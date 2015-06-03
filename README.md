@@ -28,15 +28,15 @@ Ejecutar el servidor:
 
 	python manage.py runserver
 
-========================================
+
 Manejo del Repositorio
-========================================
+==========================
 
 Para subir al repositorio cada usuario esta autorizado de la siguiente manera:
-	* Rama "milton-daniel": Miltón y Daniel pueden leer y escribir
-	* Rama "cristian": Cristian puede leer y escribir
-	* Rama "Andres-Karent": Andrés y Karent pueden leer y escribir
-	* Rama "master": Mauricio Gaona puede leer y escribir
+	Rama "milton-daniel": Miltón y Daniel pueden leer y escribir
+	Rama "cristian": Cristian puede leer y escribir
+	Rama "Andres-Karent": Andrés y Karent pueden leer y escribir
+	Rama "master": Mauricio Gaona puede leer y escribir
 
 Nota: Cada persona autorizada solo puede escribir en la rama correspondiente.
 
