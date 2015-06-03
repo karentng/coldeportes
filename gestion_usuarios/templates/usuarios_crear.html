@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Crear Usuario
+{% endblock %}
+
+{% block titulo_contenido %}
+    Creación de Usuario
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="#">Usuarios</a></li>
+    <li class="active">Crear</li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Registro Usuario
+{% endblock %}
+
+{% block contenido_panel %}
+    <form class="form-vertical" enctype="multipart/form-data" method="post">{% csrf_token %}
+        <div class="row">
+            <div class="col-sm-6">
+                {% bootstrap_field form.username layout="vertical" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                {% bootstrap_field form.password1 layout="vertical" %}
+            </div>
+            <div class="col-sm-6">
+                {% bootstrap_field form.password2 layout="vertical" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                {% bootstrap_field form.first_name layout="vertical" %}
+            </div>
+            <div class="col-sm-6">
+                {% bootstrap_field form.last_name layout="vertical" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                {% bootstrap_field form.email layout="vertical" %}
+            </div>
+            <div class="col-sm-6">
+                {% bootstrap_field form.grupo layout="vertical" %}
+            </div>
+        </div>
+        <button class="btn btn-primary pull-right" type="submit">Crear <i class="fa fa-angle-right"></i></button>
+    </form>
+{% endblock %}

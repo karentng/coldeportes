@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Listar Usuarios
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista de Usuarios
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="#">Usuarios</a></li>
+    <li class="active">Lista</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
+    <script type="text/javascript">
+        if ($('#data-table').length !== 0) {
+            $('#data-table').DataTable({
+                dom: 'T<"clear">lfrtip',
+                tableTools: {
+                    "sSwfPath": "{{STATIC_URL}}"+"plugins/DataTables/swf/copy_csv_xls_pdf.swf"
+                }
+            });
+        }
+        
+    </script>
+{% endblock %}
+
+{% block titulo_panel %}
+    Listar Usuarios
+{% endblock %}
+
+{% block contenido_panel %}
+    <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Nombre de Usuario</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Email</th>
+                <th>Grupo</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in usuarios %}
+                <tr>
+                    <td>{{i.username}}</td>
+                    <td>{{i.first_name}}</td>
+                    <td>{{i.last_name}}</td>
+                    <td>{{i.email}}</td>
+                    <td>
+                        {{i.groups.all.0}}
+                    </td>
+                    <td>
+                        <a href="{% url 'usuarios_modificar' i.id %}" title="Modificar" target="__new">
+                            <i class="fa fa-gear"></i> Modificar
+                        </a>
+                        <br/>
+                        <a href="{% url 'usuarios_password' i.id %}" title="Cambiar Contraseña" target="__new">
+                            <i class="fa fa-key"></i> Cambiar Contraseña
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

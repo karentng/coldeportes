@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="">Escenarios</a>
+	<li class="active">Registro</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Escenarios:
+{% endblock %}
+{% block panel_botones %}
+{% endblock %}
+{% block titulo_panel %}
+	Registro Nuevo Escenario Finalizado
+{% endblock %}
+{% block contenido_panel %}
+	<h2 class="text-info" align="center">Registro Finalizado Correctamente!</h2>
+{% endblock %}
+

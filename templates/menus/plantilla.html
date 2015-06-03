@@ -1,0 +1,45 @@
+<li class="has-sub {% if "/gestion-usuarios/" in request.path %} active {% endif %}">
+	<a href="javascript:;">
+	    <b class="caret pull-right"></b>
+	    <i class="fa fa-users"></i>
+	    <span>Gestión de Usuarios</span>
+    </a>
+	<ul class="sub-menu">
+	    <li {% if "/gestion-usuarios/crear" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'usuarios_crear' %}">Crear Usuario</a>
+	    </li>
+	    <li {% if "/gestion-usuarios/lista" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'usuarios_lista' %}">Listar Usuarios</a>
+	    </li>
+	</ul>
+</li>
+<li class="has-sub {% if '/escenarios/' in request.path %} active {% endif %}">
+	<a href="javascript:;">
+	    <b class="caret pull-right"></b>
+	    <i class="fa fa-futbol-o"></i>
+	    <span>Escenarios</span>
+    </a>
+	<ul class="sub-menu">
+	    <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'nuevo_escenario' %}">Registro</a>
+	    </li>	    
+	    <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
+	    </li>	    
+	</ul>
+</li>
+<li class="has-sub {% if '/caf/' in request.path %} active {% endif %}">
+	<a href="javascript:;">
+	    <b class="caret pull-right"></b>
+	    <i class="fa fa-futbol-o"></i>
+	    <span>Centro de Acondicionamiento</span>
+    </a>
+	<ul class="sub-menu">
+	    <li {% if "/caf/nuevo" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'nuevo_caf' %}">Registro</a>
+	    </li>
+	    <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'listar_cafs' %}">Listar CAFs</a>
+	    </li> 
+	</ul>
+</li>

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="">Entidades</a>
+	<li class="active">Tipo</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Tipo de Registro
+{% endblock %}
+
+{% block titulo_panel %}
+	Tipo de Registro
+{% endblock %}
+
+{% block contenido_panel %}
+	<div class="row">
+		<div class="col-sm-12">
+			<b>Por favor seleccione el tipo de registro que hará:</b>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
+			<a href="{% url 'entidad_registro' %}">
+				<button class="btn btn-lg btn-success" style="width:100%">
+					<i class="fa fa-twitter fa-2x"></i><br/>
+					Ente Municipal<br />
+					<small>---</small>
+				</button>
+			</a>
+		</div>
+		<div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
+			<a href="{% url 'entidad_registro' %}">
+				<button class="btn btn-lg btn-danger" style="width:100%">
+					<i class="fa fa-twitter fa-2x"></i><br/>
+					Ente Departamental<br />
+					<small>---</small>
+				</button>
+			</a>
+		</div>
+		<div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
+			<a href="{% url 'entidad_registro' %}">
+				<button class="btn btn-lg btn-primary" style="width:100%">
+					<i class="fa fa-twitter fa-2x"></i><br/>
+					Club<br />
+					<small>---</small>
+				</button>
+			</a>
+		</div>
+		<div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
+			<a href="{% url 'entidad_registro' %}">
+				<button class="btn btn-lg btn-warning" style="width:100%">
+					<i class="fa fa-twitter fa-2x"></i><br/>
+					CDC<br />
+					<small>Cajas de Compensación</small>
+				</button>
+			</a>
+		</div>
+	</div>
+{% endblock %}

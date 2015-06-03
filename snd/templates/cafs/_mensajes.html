@@ -1,0 +1,11 @@
+<p><small>
+	{% if wizard_stage == 1 %}
+		Ingrese los datos de identificación del Centro de Acondicionamiento Físico
+	{% elif wizard_stage == 2 %}
+		Ingrese los costos de uso del Centro de Acondicionamiento Físico
+	{% elif wizard_stage == 3 %}
+		Seleccione los servicios que provee el Centro de Acondicionamiento Físico a sus usuarios
+	{% else %}
+		Seleccione los servicios adicionales e ingrese comentarios adicionales del  Centro de Acondicionamiento Físico
+	{% endif %}
+</small></p>

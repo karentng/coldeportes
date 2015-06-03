@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="">Entidades</a>
+	<li class="active">Registro</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Registro de Entidad
+{% endblock %}
+
+
+{% block titulo_panel %}
+	Registro de Entidad
+{% endblock %}
+
+{% block contenido_panel %}
+	<div class="row">
+		<div class="col-sm-12">
+			<form class="form-horizontal" action="" method="post">{% csrf_token %}
+				{% bootstrap_form form layout="horizontal" %}
+				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Registrar</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}
