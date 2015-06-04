@@ -48,8 +48,8 @@
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Departamento</th>
-                        <th>Ciudad</th>
+                        <th>Ciudad (Departamento)</th>
+                        <th>Estrato</th>
                         <th>Estado</th>
                         <th>Opciones</th>
                     </tr>
@@ -58,8 +58,8 @@
                     {% for escenario in escenarios %}
                         <tr>
                             <td>{{escenario.nombre}}</td>
-                            <td>{{escenario.departamento.nombre}}</td>
-                            <td>{{escenario.ciudad.nombre}}</td>
+                            <td>{{escenario.ciudad}}</td>
+                            <td>{{escenario.estrato}}</td>
                             <td>{% if escenario.activo %} Activo {% else %} Desactivado {% endif %}</td>
                             <td>
                                 <a href="{% url 'editar_identificacion' escenario.id %}" title="Modificar">
