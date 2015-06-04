@@ -4,9 +4,13 @@ from snd.views.escenarios import *
 
 
 urlpatterns = patterns('snd.views.escenarios',
-    url(r'^nuevo$', EscenarioWizard.as_view(FORMS), name='nuevo_escenario'),    
+    #urls para crear escenarios
+    url(r'^nuevo/identificacion$', 'nuevo_identificacion', name='nuevo_identificacion'),
+    url(r'^nuevo/caracterizacion/(\d+)$', 'nuevo_caracterizacion', name='nuevo_caracterizacion'),
+
     url(r'^listar$', 'listarEscenarios', name='listar_escenarios'), 
-    url(r'^desactivar/(\d+)$', 'desactivarEscenario', name='desactivar_escenario'), 
+    url(r'^desactivar/(\d+)$', 'desactivarEscenario', name='desactivar_escenario'),
+    #urls de editar escenarios
     url(r'^editar/identificacion/(\d+)$', 'editar_identificacion', name='editar_identificacion'), 
     url(r'^editar/caracterizacion/(\d+)$', 'editar_caracterizacion', name='editar_caracterizacion'), 
     url(r'^editar/horarios/(\d+)$', 'editar_horarios', name='editar_horarios'), 
@@ -14,6 +18,7 @@ urlpatterns = patterns('snd.views.escenarios',
     url(r'^editar/videos/(\d+)$', 'editar_videos', name='editar_videos'), 
     url(r'^editar/historicos/(\d+)$', 'editar_historicos', name='editar_historicos'), 
     url(r'^editar/contactos/(\d+)$', 'editar_contactos', name='editar_contactos'), 
+    #urls para eliminar los pasos de los que se pueden registrar muchos en el wizard
     url(r'^eliminar/horario/(\d+)/(\d+)$', 'eliminar_horario', name='eliminar_horario'), 
     url(r'^eliminar/historico/(\d+)/(\d+)$', 'eliminar_historico', name='eliminar_historico'), 
     url(r'^eliminar/foto/(\d+)/(\d+)$', 'eliminar_foto', name='eliminar_foto'), 

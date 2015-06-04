@@ -9,92 +9,72 @@ from snd.formularios.escenarios  import *
 from snd.models import *
 from entidades.models import *
 
-
-"""
-Autor: Karent Narvaez Grisales
-Conjunto de Templates pasados al wizard según el paso actual del wizard
-"""
-TEMPLATES = {
-             "Identificacion": 'escenarios/step_0_template.html',
-             "Caracterizacion": 'escenarios/step_0_template.html',
-             "Horarios": 'escenarios/horarios.html', 
-             "Datos Historicos": 'escenarios/horarios.html', 
-             "Fotos": 'escenarios/step_0_template.html', 
-             "Videos": 'escenarios/step_0_template.html', 
-             "Contacto": 'escenarios/horarios.html'}
-"""
-Autor: Karent Narvaez Grisales
-Conjunto de formularios pasados al wizard según el paso actual del wizard
-"""
-FORMS = [ 
-         ("Identificacion", IdentificacionForm),
-         ("Caracterizacion", CaracterizacionForm),
-         ("Horarios", HorariosDisponibleForm), 
-         ("Datos Historicos", DatoHistoricoForm), 
-         ("Fotos", FotoEscenarioForm), 
-         ("Videos", VideoEscenarioForm), 
-         ("Contacto", ContactoForm)]
-
-
-def guardar_identificacion(wizard, escenario_form):
-    """
-    Mayo 30 / 2015
-    Autor: Karent Narvaez
-    
-    Guarda el primer paso del wizard de los datos de identificación del escenario
-
-    Se asigna el tenant que realiza la petición como la entidad responsable del escenario y se guarda el escenario
-    :param wizard:     Wizard
-    :type wizard:      SessionWizardView
-    :param escenario:   Escenario
-    :type escenario:    Escenario
-    :returns:        Arreglo con los formularios información del escenario
-    :rtype:          Escenario
-    """
-    escenario = escenario_form.save(commit=False)
-    escenario.entidad = wizard.request.tenant   
-    escenario.save()
-    return escenario
-
-def guardar_formulario(escenario, form):
+@login_required
+def nuevo_identificacion(request):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
     
-    Guardar un formulario de wizard
+    Crear Escenario: Primer paso para los datos de identificación
 
-    Se asigna el escenario respectivo para asociar al formulario pasado como parámetro y se guardan las relaciones muchos a muchos
+    Se obtienen los formularios de identificación del escenario y se guardan los datos que se diligencien.
 
-    :param escenario:   Escenario guardado previamente con el que se relaciona el formulario
-    :type escenario:    Escenario
-    :param form:   formulario
-    :type form:    formulario
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
     """
-    formulario = form.save(commit=False)
-    formulario.escenario = escenario
-    form.save()
+
+    identificacion_form = IdentificacionForm()
+
+    if request.method == 'POST':
+
+        identificacion_form = IdentificacionForm(request.POST)
+
+        if identificacion_form.is_valid():
+            escenario = identificacion_form.save(commit=False)
+            escenario.entidad = request.tenant
+            escenario.save()
+            return redirect('nuevo_caracterizacion', escenario.id)
 
 
-class EscenarioWizard(SessionWizardView):
+    return render(request, 'escenarios/wizard/editar_escenario.html', {
+        'titulo': 'Identificación del Escenario',
+        'wizard_stage': 1,
+        'form': identificacion_form,
+    })
 
-    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'media_escenarios'))
+@login_required
+def nuevo_caracterizacion(request, escenario_id):
+    """
+    Mayo 30 / 2015
+    Autor: Karent Narvaez Grisales
     
-    def get_template_names(self):
-        return [TEMPLATES[self.steps.current]]
+    Crear Escenario: Segundo paso para los datos de caracterización
 
-    #template_name = 'escenarios/step_0_template.html'
+    Se obtienen los formularios de caracterización del escenario y se guardan los datos que se diligencien.
 
-    def done(self, form_list, form_dict, **kwargs):
-        #[form.cleaned_data for form in form_list]
-        
-        escenario = guardar_identificacion(self, form_dict['Identificacion'])
-        guardar_formulario( escenario, form_dict['Caracterizacion'])
-        guardar_formulario( escenario, form_dict['Horarios'])
-        guardar_formulario( escenario, form_dict['Datos Historicos'])
-        guardar_formulario( escenario, form_dict['Contacto'])
-        
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
 
-        return render(self.request,'escenarios/finalizado_registro.html')
+    caracterizacion_form = CaracterizacionForm()
+
+    if request.method == 'POST':
+
+        caracterizacion_form = CaracterizacionForm(request.POST)
+
+        if caracterizacion_form.is_valid():
+            caracteristicas = caracterizacion_form.save(commit=False)
+            caracteristicas.escenario = Escenario.objects.get(id=escenario_id)
+            caracteristicas.save()
+            caracterizacion_form.save()
+            return redirect('listar_escenarios')
+
+
+    return render(request, 'escenarios/wizard/editar_escenario.html', {
+        'titulo': 'Caracterización del Escenario',
+        'wizard_stage': 2,
+        'form': caracterizacion_form,
+    })
 
 @login_required
 def listarEscenarios(request):
