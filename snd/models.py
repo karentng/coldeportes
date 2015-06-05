@@ -25,16 +25,12 @@ class Escenario(models.Model):
     nombre_administrador = models.CharField(max_length=50, null=True)
     entidad = models.ForeignKey(Entidad)    
     activo = models.BooleanField(default=True)
-    descripcion = models.CharField(max_length=250, verbose_name='descripción', null=True)
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
 class CaracterizacionEscenario(models.Model):   
     accesos = (('pr', 'Privado'),
                 ('dul', 'De Uso Libre'),
                 ('pcp', 'Público Con Pago'),
-    )
-    usos = (('af', 'Aficionado'),
-            ('ar', 'De Alto Rendimiento'),
-            ('sp', 'Sólo Profesional'),
     )
     escenario = models.ForeignKey(Escenario)
     capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
@@ -44,8 +40,8 @@ class CaracterizacionEscenario(models.Model):
     tipo_superficie_juego = models.CharField(max_length=100, null=True)
     clase_acceso = models.CharField(choices=accesos, max_length=3, verbose_name='tipo de acceso')
     caracteristicas = models.ManyToManyField(CaracteristicaEscenario)
-    clase_uso = models.CharField(choices=usos, verbose_name='clase de uso', max_length=2)
-    descripcion = models.CharField(max_length=250, verbose_name='descripción', null=True)
+    clase_uso = models.ManyToManyField(TipoUsoEscenario)
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
     
 
@@ -54,7 +50,7 @@ class HorarioDisponibilidad(models.Model):
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
     dias = models.ManyToManyField(Dias)
-    descripcion = models.CharField(max_length=150)
+    descripcion = models.CharField(max_length=1024)
 
 class Foto(models.Model):
     escenario = models.ForeignKey(Escenario)
@@ -62,13 +58,14 @@ class Foto(models.Model):
 
 class Video(models.Model):
     escenario = models.ForeignKey(Escenario)
-    video = models.FileField(upload_to='videos', null=True, blank=True)
+    url = models.CharField(max_length=1024, verbose_name='url', null=True)
+    descripcion = models.CharField(max_length=1024, null=True)
 
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
-    descripcion = models.CharField(max_length=150)
+    descripcion = models.CharField(max_length=1024)
 
 class Contacto(models.Model):
     escenario = models.ForeignKey(Escenario)

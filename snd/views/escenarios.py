@@ -8,73 +8,8 @@ import os
 from snd.formularios.escenarios  import *
 from snd.models import *
 from entidades.models import *
+from django.contrib import messages
 
-@login_required
-def nuevo_identificacion(request):
-    """
-    Mayo 30 / 2015
-    Autor: Karent Narvaez Grisales
-    
-    Crear Escenario: Primer paso para los datos de identificación
-
-    Se obtienen los formularios de identificación del escenario y se guardan los datos que se diligencien.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    """
-
-    identificacion_form = IdentificacionForm()
-
-    if request.method == 'POST':
-
-        identificacion_form = IdentificacionForm(request.POST)
-
-        if identificacion_form.is_valid():
-            escenario = identificacion_form.save(commit=False)
-            escenario.entidad = request.tenant
-            escenario.save()
-            return redirect('nuevo_caracterizacion', escenario.id)
-
-
-    return render(request, 'escenarios/wizard/editar_escenario.html', {
-        'titulo': 'Identificación del Escenario',
-        'wizard_stage': 1,
-        'form': identificacion_form,
-    })
-
-@login_required
-def nuevo_caracterizacion(request, escenario_id):
-    """
-    Mayo 30 / 2015
-    Autor: Karent Narvaez Grisales
-    
-    Crear Escenario: Segundo paso para los datos de caracterización
-
-    Se obtienen los formularios de caracterización del escenario y se guardan los datos que se diligencien.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    """
-
-    caracterizacion_form = CaracterizacionForm()
-
-    if request.method == 'POST':
-
-        caracterizacion_form = CaracterizacionForm(request.POST)
-
-        if caracterizacion_form.is_valid():
-            caracteristicas = caracterizacion_form.save(commit=False)
-            caracteristicas.escenario = Escenario.objects.get(id=escenario_id)
-            caracteristicas.save()
-            caracterizacion_form.save()
-            return redirect('listar_escenarios')
-
-
-    return render(request, 'escenarios/wizard/editar_escenario.html', {
-        'titulo': 'Caracterización del Escenario',
-        'wizard_stage': 2,
-        'form': caracterizacion_form,
-    })
 
 @login_required
 def listarEscenarios(request):
@@ -115,14 +50,46 @@ def desactivarEscenario(request, escenario_id):
     escenario.save()
     return redirect('listar_escenarios')
 
-
 @login_required
-def editar_identificacion(request, escenario_id):
+def wizard_nuevo_identificacion(request):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
     
-    Editar un Escenario
+    Crear un Escenario
+
+    Se obtienen los formularios de información del escenario con los datos diligenciados y se guardan.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
+
+    identificacion_form = IdentificacionForm( )
+
+    if request.method == 'POST':
+
+        identificacion_form = IdentificacionForm(request.POST)
+
+        if identificacion_form.is_valid():
+            escenario = identificacion_form.save(commit=False)
+            escenario.entidad =  request.tenant
+            escenario.save()
+            return redirect('wizard_caracterizacion', escenario.id)
+
+
+    return render(request, 'escenarios/wizard/wizard_escenario.html', {
+        'titulo': 'Identificación del Escenario',
+        'wizard_stage': 1,
+        'form': identificacion_form,
+    })
+
+@login_required
+def wizard_identificacion(request, escenario_id):
+    """
+    Mayo 30 / 2015
+    Autor: Karent Narvaez Grisales
+    
+    Editar un Escenario: Paso datos de identificación escenario
 
     Se obtienen los formularios de información del escenario con los datos diligenciados y se guardan.
 
@@ -135,7 +102,7 @@ def editar_identificacion(request, escenario_id):
     try:
         escenario = Escenario.objects.get(id=escenario_id)
     except Exception:
-        return redirect('listar_escenarios')
+        escenario = None
 
     identificacion_form = IdentificacionForm( instance=escenario)
 
@@ -145,24 +112,25 @@ def editar_identificacion(request, escenario_id):
 
         if identificacion_form.is_valid():
             identificacion_form.save()
-            return redirect('editar_caracterizacion', escenario_id)
+            return redirect('wizard_caracterizacion', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/editar_escenario.html', {
+    return render(request, 'escenarios/wizard/wizard_escenario.html', {
         'titulo': 'Identificación del Escenario',
         'wizard_stage': 1,
         'form': identificacion_form,
     })
 
 @login_required
-def editar_caracterizacion(request, escenario_id):
+def wizard_caracterizacion(request, escenario_id):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
     
-    Editar Características del Escenario
+    Paso de caracterización de un escenario
 
     Se obtienen el formulario de las características del escenario con la información actual y se guardan las modificaciones, si hay.
+    Si el escenario es nuevo se inicializa en nulo.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
@@ -173,7 +141,7 @@ def editar_caracterizacion(request, escenario_id):
     try:
         caracteristicas = CaracterizacionEscenario.objects.get(escenario=escenario_id)
     except Exception:
-        return redirect('listar_escenarios')
+        caracteristicas = None
 
     caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
 
@@ -181,70 +149,30 @@ def editar_caracterizacion(request, escenario_id):
         caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
 
         if caracterizacion_form.is_valid():
+            caracteristicas = caracterizacion_form.save(commit=False)
+            caracteristicas.escenario = Escenario.objects.get(id=escenario_id)
+            caracteristicas.save()
             caracterizacion_form.save()
-            print ('hola46')
-            return redirect('editar_horarios', escenario_id)
+            return redirect('wizard_horarios', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/editar_escenario.html', {
+    return render(request, 'escenarios/wizard/wizard_escenario.html', {
         'titulo': 'Caracterización del Escenario',
         'wizard_stage': 2,
         'form': caracterizacion_form,
     })
 
-
 @login_required
-def editar_historicos(request, escenario_id):
+def wizard_horarios(request, escenario_id):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
     
-    Editar los datos históricos de un Escenario
-
-    Se obtienen el formulario de los datos históricos y se muestran los datos actualmente añadidos al escenario
-    y si hay modificaciones se guardan.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param escenario_id:   Identificador del escenario
-    :type escenario_id:    String
-    """
-
-    try:
-        historicos = DatoHistorico.objects.filter(escenario=escenario_id)
-    except Exception:
-        return redirect('listar_escenarios')
-
-    historico_form = DatoHistoricoForm()
-
-    if request.method == 'POST':
-        historico_form = DatoHistoricoForm(request.POST)
-
-        if historico_form.is_valid():
-            historico_nuevo = historico_form.save(commit=False)
-            historico_nuevo.escenario = Escenario.objects.get(id=escenario_id)
-            historico_nuevo.save()
-            return redirect('editar_historicos', escenario_id)
-
-
-    return render(request, 'escenarios/wizard/editar_escenario_historicos.html', {
-        'titulo': 'Datos Históricos del Escenario',
-        'wizard_stage': 4,
-        'form': historico_form,
-        'historicos': historicos,
-        'escenario_id': escenario_id
-    })
-
-@login_required
-def editar_horarios(request, escenario_id):
-    """
-    Mayo 30 / 2015
-    Autor: Karent Narvaez Grisales
-    
-    Editar los horarios de un Escenario
+    Horarios de disponibilidad de un escenario
 
     Se obtienen el formulario de los horarios y se muestran los horarios actualmente añadidos al escenario
     y si hay modificaciones se guardan.
+    Si el escenario es nuevo se inicializa en nulo.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
@@ -255,7 +183,7 @@ def editar_horarios(request, escenario_id):
     try:
         horarios = HorarioDisponibilidad.objects.filter(escenario=escenario_id)
     except Exception:
-        return redirect('listar_escenarios')
+        horarios = None
 
     horarios_form = HorariosDisponibleForm()
 
@@ -266,10 +194,11 @@ def editar_horarios(request, escenario_id):
             horario_nuevo = horarios_form.save(commit=False)
             horario_nuevo.escenario = Escenario.objects.get(id=escenario_id)
             horario_nuevo.save()
-            return redirect('editar_horarios', escenario_id)
+            horarios_form.save()
+            return redirect('wizard_horarios', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/editar_escenario_grid.html', {
+    return render(request, 'escenarios/wizard/wizard_horarios.html', {
         'titulo': 'Horarios de Disponibildad del Escenario',
         'wizard_stage': 3,
         'form': horarios_form,
@@ -278,15 +207,60 @@ def editar_horarios(request, escenario_id):
     })
 
 @login_required
-def editar_fotos(request, escenario_id):
+def wizard_historicos(request, escenario_id):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
     
-    Editar las fotos de un Escenario
+    Datos históricos de un Escenario
+
+    Se obtienen el formulario de los datos históricos y se muestran los datos actualmente añadidos al escenario
+    y si hay modificaciones se guardan.
+    Si el escenario es nuevo se inicializa en nulo.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del escenario
+    :type escenario_id:    String
+    """
+
+    try:
+        historicos = DatoHistorico.objects.filter(escenario=escenario_id)
+    except Exception:
+        historicos = None
+
+    historico_form = DatoHistoricoForm()
+
+    if request.method == 'POST':
+        historico_form = DatoHistoricoForm(request.POST)
+
+        if historico_form.is_valid():
+            historico_nuevo = historico_form.save(commit=False)
+            historico_nuevo.escenario = Escenario.objects.get(id=escenario_id)
+            historico_nuevo.save()
+            return redirect('wizard_historicos', escenario_id)
+
+
+    return render(request, 'escenarios/wizard/wizard_historicos.html', {
+        'titulo': 'Datos Históricos del Escenario',
+        'wizard_stage': 4,
+        'form': historico_form,
+        'historicos': historicos,
+        'escenario_id': escenario_id
+    })
+
+
+@login_required
+def wizard_fotos(request, escenario_id):
+    """
+    Mayo 30 / 2015
+    Autor: Karent Narvaez Grisales
+    
+    Fotos de un Escenario
 
     Se obtienen el formulario para subir fotos y se muestran las que actualmente hay añadidos al escenario
     y si hay modificaciones se guardan.
+    Si el escenario es nuevo se inicializa en nulo.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
@@ -297,7 +271,7 @@ def editar_fotos(request, escenario_id):
     try:
         fotos = Foto.objects.filter(escenario=escenario_id)
     except Exception:
-        return redirect('listar_escenarios')
+        fotos = None
 
     fotos_form = FotoEscenarioForm()
 
@@ -308,10 +282,10 @@ def editar_fotos(request, escenario_id):
             foto_nueva = fotos_form.save(commit=False)
             foto_nueva.escenario = Escenario.objects.get(id=escenario_id)
             foto_nueva.save()
-            return redirect('editar_fotos', escenario_id)
+            return redirect('wizard_fotos', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/editar_escenario_fotos.html', {
+    return render(request, 'escenarios/wizard/wizard_fotos.html', {
         'titulo': 'Fotos del Escenario',
         'wizard_stage': 5,
         'form': fotos_form,
@@ -319,59 +293,18 @@ def editar_fotos(request, escenario_id):
         'escenario_id': escenario_id
     })
 
-
+    
 @login_required
-def editar_contactos(request, escenario_id):
+def wizard_videos(request, escenario_id):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
     
-    Editar los contactos de un Escenario
-
-    Se obtienen el formulario para subir contactos y se muestran los que actualmente hay añadidos al escenario
-    y si hay modificaciones se guardan.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param escenario_id:   Identificador del escenario
-    :type escenario_id:    String
-    """
-
-    try:
-        contactos = Contacto.objects.filter(escenario=escenario_id)
-    except Exception:
-        return redirect('listar_escenarios')
-
-    contactos_form = ContactoForm()
-
-    if request.method == 'POST':
-        contactos_form = ContactoForm(request.POST)
-
-        if contactos_form.is_valid():
-            contacto_nuevo = contactos_form.save(commit=False)
-            contacto_nuevo.escenario = Escenario.objects.get(id=escenario_id)
-            contacto_nuevo.save()
-            return redirect('editar_contactos', escenario_id)
-
-
-    return render(request, 'escenarios/wizard/editar_escenario_contactos.html', {
-        'titulo': 'Contactos del Escenario',
-        'wizard_stage': 7,
-        'form': contactos_form,
-        'contactos': contactos,
-        'escenario_id': escenario_id
-    })
-    
-@login_required
-def editar_videos(request, escenario_id):
-    """
-    Mayo 30 / 2015
-    Autor: Karent Narvaez Grisales
-    
-    Editar los videos de un Escenario
+    Videos de un escenario
 
     Se obtienen el formulario para subir videos y se muestran loss que actualmente hay añadidos al escenario
     y si hay modificaciones se guardan.
+    Si el escenario es nuevo se inicializa en nulo.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
@@ -382,25 +315,70 @@ def editar_videos(request, escenario_id):
     try:
         videos = Video.objects.filter(escenario=escenario_id)
     except Exception:
-        return redirect('listar_escenarios')
+        videos = None
 
     videos_form = VideoEscenarioForm()
 
     if request.method == 'POST':
-        videos_form = VideosEscenarioForm(request.POST)
+        videos_form = VideoEscenarioForm(request.POST)
 
         if videos_form.is_valid():
             video_nuevo = videos_form.save(commit=False)
             video_nuevo.escenario = Escenario.objects.get(id=escenario_id)
             video_nuevo.save()
-            return redirect('editar_videos', escenario_id)
+            return redirect('wizard_videos', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/editar_escenario_videos.html', {
+    return render(request, 'escenarios/wizard/wizard_videos.html', {
         'titulo': 'Videos del Escenario',
         'wizard_stage': 6,
         'form': videos_form,
         'videos': videos,
+        'escenario_id': escenario_id
+    })
+
+
+@login_required
+def wizard_contactos(request, escenario_id):
+    """
+    Mayo 30 / 2015
+    Autor: Karent Narvaez Grisales
+    
+    Contactos de un escenario
+
+    Se obtienen el formulario para subir contactos y se muestran los que actualmente hay añadidos al escenario
+    y si hay modificaciones se guardan.
+    Si el escenario es nuevo se inicializa en nulo.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del escenario
+    :type escenario_id:    String
+    """
+
+    try:
+        contactos = Contacto.objects.filter(escenario=escenario_id)
+    except Exception:
+        contactos = Nones
+
+    contactos_form = ContactoForm()
+
+    if request.method == 'POST':
+        contactos_form = ContactoForm(request.POST)
+
+        if contactos_form.is_valid():
+            contacto_nuevo = contactos_form.save(commit=False)
+            contacto_nuevo.escenario = Escenario.objects.get(id=escenario_id)
+            contacto_nuevo.save()
+            #messages.success(request, "¡Escenario guardado exitósamente!")
+            return redirect('wizard_contactos', escenario_id)
+
+
+    return render(request, 'escenarios/wizard/wizard_contactos.html', {
+        'titulo': 'Contactos del Escenario',
+        'wizard_stage': 7,
+        'form': contactos_form,
+        'contactos': contactos,
         'escenario_id': escenario_id
     })
 
@@ -424,10 +402,10 @@ def eliminar_horario(request, escenario_id, horario_id):
     try:
         horario = HorarioDisponibilidad.objects.get(id=horario_id, escenario=escenario_id)
         horario.delete()
-        return redirect('editar_horarios', escenario_id)
+        return redirect('wizard_horarios', escenario_id)
 
     except Exception:
-        return redirect('editar_horarios', escenario_id)
+        return redirect('wizard_horarios', escenario_id)
 
 
 @login_required
@@ -451,10 +429,10 @@ def eliminar_historico(request, escenario_id, historico_id):
     try:
         historico = DatoHistorico.objects.get(id=historico_id, escenario=escenario_id)
         historico.delete()
-        return redirect('editar_historicos', escenario_id)
+        return redirect('wizard_historicos', escenario_id)
 
     except Exception:
-        return redirect('editar_historicos', escenario_id)
+        return redirect('wizard_historicos', escenario_id)
 
 @login_required
 def eliminar_foto(request, escenario_id, foto_id):
@@ -477,9 +455,9 @@ def eliminar_foto(request, escenario_id, foto_id):
     try:
         foto = Foto.objects.get(id=foto_id, escenario=escenario_id)
         foto.delete()
-        return redirect('editar_fotos', escenario_id)
+        return redirect('wizard_fotos', escenario_id)
     except Exception:
-        return redirect('editar_fotos', escenario_id)
+        return redirect('wizard_fotos', escenario_id)
 
 @login_required
 def eliminar_video(request, escenario_id, video_id):
@@ -502,9 +480,9 @@ def eliminar_video(request, escenario_id, video_id):
     try:
         video = Video.objects.get(id=video_id, escenario=escenario_id)
         video.delete()
-        return redirect('editar_videos', escenario_id)
+        return redirect('wizard_videos', escenario_id)
     except Exception:
-        return redirect('editar_videos', escenario_id)
+        return redirect('wizard_videos', escenario_id)
 
 @login_required
 def eliminar_contacto(request, escenario_id, contacto_id):
@@ -527,8 +505,8 @@ def eliminar_contacto(request, escenario_id, contacto_id):
     try:
         contacto = Contacto.objects.get(id=contacto_id, escenario=escenario_id)
         contacto.delete()
-        return redirect('editar_contactos', escenario_id)
+        return redirect('wizard_contactos', escenario_id)
     except Exception:
-        return redirect('editar_contactos', escenario_id)
+        return redirect('wizard_contactos', escenario_id)
 
 

@@ -4,20 +4,20 @@ from snd.views.escenarios import *
 
 
 urlpatterns = patterns('snd.views.escenarios',
-    #urls para crear escenarios
-    url(r'^nuevo/identificacion$', 'nuevo_identificacion', name='nuevo_identificacion'),
-    url(r'^nuevo/caracterizacion/(\d+)$', 'nuevo_caracterizacion', name='nuevo_caracterizacion'),
-
+    #urls tabla interactiva
     url(r'^listar$', 'listarEscenarios', name='listar_escenarios'), 
     url(r'^desactivar/(\d+)$', 'desactivarEscenario', name='desactivar_escenario'),
-    #urls de editar escenarios
-    url(r'^editar/identificacion/(\d+)$', 'editar_identificacion', name='editar_identificacion'), 
-    url(r'^editar/caracterizacion/(\d+)$', 'editar_caracterizacion', name='editar_caracterizacion'), 
-    url(r'^editar/horarios/(\d+)$', 'editar_horarios', name='editar_horarios'), 
-    url(r'^editar/fotos/(\d+)$', 'editar_fotos', name='editar_fotos'), 
-    url(r'^editar/videos/(\d+)$', 'editar_videos', name='editar_videos'), 
-    url(r'^editar/historicos/(\d+)$', 'editar_historicos', name='editar_historicos'), 
-    url(r'^editar/contactos/(\d+)$', 'editar_contactos', name='editar_contactos'), 
+
+    #urls wizard
+    url(r'^wizard/identificacion$', 'wizard_nuevo_identificacion', name='wizard_nuevo_identificacion'), 
+    url(r'^wizard/identificacion/(\d+)$', 'wizard_identificacion', name='wizard_identificacion'), 
+    url(r'^wizard/caracterizacion/(\d+)$', 'wizard_caracterizacion', name='wizard_caracterizacion'), 
+    url(r'^wizard/horarios/(\d+)$', 'wizard_horarios', name='wizard_horarios'), 
+    url(r'^wizard/fotos/(\d+)$', 'wizard_fotos', name='wizard_fotos'), 
+    url(r'^wizard/videos/(\d+)$', 'wizard_videos', name='wizard_videos'), 
+    url(r'^wizard/historicos/(\d+)$', 'wizard_historicos', name='wizard_historicos'), 
+    url(r'^wizard/contactos/(\d+)$', 'wizard_contactos', name='wizard_contactos'), 
+    
     #urls para eliminar los pasos de los que se pueden registrar muchos en el wizard
     url(r'^eliminar/horario/(\d+)/(\d+)$', 'eliminar_horario', name='eliminar_horario'), 
     url(r'^eliminar/historico/(\d+)/(\d+)$', 'eliminar_historico', name='eliminar_historico'), 

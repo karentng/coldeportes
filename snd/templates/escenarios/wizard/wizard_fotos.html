@@ -7,6 +7,7 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block miga_pan %}
@@ -41,23 +42,19 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Contactos Actuales:</h4>
+                <h4>Fotos Actuales:</h4>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th align="center">Nombre</th>
-                            <th align="center">Teléfono</th>
-                            <th align="center">Correo</th>
+                            <th align="center">Foto</th>
                             <th align="center"></th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% if contactos %}
-                    {% for contacto in contactos %}
+                    {% if fotos %}
+                    {% for foto in fotos %}
                         <tr>
-                            <td align="center">{{contacto.nombre}}</td>
-                            <td align="center">{{contacto.telefono}}</td>
-                            <td align="center">{{contacto.email}}</td>
+                            <td align="center"><img src="{{MEDIA_URL}}{{foto.foto}}" width="20%" height="20%" /></td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
@@ -65,14 +62,14 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Eliminar contacto:</h4>
+                                                <h4 class="modal-title">Eliminar Foto:</h4>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Está seguro que desea eliminar esta contacto?
+                                                ¿Está seguro que desea eliminar esta foto?
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_contacto' escenario_id contacto.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_foto' escenario_id foto.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -81,7 +78,7 @@
                         </tr>
                     {% endfor %}
                     {% else %}
-                        <tr><td>No hay contactos actualmente</td></tr>
+                        <tr><td>No hay fotos actualmente</td></tr>
                     {% endif %}
                     </tbody>
                 </table>            
@@ -91,7 +88,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'listar_escenarios' %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'wizard_videos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 
 {% endblock %}

@@ -27,6 +27,7 @@ class CaracterizacionForm(forms.ModelForm):
         self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
         self.fields['tipo_disciplinas'] = adicionarClase(self.fields['tipo_disciplinas'], 'many')
         self.fields['caracteristicas'] = adicionarClase(self.fields['caracteristicas'], 'many')
+        self.fields['clase_uso'] = adicionarClase(self.fields['clase_uso'], 'many')
     class Meta:
         model = CaracterizacionEscenario
         exclude = ('escenario',)        
@@ -65,7 +66,6 @@ class FotoEscenarioForm(ModelForm):
         exclude = ('escenario',)
 
 class VideoEscenarioForm(ModelForm):
-    video = forms.FileField(required=False)
     class Meta:
         model = Video
         exclude = ('escenario',)

@@ -7,6 +7,7 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block miga_pan %}
@@ -41,19 +42,22 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Videos Actuales:</h4>
+                <h4>Horarios Actuales:</h4>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th align="center">Video</th>
+                            <th align="center">Hora Inicio</th>
+                            <th align="center">Hora Fin</th>
+                            <th align="center">Descripción</th>
                             <th align="center"></th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% if videos %}
-                    {% for video in videos %}
+                    {% for horario in horarios %}
                         <tr>
-                            <td align="center">{{video.video}}</td>
+                            <td align="center">{{horario.hora_inicio}}</td>
+                            <td align="center">{{horario.hora_fin}}</td>
+                            <td align="center">{{horario.descripcion}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
@@ -61,14 +65,14 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Eliminar video:</h4>
+                                                <h4 class="modal-title">Eliminar Horario:</h4>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Está seguro que desea eliminar esta video?
+                                                ¿Está seguro que desea eliminar este horario?
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_video' escenario_id video.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_horario' escenario_id horario.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -76,9 +80,6 @@
                             </td>
                         </tr>
                     {% endfor %}
-                    {% else %}
-                        <tr><td>No hay videos actualmente</td></tr>
-                    {% endif %}
                     </tbody>
                 </table>            
             </div>
@@ -87,7 +88,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'editar_contactos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'wizard_historicos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 
 {% endblock %}

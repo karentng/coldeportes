@@ -120,6 +120,7 @@
         
         <!-- begin #content -->
         <div id="content" class="content">
+            
             <!-- begin breadcrumb -->
             <ol class="breadcrumb pull-right">
                 {% block miga_pan %}
@@ -128,12 +129,21 @@
             </ol>
             <!-- end breadcrumb -->
             <!-- begin page-header -->
+            
             <h1 class="page-header">
                 <img src="{{STATIC_URL}}img/coldeportes.png" width="260">
                 <img src="{{STATIC_URL}}img/prosperidad.png" width="160">
             </h1>
             <!-- end page-header -->
+            {% for msg in messages %}
+                <div {% if msg.tags == 'error' %} class="alert alert-danger" {% else %} class="alert alert-{{msg.tags}}" {%     endif %} >
+          
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{msg}}
+                </div>
+            {% endfor %}
             {% block contenido %}
+
             <!-- Se deja contenido y el panel, si en algún momento no se desea usar el panel -->
             <div class="panel panel-success">
                 <div class="panel-heading">
@@ -152,6 +162,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             {% block contenido_panel %}
+
+
                             {% endblock %}
                         </div>
                     </div>

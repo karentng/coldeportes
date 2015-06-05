@@ -1183,6 +1183,10 @@ INSERT INTO "entidades_tipodisciplinaescenario" ("id", "descripcion") VALUES
 (10,	'Gimnasia'),
 (4,	'Fútbol');
 
+INSERT INTO "entidades_tipousoescenario" ("id", "descripcion") VALUES
+(1,	'Aficionado'),
+(2,	'Alto Rendimiento');
+
 INSERT INTO "entidades_tipoescenario" ("id", "descripcion") VALUES
 (1,	'Estadio'),
 (2,	'Coliseo'),
