@@ -43,3 +43,18 @@
 	    </li> 
 	</ul>
 </li>
+<li class="has-sub {% if '/deportistas/' in request.path %} active {% endif %}">
+	<a href="javascript:;">
+	    <b class="caret pull-right"></b>
+	    <i class="fa fa-futbol-o"></i>
+	    <span>Deportistas</span>
+    </a>
+	<ul class="sub-menu">
+	    <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'deporista_nuevo' %}">Registro</a>
+	    </li>
+	    <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'deporista_lista' %}">Listar Deportistas</a>
+	    </li>
+	</ul>
+</li>

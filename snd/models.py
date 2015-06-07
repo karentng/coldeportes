@@ -113,3 +113,121 @@ class CAOtros(models.Model):
     camerinos = models.BooleanField()
     duchas = models.BooleanField()
     comentarios = models.TextField(blank=True, null=True)
+
+#Modelos de deportistas
+#Informacion del deportista, informacion deportiva
+
+class Deportista(models.Model):
+    #Datos personales
+        #Identificacion
+    tipo_sexo = (
+        ('Masculino','Masculino'),
+        ('Femenino','Femenino'),
+    )
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    sexo = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Sexo del Deportista')
+    identificacion = models.CharField(max_length=100)
+    fecha_nacimiento = models.DateField()
+    nacionalidad = models.CharField(max_length=100)
+    ciudad_nacimiento = models.ForeignKey(Ciudad)
+    departamento_nacimiento = models.ForeignKey(Departamento)
+    barrio = models.CharField(max_length=100)
+    comuna = models.CharField(max_length=100)
+    email = models.EmailField()
+    telefono = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100)
+        #Composicion corporal
+    peso = models.FloatField()
+    estatura = models.IntegerField()
+    RH = models.CharField(max_length=100)
+    talla_camisa = models.CharField(max_length=100)
+    talla_pantaloneta = models.CharField(max_length=100)
+    talla_zapato = models.CharField(max_length=100)
+    porcentaje_grasa = models.CharField(max_length=100)
+    porcentaje_musculo = models.CharField(max_length=100)
+        #Entidad
+    entidad = models.ForeignKey(Entidad)
+        #Disciplina
+    disciplinas = models.ManyToManyField(DisciplinaDepostiva)
+    activo = models.BooleanField(default=True)
+
+#Informacion medica del deportista
+#Seguro medico del deportista
+class SeguroMedico(models.Model):
+    tipo_seguros=(
+        ('SISBEN','SISBEN'),
+        ('EPS','EPS'),
+        ('Medicina Prepagada','Medicina Prepagada'),
+    )
+    nombre = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=10, choices=tipo_seguros)
+    deportista = models.ForeignKey(Deportista)
+
+class Alergia(models.Model):
+    causa = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    deportista = models.ForeignKey(Deportista)
+
+class Lesion(models.Model):
+    lugar = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    deportista = models.ForeignKey(Deportista)
+
+    #Como por ejemplo asma, hipertension
+class Enfermedades(models.Model):
+    nombre = models.CharField(max_length=100)
+    descipcion = models.TextField()
+    deportista = models.ForeignKey(Deportista)
+
+#Representante o manager del deportista
+class Representante(models.Model):
+    tipo_relacion = (
+        ('fam','Familiar'),
+        ('patr','Patrocinador'),
+        ('contr','Contratado'),
+    )
+    nombre = models.CharField(max_length=100)
+    cedula_nit = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100)
+    relación = models.CharField(choices=tipo_relacion,max_length=10,verbose_name='Representante del Deportista')
+
+#Hitorial deportivo
+class HistorialDeportivo(models.Model):
+    tipo_his_deportivo=(
+        ('comp','Competencia'),
+        ('premio','Premio'),
+        ('logo_de','Logro Deportivo'),
+        ('part','Participacion en Equipo'),
+    )
+    fecha = models.DateField()
+    lugar = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    institucion_equipo = models.CharField(max_length=100,blank=True,null=True)
+    tipo = models.CharField(choices=tipo_his_deportivo,max_length=30,verbose_name='Tipo Historial')
+
+#Informacion academica
+class InformacionAcademica(models.Model):
+    tipo_academica = (
+        ('Jardin','Jardin'),
+        ('Primaria','Primaria'),
+        ('Bachillerato','Bachillerato'),
+        ('Pregrado','Pregrado'),
+        ('Postgrado','Postgrado'),
+    )
+    tipo_estado = (
+        ('Finalizado','Finalizado'),
+        ('Incompleto','Incompleto'),
+        ('Actual','Actual'),
+    )
+    pais = models.CharField(max_length=100)
+    departamento = models.CharField(max_length=100) #si es diferente de colombia
+    ciudad = models.CharField(max_length=100) #si es diferente de colombia
+    institucion = models.CharField(max_length=100)
+    nivel = models.CharField(choices=tipo_academica,max_length=20)
+    grado_semestre = models.IntegerField()
+    profesion =  models.CharField(max_length=100,blank=True,null=True)
+    estado = models.CharField(choices=tipo_estado,max_length=20)
+    fecha_finalizacion = models.DateField(blank=True,null=True)
+    fecha_desercion = models.DateField(blank=True,null=True)
