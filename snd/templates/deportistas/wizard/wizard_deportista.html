@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block head %}
-	Registro Escenario
+	Registro Deportistas
 {% endblock %}
 
 {% block css %}
@@ -12,23 +12,23 @@
 
 {% block miga_pan %}
 	<li><a href="{% url 'inicio' %}">Inicio</a></li>
-	<li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+	<li><a href="{% url 'deporista_listar' %}">Deportistas</a>
 	<li class="active">Editar</li>
 {% endblock %}
 
 {% block titulo_contenido %}
-	Escenarios Deportivos
+	Deportistas
 {% endblock %}
 
 {% block titulo_panel %}
-	Registro de Escenarios Deportivos
+	Registro de Deportistas
 {% endblock %}
 
 {% block panel_botones %}
 {% endblock %}
 
 {% block contenido_panel %}
-	{% include 'escenarios/wizard/_wizard.html' %}
+	{% include 'deportistas/wizard/_wizard.html' %}
 	<fieldset>
 		<form action="" method="post">{% csrf_token %}
 			<div class="well row">

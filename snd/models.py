@@ -136,13 +136,13 @@ class Deportista(models.Model):
     email = models.EmailField()
     telefono = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
-    foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
-    video = models.URLField(max_length=1024, verbose_name='url', null=True)
         #Entidad
     entidad = models.ForeignKey(Entidad)
         #Disciplina
     disciplinas = models.ManyToManyField(DisciplinaDepostiva)
     activo = models.BooleanField(default=True)
+    video = models.URLField(max_length=1024, verbose_name='url', null=True)
+    foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):
