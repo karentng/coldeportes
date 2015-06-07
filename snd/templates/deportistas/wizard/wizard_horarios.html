@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+    Registro Escenario
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+    <li class="active">Editar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Escenarios Deportivos
+{% endblock %}
+
+{% block titulo_panel %}
+    Registro de Escenarios Deportivos
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'escenarios/wizard/_wizard.html' %}
+        <div class="row">
+            <fieldset class="col-md-7" >
+                <form action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>{{titulo}}</h3>
+                        {% bootstrap_form form layout="horizontal" %}
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                    </div>
+                </div>
+                </form>
+            </fieldset> 
+            <div class="col-md-5">
+                <h4>Horarios Actuales:</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th align="center">Hora Inicio</th>
+                            <th align="center">Hora Fin</th>
+                            <th align="center">Descripción</th>
+                            <th align="center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for horario in horarios %}
+                        <tr>
+                            <td align="center">{{horario.hora_inicio}}</td>
+                            <td align="center">{{horario.hora_fin}}</td>
+                            <td align="center">{{horario.descripcion}}</td>
+                            <td align="center">
+                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Eliminar Horario:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar este horario?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                <a href="{% url 'eliminar_horario' escenario_id horario.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>            
+            </div>
+        </div>
+        <br/>
+        {% if wizard_stage > 1 %}
+        <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+        {% endif %}     
+        <a href="{% url 'wizard_historicos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
+    
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            FormWizard.init();
+        });
+    </script>
+{% endblock %}

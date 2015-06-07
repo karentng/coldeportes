@@ -131,28 +131,40 @@ class Deportista(models.Model):
     fecha_nacimiento = models.DateField()
     #nacionalidad = models.CharField(max_length=100)
     ciudad_nacimiento = models.ForeignKey(Ciudad)
-    departamento_nacimiento = models.ForeignKey(Departamento)
     barrio = models.CharField(max_length=100)
     comuna = models.CharField(max_length=100)
     email = models.EmailField()
     telefono = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
-    video = models.CharField(max_length=1024, verbose_name='url', null=True)
-        #Composicion corporal
-    peso = models.FloatField()
-    estatura = models.IntegerField()
-    RH = models.CharField(max_length=100)
-    talla_camisa = models.CharField(max_length=100)
-    talla_pantaloneta = models.CharField(max_length=100)
-    talla_zapato = models.CharField(max_length=100)
-    porcentaje_grasa = models.CharField(max_length=100)
-    porcentaje_musculo = models.CharField(max_length=100)
+    video = models.URLField(max_length=1024, verbose_name='url', null=True)
         #Entidad
     entidad = models.ForeignKey(Entidad)
         #Disciplina
     disciplinas = models.ManyToManyField(DisciplinaDepostiva)
     activo = models.BooleanField(default=True)
+
+#Composicion corporal
+class ComposicionCorporal(models.Model):
+    tipos_rh =(
+        ('A+','A+'),
+        ('A-','A-'),
+        ('B+','B+'),
+        ('B-','B-'),
+        ('AB+','AB+'),
+        ('AB-','AB-'),
+        ('O+','O+'),
+        ('O-','O-'),
+    )
+    deportista = models.ForeignKey(Deportista)
+    peso = models.FloatField()
+    estatura = models.IntegerField()
+    RH = models.CharField(max_length=4,choices=tipos_rh)
+    talla_camisa = models.CharField(max_length=100)
+    talla_pantaloneta = models.CharField(max_length=100)
+    talla_zapato = models.CharField(max_length=100)
+    porcentaje_grasa = models.CharField(max_length=100)
+    porcentaje_musculo = models.CharField(max_length=100)
 
 #Informacion medica del deportista
 #Seguro medico del deportista
@@ -193,7 +205,8 @@ class Representante(models.Model):
     cedula_nit = models.CharField(max_length=100)
     telefono = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
-    relación = models.CharField(choices=tipo_relacion,max_length=10,verbose_name='Representante del Deportista')
+    relacion = models.CharField(choices=tipo_relacion,max_length=10,verbose_name='Representante del Deportista')
+    deportista = models.ForeignKey(Deportista)
 
 #Hitorial deportivo
 class HistorialDeportivo(models.Model):
@@ -208,6 +221,7 @@ class HistorialDeportivo(models.Model):
     descripcion = models.TextField()
     institucion_equipo = models.CharField(max_length=100,blank=True,null=True)
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=30,verbose_name='Tipo Historial')
+    deportista = models.ForeignKey(Deportista)
 
 #Informacion academica
 class InformacionAcademica(models.Model):
@@ -233,3 +247,4 @@ class InformacionAcademica(models.Model):
     estado = models.CharField(choices=tipo_estado,max_length=20)
     fecha_finalizacion = models.DateField(blank=True,null=True)
     fecha_desercion = models.DateField(blank=True,null=True)
+    deportista = models.ForeignKey(Deportista)
