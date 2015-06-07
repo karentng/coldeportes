@@ -25,7 +25,7 @@ def inicio(request):
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')
         else:
-            return redirect('nuevo_escenario')
+            return redirect('listar_escenarios')
 
     return redirect('login')
 
