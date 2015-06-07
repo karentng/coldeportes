@@ -129,7 +129,7 @@ class Deportista(models.Model):
     sexo = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Sexo del Deportista')
     identificacion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
-    nacionalidad = models.CharField(max_length=100)
+    #nacionalidad = models.CharField(max_length=100)
     ciudad_nacimiento = models.ForeignKey(Ciudad)
     departamento_nacimiento = models.ForeignKey(Departamento)
     barrio = models.CharField(max_length=100)
@@ -137,6 +137,8 @@ class Deportista(models.Model):
     email = models.EmailField()
     telefono = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
+    foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    video = models.CharField(max_length=1024, verbose_name='url', null=True)
         #Composicion corporal
     peso = models.FloatField()
     estatura = models.IntegerField()
