@@ -25,6 +25,12 @@ class Ciudad(models.Model):
 	def __str__(self):
 		return ("%s (%s)")%(self.nombre, self.departamento.nombre)
 
+class Nacionalidad(models.Model):
+	nombre = models.CharField(max_length=255,verbose_name='pais')
+
+	def __str__(self):
+		return self.nombre
+
 class Dias(models.Model):
 	nombre = models.CharField(max_length=10)
 

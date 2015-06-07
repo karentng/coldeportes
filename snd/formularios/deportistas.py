@@ -14,6 +14,7 @@ class DeportistaForm(ModelForm):
         self.fields['ciudad_nacimiento'] = adicionarClase(self.fields['ciudad_nacimiento'], 'one')
         self.fields['sexo'] = adicionarClase(self.fields['sexo'], 'one')
         self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
+        self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
 
     class Meta:
         model = Deportista
@@ -30,39 +31,6 @@ class ComposicionCorporalForm(ModelForm):
 
     class Meta:
         model = ComposicionCorporal
-        exclude = ('deportista',)
-
-class SeguroMedicoForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(SeguroMedicoForm, self).__init__(*args, **kwargs)
-        self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
-
-    class Meta:
-        model = SeguroMedico
-        exclude = ('deportista',)
-
-class AlergiaForm(ModelForm):
-    class Meta:
-        model = Alergia
-        exclude = ('deportista',)
-
-class LesionForm(ModelForm):
-    class Meta:
-        model = Lesion
-        exclude = ('deportista',)
-
-class EnfermedadesForm(ModelForm):
-    class Meta:
-        model = Enfermedades
-        exclude = ('deportista',)
-
-class RepresentanteForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(RepresentanteForm, self).__init__(*args, **kwargs)
-        self.fields['relacion'] = adicionarClase(self.fields['relacion'], 'one')
-
-    class Meta:
-        model = Representante
         exclude = ('deportista',)
 
 class HistorialDeportivoForm(ModelForm):

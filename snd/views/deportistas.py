@@ -54,7 +54,41 @@ def wizard_deportista_nuevo(request):
 
 @login_required
 def wizard_deportista(request,id_depor):
-    pass
+    """
+    Junio 7 / 2015
+    Autor: Daniel Correa
+
+    Editar un Deportista: Primer paso, información de identifiación del deportista
+
+    Se obtiene el id del deportista, se busca y se almacenan los cambios
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except Exception:
+        deportista = None
+
+    deportista_form = DeportistaForm( instance=deportista)
+
+    if request.method == 'POST':
+
+        deportista_form = DeportistaForm(request.POST, instance=deportista)
+
+        if deportista_form.is_valid():
+            deportista_form.save()
+            return redirect('wizard_corporal', id_depor)
+
+
+    return render(request, 'deportistas/wizard/wizard_deportista.html', {
+        'titulo': 'Identificación del Deportista',
+        'wizard_stage': 1,
+        'form': deportista_form,
+    })
 
 @login_required
 def wizard_corporal(request,id_depor):

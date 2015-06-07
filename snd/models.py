@@ -129,8 +129,8 @@ class Deportista(models.Model):
     sexo = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Sexo del Deportista')
     identificacion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
-    #nacionalidad = models.CharField(max_length=100)
-    ciudad_nacimiento = models.ForeignKey(Ciudad)
+    nacionalidad = models.ManyToManyField(Nacionalidad)
+    ciudad_nacimiento = models.ForeignKey(Ciudad,blank=True)
     barrio = models.CharField(max_length=100)
     comuna = models.CharField(max_length=100)
     email = models.EmailField()
@@ -166,47 +166,6 @@ class ComposicionCorporal(models.Model):
     porcentaje_grasa = models.CharField(max_length=100)
     porcentaje_musculo = models.CharField(max_length=100)
 
-#Informacion medica del deportista
-#Seguro medico del deportista
-class SeguroMedico(models.Model):
-    tipo_seguros=(
-        ('SISBEN','SISBEN'),
-        ('EPS','EPS'),
-        ('Medicina Prepagada','Medicina Prepagada'),
-    )
-    nombre = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=10, choices=tipo_seguros)
-    deportista = models.ForeignKey(Deportista)
-
-class Alergia(models.Model):
-    causa = models.CharField(max_length=100)
-    descripcion = models.TextField()
-    deportista = models.ForeignKey(Deportista)
-
-class Lesion(models.Model):
-    lugar = models.CharField(max_length=100)
-    descripcion = models.TextField()
-    deportista = models.ForeignKey(Deportista)
-
-    #Como por ejemplo asma, hipertension
-class Enfermedades(models.Model):
-    nombre = models.CharField(max_length=100)
-    descipcion = models.TextField()
-    deportista = models.ForeignKey(Deportista)
-
-#Representante o manager del deportista
-class Representante(models.Model):
-    tipo_relacion = (
-        ('fam','Familiar'),
-        ('patr','Patrocinador'),
-        ('contr','Contratado'),
-    )
-    nombre = models.CharField(max_length=100)
-    cedula_nit = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=100)
-    direccion = models.CharField(max_length=100)
-    relacion = models.CharField(choices=tipo_relacion,max_length=10,verbose_name='Representante del Deportista')
-    deportista = models.ForeignKey(Deportista)
 
 #Hitorial deportivo
 class HistorialDeportivo(models.Model):
