@@ -202,4 +202,47 @@ def eliminar_historia_deportiva(request,id_depor,id_historia):
 
 @login_required
 def wizard_historia_academica(request,id_depor):
+    """
+    8 Junio / 2015
+    Autor: Daniel Correa
+
+    Paso 4: Información academica, se obtiene un historial academico, se almacena y asigna al deportista.
+    Si no hay historial se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    try:
+        hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
+    except Exception:
+        hist_depor = None
+
+    hist_depor_form = HistorialDeportivoForm()
+
+    if request.method == 'POST':
+        hist_depor_form = HistorialDeportivoForm(request.POST)
+
+        if hist_depor_form.is_valid():
+            hist_depor_nuevo = hist_depor_form.save(commit=False)
+            hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
+            hist_depor_nuevo.save()
+            hist_depor_form.save()
+            return redirect('wizard_historia_deportiva', id_depor)
+
+
+    return render(request, 'deportistas/wizard/wizard_historia_deportiva.html', {
+        'titulo': 'Historia Deportiva del Deportista',
+        'wizard_stage': 3,
+        'form': hist_depor_form,
+        'historicos': hist_depor,
+        'id_depor': id_depor
+    })
+
+#Eliminacion Historia Academica
+@login_required
+def eliminar_historia_academica(request,id_depor,id_historia):
     pass
+#Fin eliminacion historia academica

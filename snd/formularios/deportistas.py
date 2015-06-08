@@ -51,6 +51,7 @@ class InformacionAcademicaForm(ModelForm):
         super(InformacionAcademicaForm, self).__init__(*args, **kwargs)
         self.fields['nivel'] = adicionarClase(self.fields['nivel'], 'one')
         self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
+        self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
 
     class Meta:
         model = HistorialDeportivo

@@ -196,12 +196,10 @@ class InformacionAcademica(models.Model):
         ('Incompleto','Incompleto'),
         ('Actual','Actual'),
     )
-    pais = models.CharField(max_length=100)
-    departamento = models.CharField(max_length=100) #si es diferente de colombia
-    ciudad = models.CharField(max_length=100) #si es diferente de colombia
+    pais = models.ForeignKey(Nacionalidad)
     institucion = models.CharField(max_length=100)
     nivel = models.CharField(choices=tipo_academica,max_length=20)
-    grado_semestre = models.IntegerField()
+    grado_semestre = models.IntegerField(verbose_name='Grado o Semestre', null=True, blank=True)
     profesion =  models.CharField(max_length=100,blank=True,null=True)
     estado = models.CharField(choices=tipo_estado,max_length=20)
     fecha_finalizacion = models.DateField(blank=True,null=True)
