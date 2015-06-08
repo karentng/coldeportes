@@ -26,6 +26,7 @@ class Ciudad(models.Model):
 		return ("%s (%s)")%(self.nombre, self.departamento.nombre)
 
 class Nacionalidad(models.Model):
+	iso = models.CharField(max_length=5,verbose_name='Abreviacion')
 	nombre = models.CharField(max_length=255,verbose_name='pais')
 
 	def __str__(self):
