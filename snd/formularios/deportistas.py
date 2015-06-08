@@ -54,7 +54,7 @@ class InformacionAcademicaForm(ModelForm):
         self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
 
     class Meta:
-        model = HistorialDeportivo
+        model = InformacionAcademica
         exclude = ('deportista',)
         widgets = {
             'fecha_finalizacion': DateWidget(attrs={'id':"id_fecha_finalizacion"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),

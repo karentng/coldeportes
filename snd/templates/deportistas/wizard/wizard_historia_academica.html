@@ -12,7 +12,7 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'listar_escenarios' %}">Deportistas</a>
+    <li><a href="{% url 'deporista_listar' %}">Deportistas</a>
     <li class="active">Editar</li>
 {% endblock %}
 
@@ -89,7 +89,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'wizard_historia_academica' id_depor %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'deporista_listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
     
 
 {% endblock %}

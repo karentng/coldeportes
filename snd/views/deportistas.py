@@ -216,33 +216,55 @@ def wizard_historia_academica(request,id_depor):
     """
 
     try:
-        hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
+        inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
     except Exception:
-        hist_depor = None
+        inf_academ = None
 
-    hist_depor_form = HistorialDeportivoForm()
+    inf_academ_form = InformacionAcademicaForm()
 
     if request.method == 'POST':
-        hist_depor_form = HistorialDeportivoForm(request.POST)
+        inf_academ_form = InformacionAcademicaForm(request.POST)
 
-        if hist_depor_form.is_valid():
-            hist_depor_nuevo = hist_depor_form.save(commit=False)
-            hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
-            hist_depor_nuevo.save()
-            hist_depor_form.save()
-            return redirect('wizard_historia_deportiva', id_depor)
+        if inf_academ_form.is_valid():
+            inf_academ_nuevo = inf_academ_form.save(commit=False)
+            inf_academ_nuevo.deportista = Deportista.objects.get(id=id_depor)
+            inf_academ_nuevo.save()
+            inf_academ_form.save()
+            return redirect('wizard_historia_academica', id_depor)
 
 
-    return render(request, 'deportistas/wizard/wizard_historia_deportiva.html', {
-        'titulo': 'Historia Deportiva del Deportista',
-        'wizard_stage': 3,
-        'form': hist_depor_form,
-        'historicos': hist_depor,
+    return render(request, 'deportistas/wizard/wizard_historia_academica.html', {
+        'titulo': 'Historia Academica del Deportista',
+        'wizard_stage': 4,
+        'form': inf_academ_form,
+        'historicos': inf_academ,
         'id_depor': id_depor
     })
 
 #Eliminacion Historia Academica
 @login_required
 def eliminar_historia_academica(request,id_depor,id_historia):
-    pass
+    """
+    Junio 8 / 2015
+    Autor: Daniel Correa
+
+    Eliminar Historial Academico
+
+    Se obtiene el id del hisotorial y el de deportista, se busca y se elimina de la base de datos
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    :param id_historia: Llave primaria del historial deportivo
+    :type id_historia: String
+    """
+    try:
+        inf_academ = InformacionAcademica.objects.get(id=id_historia, deportista=id_depor)
+        inf_academ.delete()
+        return redirect('wizard_historia_academica', id_depor)
+
+    except Exception:
+        return redirect('wizard_historia_academica', id_depor)
+
 #Fin eliminacion historia academica
