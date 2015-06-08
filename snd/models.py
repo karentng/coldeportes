@@ -141,7 +141,7 @@ class Deportista(models.Model):
         #Disciplina
     disciplinas = models.ManyToManyField(DisciplinaDepostiva)
     activo = models.BooleanField(default=True)
-    video = models.URLField(max_length=1024, verbose_name='url', null=True)
+    video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
 #Composicion corporal
