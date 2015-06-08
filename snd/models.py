@@ -170,16 +170,16 @@ class ComposicionCorporal(models.Model):
 #Hitorial deportivo
 class HistorialDeportivo(models.Model):
     tipo_his_deportivo=(
-        ('comp','Competencia'),
-        ('premio','Premio'),
-        ('logo_de','Logro Deportivo'),
-        ('part','Participacion en Equipo'),
+        ('Competencia','Competencia'),
+        ('Premio','Premio'),
+        ('Logro Deportivo','Logro Deportivo'),
+        ('Participacion en Equipo','Participacion en Equipo'),
     )
     fecha = models.DateField()
     lugar = models.CharField(max_length=100)
     descripcion = models.TextField()
     institucion_equipo = models.CharField(max_length=100,blank=True,null=True)
-    tipo = models.CharField(choices=tipo_his_deportivo,max_length=30,verbose_name='Tipo Historial')
+    tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Tipo Historial')
     deportista = models.ForeignKey(Deportista)
 
 #Informacion academica
