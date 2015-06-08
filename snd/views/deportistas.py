@@ -10,12 +10,11 @@ from snd.models import *
 from entidades.models import *
 from django.contrib import messages
 
-def crear_deportista(request):
-    return redirect('/escenarios/listar')
-
+@login_required
 def desactivar_deportista(request):
     return redirect('/escenarios/listar')
 
+@login_required
 def listar_deportista(request):
     return redirect('/escenarios/listar')
 
@@ -92,4 +91,50 @@ def wizard_deportista(request,id_depor):
 
 @login_required
 def wizard_corporal(request,id_depor):
+    """
+
+    Junio 7 / 2015
+    Autor: Daniel Correa
+
+    Paso para datos de composicion corporal del deportista
+
+    Se obtiene la información de la peticion, se intenta buscar un objeto ComposicionCorporal y en caso de haber modificaciones se guardan.
+    Si la informacion para la ComposicionCorporal del deportista es nueva se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    try:
+        corporal = ComposicionCorporal.objects.get(deportista=id_depor)
+    except Exception:
+        corporal = None
+
+    corporal_form = ComposicionCorporalForm(instance=corporal)
+
+    if request.method == 'POST':
+        corporal_form = ComposicionCorporalForm(request.POST, instance=corporal)
+
+        if corporal_form.is_valid():
+            corporal = corporal_form.save(commit=False)
+            corporal.deportista = Deportista.objects.get(id=id_depor)
+            corporal.save()
+            corporal_form.save()
+            return redirect('wizard_historia_deportiva', id_depor)
+
+
+    return render(request, 'deportistas/wizard/wizard_corporal.html', {
+        'titulo': 'Composición Corporal del Deportista',
+        'wizard_stage': 2,
+        'form': corporal_form,
+    })
+
+@login_required
+def wizard_historia_deportiva(request,id_depor):
+    pass
+
+@login_required
+def wizard_historia_academica(request,id_depor):
     pass

@@ -133,7 +133,7 @@ class Deportista(models.Model):
     ciudad_nacimiento = models.ForeignKey(Ciudad,blank=True)
     barrio = models.CharField(max_length=100)
     comuna = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(null=True,blank=True)
     telefono = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
         #Entidad
@@ -158,7 +158,7 @@ class ComposicionCorporal(models.Model):
     )
     deportista = models.ForeignKey(Deportista)
     peso = models.FloatField()
-    estatura = models.IntegerField()
+    estatura = models.FloatField()
     RH = models.CharField(max_length=4,choices=tipos_rh)
     talla_camisa = models.CharField(max_length=100)
     talla_pantaloneta = models.CharField(max_length=100)

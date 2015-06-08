@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+	Registro Deportistas
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	{{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'deporista_listar' %}">Deportistas</a>
+	<li class="active">Editar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Deportistas
+{% endblock %}
+
+{% block titulo_panel %}
+	Registro de Deportistas
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'deportistas/wizard/_wizard.html' %}
+	<fieldset>
+		<form action="" method="post">{% csrf_token %}
+			<div class="well row">
+				<div class="col-xs-12">
+					<h3>{{titulo}}</h3>
+					{% bootstrap_form form layout="horizontal" %}
+				</div>
+			</div>
+			<hr>
+			{% if wizard_stage > 1 %}
+			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+			{% endif %}		
+			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+		</form>
+	</fieldset>
+	
+
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	
+{% endblock %}
+
+{% block script %}
+	<script>
+		$(document).ready(function() {
+			App.init();
+			FormWizard.init();
+		});
+	</script>
+{% endblock %}
