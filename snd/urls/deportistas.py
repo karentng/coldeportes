@@ -12,9 +12,9 @@ urlpatterns = patterns('snd.views.deportistas',
     url(r'^wizard/historia-academica/(\d+)$', 'wizard_historia_academica', name='wizard_historia_academica'),
 
     #Urls de eliminacion de muchos en el wizard
+    url(r'^eliminar/historia-deportiva/(\d+)/(\d+)$', 'eliminar_historia_deportiva', name='eliminar_historia_deportiva'),
 
     #Urls de listado y desactivacion
-    #url(r'^crear$', 'crear_deportista', name='deporista_nuevo'),
     url(r'^listar$', 'listar_deportista', name='deporista_listar'),
     url(r'^desactivar', 'desactivar_deportista', name='deporista_desactivar'),
 )

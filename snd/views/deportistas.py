@@ -96,7 +96,7 @@ def wizard_corporal(request,id_depor):
     Junio 7 / 2015
     Autor: Daniel Correa
 
-    Paso para datos de composicion corporal del deportista
+    Paso 2: Datos de composicion corporal del deportista
 
     Se obtiene la información de la peticion, se intenta buscar un objeto ComposicionCorporal y en caso de haber modificaciones se guardan.
     Si la informacion para la ComposicionCorporal del deportista es nueva se inicializa en nulo
@@ -124,7 +124,6 @@ def wizard_corporal(request,id_depor):
             corporal_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
 
-
     return render(request, 'deportistas/wizard/wizard_corporal.html', {
         'titulo': 'Composición Corporal del Deportista',
         'wizard_stage': 2,
@@ -133,7 +132,73 @@ def wizard_corporal(request,id_depor):
 
 @login_required
 def wizard_historia_deportiva(request,id_depor):
-    pass
+    """
+    Junio 8 / 2015
+    Autor: Daniel Correa
+
+    Paso 3: Ingreso de historias deportivas, en caso se haber se muestran, en caso de ser una nueva se adiciona a la base de datos
+    Si no hay Historial Deportivo se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    try:
+        hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
+    except Exception:
+        hist_depor = None
+
+    hist_depor_form = HistorialDeportivoForm()
+
+    if request.method == 'POST':
+        hist_depor_form = HistorialDeportivoForm(request.POST)
+
+        if hist_depor_form.is_valid():
+            hist_depor_nuevo = hist_depor_form.save(commit=False)
+            hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
+            hist_depor_nuevo.save()
+            hist_depor_form.save()
+            return redirect('wizard_historia_deportiva', id_depor)
+
+
+    return render(request, 'deportistas/wizard/wizard_historia_deportiva.html', {
+        'titulo': 'Historia Deportiva del Deportista',
+        'wizard_stage': 3,
+        'form': hist_depor_form,
+        'historicos': hist_depor,
+        'id_depor': id_depor
+    })
+
+#Eliminacion Historia Deportiva
+@login_required
+def eliminar_historia_deportiva(request,id_depor,id_historia):
+    """
+    Junio 8 / 2015
+    Autor: Daniel Correa
+
+    Eliminar Historial Deportivo
+
+    Se obtiene el historial requerido y se elimina de la base de datos
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    :param id_historia: Llave primaria del historial deportivo
+    :type id_historia: String
+    """
+
+    try:
+        hist_depor = HistorialDeportivo.objects.get(id=id_historia, deportista=id_depor)
+        hist_depor.delete()
+        return redirect('wizard_historia_deportiva', id_depor)
+
+    except Exception:
+        return redirect('wizard_historia_deportiva', id_depor)
+#Fin eliminacion historia deportiva
+
 
 @login_required
 def wizard_historia_academica(request,id_depor):
