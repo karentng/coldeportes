@@ -28,7 +28,7 @@ def wizard_deportista_nuevo(request):
 
     if request.method == 'POST':
 
-        deportista_form = DeportistaForm(request.POST)
+        deportista_form = DeportistaForm(request.POST, request.FILES)
 
         if deportista_form.is_valid():
             deportista = deportista_form.save(commit=False)
@@ -69,7 +69,7 @@ def wizard_deportista(request,id_depor):
 
     if request.method == 'POST':
 
-        deportista_form = DeportistaForm(request.POST, instance=deportista)
+        deportista_form = DeportistaForm(request.POST, request.FILES, instance=deportista)
 
         if deportista_form.is_valid():
             deportista_form.save()
@@ -280,6 +280,7 @@ def desactivar_deportista(request,id_depor):
     estado_actual = deportista.activo
     deportista.activo = not(estado_actual)
     deportista.save()
+    messages.warning(request, "Deportista desactivado/activado correctamente.")
     return redirect('deportista_listar')
 
 @login_required
@@ -296,7 +297,23 @@ def listar_deportista(request):
     :type request: WSGIRequest
     """
 
-    deportistas = Deportista.objects.filter(entidad=request.tenant)
+    deportistas = Deportista.objects.all()
     return render(request, 'deportistas/deportistas_lista.html', {
         'deportistas':deportistas,
     })
+
+@login_required
+def finalizar_deportista(request):
+    """
+    Junio 10 / 2015
+    Autor: Daniel Correa
+
+    enviar mensaje de finalizada la creación de deportista
+
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
+    messages.success(request, "Deportista registrado correctamente.")
+
+    return redirect('deportista_listar')

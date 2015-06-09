@@ -5,8 +5,10 @@ from snd.views.escenarios import *
 
 urlpatterns = patterns('snd.views.escenarios',
     #urls tabla interactiva
-    url(r'^listar$', 'listarEscenarios', name='listar_escenarios'), 
-    url(r'^desactivar/(\d+)$', 'desactivarEscenario', name='desactivar_escenario'),
+    url(r'^listar$', 'listar_escenarios', name='listar_escenarios'), 
+    url(r'^desactivar/(\d+)$', 'desactivar_escenario', name='desactivar_escenario'),
+    url(r'^finalizar', 'finalizar_escenario', name='finalizar_escenario'),
+
 
     #urls wizard
     url(r'^wizard/identificacion$', 'wizard_nuevo_identificacion', name='wizard_nuevo_identificacion'), 

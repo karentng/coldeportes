@@ -53,7 +53,7 @@ class HorarioDisponibilidad(models.Model):
 
 class Foto(models.Model):
     escenario = models.ForeignKey(Escenario)
-    foto = models.ImageField(upload_to='fotos', null=True, blank=True)
+    foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
 
 class Video(models.Model):
     escenario = models.ForeignKey(Escenario)

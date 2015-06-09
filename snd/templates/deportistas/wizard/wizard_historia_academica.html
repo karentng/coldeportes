@@ -43,7 +43,7 @@
             </fieldset> 
             <div class="col-md-5">
                 <h4>Historial Académico Actual:</h4>
-                <table class="table">
+                <table class="table table-responsive">
                     <thead>
                         <tr>
                             <th align="center">Nivel</th>
@@ -89,7 +89,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'deportista_listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'finalizar_deportista' %}" class="btn btn-primary pull-right">Finalizar →</a>
     
 
 {% endblock %}

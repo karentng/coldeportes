@@ -60,7 +60,6 @@ class DatoHistoricoForm(ModelForm):
         }
 
 class FotoEscenarioForm(ModelForm):
-    foto = forms.ImageField(required=False)
     class Meta:
         model = Foto
         exclude = ('escenario',)

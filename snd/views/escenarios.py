@@ -12,7 +12,7 @@ from django.contrib import messages
 
 
 @login_required
-def listarEscenarios(request):
+def listar_escenarios(request):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
@@ -24,13 +24,29 @@ def listarEscenarios(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-    escenarios = Escenario.objects.filter(entidad=request.tenant)
+    escenarios = Escenario.objects.all()
     return render(request, 'escenarios/escenarios_lista.html', {
         'escenarios': escenarios,
     })
 
 @login_required
-def desactivarEscenario(request, escenario_id):
+def finalizar_escenario(request):
+    """
+    Junio 10 / 2015
+    Autor: Karent Narvaez Grisales
+    
+    enviar mensaje de finalizada la creación de escenario
+
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
+    messages.success(request, "Escenario registrado correctamente.")
+    
+    return redirect('listar_escenarios')
+
+@login_required
+def desactivar_escenario(request, escenario_id):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
@@ -48,6 +64,7 @@ def desactivarEscenario(request, escenario_id):
     estado_actual = escenario.activo
     escenario.activo = not(estado_actual)
     escenario.save()
+    messages.warning(request, "Escenario desactivado correctamente.")
     return redirect('listar_escenarios')
 
 @login_required
@@ -276,7 +293,7 @@ def wizard_fotos(request, escenario_id):
     fotos_form = FotoEscenarioForm()
 
     if request.method == 'POST':
-        fotos_form = FotoEscenarioForm(request.POST)
+        fotos_form = FotoEscenarioForm(request.POST, request.FILES)
 
         if fotos_form.is_valid():
             foto_nueva = fotos_form.save(commit=False)
