@@ -34,6 +34,7 @@ def wizard_deportista_nuevo(request):
             deportista = deportista_form.save(commit=False)
             deportista.entidad =  request.tenant
             deportista.save()
+            deportista_form.save()
             return redirect('wizard_corporal', deportista.id)
 
 
