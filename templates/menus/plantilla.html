@@ -58,3 +58,19 @@
 	    </li>
 	</ul>
 </li>
+
+<li class="has-sub {% if '/entrenadores/' in request.path %} active {% endif %}">
+	<a href="javascript:;">
+	    <b class="caret pull-right"></b>
+	    <i class="fa fa-futbol-o"></i>
+	    <span>Entrenadores</span>
+    </a>
+	<ul class="sub-menu">
+	    <li {% if "/entrenadores/crear" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'entrenador_nuevo' %}">Registro</a>
+	    </li>
+	    <li {% if "/entrenadores/listar" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'entrenador_listar' %}">Listar Entrenadores</a>
+	    </li>
+	</ul>
+</li>
