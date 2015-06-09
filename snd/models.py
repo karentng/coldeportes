@@ -114,6 +114,7 @@ class CAOtros(models.Model):
     duchas = models.BooleanField()
     comentarios = models.TextField(blank=True, null=True)
 
+<<<<<<< HEAD
 #Modelos de deportistas
 #Informacion del deportista, informacion deportiva
 
@@ -204,3 +205,12 @@ class InformacionAcademica(models.Model):
     grado_semestre = models.IntegerField(verbose_name='Grado o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
+=======
+# Gestion de dirigentes
+
+class Dirigente(models.Model):
+    nombre = models.CharField(max_length=100)
+    cargo = models.CharField(max_length=100)
+    superior = models.ForeignKey('Dirigente'); # las comillas fuerza un lazy reference, necesario por la referencia cíclica
+    foto = models.ImageField(upload_to='fotos', null=True, blank=True)
+>>>>>>> origin/cristian

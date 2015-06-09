@@ -16,4 +16,5 @@ urlpatterns = patterns('',
     url(r'^escenarios/', include('snd.urls.escenarios')), #urls de escenarios
     url(r'^caf/', include('snd.urls.caf')), #urls de escenarios
     url(r'^deportistas/',include('snd.urls.deportistas')),#urls de deportistas
+    url(r'^gestion_dirigentes/', include('snd.urls.dirigentes')), #urls de dirigentes
 )
