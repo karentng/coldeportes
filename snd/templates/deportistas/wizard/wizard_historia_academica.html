@@ -127,7 +127,6 @@
 
         document.getElementById("id_estado").onchange=function(){
             var estado = document.getElementById("id_estado").value + "";
-            //if(estado == "Finalizado" || estado=="Incompleto"){
             if(estado=="Actual"){
                 //se quita fecha
                 fecha_finalizacion.disabled=true;
@@ -135,11 +134,17 @@
                 //se pone grado
                 grado_semestre.disabled=false;
             }else{
-                //se pone fecha
-                fecha_finalizacion.disabled=false;
-                //se quita grado
-                grado_semestre.disabled=true;
-                grado_semestre.value='';
+                if(estado == "Finalizado" || estado=="Incompleto") {
+                    //se pone fecha
+                    fecha_finalizacion.disabled = false;
+                    //se quita grado
+                    grado_semestre.disabled = true;
+                    grado_semestre.value = '';
+                }else{
+                    //Algun otro caso
+                    grado_semestre.disabled=true;
+                    fecha_finalizacion.disabled=true;
+                }
             }
 
         };
