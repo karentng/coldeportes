@@ -11,14 +11,6 @@ from entidades.models import *
 from django.contrib import messages
 
 @login_required
-def desactivar_deportista(request):
-    return redirect('/escenarios/listar')
-
-@login_required
-def listar_deportista(request):
-    return redirect('/escenarios/listar')
-
-@login_required
 def wizard_deportista_nuevo(request):
     """
     Junio 7 / 2015
@@ -266,5 +258,44 @@ def eliminar_historia_academica(request,id_depor,id_historia):
 
     except Exception:
         return redirect('wizard_historia_academica', id_depor)
-
 #Fin eliminacion historia academica
+
+@login_required
+def desactivar_deportista(request,id_depor):
+    """
+    Junio 8 / 2015
+    Autor: Daniel Correa
+
+    Desactivar deportista
+
+    Se obtiene el estado actual y se invierte
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+    deportista = Deportista.objects.get(id=id_depor)
+    estado_actual = deportista.activo
+    deportista.activo = not(estado_actual)
+    deportista.save()
+    return redirect('deportista_listar')
+
+@login_required
+def listar_deportista(request):
+    """
+    Junio 8 / 2015
+    Autor: Daniel Correa
+
+    Listar deportistas de un tenant
+
+    Se obtienen todos los deportistas del respectivo tenant y se listan
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    """
+
+    deportistas = Deportista.objects.filter(entidad=request.tenant)
+    return render(request, 'deportistas/deportistas_lista.html', {
+        'deportistas':deportistas,
+    })

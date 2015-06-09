@@ -51,7 +51,7 @@
     </a>
 	<ul class="sub-menu">
 	    <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'deporista_nuevo' %}">Registro</a>
+	    	<a href="{% url 'deportista_nuevo' %}">Registro</a>
 	    </li>
 	    <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
 	    	<a href="{% url 'deporista_listar' %}">Listar Deportistas</a>
