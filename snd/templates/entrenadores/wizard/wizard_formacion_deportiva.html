@@ -8,6 +8,8 @@
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
+    <link href="{{ STATIC_URL }}plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
 {% endblock %}
 
 {% block miga_pan %}
@@ -43,7 +45,7 @@
             </fieldset>
             <div class="col-md-4">
                 <h4>Formación deportiva actual:</h4>
-                <table class="table">
+                <table id="tabla-formacion-deportiva" class="table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th align="center">Disciplina</th>
@@ -60,12 +62,12 @@
                         <tr>
                             <td align="center">{{historico.disciplina_deportiva}}</td>
                             <td align="center">{{historico.denominacion_diploma}}</td>
-                            <td align="center">{{historico.nivel}}</td>
-                            <td align="center">{{historico.institucion_formacion}}</td>
-                            <td align="center">{{historico.pais_formacion}}</td>
-                            <td align="center">{{historico.fecha_comienzo}}</td>
-                            <td align="center">{{historico.fecha_fin}}</td>
-                            <td align="center">
+                            <td class="min-tablet" align="center">{{historico.nivel}}</td>
+                            <td class="min-desktop" align="center">{{historico.institucion_formacion}}</td>
+                            <td class="min-desktop" align="center">{{historico.pais_formacion}}</td>
+                            <td class="min-desktop" align="center">{{historico.fecha_comienzo}}</td>
+                            <td class="min-desktop" align="center">{{historico.fecha_fin}}</td>
+                            <td class="min-desktop" align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
                                     <div class="modal-dialog">
@@ -103,7 +105,17 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
-
+    <!--DataTables [ OPTIONAL ]-->
+    <script src="{{ STATIC_URL }}plugins/datatables/media/js/jquery.dataTables.js"></script>
+    <script src="{{ STATIC_URL }}plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script>
+        $(window).on('load', function() {
+            $('#tabla-formacion-deportiva').dataTable({
+                "responsive": true
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block script %}
