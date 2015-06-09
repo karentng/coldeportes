@@ -21,7 +21,7 @@
     </a>
 	<ul class="sub-menu">
 	    <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'nuevo_escenario' %}">Registro</a>
+	    	<a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
 	    </li>	    
 	    <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
 	    	<a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
@@ -41,5 +41,20 @@
 	    <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
 	    	<a href="{% url 'listar_cafs' %}">Listar CAFs</a>
 	    </li> 
+	</ul>
+</li>
+<li class="has-sub {% if '/deportistas/' in request.path %} active {% endif %}">
+	<a href="javascript:;">
+	    <b class="caret pull-right"></b>
+	    <i class="fa fa-futbol-o"></i>
+	    <span>Deportistas</span>
+    </a>
+	<ul class="sub-menu">
+	    <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'deportista_nuevo' %}">Registro</a>
+	    </li>
+	    <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
+	    </li>
 	</ul>
 </li>
