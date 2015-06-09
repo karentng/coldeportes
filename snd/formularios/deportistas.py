@@ -56,7 +56,3 @@ class InformacionAcademicaForm(ModelForm):
     class Meta:
         model = InformacionAcademica
         exclude = ('deportista',)
-        widgets = {
-            'fecha_finalizacion': DateWidget(attrs={'id':"id_fecha_finalizacion"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),
-
-        }

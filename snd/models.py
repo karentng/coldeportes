@@ -202,5 +202,5 @@ class InformacionAcademica(models.Model):
     estado = models.CharField(choices=tipo_estado,max_length=20)
     profesion =  models.CharField(max_length=100,blank=True,null=True)
     grado_semestre = models.IntegerField(verbose_name='Grado o Semestre', null=True, blank=True)
-    fecha_finalizacion = models.DateField(blank=True,null=True)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
