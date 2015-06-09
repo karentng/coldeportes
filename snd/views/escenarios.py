@@ -293,7 +293,7 @@ def wizard_fotos(request, escenario_id):
     fotos_form = FotoEscenarioForm()
 
     if request.method == 'POST':
-        fotos_form = FotoEscenarioForm(request.POST)
+        fotos_form = FotoEscenarioForm(request.POST, request.FILES)
 
         if fotos_form.is_valid():
             foto_nueva = fotos_form.save(commit=False)
