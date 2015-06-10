@@ -7,6 +7,7 @@ from django.core.files.storage import FileSystemStorage
 from snd.models import *
 from entidades.models import *
 from snd.formularios.caf import *
+from django.contrib import messages
 
 def guardar_identificacion(wizard, caf_form):
     """
@@ -78,8 +79,10 @@ class CentroAcondicionamientoWizard(NamedUrlSessionWizardView):
         guardar_formulario(self, centro, form_dict['Costos'])
         guardar_formulario(self, centro, form_dict['Servicios'])
         guardar_formulario(self, centro, form_dict['Otros'])
-        
-        return render(self.request,'cafs/finalizado_registro.html')
+
+        messages.success(self.request, "Centro de acondicionamiento registrado correctamente.")
+
+        return redirect('listar_cafs')
 
 @login_required
 def listarCAFS(request):
@@ -94,7 +97,7 @@ def listarCAFS(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-
+    
     cafs = CentroAcondicionamiento.objects.all()
     return render(request, 'cafs/cafs_lista.html', {
         'cafs': cafs,
@@ -181,6 +184,7 @@ def modificar(request, idCAF, idForm=0):
         centro = CentroAcondicionamiento.objects.get(id=idCAF)
         idForm = int(idForm)
         if idForm < 0 or idForm > 3:
+            messages.success(request, "Centro de acondicionamiento modificado correctamente.")
             return redirect('listar_cafs')
     except Exception:
         return redirect('listar_cafs')

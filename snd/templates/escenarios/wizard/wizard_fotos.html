@@ -31,7 +31,7 @@
     {% include 'escenarios/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" method="post">{% csrf_token %}
+                <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
@@ -54,7 +54,7 @@
                     {% if fotos %}
                     {% for foto in fotos %}
                         <tr>
-                            <td align="center"><img src="{{MEDIA_URL}}{{foto.foto}}" width="20%" height="20%" /></td>
+                            <td align="center"><img src="{{MEDIA_URL}}{{foto.foto}}" width="100" /></td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
