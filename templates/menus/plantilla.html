@@ -21,7 +21,7 @@
     </a>
 	<ul class="sub-menu">
 	    <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'nuevo_escenario' %}">Registro</a>
+	    	<a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
 	    </li>	    
 	    <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
 	    	<a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
