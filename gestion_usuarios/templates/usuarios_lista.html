@@ -47,6 +47,7 @@
                 <th>Apellidos</th>
                 <th>Email</th>
                 <th>Grupo</th>
+                <th>Estado</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -61,6 +62,17 @@
                         {{i.groups.all.0}}
                     </td>
                     <td>
+                        {% if i.is_active == True %}
+                            Activo
+                        {% else %}
+                            Inactivo
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'usuarios_desactivar' i.id %}" title="Activar/Desactivar">
+                            <i class="fa fa-refresh"></i> Activar/Desactivar
+                        </a>
+                        <br/>
                         <a href="{% url 'usuarios_modificar' i.id %}" title="Modificar" target="__new">
                             <i class="fa fa-gear"></i> Modificar
                         </a>

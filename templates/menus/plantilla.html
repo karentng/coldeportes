@@ -13,6 +13,21 @@
 	    </li>
 	</ul>
 </li>
+<li class="has-sub {% if "/gestion_dirigentes/" in request.path %} active {% endif %}">
+	<a href="javascript:;">
+	    <b class="caret pull-right"></b>
+	    <i class="fa fa-users"></i>
+	    <span>Gestión de Dirigentes</span>
+    </a>
+	<ul class="sub-menu">
+	    <li {% if "/gestion_dirigentes/crear" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'dirigentes_crear' %}">Crear Dirigente</a>
+	    </li>
+	    <li {% if "/gestion_dirigentes/listar" in request.path %} class="active" {% endif %}>
+	    	<a href="{% url 'dirigentes_listar' %}">Listar Dirigentes</a>
+	    </li>
+	</ul>
+</li>
 <li class="has-sub {% if '/escenarios/' in request.path %} active {% endif %}">
 	<a href="javascript:;">
 	    <b class="caret pull-right"></b>

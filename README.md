@@ -1,5 +1,5 @@
 Instalación
-===========
+========================================
 
 Instalar los requerimientos
 
@@ -9,10 +9,7 @@ Se recomienda leer la documentación acerca de django-tenant-schemas en:
 
 	https://django-tenant-schemas.readthedocs.org/en/latest/index.html
 
-Realizar los pasos para el fix de django-tenant-schemas en Django 1.8:
-
-	Parte 1: https://github.com/tomturner/django-tenant-schemas/commit/fe437f7c81af8484614b3dcdaeb7ad5c43249f54
-	Parte 2: https://github.com/tomturner/django-tenant-schemas/commit/d56c2538162abe1603b13290d2c5f40825c22711
+Clonar el repositorio https://github.com/tomturner/django-tenant-schemas, copiamos la carpeta "tenant_schemas" en el directorio de paquetes de Python.
 
 Sincronice la base de datos:
 	
@@ -30,3 +27,26 @@ Dentro de la base de datos, ir al esquema "public", en él registrar dentro de l
 Ejecutar el servidor:
 
 	python manage.py runserver
+
+
+Manejo del Repositorio
+==========================
+
+Para subir al repositorio cada usuario esta autorizado de la siguiente manera:
+
+Rama "milton-daniel": Miltón y Daniel pueden leer y escribir
+
+Rama "cristian": Cristian puede leer y escribir
+
+Rama "Andres-Karent": Andrés y Karent pueden leer y escribir
+
+Rama "master": Mauricio Gaona puede leer y escribir
+
+Nota: Cada persona autorizada solo puede escribir en la rama correspondiente.
+
+Proceso para hacer PUSH
+==========================
+	git checkout nombre_rama (Para cambiar a la rama de trabajo)
+	git add archivo1 archivo2 ... (Si son todos los archivos: git add .)
+	git commit -m "Mensaje del commit"
+	git push

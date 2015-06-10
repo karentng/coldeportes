@@ -39,7 +39,8 @@ class HorariosDisponibleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(HorariosDisponibleForm, self).__init__(*args, **kwargs)
         self.fields['dias'] = adicionarClase(self.fields['dias'], 'many')
-
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+        
     class Meta:
 
         model = HorarioDisponibilidad
@@ -51,6 +52,11 @@ class HorariosDisponibleForm(ModelForm):
 
 class DatoHistoricoForm(ModelForm):
     descripcion = forms.CharField(widget=forms.Textarea, required=True)
+    
+    def __init__(self, *args, **kwargs):
+        super(DatoHistoricoForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
     class Meta:
         model = DatoHistorico
         exclude = ('escenario',)

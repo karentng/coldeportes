@@ -71,7 +71,11 @@
                             <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>
                             <li><a href="javascript:;">Calendar</a></li>
                             {% endcomment %}
-                            <li><a href="javascript:;">Cambiar Contraseña</a></li>
+                            <li>
+                                <a href="{% url 'cambiar_pass' %}">
+                                Cambiar Contraseña
+                                </a>
+                            </li>
                             <li class="divider"></li>
                             <li><a href="{% url 'logout' %}">Salir</a></li>
                         </ul>
@@ -152,7 +156,7 @@
                     </h4>
                 </div>
                 {% for msg in messages %}
-                    <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} >              
+                    <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">              
                         <span class="close" data-dismiss="alert">×</span>
                         <i class="fa fa-check fa-2x pull-left"></i>
                         <p>{{msg}}</p>
