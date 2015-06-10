@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from gestion_usuarios.forms import *
 from django.contrib.auth.models import *
+from django.contrib import messages
 
 def inicio(request):
     digitador = None
@@ -39,18 +40,11 @@ def crear(request):
             obj = form.save()
             grupo = form.cleaned_data['grupo']
             grupo.user_set.add(obj)
-            request.session['usuario_creado'] = True
+            messages.success(request, "Usuario registrado correctamente.")
             return redirect('usuarios_lista')
-    else:
-        try:
-            creado = request.session.get('usuario_creado')
-            del request.session['usuario_creado']
-        except Exception:
-            creado = None
 
     return render(request, 'usuarios_crear.html', {
         'form': form,
-        'creado': creado,
     })
 
 @login_required
@@ -70,6 +64,7 @@ def modificar(request, idUsuario):
             grupo.user_set.remove(usuario)
             grupo = form.cleaned_data['grupo']
             grupo.user_set.add(obj)
+            messages.success(request, "Usuario modificado correctamente.")
             return redirect('usuarios_lista')
 
     return render(request, 'usuarios_modificar.html', {
@@ -93,6 +88,7 @@ def password(request, idUsuario):
             if pass1 == pass2:
                 usuario.set_password(pass1)
                 usuario.save()
+                messages.success(request, "Password cambiado correctamente.")
                 return redirect('usuarios_lista')
             
 
@@ -107,3 +103,18 @@ def lista(request):
     return render(request, 'usuarios_lista.html', {
         'usuarios': usuarios,
     })
+
+@login_required
+def desactivar(request, idUsuario):
+    try:
+        usuario = User.objects.get(id=idUsuario)
+    except Exception:
+        return redirect('usuarios_lista')
+
+    usuario.is_active = not(usuario.is_active)
+    usuario.save()
+    if usuario.is_active == True:
+        messages.success(request, "Usuario activado.")
+    else:
+        messages.success(request, "Usuario desactivado.")
+    return redirect('usuarios_lista')

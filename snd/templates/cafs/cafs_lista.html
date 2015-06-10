@@ -39,59 +39,61 @@
 {% endblock %}
 
 {% block contenido_panel %}
-    <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Dirección</th>
-                <th>Teléfono</th>
-                <th>Ciudad (Departamento)</th>
-                <th>Estado</th>
-                <th>Opciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for caf in cafs %}
+    <div class="table-responsive">
+        <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+            <thead>
                 <tr>
-                    <td>{{caf.nombre}}</td>
-                    <td>{{caf.direccion}}</td>
-                    <td>{{caf.telefono}}</td>
-                    <td>{{caf.ciudad}}</td>
-                    <td>
-                        {% if caf.activo %}
-                            Activo
-                        {% else %}
-                            Desactivado
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'modificar_caf' caf.id %}" title="Modificar">
-                            <i class="fa fa-gear"></i> Modificar
-                        </a>
-                        <br/>
-                        <a href="#modal-desactivate" data-toggle="modal">
-                            <i class="fa fa-ban"></i> Activar / Desactivar
-                        </a>
-                        <div class="modal fade" id="modal-desactivate">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title">Desactivar CAF:</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        ¿Está seguro que desea desactivar este Centro de Acondicionamiento Físico?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                        <a href="{% url 'desactivar_caf' caf.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Ciudad (Departamento)</th>
+                    <th>Estado</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for caf in cafs %}
+                    <tr>
+                        <td>{{caf.nombre}}</td>
+                        <td>{{caf.direccion}}</td>
+                        <td>{{caf.telefono}}</td>
+                        <td>{{caf.ciudad}}</td>
+                        <td>
+                            {% if caf.activo %}
+                                Activo
+                            {% else %}
+                                Desactivado
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'modificar_caf' caf.id %}" title="Modificar">
+                                <i class="fa fa-gear"></i> Modificar
+                            </a>
+                            <br/>
+                            <a href="#modal-desactivate" data-toggle="modal">
+                                <i class="fa fa-ban"></i> Activar / Desactivar
+                            </a>
+                            <div class="modal fade" id="modal-desactivate">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title">Desactivar CAF:</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea desactivar este Centro de Acondicionamiento Físico?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                            <a href="{% url 'desactivar_caf' caf.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

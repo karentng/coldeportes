@@ -216,7 +216,7 @@ def wizard_horarios(request, escenario_id):
 
 
     return render(request, 'escenarios/wizard/wizard_horarios.html', {
-        'titulo': 'Horarios de Disponibildad del Escenario',
+        'titulo': 'Horarios de Disponibilidad del Escenario',
         'wizard_stage': 3,
         'form': horarios_form,
         'horarios': horarios,

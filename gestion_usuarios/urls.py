@@ -5,4 +5,5 @@ urlpatterns = patterns('gestion_usuarios.views',
 	url(r'^modificar/(\d+)$', 'modificar', name="usuarios_modificar"),
 	url(r'^password/(\d+)$', 'password', name="usuarios_password"),
 	url(r'^lista$', 'lista', name="usuarios_lista"),
+	url(r'^desactivar/(\d+)$', 'desactivar', name="usuarios_desactivar"),
 )

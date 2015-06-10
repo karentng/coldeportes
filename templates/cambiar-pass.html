@@ -1,0 +1,17 @@
+{% extends 'base_login.html' %}
+{% load bootstrap3 %}
+
+{% block contenido %}
+    <p class="pad-btm"><b>Cambio de Contraseña</b></p>
+    <form method="post" action="{% url 'cambiar_pass' %}" class="margin-bottom-0"> {% csrf_token %}
+        <input type="hidden" name="next" value="{{next}}"/>
+
+        {% bootstrap_form form  %}
+
+        <div class="login-buttons">
+            <button type="submit" class="btn btn-success btn-block btn-lg">
+                <i class="fa fa-unlock-alt"></i> Cambiar Contraseña
+            </button>
+        </div>
+    </form>
+{% endblock %}
