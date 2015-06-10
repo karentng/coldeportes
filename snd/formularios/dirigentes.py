@@ -13,4 +13,5 @@ class CrearDirigenteForm(ModelForm):
 
     class Meta:
         model = Dirigente
-        fields = '__all__'
+        #fields = '__all__'
+        exclude = ('entidad',)

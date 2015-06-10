@@ -21,11 +21,15 @@
 {% endblock %}
 
 {% block contenido_panel %}
-	<form action="/dirigentes_crear" method="POST">{% csrf_token %}
-		<table>
-			{{ form.as_table }}
-		</table>
-		<iunput type="submit" value="Registrar"/>
-	</form>
-	}
+	<fieldset>
+		<form action="" method="POST">{% csrf_token %}
+		<div class="well row">
+			<div class="col-xs-12">
+				<h3>{{titulo}}</h3>
+				{% bootstrap_form form layout="horizontal" %}
+			</div>
+			<input class="btn btn-primary pull-right" type="submit" value="Registrar"/>
+		</div>
+		</form>
+	</fieldset>
 {% endblock %}
