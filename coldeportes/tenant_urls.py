@@ -15,4 +15,6 @@ urlpatterns = patterns('',
     url(r'^gestion-usuarios/', include('gestion_usuarios.urls')),
     url(r'^escenarios/', include('snd.urls.escenarios')), #urls de escenarios
     url(r'^caf/', include('snd.urls.caf')), #urls de escenarios
+    url(r'^deportistas/',include('snd.urls.deportistas')),#urls de deportistas
+    url(r'^entrenadores/',include('snd.urls.entrenadores')),#urls de entrenadores
 )

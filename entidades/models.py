@@ -25,6 +25,13 @@ class Ciudad(models.Model):
 	def __str__(self):
 		return ("%s (%s)")%(self.nombre, self.departamento.nombre)
 
+class Nacionalidad(models.Model):
+	iso = models.CharField(max_length=5,verbose_name='Abreviacion')
+	nombre = models.CharField(max_length=255,verbose_name='pais')
+
+	def __str__(self):
+		return self.nombre
+
 class Dias(models.Model):
 	nombre = models.CharField(max_length=10)
 
@@ -38,6 +45,19 @@ class TipoEscenario(models.Model):
 		return self.descripcion
 
 class TipoDisciplinaEscenario(models.Model):
+	descripcion = models.CharField(max_length=50, verbose_name='descripción')
+
+	def __str__(self):
+		return self.descripcion
+
+#General para deportistas y escenarios
+class DisciplinaDepostiva(models.Model):
+	descripcion = models.CharField(max_length=50, verbose_name='descripción')
+
+	def __str__(self):
+		return self.descripcion
+
+class TipoUsoEscenario(models.Model):
 	descripcion = models.CharField(max_length=50, verbose_name='descripción')
 
 	def __str__(self):
