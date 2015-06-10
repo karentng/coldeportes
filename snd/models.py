@@ -3,6 +3,8 @@ from django.db import models
 from entidades.models import Nacionalidad, Ciudad, Entidad, DisciplinaDepostiva, TipoEscenario,\
                                          TipoDisciplinaEscenario, CaracteristicaEscenario, TipoUsoEscenario, Dias
 
+#=======================================================================================================
+#Escenarios
 
 class Escenario(models.Model):
     estratos = (('1', 'Uno'),
@@ -72,6 +74,7 @@ class Contacto(models.Model):
     telefono = models.BigIntegerField()
     email = models.EmailField()
 
+#=======================================================================================================
 # Centro de Acondicionamiento Físico
 
 class CentroAcondicionamiento(models.Model):
@@ -113,6 +116,21 @@ class CAOtros(models.Model):
     duchas = models.BooleanField()
     comentarios = models.TextField(blank=True, null=True)
 
+
+#=======================================================================================================
+# Gestion de dirigentes
+
+class Dirigente(models.Model):
+    nombre = models.CharField(max_length=100)
+    cargo = models.CharField(max_length=100)
+    superior = models.ForeignKey('Dirigente', null=True, blank=True); # las comillas fuerza un lazy reference, necesario por la referencia cíclica
+    foto = models.ImageField(upload_to='fotos', null=True, blank=True)
+    entidad = models.ForeignKey(Entidad, null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#=======================================================================================================
 #Modelos de deportistas
 #Informacion del deportista, informacion deportiva
 
