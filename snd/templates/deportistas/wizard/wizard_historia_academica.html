@@ -2,32 +2,33 @@
 {% load bootstrap3 %}
 
 {% block head %}
-    Registro Escenario
+    Registro Deportistas
 {% endblock %}
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+    <li><a href="{% url 'deportista_listar' %}">Deportistas</a>
     <li class="active">Editar</li>
 {% endblock %}
 
 {% block titulo_contenido %}
-    Escenarios Deportivos
+    Deportistas
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Escenarios Deportivos
+    Registro de Deportistas
 {% endblock %}
 
 {% block panel_botones %}
 {% endblock %}
 
 {% block contenido_panel %}
-    {% include 'escenarios/wizard/_wizard.html' %}
+    {% include 'deportistas/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
                 <form action="" method="post">{% csrf_token %}
@@ -41,19 +42,23 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Videos Actuales:</h4>
-                <table class="table">
+                <h4>Historial Académico Actual:</h4>
+                <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Video</th>
-                            <th align="center"></th>
+                            <th align="center">Nivel</th>
+                            <th align="center">Institucion</th>
+                            <th align="center">País</th>
+                            <th align="center">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% if videos %}
-                    {% for video in videos %}
+                    {% for historico in historicos %}
                         <tr>
-                            <td align="center">{{video.video}}</td>
+                            <td align="center">{{historico.nivel}}</td>
+                            <td align="center">{{historico.institucion}}</td>
+                            <td align="center">{{historico.pais}}</td>
+                            <td align="center">{{historico.estado}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
@@ -61,14 +66,14 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Eliminar video:</h4>
+                                                <h4 class="modal-title">Eliminar Historial Académico:</h4>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Está seguro que desea eliminar esta video?
+                                                ¿Está seguro que desea eliminar este historial académico?
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_video' escenario_id video.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_historia_academica' id_depor historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -76,9 +81,6 @@
                             </td>
                         </tr>
                     {% endfor %}
-                    {% else %}
-                        <tr><td>No hay videos actualmente</td></tr>
-                    {% endif %}
                     </tbody>
                 </table>            
             </div>
@@ -87,7 +89,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'editar_contactos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'finalizar_deportista' %}" class="btn btn-primary pull-right">Finalizar →</a>
     
 
 {% endblock %}
@@ -100,9 +102,51 @@
 
 {% block script %}
     <script>
+        var grado_semestre = document.getElementById("id_grado_semestre");
+        var profesion = document.getElementById("id_profesion");
+        var fecha_finalizacion = document.getElementById("id_fecha_finalizacion");
+
         $(document).ready(function() {
             App.init();
             FormWizard.init();
+            grado_semestre.disabled=true;
+            profesion.disabled=true;
+            fecha_finalizacion.disabled=true;
         });
+
+        document.getElementById("id_nivel").onchange=function(){
+            var nivel = document.getElementById("id_nivel").value + "";
+            if(nivel == "Pregrado" || nivel == "Postgrado"){
+                profesion.disabled=false;
+            }else{
+                profesion.disabled=true;
+                profesion.value='';
+            }
+
+        };
+
+        document.getElementById("id_estado").onchange=function(){
+            var estado = document.getElementById("id_estado").value + "";
+            if(estado=="Actual"){
+                //se quita fecha
+                fecha_finalizacion.disabled=true;
+                fecha_finalizacion.value='';
+                //se pone grado
+                grado_semestre.disabled=false;
+            }else{
+                if(estado == "Finalizado" || estado=="Incompleto") {
+                    //se pone fecha
+                    fecha_finalizacion.disabled = false;
+                    //se quita grado
+                    grado_semestre.disabled = true;
+                    grado_semestre.value = '';
+                }else{
+                    //Algun otro caso
+                    grado_semestre.disabled=true;
+                    fecha_finalizacion.disabled=true;
+                }
+            }
+
+        };
     </script>
 {% endblock %}

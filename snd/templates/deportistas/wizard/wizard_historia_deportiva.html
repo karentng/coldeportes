@@ -2,32 +2,33 @@
 {% load bootstrap3 %}
 
 {% block head %}
-    Registro Escenario
+    Registro Deportistas
 {% endblock %}
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+    <li><a href="{% url 'deportista_listar' %}">Deportistas</a>
     <li class="active">Editar</li>
 {% endblock %}
 
 {% block titulo_contenido %}
-    Escenarios Deportivos
+    Deportistas
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Escenarios Deportivos
+    Registro de Deportistas
 {% endblock %}
 
 {% block panel_botones %}
 {% endblock %}
 
 {% block contenido_panel %}
-    {% include 'escenarios/wizard/_wizard.html' %}
+    {% include 'deportistas/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
                 <form action="" method="post">{% csrf_token %}
@@ -41,19 +42,23 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Fotos Actuales:</h4>
-                <table class="table">
+                <h4>Historial Deportivo Actual:</h4>
+                <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Foto</th>
-                            <th align="center"></th>
+                            <th align="center">Fecha</th>
+                            <th align="center">Tipo</th>
+                            <th align="center">Lugar</th>
+                            <th align="center">Descripción</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% if fotos %}
-                    {% for foto in fotos %}
+                    {% for historico in historicos %}
                         <tr>
-                            <td align="center">{{foto.foto}}</td>
+                            <td align="center">{{historico.fecha}}</td>
+                            <td align="center">{{historico.tipo}}</td>
+                            <td align="center">{{historico.lugar}}</td>
+                            <td align="center">{{historico.descripcion}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
@@ -61,14 +66,14 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Eliminar Foto:</h4>
+                                                <h4 class="modal-title">Eliminar Historial Deportivo:</h4>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Está seguro que desea eliminar esta foto?
+                                                ¿Está seguro que desea eliminar este historial deportivo?
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_foto' escenario_id foto.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_historia_deportiva' id_depor historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -76,9 +81,6 @@
                             </td>
                         </tr>
                     {% endfor %}
-                    {% else %}
-                        <tr><td>No hay fotos actualmente</td></tr>
-                    {% endif %}
                     </tbody>
                 </table>            
             </div>
@@ -87,7 +89,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'editar_videos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'wizard_historia_academica' id_depor %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 
 {% endblock %}

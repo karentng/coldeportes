@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block head %}
+	Nuevo Dirigente
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="">Gestion Dirigentes</a>
+	<li class="active">Registro</li>
+{% endblock %}
+
+{% block titulo_panel %}
+	Registro Nuevo Dirigente
+{% endblock %}
+
+{% block titulo_contenido %}
+	Gestion de Dirigentes:
+{% endblock %}
+
+{% block contenido_panel %}
+	<form action="/dirigentes_crear" method="POST">{% csrf_token %}
+		<table>
+			{{ form.as_table }}
+		</table>
+		<iunput type="submit" value="Registrar"/>
+	</form>
+	}
+{% endblock %}
