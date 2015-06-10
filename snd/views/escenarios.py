@@ -376,7 +376,7 @@ def wizard_contactos(request, escenario_id):
     try:
         contactos = Contacto.objects.filter(escenario=escenario_id)
     except Exception:
-        contactos = Nones
+        contactos = None
 
     contactos_form = ContactoForm()
 

@@ -1,3 +1,4 @@
 *.pyc
 Thumbs.db
 coldeportes/settings.py
+snd/pendiente/
