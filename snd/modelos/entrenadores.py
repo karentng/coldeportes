@@ -11,20 +11,19 @@ class Entrenador(models.Model):
         ('Inactivo',False),
     )
 
-    tipo_sexo = (
-        ('Masculino','Masculino'),
-        ('Femenino','Femenino'),
+    tipo_genero = (
+        ('Hombre','Hombre'),
+        ('Mujer','Mujer'),
     )
 
     TIPO_IDENTIDAD = (
         ('CED', 'Cédula de ciudadanía'),
         ('CEDEX', 'Cédula de extranjero'),
-        ('NIT', 'NIT'),
     )
     estado = models.BooleanField(choices=estado, default=True)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
-    sexo = models.CharField(choices=tipo_sexo,max_length=11)
+    genero = models.CharField(choices=tipo_genero,max_length=11)
     foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
     tipo_id = models.CharField(max_length=5, choices=TIPO_IDENTIDAD, default='CED')
     nro_id = models.BigIntegerField()

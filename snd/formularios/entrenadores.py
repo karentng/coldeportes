@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import Entrenador, FormacionDeportiva, ExperienciaLaboral
 from datetimewidget.widgets import DateWidget
+from django import forms
 
 def adicionarClase(campo, clase):
     campo.widget.attrs.update({'class': clase})
@@ -18,7 +19,9 @@ class EntrenadorForm(ModelForm):
         model = Entrenador
         exclude = ('estado','entidad_vinculacion',)
         widgets = {
-            'fecha_nacimiento': DateWidget(attrs={'id':"id_fecha_nacimiento"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3)
+            'fecha_nacimiento': DateWidget(attrs={'id':"id_fecha_nacimiento"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),
+            'tipo_id': forms.Select(),
+            'genero': forms.Select()
         }
 
 class FormacionDeportivaForm(ModelForm):

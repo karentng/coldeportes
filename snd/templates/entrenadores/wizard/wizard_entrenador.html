@@ -30,7 +30,8 @@
 {% block contenido_panel %}
 	{% include 'entrenadores/wizard/_wizard.html' %}
 	<fieldset>
-		<form action="" method="post">{% csrf_token %}
+		<form action="" enctype="multipart/form-data" method="post">
+			{% csrf_token %}
 			<div class="well row">
 				<div class="col-xs-12">
 					<h3>{{titulo}}</h3>
