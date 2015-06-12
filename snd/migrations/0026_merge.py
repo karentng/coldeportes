@@ -8,6 +8,9 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('snd', '0002_dirigente'),
+
+        ('snd', '0006_auto_20150609_2057'),
+        ('snd', '0006_auto_20150610_1050'),
         ('snd', '0025_auto_20150609_1247'),
     ]
 
