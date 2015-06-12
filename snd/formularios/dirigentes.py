@@ -6,12 +6,17 @@ def adicionarClase(campo, clase):
     campo.widget.attrs.update({'class': clase})
     return campo
 
-class CrearDirigenteForm(ModelForm):
+class DirigenteForm(ModelForm):
     def __init__(self, *args, **kwargs):
-        super(CrearDirigenteForm, self).__init__(*args, **kwargs)
+        super(DirigenteForm, self).__init__(*args, **kwargs)
         self.fields['superior'] = adicionarClase(self.fields['superior'], 'one')
 
     class Meta:
         model = Dirigente
         #fields = '__all__'
-        exclude = ('entidad',)
+        exclude = ('entidad','activo',)
+
+class DirigenteFuncionesForm(ModelForm):
+    class Meta:
+        model = Funcion
+        exclude = ('dirigente',)
