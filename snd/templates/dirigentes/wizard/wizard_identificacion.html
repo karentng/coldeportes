@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock %}
+
+{% block titulo %}
+    Dirigentes - SND COLDEPORTES
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'dirigentes_listar' %}">Dirigentes</a>
+    <li class="active">Registro</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Dirigentes
+{% endblock %}
+
+{% block titulo_panel %}
+    Registro Nuevo Dirigente
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'dirigentes/wizard/_wizard.html' %}
+    
+    <form action="" method="post">{% csrf_token %}
+        <fieldset>
+            <div class="well row">
+                <div class="" >
+                    <legend class="pull-left width-full">
+                        {% include 'dirigentes/wizard/_mensajes.html' %}
+                    </legend>
+                    
+                    {{ wizard.management_form }}
+                    
+                    {% for i in form %}
+                        <div class="col-md-6">
+                            {% bootstrap_field i layout="vertical" %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <ul class="pager bwizard-buttons">
+                <input class="btn btn-primary pull-right" type="submit" value="{% trans "Siguiente →" %}"/>
+            </ul>
+        </fieldset>
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            FormWizard.init();
+        });
+    </script>
+{% endblock %}

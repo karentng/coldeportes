@@ -1,91 +1,91 @@
 <li class="has-sub {% if "/gestion-usuarios/" in request.path %} active {% endif %}">
-	<a href="javascript:;">
-	    <b class="caret pull-right"></b>
-	    <i class="fa fa-users"></i>
-	    <span>Gestión de Usuarios</span>
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-users"></i>
+        <span>Gestión de Usuarios</span>
     </a>
-	<ul class="sub-menu">
-	    <li {% if "/gestion-usuarios/crear" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'usuarios_crear' %}">Crear Usuario</a>
-	    </li>
-	    <li {% if "/gestion-usuarios/lista" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'usuarios_lista' %}">Listar Usuarios</a>
-	    </li>
-	</ul>
+    <ul class="sub-menu">
+        <li {% if "/gestion-usuarios/crear" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'usuarios_crear' %}">Crear Usuario</a>
+        </li>
+        <li {% if "/gestion-usuarios/lista" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'usuarios_lista' %}">Listar Usuarios</a>
+        </li>
+    </ul>
 </li>
-<li class="has-sub {% if "/gestion_dirigentes/" in request.path %} active {% endif %}">
-	<a href="javascript:;">
-	    <b class="caret pull-right"></b>
-	    <i class="fa fa-users"></i>
-	    <span>Gestión de Dirigentes</span>
+<li class="has-sub {% if '/dirigentes/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span>Dirigentes</span>
     </a>
-	<ul class="sub-menu">
-	    <li {% if "/gestion_dirigentes/crear" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'dirigentes_crear' %}">Crear Dirigente</a>
-	    </li>
-	    <li {% if "/gestion_dirigentes/listar" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'dirigentes_listar' %}">Listar Dirigentes</a>
-	    </li>
-	</ul>
+    <ul class="sub-menu">
+        <li {% if "/dirigentes/nuevo/wizard/identificacion" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'dirigentes_wizard_identificacion_nuevo' %}">Registro</a>
+        </li>       
+        <li {% if "/dirigentes/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'dirigentes_listar' %}">Listar Dirigentes</a>
+        </li>       
+    </ul>
 </li>
 <li class="has-sub {% if '/escenarios/' in request.path %} active {% endif %}">
-	<a href="javascript:;">
-	    <b class="caret pull-right"></b>
-	    <i class="fa fa-futbol-o"></i>
-	    <span>Escenarios</span>
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span>Escenarios</span>
     </a>
-	<ul class="sub-menu">
-	    <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
-	    </li>	    
-	    <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
-	    </li>	    
-	</ul>
+    <ul class="sub-menu">
+        <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
+        </li>       
+        <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
+        </li>       
+    </ul>
 </li>
 <li class="has-sub {% if '/caf/' in request.path %} active {% endif %}">
-	<a href="javascript:;">
-	    <b class="caret pull-right"></b>
-	    <i class="fa fa-futbol-o"></i>
-	    <span>Centro de Acondicionamiento</span>
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span>Centro de Acondicionamiento</span>
     </a>
-	<ul class="sub-menu">
-	    <li {% if "/caf/nuevo" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'nuevo_caf' %}">Registro</a>
-	    </li>
-	    <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'listar_cafs' %}">Listar CAFs</a>
-	    </li> 
-	</ul>
+    <ul class="sub-menu">
+        <li {% if "/caf/nuevo" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'nuevo_caf' %}">Registro</a>
+        </li>
+        <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_cafs' %}">Listar CAFs</a>
+        </li> 
+    </ul>
 </li>
 <li class="has-sub {% if '/deportistas/' in request.path %} active {% endif %}">
-	<a href="javascript:;">
-	    <b class="caret pull-right"></b>
-	    <i class="fa fa-futbol-o"></i>
-	    <span>Deportistas</span>
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span>Deportistas</span>
     </a>
-	<ul class="sub-menu">
-	    <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'deportista_nuevo' %}">Registro</a>
-	    </li>
-	    <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
-	    </li>
-	</ul>
+    <ul class="sub-menu">
+        <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'deportista_nuevo' %}">Registro</a>
+        </li>
+        <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
+        </li>
+    </ul>
 </li>
 <li class="has-sub {% if '/entrenadores/' in request.path %} active {% endif %}">
-	<a href="javascript:;">
-	    <b class="caret pull-right"></b>
-	    <i class="fa fa-futbol-o"></i>
-	    <span>Entrenadores</span>
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span>Entrenadores</span>
     </a>
-	<ul class="sub-menu">
-	    <li {% if "/entrenadores/crear" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'entrenador_nuevo' %}">Registro</a>
-	    </li>
-	    <li {% if "/entrenadores/listar" in request.path %} class="active" {% endif %}>
-	    	<a href="{% url 'entrenador_listar' %}">Listar Entrenadores</a>
-	    </li>
-	</ul>
+    <ul class="sub-menu">
+        <li {% if "/entrenadores/crear" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'entrenador_nuevo' %}">Registro</a>
+        </li>
+        <li {% if "/entrenadores/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'entrenador_listar' %}">Listar Entrenadores</a>
+        </li>
+    </ul>
 </li>
 
