@@ -32,12 +32,16 @@
 {% block contenido_panel %}
     {% include 'entrenadores/wizard/_wizard.html' %}
         <div class="row">
-            <fieldset class="col-md-8" >
+            <fieldset class="col-md-5" >
                 <form action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
-                        {% bootstrap_form form layout="horizontal" %}
+                        {% for i in form %}
+						<div class="col-md-12">
+							{% bootstrap_field i layout="vertical" %}
+						</div>
+					    {% endfor %}
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>
                     </div>
                 </div>
@@ -45,16 +49,16 @@
             </fieldset>
             <div class="col-md-4">
                 <h4>Formación deportiva actual:</h4>
-                <table id="tabla-formacion-deportiva" class="table" cellspacing="0" width="100%">
+                <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th align="center">Disciplina</th>
                             <th align="center">Denominación diploma</th>
-                            <th align="center">Nivel</th>
-                            <th align="center">Institución formación</th>
-                            <th align="center">País</th>
-                            <th align="center">Fecha comienzo</th>
-                            <th align="center">Fecha fin</th>
+                            <th class="min-tablet" align="center">Nivel</th>
+                            <th class="min-desktop" align="center">Institución formación</th>
+                            <th class="min-desktop" align="center">País</th>
+                            <th class="min-desktop" align="center">Fecha comienzo</th>
+                            <th class="min-desktop" align="center">Fecha fin</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,12 +66,12 @@
                         <tr>
                             <td align="center">{{historico.disciplina_deportiva}}</td>
                             <td align="center">{{historico.denominacion_diploma}}</td>
-                            <td class="min-tablet" align="center">{{historico.nivel}}</td>
-                            <td class="min-desktop" align="center">{{historico.institucion_formacion}}</td>
-                            <td class="min-desktop" align="center">{{historico.pais_formacion}}</td>
-                            <td class="min-desktop" align="center">{{historico.fecha_comienzo}}</td>
-                            <td class="min-desktop" align="center">{{historico.fecha_fin}}</td>
-                            <td class="min-desktop" align="center">
+                            <td align="center">{{historico.nivel}}</td>
+                            <td align="center">{{historico.institucion_formacion}}</td>
+                            <td align="center">{{historico.pais_formacion}}</td>
+                            <td align="center">{{historico.fecha_comienzo}}</td>
+                            <td align="center">{{historico.fecha_fin}}</td>
+                            <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
                                     <div class="modal-dialog">
@@ -97,7 +101,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}
-        <a href="{% url 'wizard_experiencia_laboral' id_entrenador %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'wizard_experiencia_laboral' id_entrenador %}" class="btn btn-primary pull-right">Siguiente →</a>
 
 
 {% endblock %}

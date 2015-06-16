@@ -14,7 +14,6 @@ class EntrenadorForm(ModelForm):
         super(EntrenadorForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'one')
-        self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
     class Meta:
         model = Entrenador
         exclude = ('estado','entidad_vinculacion',)
