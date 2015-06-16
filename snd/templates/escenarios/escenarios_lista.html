@@ -62,7 +62,11 @@
                             <td>{{escenario.estrato}}</td>
                             <td>{% if escenario.activo %} Activo {% else %} Desactivado {% endif %}</td>
                             <td>
-                                <a href="{% url 'wizard_identificacion' escenario.id %}" title="Modificar">
+                                <a href="{% url 'ver_escenario' escenario.id %}" data-toggle="modal">
+                                    <i class="fa fa-eye"></i> Ver Escenario
+                                </a>
+                                <br/>
+                                <a href="{% url 'wizard_identificacion' escenario.id %}" title="Editar">
                                     <i class="fa fa-gear"></i> Editar
                                 </a>
                                 <br/>

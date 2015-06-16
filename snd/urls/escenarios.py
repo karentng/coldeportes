@@ -7,6 +7,7 @@ urlpatterns = patterns('snd.views.escenarios',
     #urls tabla interactiva
     url(r'^listar$', 'listar_escenarios', name='listar_escenarios'), 
     url(r'^desactivar/(\d+)$', 'desactivar_escenario', name='desactivar_escenario'),
+    url(r'^ver/(\d+)$', 'ver_escenario', name='ver_escenario'),
     url(r'^finalizar', 'finalizar_escenario', name='finalizar_escenario'),
 
 
