@@ -8,12 +8,12 @@ class Deportista(models.Model):
     #Datos personales
         #Identificacion
     tipo_sexo = (
-        ('Masculino','Masculino'),
-        ('Femenino','Femenino'),
+        ('Hombre','Hombre'),
+        ('Mujer','Mujer'),
     )
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    sexo = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Sexo del Deportista')
+    genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista')
     identificacion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     nacionalidad = models.ManyToManyField(Nacionalidad)
