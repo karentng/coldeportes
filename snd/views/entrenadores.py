@@ -39,7 +39,21 @@ def wizard_entrenador_nuevo(request):
         'form': entrenador_form,
     })
 
+@login_required
+def finalizar_entrenador(request):
+    """
+    Junio 16 / 2015
+    Autor: Milton Lenis
 
+    enviar mensaje de finalizada la creación de entrenador
+
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
+    messages.success(request, "Entrenador registrado correctamente.")
+
+    return redirect('listar_entrenador')
 
 @login_required
 def wizard_entrenador(request,id_entrenador):
@@ -222,7 +236,7 @@ def eliminar_experiencia_laboral(request,id_entrenador,id_experiencia):
 
 
 @login_required
-def cambiar_estado_entrenador(request,id_entrenador):
+def desactivar_entrenador(request,id_entrenador):
     """
     Junio 9 / 2015
     Autor: Milton Lenis
@@ -240,6 +254,7 @@ def cambiar_estado_entrenador(request,id_entrenador):
     estado_actual = entrenador.activo
     entrenador.activo = not(estado_actual)
     entrenador.save()
+    messages.warning(request, "Entrenador desactivado correctamente.")
     return redirect('entrenador_listar')
 
 @login_required
