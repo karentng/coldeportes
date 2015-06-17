@@ -51,7 +51,7 @@ class TipoDisciplinaEscenario(models.Model):
 		return self.descripcion
 
 #General para deportistas y escenarios
-class DisciplinaDepostiva(models.Model):
+class TipoDisciplinaDeportiva(models.Model):
 	descripcion = models.CharField(max_length=50, verbose_name='descripción')
 
 	def __str__(self):
