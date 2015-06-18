@@ -240,7 +240,7 @@ INSERT INTO "entidades_nacionalidad" ("id","iso","nombre") VALUES
 (239, 'ZM', 'Zambia'),
 (240, 'ZW', 'Zimbabue');
 
-INSERT INTO "entidades_disciplinadepostiva" ("id", "descripcion") VALUES
+INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
 (1,	'Ciclismo'),
 (2,	'Voleibol'),
 (3,	'Baloncesto'),

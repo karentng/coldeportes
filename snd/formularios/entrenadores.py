@@ -13,8 +13,7 @@ class EntrenadorForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(EntrenadorForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
-        self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'one')
-        self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
+        self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
     class Meta:
         model = Entrenador
         exclude = ('estado','entidad_vinculacion',)
@@ -27,7 +26,7 @@ class EntrenadorForm(ModelForm):
 class FormacionDeportivaForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FormacionDeportivaForm, self).__init__(*args, **kwargs)
-        self.fields['disciplina_deportiva'] = adicionarClase(self.fields['disciplina_deportiva'], 'one')
+        self.fields['disciplina_deportiva'] = adicionarClase(self.fields['disciplina_deportiva'], 'many')
         self.fields['pais_formacion'] = adicionarClase(self.fields['pais_formacion'], 'one')
 
     class Meta:

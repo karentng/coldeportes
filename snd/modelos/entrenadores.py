@@ -1,7 +1,7 @@
 #encoding:utf-8
 
 from django.db import models
-from entidades.models import Ciudad, Entidad, Nacionalidad, DisciplinaDepostiva
+from entidades.models import Ciudad, Entidad, Nacionalidad, TipoDisciplinaDeportiva
 #=======================================================================================================
 #Modelos para Entrenadores
 
@@ -19,6 +19,7 @@ class Entrenador(models.Model):
     TIPO_IDENTIDAD = (
         ('CED', 'Cédula de ciudadanía'),
         ('CEDEX', 'Cédula de extranjero'),
+        ('PAS', 'Pasaporte'),
     )
     estado = models.BooleanField(choices=estado, default=True)
     nombres = models.CharField(max_length=50)
@@ -31,7 +32,7 @@ class Entrenador(models.Model):
     telefono_celular = models.CharField(max_length=50, blank=True)
     correo_electronico = models.EmailField(blank=True)
     fecha_nacimiento = models.DateField()
-    nacionalidad = models.ForeignKey(Nacionalidad)
+    nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad, blank=True)
     #en centimetros
     altura = models.IntegerField(blank=True)
@@ -40,7 +41,7 @@ class Entrenador(models.Model):
     entidad_vinculacion = models.ForeignKey(Entidad)
 
 class FormacionDeportiva(models.Model):
-    disciplina_deportiva = models.ForeignKey(DisciplinaDepostiva)
+    disciplina_deportiva = models.ManyToManyField(TipoDisciplinaDeportiva)
     denominacion_diploma = models.CharField(max_length=150)
     nivel = models.CharField(max_length=50, blank=True)
     institucion_formacion = models.CharField(max_length=100)
