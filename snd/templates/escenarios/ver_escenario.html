@@ -31,13 +31,13 @@
         <div class="tab-overflow">
             <ul class="nav nav-tabs">
                 <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
-                <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-paint-brush"></i> Caracterización</a></li>
-                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>
-                <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>
-                <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
-                <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>
-                <li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>
+                {% if escenario %}<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>{% endif %}
+                {% if caracteristicas %}<li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-paint-brush"></i> Caracterización</a></li>{% endif %}
+                {% if horarios %}<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>{% endif %}
+                {% if historicos %}<li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>{% endif %}
+                {% if fotos %}<li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>{% endif %}
+                {% if videos %}<li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>{% endif %}
+                {% if contactos %}<li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>{% endif %}
                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
             </ul>
         </div>
@@ -67,6 +67,7 @@
                 <p>{{escenario.descripcion}}</p>
             </div>
         </div>
+        {% if caracteristicas %}
         <div class="tab-pane fade" id="nav-tab2-13">
             <div class="invoice">
                 <div class="invoice-company">
@@ -93,6 +94,8 @@
                 <p>{{caracteristicas.descripcion}}</p>
             </div>
         </div>
+        {% endif %}
+        {% if horarios %}
         <div class="tab-pane fade" id="nav-tab2-14">
             <div class="invoice">
                 <div class="invoice-company">
@@ -128,6 +131,8 @@
                 </div>
             </div>
         </div>
+        {% endif %}
+        {% if historicos %}
         <div class="tab-pane fade" id="nav-tab2-15">
             <div class="invoice">
                 <div class="invoice-company">
@@ -161,6 +166,8 @@
                 </div>
             </div>
         </div>
+        {% endif %}
+        {% if fotos %}
         <div class="tab-pane fade" id="nav-tab2-16">
             <div class="invoice">
                 <div class="invoice-company">
@@ -182,6 +189,75 @@
                 </div>
             </div>
         </div>
+        {% endif %}
+        {% if videos %}
+        <div class="tab-pane fade" id="nav-tab2-17">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>                    
+                </div>
+                <h1 class="page-header">{{escenario.nombre}}</h1>
+                <!-- end page-header -->
+                <div class="table-responsive">
+                    <table class="table table-invoice">
+                        <thead>
+                            <tr>
+                                <th>VISUALIZACION</th>
+                                <th>DIRECCIÓN</th>
+                                <th>DESCRIPCION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for video in videos %}
+                            <tr>                        
+                                <td><iframe width="260" height="115" src="{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
+                                <td>{{video.url}}</td>
+                                <td>{{video.descripcion}}</td>
+                            </tr> 
+                            {% endfor %}                               
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if contactos %}
+        <div class="tab-pane fade" id="nav-tab2-18">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>                    
+                </div>
+                <h1 class="page-header">{{escenario.nombre}}</h1>
+                <!-- end page-header -->
+                <div class="table-responsive">
+                    <table class="table table-invoice">
+                        <thead>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>TELÉFONO</th>
+                                <th>EMAIL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contacto in contactos %}
+                            <tr>                        
+                                <td>{{contacto.nombre}}</td>
+                                <td>{{contacto.telefono}}</td>
+                                <td>{{contacto.email}}</td>
+                            </tr> 
+                            {% endfor %}                               
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
