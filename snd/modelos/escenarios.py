@@ -68,5 +68,5 @@ class DatoHistorico(models.Model):
 class Contacto(models.Model):
     escenario = models.ForeignKey(Escenario)
     nombre =  models.CharField(max_length=50)
-    telefono = models.BigIntegerField()
+    telefono = models.CharField(max_length=20)
     email = models.EmailField()

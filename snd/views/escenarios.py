@@ -83,7 +83,7 @@ def ver_escenario(request, escenario_id):
     :type escenario_id:    String
     """
     escenario = Escenario.objects.get(id=escenario_id)
-    caracteristicas = CaracterizacionEscenario.objects.filter(escenario=escenario)
+    caracteristicas = CaracterizacionEscenario.objects.get(escenario=escenario)
     horarios = HorarioDisponibilidad.objects.filter(escenario=escenario)
     fotos = Foto.objects.filter(escenario=escenario)
     videos =  Video.objects.filter(escenario=escenario)

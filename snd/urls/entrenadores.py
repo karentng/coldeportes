@@ -5,6 +5,7 @@ from snd.views.entrenadores import *
 
 
 urlpatterns = patterns('snd.views.entrenadores',
+
     #Urls de Wizard
     url(r'^wizard/identificacion$', 'wizard_entrenador_nuevo', name='entrenador_nuevo'),
     url(r'^wizard/identificacion/(\d+)$', 'wizard_entrenador', name='edicion_entrenador'),
@@ -17,5 +18,6 @@ urlpatterns = patterns('snd.views.entrenadores',
 
     #Urls de listado y desactivacion
     url(r'^listar$', 'listar_entrenador', name='entrenador_listar'),
-    url(r'^cambiar-estado/(\d+)$', 'cambiar_estado_entrenador', name='entrenador_cambiar_estado'),
+    url(r'^desactivar/(\d+)$', 'desactivar_entrenador', name='entrenador_desactivar'),
+    url(r'^finalizar', 'finalizar_entrenador', name='finalizar_entrenador'),
 )

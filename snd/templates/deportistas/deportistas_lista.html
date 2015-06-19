@@ -60,14 +60,14 @@
                             <td>{{deportista.nombres}} {{deportista.apellidos}}</td>
                             <td>{{deportista.ciudad_nacimiento}}</td>
                             <td>{{deportista.identificacion}}</td>
-                            <td>{% if deportista.activo %} Activo {% else %} Desactivado {% endif %}</td>
+                            <td>{% if deportista.activo %} Activo {% else %} Inactivo {% endif %}</td>
                             <td>
                                 <a href="{% url 'edicion_deportista' deportista.id %}" title="Modificar">
                                     <i class="fa fa-gear"></i> Editar
                                 </a>
                                 <br/>
                                 <a href="#modal-desactivate" data-toggle="modal">
-                                    <i class="fa fa-ban"></i> Activar / Desactivar
+                                    <i class="fa fa-ban"></i> Activar / Inactivar
                                 </a>
                                 <div class="modal fade" id="modal-desactivate">
                                     <div class="modal-dialog">

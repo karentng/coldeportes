@@ -8,12 +8,19 @@ class Deportista(models.Model):
     #Datos personales
         #Identificacion
     tipo_sexo = (
-        ('Masculino','Masculino'),
-        ('Femenino','Femenino'),
+        ('Hombre','Hombre'),
+        ('Mujer','Mujer'),
+    )
+    TIPO_IDENTIDAD = (
+        ('TI', 'Tarjeta de Identidad'),
+        ('CED', 'Cédula de ciudadanía'),
+        ('CEDEX', 'Cédula de extranjero'),
+        ('PAS', 'Pasaporte'),
     )
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    sexo = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Sexo del Deportista')
+    genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista')
+    tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CED',verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     nacionalidad = models.ManyToManyField(Nacionalidad)
@@ -26,7 +33,7 @@ class Deportista(models.Model):
         #Entidad
     entidad = models.ForeignKey(Entidad)
         #Disciplina
-    disciplinas = models.ManyToManyField(DisciplinaDepostiva)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
     activo = models.BooleanField(default=True)
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
