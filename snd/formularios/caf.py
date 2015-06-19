@@ -5,6 +5,8 @@ from snd.models import *
 
 def adicionarClase(campo, clase):
     campo.widget.attrs.update({'class': clase})
+    if clase == 'fecha':
+        campo.widget.attrs.update({'readonly': True})
     return campo
 
 class CentroAcondicionamientoForm(ModelForm):

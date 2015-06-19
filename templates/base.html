@@ -17,7 +17,7 @@
     <script src="{{STATIC_URL}}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
     
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    {#<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">#}
     <link href="{{STATIC_URL}}plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
@@ -30,7 +30,7 @@
     <script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script>
     <!-- ================== END BASE JS ================== -->
     <link href="{{STATIC_URL}}css/select2.min.css" rel="stylesheet" />
-    
+    <link href="{{STATIC_URL}}css/jquery.datetimepicker.css" rel="stylesheet">
     {% block css %}
     {% endblock %}
 </head>
@@ -182,7 +182,9 @@
         <!-- end scroll to top btn -->
     </div>
     <!-- end page container -->
-    
+    <script type="text/javascript">
+        base = "{{STATIC_URL}}";
+    </script>
     <!-- ================== BEGIN BASE JS ================== -->
     <script src="{{STATIC_URL}}plugins/bootstrap/js/bootstrap.min.js"></script>
     <!--[if lt IE 9]>
@@ -194,14 +196,22 @@
     
     <script src="{{STATIC_URL}}plugins/jquery-cookie/jquery.cookie.js"></script>
     <!-- ================== END BASE JS ================== -->
-    
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
     <!-- ================== END PAGE LEVEL JS ================== -->
     <script src="{{STATIC_URL}}js/select2.min.js"></script> 
+    <script src="{{STATIC_URL}}js/jquery.datetimepicker.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $("select.one").select2();
             $("select.many").select2({multiple:true});
+            $('.fecha').datetimepicker({
+                timepicker:false,
+                format:'Y-m-d',
+                formatDate:'Y-m-d',
+                lang: 'es',
+                closeOnDateSelect: true,
+                readonly: true,
+            });
         });
     </script>
     {% block js %}

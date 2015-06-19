@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Crear Grupo
+{% endblock %}
+
+{% block titulo_contenido %}
+    Creación de Grupo
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="#">Grupos</a></li>
+    <li class="active">Crear</li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Registro Grupo
+{% endblock %}
+
+{% block contenido_panel %}
+    <form class="form-vertical" enctype="multipart/form-data" method="post">{% csrf_token %}
+        <div class="row">
+            {% for i in form %}
+                <div class="col-sm-6">
+                    {% bootstrap_field i layout="vertical" %}
+                </div>
+            {% endfor %}
+        </div>
+        <button class="btn btn-primary pull-right" type="submit">Crear <i class="fa fa-angle-right"></i></button>
+    </form>
+{% endblock %}

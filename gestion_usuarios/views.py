@@ -26,7 +26,10 @@ def inicio(request):
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')
         else:
-            return redirect('listar_escenarios')
+            if request.user.is_superuser:
+                return redirect('usuarios_lista')
+            else:
+                return redirect('listar_escenarios')
 
     return redirect('login')
 
@@ -118,3 +121,44 @@ def desactivar(request, idUsuario):
     else:
         messages.success(request, "Usuario desactivado.")
     return redirect('usuarios_lista')
+
+@login_required
+def grupos_listar(request):
+    grupos = Group.objects.all()
+    return render(request, 'grupos_lista.html', {
+        'grupos': grupos,
+    })
+
+@login_required
+def grupos_crear(request):
+    form = GroupForm()
+
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Grupo creado correctamente")
+            return redirect('grupos_listar')
+
+    return render(request, 'grupos_crear.html', {
+        'form': form,
+    })
+
+@login_required
+def grupos_modificar(request, idGrupo):
+    try:
+        grupo = Group.objects.get(id=idGrupo)
+    except Exception:
+        return redirect('grupos_listar')
+
+    form = GroupForm(instance=grupo)
+    if request.method == 'POST':
+        form = GroupForm(request.POST, instance=grupo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Grupo modificado correctamente")
+            return redirect('grupos_listar')
+
+    return render(request, 'grupos_modificar.html', {
+        'form': form,
+    })

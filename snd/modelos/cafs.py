@@ -6,7 +6,7 @@ from entidades.models import Ciudad, Entidad
 class CentroAcondicionamiento(models.Model):
     nombre =  models.CharField(max_length=100)
     direccion = models.CharField(max_length=100, verbose_name="dirección")
-    telefono = models.BigIntegerField(verbose_name="teléfono")
+    telefono = models.CharField(max_length=50, verbose_name="teléfono")
     email = models.EmailField()
 
     latitud = models.FloatField(max_length=10)
@@ -22,8 +22,8 @@ class CentroAcondicionamiento(models.Model):
 
 class CACostoUso(models.Model):
     centro = models.OneToOneField(CentroAcondicionamiento)
-    privado = models.PositiveIntegerField(default=0)
-    publico = models.PositiveIntegerField(verbose_name="público", default=0)
+    privado = models.PositiveIntegerField(default=0, verbose_name="Costo mensual al afiliado")
+    publico = models.PositiveIntegerField(verbose_name="Costo mensual al público", default=0)
     libre = models.BooleanField()
 
 class CAServicios(models.Model):

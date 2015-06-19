@@ -1,0 +1,37 @@
+<li class="has-sub {% if "/gestion-usuarios/" in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-users"></i>
+        <span>Gestión de Usuarios</span>
+    </a>
+    <ul class="sub-menu">
+        <li class="has-sub {% if '/gestion-usuarios/crear' in request.path or '/gestion-usuarios/listar' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                Usuarios
+            </a>
+            <ul class="sub-menu">
+                <li {% if "/gestion-usuarios/crear" in request.path  %} class="active" {% endif %}>
+                    <a href="{% url 'usuarios_crear' %}">Crear Usuario</a>
+                </li>
+                <li {% if "/gestion-usuarios/lista" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'usuarios_lista' %}">Listar Usuarios</a>
+                </li>
+            </ul>
+        </li>
+        <li class="has-sub {% if "/gestion-usuarios/grupo" in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                Grupos
+            </a>
+            <ul class="sub-menu">
+                <li {% if "/gestion-usuarios/grupo/crear" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'grupos_crear' %}">Crear Grupo</a>
+                </li>
+                <li {% if "/gestion-usuarios/grupo/listar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'grupos_listar' %}">Listar Grupos</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>
