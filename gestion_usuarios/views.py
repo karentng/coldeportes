@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from gestion_usuarios.forms import *
 from django.contrib.auth.models import *
 from django.contrib import messages
+from snd.utilities import superuser_only
 
 def inicio(request):
     digitador = None
@@ -34,6 +35,7 @@ def inicio(request):
     return redirect('login')
 
 @login_required
+@superuser_only
 def crear(request):
     form = UserForm()
 
@@ -51,6 +53,7 @@ def crear(request):
     })
 
 @login_required
+@superuser_only
 def modificar(request, idUsuario):
     try:
         usuario = User.objects.get(id=idUsuario)
@@ -75,6 +78,7 @@ def modificar(request, idUsuario):
     })
 
 @login_required
+@superuser_only
 def password(request, idUsuario):
     try:
         usuario = User.objects.get(id=idUsuario)
@@ -101,6 +105,7 @@ def password(request, idUsuario):
     })
 
 @login_required
+@superuser_only
 def lista(request):
     usuarios = User.objects.all()
     return render(request, 'usuarios_lista.html', {
@@ -108,6 +113,7 @@ def lista(request):
     })
 
 @login_required
+@superuser_only
 def desactivar(request, idUsuario):
     try:
         usuario = User.objects.get(id=idUsuario)
@@ -123,6 +129,7 @@ def desactivar(request, idUsuario):
     return redirect('usuarios_lista')
 
 @login_required
+@superuser_only
 def grupos_listar(request):
     grupos = Group.objects.all()
     return render(request, 'grupos_lista.html', {
@@ -130,6 +137,7 @@ def grupos_listar(request):
     })
 
 @login_required
+@superuser_only
 def grupos_crear(request):
     form = GroupForm()
 
@@ -145,6 +153,7 @@ def grupos_crear(request):
     })
 
 @login_required
+@superuser_only
 def grupos_modificar(request, idGrupo):
     try:
         grupo = Group.objects.get(id=idGrupo)

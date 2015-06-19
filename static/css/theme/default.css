@@ -4,7 +4,9 @@ Version: 1.7.0
 Author: Sean Ngu
 Website: http://www.seantheme.com/color-admin-v1.7/admin/
 */
-
+.colorMenu{
+    color:white;
+}
 .navbar-logo,
 .coming-soon .brand .logo,
 .login .login-header .brand .logo {
