@@ -8,7 +8,7 @@ from django.core.files.storage import FileSystemStorage
 #import os
 from django.conf import settings
 
-
+@login_required
 def wizard_identificacion_nuevo(request):
     """
     Junio 14 / 2015
@@ -165,7 +165,7 @@ def listar(request):
     })
 
 @login_required
-def finalizar(request):
+def finalizar(request, opcion):
     """
     Junio 14 / 2015
     Autor: Cristian Leonardo Ríos López
@@ -178,7 +178,10 @@ def finalizar(request):
     """
     messages.success(request, "Dirigente registrado correctamente.")
     
-    return redirect('dirigentes_listar')
+    if opcion == "nuevo":
+        return redirect('dirigentes_wizard_identificacion_nuevo')
+    elif opcion == "listar":
+        return redirect('dirigentes_listar')
 
 @login_required
 def activar_desactivar(request, dirigente_id):
