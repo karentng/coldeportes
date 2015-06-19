@@ -12,8 +12,6 @@
                          <legend class="pull-left width-full">
                             {% include 'dirigentes/wizard/_mensajes.html' %}
                         </legend>
-
-                        {{ wizard.management_form }}
                         {% bootstrap_form form layout='vertical' %}
 
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
@@ -26,7 +24,7 @@
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Descripció de la funciónn</th>
+                            <th align="center">Descripción de la función</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,7 +62,8 @@
             {% if wizard_stage > 1 %}
                 <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atras" onclick="history.back()" />
             {% endif %}     
-            <a href="{% url 'dirigentes_finalizar' %}" class="btn btn-primary pull-right">Finalizar →</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-primary pull-right">Finalizar y Guardar Nuevo →</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
         </ul>
 
 {% endblock %}

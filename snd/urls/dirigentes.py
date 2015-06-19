@@ -9,7 +9,7 @@ Conjunto de formularios pasados al wizard según el paso actual del wizard
 
 urlpatterns = patterns('snd.views.dirigentes',
     url(r'^listar$', 'listar', name='dirigentes_listar'),
-    url(r'^finalizar$', 'finalizar', name='dirigentes_finalizar'),
+    url(r'^finalizar/(?P<opcion>.+)$', 'finalizar', name='dirigentes_finalizar'),
     url(r'^activar_desactivar/(\d+)$', 'activar_desactivar', name='dirigentes_activar_desactivar'),
 
     #urls wizard
