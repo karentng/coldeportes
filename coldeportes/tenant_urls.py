@@ -16,11 +16,8 @@ urlpatterns = patterns('',
 
     url(r'^gestion-usuarios/', include('gestion_usuarios.urls')),
     url(r'^escenarios/', include('snd.urls.escenarios')), #urls de escenarios
-    url(r'^caf/', include('snd.urls.caf')), #urls de escenarios
-
+    url(r'^caf/', include('snd.urls.caf')), #urls de cafs
     url(r'^deportistas/',include('snd.urls.deportistas')),#urls de deportistas
     url(r'^dirigentes/', include('snd.urls.dirigentes')), #urls de dirigentes
     url(r'^entrenadores/',include('snd.urls.entrenadores')),#urls de entrenadores
-
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

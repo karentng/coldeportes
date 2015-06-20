@@ -30,11 +30,15 @@
 {% block contenido_panel %}
 	{% include 'deportistas/wizard/_wizard.html' %}
 	<fieldset>
-		<form action="" method="post">{% csrf_token %}
+		<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
 			<div class="well row">
 				<div class="col-xs-12">
 					<h3>{{titulo}}</h3>
-					{% bootstrap_form form layout="horizontal" %}
+					{% for i in form %}
+						<div class="col-md-6">
+							{% bootstrap_field i layout="vertical" %}
+						</div>
+					{% endfor %}
 				</div>
 			</div>
 			<hr>

@@ -8,6 +8,7 @@ from snd.models import *
 from entidades.models import *
 from snd.formularios.caf import *
 from django.contrib import messages
+from snd.utilities import all_permission_required
 
 def guardar_identificacion(wizard, caf_form):
     """
@@ -104,6 +105,7 @@ def listarCAFS(request):
     })
 
 @login_required
+@all_permission_required('snd.change_centroacondicionamiento')
 def desactivarCAF(request, idCAF):
     """
     Mayo 26 / 2015
@@ -162,6 +164,7 @@ def traerFormularioCAF(centro, idForm, post=None):
     return form
 
 @login_required
+@all_permission_required('snd.change_centroacondicionamiento')
 def modificar(request, idCAF, idForm=0):
 
     """
@@ -203,3 +206,22 @@ def modificar(request, idCAF, idForm=0):
         'idForm': idForm + 1,
         'idCAF': idCAF,
     })
+
+
+@login_required
+def cargar_datos(request, modelo):
+    from snd.cargado_datos import obtenerDatos
+    from django.http import JsonResponse
+
+    datos = obtenerDatos(request, int(modelo))
+
+    return JsonResponse(datos)
+
+@login_required
+def cargar_columnas(request, modelo):
+    from snd.cargado_datos import obtenerCantidadColumnas
+    from django.http import JsonResponse
+
+    datos = obtenerCantidadColumnas(request, int(modelo))
+
+    return JsonResponse(datos)

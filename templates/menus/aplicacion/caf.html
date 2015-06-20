@@ -1,0 +1,17 @@
+<li class="has-sub {% if '/caf/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span class="colorMenu">Centro de Acondicionamiento</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.snd.add_centroacondicionamiento %}
+            <li {% if "/caf/nuevo" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'nuevo_caf' %}">Registro</a>
+            </li>
+        {% endif %}
+        <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_cafs' %}">Listar CAF</a>
+        </li>
+    </ul>
+</li>

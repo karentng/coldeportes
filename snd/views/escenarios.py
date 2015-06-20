@@ -64,8 +64,41 @@ def desactivar_escenario(request, escenario_id):
     estado_actual = escenario.activo
     escenario.activo = not(estado_actual)
     escenario.save()
-    messages.warning(request, "Escenario desactivado correctamente.")
+    messages.warning(request, "Escenario cambiado de estado correctamente.")
     return redirect('listar_escenarios')
+
+@login_required
+def ver_escenario(request, escenario_id):
+    """
+    Mayo 30 / 2015
+    Autor: Karent Narvaez Grisales
+    
+    ver escenario
+
+    Se obtienen toda la información registrada del escenario dado y se muestra.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del escenario
+    :type escenario_id:    String
+    """
+    escenario = Escenario.objects.get(id=escenario_id)
+    caracteristicas = CaracterizacionEscenario.objects.get(escenario=escenario)
+    horarios = HorarioDisponibilidad.objects.filter(escenario=escenario)
+    fotos = Foto.objects.filter(escenario=escenario)
+    videos =  Video.objects.filter(escenario=escenario)
+    historicos =  DatoHistorico.objects.filter(escenario=escenario)
+    contactos = Contacto.objects.filter(escenario=escenario)
+
+    return render(request, 'escenarios/ver_escenario.html', {
+        'escenario': escenario,
+        'caracteristicas': caracteristicas,
+        'horarios': horarios,
+        'historicos': historicos,
+        'fotos': fotos,
+        'videos': videos,
+        'contactos': contactos
+    })
 
 @login_required
 def wizard_nuevo_identificacion(request):

@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Escenarios-SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Ver Detalles de Escenario
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Ver Escenario</li>
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block titulo_panel %}
+    Detalles del Escenario
+{% endblock %}
+
+{% block contenido_panel %}
+<div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+    <div class="panel-heading p-0">
+        <div class="panel-heading-btn m-r-10 m-t-10">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+        </div>
+        <!-- begin nav-tabs -->
+        <div class="tab-overflow">
+            <ul class="nav nav-tabs">
+                <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
+                {% if escenario %}<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>{% endif %}
+                {% if caracteristicas %}<li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-paint-brush"></i> Caracterización</a></li>{% endif %}
+                {% if horarios %}<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>{% endif %}
+                {% if historicos %}<li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>{% endif %}
+                {% if fotos %}<li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>{% endif %}
+                {% if videos %}<li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>{% endif %}
+                {% if contactos %}<li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>{% endif %}
+                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="nav-tab2-12">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{escenario.nombre}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                            <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br />
+                            {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br />
+                            Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br />
+                            Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
+                            Nombre del Administrador: {{escenario.nombre_administrador}}
+                        </address>
+                    </div>                    
+                </div>
+                <h5 class="m-t-10">Descipción:</h5>
+                <p>{{escenario.descripcion}}</p>
+            </div>
+        </div>
+        {% if caracteristicas %}
+        <div class="tab-pane fade" id="nav-tab2-13">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{escenario.nombre}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                            <strong>{{caracteristicas.tipo_escenario.descripcion}}</strong><br />
+                            Capacidad de zona espectadores: {{caracteristicas.capacidad_espectadores}}, Metros construídos: {{caracteristicas.metros_construidos}}<br />
+                            Disciplinas: {% for disciplina in caracteristicas.tipo_disciplinas.all %} {{disciplina.descripcion}} {% endfor %}<br />
+                            Tipo de Superficie: {{caracteristicas.tipo_superficie_juego}}<br/>
+                            Clase de Acceso: {{caracteristicas.get_clase_acceso_display}} <br/>
+                            Características del escenario: {% for caracteristica in caracteristicas.caracteristicas.all %} {{caracteristica.descripcion}} {% endfor %} <br/>
+                            Clases de uso: {% for uso in caracteristicas.clase_uso.all %} {{uso.descripcion}} {% endfor %}                    
+                        </address>
+                    </div>
+                </div>
+                <h5 class="m-t-10">Descipción:</h5>
+                <p>{{caracteristicas.descripcion}}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% if horarios %}
+        <div class="tab-pane fade" id="nav-tab2-14">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{escenario.nombre}}
+                </div>
+                <div class="invoice-content">
+                    <div class="table-responsive">
+                        <table class="table table-invoice">
+                            <thead>
+                                <tr>
+                                    <th>HORA INICIO</th>
+                                    <th>HORA FIN</th>
+                                    <th>DIAS</th>
+                                    <th>DESCRIPCION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for horario in horarios %}
+                                <tr>
+                                    <td>{{horario.hora_inicio}}</td>
+                                    <td>{{horario.hora_fin}}</td>
+                                    <td>{% for dia in horario.dias.all %} {{dia.nombre}} {% endfor %}</td>
+                                    <td>{{horario.descripcion}}</td>
+                                </tr> 
+                                {% endfor %}                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if historicos %}
+        <div class="tab-pane fade" id="nav-tab2-15">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{escenario.nombre}}
+                </div>
+                <div class="invoice-content">
+                    <div class="table-responsive">
+                        <table class="table table-invoice">
+                            <thead>
+                                <tr>
+                                    <th>FECHA INICIO</th>
+                                    <th>FECHA FIN</th>
+                                    <th>DESCRIPCION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for historico in historicos %}
+                                <tr>
+                                    <td>{{historico.fecha_inicio}}</td>
+                                    <td>{{historico.fecha_fin}}</td>
+                                    <td>{{historico.descripcion}}</td>
+                                </tr> 
+                                {% endfor %}                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if fotos %}
+        <div class="tab-pane fade" id="nav-tab2-16">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>                    
+                </div>
+                <h1 class="page-header">{{escenario.nombre}}:<small> galería de fotos</small></h1>
+                <!-- end page-header -->
+                
+                <!-- begin superbox -->
+                <div class="superbox" data-offset="54">
+                    {% for foto in fotos %}
+                    <div class="superbox-list">
+                        <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" alt="" class="superbox-img" />
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if videos %}
+        <div class="tab-pane fade" id="nav-tab2-17">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>                    
+                </div>
+                <h1 class="page-header">{{escenario.nombre}}</h1>
+                <!-- end page-header -->
+                <div class="table-responsive">
+                    <table class="table table-invoice">
+                        <thead>
+                            <tr>
+                                <th>VISUALIZACION</th>
+                                <th>DIRECCIÓN</th>
+                                <th>DESCRIPCION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for video in videos %}
+                            <tr>                        
+                                <td><iframe width="260" height="115" src="{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
+                                <td>{{video.url}}</td>
+                                <td>{{video.descripcion}}</td>
+                            </tr> 
+                            {% endfor %}                               
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if contactos %}
+        <div class="tab-pane fade" id="nav-tab2-18">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>                    
+                </div>
+                <h1 class="page-header">{{escenario.nombre}}</h1>
+                <!-- end page-header -->
+                <div class="table-responsive">
+                    <table class="table table-invoice">
+                        <thead>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>TELÉFONO</th>
+                                <th>EMAIL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contacto in contactos %}
+                            <tr>                        
+                                <td>{{contacto.nombre}}</td>
+                                <td>{{contacto.telefono}}</td>
+                                <td>{{contacto.email}}</td>
+                            </tr> 
+                            {% endfor %}                               
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/gallery-v2.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            Gallery.init();
+        });
+    </script>
+{% endblock %}
