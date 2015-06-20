@@ -30,8 +30,9 @@
                 }
             });
         }
-        
+        idTabla = "tabla-deportistas";
     </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
     
 
 {% endblock %}
@@ -44,12 +45,14 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+            <table id="tabla-deportistas" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Ciudad (Departamento) Nacimiento</th>
+                        <th>Tipo Identificación</th>
                         <th>Identificación</th>
+                        <th>Disciplinas</th>
                         <th>Estado</th>
                         <th>Opciones</th>
                     </tr>
@@ -59,7 +62,13 @@
                         <tr>
                             <td>{{deportista.nombres}} {{deportista.apellidos}}</td>
                             <td>{{deportista.ciudad_nacimiento}}</td>
+                            <td>{{ deportista.tipo_id }}</td>
                             <td>{{deportista.identificacion}}</td>
+                            <td>
+                                {%for d in deportista.disciplinas.all%}
+                                    {{ d }},
+                                {% endfor %}
+                            </td>
                             <td>{% if deportista.activo %} Activo {% else %} Inactivo {% endif %}</td>
                             <td>
                                 <a href="{% url 'edicion_deportista' deportista.id %}" title="Modificar">
