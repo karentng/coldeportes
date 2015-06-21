@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from snd.views.dirigentes import *
 
 """
-Autor: Cristian Ríos
+Autor: Cristian Leonardo Ríos López
 Conjunto de formularios pasados al wizard según el paso actual del wizard
 """
 

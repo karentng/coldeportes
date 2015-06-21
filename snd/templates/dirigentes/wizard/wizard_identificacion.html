@@ -58,12 +58,3 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 {% endblock %}
-
-{% block script %}
-    <script>
-        $(document).ready(function() {
-            App.init();
-            FormWizard.init();
-        });
-    </script>
-{% endblock %}

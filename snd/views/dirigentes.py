@@ -5,7 +5,6 @@ from django.contrib import messages
 from formtools.wizard.views import *
 from snd.formularios.dirigentes  import *
 from django.core.files.storage import FileSystemStorage
-#import os
 from django.conf import settings
 
 @login_required

@@ -57,6 +57,7 @@ $.getScript(base+"plugins/DataTables/js/jquery.dataTables.js", function(){
 				                },
 				            ]
 				        },
+				        "columnDefs": options,
 				    });
 				});
 			});

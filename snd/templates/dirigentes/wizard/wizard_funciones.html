@@ -60,10 +60,10 @@
         <br/>
         <ul class="pager bwizard-buttons">
             {% if wizard_stage > 1 %}
-                <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atras" onclick="history.back()" />
+                <input class="btn btn-success pull-left" type="button" value="{%trans '← Anterior' %}" name="volver atras" onclick="history.back()" />
             {% endif %}     
-            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-primary pull-right">Finalizar y Guardar Nuevo →</a>
-            <a href="{% url 'dirigentes_finalizar' opcion='listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='listar' %}" class="btn btn-primary pull-right">{% trans 'Finalizar →' %}</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">{% trans 'Finalizar y Guardar Nuevo →' %}</a>
         </ul>
 
 {% endblock %}
