@@ -2,9 +2,20 @@
 
 from entidades.models import *
 from django.db import models
+import os
+from django.conf import settings
 
 
 class Dirigente(models.Model):
+    def foto_name(instance, filename):
+        #el nombre de la imagen es la identificación del dirigente, filename[-4:] indica la extensión del archivo
+        #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
+        ruta = 'fotos_dirigentes/' + instance.identificacion + filename[-4:]
+        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        if(os.path.exists(ruta_delete)):
+            os.remove(ruta_delete)
+        return ruta
+
     tipo_genero = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
@@ -24,9 +35,9 @@ class Dirigente(models.Model):
     telefono = models.CharField(max_length=100, verbose_name="Teléfono")
     email = models.EmailField(null=True,blank=True)
     nacionalidad = models.ManyToManyField(Nacionalidad)
-    fecha_posecion = models.DateField(verbose_name="Fecha de Poseción")
+    fecha_posesion = models.DateField(verbose_name="Fecha de Posesión")
     fecha_retiro = models.DateField(null=True,blank=True, verbose_name="Fecha de Retiro")
-    foto = models.ImageField(upload_to='fotos_dirigentes', null=True, blank=True)
+    foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
     activo = models.BooleanField(default=True)
     descripcion = models.CharField(max_length=500, verbose_name="Descripción o Logros")
 

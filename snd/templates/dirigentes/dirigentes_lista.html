@@ -19,21 +19,12 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
-    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
     <script type="text/javascript">
-        if ($('#data-table').length !== 0) {
-            $('#data-table').DataTable({
-                dom: 'T<"clear">lfrtip',
-                tableTools: {
-                    "sSwfPath": "{{STATIC_URL}}"+"plugins/DataTables/swf/copy_csv_xls_pdf.swf"
-                }
-            });
-        }
-        
+        idTabla = "tabla-dirigentes";
+        options = [{visible : false, targets : [1,3,7,8,9,10]}]
+        //options = [] //si no hay opciones
     </script>
-    
-
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
 
 {% block titulo_panel %}
@@ -41,26 +32,41 @@
 {% endblock %}
 
 {% block contenido_panel %}
-
-    <div class="row">
-        <div class="col-sm-12">
-            <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Cargo</th>
-                        <th>Superior</th>
-                        <th>Estado</th>
+    <div class="table-responsive">
+        <table id="tabla-dirigentes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Género</th>
+                    <th>Cargo</th>
+                    <th>Superior</th>
+                    <th>Estado</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Fecha de Posesión</th>
+                    <th>Fecha de Retiro</th>
+                    {% if perms.snd.change_dirigente %}
                         <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for dirigente in dirigentes %}
-                        <tr>
-                            <td>{{dirigente.nombres}} {{dirigente.apellidos}}</td>
-                            <td>{{dirigente.cargo}}</td>
-                            <td>{{dirigente.superior.nombres}} {{dirigente.superior.apellidos}}</td>
-                            <td>{% if dirigente.activo %} Activo {% else %} Inactivo {% endif %}</td>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for dirigente in dirigentes %}
+                    <tr>
+                        <td align="center">{%if dirigente.foto%}<img class="media-object rounded-corner" src="{{MEDIA_URL}}{{dirigente.foto}}" alt="" width="60" height="60" />{%else%}<span class="fa fa-4x fa-smile-o"></span>{%endif%}</td>
+                        <td>{{dirigente.tipo_identificacion}}. {{dirigente.identificacion}}</td>
+                        <td>{{dirigente.nombres}} {{dirigente.apellidos}}</td>
+                        <td>{{dirigente.genero}}</td>
+                        <td>{{dirigente.cargo}}</td>
+                        <td>{{dirigente.superior.nombres}} {{dirigente.superior.apellidos}}</td>
+                        <td>{% if dirigente.activo %} Activo {% else %} Desactivado {% endif %}</td>
+                        <td>{{dirigente.telefono}}</td>
+                        <td>{{dirigente.email}}</td>
+                        <td>{{dirigente.fecha_posesion}}</td>
+                        <td>{{dirigente.fecha_retiro}}</td>
+                        {% if perms.snd.change_dirigente %}
                             <td>
                                 <a href="{% url 'dirigentes_wizard_identificacion' dirigente.id %}" title="Editar">
                                     <i class="fa fa-gear"></i> Editar
@@ -88,11 +94,10 @@
                                     </div>
                                 </div>
                             </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div> 
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    
 {% endblock %}

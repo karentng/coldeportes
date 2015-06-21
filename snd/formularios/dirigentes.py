@@ -2,10 +2,8 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 from datetimewidget.widgets import DateWidget
+from snd.utilities import adicionarClase
 
-def adicionarClase(campo, clase):
-    campo.widget.attrs.update({'class': clase})
-    return campo
 
 class DirigenteForm(ModelForm):
 
@@ -15,13 +13,15 @@ class DirigenteForm(ModelForm):
         super(DirigenteForm, self).__init__(*args, **kwargs)
         self.fields['superior'] = adicionarClase(self.fields['superior'], 'one')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
+        self.fields['fecha_posesion'] = adicionarClase(self.fields['fecha_posesion'], 'fecha')
+        self.fields['fecha_retiro'] = adicionarClase(self.fields['fecha_retiro'], 'fecha')
 
     class Meta:
         model = Dirigente
         #fields = '__all__'
         exclude = ('entidad','activo',)
         widgets = {
-            'fecha_posecion': DateWidget(attrs={'id':"id_fecha_posecion"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),
+            'fecha_posesion': DateWidget(attrs={'id':"id_fecha_posesion"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),
             'fecha_retiro': DateWidget(attrs={'id':"id_fecha_retiro"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3)
         }
 
