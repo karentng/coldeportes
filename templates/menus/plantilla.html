@@ -32,21 +32,7 @@
         </ul>
     </li>
     {% include "menus/aplicacion/caf.html" %}
-    <li class="has-sub {% if '/deportistas/' in request.path %} active {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-futbol-o"></i>
-            <span>Deportistas</span>
-        </a>
-        <ul class="sub-menu">
-            <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'deportista_nuevo' %}">Registro</a>
-            </li>
-            <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
-            </li>
-        </ul>
-    </li>
+    {% include "menus/aplicacion/deportistas.html" %}
     <li class="has-sub {% if '/entrenadores/' in request.path %} active {% endif %}">
         <a href="javascript:;">
             <b class="caret pull-right"></b>

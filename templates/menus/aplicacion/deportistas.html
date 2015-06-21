@@ -1,0 +1,17 @@
+<li class="has-sub {% if '/deportistas/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span span class="colorMenu">Deportistas</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.snd.add_deportista %}
+            <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'deportista_nuevo' %}">Registro</a>
+            </li>
+        {% endif %}
+        <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
+        </li>
+    </ul>
+</li>
