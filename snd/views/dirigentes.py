@@ -207,3 +207,27 @@ def activar_desactivar(request, dirigente_id):
         message = "Dirigente activado correctamente."
     messages.warning(request, message)
     return redirect('dirigentes_listar')
+
+@login_required
+def ver(request, dirigente_id):
+    """
+    Junio 21 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    ver dirigente
+
+    Se obtienen toda la información registrada del dirigente dado y se muestra.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param dirigente_id:   Identificador del dirigente
+    :type dirigente_id:    String
+    """
+
+    dirigente = Dirigente.objects.get(id=dirigente_id)
+    funciones = Funcion.objects.filter(dirigente=dirigente)
+
+    return render(request, 'dirigentes/dirigentes_ver.html', {
+        'dirigente': dirigente,
+        'funciones': funciones
+    })
