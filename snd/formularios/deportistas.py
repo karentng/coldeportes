@@ -18,10 +18,6 @@ class DeportistaForm(ModelForm):
     class Meta:
         model = Deportista
         exclude = ('entidad','activo',)
-        widgets = {
-            'fecha_nacimiento': DateWidget(attrs={'id':"id_fecha_nacimiento"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),
-
-        }
 
 class ComposicionCorporalForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -41,10 +37,6 @@ class HistorialDeportivoForm(ModelForm):
     class Meta:
         model = HistorialDeportivo
         exclude = ('deportista',)
-        widgets = {
-            'fecha': DateWidget(attrs={'id':"id_fecha"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),
-
-        }
 
 class InformacionAcademicaForm(ModelForm):
     def __init__(self, *args, **kwargs):
