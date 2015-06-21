@@ -3,10 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 from datetimewidget.widgets import DateWidget
-
-def adicionarClase(campo, clase):
-    campo.widget.attrs.update({'class': clase})
-    return campo
+from snd.utilities import adicionarClase
 
 class DeportistaForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -16,6 +13,7 @@ class DeportistaForm(ModelForm):
         self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
         self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
+        self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'],'fecha')
 
     class Meta:
         model = Deportista
@@ -38,6 +36,7 @@ class HistorialDeportivoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
+        self.fields['fecha'] = adicionarClase(self.fields['fecha'], 'fecha')
 
     class Meta:
         model = HistorialDeportivo
