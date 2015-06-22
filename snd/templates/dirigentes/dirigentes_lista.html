@@ -20,9 +20,8 @@
 
 {% block js %}
     <script type="text/javascript">
-        idTabla = "tabla-dirigentes";
-        options = [{visible : false, targets : [1,3,7,8,9,10]}]
-        //options = [] //si no hay opciones
+        var idTabla = "tabla-dirigentes";
+        var options = [{visible : false, targets : [1,3,7,8,9,10]}];
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
@@ -68,6 +67,9 @@
                         <td>{{dirigente.fecha_retiro}}</td>
                         {% if perms.snd.change_dirigente %}
                             <td>
+                                <a href="{% url 'dirigentes_ver' dirigente.id %}" data-toggle="modal">
+                                    <i class="fa fa-eye"></i> Ver Dirigente
+                                </a>
                                 <a href="{% url 'dirigentes_wizard_identificacion' dirigente.id %}" title="Editar">
                                     <i class="fa fa-gear"></i> Editar
                                 </a>

@@ -11,6 +11,7 @@ urlpatterns = patterns('snd.views.dirigentes',
     url(r'^listar$', 'listar', name='dirigentes_listar'),
     url(r'^finalizar/(?P<opcion>.+)$', 'finalizar', name='dirigentes_finalizar'),
     url(r'^activar_desactivar/(\d+)$', 'activar_desactivar', name='dirigentes_activar_desactivar'),
+    url(r'^ver/(\d+)$', 'ver', name='dirigentes_ver'),
 
     #urls wizard
     url(r'^nuevo/wizard/identificacion$', 'wizard_identificacion_nuevo', name='dirigentes_wizard_identificacion_nuevo'),

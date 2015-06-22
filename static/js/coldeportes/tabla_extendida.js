@@ -15,6 +15,7 @@ $.getScript(base+"plugins/DataTables/js/jquery.dataTables.js", function(){
 		$.getScript(base+"plugins/DataTables/js/dataTables.colVis.js", function(){
 			$.getScript(base+"plugins/DataTables/js/dataTables.keyTable.js", function(){
 				$.getScript(base+"plugins/DataTables/js/dataTables.tableTools.js", function(){
+					if(typeof(options)=='undefined'){options=[]}
 					var table = $('#'+idTabla).DataTable({
 				        dom: 'TRC<"clear">lfrtip',
 				        tableTools: {
