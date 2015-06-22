@@ -2,21 +2,7 @@
     {% include "menus/aplicacion/usuarios.html" %}
 {% else %}
     {% include "menus/aplicacion/dirigentes.html" %}
-    <li class="has-sub {% if '/escenarios/' in request.path %} active {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-futbol-o"></i>
-            <span>Escenarios</span>
-        </a>
-        <ul class="sub-menu">
-            <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
-            </li>       
-            <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
-            </li>       
-        </ul>
-    </li>
+    {% include "menus/aplicacion/escenarios.html" %}    
     {% include "menus/aplicacion/caf.html" %}
     {% include "menus/aplicacion/deportistas.html" %}
     <li class="has-sub {% if '/entrenadores/' in request.path %} active {% endif %}">

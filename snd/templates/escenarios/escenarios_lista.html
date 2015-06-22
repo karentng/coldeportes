@@ -19,18 +19,10 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
-    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
     <script type="text/javascript">
-        if ($('#data-table').length !== 0) {
-            $('#data-table').DataTable({
-                dom: 'T<"clear">lfrtip',
-                tableTools: {
-                    "sSwfPath": "{{STATIC_URL}}"+"plugins/DataTables/swf/copy_csv_xls_pdf.swf"
-                }
-            });
-        }
-        
+        idTabla = "tabla-escenarios";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
     </script>
     
 
@@ -44,7 +36,7 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+            <table id="tabla-escenarios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -60,12 +52,13 @@
                             <td>{{escenario.nombre}}</td>
                             <td>{{escenario.ciudad}}</td>
                             <td>{{escenario.estrato}}</td>
-                            <td>{% if escenario.activo %} Activo {% else %} Desactivado {% endif %}</td>
+                            <td>{% if escenario.activo %} Activo {% else %} Inactivo {% endif %}</td>
                             <td>
                                 <a href="{% url 'ver_escenario' escenario.id %}" data-toggle="modal">
                                     <i class="fa fa-eye"></i> Ver Escenario
                                 </a>
                                 <br/>
+                                {% if perms.snd.change_escenario %}
                                 <a href="{% url 'wizard_identificacion' escenario.id %}" title="Editar">
                                     <i class="fa fa-gear"></i> Editar
                                 </a>
@@ -90,6 +83,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

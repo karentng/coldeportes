@@ -1171,19 +1171,7 @@ INSERT INTO "entidades_dias" ("id", "nombre") VALUES
 (7,	'Sábado'),
 (1,	'Domingo');
 
-INSERT INTO "entidades_tipodisciplinaescenario" ("id", "descripcion") VALUES
-(1,	'Ciclismo'),
-(2,	'Voleibol'),
-(3,	'Baloncesto'),
-(5,	'Natación'),
-(6,	'Atletismo'),
-(7,	'Patinaje'),
-(8,	'Béisbol'),
-(9,	'Softball'),
-(10,	'Gimnasia'),
-(4,	'Fútbol');
-
-INSERT INTO "entidades_disciplinadepostiva" ("id", "descripcion") VALUES
+INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
 (1,	'Ciclismo'),
 (2,	'Voleibol'),
 (3,	'Baloncesto'),
