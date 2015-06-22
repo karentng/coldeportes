@@ -9,7 +9,7 @@ from snd.formularios.deportistas  import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
-from datetime import date
+from snd.utilities import calculate_age
 
 @login_required
 def wizard_deportista_nuevo(request):
@@ -287,18 +287,6 @@ def desactivar_deportista(request,id_depor):
     except:
         messages.error(request, "Error: No existe el deportista solicitado")
         return redirect('deportista_listar')
-
-#Funcion auxiliar para calculo de edad
-def calculate_age(born):
-    today = date.today()
-    try:
-        birthday = born.replace(year=today.year)
-    except ValueError: # raised when birth date is February 29 and the current year is not a leap year
-        birthday = born.replace(year=today.year, month=born.month+1, day=1)
-    if birthday > today:
-        return today.year - born.year - 1
-    else:
-        return today.year - born.year
 
 @login_required
 def listar_deportista(request):

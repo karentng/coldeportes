@@ -63,6 +63,7 @@
                     <div class="invoice-from">
                         <address class="m-t-5 m-b-5">
                             <ul class="media-list">
+
                                 <li class="media">
                                     <a href="javascript:;" class="media-left"></a>
                                     {%if deportista.foto%}
@@ -92,12 +93,6 @@
                                             {%for d in deportista.disciplinas.all%}
                                                 {{ d }},
                                             {% endfor %}<br/>
-                                            Video:
-                                            {% if deportista.video %}
-                                                {{deportista.video}}
-                                            {% else %}
-                                                Ninguno
-                                            {% endif %}<br/>
                                             {% if perms.snd.change_deportista %}
                                                 <strong>Contacto:</strong> <br/>
                                                 Teléfono: {{deportista.telefono}}<br/>
@@ -130,31 +125,133 @@
                 </div>
             </div>
         </div>
-        
-        {% if funciones %}
+        <!-- COMPOSICION CORPORAL -->
         <div class="tab-pane fade" id="nav-tab2-2">
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
-                    {{dirigente.nombres}} {{dirigente.apellidos}}
+                    {{deportista.nombres}} {{deportista.apellidos}}
                 </div>
                 <div class="invoice-header">
                     <div class="invoice-from">
                         <address class="m-t-5 m-b-5">
-                        <strong>Cargo: {{dirigente.cargo}}</strong><br/><br/>
-                        <ul class="funciones">
-                            {% for funcion in funciones %}
-                                <li class="fa fa-lg fa-tag">{{funcion.descripcion}}</li>
-                            {% endfor %}
-                        </ul>
+                            <ul class="media-list">
+
+                                <li class="media">
+                                    <a href="javascript:;" class="media-left"></a>
+                                    {%if deportista.foto%}
+                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" style="float: left; width=100 height=100" />
+                                    {%else%}
+                                        <span class="fa fa-4x fa-smile-o media-object" style="float: left;"></span>
+                                    {%endif%}
+                                    <div class="media-body">
+                                        <div class="col-lg-6">
+                                            <p style="margin-left: 50px">
+                                            <strong>Composicion Corporal:</strong><br/>
+                                                Camisa: {{ composicion.talla_camisa }}<br/>
+                                                Pantaloneta: {{ composicion.talla_pantaloneta }}<br/>
+                                                Zapato: {{ composicion.talla_zapato }}<br/>
+                                                Grasa: {{ composicion.porcentaje_grasa }}% <br/>
+                                                Musculo: {{ composicion.porcentaje_musculo }}%
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <br/>
+                                             <strong> {{ composicion.RH }} </strong><br/>
+                                            <strong> {{ composicion.estatura }} m</strong>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </address>
                     </div>
                 </div>
             </div>
         </div>
+        <!--HISTORIAL DEPORTIVO-->
+        {% if historial_deportivo %}
+            <div class="tab-pane fade" id="nav-tab2-3">
+                <div class="invoice">
+                    <div class="invoice-company">
+                        <span class="pull-right hidden-print">
+                        <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                        </span>
+                        {{deportista.nombres}} {{deportista.apellidos}}
+                    </div>
+                    <div class="invoice-content">
+                        <div class="table-responsive">
+                            <table class="table table-invoice">
+                                <thead>
+                                    <tr>
+                                        <th>FECHA</th>
+                                        <th>LUGAR</th>
+                                        <th>INSTITUCIÓN O EQUIPO</th>
+                                        <th>TIPO</th>
+                                        <th>DESCRIPCION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for historial in historial_deportivo %}
+                                    <tr>
+                                        <td>{{historial.fecha}}</td>
+                                        <td>{{historial.lugar}}</td>
+                                        <td>{% if historial.institucion_equipo %}{{ historial.institucion_equipo }}{% else %}Ninguno{% endif %}</td>
+                                        <td>{{ historial.tipo }}</td>
+                                        <td>{{historial.descripcion}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <!--INFORMACION ACADEMICA-->
+        {% if informacion_academica %}
+            <div class="tab-pane fade" id="nav-tab2-4">
+                <div class="invoice">
+                    <div class="invoice-company">
+                        <span class="pull-right hidden-print">
+                        <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                        </span>
+                        {{deportista.nombres}} {{deportista.apellidos}}
+                    </div>
+                    <div class="invoice-content">
+                        <div class="table-responsive">
+                            <table class="table table-invoice">
+                                <thead>
+                                    <tr>
+                                        <th>INSTITUCIÓN</th>
+                                        <th>NIVEL</th>
+                                        <th>ESTADO</th>
+                                        <th>PROFESIÓN</th>
+                                        <th>PAÍS</th>
+                                        <th>AÑO FINALIZACIÓN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for academico in informacion_academica %}
+                                    <tr>
+                                        <td>{{academico.institucion}}</td>
+                                        <td>{{academico.nivel}}</td>
+                                        <td>{{academico.estado}}</td>
+                                        <td>{% if academico.profesion %}{{ academico.profesion }}{% else %}N/A{% endif %}</td>
+                                        <td>{{ academico.pais }}</td>
+                                        <td>{% if academico.fecha_finalizacion %}{{ academico.fecha_finalizacion }}{% else %}N/A{% endif %}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endif %}
     </div>
 </div>
