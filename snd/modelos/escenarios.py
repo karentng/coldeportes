@@ -36,7 +36,7 @@ class CaracterizacionEscenario(models.Model):
     capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
     metros_construidos = models.CharField(max_length=50, verbose_name='metros cuadrados construídos')
     tipo_escenario = models.ForeignKey(TipoEscenario)
-    tipo_disciplinas = models.ManyToManyField(TipoDisciplinaEscenario)
+    tipo_disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
     tipo_superficie_juego = models.CharField(max_length=100, null=True)
     clase_acceso = models.CharField(choices=accesos, max_length=3, verbose_name='tipo de acceso')
     caracteristicas = models.ManyToManyField(CaracteristicaEscenario)

@@ -52,7 +52,6 @@
                         <tr>
                             <th align="center">Hora Inicio</th>
                             <th align="center">Hora Fin</th>
-                            <th align="center">Días</th>
                             <th align="center">Descripción</th>
                             <th align="center"></th>
                         </tr>
@@ -62,7 +61,6 @@
                         <tr>
                             <td align="center">{{horario.hora_inicio}}</td>
                             <td align="center">{{horario.hora_fin}}</td>
-                            <td align="center">{% for dia in horario.dias.all %} dia.nombre {% endif %}</td>
                             <td align="center">{{horario.descripcion}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
