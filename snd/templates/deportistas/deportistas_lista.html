@@ -51,8 +51,11 @@
                         <th>Foto</th>
                         <th>Nombre</th>
                         <th>Ciudad (Departamento) Nacimiento</th>
-                        <th>Tipo Identificación</th>
-                        <th>Identificación</th>
+                        {% if perms.snd.change_deportista %}
+                            <th>Tipo Identificación</th>
+                            <th>Identificación</th>
+                        {% endif %}
+                        <th>Edad</th>
                         <th>Disciplinas</th>
                         <th>Estado</th>
                         {% if perms.snd.change_deportista %}
@@ -66,8 +69,11 @@
                             <td align="center">{%if deportista.foto%}<img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" width="60" height="60" />{%else%}<span class="fa fa-4x fa-smile-o"></span>{%endif%}</td>
                             <td>{{deportista.nombres}} {{deportista.apellidos}}</td>
                             <td>{{deportista.ciudad_nacimiento}}</td>
-                            <td>{{ deportista.tipo_id }}</td>
-                            <td>{{deportista.identificacion}}</td>
+                            {% if perms.snd.change_deportista %}
+                                <td>{{ deportista.tipo_id }}</td>
+                                <td>{{deportista.identificacion}}</td>
+                            {% endif %}
+                            <td>{{ deportista.edad }}</td>
                             <td>
                                 {%for d in deportista.disciplinas.all%}
                                     {{ d }},
@@ -75,6 +81,10 @@
                             </td>
                             <td>{% if deportista.activo %} Activo {% else %} Inactivo {% endif %}</td>
                             <td>
+                                <a href="{% url 'ver_deportista' deportista.id %}" title="Modificar">
+                                    <i class="fa fa-eye"></i> Ver Deporstista
+                                </a>
+                                <br/>
                                 {% if perms.snd.change_deportista %}
                                     <a href="{% url 'edicion_deportista' deportista.id %}" title="Modificar">
                                         <i class="fa fa-gear"></i> Editar

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Deportistas - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Ver Detalles de Deportista
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Ver Deportista</li>
+{% endblock %}
+
+{% block css %}
+    <style type="text/css">
+    .funciones li{
+        list-style: none;
+        display: list-item;
+        line-height: 20px;
+    }
+    .funciones li:before {
+        margin-right: 10px;
+    }
+    </style>
+{% endblock %}
+
+{% block titulo_panel %}
+    Detalles del Deportista
+{% endblock %}
+
+{% block contenido_panel %}
+<div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+    <div class="panel-heading p-0">
+        <div class="panel-heading-btn m-r-10 m-t-10">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+        </div>
+        <!-- begin nav-tabs -->
+        <div class="tab-overflow">
+            <ul class="nav nav-tabs">
+                <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
+                <li class="active"><a href="#nav-tab2-1" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+                <li class=""><a href="#nav-tab2-2" data-toggle="tab"><i class="fa fa-paint-brush"></i> Composición Corporal</a></li>
+                {% if historial_deportivo %}<li class=""><a href="#nav-tab2-3" data-toggle="tab"><i class="fa fa-paint-brush"></i> Historial Deportivo</a></li>{% endif %}
+                {% if informacion_academica %}<li class=""><a href="#nav-tab2-4" data-toggle="tab"><i class="fa fa-paint-brush"></i> Información Academica</a></li>{% endif %}
+                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="nav-tab2-1">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{deportista.nombres}} {{deportista.apellidos}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                            <ul class="media-list">
+                                <li class="media">
+                                    <a href="javascript:;" class="media-left"></a>
+                                    {%if deportista.foto%}
+                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" style="float: left; width=100 height=100" />
+                                    {%else%}
+                                        <span class="fa fa-4x fa-smile-o media-object" style="float: left;"></span>
+                                    {%endif%}
+                                    <div class="media-body">
+                                        <div class="col-lg-6">
+                                        <p style="margin-left: 50px">
+                                            {% if perms.snd.change_deportista %}
+                                                Identificación: {{deportista.tipo_id}}: {{deportista.identificacion}}<br />
+                                            {% endif %}
+                                            Género: {{deportista.genero}}<br/>
+                                            Edad: {{ deportista.edad }}<br/>
+                                            Nacionalidades:
+                                            {% for nac in deportista.nacionalidad.all %}
+                                                {{nac}},
+                                            {% endfor %}<br/>
+                                            Ciudad (Departamento) de Nacimiento:
+                                            {% if deportista.ciudad_nacimiento %}
+                                                {{ deportista.ciudad_nacimiento }}
+                                            {% else %}
+                                                Ninguna
+                                            {% endif %}<br/>
+                                            Disciplinas:
+                                            {%for d in deportista.disciplinas.all%}
+                                                {{ d }},
+                                            {% endfor %}<br/>
+                                            Video:
+                                            {% if deportista.video %}
+                                                {{deportista.video}}
+                                            {% else %}
+                                                Ninguno
+                                            {% endif %}<br/>
+                                            {% if perms.snd.change_deportista %}
+                                                <strong>Contacto:</strong> <br/>
+                                                Teléfono: {{deportista.telefono}}<br/>
+                                                Direccion: {{deportista.direccion}}<br/>
+                                                Email:
+                                                {% if deportista.email %}
+                                                    {{deportista.email}}
+                                                {% else %}
+                                                    Ninguno
+                                                {% endif %}<br/>
+                                                <strong>Ubicación:</strong> <br/>
+                                                Barrio: {{ deportista.barrio }} <br/>
+                                                Comuna: {{ deportista.comuna }}
+                                            {% endif %}
+                                        </p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <strong>Video:</strong><br/>
+                                            {% if deportista.video %}
+                                                {{deportista.video}}
+                                            {% else %}
+                                                Ninguno
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </address>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        
+        {% if funciones %}
+        <div class="tab-pane fade" id="nav-tab2-2">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_escenarios' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{dirigente.nombres}} {{dirigente.apellidos}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                        <strong>Cargo: {{dirigente.cargo}}</strong><br/><br/>
+                        <ul class="funciones">
+                            {% for funcion in funciones %}
+                                <li class="fa fa-lg fa-tag">{{funcion.descripcion}}</li>
+                            {% endfor %}
+                        </ul>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

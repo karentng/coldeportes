@@ -9,6 +9,7 @@ from snd.formularios.deportistas  import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
+from datetime import date
 
 @login_required
 def wizard_deportista_nuevo(request):
@@ -276,12 +277,28 @@ def desactivar_deportista(request,id_depor):
     :param id_depor: Llave primaria del deportista
     :type id_depor: String
     """
-    deportista = Deportista.objects.get(id=id_depor)
-    estado_actual = deportista.activo
-    deportista.activo = not(estado_actual)
-    deportista.save()
-    messages.warning(request, "Deportista desactivado/activado correctamente.")
-    return redirect('deportista_listar')
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+        estado_actual = deportista.activo
+        deportista.activo = not(estado_actual)
+        deportista.save()
+        messages.warning(request, "Deportista desactivado/activado correctamente.")
+        return redirect('deportista_listar')
+    except:
+        messages.error(request, "Error: No existe el deportista solicitado")
+        return redirect('deportista_listar')
+
+#Funcion auxiliar para calculo de edad
+def calculate_age(born):
+    today = date.today()
+    try:
+        birthday = born.replace(year=today.year)
+    except ValueError: # raised when birth date is February 29 and the current year is not a leap year
+        birthday = born.replace(year=today.year, month=born.month+1, day=1)
+    if birthday > today:
+        return today.year - born.year - 1
+    else:
+        return today.year - born.year
 
 @login_required
 def listar_deportista(request):
@@ -298,9 +315,42 @@ def listar_deportista(request):
     """
 
     deportistas = Deportista.objects.all()
+    for dep in deportistas:
+        dep.edad = calculate_age(dep.fecha_nacimiento)
     return render(request, 'deportistas/deportistas_lista.html', {
         'deportistas':deportistas,
     })
+
+@login_required
+def ver_deportista(request,id_depor):
+    """
+    Junio 22 /2015
+    Autor: Daniel Correa
+
+    Ver Deportista
+
+    Se obtiene la informacion general del deportista desde la base de datos y se muestra
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+        composicion = ComposicionCorporal.objects.get(deportista=deportista)
+    except:
+        messages.error(request, "Error: No existe el deportista solicitado o su información es incompleta")
+        return redirect('deportista_listar')
+    historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista)
+    informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
+    deportista.edad = calculate_age(deportista.fecha_nacimiento)
+    return render(request,'deportistas/ver_deportista.html',{
+            'deportista':deportista,
+            'composicion':composicion,
+            'historial_deportivo':historial_deportivo,
+            'informacion_academica':informacion_academica
+        })
 
 @login_required
 def finalizar_deportista(request):
