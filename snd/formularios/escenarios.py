@@ -2,6 +2,7 @@
 from django import forms
 from django.forms import ModelForm
 from snd.models import *
+from entidades.models import CaracteristicaEscenario, Dias
 from datetimewidget.widgets import TimeWidget, DateWidget
 
 def adicionarClase(campo, clase):
@@ -26,9 +27,13 @@ class CaracterizacionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CaracterizacionForm, self).__init__(*args, **kwargs)
         self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
+        self.fields['tipo_escenario'].queryset = TipoEscenario.objects.all().order_by('descripcion')
         self.fields['tipo_disciplinas'] = adicionarClase(self.fields['tipo_disciplinas'], 'many')
+        self.fields['tipo_disciplinas'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
         self.fields['caracteristicas'] = adicionarClase(self.fields['caracteristicas'], 'many')
+        self.fields['caracteristicas'].queryset = CaracteristicaEscenario.objects.all().order_by('descripcion')
         self.fields['clase_uso'] = adicionarClase(self.fields['clase_uso'], 'many')
+        self.fields['clase_uso'].queryset = TipoUsoEscenario.objects.all().order_by('descripcion')
         self.fields['descripcion'].widget.attrs['rows'] = 3
     class Meta:
         model = CaracterizacionEscenario
