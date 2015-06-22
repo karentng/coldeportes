@@ -1,0 +1,17 @@
+<li class="has-sub {% if '/escenarios/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-futbol-o"></i>
+        <span>Escenarios</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.snd.add_escenario %}
+        <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
+        </li>      
+        {% endif %} 
+        <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
+        </li>       
+    </ul>
+</li>

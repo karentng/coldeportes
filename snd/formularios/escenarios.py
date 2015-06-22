@@ -56,6 +56,7 @@ class DatoHistoricoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(DatoHistoricoForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['fecha_inicio'] = adicionarClase(self.fields['fecha_inicio'], 'date')
 
     class Meta:
         model = DatoHistorico
