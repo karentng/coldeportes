@@ -326,10 +326,12 @@ def ver_deportista(request,id_depor):
     """
     try:
         deportista = Deportista.objects.get(id=id_depor)
-        composicion = ComposicionCorporal.objects.get(deportista=deportista)
     except:
-        messages.error(request, "Error: No existe el deportista solicitado o su información es incompleta")
+        messages.error(request, "Error: No existe el deportista solicitado")
         return redirect('deportista_listar')
+    composicion = ComposicionCorporal.objects.filter(deportista=deportista)
+    if len(composicion) != 0:
+        composicion = composicion[0]
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista)
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     deportista.edad = calculate_age(deportista.fecha_nacimiento)
