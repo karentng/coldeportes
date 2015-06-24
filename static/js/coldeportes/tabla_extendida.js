@@ -15,51 +15,12 @@ $.getScript(base+"plugins/DataTables/js/jquery.dataTables.js", function(){
 		$.getScript(base+"plugins/DataTables/js/dataTables.colVis.js", function(){
 			$.getScript(base+"plugins/DataTables/js/dataTables.keyTable.js", function(){
 				$.getScript(base+"plugins/DataTables/js/dataTables.tableTools.js", function(){
-					if(typeof(options)=='undefined'){options=[]}
-					var table = $('#'+idTabla).DataTable({
-				        dom: 'TRC<"clear">lfrtip',
-				        tableTools: {
-				            "sSwfPath": base+"plugins/DataTables/swf/copy_csv_xls_pdf.swf",
-				            "aButtons": [
-				                {
-				                    "sExtends": "copy",
-				                    "mColumns": function(dtSettings){
-				                        var api = new $.fn.dataTable.Api(dtSettings);
-				                        return api.columns(":not(:last)").indexes().toArray();
-				                    }
-				                },
-				                {
-				                    "sExtends": "csv",
-				                    "mColumns": function(dtSettings){
-				                        var api = new $.fn.dataTable.Api(dtSettings);
-				                        return api.columns(":not(:last)").indexes().toArray();
-				                    }
-				                },
-				                {
-				                    "sExtends": "xls",
-				                    "mColumns": function(dtSettings){
-				                        var api = new $.fn.dataTable.Api(dtSettings);
-				                        return api.columns(":not(:last)").indexes().toArray();
-				                    }
-				                },
-				                {
-				                    "sExtends": "pdf",
-				                    "mColumns": function(dtSettings){
-				                        var api = new $.fn.dataTable.Api(dtSettings);
-				                        return api.columns(":not(:last)").indexes().toArray();
-				                    }
-				                },
-				                {
-				                    "sExtends": "print",
-				                    "mColumns": function(dtSettings){
-				                        var api = new $.fn.dataTable.Api(dtSettings);
-				                        return api.columns(":not(:last)").indexes().toArray();
-				                    }
-				                },
-				            ]
-				        },
-				        "columnDefs": options,
-				    });
+					if (typeof url != 'undefined'){
+						$.getScript(base+"js/coldeportes/cargado_datos.js");
+					}else{
+						// Discutir si es necesario a futuro (es posible para casos pequeños)
+						$.getScript(base+"js/coldeportes/cargado_normal.js");
+					}
 				});
 			});
 		});
