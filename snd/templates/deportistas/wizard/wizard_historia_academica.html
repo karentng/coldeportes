@@ -93,7 +93,8 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'finalizar_deportista' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'finalizar_deportista' opcion='listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'finalizar_deportista' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">Finalizar,Guardar y Nuevo →</a>
     
 
 {% endblock %}

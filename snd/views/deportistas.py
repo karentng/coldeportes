@@ -343,17 +343,21 @@ def ver_deportista(request,id_depor):
         })
 
 @login_required
-def finalizar_deportista(request):
+def finalizar_deportista(request,opcion):
     """
     Junio 10 / 2015
     Autor: Daniel Correa
 
-    enviar mensaje de finalizada la creación de deportista
+    enviar mensaje de finalizada la creación de deportista, dependiendo del caso redireccionar
 
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
+    :param opcion: Caso a redireccionar
+    :type opcion: String
     """
     messages.success(request, "Deportista registrado correctamente.")
-
-    return redirect('deportista_listar')
+    if opcion=='nuevo':
+        return redirect('deportista_nuevo')
+    elif opcion =='listar':
+        return redirect('deportista_listar')
