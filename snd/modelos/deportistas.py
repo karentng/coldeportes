@@ -13,14 +13,14 @@ class Deportista(models.Model):
     )
     TIPO_IDENTIDAD = (
         ('TI', 'Tarjeta de Identidad'),
-        ('CED', 'Cédula de ciudadanía'),
-        ('CEDEX', 'Cédula de extranjero'),
-        ('PAS', 'Pasaporte'),
+        ('CC', 'Cédula de ciudadanía'),
+        ('CCEX', 'Cédula de extranjero'),
+        ('PASS', 'Pasaporte'),
     )
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista')
-    tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CED',verbose_name='Tipo de Identificación')
+    genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista',default='Hombre')
+    tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     nacionalidad = models.ManyToManyField(Nacionalidad)
@@ -53,7 +53,7 @@ class ComposicionCorporal(models.Model):
     deportista = models.ForeignKey(Deportista)
     peso = models.FloatField()
     estatura = models.FloatField()
-    RH = models.CharField(max_length=4,choices=tipos_rh)
+    RH = models.CharField(max_length=4,choices=tipos_rh,default='O+')
     talla_camisa = models.CharField(max_length=100)
     talla_pantaloneta = models.CharField(max_length=100)
     talla_zapato = models.CharField(max_length=100)
@@ -65,15 +65,15 @@ class ComposicionCorporal(models.Model):
 class HistorialDeportivo(models.Model):
     tipo_his_deportivo=(
         ('Competencia','Competencia'),
-        ('Premio','Premio'),
         ('Logro Deportivo','Logro Deportivo'),
         ('Participacion en Equipo','Participacion en Equipo'),
+        ('Premio','Premio'),
     )
     fecha = models.DateField()
     lugar = models.CharField(max_length=100)
     descripcion = models.TextField()
     institucion_equipo = models.CharField(max_length=100,blank=True,null=True)
-    tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Tipo Historial')
+    tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Tipo Historial',default='Competencia')
     deportista = models.ForeignKey(Deportista)
 
 #Informacion academica
@@ -86,9 +86,9 @@ class InformacionAcademica(models.Model):
         ('Postgrado','Postgrado'),
     )
     tipo_estado = (
+        ('Actual','Actual'),
         ('Finalizado','Finalizado'),
         ('Incompleto','Incompleto'),
-        ('Actual','Actual'),
     )
     pais = models.ForeignKey(Nacionalidad)
     institucion = models.CharField(max_length=100)
