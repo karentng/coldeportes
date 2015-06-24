@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    CAF-SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Ver Detalles de CAF
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Ver CAF</li>
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block titulo_panel %}
+    Detalles del CAF
+{% endblock %}
+
+{% block contenido_panel %}
+<div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+    <div class="panel-heading p-0">
+        <div class="panel-heading-btn m-r-10 m-t-10">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+        </div>
+        
+        <div class="tab-overflow">
+            <ul class="nav nav-tabs">
+                <li class="prev-button">
+                	<a href="javascript:;" data-click="prev-tab" class="text-inverse">
+                		<i class="fa fa-arrow-left"></i>
+                	</a>
+                </li>
+
+                {% if centro %}
+                	<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+                {% endif %}
+
+                {% if costos %}
+                	<li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-dollar"></i> Costos de Uso</a></li>
+                {% endif %}
+
+                {% if servicios %}
+                	<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-users"></i> Servicios</a></li>
+                {% endif %}
+
+                {% if otros %}
+                	<li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Otros</a></li>
+                {% endif %}
+                
+                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="nav-tab2-12">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10">
+                    	<i class="fa fa-chevron-left m-r-5"></i> Volver
+                    </a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10">
+                    	<i class="fa fa-print m-r-5"></i> Imprimir
+                    </a>
+                    </span>
+                    {{centro.nombre}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                            <p><b>Estado: {{centro.get_estado_display}}</b></p>
+                            <p>Dirección: {{centro.direccion}}</p>
+
+                            <p>{{centro.ciudad.nombre}}, {{centro.ciudad.departamento.nombre}}</p>
+                            <p>Latitud: {{centro.latitud}} Longitud: {{centro.longitud}} Altura: {{centro.altura}}</p>
+                        </address>
+                    </div>                    
+                </div>
+                <h5 class="m-t-10">Información de contacto:</h5>
+                <p>
+                	{% if escenario.contacto == None %}
+                		No hay información disponible actualmente
+                	{% else %}
+                		{{escenario.contacto|linebreaksbr}}
+                	{% endif %}
+                </p>
+            </div>
+        </div>
+        {% if costos %}
+        <div class="tab-pane fade" id="nav-tab2-13">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{centro.nombre}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                        	{% if costos.libre %}
+                        		<b>El ingreso al centro de acondicionamiento físico es libre y sin costo</b>
+                        	{% else %}
+                        		<p><b>Costo público: {{costos.publico}} pesos</b></p>
+                        		<p><b>Costo privado: {{costos.privado}} pesos</b></p>
+                        	{% endif %}
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if servicios %}
+        <div class="tab-pane fade" id="nav-tab2-14">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{centro.nombre}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                        	<b>Los servicios que provee el centro de acondicionamiento físico son:</b>
+                        	<ul>
+                        		{% for i in servicios %}
+                        		<li>{{i}}</li>
+                        		{% endfor %}
+                        	</ul>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if otros %}
+        <div class="tab-pane fade" id="nav-tab2-15">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{centro.nombre}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                        	<b>Otros servicios que provee el centro de acondicionamiento físico son:</b>
+                        	<ul>
+                        		{% for i in otros %}
+                        		<li>{{i}}</li>
+                        		{% endfor %}
+                        	</ul>
+                        </address>
+                    </div>
+                </div>
+                <h5 class="m-t-10">Comentarios:</h5>
+                <p>
+                	{% if otros.comentarios == '' %}
+                		No hay comentarios registrados
+                	{% else %}
+                		{{otros.comentarios|linebreaksbr}}
+                	{% endif %}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/gallery-v2.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            Gallery.init();
+        });
+    </script>
+{% endblock %}

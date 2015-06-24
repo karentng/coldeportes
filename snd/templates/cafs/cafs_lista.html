@@ -21,7 +21,12 @@
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-cafs";
+        opciones = {% if perms.snd.change_centroacondicionamiento %} true {% else %} false {% endif %};
+
+        url = "{% url 'cargar_columnas' 0 %}";
     </script>
+
+
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
 
@@ -32,6 +37,7 @@
 {% block contenido_panel %}
     <div class="table-responsive">
         <table id="tabla-cafs" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+            {% comment %}
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -89,6 +95,7 @@
                     </tr>
                 {% endfor %}
             </tbody>
+            {% endcomment %}
         </table>
     </div>
 {% endblock %}
