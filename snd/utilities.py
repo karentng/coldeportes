@@ -22,12 +22,20 @@ def adicionarClase(campo, clase):
         campo.widget.attrs.update({'readonly': True})
     return campo
 
-#Funcion auxiliar para calculo de edad
 def calculate_age(born):
+    """
+    Junio 22 / 2015
+    Autor: Daniel Correa
+
+    Funcion para el calculo de la edad de acuerdo a una fecha ingresada por parametro
+    :param born: Fecha de nacimiento de la persona a calcular edad
+    :type born: Datetime.date
+    """
+
     today = date.today()
     try:
         birthday = born.replace(year=today.year)
-    except ValueError: # raised when birth date is February 29 and the current year is not a leap year
+    except ValueError: # caso de  February 29 en año no bisiesto
         birthday = born.replace(year=today.year, month=born.month+1, day=1)
     if birthday > today:
         return today.year - born.year - 1

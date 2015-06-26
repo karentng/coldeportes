@@ -24,7 +24,7 @@ class Deportista(models.Model):
     identificacion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     nacionalidad = models.ManyToManyField(Nacionalidad)
-    ciudad_nacimiento = models.ForeignKey(Ciudad,blank=True)
+    ciudad_nacimiento = models.ForeignKey(Ciudad,blank=True,null=True)
     barrio = models.CharField(max_length=100)
     comuna = models.CharField(max_length=100)
     email = models.EmailField(null=True,blank=True)

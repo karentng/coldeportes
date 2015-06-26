@@ -2,6 +2,5 @@
 Thumbs.db
 coldeportes/settings.py
 snd/pendiente/
-entidades/migrations/
-snd/migrations/
-gestion_usuarios/migrations/
+snd/migrations/*
+entidades/migrations/*
