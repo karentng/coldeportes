@@ -31,6 +31,10 @@ urlpatterns = patterns('snd.views.caf',
 	url(r'^modificar/(\d+)$', 'modificar', name="modificar_caf"),
 	url(r'^modificar/(\d+)/(\d+)$', 'modificar', name="modificar_caf"),
     
-    url(r'^listar$', 'listarCAFS', name='listar_cafs'),    
+    url(r'^listar$', 'listarCAFS', name='listar_cafs'),
     url(r'^desactivar/(\d+)$', 'desactivarCAF', name='desactivar_caf'),
+    url(r'^ver/(\d+)$', 'ver_caf', name='ver_caf'),
+
+    url(r'^cargar-columnas/(\d+)$', 'cargar_columnas', name='cargar_columnas'),
+    url(r'^cargar-datos/(\d+)$', 'cargar_datos', name='cargar_datos'),
 )

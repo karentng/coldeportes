@@ -1,0 +1,12 @@
+{% if tipo and label %}
+	<span class='label label-table {{tipo}}'>{{label}}</span>
+{% endif %}
+
+{% if tipo == 'urlsOpciones'%}
+	{% for i in urls %}
+	    <a href='{{i.url}}' >
+	    	<i class="fa {{i.imagen}}"></i> {{i.nombre}}
+	    </a>
+	    <br/>
+	{% endfor %}
+{% endif %}
