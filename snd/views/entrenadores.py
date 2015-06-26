@@ -2,7 +2,8 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from snd.formularios.entrenadores import EntrenadorForm, FormacionDeportivaForm, ExperienciaLaboralForm
 from snd.models import Entrenador, FormacionDeportiva, ExperienciaLaboral
-
+from snd.utilities import calculate_age
+from django.contrib import messages
 
 @login_required
 def wizard_entrenador_nuevo(request):
@@ -275,3 +276,32 @@ def listar_entrenador(request):
     return render(request, 'entrenadores/entrenadores_lista.html', {
         'entrenadores':entrenadores,
     })
+
+@login_required
+def ver_entrenador(request,id_entrenador):
+    """
+    Junio 23 /2015
+    Autor: Milton Lenis
+
+    Ver Entrenador
+
+    Se obtiene la informacion general del entrenador desde la base de datos y se muestra
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_entrenador: Llave primaria del entrenador
+    :type id_entrenador: String
+    """
+    try:
+        entrenador = Entrenador.objects.get(id=id_entrenador)
+    except:
+        messages.error(request, "Error: No existe el entrenador solicitado o su información es incompleta")
+        return redirect('entrenador_listar')
+    formacion_deportiva = FormacionDeportiva.objects.filter(entrenador=entrenador)
+    experiencia_laboral = ExperienciaLaboral.objects.filter(entrenador=entrenador)
+    entrenador.edad = calculate_age(entrenador.fecha_nacimiento)
+    return render(request,'entrenadores/ver_entrenador.html',{
+            'entrenador':entrenador,
+            'formacion_deportiva':formacion_deportiva,
+            'experiencia_laboral':experiencia_laboral
+        })
