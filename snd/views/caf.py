@@ -207,6 +207,36 @@ def modificar(request, idCAF, idForm=0):
         'idCAF': idCAF,
     })
 
+@login_required
+def ver_caf(request, idCAF):
+    """
+    Junio 23 / 2015
+    Autor: Andrés Serna
+    
+    Ver CAF
+
+    Se obtienen toda la información registrada del CAF dado y se muestra.
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param escenario_id:   Identificador del CAF
+    :type escenario_id:    String
+    """
+    try:
+        centro = CentroAcondicionamiento.objects.get(id=idCAF)
+        costos = CACostoUso.objects.get(centro=centro)
+        servicios = CAServicios.objects.get(centro=centro)
+        otros = CAOtros.objects.get(centro=centro)
+    except Exception:
+        return redirect('listar_cafs')
+
+    return render(request, 'cafs/ver_caf.html', {
+        'centro': centro,
+        'costos': costos,
+        'servicios': servicios,
+        'otros': otros,
+    })
+
 
 @login_required
 def cargar_datos(request, modelo):

@@ -12,7 +12,7 @@ class CentroAcondicionamientoForm(ModelForm):
 
     class Meta:
         model = CentroAcondicionamiento
-        exclude = ('entidad', 'activo',)
+        exclude = ('entidad',)
 
 class CACostoUsoForm(ModelForm):
     class Meta:

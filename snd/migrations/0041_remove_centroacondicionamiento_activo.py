@@ -7,12 +7,12 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('snd', '0002_dirigente'),
-
-        ('snd', '0006_auto_20150609_2057'),
-        ('snd', '0006_auto_20150610_1050'),
-        ('snd', '0025_auto_20150609_1247'),
+        ('snd', '0040_caracterizacionescenario_tipo_disciplinas'),
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='centroacondicionamiento',
+            name='activo',
+        ),
     ]

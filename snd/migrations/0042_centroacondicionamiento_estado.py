@@ -7,14 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('entidades', '0005_nacionalidad'),
+        ('snd', '0041_remove_centroacondicionamiento_activo'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='nacionalidad',
-            name='iso',
-            field=models.CharField(max_length=5, verbose_name='Abreviacion', default='CO'),
-            preserve_default=False,
+            model_name='centroacondicionamiento',
+            name='estado',
+            field=models.IntegerField(default=1, choices=[(1, 'Activo'), (2, 'Inactivo')]),
         ),
     ]
