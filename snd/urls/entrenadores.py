@@ -20,4 +20,5 @@ urlpatterns = patterns('snd.views.entrenadores',
     url(r'^listar$', 'listar_entrenador', name='entrenador_listar'),
     url(r'^desactivar/(\d+)$', 'desactivar_entrenador', name='entrenador_desactivar'),
     url(r'^finalizar', 'finalizar_entrenador', name='finalizar_entrenador'),
+    url(r'^ver/(\d+)$','ver_entrenador',name='ver_entrenador'),
 )

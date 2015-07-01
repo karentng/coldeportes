@@ -158,7 +158,11 @@
                 {% for msg in messages %}
                     <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">              
                         <span class="close" data-dismiss="alert">×</span>
-                        <i class="fa fa-check fa-2x pull-left"></i>
+                        {% if msg.tags == 'error' %}
+                            <i class="fa fa-times fa-2x pull-left"></i>
+                        {% else %}
+                            <i class="fa fa-check fa-2x pull-left"></i>
+                        {% endif %}
                         <p>{{msg}}</p>
                     </div>
                 {% endfor %}

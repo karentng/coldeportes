@@ -18,6 +18,6 @@ urlpatterns = patterns('snd.views.deportistas',
     #Urls generales
     url(r'^listar$', 'listar_deportista', name='deportista_listar'),
     url(r'^desactivar/(\d+)$', 'desactivar_deportista', name='deportista_desactivar'),
-    url(r'^finalizar', 'finalizar_deportista', name='finalizar_deportista'),
+    url(r'^finalizar/(?P<opcion>.+)$', 'finalizar_deportista', name='finalizar_deportista'),
     url(r'^ver/(\d+)$','ver_deportista',name='ver_deportista'),
 )
