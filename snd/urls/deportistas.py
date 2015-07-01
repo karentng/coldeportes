@@ -15,8 +15,9 @@ urlpatterns = patterns('snd.views.deportistas',
     url(r'^eliminar/historia-deportiva/(\d+)/(\d+)$', 'eliminar_historia_deportiva', name='eliminar_historia_deportiva'),
     url(r'^eliminar/historia-academica/(\d+)/(\d+)$', 'eliminar_historia_academica', name='eliminar_historia_academica'),
 
-    #Urls de listado y desactivacion
+    #Urls generales
     url(r'^listar$', 'listar_deportista', name='deportista_listar'),
     url(r'^desactivar/(\d+)$', 'desactivar_deportista', name='deportista_desactivar'),
-    url(r'^finalizar', 'finalizar_deportista', name='finalizar_deportista'),
+    url(r'^finalizar/(?P<opcion>.+)$', 'finalizar_deportista', name='finalizar_deportista'),
+    url(r'^ver/(\d+)$','ver_deportista',name='ver_deportista'),
 )
