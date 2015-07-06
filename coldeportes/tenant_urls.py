@@ -20,4 +20,5 @@ urlpatterns = patterns('',
     url(r'^deportistas/',include('snd.urls.deportistas')),#urls de deportistas
     url(r'^dirigentes/', include('snd.urls.dirigentes')), #urls de dirigentes
     url(r'^entrenadores/',include('snd.urls.entrenadores')),#urls de entrenadores
+    url(r'^ccf/',include('snd.urls.cajas_compensacion')),#urls de ecajas compensación
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

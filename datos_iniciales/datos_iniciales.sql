@@ -1427,7 +1427,10 @@ INSERT INTO "entidades_nacionalidad" ("id","iso","nombre") VALUES
 
 INSERT INTO "entidades_tipousoescenario" ("id", "descripcion") VALUES
 (1,	'Aficionado'),
-(2,	'Alto Rendimiento');
+(2,	'Alto Rendimiento'),
+(3,	'Recreación'),
+(4,	'Descanso'),
+(5,	'Vacacional');
 
 INSERT INTO "entidades_tipoescenario" ("id", "descripcion") VALUES
 (1,	'Estadio'),
@@ -1435,7 +1438,12 @@ INSERT INTO "entidades_tipoescenario" ("id", "descripcion") VALUES
 (3,	'Velódromo'),
 (4,	'Piscina Olímpica'),
 (5,	'Pista Atlética'),
-(6,	'Cancha Comunal');
+(6,	'Gimnasio'),
+(7,	'Centro Vacacional'),
+(8,	'Centro Recreacional'),
+(9,	'Parque de Diversión'),
+(10,	'Clubes Deportivos'),
+(11,	'Cancha Comunal');
 
 INSERT INTO "entidades_nacionalidad" ("id","iso","nombre") VALUES
 (1, 'AF', 'Afganistán'),

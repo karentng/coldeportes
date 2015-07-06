@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+	Registro Caja de Compensación
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'listar_escenarios' %}">Escenarios CCF</a>
+	<li class="active">Editar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Cajas de Compensación Familiar
+{% endblock %}
+
+{% block titulo_panel %}
+	Registro de Cajas de Compensación Familiar
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'cajas_compensacion/wizard/_wizard.html' %}
+	<fieldset>
+		<form action="" method="post">{% csrf_token %}
+			<div class="well row">
+				<div class="col-xs-12">
+					<h3>{{titulo}}</h3>
+					
+					{% for i in form %}
+						<div class="col-md-6">
+							{% bootstrap_field i layout="vertical" %}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<hr>
+			{% if wizard_stage > 1 %}
+			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+			{% endif %}		
+			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+		</form>
+	</fieldset>
+	
+
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	
+{% endblock %}
+
