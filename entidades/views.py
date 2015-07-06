@@ -5,10 +5,11 @@ from entidades.models import *
 from entidades.forms import *
 from django.conf import settings
 from django.contrib import messages
+from snd.modelos.cafs import CentroAcondicionamiento
 
 @login_required
 def tipo(request):
-	return render(request, 'entidad_tipo.html', {
+    return render(request, 'entidad_tipo.html', {
     })
 
 @login_required
