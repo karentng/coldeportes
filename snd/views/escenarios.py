@@ -83,7 +83,7 @@ def ver_escenario(request, escenario_id):
     :type escenario_id:    String
     """
     escenario = Escenario.objects.get(id=escenario_id)
-    caracteristicas = CaracterizacionEscenario.objects.get(escenario=escenario)
+    caracteristicas = CaracterizacionEscenario.objects.filter(escenario=escenario) 
     horarios = HorarioDisponibilidad.objects.filter(escenario=escenario)
     fotos = Foto.objects.filter(escenario=escenario)
     videos =  Video.objects.filter(escenario=escenario)
@@ -122,6 +122,7 @@ def wizard_nuevo_identificacion(request):
 
         if identificacion_form.is_valid():
             escenario = identificacion_form.save(commit=False)
+            escenario.entidad =  request.tenant
             escenario.nombre = escenario.nombre.upper()
             escenario.direccion = escenario.direccion.upper()
             escenario.comuna = escenario.comuna.upper()
@@ -166,6 +167,7 @@ def wizard_identificacion(request, escenario_id):
 
         if identificacion_form.is_valid():
             escenario = identificacion_form.save(commit=False)
+            escenario.entidad =  request.tenant
             escenario.nombre = escenario.nombre.upper()
             escenario.direccion = escenario.direccion.upper()
             escenario.comuna = escenario.comuna.upper()

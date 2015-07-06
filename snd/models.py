@@ -4,3 +4,4 @@ from snd.modelos.escenarios import *
 from snd.modelos.entrenadores import *
 from snd.modelos.deportistas import *
 from snd.modelos.dirigentes import *
+from snd.modelos.cajas_compensacion import *
