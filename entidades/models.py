@@ -36,7 +36,6 @@ class Nacionalidad(models.Model):
         return self.nombre
 
 
-
 class Dias(models.Model):
     nombre = models.CharField(max_length=10)
 
@@ -46,6 +45,19 @@ class Dias(models.Model):
 
 class TipoEscenario(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name='descripción')
+
+    def __str__(self):
+        return self.descripcion
+
+class TipoServicioCajaCompensacion(models.Model):
+    categoria = models.CharField(max_length=50, verbose_name='categoría')
+    descripcion = models.CharField(max_length=100, verbose_name='descripción')
+
+    def __str__(self):
+        return self.descripcion
+
+class TipoServicioEscenarioCajaCompensacion(models.Model):
+    descripcion = models.CharField(max_length=100, verbose_name='descripción')
 
     def __str__(self):
         return self.descripcion
