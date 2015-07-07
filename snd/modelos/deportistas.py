@@ -50,13 +50,18 @@ class ComposicionCorporal(models.Model):
         ('O+','O+'),
         ('O-','O-'),
     )
+    tipos_talla_choices = (
+        ('Niño','Niño'),
+        ('Adulto','Adulto'),
+    )
     deportista = models.ForeignKey(Deportista)
     peso = models.FloatField(help_text="En kg", verbose_name="Peso (kg)")
     estatura = models.IntegerField(help_text="En cm", verbose_name="Estatura (cm)")
     RH = models.CharField(max_length=4,choices=tipos_rh,default='O+')
-    talla_camisa = models.CharField(max_length=100)
-    talla_pantaloneta = models.CharField(max_length=100)
-    talla_zapato = models.CharField(max_length=100)
+    tipo_talla = models.CharField(max_length=7,choices=tipos_talla_choices,default='Adulto',verbose_name='Talla para')
+    talla_camisa = models.CharField(max_length=2)
+    talla_pantaloneta = models.CharField(max_length=2)
+    talla_zapato = models.CharField(max_length=2)
     porcentaje_grasa = models.CharField(max_length=7)
     porcentaje_musculo = models.CharField(max_length=7)
 
