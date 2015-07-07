@@ -20,10 +20,6 @@ class DirigenteForm(ModelForm):
         model = Dirigente
         #fields = '__all__'
         exclude = ('entidad','activo',)
-        widgets = {
-            'fecha_posesion': DateWidget(attrs={'id':"id_fecha_posesion"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3),
-            'fecha_retiro': DateWidget(attrs={'id':"id_fecha_retiro"}, options={'format': 'yyyy-mm-dd'}, usel10n = True, bootstrap_version=3)
-        }
 
 class DirigenteFuncionesForm(ModelForm):
 

@@ -26,7 +26,7 @@ class Dirigente(models.Model):
         ('PT', "Pasaporte"),
     )
     tipo_identificacion = models.CharField(choices=tipo_identificacion, max_length=2, verbose_name="Tipo de Identificación")
-    identificacion = models.CharField(max_length=20, verbose_name="Número de Identificación")
+    identificacion = models.CharField(max_length=20, verbose_name="Número de Identificación", unique=True)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(choices=tipo_genero,max_length=6, verbose_name='Género')
@@ -46,6 +46,10 @@ class Dirigente(models.Model):
 
     def __str__(self):
         return "{0} {1} - {2}".format(self.nombres, self.apellidos, self.cargo)
+
+    def uppercase(self):
+        self.nombres = self.nombres.upper()
+        self.apellidos = self.apellidos.upper()
 
 class Funcion(models.Model):
     descripcion = models.CharField(max_length=200, verbose_name="Descripción")
