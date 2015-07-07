@@ -33,7 +33,12 @@ def wizard_deportista_nuevo(request):
 
         if deportista_form.is_valid():
             deportista = deportista_form.save(commit=False)
-            deportista.entidad =  request.tenant
+            deportista.entidad = request.tenant
+            deportista.nombres = deportista.nombres.upper()
+            deportista.apellidos = deportista.apellidos.upper()
+            deportista.barrio = deportista.barrio.upper()
+            deportista.comuna = deportista.comuna.upper()
+            deportista.direccion = deportista.direccion.upper()
             deportista.save()
             deportista_form.save()
             return redirect('wizard_corporal', deportista.id)
@@ -73,6 +78,13 @@ def wizard_deportista(request,id_depor):
         deportista_form = DeportistaForm(request.POST, request.FILES, instance=deportista)
 
         if deportista_form.is_valid():
+            deportista = deportista_form.save(commit=False)
+            deportista.nombres = deportista.nombres.upper()
+            deportista.apellidos = deportista.apellidos.upper()
+            deportista.barrio = deportista.barrio.upper()
+            deportista.comuna = deportista.comuna.upper()
+            deportista.direccion = deportista.direccion.upper()
+            deportista.save()
             deportista_form.save()
             return redirect('wizard_corporal', id_depor)
 
@@ -114,6 +126,11 @@ def wizard_corporal(request,id_depor):
         if corporal_form.is_valid():
             corporal = corporal_form.save(commit=False)
             corporal.deportista = Deportista.objects.get(id=id_depor)
+            corporal.talla_camisa = corporal.talla_camisa.upper()
+            corporal.talla_pantaloneta = corporal.talla_pantaloneta.upper()
+            corporal.talla_zapato = corporal.talla_zapato.upper()
+            corporal.porcentaje_grasa = corporal.porcentaje_grasa.upper()
+            corporal.porcentaje_musculo = corporal.porcentaje_musculo.upper()
             corporal.save()
             corporal_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -152,6 +169,9 @@ def wizard_historia_deportiva(request,id_depor):
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
             hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
+            hist_depor.lugar = hist_depor.lugar.upper()
+            hist_depor.descripcion = hist_depor.descripcion.upper()
+            hist_depor.institucion_equipo = hist_depor.institucion_equipo.upper()
             hist_depor_nuevo.save()
             hist_depor_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -222,6 +242,8 @@ def wizard_historia_academica(request,id_depor):
         if inf_academ_form.is_valid():
             inf_academ_nuevo = inf_academ_form.save(commit=False)
             inf_academ_nuevo.deportista = Deportista.objects.get(id=id_depor)
+            inf_academ.institucion = inf_academ.institucion.upper()
+            inf_academ.profesion = inf_academ.profesion.upper()
             inf_academ_nuevo.save()
             inf_academ_form.save()
             return redirect('wizard_historia_academica', id_depor)
