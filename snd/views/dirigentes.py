@@ -30,6 +30,7 @@ def wizard_identificacion_nuevo(request):
         if identificacion_form.is_valid():
             dirigente = identificacion_form.save(commit=False)
             dirigente.entidad =  request.tenant
+            dirigente.uppercase()
             dirigente.save()
             identificacion_form.save()
             return redirect('dirigentes_wizard_funciones', dirigente.id)
@@ -68,6 +69,9 @@ def wizard_identificacion(request, dirigente_id):
         identificacion_form = DirigenteForm(request.POST, request.FILES, instance=dirigente)
 
         if identificacion_form.is_valid():
+            dirigente = identificacion_form.save(commit=False)
+            dirigente.uppercase()
+            dirigente.save()
             identificacion_form.save()
             return redirect('dirigentes_wizard_funciones', dirigente_id)
 

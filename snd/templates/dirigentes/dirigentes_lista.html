@@ -16,6 +16,15 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <style type="text/css">
+    .media-object{
+        width: 60px !important;
+        height: 60px !important;
+    }
+    th{
+        text-align: center;
+    }
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -54,7 +63,15 @@
             <tbody>
                 {% for dirigente in dirigentes %}
                     <tr>
-                        <td align="center">{%if dirigente.foto%}<img class="media-object rounded-corner" src="{{MEDIA_URL}}{{dirigente.foto}}" alt="" width="60" height="60" />{%else%}<span class="fa fa-4x fa-smile-o"></span>{%endif%}</td>
+                        <td align="center">
+                            {%if dirigente.foto%}
+                                <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{dirigente.foto}}" alt=""/>
+                            {%elif dirigente.genero == "Hombre"%}
+                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt=""/>
+                            {%else%}
+                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt=""/>
+                            {%endif%}
+                        </td>
                         <td>{{dirigente.tipo_identificacion}}. {{dirigente.identificacion}}</td>
                         <td>{{dirigente.nombres}} {{dirigente.apellidos}}</td>
                         <td>{{dirigente.genero}}</td>
