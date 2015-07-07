@@ -83,7 +83,7 @@ def ver_escenario(request, escenario_id):
     :type escenario_id:    String
     """
     escenario = Escenario.objects.get(id=escenario_id)
-    caracteristicas = CaracterizacionEscenario.objects.get(escenario=escenario)
+    caracteristicas = CaracterizacionEscenario.objects.filter(escenario=escenario) 
     horarios = HorarioDisponibilidad.objects.filter(escenario=escenario)
     fotos = Foto.objects.filter(escenario=escenario)
     videos =  Video.objects.filter(escenario=escenario)
@@ -123,6 +123,11 @@ def wizard_nuevo_identificacion(request):
         if identificacion_form.is_valid():
             escenario = identificacion_form.save(commit=False)
             escenario.entidad =  request.tenant
+            escenario.nombre = escenario.nombre.upper()
+            escenario.direccion = escenario.direccion.upper()
+            escenario.comuna = escenario.comuna.upper()
+            escenario.barrio = escenario.barrio.upper()
+            escenario.nombre_administrador = escenario.nombre_administrador.upper()
             escenario.save()
             return redirect('wizard_caracterizacion', escenario.id)
 
@@ -161,7 +166,14 @@ def wizard_identificacion(request, escenario_id):
         identificacion_form = IdentificacionForm(request.POST, instance=escenario)
 
         if identificacion_form.is_valid():
-            identificacion_form.save()
+            escenario = identificacion_form.save(commit=False)
+            escenario.entidad =  request.tenant
+            escenario.nombre = escenario.nombre.upper()
+            escenario.direccion = escenario.direccion.upper()
+            escenario.comuna = escenario.comuna.upper()
+            escenario.barrio = escenario.barrio.upper()
+            escenario.nombre_administrador = escenario.nombre_administrador.upper()
+            escenario.save()
             return redirect('wizard_caracterizacion', escenario_id)
 
 
@@ -419,6 +431,7 @@ def wizard_contactos(request, escenario_id):
         if contactos_form.is_valid():
             contacto_nuevo = contactos_form.save(commit=False)
             contacto_nuevo.escenario = Escenario.objects.get(id=escenario_id)
+            contacto_nuevo.nombre = contacto_nuevo.nombre.upper()
             contacto_nuevo.save()
             #messages.success(request, "¡Escenario guardado exitósamente!")
             return redirect('wizard_contactos', escenario_id)
