@@ -29,10 +29,12 @@ class ComposicionCorporalForm(ModelForm):
         exclude = ('deportista',)
 
 class HistorialDeportivoForm(ModelForm):
+    descripcion = forms.CharField(widget=forms.Textarea, required=False)
     def __init__(self, *args, **kwargs):
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['fecha'] = adicionarClase(self.fields['fecha'], 'fecha')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
         model = HistorialDeportivo

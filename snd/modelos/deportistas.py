@@ -21,7 +21,7 @@ class Deportista(models.Model):
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista',default='Hombre')
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
-    identificacion = models.CharField(max_length=100)
+    identificacion = models.CharField(max_length=100,unique=True)
     fecha_nacimiento = models.DateField()
     nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad_nacimiento = models.ForeignKey(Ciudad,blank=True,null=True)
@@ -51,14 +51,14 @@ class ComposicionCorporal(models.Model):
         ('O-','O-'),
     )
     deportista = models.ForeignKey(Deportista)
-    peso = models.FloatField()
-    estatura = models.FloatField()
+    peso = models.FloatField(help_text="En kg", verbose_name="Peso (kg)")
+    estatura = models.IntegerField(help_text="En cm", verbose_name="Estatura (cm)")
     RH = models.CharField(max_length=4,choices=tipos_rh,default='O+')
     talla_camisa = models.CharField(max_length=100)
     talla_pantaloneta = models.CharField(max_length=100)
     talla_zapato = models.CharField(max_length=100)
-    porcentaje_grasa = models.CharField(max_length=100)
-    porcentaje_musculo = models.CharField(max_length=100)
+    porcentaje_grasa = models.CharField(max_length=7)
+    porcentaje_musculo = models.CharField(max_length=7)
 
 
 #Hitorial deportivo
@@ -71,7 +71,7 @@ class HistorialDeportivo(models.Model):
     )
     fecha = models.DateField()
     lugar = models.CharField(max_length=100)
-    descripcion = models.TextField()
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
     institucion_equipo = models.CharField(max_length=100,blank=True,null=True)
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Tipo Historial',default='Competencia')
     deportista = models.ForeignKey(Deportista)

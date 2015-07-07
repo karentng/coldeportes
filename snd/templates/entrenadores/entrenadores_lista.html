@@ -62,7 +62,7 @@
                             <td>{{entrenador.nombres}} {{entrenador.apellidos}}</td>
                             <td>{{entrenador.nacionalidad}}</td>
                             <td>{{entrenador.identificacion}}</td>
-                            <td>{% if entrenador.activo %} Activo {% else %} Desactivado {% endif %}</td>
+                            <td>{% if entrenador.estado %} Activo {% else %} Desactivado {% endif %}</td>
                             <td>
                                 <a href="{% url 'ver_entrenador' entrenador.id %}" title="Ver">
                                     <i class="fa fa-eye"></i> Ver Entrenador
@@ -87,7 +87,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                    <a href="{% url 'deportista_desactivar' entrenador.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                    <a href="{% url 'entrenador_desactivar' entrenador.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                                 </div>
                                             </div>
                                         </div>

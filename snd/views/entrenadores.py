@@ -252,8 +252,8 @@ def desactivar_entrenador(request,id_entrenador):
     :type id_entrenador: String
     """
     entrenador = Entrenador.objects.get(id=id_entrenador)
-    estado_actual = entrenador.activo
-    entrenador.activo = not(estado_actual)
+    estado_actual = entrenador.estado
+    entrenador.estado = not(estado_actual)
     entrenador.save()
     messages.warning(request, "Entrenador desactivado correctamente.")
     return redirect('entrenador_listar')
