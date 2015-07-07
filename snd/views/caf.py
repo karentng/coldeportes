@@ -28,7 +28,11 @@ def guardar_identificacion(wizard, caf_form):
     """
 
     centro = caf_form.save(commit=False)
-    centro.entidad = wizard.request.tenant  
+    centro.entidad = wizard.request.tenant
+    centro.nombre = centro.nombre.upper()
+    centro.direccion = centro.direccion.upper()
+    centro.email = centro.email.upper()
+    centro.contacto = centro.contacto.upper()
     centro.save()
 
     return centro
