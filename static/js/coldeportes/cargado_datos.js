@@ -83,7 +83,7 @@ return function ( request, drawCallback, settings ) {
                 json = json.datos
                 
                 for (i in atributos){
-                    $('#tabla-cafs tr:eq(0) th:eq('+i+')').text(atributos[i]);
+                    $('#'+idTabla+' tr:eq(0) th:eq('+i+')').text(atributos[i]);
                 }
 
                 cacheLastJson = $.extend(true, {}, json);
@@ -132,7 +132,7 @@ $.ajax( {
 		columnas.push({"title": "Opciones", "targets": columnas.length, "orderable": true});
 	}
 
-    $('#tabla-cafs').dataTable({
+    $('#'+idTabla).dataTable({
         "responsive": true,
         "pagingType": "simple_numbers",
         "pageLength": 10,
@@ -149,8 +149,6 @@ $.ajax( {
             url: json.url,
             pages: 7 // number of pages to cache
         }),
-
-
 
         dom: 'TRC<"clear">lfrtip',
         tableTools: {

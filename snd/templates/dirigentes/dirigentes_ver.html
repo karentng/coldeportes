@@ -24,6 +24,11 @@
     .funciones li:before {
         margin-right: 10px;
     }
+    .media-object{
+        float: left;
+        width: 100px !important;
+        height: 100px !important;
+    }
     </style>
 {% endblock %}
 
@@ -64,9 +69,11 @@
                                 <li class="media">
                                     <a href="javascript:;" class="media-left"></a>
                                     {%if dirigente.foto%}
-                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{dirigente.foto}}" alt="" style="float: left; width=100 height=100" />
+                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{dirigente.foto}}" alt=""/>
+                                    {%elif dirigente.genero == "Hombre"%}
+                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt=""/>
                                     {%else%}
-                                        <span class="fa fa-4x fa-smile-o media-object" style="float: left;"></span>
+                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt=""/>
                                     {%endif%}
                                     <div class="media-body">
                                         <p style="margin-left: 50px">
@@ -104,7 +111,7 @@
                         </address>
                     </div>                    
                 </div>
-                <h5 class="m-t-10">Descipción:</h5>
+                <h5 class="m-t-10">Descripción:</h5>
                 <p>{{dirigente.descripcion}}</p>
             </div>
         </div>

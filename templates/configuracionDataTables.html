@@ -10,3 +10,11 @@
 	    <br/>
 	{% endfor %}
 {% endif %}
+
+{% if tipo == 'ManyToMany' %}
+	<ul>
+	{% for i in valores %}
+	    <li>{{i}}</li>
+	{% endfor %}
+	</ul>
+{% endif %}
