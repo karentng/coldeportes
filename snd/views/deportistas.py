@@ -169,9 +169,9 @@ def wizard_historia_deportiva(request,id_depor):
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
             hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
-            hist_depor.lugar = hist_depor.lugar.upper()
-            hist_depor.descripcion = hist_depor.descripcion.upper()
-            hist_depor.institucion_equipo = hist_depor.institucion_equipo.upper()
+            hist_depor_nuevo.lugar = hist_depor.lugar.upper()
+            hist_depor_nuevo.descripcion = hist_depor.descripcion.upper()
+            hist_depor_nuevo.institucion_equipo = hist_depor.institucion_equipo.upper()
             hist_depor_nuevo.save()
             hist_depor_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -242,8 +242,8 @@ def wizard_historia_academica(request,id_depor):
         if inf_academ_form.is_valid():
             inf_academ_nuevo = inf_academ_form.save(commit=False)
             inf_academ_nuevo.deportista = Deportista.objects.get(id=id_depor)
-            inf_academ.institucion = inf_academ.institucion.upper()
-            inf_academ.profesion = inf_academ.profesion.upper()
+            inf_academ_nuevo.institucion = inf_academ.institucion.upper()
+            inf_academ_nuevo.profesion = inf_academ.profesion.upper()
             inf_academ_nuevo.save()
             inf_academ_form.save()
             return redirect('wizard_historia_academica', id_depor)
