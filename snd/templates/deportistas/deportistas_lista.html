@@ -56,7 +56,15 @@
                 <tbody>
                     {% for deportista in deportistas %}
                         <tr>
-                            <td align="center">{%if deportista.foto%}<img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" width="60" height="60" />{%else%}<span class="fa fa-4x fa-smile-o"></span>{%endif%}</td>
+                            <td align="center">
+                                {%if deportista.foto%}
+                                    <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" width="60" height="60" />
+                                {%elif deportista.genero == "Hombre"%}
+                                    <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" width="60" height="60"/>
+                                {%else%}
+                                    <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" width="60" height="60"/>
+                                {%endif%}
+                            </td>
                             <td>{{deportista.nombres}} {{deportista.apellidos}}</td>
                             <td>{{deportista.ciudad_nacimiento}}</td>
                             {% if perms.snd.change_deportista %}
