@@ -47,7 +47,8 @@
             </fieldset> 
             <div class="col-md-5">
                 <h4>Historial Deportivo Actual:</h4>
-                <table class="table table-responsive">
+                <div class="table-responsive">
+                <table class="table">
                     <thead>
                         <tr>
                             <th align="center">Fecha</th>
@@ -62,7 +63,7 @@
                             <td align="center">{{historico.fecha}}</td>
                             <td align="center">{{historico.tipo}}</td>
                             <td align="center">{{historico.lugar}}</td>
-                            <td align="center">{{historico.descripcion}}</td>
+                            <td align="center">{{historico.descripcion|linebreaksbr}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate-{{ historico.id }}" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate-{{ historico.id }}">
@@ -86,7 +87,8 @@
                         </tr>
                     {% endfor %}
                     </tbody>
-                </table>            
+                </table>
+                </div>
             </div>
         </div>
         <br/>
