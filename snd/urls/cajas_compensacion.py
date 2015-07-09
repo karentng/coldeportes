@@ -5,15 +5,15 @@ from snd.views.cajas_compensacion import *
 
 urlpatterns = patterns('snd.views.cajas_compensacion',
     #urls tabla interactiva
-    url(r'^listar$', 'listar_escenarios_ccfs', name='listar_escenarios_ccfs'), 
-    url(r'^desactivar/(\d+)$', 'desactivar_escenario_ccf', name='desactivar_escenario_ccf'),
-    url(r'^ver/(\d+)$', 'ver_escenario_ccf', name='ver_escenario_ccf'),
-    url(r'^finalizar', 'finalizar_escenario_ccf', name='finalizar_escenario_ccf'),
+    url(r'^listar$', 'listar_ccfs', name='listar_ccfs'), 
+    url(r'^desactivar/(\d+)$', 'desactivar_ccf', name='desactivar_ccf'),
+    url(r'^ver/(\d+)$', 'ver_ccf', name='ver_ccf'),
+    url(r'^finalizar', 'finalizar_ccf', name='finalizar_ccf'),
 
 
     #urls wizard
-    url(r'^wizard/nuevo$', 'wizard_caja_escenario', name='wizard_caja_escenario'), 
-    url(r'^wizard/editar/escenario/(\d+)$', 'wizard_editar_caja_escenario', name='wizard_editar_caja_escenario'), 
+    url(r'^wizard/nuevo$', 'wizard_caja', name='wizard_caja'), 
+    url(r'^wizard/editar/(\d+)$', 'wizard_editar_caja', name='wizard_editar_caja'), 
     url(r'^wizard/horarios/(\d+)$', 'wizard_horarios_ccf', name='wizard_horarios_ccf'), 
     url(r'^wizard/tarifas/(\d+)$', 'wizard_tarifas_ccf', name='wizard_tarifas_ccf'), 
     url(r'^wizard/contactos/(\d+)$', 'wizard_contactos_ccf', name='wizard_contactos_ccf'), 

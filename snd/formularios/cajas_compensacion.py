@@ -20,7 +20,6 @@ class CajaCompensacionForm(ModelForm):
         self.fields['publico'] = adicionarClase(self.fields['publico'], 'one')
         self.fields['infraestructura'] = adicionarClase(self.fields['infraestructura'], 'one')
         self.fields['tipo_institucion'] = adicionarClase(self.fields['tipo_institucion'], 'one')
-        self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
         self.fields['servicios'] = adicionarClase(self.fields['servicios'], 'many')
 
     class Meta:

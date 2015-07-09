@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block head %}
-    Registro Escenario
+   Registro Caja de Compensación
 {% endblock %}
 
 {% block css %}
@@ -12,16 +12,16 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+    <li><a href="{% url 'listar_ccfs' %}">Escenarios CCF</a>
     <li class="active">Editar</li>
 {% endblock %}
 
 {% block titulo_contenido %}
-    Escenarios Deportivos
+    Cajas de Compensación Familiar
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Escenarios Deportivos
+    Registro de Cajas de Compensación Familiar
 {% endblock %}
 
 {% block panel_botones %}
@@ -92,7 +92,7 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'finalizar_escenario_ccf' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'finalizar_ccf' %}" class="btn btn-primary pull-right">Finalizar →</a>
     
 
 {% endblock %}

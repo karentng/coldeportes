@@ -2,16 +2,16 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Escenarios CCF-SND COLDEPORTES
+    CCF-SND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
-    Lista de Escenarios
+    Lista de CCF
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li class="active">Escenarios CCF</li>
+    <li class="active">CCF</li>
 {% endblock %}
 
 {% block css %}
@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Listar Escenarios De Cajas de Compensación
+    Listar Cajas de Compensación
 {% endblock %}
 
 {% block contenido_panel %}
@@ -56,12 +56,12 @@
                             <td>{{ccf.get_region_display}}</td>
                             <td>{% if ccf.activo %} Activo {% else %} Inactivo {% endif %}</td>
                             <td>
-                                <a href="{% url 'ver_escenario_ccf' ccf.id %}" data-toggle="modal">
-                                    <i class="fa fa-eye"></i> Ver Escenario CCF
+                                <a href="{% url 'ver_ccf' ccf.id %}" data-toggle="modal">
+                                    <i class="fa fa-eye"></i> Ver CCF
                                 </a>
                                 <br/>
                                 {% if perms.snd.change_cajacompensacion %}
-                                <a href="{% url 'wizard_editar_caja_escenario' ccf.id %}" title="Editar">
+                                <a href="{% url 'wizard_editar_caja' ccf.id %}" title="Editar">
                                     <i class="fa fa-gear"></i> Editar
                                 </a>
                                 <br/>
@@ -73,14 +73,14 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Desactivar Escenario:</h4>
+                                                <h4 class="modal-title">Desactivar CCF:</h4>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Está seguro que desea desactivar este escenario de CCF?
+                                                ¿Está seguro que desea desactivar esta CCF?
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'desactivar_escenario_ccf' ccf.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'desactivar_ccf' ccf.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>

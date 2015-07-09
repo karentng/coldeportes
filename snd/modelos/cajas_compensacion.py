@@ -16,8 +16,8 @@ class CajaCompensacion(models.Model):
     publico = models.CharField(choices=tipo_publicos, max_length=1)
     infraestructura = models.CharField(choices=tipo_infraesctructura, max_length=1)
     tipo_institucion = models.CharField(choices=tipo_instituciones, max_length=2)
-    tipo_escenario = models.ForeignKey(TipoEscenario)
-    servicios = models.ManyToManyField(TipoServicioEscenarioCajaCompensacion)
+    #tipo_escenario = models.ForeignKey(TipoEscenario)
+    servicios = models.ManyToManyField(TipoServicioCajaCompensacion)
 
     entidad = models.ForeignKey(Entidad)    
     activo = models.BooleanField(default=True)
