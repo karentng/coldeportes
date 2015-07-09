@@ -37,7 +37,7 @@ class CaracterizacionEscenario(models.Model):
     metros_construidos = models.CharField(max_length=50, verbose_name='metros cuadrados construídos')
     tipo_escenario = models.ForeignKey(TipoEscenario)
     tipo_disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
-    tipo_superficie_juego = models.CharField(max_length=100, null=True)
+    tipo_superficie_juego = models.ManyToManyField(TipoSuperficie)
     clase_acceso = models.CharField(choices=accesos, max_length=3, verbose_name='tipo de acceso')
     caracteristicas = models.ManyToManyField(CaracteristicaEscenario)
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
@@ -70,3 +70,4 @@ class Contacto(models.Model):
     nombre =  models.CharField(max_length=50)
     telefono = models.CharField(max_length=20)
     email = models.EmailField()
+    descripcion = models.CharField(max_length=1024, null=True)

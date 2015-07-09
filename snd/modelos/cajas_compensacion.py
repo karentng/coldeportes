@@ -41,3 +41,5 @@ class ContactoCajas(models.Model):
     nombre =  models.CharField(max_length=50)
     telefono = models.CharField(max_length=20)
     email = models.EmailField()
+    descripcion = models.CharField(max_length=1024, null=True)
+    

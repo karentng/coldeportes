@@ -53,6 +53,11 @@ class TarifaCajasForm(ModelForm):
         exclude = ('caja_compensacion',)
 
 class ContactoCajasForm(ModelForm):
+    descripcion = forms.CharField(widget=forms.Textarea, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(ContactoCajasForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
         model = ContactoCajas

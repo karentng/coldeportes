@@ -46,6 +46,13 @@ class TipoEscenario(models.Model):
     def __str__(self):
         return self.descripcion
 
+class TipoSuperficie(models.Model):
+    disciplina = models.CharField(max_length=50, null=True)
+    descripcion = models.CharField(max_length=100, verbose_name='descripción')
+
+    def __str__(self):
+        return self.disciplina+", "+self.descripcion
+
 class TipoServicioCajaCompensacion(models.Model):
     categoria = models.CharField(max_length=50, verbose_name='categoría')
     descripcion = models.CharField(max_length=100, verbose_name='descripción')

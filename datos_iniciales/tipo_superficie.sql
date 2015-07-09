@@ -1,0 +1,17 @@
+INSERT INTO "entidades_tiposuperficie" ("id", "descripcion", "disciplina") VALUES
+(2,	'Cesped Natural',	'Fútbol'),
+(3,	'Cesped Sintético',	'Fútbol'),
+(6,	'Asfalto',	'Baloncesto'),
+(1,	'Tierra',	'Fútbol'),
+(4,	'Polipropileno modular',	'Baloncesto'),
+(5,	'Madera',	'Baloncesto'),
+(7,	'Asfalto',	'Voleibol'),
+(8,	'Madera',	'Voleibol'),
+(9,	'Sintética',	'Voleibol'),
+(10,	'Arena',	'Voleibol Playa'),
+(11,	'Madera',	'Squash'),
+(12,	'Sintética',	'Squash'),
+(13,	'Madera',	'Bolos'),
+(14,	'Sintética',	'Bolos'),
+(15,	'Tapiz',	'Lucha'),
+(16,	'Tierra',	'Ciclismo BMX');
