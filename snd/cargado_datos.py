@@ -49,11 +49,15 @@ def obtenerDato(modelo, campos):
         if hasattr(modelo, 'get_%s_display' % campo):
             valor = (getattr(modelo, 'get_%s_display' % campo)())
         else:
-            valor = getattr(modelo, campo)
-            if valor.__class__.__name__ == 'ManyRelatedManager':
-                valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
-            else:
-                valor = ('%s'%valor)
+            try:
+                valor = getattr(modelo, campo)
+                if valor.__class__.__name__ == 'ManyRelatedManager':
+                    valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
+                else:
+                    valor = ('%s'%valor)
+            except Exception:
+                return campo
+
     else:
         valor = ''
         for campo in campos:

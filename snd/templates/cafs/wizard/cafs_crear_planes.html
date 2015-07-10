@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block head %}
+	Planes - CAF
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/switchery/switchery.min.css" rel="stylesheet" />
+
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'listar_escenarios' %}">CAF</a>
+	<li class="active">Planes</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Planes del Centro de Acondicionamiento Físico
+{% endblock %}
+
+{% block titulo_panel %}
+	Registro Planes del Nuevo CAF
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'cafs/wizard/_wizard.html' %}
+	<div class="row">
+        <fieldset class="col-md-6" >
+            <form action="{% url 'crear_plan' idCAF %}" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>Plan ofrecido</h3>
+                        {% for i in form %}
+                            <div class="col-lg-12">
+                                {% bootstrap_field i layout="vertical" %}
+                            </div>
+                        {% endfor %}
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                    </div>
+                </div>
+            </form>
+        </fieldset> 
+        <div class="col-md-6">
+            <h4>Planes Actuales:</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th align="center">Nombre</th>
+                            <th align="center">Precio</th>
+                            <th align="center">Descripción</th>
+                            <th align="center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for plan in planes %}
+                        <tr>
+                            <td align="center">{{plan.nombre}}</td>
+                            <td align="center">{{plan.precio}}</td>
+                            <td align="center">{{plan.descripcion|linebreaksbr}}</td>
+                            <td align="center">
+                                <a href="#modal-desactivate{{plan.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate{{plan.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Eliminar Plan:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar este plan?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                <a href="{% url 'eliminar_plan' idCAF plan.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            {% empty %}
+                            <tr>
+                            	<td colspan="4" align="center">
+                            		<b>No hay planes registrados</b>
+                            	</td>
+                            </tr>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    	<div class="col-sm-12">
+            {% if anterior %}
+                <a href="{% url 'crear_caf' anterior idCAF  %}">
+                    <button class="btn btn-default pull-left" type="button">
+                        ← Anterior
+                    </button>
+                </a>
+            {% endif %}
+    		<a href="{% url 'crear_caf' 'Clases' idCAF %}">
+    			<button class="btn btn-primary pull-right" type="submit">
+					Siguiente →
+				</button>
+    		</a>
+    	</div>
+    </div>
+{% endblock %}

@@ -12,46 +12,46 @@ from django.contrib import messages
 
 
 @login_required
-def listar_escenarios_ccfs(request):
+def listar_ccfs(request):
     """
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    listar los escenarios de las CCF del tenant respectivo
+    listar las CCF del tenant respectivo
 
-    Se obtienen los escenario que ha registrado el tenant que realiza la petición
+    Se obtienen las CCF que se ha registrado en el tenant que realiza la petición
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
     ccfs = CajaCompensacion.objects.all()
-    return render(request, 'cajas_compensacion/escenarios_ccf_lista.html', {
+    return render(request, 'cajas_compensacion/ccf_lista.html', {
         'ccfs': ccfs,
     })
 
 @login_required
-def finalizar_escenario_ccf(request):
+def finalizar_ccf(request):
     """
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    enviar mensaje de finalizada la creación de escenario CCF
+    enviar mensaje de finalizada la creación de la CCF
 
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-    messages.success(request, "Escenario CCF registrado correctamente.")
+    messages.success(request, "CCF registrado correctamente.")
     
-    return redirect('listar_escenarios_ccfs')
+    return redirect('listar_ccfs')
 
 @login_required
-def desactivar_escenario_ccf(request, ccf_id):
+def desactivar_ccf(request, ccf_id):
     """
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    desactivar escenario de caja de compensación
+    desactivar caja de compensación
 
     Se obtienen el estado actual del escenario CCF y se invierte.
 
@@ -64,38 +64,38 @@ def desactivar_escenario_ccf(request, ccf_id):
     estado_actual = ccf.activo
     ccf.activo = not(estado_actual)
     ccf.save()
-    messages.warning(request, "Escenario CCF cambiado de estado correctamente.")
-    return redirect('listar_escenarios_ccfs')
+    messages.warning(request, "CCF cambiada de estado correctamente.")
+    return redirect('listar_ccfs')
 
 @login_required
-def ver_escenario_ccf(request, ccf_id):
+def ver_ccf(request, ccf_id):
     """
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    ver escenario de cafas de compensación
+    ver cafas de compensación
 
-    Se obtienen toda la información registrada del escenario de la caja de compensación dado y se muestra.
+    Se obtienen toda la información registrada de la caja de compensación dado y se muestra.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
     :param ccf_id:   Identificador del escenario
     :type ccf_id:    String
     """
-    escenario_ccf = CajaCompensacion.objects.get(id=ccf_id)
+    ccf = CajaCompensacion.objects.get(id=ccf_id)
     horarios = HorarioDisponibilidadCajas.objects.filter(caja_compensacion=ccf_id)
     tarifas = Tarifa.objects.filter(caja_compensacion=ccf_id)
     contactos = ContactoCajas.objects.filter(caja_compensacion=ccf_id)
 
-    return render(request, 'cajas_compensacion/ver_escenario_ccf.html', {
-        'escenario_ccf': escenario_ccf,
+    return render(request, 'cajas_compensacion/ver_ccf.html', {
+        'ccf': ccf,
         'horarios': horarios,
         'tarifas': tarifas,
         'contactos': contactos
     })
 
 @login_required
-def wizard_caja_escenario(request):
+def wizard_caja(request):
     """
     Julio 4 / 2015
     Autor: Karent Narvaez Grisales
@@ -124,13 +124,13 @@ def wizard_caja_escenario(request):
 
 
     return render(request, 'cajas_compensacion/wizard/wizard_1.html', {
-        'titulo': 'Identificación del Escenario CCF',
+        'titulo': 'Identificación de la CCF',
         'wizard_stage': 1,
         'form': caja_form,
     })
 
 @login_required
-def wizard_editar_caja_escenario(request, caja_id):
+def wizard_editar_caja(request, caja_id):
     """
     Julio 4 / 2015
     Autor: Karent Narvaez Grisales
@@ -165,7 +165,7 @@ def wizard_editar_caja_escenario(request, caja_id):
 
 
     return render(request, 'cajas_compensacion/wizard/wizard_1.html', {
-        'titulo': 'Identificación del Caja de Compensación',
+        'titulo': 'Identificación de la Caja de Compensación',
         'wizard_stage': 1,
         'form': caja_form,
     })
@@ -177,11 +177,11 @@ def wizard_horarios_ccf(request, ccf_id):
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    Horarios de disponibilidad de un escenario de caja de compensacion
+    Horarios de disponibilidad de una caja de compensacion
 
-    Se obtienen el formulario de los horarios y se muestran los horarios actualmente añadidos al escenario
+    Se obtienen el formulario de los horarios y se muestran los horarios actualmente añadidos a la caja de compensación
     y si hay modificaciones se guardan.
-    Si el escenario es nuevo se inicializa en nulo.
+    Si la caja de compensación es nueva se inicializan en nulo los horarios.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
@@ -208,7 +208,7 @@ def wizard_horarios_ccf(request, ccf_id):
 
 
     return render(request, 'cajas_compensacion/wizard/wizard_2.html', {
-        'titulo': 'Horarios de Disponibilidad del Escenario CCF',
+        'titulo': 'Horarios de Disponibilidad de la CCF',
         'wizard_stage': 2,
         'form': horarios_form,
         'horarios': horarios,
@@ -255,7 +255,7 @@ def wizard_contactos_ccf(request, ccf_id):
 
 
     return render(request, 'cajas_compensacion/wizard/wizard_4.html', {
-        'titulo': 'Contactos del Escenario CCF',
+        'titulo': 'Contactos de la CCF',
         'wizard_stage': 4,
         'form': contactos_form,
         'contactos': contactos,
@@ -268,9 +268,9 @@ def wizard_tarifas_ccf(request, ccf_id):
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    Tarifas de un escenario de caja de compensación
+    Tarifas de una caja de compensación
 
-    Se obtienen el formulario para crear tarifas y se muestran las que actualmente hay añadidas al escenario CCF
+    Se obtienen el formulario para crear tarifas y se muestran las que actualmente hay añadidas a la CCF
     y si hay modificaciones se guardan.
     Si el escenario es nuevo se inicializa en nulo.
 
@@ -299,7 +299,7 @@ def wizard_tarifas_ccf(request, ccf_id):
 
 
     return render(request, 'cajas_compensacion/wizard/wizard_3.html', {
-        'titulo': 'Tarifas del Escenario CCF',
+        'titulo': 'Tarifas de la CCF',
         'wizard_stage': 3,
         'form': tarifas_form,
         'tarifas': tarifas,
@@ -313,7 +313,7 @@ def eliminar_horario_ccf(request, ccf_id, horario_id):
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    Eliminar horario de un escenario de caja de compensación
+    Eliminar horario de una caja de compensación
 
     Se obtienen el horario de la base de datos y se elimina
 
@@ -366,7 +366,7 @@ def eliminar_tarifa_ccf(request, ccf_id, tarifa_id):
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
     
-    Eliminar contacto de Caja de Compensación
+    Eliminar tarifa de Caja de Compensación
 
     Se obtienen el contacto de la base de datos y se elimina
 
