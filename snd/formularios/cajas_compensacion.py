@@ -20,7 +20,6 @@ class CajaCompensacionForm(ModelForm):
         self.fields['publico'] = adicionarClase(self.fields['publico'], 'one')
         self.fields['infraestructura'] = adicionarClase(self.fields['infraestructura'], 'one')
         self.fields['tipo_institucion'] = adicionarClase(self.fields['tipo_institucion'], 'one')
-        self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
         self.fields['servicios'] = adicionarClase(self.fields['servicios'], 'many')
 
     class Meta:
@@ -54,6 +53,11 @@ class TarifaCajasForm(ModelForm):
         exclude = ('caja_compensacion',)
 
 class ContactoCajasForm(ModelForm):
+    descripcion = forms.CharField(widget=forms.Textarea, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(ContactoCajasForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
         model = ContactoCajas

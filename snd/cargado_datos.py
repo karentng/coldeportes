@@ -49,11 +49,10 @@ def obtenerDato(modelo, campos):
         if hasattr(modelo, 'get_%s_display' % campo):
             valor = (getattr(modelo, 'get_%s_display' % campo)())
         else:
-            valor = getattr(modelo, campo)
-            if valor.__class__.__name__ == 'ManyRelatedManager':
-                valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
-            else:
-                valor = ('%s'%valor)
+            try:
+                valor = ('%s'%getattr(modelo, campo))
+            except Exception:
+                return campo
     else:
         valor = ''
         for campo in campos:
@@ -113,8 +112,8 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
                 aux.append(valor)
 
         urls = []
-
         for i in urlsOpciones:
+
             bien = evaluarCondiciones(objeto, i[4])
             if not(bien):
                 continue
@@ -166,6 +165,7 @@ def obtenerDatos(request, modelo):
         datos['recordsFiltered'] = cantidadObjetos
 
     objetos = definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion)
+
     datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones)
     
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
@@ -190,7 +190,6 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
     return objetos
 
 def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion):
-    columna = columna.split(" ")[0]
     orden = ''
     if direccion == 'desc':
         orden = "-"

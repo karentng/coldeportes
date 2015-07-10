@@ -41,9 +41,9 @@ MODELOS_DE_DATOS = (
                 None
             ],
             [
-                "Modificar",
-                'modificar_caf',
-                ['id'],
+                "Editar",
+                'crear_caf',
+                ['Identificación', 'id'],
                 'fa-gear',
                 None
             ],

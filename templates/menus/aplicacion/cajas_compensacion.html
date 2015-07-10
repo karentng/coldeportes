@@ -2,16 +2,16 @@
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="ion-ios-color-filter-outline fa-2x"></i>
-        <span>Escenarios CCF</span>
+        <span>Cajas de Compensación</span>
     </a>
     <ul class="sub-menu">
-        {% if perms.snd.add_escenario %}
+        {% if perms.snd.add_cajacompensacion %}
         <li {% if "/ccf/wizard/nuevo" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'wizard_caja_escenario' %}">Registro</a>
+            <a href="{% url 'wizard_caja' %}">Registro</a>
         </li>      
         {% endif %}         
         <li {% if "/ccf/listar" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'listar_escenarios_ccfs' %}">Listar Escenarios CCF</a>
+            <a href="{% url 'listar_ccfs' %}">Listar CCF</a>
         </li>       
     </ul>
 </li>

@@ -1,63 +1,64 @@
 #encoding:utf-8
-
 from django.db import models
-from entidades.models import Ciudad, Entidad
+from entidades.models import Ciudad, Entidad, CAClase, CAServicio
 
 class CentroAcondicionamiento(models.Model):
     ESTADOS = (
         (1, "Activo"),
         (2, "Inactivo"),
     )
+    ESTRATOS = (
+        (1, 'Uno'),
+        (2, 'Dos'),
+        (3, 'Tres'),
+        (4, 'Cuatro'),
+        (5, 'Cinco'),
+        (6, 'Seis'),
+    )
     nombre =  models.CharField(max_length=100)
     direccion = models.CharField(max_length=100, verbose_name="dirección")
     telefono = models.CharField(max_length=50, verbose_name="teléfono")
     email = models.EmailField()
+    ciudad = models.ForeignKey(Ciudad)
+    comuna = models.CharField(max_length=10)
+    barrio = models.CharField(max_length=20)
+    estrato = models.IntegerField(choices=ESTRATOS)
     latitud = models.FloatField(max_length=10)
     longitud = models.FloatField(max_length=10)
     altura = models.FloatField(max_length=10)
+    nombre_administrador = models.CharField(max_length=50, null=True)
     contacto = models.TextField(verbose_name='información de contacto', null=True, blank=True)
-    entidad = models.ForeignKey(Entidad)    
-    estado = models.IntegerField(choices=ESTADOS, default=1)
-    ciudad = models.ForeignKey(Ciudad)
+    
+    estado = models.IntegerField(choices=ESTADOS, default=1, verbose_name="estado del Centro de Acondicionamiento Físico")
+    # Pestañas adicionales
+    servicios = models.ManyToManyField(CAServicio, blank=True)
+    clases = models.ManyToManyField(CAClase, blank=True)
+    entidad = models.ForeignKey(Entidad)
 
-class CACostoUso(models.Model):
-    centro = models.OneToOneField(CentroAcondicionamiento)
-    privado = models.PositiveIntegerField(default=0, verbose_name="Costo mensual al afiliado")
-    publico = models.PositiveIntegerField(verbose_name="Costo mensual al público", default=0)
-    libre = models.BooleanField()
+    def save(self, *args, **kwargs):
+        self.nombre = self.nombre.upper()
+        self.direccion = self.direccion.upper()
+        self.email = self.email.upper()
+        self.comuna = self.comuna.upper()
+        self.barrio = self.barrio.upper()
+        self.nombre_administrador = self.nombre_administrador.upper()
+        self.contacto = self.contacto.upper()
+        super(CentroAcondicionamiento, self).save(*args, **kwargs)
 
-class CAServicios(models.Model):
-    centro = models.OneToOneField(CentroAcondicionamiento)
-    acondicionamiento = models.BooleanField(verbose_name="Acondicionamiento")
-    fortalecimiento = models.BooleanField(verbose_name="Fortalecimiento")
-    zona_cardio = models.BooleanField(verbose_name="Zona cardio")
-    zona_humeda = models.BooleanField(verbose_name="Zona húmeda")
-    medico = models.BooleanField(verbose_name="Médico")
-    nutricionista = models.BooleanField(verbose_name="Nutricionista")
-    fisioterapia = models.BooleanField(verbose_name="Fisioterapia")
+class CAPlan(models.Model):
+    centro = models.ForeignKey(CentroAcondicionamiento)
+    nombre = models.CharField(max_length=255)
+    precio = models.PositiveIntegerField()
+    descripcion = models.TextField(verbose_name="descripción")
 
-    def __iter__(self):
-        for field in self._meta.fields:
-            vn = field.verbose_name
-            valor = field.value_to_string(self)
+    def save(self, *args, **kwargs):
+        self.nombre = self.nombre.upper()
+        self.descripcion = self.descripcion.upper()
+        super(CAPlan, self).save(*args, **kwargs)
 
-            if vn == 'ID' or vn == 'centro' or valor == 'False':
-                continue
-            
-            yield vn
+def ruta_fotos_cafs(instance, filename):
+    return "snd/fotos/cafs/%s-%s"%(instance.id, filename.encode('ascii','ignore').decode('ascii'))
 
-class CAOtros(models.Model):
-    centro = models.OneToOneField(CentroAcondicionamiento)
-    camerinos = models.BooleanField(verbose_name="Camerinos")
-    duchas = models.BooleanField(verbose_name="Duchas")
-    comentarios = models.TextField(blank=True, null=True)
-
-    def __iter__(self):
-        for field in self._meta.fields:
-            vn = field.verbose_name
-            valor = field.value_to_string(self)
-
-            if vn == 'ID' or vn == 'centro' or valor == 'False' or vn == 'comentarios':
-                continue
-            
-            yield vn
+class CAFoto(models.Model):
+    centro = models.ForeignKey(CentroAcondicionamiento)
+    foto = models.ImageField(upload_to='ruta_fotos_cafs')
