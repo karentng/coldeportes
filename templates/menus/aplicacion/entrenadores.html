@@ -5,7 +5,7 @@
             <span>Entrenadores</span>
         </a>
         <ul class="sub-menu">
-            {% if perms.snd.add_deportista %}
+            {% if perms.snd.add_entrenador %}
             <li {% if "/entrenadores/crear" in request.path %} class="active" {% endif %}>
                 <a href="{% url 'entrenador_nuevo' %}">Registro</a>
             </li>

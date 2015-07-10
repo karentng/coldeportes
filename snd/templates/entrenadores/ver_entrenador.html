@@ -74,13 +74,17 @@
                                         <div class="col-lg-6">
                                         <p style="margin-left: 50px">
                                             {% if perms.snd.change_entrenador %}
-                                                Identificación: {{entrenador.tipo_id}}: {{entrenador.nro_id}}<br />
+                                                {{entrenador.get_tipo_id_display | title}}: {{entrenador.nro_id}}<br />
                                             {% endif %}
                                             Género: {{entrenador.genero}}<br/>
                                             Edad: {{ entrenador.edad }}<br/>
                                             Nacionalidades:
                                             {% for nac in entrenador.nacionalidad.all %}
-                                                {{nac}},
+                                                {% if forloop.last %}
+                                                    {{ nac }}
+                                                {% else %}
+                                                    {{nac}},
+                                                {% endif %}
                                             {% endfor %}<br/>
                                             Ciudad (Departamento) de Nacimiento:
                                             {% if entrenador.ciudad %}
@@ -89,33 +93,33 @@
                                                 Ninguna
                                             {% endif %}<br/>
                                             Altura:
-                                                {% entrenador.altura %}
-                                                    {{entrenador.altura}}
+                                                {%if entrenador.altura %}
+                                                    {{entrenador.altura}} Cm
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                             Peso:
-                                                {% entrenador.peso %}
-                                                    {{entrenador.peso}}
+                                                {%if entrenador.peso %}
+                                                    {{entrenador.peso}} Kg
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                             {% if perms.snd.change_entrenador %}
                                                 <strong>Contacto:</strong> <br/>
                                                 Teléfono fijo:
-                                                {% entrenador.telefono_fijo %}
+                                                {% if entrenador.telefono_fijo %}
                                                     {{entrenador.telefono_fijo}}
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                                 Teléfono celular:
-                                                {% entrenador.telefono_celular %}
+                                                {% if entrenador.telefono_celular %}
                                                     {{entrenador.telefono_celular}}
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                                 Dirección:
-                                                {% entrenador.direccion %}
+                                                {% if entrenador.direccion %}
                                                     {{entrenador.direccion}}
                                                 {% else %}
                                                     Ninguno
@@ -153,7 +157,7 @@
                             <table class="table table-invoice">
                                 <thead>
                                     <tr>
-                                        <th>DISCIPLINA</th>
+                                        <th>DISCIPLINAS</th>
                                         <th>DENOMINACIÓN DIPLOMA</th>
                                         <th>NIVEL</th>
                                         <th>INSTITUCIÓN FORMACIÓN</th>
@@ -165,7 +169,15 @@
                                 <tbody>
                                     {% for formacion in formacion_deportiva %}
                                     <tr>
-                                        <td>{{formacion.disciplina_deportiva}}</td>
+                                        <td>
+                                            {% for disciplina in formacion.disciplina_deportiva.all %}
+                                                {% if forloop.last %}
+                                                    {{ disciplina }}
+                                                {% else %}
+                                                    {{disciplina}},
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
                                         <td>{{formacion.denominacion_diploma}}</td>
                                         <td>{{formacion.nivel}}</td>
                                         <td>{{formacion.institucion_formacion}}</td>

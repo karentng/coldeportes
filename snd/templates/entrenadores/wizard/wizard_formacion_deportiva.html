@@ -64,7 +64,15 @@
                     <tbody>
                     {% for historico in historicos %}
                         <tr>
-                            <td align="center">{{historico.disciplina_deportiva}}</td>
+                            <td align="center">
+                                {% for disciplina in historico.disciplina_deportiva.all %}
+                                    {% if forloop.last %}
+                                        {{ disciplina }}
+                                    {% else %}
+                                        {{disciplina}},
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
                             <td align="center">{{historico.denominacion_diploma}}</td>
                             <td align="center">{{historico.nivel}}</td>
                             <td align="center">{{historico.institucion_formacion}}</td>

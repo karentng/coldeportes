@@ -164,6 +164,8 @@ def eliminar_plan(request, idCAF, idPlan):
     """
     Julio 09 / 2015
     Autor: Andrés Serna
+    
+    Retorna el formulario elegido de acuerdo a idForm
 
     Elimina un plan asociado a un CAF
 
@@ -199,6 +201,8 @@ def crear_foto(request, idCAF):
     """
     Julio 09 / 2015
     Autor: Andrés Serna
+    
+    Modificar un CAF
 
     Registrar una foto del CAF
 
