@@ -6,45 +6,44 @@ from entidades.models import Ciudad, Entidad, Nacionalidad, TipoDisciplinaDeport
 #Modelos para Entrenadores
 
 class Entrenador(models.Model):
-    estado = (
-        ('Activo',True),
-        ('Inactivo',False),
+    ESTADOS = (
+        (1, "ACTIVO"),
+        (2, "INACTIVO"),
     )
-
     tipo_genero = (
-        ('Hombre','Hombre'),
-        ('Mujer','Mujer'),
+        ('HOMBRE','HOMBRE'),
+        ('MUJER','MUJER'),
     )
 
     TIPO_IDENTIDAD = (
-        ('CED', 'Cédula de ciudadanía'),
-        ('CEDEX', 'Cédula de extranjero'),
-        ('PAS', 'Pasaporte'),
+        ('CED', 'CÉDULA DE CIUDADANÍA'),
+        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
+        ('PAS', 'PASAPORTE'),
     )
-    estado = models.BooleanField(choices=estado, default=True)
+    estado = models.IntegerField(choices=ESTADOS, default=1)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
-    genero = models.CharField(choices=tipo_genero,max_length=11)
+    genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
     foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
-    tipo_id = models.CharField(max_length=5, choices=TIPO_IDENTIDAD, default='CED')
-    nro_id = models.BigIntegerField()
-    telefono_fijo = models.CharField(max_length=50, blank=True)
-    telefono_celular = models.CharField(max_length=50, blank=True)
-    correo_electronico = models.EmailField(blank=True)
-    fecha_nacimiento = models.DateField()
+    tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD, default='CED')
+    nro_id = models.BigIntegerField(verbose_name='Número de identificación')
+    telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
+    telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
+    correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')
+    fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad, blank=True)
     #en centimetros
-    altura = models.IntegerField(blank=True)
+    altura = models.IntegerField(blank=True, verbose_name='Altura (En Cm)')
     #en Kg
-    peso = models.IntegerField(blank=True)
+    peso = models.IntegerField(blank=True, verbose_name='Peso (En Kg)')
     entidad_vinculacion = models.ForeignKey(Entidad)
 
 class FormacionDeportiva(models.Model):
     disciplina_deportiva = models.ManyToManyField(TipoDisciplinaDeportiva)
-    denominacion_diploma = models.CharField(max_length=150)
+    denominacion_diploma = models.CharField(max_length=150, verbose_name='Denominación del diploma')
     nivel = models.CharField(max_length=50, blank=True)
-    institucion_formacion = models.CharField(max_length=100)
+    institucion_formacion = models.CharField(max_length=100, verbose_name='Institución de formación')
     pais_formacion = models.ForeignKey(Nacionalidad)
     fecha_comienzo = models.DateField()
     fecha_fin = models.DateField()
@@ -52,8 +51,8 @@ class FormacionDeportiva(models.Model):
 
 
 class ExperienciaLaboral(models.Model):
-    nombre_cargo = models.CharField(max_length=50)
-    institucion = models.CharField(max_length=150)
+    nombre_cargo = models.CharField(max_length=50, verbose_name='Nombre del cargo')
+    institucion = models.CharField(max_length=150, verbose_name='Institución donde se desempeñó')
     fecha_comienzo = models.DateField()
     fecha_fin = models.DateField()
     entrenador = models.ForeignKey(Entrenador)

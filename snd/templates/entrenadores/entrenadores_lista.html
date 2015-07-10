@@ -60,8 +60,16 @@
                     {% for entrenador in entrenadores %}
                         <tr>
                             <td>{{entrenador.nombres}} {{entrenador.apellidos}}</td>
-                            <td>{{entrenador.nacionalidad}}</td>
-                            <td>{{entrenador.identificacion}}</td>
+                            <td>
+                                {% for nac in entrenador.nacionalidad.all %}
+                                    {% if forloop.last %}
+                                        {{ nac }}
+                                    {% else %}
+                                        {{ nac }},
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{entrenador.nro_id}}</td>
                             <td>{% if entrenador.estado %} Activo {% else %} Desactivado {% endif %}</td>
                             <td>
                                 <a href="{% url 'ver_entrenador' entrenador.id %}" title="Ver">

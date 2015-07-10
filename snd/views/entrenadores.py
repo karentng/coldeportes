@@ -4,8 +4,10 @@ from snd.formularios.entrenadores import EntrenadorForm, FormacionDeportivaForm,
 from snd.models import Entrenador, FormacionDeportiva, ExperienciaLaboral
 from snd.utilities import calculate_age
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 
 @login_required
+@permission_required('snd.add_entrenador')
 def wizard_entrenador_nuevo(request):
     """
     Junio 9 / 2015
@@ -29,6 +31,9 @@ def wizard_entrenador_nuevo(request):
         if entrenador_form.is_valid():
             entrenador = entrenador_form.save(commit=False)
             entrenador.entidad_vinculacion = request.tenant
+            entrenador.nombres = entrenador.nombres.upper()
+            entrenador.apellidos = entrenador.apellidos.upper()
+            entrenador.tipo_id = entrenador.tipo_id.upper()
             entrenador.save()
             entrenador_form.save()
             return redirect('wizard_formacion_deportiva', entrenador.id)
@@ -41,6 +46,7 @@ def wizard_entrenador_nuevo(request):
     })
 
 @login_required
+@permission_required('snd.add_entrenador')
 def finalizar_entrenador(request):
     """
     Junio 16 / 2015
@@ -57,6 +63,7 @@ def finalizar_entrenador(request):
     return redirect('listar_entrenador')
 
 @login_required
+@permission_required('snd.change_entrenador')
 def wizard_entrenador(request,id_entrenador):
     """
     Junio 9 / 2015
@@ -84,6 +91,11 @@ def wizard_entrenador(request,id_entrenador):
         entrenador_form = EntrenadorForm(request.POST, request.FILES, instance=entrenador)
 
         if entrenador_form.is_valid():
+            entrenador = entrenador_form.save(commit=False)
+            entrenador.nombres = entrenador.nombres.upper()
+            entrenador.apellidos = entrenador.apellidos.upper()
+            entrenador.tipo_id = entrenador.tipo_id.upper()
+            entrenador.save()
             entrenador_form.save()
             return redirect('wizard_formacion_deportiva', id_entrenador)
 
@@ -96,6 +108,7 @@ def wizard_entrenador(request,id_entrenador):
 
 
 @login_required
+@permission_required('snd.change_entrenador')
 def wizard_formacion_deportiva(request,id_entrenador):
     """
 
@@ -127,6 +140,9 @@ def wizard_formacion_deportiva(request,id_entrenador):
         if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
             formacion_deportiva.entrenador = Entrenador.objects.get(id=id_entrenador)
+            formacion_deportiva.denominacion_diploma = formacion_deportiva.denominacion_diploma.upper()
+            formacion_deportiva.nivel = formacion_deportiva.nivel.upper()
+            formacion_deportiva.institucion_formacion = formacion_deportiva.institucion_formacion.upper()
             formacion_deportiva.save()
             formaciondep_form.save()
             return redirect('wizard_formacion_deportiva', id_entrenador)
@@ -140,6 +156,7 @@ def wizard_formacion_deportiva(request,id_entrenador):
     })
 
 @login_required
+@permission_required('snd.change_entrenador')
 def eliminar_formacion_deportiva(request,id_entrenador,id_formacion):
     """
     Junio 9 / 2015
@@ -167,6 +184,7 @@ def eliminar_formacion_deportiva(request,id_entrenador,id_formacion):
 
 
 @login_required
+@permission_required('snd.change_entrenador')
 def wizard_experiencia_laboral(request,id_entrenador):
     """
     Junio 9 / 2015
@@ -195,6 +213,8 @@ def wizard_experiencia_laboral(request,id_entrenador):
         if experiencia_laboral_form.is_valid():
             experiencia_laboral_nuevo = experiencia_laboral_form.save(commit=False)
             experiencia_laboral_nuevo.entrenador = Entrenador.objects.get(id=id_entrenador)
+            experiencia_laboral_nuevo.nombre_cargo = experiencia_laboral_nuevo.nombre_cargo.upper()
+            experiencia_laboral_nuevo.institucion = experiencia_laboral_nuevo.institucion.upper()
             experiencia_laboral_nuevo.save()
             experiencia_laboral_form.save()
             return redirect('wizard_experiencia_laboral', id_entrenador)
@@ -209,6 +229,7 @@ def wizard_experiencia_laboral(request,id_entrenador):
     })
 
 @login_required
+@permission_required('snd.change_entrenador')
 def eliminar_experiencia_laboral(request,id_entrenador,id_experiencia):
     """
     Junio 9 / 2015
@@ -237,6 +258,7 @@ def eliminar_experiencia_laboral(request,id_entrenador,id_experiencia):
 
 
 @login_required
+@permission_required('snd.delete_entrenador')
 def desactivar_entrenador(request,id_entrenador):
     """
     Junio 9 / 2015
