@@ -49,7 +49,10 @@ def obtenerDato(modelo, campos):
         if hasattr(modelo, 'get_%s_display' % campo):
             valor = (getattr(modelo, 'get_%s_display' % campo)())
         else:
-            valor = ('%s'%getattr(modelo, campo))
+            try:
+                valor = ('%s'%getattr(modelo, campo))
+            except Exception:
+                return campo
     else:
         valor = ''
         for campo in campos:

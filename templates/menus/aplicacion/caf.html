@@ -6,8 +6,8 @@
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_centroacondicionamiento %}
-            <li {% if "/caf/nuevo" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'nuevo_caf' %}">Registro</a>
+            <li {% if "/caf/crear-editar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'crear_caf' 'Identificación' %}">Registro</a>
             </li>
         {% endif %}
         <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>

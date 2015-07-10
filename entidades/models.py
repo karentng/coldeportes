@@ -72,3 +72,15 @@ class CaracteristicaEscenario(models.Model):
     def __str__(self):
         return self.descripcion
         return self.nombre
+
+class CAClase(models.Model):
+    nombre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre
+
+class CAServicio(models.Model):
+    nombre = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return self.nombre

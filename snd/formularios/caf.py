@@ -1,10 +1,9 @@
 #-*- coding: utf-8 -*-
 from django import forms
-from django.forms import ModelForm
 from snd.models import *
 from snd.utilities import adicionarClase
 
-class CentroAcondicionamientoForm(ModelForm):
+class CentroAcondicionamientoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CentroAcondicionamientoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
@@ -12,8 +11,46 @@ class CentroAcondicionamientoForm(ModelForm):
 
     class Meta:
         model = CentroAcondicionamiento
-        exclude = ('entidad',)
+        exclude = ('entidad', 'clases', 'servicios',)
 
+class CAPlanForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CAPlanForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+    class Meta:
+        model = CAPlan
+        exclude = ('centro',)
+
+class CAClasesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CAClasesForm, self).__init__(*args, **kwargs)
+        self.fields['clases'] = adicionarClase(self.fields['clases'], 'styled')
+        self.fields['clases'].queryset = self.fields['clases'].queryset.order_by('nombre')
+    class Meta:
+        model = CentroAcondicionamiento
+        fields = ('clases',)
+        widgets = {
+            'clases': forms.CheckboxSelectMultiple
+        }
+
+class CAServiciosForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CAServiciosForm, self).__init__(*args, **kwargs)
+        self.fields['servicios'] = adicionarClase(self.fields['servicios'], 'styled')
+        self.fields['servicios'].queryset = self.fields['servicios'].queryset.order_by('nombre')
+    class Meta:
+        model = CentroAcondicionamiento
+        fields = ('servicios',)
+        widgets = {
+            'servicios': forms.CheckboxSelectMultiple
+        }
+
+class CAFotoForm(forms.ModelForm):
+    class Meta:
+        model = CAFoto
+        exclude = ('centro',)
+
+'''
 class CACostoUsoForm(ModelForm):
     class Meta:
         model = CACostoUso
@@ -57,3 +94,4 @@ class CAOtrosForm(ModelForm):
     class Meta:
         model = CAOtros
         exclude = ('centro',)
+'''

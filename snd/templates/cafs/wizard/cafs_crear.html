@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block head %}
+	{{ wizard.form.media }}
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/switchery/switchery.min.css" rel="stylesheet" />
+
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'listar_escenarios' %}">CAF</a>
+	<li class="active">Registro</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Centro de Acondicionamiento Físico
+{% endblock %}
+
+{% block titulo_panel %}
+	Registro Nuevo CAF
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'cafs/wizard/_wizard.html' %}
+	<form action="" method="post">{% csrf_token %}
+		<fieldset>
+			<div class="well row">
+				<strong><h4>Identificación</h4></strong>
+
+				<div class="row">
+					<div class="col-md-6">
+						{% bootstrap_field form.nombre layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.direccion layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.telefono layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.email layout="vertical" %}
+					</div>
+				</div>
+				<hr>
+				<strong><h4>Ubicación</h4></strong>
+				<div class="row">
+					<div class="col-md-6">
+						{% bootstrap_field form.ciudad layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.comuna layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.barrio layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.estrato layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.latitud layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.longitud layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.altura layout="vertical" %}
+					</div>
+				</div>
+				<hr>
+				<strong><h4>Estado y Contacto</h4></strong>
+				<div class="row">
+					<div class="col-md-6">
+						{% bootstrap_field form.estado layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.nombre_administrador layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.contacto layout="vertical" %}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						{% if anterior %}
+							<a href="{% url 'crear_caf' anterior idCAF  %}">
+								<button class="btn btn-default pull-left" type="button">
+									← Anterior
+								</button>
+							</a>
+						{% endif %}
+						<button class="btn btn-primary pull-right" type="submit">
+							Siguiente →
+						</button>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}
