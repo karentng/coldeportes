@@ -28,6 +28,8 @@
     <!-- ================== END BASE CSS STYLE ================== -->
     <!-- ================== BEGIN BASE JS ================== -->
     <script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script>
+    <link href="{{STATIC_URL}}plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
+
     <!-- ================== END BASE JS ================== -->
     <link href="{{STATIC_URL}}css/select2.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}css/jquery.datetimepicker.css" rel="stylesheet">
@@ -158,7 +160,11 @@
                 {% for msg in messages %}
                     <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">              
                         <span class="close" data-dismiss="alert">×</span>
-                        <i class="fa fa-check fa-2x pull-left"></i>
+                        {% if msg.tags == 'error' %}
+                            <i class="fa fa-times fa-2x pull-left"></i>
+                        {% else %}
+                            <i class="fa fa-check fa-2x pull-left"></i>
+                        {% endif %}
                         <p>{{msg}}</p>
                     </div>
                 {% endfor %}
@@ -195,6 +201,8 @@
     <script src="{{STATIC_URL}}plugins/slimscroll/jquery.slimscroll.min.js"></script>
     
     <script src="{{STATIC_URL}}plugins/jquery-cookie/jquery.cookie.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+
     <!-- ================== END BASE JS ================== -->
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
     <!-- ================== END PAGE LEVEL JS ================== -->

@@ -2,16 +2,16 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Escenarios-SND COLDEPORTES
+    CCF-SND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
-    Lista de Escenarios
+    Lista de CCF
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li class="active">Escenarios</li>
+    <li class="active">CCF</li>
 {% endblock %}
 
 {% block css %}
@@ -20,7 +20,7 @@
 
 {% block js %}
     <script type="text/javascript">
-        idTabla = "tabla-escenarios";
+        idTabla = "tabla-ccfs";
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
     </script>
@@ -29,56 +29,58 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Listar Escenarios
+    Listar Cajas de Compensación
 {% endblock %}
 
 {% block contenido_panel %}
 
     <div class="row">
         <div class="col-sm-12">
-            <table id="tabla-escenarios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+            <table id="tabla-ccfs" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Ciudad (Departamento)</th>
-                        <th>Estrato</th>
+                        <th>Público</th>
+                        <th>Clasificación</th>
+                        <th>Region</th>
                         <th>Estado</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for escenario in escenarios %}
+                    {% for ccf in ccfs %}
                         <tr>
-                            <td>{{escenario.nombre}}</td>
-                            <td>{{escenario.ciudad}}</td>
-                            <td>{{escenario.estrato}}</td>
-                            <td>{% if escenario.activo %} Activo {% else %} Inactivo {% endif %}</td>
+                            <td>{{ccf.nombre}}</td>
+                            <td>{{ccf.get_publico_display}}</td>
+                            <td>{{ccf.get_clasificacion_display}}</td>
+                            <td>{{ccf.get_region_display}}</td>
+                            <td>{% if ccf.activo %} Activo {% else %} Inactivo {% endif %}</td>
                             <td>
-                                <a href="{% url 'ver_escenario' escenario.id %}" data-toggle="modal">
-                                    <i class="fa fa-eye"></i> Ver Escenario
+                                <a href="{% url 'ver_ccf' ccf.id %}" data-toggle="modal">
+                                    <i class="fa fa-eye"></i> Ver CCF
                                 </a>
                                 <br/>
-                                {% if perms.snd.change_escenario %}
-                                <a href="{% url 'wizard_identificacion' escenario.id %}" title="Editar">
+                                {% if perms.snd.change_cajacompensacion %}
+                                <a href="{% url 'wizard_editar_caja' ccf.id %}" title="Editar">
                                     <i class="fa fa-gear"></i> Editar
                                 </a>
                                 <br/>
-                                <a href="#modal-desactivate-{{escenario.id}}" data-toggle="modal">
+                                <a href="#modal-desactivate-{{ccf.id}}" data-toggle="modal">
                                     <i class="fa fa-ban"></i> Activar / Desactivar
                                 </a>
-                                <div class="modal fade" id="modal-desactivate-{{escenario.id}}">
+                                <div class="modal fade" id="modal-desactivate-{{ccf.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Desactivar Escenario:</h4>
+                                                <h4 class="modal-title">Desactivar CCF:</h4>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Está seguro que desea desactivar este escenario?
+                                                ¿Está seguro que desea desactivar esta CCF?
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'desactivar_escenario' escenario.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'desactivar_ccf' ccf.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>

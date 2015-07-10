@@ -11,10 +11,11 @@ def adicionarClase(campo, clase):
    
 
 class IdentificacionForm(ModelForm):
-    descripcion = forms.CharField(widget=forms.Textarea, required=True)
+    descripcion = forms.CharField(widget=forms.Textarea, required=False)
     def __init__(self, *args, **kwargs):
         super(IdentificacionForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+        self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
@@ -22,14 +23,17 @@ class IdentificacionForm(ModelForm):
         exclude = ('entidad',)
 
 class CaracterizacionForm(forms.ModelForm):
-    descripcion = forms.CharField(widget=forms.Textarea, required=True)
+    descripcion = forms.CharField(widget=forms.Textarea, required=False)
 
     def __init__(self, *args, **kwargs):
         super(CaracterizacionForm, self).__init__(*args, **kwargs)
         self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
+        self.fields['clase_acceso'] = adicionarClase(self.fields['clase_acceso'], 'one')
         self.fields['tipo_escenario'].queryset = TipoEscenario.objects.all().order_by('descripcion')
         self.fields['tipo_disciplinas'] = adicionarClase(self.fields['tipo_disciplinas'], 'many')
         self.fields['tipo_disciplinas'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+        self.fields['tipo_superficie_juego'] = adicionarClase(self.fields['tipo_superficie_juego'], 'many')
+        self.fields['tipo_superficie_juego'].queryset = TipoSuperficie.objects.all().order_by('descripcion')
         self.fields['caracteristicas'] = adicionarClase(self.fields['caracteristicas'], 'many')
         self.fields['caracteristicas'].queryset = CaracteristicaEscenario.objects.all().order_by('descripcion')
         self.fields['clase_uso'] = adicionarClase(self.fields['clase_uso'], 'many')
@@ -64,7 +68,7 @@ class DatoHistoricoForm(ModelForm):
         super(DatoHistoricoForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
         self.fields['fecha_inicio'] = adicionarClase(self.fields['fecha_inicio'], 'fecha')
-        self.fields['fecha_fin'] = adicionarClase(self.fields['fecha_inicio'], 'fecha')
+        self.fields['fecha_fin'] = adicionarClase(self.fields['fecha_fin'], 'fecha')
 
     class Meta:
         model = DatoHistorico
@@ -82,6 +86,12 @@ class VideoEscenarioForm(ModelForm):
         exclude = ('escenario',)
 
 class ContactoForm(ModelForm):
+    descripcion = forms.CharField(widget=forms.Textarea, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(ContactoForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
     class Meta:
         model = Contacto
         exclude = ('escenario',)
