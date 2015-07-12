@@ -36,21 +36,16 @@
                 	</a>
                 </li>
 
-                {% if centro %}
-                	<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-                {% endif %}
+                <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
 
-                {% if costos %}
-                	<li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-dollar"></i> Costos de Uso</a></li>
-                {% endif %}
+                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-dollar"></i> Planes</a></li>
 
-                {% if servicios %}
-                	<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-users"></i> Servicios</a></li>
-                {% endif %}
+                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-users"></i> Clases</a></li>
 
-                {% if otros %}
-                	<li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Otros</a></li>
-                {% endif %}
+                <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-phone"></i> Servicios</a></li>
+
+                <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
+                
                 
                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
             </ul>
@@ -75,9 +70,16 @@
                         <address class="m-t-5 m-b-5">
                             <p><b>Estado: {{centro.get_estado_display}}</b></p>
                             <p>Dirección: {{centro.direccion}}</p>
-
+                            <p>Teléfono: {{centro.telefono}}</p>
+                            <p>Email: {{centro.email}}</p>
+                            <p>Ciudad: {{centro.ciudad}}</p>
+                            <p>Comuna: {{centro.comuna}}</p>
+                            <p>Barrio: {{centro.barrio}}</p>
+                            <p>Estrato: {{centro.estrato}}</p>
                             <p>{{centro.ciudad.nombre}}, {{centro.ciudad.departamento.nombre}}</p>
                             <p>Latitud: {{centro.latitud}} Longitud: {{centro.longitud}} Altura: {{centro.altura}}</p>
+
+                            <p>Administrador: {{centro.nombre_administrador}}</p>
                         </address>
                     </div>                    
                 </div>
@@ -91,7 +93,7 @@
                 </p>
             </div>
         </div>
-        {% if costos %}
+        
         <div class="tab-pane fade" id="nav-tab2-13">
             <div class="invoice">
                 <div class="invoice-company">
@@ -104,19 +106,38 @@
                 <div class="invoice-header">
                     <div class="invoice-from">
                         <address class="m-t-5 m-b-5">
-                        	{% if costos.libre %}
-                        		<b>El ingreso al centro de acondicionamiento físico es libre y sin costo</b>
-                        	{% else %}
-                        		<p><b>Costo público: {{costos.publico}} pesos</b></p>
-                        		<p><b>Costo privado: {{costos.privado}} pesos</b></p>
-                        	{% endif %}
+                            <b>Planes que ofrece el Centro de Acondicionamiento Físico:</b>
+                        	<div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th align="center">Nombre</th>
+                                            <th align="center">Precio</th>
+                                            <th align="center">Descripción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for plan in planes %}
+                                        <tr>
+                                            <td>{{plan.nombre}}</td>
+                                            <td>{{plan.precio}}</td>
+                                            <td>{{plan.descripcion|linebreaksbr}}</td>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="4" align="center">
+                                                    <b>No hay planes registrados</b>
+                                                </td>
+                                            </tr>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                         </address>
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
-        {% if servicios %}
+        
         <div class="tab-pane fade" id="nav-tab2-14">
             <div class="invoice">
                 <div class="invoice-company">
@@ -129,9 +150,9 @@
                 <div class="invoice-header">
                     <div class="invoice-from">
                         <address class="m-t-5 m-b-5">
-                        	<b>Los servicios que provee el centro de acondicionamiento físico son:</b>
+                        	<b>Clases que ofrece el Centro de Acondicionamiento Físico:</b>
                         	<ul>
-                        		{% for i in servicios %}
+                        		{% for i in centro.clases.all %}
                         		<li>{{i}}</li>
                         		{% endfor %}
                         	</ul>
@@ -140,8 +161,7 @@
                 </div>
             </div>
         </div>
-        {% endif %}
-        {% if otros %}
+        
         <div class="tab-pane fade" id="nav-tab2-15">
             <div class="invoice">
                 <div class="invoice-company">
@@ -154,26 +174,45 @@
                 <div class="invoice-header">
                     <div class="invoice-from">
                         <address class="m-t-5 m-b-5">
-                        	<b>Otros servicios que provee el centro de acondicionamiento físico son:</b>
+                        	<b>Servicios que ofrece el Centro de Acondicionamiento Físico:</b>
                         	<ul>
-                        		{% for i in otros %}
-                        		<li>{{i}}</li>
-                        		{% endfor %}
-                        	</ul>
+                                {% for i in centro.servicios.all %}
+                                <li>{{i}}</li>
+                                {% endfor %}
+                            </ul>
                         </address>
                     </div>
                 </div>
-                <h5 class="m-t-10">Comentarios:</h5>
-                <p>
-                	{% if otros.comentarios == '' %}
-                		No hay comentarios registrados
-                	{% else %}
-                		{{otros.comentarios|linebreaksbr}}
-                	{% endif %}
-                </p>
             </div>
         </div>
-        {% endif %}
+
+        <div class="tab-pane fade" id="nav-tab2-16">
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                    </span>
+                    {{centro.nombre}}
+                </div>
+                <div class="invoice-header">
+                    <div class="invoice-from">
+                        <address class="m-t-5 m-b-5">
+                            <b>Fotos del Centro de Acondicionamiento Físico:</b>
+                            <!-- begin superbox -->
+                            <div class="superbox" data-offset="54">
+                                {% for foto in fotos %}
+                                <div class="superbox-list">
+                                    <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" alt="" class="superbox-img" />
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 
