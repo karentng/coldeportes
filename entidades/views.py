@@ -15,13 +15,16 @@ def tipo(request):
 @login_required
 def registro(request):
     form = EntidadForm()
+    dominio = settings.SUBDOMINIO_URL
 
     if request.method == 'POST':
         form = EntidadForm(request.POST)
         
         if form.is_valid():
+            pagina = form.cleaned_data['pagina']
             obj = form.save(commit=False)
-            obj.domain_url += settings.SUBDOMINIO_URL
+            obj.schema_name = pagina
+            obj.domain_url = pagina + dominio
             obj.save()
 
             messages.success(request, "Entidad registrada correctamente.")
@@ -29,4 +32,5 @@ def registro(request):
 
     return render(request, 'entidad_registro.html', {
         'form': form,
+        'dominio': dominio,
     })
