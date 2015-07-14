@@ -2,8 +2,15 @@
 from django.forms import *
 from django import forms
 from entidades.models import *
+from snd.utilities import adicionarClase
 
 class EntidadForm(forms.ModelForm):
-	class Meta:
-		model = Entidad
-		exclude = ()
+    pagina = forms.CharField(label="Página Web")
+
+    def __init__(self, *args, **kwargs):
+        super(EntidadForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+
+    class Meta:
+        model = Entidad
+        fields = ('nombre',)

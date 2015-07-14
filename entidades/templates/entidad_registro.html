@@ -11,16 +11,41 @@
 	Registro de Entidad
 {% endblock %}
 
-
 {% block titulo_panel %}
 	Registro de Entidad
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		$( "#id_pagina" ).blur(function(){
+			var texto = $(this).val();
+			var inicio = texto[0];
+			if (isNaN(parseInt(inicio)) == false){
+				$(this).val('');
+			}else{
+				$(this).val(texto.toLowerCase());
+			}
+		});
+	</script>
 {% endblock %}
 
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
 			<form class="form-horizontal" action="" method="post">{% csrf_token %}
-				{% bootstrap_form form layout="horizontal" %}
+				{% bootstrap_field form.nombre layout="horizontal" %}
+				<div class="form-group">
+				<label class="col-md-2 control-label">
+					<p>Página Web</p>
+					<small>{{form.pagina.help_text}}</small>
+				</label>
+				<div class="col-md-4">
+					<div class="input-group">
+				        {{form.pagina}}
+				        <span class="input-group-addon">{{dominio}}</span>
+				    </div>
+			    </div>
+			    </div>
 				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Registrar</button>
 			</form>
 		</div>
