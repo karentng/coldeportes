@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Inicio - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Panel de Control
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+{% endblock %}
+
+{% block contenido %}
+    <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
+
+    <div class="row">
+    <!--Fila de notificaciones-->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-md-6">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="panel-title">
+                                Transferencias deportistas
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {% comment %}
+                                    {% if transfer_deportistas %}
+
+                                    {% else %}
+                                       <strong>No hay transferencias al momento</strong>
+                                    {% endif %}
+                                    {% endcomment %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

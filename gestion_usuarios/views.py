@@ -30,9 +30,25 @@ def inicio(request):
             if request.user.is_superuser:
                 return redirect('usuarios_lista')
             else:
-                return redirect('listar_escenarios')
+                return redirect('inicio_tenant')
 
     return redirect('login')
+
+@login_required
+def inicio_tenant(request):
+    """
+    Julio 14 / 2015
+    Autor: Daniel Correa
+
+    Index para tentat
+
+    Esta vista permite renderizan el panel de control del tenant, donde se mostraran notificaciones y demas opciones de control
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    """
+    return render(request,'index_tenant.html',{})
+
 
 @login_required
 @superuser_only
