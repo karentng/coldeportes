@@ -35,7 +35,14 @@
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
-                        {% bootstrap_form form layout="horizontal" %}
+                        {% for field in form %}
+                            <div class="col-lg-12">
+                                <label for="{{ field.label }}">{{ field.label_tag }}
+                                    {% if field.field.required %}<span class="special_class">*</span>{% endif %}
+                                </label>
+                                {% bootstrap_field field layout="inline" %}
+                            </div>
+                        {% endfor %}
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
                     </div>
                 </div>
