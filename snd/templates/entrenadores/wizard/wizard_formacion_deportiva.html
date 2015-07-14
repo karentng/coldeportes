@@ -134,6 +134,15 @@
     <script>
 
         $(document).ready(function() {
+            $("#id_actual").change(function(){
+               if($(this).is(":checked")){
+                   $("#id_fecha_fin").val("");
+                   $("#id_fecha_fin").parent().css('display','none');
+               }else{
+                   $("#id_fecha_fin").parent().css('display','block');
+               }
+            });
+
             App.init();
             FormWizard.init();
         });

@@ -26,7 +26,7 @@ class Entrenador(models.Model):
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
     foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
     tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD, default='CED')
-    nro_id = models.BigIntegerField(verbose_name='Número de identificación')
+    nro_id = models.BigIntegerField(verbose_name='Número de identificación', unique=True)
     telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
     telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
     correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')
@@ -46,7 +46,8 @@ class FormacionDeportiva(models.Model):
     institucion_formacion = models.CharField(max_length=100, verbose_name='Institución de formación')
     pais_formacion = models.ForeignKey(Nacionalidad)
     fecha_comienzo = models.DateField()
-    fecha_fin = models.DateField()
+    actual = models.BooleanField(verbose_name='¿Aún en formación?')
+    fecha_fin = models.DateField(blank=True, null=True)
     entrenador = models.ForeignKey(Entrenador)
 
 
@@ -54,5 +55,6 @@ class ExperienciaLaboral(models.Model):
     nombre_cargo = models.CharField(max_length=50, verbose_name='Nombre del cargo')
     institucion = models.CharField(max_length=150, verbose_name='Institución donde se desempeñó')
     fecha_comienzo = models.DateField()
-    fecha_fin = models.DateField()
+    actual = models.BooleanField(verbose_name='¿Aún en el cargo?')
+    fecha_fin = models.DateField(blank=True, null=True)
     entrenador = models.ForeignKey(Entrenador)

@@ -93,7 +93,8 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}
-        <a href="{% url 'entrenador_listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'finalizar_entrenador' opcion='listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'finalizar_entrenador' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">Finalizar y registrar otro →</a>
 
 
 {% endblock %}
@@ -108,6 +109,16 @@
     <script>
 
         $(document).ready(function() {
+            $("#id_actual").change(function(){
+               if($(this).is(":checked")){
+                   $("#id_fecha_fin").val("");
+                   $("#id_fecha_fin").parent().css('display','none');
+               }else{
+                   $("#id_fecha_fin").parent().css('display','block');
+               }
+            });
+
+
             App.init();
             FormWizard.init();
         });

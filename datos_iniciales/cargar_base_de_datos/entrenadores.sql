@@ -5,11 +5,11 @@
 INSERT INTO prueba.snd_entrenador_nacionalidad (id,entrenador_id,nacionalidad_id) VALUES
 (100,100,52);
 
-INSERT INTO prueba.snd_experiencialaboral (id,nombre_cargo,institucion,fecha_comienzo,fecha_fin,entrenador_id) VALUES
-(100,'ENTRENADOR DE FUTBOL','INDERVALLE','2012-07-01','2015-01-01',100);
+INSERT INTO prueba.snd_experiencialaboral (id,nombre_cargo,institucion,fecha_comienzo,actual,fecha_fin,entrenador_id) VALUES
+(100,'ENTRENADOR DE FUTBOL','INDERVALLE','2012-07-01',FALSE,'2015-01-01',100);
 
-INSERT INTO prueba.snd_formaciondeportiva (id,denominacion_diploma,nivel,institucion_formacion,fecha_comienzo,fecha_fin,entrenador_id,pais_formacion_id) VALUES
-(100,'ENTRENADOR DE FUTBOL','AVANZADO','ESCUELA DE FUTBOL EL PIBE','2012-07-01','2015-01-01',100,52);
+INSERT INTO prueba.snd_formaciondeportiva (id,denominacion_diploma,nivel,institucion_formacion,fecha_comienzo,actual,fecha_fin,entrenador_id,pais_formacion_id) VALUES
+(100,'ENTRENADOR DE FUTBOL','AVANZADO','ESCUELA DE FUTBOL EL PIBE','2012-07-01',FALSE,'2015-01-01',100,52);
 
 INSERT INTO prueba.snd_formaciondeportiva_disciplina_deportiva (id,formaciondeportiva_id,tipodisciplinadeportiva_id) VALUES
 (100,100,3);

@@ -47,7 +47,7 @@ def wizard_entrenador_nuevo(request):
 
 @login_required
 @permission_required('snd.add_entrenador')
-def finalizar_entrenador(request):
+def finalizar_entrenador(request, opcion):
     """
     Junio 16 / 2015
     Autor: Milton Lenis
@@ -57,10 +57,15 @@ def finalizar_entrenador(request):
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
+    :param opcion: Opción para redireccionamiento
+    :type opcion: String
     """
     messages.success(request, "Entrenador registrado correctamente.")
+    if opcion=='nuevo':
+        return redirect('entrenador_nuevo')
+    elif opcion =='listar':
+        return redirect('listar_entrenador')
 
-    return redirect('listar_entrenador')
 
 @login_required
 @permission_required('snd.change_entrenador')
