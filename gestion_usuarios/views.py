@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from gestion_usuarios.forms import *
 from django.contrib.auth.models import *
 from django.contrib import messages
-from snd.utilities import superuser_only
+from snd.utilities import superuser_only,calculate_age
+from snd.modelos.deportistas import Deportista
+from snd.modelos.escenarios import Escenario,CaracterizacionEscenario
 
 def inicio(request):
     digitador = None
@@ -47,7 +49,19 @@ def inicio_tenant(request):
     :param request: Petición Realizada
     :type request: WSGIRequest
     """
-    return render(request,'index_tenant.html',{})
+    transfer_depor = Deportista.objects.all()
+    for d in transfer_depor:
+        disciplinas = ','.join(str(x) for x in d.disciplinas.all())
+        d.disciplinas_str = disciplinas
+        d.edad= calculate_age(d.fecha_nacimiento)
+
+    transfer_es = Escenario.objects.all()
+    for e in transfer_es:
+        e.tipo = CaracterizacionEscenario.objects.get(escenario=e).tipo_escenario
+    return render(request,'index_tenant.html',{
+        'transfer_escenario':transfer_es,
+        'transfer_persona': transfer_depor
+    })
 
 
 @login_required

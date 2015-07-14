@@ -38,6 +38,9 @@ class Deportista(models.Model):
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
+    def __str__(self):
+        return self.nombres+" "+self.apellidos
+
 #Composicion corporal
 class ComposicionCorporal(models.Model):
     tipos_rh =(

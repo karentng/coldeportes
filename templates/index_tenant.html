@@ -20,7 +20,8 @@
     <!--Fila de notificaciones-->
         <div class="row">
             <div class="col-sm-12">
-                <div class="col-md-6">
+                <!--Inicio transferencia de deportistas-->
+                <div class="col-md-8">
                     <div class="panel panel-success">
                         <div class="panel-heading">
                             <div class="panel-heading-btn">
@@ -30,25 +31,104 @@
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
                             </div>
                             <h4 class="panel-title">
-                                Transferencias deportistas
+                                Transferencias de Personas Pendientes
                             </h4>
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    {% comment %}
-                                    {% if transfer_deportistas %}
+                                    {% if transfer_persona %}
+
+                                            <div class="height-sm" data-scrollbar="true">
+                                                <ul class="media-list media-list-with-divider">
+                                                {% for t in transfer_persona %}
+                                                    <li class="media media-sm">
+                                                        <a class="media-left" href="javascript:;">
+                                                            {%if t.foto%}
+                                                                <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{t.foto}}" alt=""  />
+                                                            {%elif t.genero == "Hombre"%}
+                                                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" />
+                                                            {%else%}
+                                                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" />
+                                                            {%endif%}
+                                                        </a>
+                                                        <div class="media-body">
+                                                            <h4 class="media-heading">{{ t.nombres }} {{ t.apellidos }}<small> <strong>Fecha Solicitud: Junio 4, 2015</strong></small></h4>
+                                                            <p>Identificación: {{ t.tipo_id }}.{{ t.identificacion }}. <br/>
+                                                                Edad: {{ t.edad }} <br/>
+                                                                Genero: {{ t.genero }}
+                                                                Ciudad(Departamento): {{ t.ciudad_nacimiento }} <br/>
+                                                                Disciplinas: {{ t.disciplinas_str }}
+                                                            </p>
+                                                            <p>
+                                                                <a href="javascript:;" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                                <a href="javascript:;" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
+                                                                <a href="javascript:;" class="btn btn-sm btn-success m-r-5">Aceptar</a>
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
 
                                     {% else %}
                                        <strong>No hay transferencias al momento</strong>
                                     {% endif %}
-                                    {% endcomment %}
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--Fin transferencia de deportistas-->
+                <!--Inicio transferencia de escenarios-->
+                <div class="col-md-4">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="panel-title">
+                                Transferencias de Escenarios Pendientes
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {% if transfer_escenario %}
+
+                                            <div class="height-sm" data-scrollbar="true">
+                                                <ul class="media-list media-list-with-divider">
+                                                {% for t in transfer_escenario %}
+                                                    <li class="media media-sm">
+                                                        <div class="media-body">
+                                                            <h4 class="media-heading">{{ t.nombre }}</h4> <small> <strong>Fecha Solicitud: Junio 4, 2015</strong></small>
+                                                            <p>Dirección: {{ t.direccion }} <br/>
+                                                                Ciudad(Departamento): {{ t.ciudad }} <br/>
+                                                                Tipo: {{ t.tipo }}
+                                                            </p>
+                                                            <p>
+                                                                <a href="javascript:;" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                                <a href="javascript:;" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
+                                                                <a href="javascript:;" class="btn btn-sm btn-success m-r-5">Aceptar</a>
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+
+                                    {% else %}
+                                       <strong>No hay transferencias al momento</strong>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Fin transferencia de escenarios-->
             </div>
         </div>
     </div>
