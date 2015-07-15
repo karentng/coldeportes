@@ -7,6 +7,7 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -31,7 +32,7 @@
     {% include 'entrenadores/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-5" >
-                <form action="" method="post">{% csrf_token %}
+                <form id="form-experiencia" action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
@@ -102,6 +103,9 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <!--Bootstrap Validator [ OPTIONAL ]-->
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-experiencia-validations.js"></script>
 
 {% endblock %}
 

@@ -29,23 +29,31 @@
 	</script>
 {% endblock %}
 
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/switchery/switchery.min.css" rel="stylesheet" />
+{% endblock %}
+
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
 			<form class="form-horizontal" action="" method="post">{% csrf_token %}
 				{% bootstrap_field form.nombre layout="horizontal" %}
 				<div class="form-group">
-				<label class="col-md-2 control-label">
-					<p>Página Web</p>
-					<small>{{form.pagina.help_text}}</small>
-				</label>
-				<div class="col-md-4">
-					<div class="input-group">
-				        {{form.pagina}}
-				        <span class="input-group-addon">{{dominio}}</span>
+					<label class="col-md-2 control-label">
+						<p>Página Web</p>
+						<small>{{form.pagina.help_text}}</small>
+					</label>
+					<div class="col-md-4">
+						<div class="input-group">
+					        {{form.pagina}}
+					        <span class="input-group-addon">{{dominio}}</span>
+					    </div>
 				    </div>
 			    </div>
-			    </div>
+			    <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
+			    {% bootstrap_form form2 layout="horizontal" %}
+
 				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Registrar</button>
 			</form>
 		</div>
