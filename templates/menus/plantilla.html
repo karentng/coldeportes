@@ -2,8 +2,10 @@
     {% include "menus/aplicacion/usuarios.html" %}
 {% else %}
     {% include "menus/aplicacion/dirigentes.html" %}
-    {% include "menus/aplicacion/escenarios.html" %}    
-    {% include "menus/aplicacion/caf.html" %}
+    {% include "menus/aplicacion/escenarios.html" %}
+    {% if request.tenant.actores.centros %}
+    	{% include "menus/aplicacion/caf.html" %}
+    {% endif %}
     {% include "menus/aplicacion/deportistas.html" %}
     {% include "menus/aplicacion/entrenadores.html" %}
     {% include "menus/aplicacion/cajas_compensacion.html" %}
