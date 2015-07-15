@@ -58,18 +58,17 @@
                                                                 <em>Edad:</em> {{ t.edad }} <br/>
                                                                 <em>Genero:</em> {{ t.genero }} <br/>
                                                                 <em>Ciudad(Departamento):</em> {{ t.ciudad_nacimiento }} <br/>
-                                                                <em>Disciplinas:</em> {{ t.disciplinas_str }}<br/>
                                                                 <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
                                                             </p>
                                                             <p>
-                                                                <a href="#modal-desactivate-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                                <a href="#modal-desactivate-persona-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
                                                                 <a href="javascript:;" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
                                                                 <a href="javascript:;" class="btn btn-sm btn-success m-r-5">Aceptar</a>
                                                             </p>
                                                         </div>
                                                     </li>
                                                     <!--modal para ver detalle -->
-                                                    <div class="modal modal-message fade" id="modal-desactivate-{{ t.id }}">
+                                                    <div class="modal modal-message fade" id="modal-desactivate-persona-{{ t.id }}">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-body">
@@ -110,50 +109,41 @@
                                                                                             </thead>
                                                                                             <tbody>
                                                                                                 <tr class="highlight">
-                                                                                                    <td class="field">Mood</td>
-                                                                                                    <td><a href="#">Add Mood Message</a></td>
+                                                                                                    <td class="field">Entidad de Procedencia</td>
+                                                                                                    <td>{{ t.procedencia }}</td>
                                                                                                 </tr>
                                                                                                 <tr class="divider">
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td class="field">Mobile</td>
-                                                                                                    <td><i class="fa fa-mobile fa-lg m-r-5"></i> +1-(847)- 367-8924 <a href="#" class="m-l-5">Edit</a></td>
+                                                                                                    <td class="field">Tipo Identificación:</td>
+                                                                                                    <td><i class="fa fa-wallet fa-lg m-r-5"></i> {{ t.tipo_id }}</td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td class="field">Home</td>
-                                                                                                    <td><a href="#">Add Number</a></td>
+                                                                                                    <td class="field">Identificación</td>
+                                                                                                    <td>{{ t.identificacion }}</td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td class="field">Office</td>
-                                                                                                    <td><a href="#">Add Number</a></td>
+                                                                                                    <td class="field">Edad</td>
+                                                                                                    <td>{{ t.edad }}</td>
                                                                                                 </tr>
                                                                                                 <tr class="divider">
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr class="highlight">
-                                                                                                    <td class="field">About Me</td>
-                                                                                                    <td><a href="#">Add Description</a></td>
+                                                                                                    <td class="field">Ciudad de Nacimiento</td>
+                                                                                                    <td>{{ t.ciudad_nacimiento }}</td>
                                                                                                 </tr>
                                                                                                 <tr class="divider">
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td class="field">City</td>
-                                                                                                    <td>Los Angeles</td>
+                                                                                                    <td class="field">Solicitud</td>
+                                                                                                    <td>Esta es una solicitud de transferencia de personal de una entidad a otra</td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td class="field">State</td>
-                                                                                                    <td><a href="#">Add State</a></td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Gender</td>
-                                                                                                    <td>
-                                                                                                        <select class="form-control input-inline input-xs" name="gender">
-                                                                                                            <option value="male">Male</option>
-                                                                                                            <option value="female">Female</option>
-                                                                                                        </select>
-                                                                                                    </td>
+                                                                                                    <td class="field">Fecha Solicitud</td>
+                                                                                                    <td>Junio 4 , 2015</td>
                                                                                                 </tr>
                                                                                             </tbody>
                                                                                         </table>
@@ -218,12 +208,95 @@
                                                                 <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
                                                             </p>
                                                             <p>
-                                                                <a href="javascript:;" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                                <a href="#modal-desactivate-escenario-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
                                                                 <a href="javascript:;" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
                                                                 <a href="javascript:;" class="btn btn-sm btn-success m-r-5">Aceptar</a>
                                                             </p>
                                                         </div>
                                                     </li>
+                                                    <!--modal de ver detalle escenarios-->
+                                                    <div class="modal modal-message fade fade" id="modal-desactivate-escenario-{{ t.id }}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    <div class="profile-container">
+                                                                        <!-- begin profile-section -->
+                                                                        <div class="profile-section">
+                                                                            <!-- begin profile-left -->
+                                                                            <div class="profile-left">
+                                                                                <div class="profile-image">
+                                                                                    <i class="fa fa-trophy modal-icon"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- end profile-left -->
+                                                                            <!-- begin profile-right -->
+                                                                            <div class="profile-right">
+                                                                                <!-- begin profile-info -->
+                                                                                <div class="profile-info">
+                                                                                    <!-- begin table -->
+                                                                                    <div class="table-responsive">
+                                                                                        <table class="table table-profile">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th></th>
+                                                                                                    <th>
+                                                                                                        <h4>{{ t.nombre }}<small>{{ t.procedencia }}</small></h4>
+                                                                                                    </th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <tr class="highlight">
+                                                                                                    <td class="field">Entidad de Procedencia</td>
+                                                                                                    <td>{{ t.procedencia }}</td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Direccion</td>
+                                                                                                    <td>{{ t.direccion }}</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Ciudad</td>
+                                                                                                    <td>{{ t.ciudad }}</td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr class="highlight">
+                                                                                                    <td class="field">Tipo</td>
+                                                                                                    <td>{{ t.tipo }}</td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Solicitud</td>
+                                                                                                    <td>Esta es una solicitud de transferencia de escenario de una entidad a otra</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Fecha Solicitud</td>
+                                                                                                    <td>Junio 4 , 2015</td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                    <!-- end table -->
+                                                                                </div>
+                                                                                <!-- end profile-info -->
+                                                                            </div>
+                                                                            <!-- end profile-right -->
+                                                                        </div>
+                                                                        <!-- end profile-section -->
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="javascript:;" class="btn btn-sm btn-warning" data-dismiss="modal">Regresar</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--fin modal de ver detalle escenarios-->
                                                 {% endfor %}
                                                 </ul>
                                             </div>

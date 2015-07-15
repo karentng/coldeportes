@@ -51,8 +51,8 @@ def inicio_tenant(request):
     """
     transfer_depor = Deportista.objects.all()
     for d in transfer_depor:
-        disciplinas = ','.join(str(x) for x in d.disciplinas.all())
-        d.disciplinas_str = disciplinas
+        #disciplinas = ','.join(str(x) for x in d.disciplinas.all())
+        #d.disciplinas_str = disciplinas
         d.edad= calculate_age(d.fecha_nacimiento)
         d.procedencia = 'Deportivo Cali'
 

@@ -1,2 +1,3 @@
-from .modelos.deportistas import *
+from django.db import models
+
 # Create your models here.
