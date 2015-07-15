@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
+from snd.utilities import *
 
 admin.autodiscover()
 
@@ -16,9 +17,16 @@ urlpatterns = patterns('',
 
     url(r'^gestion-usuarios/', include('gestion_usuarios.urls')),
     url(r'^escenarios/', include('snd.urls.escenarios')), #urls de escenarios
-    url(r'^caf/', include('snd.urls.caf')), #urls de cafs
     url(r'^deportistas/',include('snd.urls.deportistas')),#urls de deportistas
     url(r'^dirigentes/', include('snd.urls.dirigentes')), #urls de dirigentes
     url(r'^entrenadores/',include('snd.urls.entrenadores')),#urls de entrenadores
     url(r'^ccf/',include('snd.urls.cajas_compensacion')),#urls de ecajas compensación
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+urlpatterns += required(
+    tenant_actor('centros'),
+    patterns('',
+        url(r'^caf/', include('snd.urls.caf')), #urls de cafs
+    )
+)

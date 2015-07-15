@@ -5,6 +5,26 @@ from django.contrib.auth.models import *
 from django.contrib import messages
 from snd.utilities import superuser_only
 
+PERMISOS_DIGITADOR = [
+    'add_cajacompensacion',
+    'change_cajacompensacion',
+    'add_dirigente',
+    'change_dirigente',
+    'add_deportista',
+    'change_deportista',
+    'add_centroacondicionamiento',
+    'change_centroacondicionamiento',
+    'add_entrenador',
+    'change_entrenador',
+    'add_escenario',
+    'change_escenario',
+]
+
+def asignarPermisosGrupo(grupo, permisos):
+    permisos = Permission.objects.filter(codename__in=permisos)
+    for permiso in permisos:
+        grupo.permissions.add(permiso)
+
 def inicio(request):
     digitador = None
 
@@ -13,6 +33,7 @@ def inicio(request):
         digitador = Group(name='Digitador')
         digitador.save()
         Group(name='Solo lectura').save()
+        asignarPermisosGrupo(digitador, PERMISOS_DIGITADOR)
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:

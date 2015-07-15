@@ -14,3 +14,8 @@ class EntidadForm(forms.ModelForm):
     class Meta:
         model = Entidad
         fields = ('nombre',)
+
+class ActoresForm(forms.ModelForm):
+    class Meta:
+        model = Actores
+        exclude = ()

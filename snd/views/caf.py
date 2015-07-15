@@ -8,7 +8,7 @@ from snd.models import *
 from entidades.models import *
 from snd.formularios.caf import *
 from django.contrib import messages
-from snd.utilities import all_permission_required
+from snd.utilities import *
 
 #==================================================================
 # Crear / Modificar CAF
