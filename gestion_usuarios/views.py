@@ -54,10 +54,13 @@ def inicio_tenant(request):
         disciplinas = ','.join(str(x) for x in d.disciplinas.all())
         d.disciplinas_str = disciplinas
         d.edad= calculate_age(d.fecha_nacimiento)
+        d.procedencia = 'Deportivo Cali'
 
     transfer_es = Escenario.objects.all()
     for e in transfer_es:
         e.tipo = CaracterizacionEscenario.objects.get(escenario=e).tipo_escenario
+        e.procedencia= 'Deportivo Cali'
+
     return render(request,'index_tenant.html',{
         'transfer_escenario':transfer_es,
         'transfer_persona': transfer_depor

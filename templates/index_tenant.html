@@ -54,19 +54,126 @@
                                                         </a>
                                                         <div class="media-body">
                                                             <h4 class="media-heading">{{ t.nombres }} {{ t.apellidos }}<small> <strong>Fecha Solicitud: Junio 4, 2015</strong></small></h4>
-                                                            <p>Identificación: {{ t.tipo_id }}.{{ t.identificacion }}. <br/>
-                                                                Edad: {{ t.edad }} <br/>
-                                                                Genero: {{ t.genero }}
-                                                                Ciudad(Departamento): {{ t.ciudad_nacimiento }} <br/>
-                                                                Disciplinas: {{ t.disciplinas_str }}
+                                                            <p><em>Identificación: </em>{{ t.tipo_id }}.{{ t.identificacion }}. <br/>
+                                                                <em>Edad:</em> {{ t.edad }} <br/>
+                                                                <em>Genero:</em> {{ t.genero }} <br/>
+                                                                <em>Ciudad(Departamento):</em> {{ t.ciudad_nacimiento }} <br/>
+                                                                <em>Disciplinas:</em> {{ t.disciplinas_str }}<br/>
+                                                                <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
                                                             </p>
                                                             <p>
-                                                                <a href="javascript:;" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                                <a href="#modal-desactivate-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
                                                                 <a href="javascript:;" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
                                                                 <a href="javascript:;" class="btn btn-sm btn-success m-r-5">Aceptar</a>
                                                             </p>
                                                         </div>
                                                     </li>
+                                                    <!--modal para ver detalle -->
+                                                    <div class="modal modal-message fade" id="modal-desactivate-{{ t.id }}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    <div class="profile-container">
+                                                                        <!-- begin profile-section -->
+                                                                        <div class="profile-section">
+                                                                            <!-- begin profile-left -->
+                                                                            <div class="profile-left">
+                                                                                <!-- begin profile-image -->
+                                                                                <div class="profile-image">
+                                                                                    {%if t.foto%}
+                                                                                        <img  src="{{MEDIA_URL}}{{t.foto}}" alt=""  />
+                                                                                    {%elif t.genero == "Hombre"%}
+                                                                                        <img  src="{{STATIC_URL}}img/male.png" alt="" />
+                                                                                    {%else%}
+                                                                                        <img  src="{{STATIC_URL}}img/female.png" alt="" />
+                                                                                    {%endif%}
+
+                                                                                    <i class="fa fa-user hide"></i>
+                                                                                </div>
+                                                                                <!-- end profile-image -->
+                                                                            </div>
+                                                                            <!-- end profile-left -->
+                                                                            <!-- begin profile-right -->
+                                                                            <div class="profile-right">
+                                                                                <!-- begin profile-info -->
+                                                                                <div class="profile-info">
+                                                                                    <!-- begin table -->
+                                                                                    <div class="table-responsive">
+                                                                                        <table class="table table-profile">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th></th>
+                                                                                                    <th>
+                                                                                                        <h4>{{ t.nombres }} {{ t.apellidos }} <small>{{ t.procedencia }}</small></h4>
+                                                                                                    </th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <tr class="highlight">
+                                                                                                    <td class="field">Mood</td>
+                                                                                                    <td><a href="#">Add Mood Message</a></td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Mobile</td>
+                                                                                                    <td><i class="fa fa-mobile fa-lg m-r-5"></i> +1-(847)- 367-8924 <a href="#" class="m-l-5">Edit</a></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Home</td>
+                                                                                                    <td><a href="#">Add Number</a></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Office</td>
+                                                                                                    <td><a href="#">Add Number</a></td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr class="highlight">
+                                                                                                    <td class="field">About Me</td>
+                                                                                                    <td><a href="#">Add Description</a></td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">City</td>
+                                                                                                    <td>Los Angeles</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">State</td>
+                                                                                                    <td><a href="#">Add State</a></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Gender</td>
+                                                                                                    <td>
+                                                                                                        <select class="form-control input-inline input-xs" name="gender">
+                                                                                                            <option value="male">Male</option>
+                                                                                                            <option value="female">Female</option>
+                                                                                                        </select>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                    <!-- end table -->
+                                                                                </div>
+                                                                                <!-- end profile-info -->
+                                                                            </div>
+                                                                            <!-- end profile-right -->
+                                                                        </div>
+                                                                        <!-- end profile-section -->
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="javascript:;" class="btn btn-sm btn-warning" data-dismiss="modal">Regresar</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- fin modal para ver detalle -->
                                                 {% endfor %}
                                                 </ul>
                                             </div>
@@ -105,9 +212,10 @@
                                                     <li class="media media-sm">
                                                         <div class="media-body">
                                                             <h4 class="media-heading">{{ t.nombre }}</h4> <small> <strong>Fecha Solicitud: Junio 4, 2015</strong></small>
-                                                            <p>Dirección: {{ t.direccion }} <br/>
-                                                                Ciudad(Departamento): {{ t.ciudad }} <br/>
-                                                                Tipo: {{ t.tipo }}
+                                                            <p><em>Dirección:</em> {{ t.direccion }} <br/>
+                                                                <em>Ciudad(Departamento):</em> {{ t.ciudad }} <br/>
+                                                                <em>Tipo:</em> {{ t.tipo }}<br/>
+                                                                <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
                                                             </p>
                                                             <p>
                                                                 <a href="javascript:;" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
