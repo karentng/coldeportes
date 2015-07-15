@@ -10,6 +10,7 @@
     {{form.media}} {# js y css para datetime #}
     <link href="{{ STATIC_URL }}plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block miga_pan %}
@@ -33,7 +34,7 @@
     {% include 'entrenadores/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-5" >
-                <form action="" method="post">{% csrf_token %}
+                <form action="" id="form-formacion" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
@@ -121,6 +122,9 @@
     <script src="{{ STATIC_URL }}plugins/datatables/media/js/jquery.dataTables.js"></script>
     <script src="{{ STATIC_URL }}plugins/datatables/media/js/dataTables.bootstrap.js"></script>
     <script src="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <!--Bootstrap Validator [ OPTIONAL ]-->
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-formacion-validations.js"></script>
     <script>
         $(window).on('load', function() {
             $('#tabla-formacion-deportiva').dataTable({
