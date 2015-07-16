@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    //Revalidar campos que usan plugins al ser actualizados
+    
+
     var faIcon = {
         valid: 'fa fa-check-circle fa-lg text-success',
         invalid: 'fa fa-times-circle fa-lg',
@@ -103,9 +106,4 @@ $(document).ready(function() {
             // Remove the has-success class
             $parent.removeClass('has-success');
         });
-
-    //Revalidar campos que usan plugins al ser actualizados
-    /*$("#id_fecha_nacimiento").on('change',function(e){
-        $("#form-wizard-escenarios").bootstrapValidator('revalidateField', 'fecha_nacimiento');
-    });*/
 });

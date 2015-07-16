@@ -5,35 +5,28 @@ $(document).ready(function() {
         validating: 'fa fa-refresh'
     }
 
-    $('#form-wizard-contactos').bootstrapValidator({
+    $('#form-wizard-tarifas').bootstrapValidator({
             feedbackIcons: faIcon,
             excluded: ':disabled',
             fields: {
-            nombre: {
+            titulo: {
                 validators: {
                     notEmpty: {
-                        message: 'El nombre  no puede ser vacío'
+                        message: 'el titulo no puede ser vacío'
                     }
                 }
             },
-            telefono: {
+            precio: {
                 validators: {
                     notEmpty: {
-                        message: 'El telefono no puede ser vacío'
-                    }
-                }
-            },
-            email: {
-                validators: {
-                    emailAddress: {
-                        message: 'El valor ingresado no es un correo electrónico válido'
+                        message: 'El precio no puede ser vacía'
                     }
                 }
             },
             descripcion: {
                 validators: {
                     notEmpty: {
-                        message: 'La descripción no puede ser vacía'
+                        message: 'La descripción del horario del escenario no puede ser vacía'
                     }
                 }
             }
@@ -51,4 +44,11 @@ $(document).ready(function() {
             $parent.removeClass('has-success');
         });
 
+    //Revalidar campos que usan plugins al ser actualizados
+    $("#id_hora_inicio").on('change',function(e){
+        $("#form-wizard-horarios").bootstrapValidator('revalidateField', 'hora_inicio');
+    });
+    $("#id_hora_fin").on('change',function(e){
+        $("#form-wizard-horarios").bootstrapValidator('revalidateField', 'hora_fin');
+    });
 });

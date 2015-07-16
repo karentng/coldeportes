@@ -107,9 +107,7 @@ def wizard_caja(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-
     caja_form = CajaCompensacionForm( )
-
     if request.method == 'POST':
 
         caja_form = CajaCompensacionForm(request.POST)
@@ -121,7 +119,7 @@ def wizard_caja(request):
             caja.save()
             caja_form.save()
             return redirect('wizard_horarios_ccf', caja.id)
-
+    
 
     return render(request, 'cajas_compensacion/wizard/wizard_1.html', {
         'titulo': 'Identificación de la CCF',

@@ -5,35 +5,56 @@ $(document).ready(function() {
         validating: 'fa fa-refresh'
     }
 
-    $('#form-wizard-contactos').bootstrapValidator({
+    $('#form-wizard-cajas').bootstrapValidator({
             feedbackIcons: faIcon,
             excluded: ':disabled',
             fields: {
             nombre: {
                 validators: {
                     notEmpty: {
-                        message: 'El nombre  no puede ser vacío'
+                        message: 'El nombre no puede ser vacío'
                     }
                 }
             },
-            telefono: {
+            clasificacion: {
                 validators: {
                     notEmpty: {
-                        message: 'El telefono no puede ser vacío'
+                        message: 'Por favor seleccione una clasificación'
                     }
                 }
             },
-            email: {
-                validators: {
-                    emailAddress: {
-                        message: 'El valor ingresado no es un correo electrónico válido'
-                    }
-                }
-            },
-            descripcion: {
+            region: {
                 validators: {
                     notEmpty: {
-                        message: 'La descripción no puede ser vacía'
+                        message: 'Por favor seleccione una región'
+                    }
+                }
+            },
+            infraestructura: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione la infraestructura'
+                    }
+                }
+            },
+            publico: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione el público'
+                    }
+                }
+            },
+            servicios: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione los servicios'
+                    }
+                }
+            },
+            tipo_institucion: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione el tipo de institución'
                     }
                 }
             }

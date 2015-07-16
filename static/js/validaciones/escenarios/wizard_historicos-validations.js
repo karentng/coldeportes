@@ -12,21 +12,21 @@ $(document).ready(function() {
             fecha_inicio: {
                 validators: {
                     notEmpty: {
-                        message: 'La fecha de inicio del dato histórico del escenario no puede ser vacío'
+                        message: 'La fecha de inicio no puede ser vacío'
                     }
                 }
             },
             fecha_fin: {
                 validators: {
                     notEmpty: {
-                        message: 'La fecha final del dato histórico del escenario no puede ser vacía'
+                        message: 'La fecha final no puede ser vacía'
                     }
                 }
             },
             descripcion: {
                 validators: {
                     notEmpty: {
-                        message: 'La descripción del dato histórico del escenario no puede ser vacía'
+                        message: 'La descripción no puede ser vacía'
                     }
                 }
             }

@@ -12,28 +12,28 @@ $(document).ready(function() {
             hora_inicio: {
                 validators: {
                     notEmpty: {
-                        message: 'La hora del inicio del horario del escenario no puede ser vacío'
+                        message: 'La hora del inicio no puede ser vacío'
                     }
                 }
             },
             hora_fin: {
                 validators: {
                     notEmpty: {
-                        message: 'La hora final del horario del escenario no puede ser vacía'
+                        message: 'La hora final no puede ser vacía'
                     }
                 }
             },
             dias: {
                 validators: {
                     notEmpty: {
-                        message: 'Los días del horario del escenario no pueden ser vacíos'
+                        message: 'Los días no pueden ser vacíos'
                     }
                 }
             },
             descripcion: {
                 validators: {
                     notEmpty: {
-                        message: 'La descripción del horario del escenario no puede ser vacía'
+                        message: 'La descripción no puede ser vacía'
                     }
                 }
             }
