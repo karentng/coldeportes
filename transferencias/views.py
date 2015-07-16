@@ -9,14 +9,14 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     Julio 15, 2015
     Autor: Daniel Correa
 
-    Transferencia de objetos entre entidades, esta definida la transferencia de personas (Deportistas, Dirigentes, Entrenadores) y Escenarios
+    Transferencia de objetos entre entidades, esta definida la transferencia de personas (Deportistas, Entrenadores) y Escenarios
     Dentro de personas el protocolo es , 1 para Deportistas, 2 para Dirigentes y 3 para Enetrenadores
 
     :param request: Petición Realizada
     :type request: WSGIRequest
     :param tipo_transfer: Tipo de transferencia, el protocolo define 1 para personas y 2 para escenarios
     :type tipo_transfer: int
-    :param tipo_persona: Tipo de persona, el protocolo define 1 para Deportistas, 2 para Dirigentes y 3 para Enetrenadores
+    :param tipo_persona: Tipo de persona, el protocolo define 1 para Deportistas y 2 para Enetrenadores
     :type tipo_persona: int
     :param id: Identificacion de objeto a tranferir
     :type id: String
