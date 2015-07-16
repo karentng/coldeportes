@@ -7,6 +7,8 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_historicos-validations.js"></script>
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -31,7 +33,7 @@
     {% include 'escenarios/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" method="post">{% csrf_token %}
+                <form id="form-wizard-historicos" action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
@@ -102,6 +104,8 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+
     
 {% endblock %}
 
