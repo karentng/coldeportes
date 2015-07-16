@@ -8,8 +8,12 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-	<link href="{{STATIC_URL}}plugins/switchery/switchery.min.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+{% endblock %}
 
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+	<script src="{{STATIC_URL}}js/validaciones/caf/wizard-caf-validations.js"></script>
 {% endblock %}
 
 {% block miga_pan %}
@@ -28,7 +32,7 @@
 
 {% block contenido_panel %}
 	{% include 'cafs/wizard/_wizard.html' %}
-	<form action="" method="post">{% csrf_token %}
+	<form id="wizard-caf-validations" action="" method="post">{% csrf_token %}
 		<fieldset>
 			<div class="well row">
 				<strong><h4>Identificación</h4></strong>
