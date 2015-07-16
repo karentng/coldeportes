@@ -1,7 +1,12 @@
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
+from entidades.models import Entidad
+from snd.models import Deportista,Escenario,Entrenador
+from .forms import TransferenciaForm
 # Create your views here.
 @login_required
 def generar_transferencia(request,tipo_transfer,tipo_persona,id):
@@ -10,7 +15,7 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     Autor: Daniel Correa
 
     Transferencia de objetos entre entidades, esta definida la transferencia de personas (Deportistas, Entrenadores) y Escenarios
-    Dentro de personas el protocolo es , 1 para Deportistas, 2 para Dirigentes y 3 para Enetrenadores
+    Dentro de personas el protocolo es , 1 para Deportistas y 2 para Enetrenadores
 
     :param request: Petición Realizada
     :type request: WSGIRequest
@@ -21,14 +26,29 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     :param id: Identificacion de objeto a tranferir
     :type id: String
     """
+    objeto = None
+    entidad_solicitante = request.tenant
+    entidades = Entidad.objects.exclude(nombre__in=['publico',entidad_solicitante.nombre])
+    if tipo_transfer==1: #Transferencia de personas
+        if tipo_persona==1: #Transferencia de deportistas
+            objeto = Deportista.objects.get(id=id)
+        elif tipo_persona==2: #Transferencia de entrenadores
+            objeto = Entrenador.objects.get(id=id)
+    elif tipo_transfer==2: #Transferencia de escenarios
+        objeto = Escenario.objects.get(id=id)
 
-    if tipo_transfer==1:
-        #Transferencia de personas
+    if request.method == 'POST':
+        #trans_form = TransferenciaForm(request.POST)
+        #entidad_cambio = trans_form.cleaned_data['entidad']
+        #print(entidad_cambio)
+        #connection.set_tenant(entidad)
+        #ContentType.objects.clear_cache()
         pass
-    elif tipo_transfer==2:
-        #Transferencia de escenarios
-        pass
-    return render(request,'generar_transferencia.html',{})
+
+    return render(request,'generar_transferencia.html',{
+        'entidades' : entidades,
+        'objeto' : objeto
+    })
 
 @login_required
 def procesar_transferencia(request,tipo_transfer,tipo_persona,id):

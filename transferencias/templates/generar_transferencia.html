@@ -51,11 +51,11 @@
 
                         <div class="pull-right">
                             <div class="btn-group btn-toolbar">
-                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-up"></i></a>
-                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-down"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
                             </div>
                             <div class="btn-group m-l-5">
-                                <a href="inbox_v2.html" class="btn btn-white btn-sm disabled"><i class="fa fa-times"></i></a>
+                                <a href="inbox_v2.html" class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                     </div>
@@ -104,14 +104,22 @@
                         </p>
                         <strong>Seleccion de Entidad</strong><br/><br/>
                         <!-- begin email form -->
-                        <form action="" method="POST">
+                        <form action="" method="POST">{% csrf_token %}
                             <!-- begin email subject -->
-                            <label class="control-label">Entidad:</label>
-                            <div class="m-b-15">
-                                <input type="text" class="form-control" />
+                            <div class="col-lg-8">
+                                <select class="form-control one" id="id_entidad" name="entidad" required title tabindex="-1" style="display: none;" >
+                                    {% for en in entidades %}
+                                        <option value="{{ en.nombre }}">{{ en.nombre }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <!-- end email subject -->
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
                             <p class="f-s-12 text-inverse">
+
                                 Coordialmente,<br />
                                 Deportivo Cali.<br />
                                 Entidad del SND,<br />

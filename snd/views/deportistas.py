@@ -335,6 +335,8 @@ def listar_deportista(request):
     deportistas = Deportista.objects.all()
     for dep in deportistas:
         dep.edad = calculate_age(dep.fecha_nacimiento)
+        dep.disciplinas_deportivas = ",".join(str(x) for x in dep.disciplinas.all())
+
     return render(request, 'deportistas/deportistas_lista.html', {
         'deportistas':deportistas,
     })

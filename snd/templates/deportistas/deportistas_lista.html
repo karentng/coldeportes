@@ -73,11 +73,7 @@
                                 <td>{{deportista.identificacion}}</td>
                             {% endif %}
                             <td>{{ deportista.edad }}</td>
-                            <td>
-                                {%for d in deportista.disciplinas.all%}
-                                    {{ d }},
-                                {% endfor %}
-                            </td>
+                            <td>{{ deportista.disciplinas_deportivas }}</td>
                             <td>{% if deportista.activo %} Activo {% else %} Inactivo {% endif %}</td>
                             <td>
                                 <a href="{% url 'ver_deportista' deportista.id %}" title="Modificar">
