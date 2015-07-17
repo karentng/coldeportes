@@ -96,9 +96,7 @@
             </div>
         </div>
         <br/>
-        {% if wizard_stage > 1 %}
-        <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-        {% endif %}     
+        <a href="{% url 'wizard_caracterizacion' escenario_id %}" class="btn btn-success pull-left" type="button">← Anterior</a>
         <a href="{% url 'wizard_historicos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 

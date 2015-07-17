@@ -90,6 +90,13 @@ $(document).ready(function() {
                         message: 'El nombre del administrador del escenario no puede ser vacío'
                     }
                 }
+            },    
+            capacidad_espectadores: {
+                validators: {
+                    notEmpty: {
+                        message: 'La capacidad de espectadores del escenario no puede ser vacío'
+                    }
+                }
             },            
             
 
@@ -106,4 +113,5 @@ $(document).ready(function() {
             // Remove the has-success class
             $parent.removeClass('has-success');
         });
+
 });

@@ -48,9 +48,7 @@
 				</div>
 			</div>
 			<hr>
-			{% if wizard_stage > 1 %}
-			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back(); " />
-			{% endif %}		
+			<a href="{% url 'wizard_identificacion' escenario_id %}" class="btn btn-success pull-left" type="button">← Anterior</a>
 			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
 		</form>
 	</fieldset>
