@@ -53,7 +53,7 @@
                                                             {%endif%}
                                                         </a>
                                                         <div class="media-body">
-                                                            <h4 class="media-heading">{{ t.nombres }} {{ t.apellidos }}<small> <strong>Fecha Solicitud: Junio 4, 2015</strong></small></h4>
+                                                            <h4 class="media-heading">{{ t.nombres }} {{ t.apellidos }}<small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small></h4>
                                                             <p><em>Identificación: </em>{{ t.tipo_id }}.{{ t.identificacion }}. <br/>
                                                                 <em>Edad:</em> {{ t.edad }} <br/>
                                                                 <em>Genero:</em> {{ t.genero }} <br/>
@@ -143,7 +143,7 @@
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Fecha Solicitud</td>
-                                                                                                    <td>Junio 4 , 2015</td>
+                                                                                                    <td>{{ t.fecha_solicitud }}</td>
                                                                                                 </tr>
                                                                                             </tbody>
                                                                                         </table>
@@ -169,7 +169,7 @@
                                             </div>
 
                                     {% else %}
-                                       <strong>No hay transferencias al momento</strong>
+                                       <strong>En el momento no se le ha solicitado ninguna transferencia</strong>
                                     {% endif %}
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
                                                 {% for t in transfer_escenario %}
                                                     <li class="media media-sm">
                                                         <div class="media-body">
-                                                            <h4 class="media-heading">{{ t.nombre }}</h4> <small> <strong>Fecha Solicitud: Junio 4, 2015</strong></small>
+                                                            <h4 class="media-heading">{{ t.nombre }}</h4> <small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small>
                                                             <p><em>Dirección:</em> {{ t.direccion }} <br/>
                                                                 <em>Ciudad(Departamento):</em> {{ t.ciudad }} <br/>
                                                                 <em>Tipo:</em> {{ t.tipo }}<br/>
@@ -276,7 +276,7 @@
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Fecha Solicitud</td>
-                                                                                                    <td>Junio 4 , 2015</td>
+                                                                                                    <td>{{ t.fecha_solicitud }}</td>
                                                                                                 </tr>
                                                                                             </tbody>
                                                                                         </table>
@@ -302,7 +302,7 @@
                                             </div>
 
                                     {% else %}
-                                       <strong>No hay transferencias al momento</strong>
+                                       <strong>En el momento no se le ha solicitado ninguna transferencia</strong>
                                     {% endif %}
                                 </div>
                             </div>

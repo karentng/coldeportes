@@ -4,8 +4,12 @@ from gestion_usuarios.forms import *
 from django.contrib.auth.models import *
 from django.contrib import messages
 from snd.utilities import superuser_only,calculate_age
+from snd.models import Entrenador
 from snd.modelos.deportistas import Deportista
 from snd.modelos.escenarios import Escenario,CaracterizacionEscenario
+from transferencias.models import Transferencia
+from django.db import connection
+from django.contrib.contenttypes.models import ContentType
 
 PERMISOS_DIGITADOR = [
     'add_cajacompensacion',
@@ -70,7 +74,33 @@ def inicio_tenant(request):
     :param request: Petición Realizada
     :type request: WSGIRequest
     """
-    transfer_depor = Deportista.objects.all()
+    transferencias = Transferencia.objects.filter(estado='Pendiente')
+    transfer_personas = []
+    transfer_escenarios = []
+    for t in transferencias:
+        entidad_cambio = t.entidad
+        connection.set_tenant(entidad_cambio)
+        ContentType.objects.clear_cache()
+        if t.tipo_objeto=='Deportista':
+            depor = Deportista.objects.get(id=t.id_objeto)
+            depor.edad = calculate_age(depor.fecha_nacimiento)
+            depor.procedencia = entidad_cambio
+            depor.fecha_solicitud = t.fecha_solicitud
+            transfer_personas.append(depor)
+        elif t.tipo_objeto=='Entrenador':
+            entre = Entrenador.objects.get(id=t.id_objeto)
+            entre.edad = calculate_age(entre.fecha_nacimiento)
+            entre.procedencia = entidad_cambio
+            entre.fecha_solicitud = t.fecha_solicitud
+            transfer_personas.append(entre)
+        elif t.tipo_objeto=='Escenario':
+            escenario = Escenario.objects.get(id=t.id_objeto)
+            escenario.procedencia = entidad_cambio
+            escenario.tipo = CaracterizacionEscenario.objects.get(escenario=escenario).tipo_escenario
+            escenario.fecha_solicitud = t.fecha_solicitud
+            transfer_escenarios.append(escenario)
+
+    """transfer_depor = Deportista.objects.all()
     for d in transfer_depor:
         #disciplinas = ','.join(str(x) for x in d.disciplinas.all())
         #d.disciplinas_str = disciplinas
@@ -80,11 +110,12 @@ def inicio_tenant(request):
     transfer_es = Escenario.objects.all()
     for e in transfer_es:
         e.tipo = CaracterizacionEscenario.objects.get(escenario=e).tipo_escenario
-        e.procedencia= 'Deportivo Cali'
+        e.procedencia= 'Deportivo Cali'"""
 
     return render(request,'index_tenant.html',{
-        'transfer_escenario':transfer_es,
-        'transfer_persona': transfer_depor
+        'transfer_persona' : transfer_personas,
+        'transfer_escenario' : transfer_escenarios
+
     })
 
 

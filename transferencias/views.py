@@ -67,6 +67,9 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         transferencia.id_objeto = objeto.id
         transferencia.tipo_objeto = objeto.tipo_objeto
         transferencia.save()
+        #
+        #Cambiar estado de objeto a "En Transferencia"
+        #
         messages.success(request,'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud')
         return redirect(redir)
 
