@@ -17,8 +17,8 @@ class Entidad(TenantMixin): # Entidad deportiva
         (4, 'Cajas de Compensación'),
     )
     nombre = models.CharField(max_length=255)
-    tipo = models.IntegerField(choices=TIPOS)
-    actores = models.OneToOneField(Actores)
+    tipo = models.IntegerField(choices=TIPOS, null=True)
+    actores = models.OneToOneField(Actores, null=True)
     auto_create_schema = True
 
     def __str__(self):

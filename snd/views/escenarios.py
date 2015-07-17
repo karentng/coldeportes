@@ -218,10 +218,11 @@ def wizard_caracterizacion(request, escenario_id):
             return redirect('wizard_horarios', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/wizard_escenario.html', {
+    return render(request, 'escenarios/wizard/wizard_caracteristicas.html', {
         'titulo': 'Caracterización del Escenario',
         'wizard_stage': 2,
         'form': caracterizacion_form,
+        'escenario_id': escenario_id,
     })
 
 @login_required

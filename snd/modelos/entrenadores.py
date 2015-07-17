@@ -46,7 +46,7 @@ class FormacionDeportiva(models.Model):
     institucion_formacion = models.CharField(max_length=100, verbose_name='Institución de formación')
     pais_formacion = models.ForeignKey(Nacionalidad)
     fecha_comienzo = models.DateField()
-    actual = models.BooleanField(verbose_name='¿Aún en formación?')
+    actual = models.BooleanField(verbose_name='¿Aún en formación?',default=False)
     fecha_fin = models.DateField(blank=True, null=True)
     entrenador = models.ForeignKey(Entrenador)
 
@@ -55,6 +55,6 @@ class ExperienciaLaboral(models.Model):
     nombre_cargo = models.CharField(max_length=50, verbose_name='Nombre del cargo')
     institucion = models.CharField(max_length=150, verbose_name='Institución donde se desempeñó')
     fecha_comienzo = models.DateField()
-    actual = models.BooleanField(verbose_name='¿Aún en el cargo?')
+    actual = models.BooleanField(verbose_name='¿Aún en el cargo?',default=False)
     fecha_fin = models.DateField(blank=True, null=True)
     entrenador = models.ForeignKey(Entrenador)

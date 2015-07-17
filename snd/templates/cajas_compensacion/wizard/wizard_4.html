@@ -7,6 +7,8 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_contactos-validations.js"></script>
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -31,13 +33,16 @@
     {% include 'cajas_compensacion/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" method="post">{% csrf_token %}
+                <form id="form-wizard-contactos" action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
-                        {% for i in form %}
+                        {% for field in form %}
                             <div class="col-lg-6">
-                                {% bootstrap_field i layout="vertical" %}
+                                <label for="{{ field.label }}">{{ field.label_tag }}
+                                    {% if field.field.required %}<span class="special_class">*</span>{% endif %}
+                                </label>
+                                {% bootstrap_field field layout="inline" %}
                             </div>
                         {% endfor %}
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
@@ -100,6 +105,8 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+
     
 {% endblock %}
 

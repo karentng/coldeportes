@@ -11,7 +11,7 @@ def adicionarClase(campo, clase):
    
 
 class IdentificacionForm(ModelForm):
-    descripcion = forms.CharField(widget=forms.Textarea, required=False)
+    descripcion = forms.CharField(widget=forms.Textarea, required=False, label="Descripción")
     def __init__(self, *args, **kwargs):
         super(IdentificacionForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')

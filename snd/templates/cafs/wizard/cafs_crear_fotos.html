@@ -8,8 +8,11 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-	<link href="{{STATIC_URL}}plugins/switchery/switchery.min.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+{% endblock %}
 
+{% block js %}
+    <script src="{{STATIC_URL}}js/validaciones/caf/wizard-fotos-validations.js"></script>
 {% endblock %}
 
 {% block miga_pan %}
@@ -30,7 +33,7 @@
 	{% include 'cafs/wizard/_wizard.html' %}
 	<div class="row">
         <fieldset class="col-md-6" >
-            <form action="{% url 'crear_foto' idCAF %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <form id="wizard-fotos-validations" action="{% url 'crear_foto' idCAF %}" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>Subir Foto</h3>

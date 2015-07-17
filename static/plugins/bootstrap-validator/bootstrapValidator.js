@@ -1952,7 +1952,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.base64 = $.extend($.fn.bootstrapValidator.i18n.base64 || {}, {
-		'default': 'Please enter a valid base 64 encoded'
+		'default': 'Por favor ingrese un valor en base 64 codificado'
 	});
 
 	$.fn.bootstrapValidator.validators.base64 = {
@@ -1977,8 +1977,8 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.between = $.extend($.fn.bootstrapValidator.i18n.between || {}, {
-		'default': 'Please enter a value between %s and %s',
-		notInclusive: 'Please enter a value between %s and %s strictly'
+		'default': 'Por favor ingrese un valor entre %s y %s',
+		notInclusive: 'Por favor ingrese un valor entre %s y %s estrictamente'
 	});
 
 	$.fn.bootstrapValidator.validators.between = {
@@ -2074,7 +2074,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.callback = $.extend($.fn.bootstrapValidator.i18n.callback || {}, {
-		'default': 'Please enter a valid value'
+		'default': 'Por favor ingrese un valor válido'
 	});
 
 	$.fn.bootstrapValidator.validators.callback = {
@@ -2115,7 +2115,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.choice = $.extend($.fn.bootstrapValidator.i18n.choice || {}, {
-		'default': 'Please enter a valid value',
+		'default': 'Por favor ingrese un valor válido',
 		less: 'Please choose %s options at minimum',
 		more: 'Please choose %s options at maximum',
 		between: 'Please choose %s - %s options'
@@ -2986,8 +2986,8 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.greaterThan = $.extend($.fn.bootstrapValidator.i18n.greaterThan || {}, {
-		'default': 'Please enter a value greater than or equal to %s',
-		notInclusive: 'Please enter a value greater than %s'
+		'default': 'Por favor ingrese un valor greater than or equal to %s',
+		notInclusive: 'Por favor ingrese un valor greater than %s'
 	});
 
 	$.fn.bootstrapValidator.validators.greaterThan = {
@@ -5235,8 +5235,8 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.lessThan = $.extend($.fn.bootstrapValidator.i18n.lessThan || {}, {
-		'default': 'Please enter a value less than or equal to %s',
-		notInclusive: 'Please enter a value less than %s'
+		'default': 'Por favor ingrese un valor less than or equal to %s',
+		notInclusive: 'Por favor ingrese un valor less than %s'
 	});
 
 	$.fn.bootstrapValidator.validators.lessThan = {
@@ -5407,7 +5407,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.notEmpty = $.extend($.fn.bootstrapValidator.i18n.notEmpty || {}, {
-		'default': 'Please enter a value'
+		'default': 'Por favor ingrese un valor'
 	});
 
 	$.fn.bootstrapValidator.validators.notEmpty = {
@@ -5660,7 +5660,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.regexp = $.extend($.fn.bootstrapValidator.i18n.regexp || {}, {
-		'default': 'Please enter a value matching the pattern'
+		'default': 'Por favor ingrese un valor matching the pattern'
 	});
 
 	$.fn.bootstrapValidator.validators.regexp = {
@@ -6048,7 +6048,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.stringLength = $.extend($.fn.bootstrapValidator.i18n.stringLength || {}, {
-		'default': 'Please enter a value with valid length',
+		'default': 'Por favor ingrese un valor with valid length',
 		less: 'Please enter less than %s characters',
 		more: 'Please enter more than %s characters',
 		between: 'Please enter value between %s and %s characters long'
