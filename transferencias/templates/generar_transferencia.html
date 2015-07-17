@@ -109,7 +109,7 @@
                             <div class="col-lg-8">
                                 <select class="form-control one" id="id_entidad" name="entidad" required title tabindex="-1" style="display: none;" >
                                     {% for en in entidades %}
-                                        <option value="{{ en.nombre }}">{{ en.nombre }}</option>
+                                        <option value="{{ en.id }}">{{ en.nombre }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
