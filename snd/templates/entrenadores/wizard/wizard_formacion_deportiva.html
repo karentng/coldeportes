@@ -8,8 +8,7 @@
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
-    <link href="{{ STATIC_URL }}plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}plugins/DataTables/css/data-table.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 {% endblock %}
 
@@ -48,10 +47,11 @@
                 </div>
                 </form>
             </fieldset>
-            <div class="col-md-4">
+            <div class="col-md-7">
                 <h4>Formación deportiva actual:</h4>
-                <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
-                    <thead>
+                <div class="table-responsive">
+                    <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
+                        <thead>
                         <tr>
                             <th align="center">Disciplina</th>
                             <th align="center">Denominación diploma</th>
@@ -61,49 +61,50 @@
                             <th class="min-desktop" align="center">Fecha comienzo</th>
                             <th class="min-desktop" align="center">Fecha fin</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                    {% for historico in historicos %}
-                        <tr>
-                            <td align="center">
-                                {% for disciplina in historico.disciplina_deportiva.all %}
-                                    {% if forloop.last %}
-                                        {{ disciplina }}
-                                    {% else %}
-                                        {{disciplina}},
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td align="center">{{historico.denominacion_diploma}}</td>
-                            <td align="center">{{historico.nivel}}</td>
-                            <td align="center">{{historico.institucion_formacion}}</td>
-                            <td align="center">{{historico.pais_formacion}}</td>
-                            <td align="center">{{historico.fecha_comienzo}}</td>
-                            <td align="center">{{historico.fecha_fin}}</td>
-                            <td align="center">
-                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
-                                <div class="modal fade" id="modal-desactivate">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Eliminar Formación deportiva:</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Está seguro que desea eliminar esta formación deportiva?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_formacion_deportiva' id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                        </thead>
+                        <tbody>
+                        {% for historico in historicos %}
+                            <tr>
+                                <td align="center">
+                                    {% for disciplina in historico.disciplina_deportiva.all %}
+                                        {% if forloop.last %}
+                                            {{ disciplina }}
+                                        {% else %}
+                                            {{disciplina}},
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td align="center">{{historico.denominacion_diploma}}</td>
+                                <td align="center">{{historico.nivel}}</td>
+                                <td align="center">{{historico.institucion_formacion}}</td>
+                                <td align="center">{{historico.pais_formacion}}</td>
+                                <td align="center">{{historico.fecha_comienzo}}</td>
+                                <td align="center">{{historico.fecha_fin}}</td>
+                                <td align="center">
+                                    <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                    <div class="modal fade" id="modal-desactivate">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    <h4 class="modal-title">Eliminar Formación deportiva:</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Está seguro que desea eliminar esta formación deportiva?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                    <a href="{% url 'eliminar_formacion_deportiva' id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <br/>
@@ -119,19 +120,9 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <!--DataTables [ OPTIONAL ]-->
-    <script src="{{ STATIC_URL }}plugins/datatables/media/js/jquery.dataTables.js"></script>
-    <script src="{{ STATIC_URL }}plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-    <script src="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
-    <!--Bootstrap Validator [ OPTIONAL ]-->
-    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/DataTables/js/jquery.dataTables.js"></script>
     <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-formacion-validations.js"></script>
-    <script>
-        $(window).on('load', function() {
-            $('#tabla-formacion-deportiva').dataTable({
-                "responsive": true
-            });
-        });
-    </script>
+
 {% endblock %}
 
 {% block script %}

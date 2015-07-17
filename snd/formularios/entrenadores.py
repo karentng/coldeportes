@@ -27,11 +27,11 @@ class FormacionDeportivaForm(ModelForm):
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_comienzo']
         fecha_fin = self.cleaned_data['fecha_fin']
-
-        if fecha_fin < fecha_comienzo:
-            msg = "La fecha de finalización es mayor a la fecha de comienzo"
-            self.add_error('fecha_comienzo', msg)
-            self.add_error('fecha_fin', msg)
+        if fecha_fin != None:
+            if fecha_fin < fecha_comienzo:
+                msg = "La fecha de finalización es menor a la fecha de comienzo"
+                self.add_error('fecha_comienzo', msg)
+                self.add_error('fecha_fin', msg)
 
     class Meta:
         model = FormacionDeportiva
@@ -47,11 +47,11 @@ class ExperienciaLaboralForm(ModelForm):
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_comienzo']
         fecha_fin = self.cleaned_data['fecha_fin']
-
-        if fecha_fin < fecha_comienzo:
-            msg = "La fecha de finalización es mayor a la fecha de comienzo"
-            self.add_error('fecha_comienzo', msg)
-            self.add_error('fecha_fin', msg)
+        if fecha_fin != None:
+            if fecha_fin < fecha_comienzo:
+                msg = "La fecha de finalización es menor a la fecha de comienzo"
+                self.add_error('fecha_comienzo', msg)
+                self.add_error('fecha_fin', msg)
 
     class Meta:
         model = ExperienciaLaboral
