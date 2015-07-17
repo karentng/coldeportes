@@ -5,9 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
-from snd.models import Deportista,Escenario,Entrenador
+from snd.models import Deportista,Escenario,Entrenador,Foto,CaracterizacionEscenario
 from .models import Transferencia
 import datetime
+from snd.utilities import calculate_age
 # Create your views here.
 @login_required
 def generar_transferencia(request,tipo_transfer,tipo_persona,id):
@@ -30,18 +31,31 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     objeto = None
     entidad_solicitante = request.tenant
     entidades = Entidad.objects.exclude(nombre__in=['publico',entidad_solicitante.nombre])
-    tipo_objeto = ""
+    redir = ''
     if tipo_transfer=='1': #Transferencia de personas
         if tipo_persona=='1': #Transferencia de deportistas
             objeto = Deportista.objects.get(id=id)
-            tipo_objeto='Deportista'
-        elif tipo_persona==2: #Transferencia de entrenadores
+            objeto.tipo_objeto='Deportista'
+            redir='deportista_listar'
+        elif tipo_persona=='2': #Transferencia de entrenadores
             objeto = Entrenador.objects.get(id=id)
-            tipo_objeto='Entrenador'
-    elif tipo_transfer==2: #Transferencia de escenarios
+            objeto.tipo_objeto='Entrenador'
+            redir='entrenador_listar'
+        objeto.edad = calculate_age(objeto.fecha_nacimiento)
+        objeto.nacionalidad_str = ",".join(str(x) for x in objeto.nacionalidad.all())
+        objeto.fotos = [objeto.foto]
+    elif tipo_transfer=='2': #Transferencia de escenarios
         objeto = Escenario.objects.get(id=id)
-        tipo_objeto='Escenario'
+        fotos = [x.foto for x in Foto.objects.filter(escenario=objeto)]
+        caracteristicas = CaracterizacionEscenario.objects.get(escenario=objeto)
+        objeto.capacidad = caracteristicas.capacidad_espectadores
+        objeto.tipo_escenario = caracteristicas.tipo_escenario
+        objeto.fotos=fotos
+        objeto.tipo_objeto='Escenario'
+        redir='listar_escenarios'
 
+    objeto.fecha = datetime.date.today()
+    objeto.entidad = entidad_solicitante
     if request.method == 'POST':
         id_entidad_cambio = request.POST['entidad']
         entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
@@ -49,12 +63,12 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         ContentType.objects.clear_cache()
         transferencia = Transferencia()
         transferencia.entidad = entidad_solicitante
-        transferencia.fecha_solicitud = datetime.date.today()
+        transferencia.fecha_solicitud = objeto.fecha
         transferencia.id_objeto = objeto.id
-        transferencia.tipo_objeto = tipo_objeto
+        transferencia.tipo_objeto = objeto.tipo_objeto
         transferencia.save()
         messages.success(request,'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud')
-        return redirect('deportista_listar')
+        return redirect(redir)
 
     return render(request,'generar_transferencia.html',{
         'entidades' : entidades,

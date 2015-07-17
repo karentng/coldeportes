@@ -83,6 +83,10 @@
                                     <a href="#modal-desactivate" data-toggle="modal">
                                         <i class="fa fa-ban"></i> Activar / Desactivar
                                     </a>
+                                    <br/>
+                                    <a href="{% url 'transferencias.views.generar_transferencia' 1 2 entrenador.id %}" title="Transferir">
+                                        <i class="fa fa-exchange"></i> Transferir
+                                    </a>
                                     <div class="modal fade" id="modal-desactivate">
                                         <div class="modal-dialog">
                                             <div class="modal-content">

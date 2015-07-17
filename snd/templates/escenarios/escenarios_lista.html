@@ -66,6 +66,10 @@
                                 <a href="#modal-desactivate-{{escenario.id}}" data-toggle="modal">
                                     <i class="fa fa-ban"></i> Activar / Desactivar
                                 </a>
+                                <br/>
+                                <a href="{% url 'transferencias.views.generar_transferencia' 2 1 escenario.id %}" title="Transferir">
+                                    <i class="fa fa-exchange"></i> Transferir
+                                </a>
                                 <div class="modal fade" id="modal-desactivate-{{escenario.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
