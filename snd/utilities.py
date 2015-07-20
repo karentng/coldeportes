@@ -13,14 +13,19 @@ def tenant_actor(actor):
     def decorator(a_view):
         def _wrapped_view(request, *args, **kwargs):
             try:
-                valor = getattr(request.tenant.actores, actor)
-
+                valor = hasattr(request.tenant.actores, actor)
                 if valor == True:
-                    return a_view(request, *args, **kwargs)
+                    valor = getattr(request.tenant.actores, actor)
+                    if valor == True:
+                        return a_view(request, *args, **kwargs)
+                    else:
+                        print ("No tiene los permisos para el actor: %s"%(actor))
+                        return redirect('inicio')
+                else:
+                    print ("Actor %s no existente"%(actor))
+                    return redirect('inicio')
             except Exception as e:
-                print ("Error: Actor no existente")
-                print(e)
-                return redirect('inicio')
+                return a_view(request, *args, **kwargs)
             return a_view(request, *args, **kwargs)
         return _wrapped_view
     return decorator

@@ -90,7 +90,7 @@
                                     </a>
                                     <br/>
                                     {% if deportista.estado == 'EN TRANSFERENCIA' %}
-                                        <a href="{% url 'transferencias.views.cacelar_transferencia' deportista.id %}" title="Cancelar Tranferencia">
+                                        <a href="{% url 'transferencias.views.cancelar_transferencia' deportista.id %}" title="Cancelar Tranferencia">
                                             <i class="fa fa-times"></i> Cancelar Transferencia
                                         </a>
                                     {% elif deportista.estado == 'TRANSFERIDO' %}
