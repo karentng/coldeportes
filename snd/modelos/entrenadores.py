@@ -7,8 +7,8 @@ from entidades.models import Ciudad, Entidad, Nacionalidad, TipoDisciplinaDeport
 
 class Entrenador(models.Model):
     ESTADOS = (
-        (1, "ACTIVO"),
-        (2, "INACTIVO"),
+        (0, "ACTIVO"),
+        (1, "INACTIVO"),
     )
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
