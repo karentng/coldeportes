@@ -2,6 +2,14 @@
 {% load bootstrap3 %}
 {% load i18n %}
 
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <style>
+    .control-label{
+        display: inline-block;
+    }
+    </style>
+{% endblock %}
 {% block contenido_panel %}
     {% include 'dirigentes/wizard/_wizard.html' %}
         <div class="row">
@@ -9,7 +17,7 @@
                 <form action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
-                         <legend class="pull-left width-full">
+                        <legend class="pull-left width-full">
                             {% include 'dirigentes/wizard/_mensajes.html' %}
                         </legend>
                         {% bootstrap_form form layout='vertical' %}
@@ -59,9 +67,7 @@
         </div>
         <br/>
         <ul class="pager bwizard-buttons">
-            {% if wizard_stage > 1 %}
-                <input class="btn btn-success pull-left" type="button" value="{%trans '← Anterior' %}" name="volver atras" onclick="history.back()" />
-            {% endif %}     
+            <a href="{% url 'dirigentes_wizard_identificacion' dirigente_id %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
             <a href="{% url 'dirigentes_finalizar' opcion='listar' %}" class="btn btn-primary pull-right">{% trans 'Finalizar →' %}</a>
             <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">{% trans 'Finalizar y Guardar Nuevo →' %}</a>
         </ul>

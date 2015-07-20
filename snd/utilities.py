@@ -14,10 +14,11 @@ def tenant_actor(actor):
         def _wrapped_view(request, *args, **kwargs):
             try:
                 valor = getattr(request.tenant.actores, actor)
-
+                print (valor)
                 if valor == True:
                     return a_view(request, *args, **kwargs)
-            except Exception:
+            except Exception as e:
+                print (e)
                 print ("Error: Actor no existente")
                 return redirect('inicio')
             return a_view(request, *args, **kwargs)
