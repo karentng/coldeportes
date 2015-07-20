@@ -74,7 +74,7 @@
                             {% endif %}
                             <td>{{ deportista.edad }}</td>
                             <td>{{ deportista.disciplinas_deportivas }}</td>
-                            <td>{% if deportista.activo %} Activo {% else %} Inactivo {% endif %}</td>
+                            <td>{{ deportista.estado }}</td>
                             <td>
                                 <a href="{% url 'ver_deportista' deportista.id %}" title="Modificar">
                                     <i class="fa fa-eye"></i> Ver Deporstista
@@ -89,9 +89,16 @@
                                         <i class="fa fa-ban"></i> Activar / Inactivar
                                     </a>
                                     <br/>
-                                    <a href="{% url 'transferencias.views.generar_transferencia' 1 1 deportista.id %}" title="Transferir">
-                                        <i class="fa fa-exchange"></i> Transferir
-                                    </a>
+                                    {% if deportista.estado == 'EN TRANSFERENCIA' %}
+                                        <a href="{% url 'transferencias.views.cacelar_transferencia' deportista.id %}" title="Cancelar Tranferencia">
+                                            <i class="fa fa-times"></i> Cancelar Transferencia
+                                        </a>
+                                    {% elif deportista.estado == 'TRANSFERIDO' %}
+                                    {% else %}
+                                        <a href="{% url 'transferencias.views.generar_transferencia' 1 1 deportista.id %}" title="Transferir">
+                                            <i class="fa fa-exchange"></i> Transferir
+                                        </a>
+                                    {% endif %}
                                     <div class="modal fade" id="modal-desactivate-{{ deportista.id }}">
                                         <div class="modal-dialog">
                                             <div class="modal-content">

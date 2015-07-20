@@ -69,6 +69,12 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         transferencia.save()
         #
         #Cambiar estado de objeto a "En Transferencia"
+        if objeto.tipo_objeto == 'Deportista':
+            connection.set_tenant(request.tenant)
+            ContentType.objects.clear_cache()
+            objeto.estado = 'EN TRANSFERENCIA'
+            print(objeto)
+            objeto.save()
         #
         messages.success(request,'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud')
         return redirect(redir)
@@ -79,5 +85,9 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     })
 
 @login_required
-def procesar_transferencia(request,tipo_transfer,tipo_persona,id):
+def procesar_transferencia(request,id_transfer):
     pass
+
+@login_required
+def cancelar_transferencia(request,id_objeto):
+    return redirect('inicio_tenant')

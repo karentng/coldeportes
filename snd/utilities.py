@@ -17,8 +17,9 @@ def tenant_actor(actor):
 
                 if valor == True:
                     return a_view(request, *args, **kwargs)
-            except Exception:
+            except Exception as e:
                 print ("Error: Actor no existente")
+                print(e)
                 return redirect('inicio')
             return a_view(request, *args, **kwargs)
         return _wrapped_view

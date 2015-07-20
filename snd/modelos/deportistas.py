@@ -19,7 +19,9 @@ class Deportista(models.Model):
     )
     ESTATOS = (
         (0,'ACTIVO'),
-        (1,'INACTIVO')
+        (1,'INACTIVO'),
+        (3,'EN TRANSFERENCIA'),
+        (4,'TRANSFERIDO'),
     )
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
@@ -38,7 +40,7 @@ class Deportista(models.Model):
     entidad = models.ForeignKey(Entidad)
         #Disciplina
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
-    estado = models.CharField(max_length=10,choices=ESTATOS,default='ACTIVO')
+    estado = models.CharField(max_length=100,choices=ESTATOS,default='ACTIVO')
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 

@@ -9,6 +9,8 @@ class Entrenador(models.Model):
     ESTADOS = (
         (0, "ACTIVO"),
         (1, "INACTIVO"),
+        (3,'EN TRANSFERENCIA'),
+        (4,'TRANSFERIDO'),
     )
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
