@@ -17,6 +17,17 @@
     <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
 
     <div class="row">
+    {% for msg in messages %}
+        <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">
+            <span class="close" data-dismiss="alert">×</span>
+            {% if msg.tags == 'error' %}
+                <i class="fa fa-times fa-2x pull-left"></i>
+            {% else %}
+                <i class="fa fa-check fa-2x pull-left"></i>
+            {% endif %}
+            <p>{{msg}}</p>
+        </div>
+    {% endfor %}
     <!--Fila de notificaciones-->
         <div class="row">
             <div class="col-sm-12">

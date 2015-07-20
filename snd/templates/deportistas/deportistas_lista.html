@@ -74,7 +74,7 @@
                             {% endif %}
                             <td>{{ deportista.edad }}</td>
                             <td>{{ deportista.disciplinas_deportivas }}</td>
-                            <td>{{ deportista.estado }}</td>
+                            <td>{{ deportista.get_estado_display }}</td>
                             <td>
                                 <a href="{% url 'ver_deportista' deportista.id %}" title="Modificar">
                                     <i class="fa fa-eye"></i> Ver Deporstista
@@ -89,11 +89,11 @@
                                         <i class="fa fa-ban"></i> Activar / Inactivar
                                     </a>
                                     <br/>
-                                    {% if deportista.estado == 'EN TRANSFERENCIA' %}
+                                    {% if deportista.estado == 2 %}
                                         <a href="{% url 'transferencias.views.cancelar_transferencia' deportista.id %}" title="Cancelar Tranferencia">
                                             <i class="fa fa-times"></i> Cancelar Transferencia
                                         </a>
-                                    {% elif deportista.estado == 'TRANSFERIDO' %}
+                                    {% elif deportista.estado == 3 or deportista.estado == 1 %}
                                     {% else %}
                                         <a href="{% url 'transferencias.views.generar_transferencia' 1 1 deportista.id %}" title="Transferir">
                                             <i class="fa fa-exchange"></i> Transferir

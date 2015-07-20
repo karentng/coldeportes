@@ -52,7 +52,7 @@
                             <td>{{escenario.nombre}}</td>
                             <td>{{escenario.ciudad}}</td>
                             <td>{{escenario.estrato}}</td>
-                            <td>{% if escenario.activo %} Activo {% else %} Inactivo {% endif %}</td>
+                            <td>{{ escenario.get_estado_display }}</td>
                             <td>
                                 <a href="{% url 'ver_escenario' escenario.id %}" data-toggle="modal">
                                     <i class="fa fa-eye"></i> Ver Escenario
@@ -67,9 +67,16 @@
                                     <i class="fa fa-ban"></i> Activar / Desactivar
                                 </a>
                                 <br/>
-                                <a href="{% url 'transferencias.views.generar_transferencia' 2 1 escenario.id %}" title="Transferir">
-                                    <i class="fa fa-exchange"></i> Transferir
-                                </a>
+                                {% if escenario.estado == 2 %}
+                                    <a href="{% url 'transferencias.views.cancelar_transferencia' escenario.id %}" title="Cancelar Tranferencia">
+                                        <i class="fa fa-times"></i> Cancelar Transferencia
+                                    </a>
+                                {% elif escenario.estado == 3 or escenario.estado == 1 %}
+                                {% else %}
+                                    <a href="{% url 'transferencias.views.generar_transferencia' 2 1 escenario.id %}" title="Transferir">
+                                        <i class="fa fa-exchange"></i> Transferir
+                                    </a>
+                                {% endif %}
                                 <div class="modal fade" id="modal-desactivate-{{escenario.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">

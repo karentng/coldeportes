@@ -9,8 +9,8 @@ class Entrenador(models.Model):
     ESTADOS = (
         (0, "ACTIVO"),
         (1, "INACTIVO"),
-        (3,'EN TRANSFERENCIA'),
-        (4,'TRANSFERIDO'),
+        (2,'EN TRANSFERENCIA'),
+        (3,'TRANSFERIDO'),
     )
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
@@ -22,7 +22,7 @@ class Entrenador(models.Model):
         ('CEDEX', 'CÉDULA DE EXTRANJERO'),
         ('PAS', 'PASAPORTE'),
     )
-    estado = models.IntegerField(choices=ESTADOS, default=1)
+    estado = models.IntegerField(choices=ESTADOS, default=0)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)

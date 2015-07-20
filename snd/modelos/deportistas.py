@@ -17,11 +17,11 @@ class Deportista(models.Model):
         ('CCEX', 'Cédula de extranjero'),
         ('PASS', 'Pasaporte'),
     )
-    ESTATOS = (
+    ESTADOS = (
         (0,'ACTIVO'),
         (1,'INACTIVO'),
-        (3,'EN TRANSFERENCIA'),
-        (4,'TRANSFERIDO'),
+        (2,'EN TRANSFERENCIA'),
+        (3,'TRANSFERIDO'),
     )
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
@@ -40,7 +40,7 @@ class Deportista(models.Model):
     entidad = models.ForeignKey(Entidad)
         #Disciplina
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
-    estado = models.CharField(max_length=100,choices=ESTATOS,default='ACTIVO')
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
