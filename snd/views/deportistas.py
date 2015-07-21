@@ -300,7 +300,7 @@ def desactivar_deportista(request,id_depor):
 
     Desactivar deportista
 
-    Se obtiene el estado actual y se invierte
+    Se cambia el estado actual a activo en caso de estar inactivo o inactivo en caso de estar activo
 
     :param request: Petición Realizada
     :type request: WSGIRequest
@@ -309,8 +309,8 @@ def desactivar_deportista(request,id_depor):
     """
     try:
         deportista = Deportista.objects.get(id=id_depor)
-        estado_actual = deportista.activo
-        deportista.activo = not(estado_actual)
+        estado_actual = deportista.estado
+        deportista.estado = not estado_actual
         deportista.save()
         messages.warning(request, "Deportista desactivado/activado correctamente.")
         return redirect('deportista_listar')

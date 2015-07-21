@@ -279,7 +279,6 @@ def desactivar_entrenador(request,id_entrenador):
     entrenador = Entrenador.objects.get(id=id_entrenador)
     estado_actual = entrenador.estado
     entrenador.estado = not(estado_actual)
-    print(entrenador.estado)
     entrenador.save()
     messages.warning(request, "Entrenador desactivado correctamente.")
     return redirect('entrenador_listar')

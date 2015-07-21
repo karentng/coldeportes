@@ -87,5 +87,65 @@ def procesar_transferencia(request,id_transfer):
     pass
 
 @login_required
-def cancelar_transferencia(request,id_objeto):
-    return redirect('inicio')
+def cancelar_transferencia(request,id_objeto,tipo_objeto):
+    """
+    Julio 21, 2015
+    Autor: Daniel Correa
+
+    Funcion para calcelacion de transferencia por parte del solicitante, el protocolo para conocer que clase de objeto es el que se solicita su cancelacion es:
+    1 para Deportista, 2 para Entrenador, 3 para Escenario
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_objeto: Id del objeto a cancelar la transferencia
+    :type id_objeto: stirng
+    :param tipo_objeto: Tipo del objeto de acuerdo al protocolo
+    :type tipo_objeto: string
+    """
+
+    objeto = ''
+    if tipo_objeto=='1':
+        objeto = 'Deportista'
+        redir = 'deportista_listar'
+        try:
+            depor = Deportista.objects.get(id=id_objeto)
+            depor.estado = 0
+            depor.save()
+        except:
+            messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
+            return redirect(redir)
+    elif tipo_objeto=='2':
+        objeto='Entrenador'
+        redir='entrenador_listar'
+        try:
+            entre = Entrenador.objects.get(id=id_objeto)
+            entre.estado = 0
+            entre.save()
+        except:
+            messages.error(request,'Error: No se puede procesar la solicitud, Entrenador no existe')
+            return redirect(redir)
+    elif tipo_objeto=='3':
+        objeto='Escenario'
+        redir='listar_escenarios'
+        try:
+            esce = Escenario.objects.get(id=id_objeto)
+            esce.estado = 0
+            esce.save()
+        except:
+            messages.error(request,'Error: No se puede procesar la solicitud, Escenario no existe')
+            return redirect(redir)
+
+    entidad_solicitante = request.tenant
+    entidades = Entidad.objects.exclude(nombre__in=['publico',entidad_solicitante.nombre])
+
+    for ent in entidades:
+        connection.set_tenant(ent)
+        ContentType.objects.clear_cache()
+        trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto=objeto)
+        if len(trans) != 0:
+            trans.delete()
+            messages.success(request,'Tranferencia cancelada exitosamente')
+            return redirect(redir)
+
+    messages.error(request,'Error: No existe la transferencia solicitada')
+    return redirect(redir)
