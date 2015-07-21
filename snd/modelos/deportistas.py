@@ -23,6 +23,15 @@ class Deportista(models.Model):
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
     )
+
+    ETNIAS = (
+        ('MESTIZO','MESTIZO'),
+        ('AFROCOLOMBIANO','AFROCOLOMBIANO'),
+        ('BLANCOS','BLANCOS'),
+        ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
+        ('GITANO','GITANO'),
+    )
+
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista',default='Hombre')
@@ -43,6 +52,7 @@ class Deportista(models.Model):
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    etnia = models.CharField(max_length=20, choices=ETNIAS)
 
     def __str__(self):
         return self.nombres+" "+self.apellidos

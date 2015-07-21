@@ -52,7 +52,7 @@ fields = {
             date: {
                 message: 'El valor ingresado no es una fecha válida, verifique que no sea menor a la de inicio',
                 format: 'YYYY-MM-DD',
-                max: 'fecha_comienzo'
+                min: 'fecha_comienzo'
             }
         }
     }

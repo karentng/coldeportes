@@ -20,7 +20,7 @@ fields = {
                 message: 'La fecha de inicio no puede ser vacía'
             },
             date: {
-                message: 'El valor ingresado no es una fecha válida',
+                message: 'El valor ingresado no es una fecha válida, verifique que no sea mayor a la de finalización',
                 format: 'YYYY-MM-DD',
                 max: 'fecha_fin'
             }
@@ -31,7 +31,7 @@ fields = {
             date: {
                 message: 'El valor ingresado no es una fecha válida',
                 format: 'YYYY-MM-DD',
-                max: 'fecha_comienzo'
+                min: 'fecha_comienzo'
             }
         }
     }
@@ -39,9 +39,11 @@ fields = {
 //Revalidar campos al ser actualizados
     $("#id_fecha_comienzo").on('change',function(e){
         $(form).bootstrapValidator('revalidateField', 'fecha_comienzo');
+        $(form).bootstrapValidator('revalidateField', 'fecha_fin');
     });
 //Revalidar campos al ser actualizados
     $("#id_fecha_fin").on('change',function(e){
+        $(form).bootstrapValidator('revalidateField', 'fecha_comienzo');
         $(form).bootstrapValidator('revalidateField', 'fecha_fin');
     });
 $.getScript(base+"js/validaciones/validations-base.js");

@@ -22,6 +22,14 @@ class Entrenador(models.Model):
         ('CEDEX', 'CÉDULA DE EXTRANJERO'),
         ('PAS', 'PASAPORTE'),
     )
+
+    ETNIAS = (
+        ('MESTIZO','MESTIZO'),
+        ('AFROCOLOMBIANO','AFROCOLOMBIANO'),
+        ('BLANCOS','BLANCOS'),
+        ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
+        ('GITANO','GITANO'),
+    )
     estado = models.IntegerField(choices=ESTADOS, default=0)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
@@ -36,9 +44,10 @@ class Entrenador(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad, blank=True)
     #en centimetros
-    altura = models.IntegerField(blank=True, verbose_name='Altura (En Cm)')
+    altura = models.IntegerField(blank=True, null=True, verbose_name='Altura (En Cm)')
     #en Kg
-    peso = models.IntegerField(blank=True, verbose_name='Peso (En Kg)')
+    peso = models.IntegerField(blank=True, null=True, verbose_name='Peso (En Kg)')
+    etnia = models.CharField(max_length=20, choices=ETNIAS)
     entidad_vinculacion = models.ForeignKey(Entidad)
 
 class FormacionDeportiva(models.Model):

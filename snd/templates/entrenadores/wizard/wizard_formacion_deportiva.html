@@ -79,7 +79,13 @@
                                 <td align="center">{{historico.institucion_formacion}}</td>
                                 <td align="center">{{historico.pais_formacion}}</td>
                                 <td align="center">{{historico.fecha_comienzo}}</td>
-                                <td align="center">{{historico.fecha_fin}}</td>
+                                <td align="center">
+                                    {% if historico.fecha_fin == None %}
+                                        ACTUAL
+                                    {% else %}
+                                        {{historico.fecha_fin}}
+                                    {% endif %}
+                                </td>
                                 <td align="center">
                                     <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                     <div class="modal fade" id="modal-desactivate">
@@ -94,7 +100,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                    <a href="{% url 'eliminar_formacion_deportiva' id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                    <a href="{% url 'eliminar_formacion_deportiva'  id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,9 +114,7 @@
             </div>
         </div>
         <br/>
-        {% if wizard_stage > 1 %}
-        <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-        {% endif %}
+        <a href="{% url 'edicion_entrenador' id_entrenador %}" class="btn btn-success pull-left" type="button">← Anterior</a>
         <a href="{% url 'wizard_experiencia_laboral' id_entrenador %}" class="btn btn-primary pull-right">Siguiente →</a>
 
 

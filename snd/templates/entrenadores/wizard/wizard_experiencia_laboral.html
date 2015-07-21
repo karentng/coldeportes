@@ -63,7 +63,13 @@
                             <td align="center">{{historico.nombre_cargo}}</td>
                             <td align="center">{{historico.institucion}}</td>
                             <td align="center">{{historico.fecha_comienzo}}</td>
-                            <td align="center">{{historico.fecha_fin}}</td>
+                            <td align="center">
+                                {% if historico.fecha_fin == None %}
+                                    ACTUAL
+                                {% else %}
+                                    {{historico.fecha_fin}}
+                                {% endif %}
+                            </td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
