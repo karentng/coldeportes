@@ -61,8 +61,8 @@ def desactivar_escenario(request, escenario_id):
     :type escenario_id:    String
     """
     escenario = Escenario.objects.get(id=escenario_id)
-    estado_actual = escenario.activo
-    escenario.activo = not(estado_actual)
+    estado_actual = escenario.estado
+    escenario.estado = not(estado_actual)
     escenario.save()
     messages.warning(request, "Escenario cambiado de estado correctamente.")
     return redirect('listar_escenarios')
