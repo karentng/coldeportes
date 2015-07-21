@@ -19,6 +19,7 @@ class Dirigente(models.Model):
     TIPO_GENERO = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
+        ('LGTBI', 'LGTBI'),
     )
     TIPO_IDENTIFICACION = (
         ('CC', "Cédula de ciudadanía"),
