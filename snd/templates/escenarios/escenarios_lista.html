@@ -68,7 +68,7 @@
                                 </a>
                                 <br/>
                                 {% if escenario.estado == 2 %}
-                                    <a href="{% url 'transferencias.views.cancelar_transferencia' escenario.id %}" title="Cancelar Tranferencia">
+                                    <a href="{% url 'transferencias.views.cancelar_transferencia' escenario.id 3 %}" title="Cancelar Tranferencia">
                                         <i class="fa fa-times"></i> Cancelar Transferencia
                                     </a>
                                 {% elif escenario.estado == 3 or escenario.estado == 1 %}

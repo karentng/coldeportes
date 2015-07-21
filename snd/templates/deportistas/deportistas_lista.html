@@ -90,7 +90,7 @@
                                     </a>
                                     <br/>
                                     {% if deportista.estado == 2 %}
-                                        <a href="{% url 'transferencias.views.cancelar_transferencia' deportista.id %}" title="Cancelar Tranferencia">
+                                        <a href="{% url 'transferencias.views.cancelar_transferencia' deportista.id 1 %}" title="Cancelar Tranferencia">
                                             <i class="fa fa-times"></i> Cancelar Transferencia
                                         </a>
                                     {% elif deportista.estado == 3 or deportista.estado == 1 %}
