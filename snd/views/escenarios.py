@@ -1,10 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from formtools.wizard.views import SessionWizardView
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
-import os
 from snd.formularios.escenarios  import *
 from snd.models import *
 from entidades.models import *
@@ -30,7 +28,7 @@ def listar_escenarios(request):
     })
 
 @login_required
-def finalizar_escenario(request):
+def finalizar_escenario(request, opcion):
     """
     Junio 10 / 2015
     Autor: Karent Narvaez Grisales
@@ -42,8 +40,10 @@ def finalizar_escenario(request):
     :type request:    WSGIRequest
     """
     messages.success(request, "Escenario registrado correctamente.")
-    
-    return redirect('listar_escenarios')
+    if opcion == 'nuevo':
+        return redirect('wizard_nuevo_identificacion')
+    elif opcion == 'otro':
+        return redirect('listar_escenarios')
 
 @login_required
 def desactivar_escenario(request, escenario_id):
