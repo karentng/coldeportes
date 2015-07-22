@@ -4,6 +4,7 @@ from entidades.models import *
 from django.db import models
 
 class CajaCompensacion(models.Model):
+    tipo_estado = ((0,'ACTIVO'), (1,'INACTIVO'), (2,'EN TRANSFERENCIA'),(3,'TRANSFERIDO'),)
     clases = ( ('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
     tipo_region = ( ('U', 'Urbano'), ('R', 'Rural'), )
     tipo_infraesctructura = ( ('P', 'Propia'), ('C', 'Convenio'), )
@@ -20,7 +21,7 @@ class CajaCompensacion(models.Model):
     servicios = models.ManyToManyField(TipoServicioCajaCompensacion)
 
     entidad = models.ForeignKey(Entidad)    
-    activo = models.BooleanField(default=True)
+    estado = models.IntegerField(choices=tipo_estado, default=0, verbose_name="estado del Escenario")
     descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
 
 class HorarioDisponibilidadCajas(models.Model):

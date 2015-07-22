@@ -16,6 +16,7 @@ class Entrenador(models.Model):
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
+        ('LGTBI', 'LGTBI'),
     )
 
     TIPO_IDENTIDAD = (
@@ -37,7 +38,7 @@ class Entrenador(models.Model):
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
     foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
     tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD, default='CED')
-    nro_id = models.BigIntegerField(verbose_name='Número de identificación', unique=True)
+    identificacion = models.BigIntegerField(verbose_name='Número de identificación', unique=True)
     telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
     telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
     correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')

@@ -30,7 +30,7 @@ def listar_ccfs(request):
     })
 
 @login_required
-def finalizar_ccf(request):
+def finalizar_ccf(request, opcion):
     """
     Julio 5 / 2015
     Autor: Karent Narvaez Grisales
@@ -42,8 +42,10 @@ def finalizar_ccf(request):
     :type request:    WSGIRequest
     """
     messages.success(request, "CCF registrado correctamente.")
-    
-    return redirect('listar_ccfs')
+    if opcion=='nuevo':
+        return redirect('wizard_caja')
+    elif opcion=='listar':
+        return redirect('listar_ccfs')
 
 @login_required
 def desactivar_ccf(request, ccf_id):

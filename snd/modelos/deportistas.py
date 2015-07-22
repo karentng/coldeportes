@@ -10,6 +10,7 @@ class Deportista(models.Model):
     tipo_sexo = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
+        ('LGTBI', 'LGTBI'),
     )
     TIPO_IDENTIDAD = (
         ('TI', 'Tarjeta de Identidad'),
@@ -48,7 +49,7 @@ class Deportista(models.Model):
         #Entidad
     entidad = models.ForeignKey(Entidad)
         #Disciplina
-    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)    #activo = models.BooleanField()
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)

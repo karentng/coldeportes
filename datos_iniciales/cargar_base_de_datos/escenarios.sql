@@ -1,7 +1,7 @@
-INSERT INTO entidad1.snd_escenario (id, nombre, direccion, latitud, longitud, altura, comuna, barrio, estrato, nombre_administrador, activo, descripcion, ciudad_id, entidad_id) VALUES
-(3,	'PASCUAL GUERRERO',	'CALLE 5 # 32-54',	6.05,	5.01,	3.25,	'10',	'SAN FERNANDO',	'4',	'JOSE TULIO RODRIGUEZ',	't',	'Estadio de fútbol y pista de atletismo.',	152,	2),
-(2,	'COLISEO EVANGELISTA MORA',	'CALLE 23 # 33A 04',	1,	1.45,	230,	'10',	'SAN FERNANDO',	'2',	'JOSE PEREZ',	't',	'Ubicado en la zona oriente de Cali.',	152,	2),
-(4,	'DIABLO AZTECA',	'CALLE 13 # 57-12',	7,	8,	300,	'3',	'INGENIO',	'5',	'JUAN CARLOS RODRIGUEZ',	't',	'Cancha sintética',	152,	2);
+INSERT INTO "snd_escenario" ("id", "nombre", "direccion", "latitud", "longitud", "altura", "comuna", "barrio", "estrato", "nombre_administrador", "descripcion", "ciudad_id", "entidad_id", "estado") VALUES
+(3,	'PASCUAL GUERRERO',	'CALLE 5 # 32-54',	6.05,	5.01,	3.25,	'10',	'SAN FERNANDO',	'4',	'JOSE TULIO RODRIGUEZ',	'Estadio de fútbol y pista de atletismo.',	152,	2,	0),
+(2,	'COLISEO EVANGELISTA MORA',	'CALLE 23 # 33A 04',	1,	1.45,	230,	'10',	'SAN FERNANDO',	'2',	'JOSE PEREZ',	'Ubicado en la zona oriente de Cali.',	152,	2,	0),
+(4,	'DIABLO AZTECA',	'CALLE 13 # 57-12',	7,	8,	300,	'3',	'INGENIO',	'5',	'JUAN CARLOS RODRIGUEZ',	'Cancha sintética',	152,	2,	0);
 
 INSERT INTO entidad1.snd_caracterizacionescenario (id, capacidad_espectadores, metros_construidos, clase_acceso, descripcion, escenario_id, tipo_escenario_id) VALUES
 (2,	'1500 personas en tribuna, 400 en palcos',	'350 metros en cemento',	'pcp',	'El estadio se encuentra en buenas condiciones de obra. ',	3,	1),
