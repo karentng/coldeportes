@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from snd.models import Entrenador, FormacionDeportiva, ExperienciaLaboral
-from snd.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase
 
 
 class EntrenadorForm(ModelForm):

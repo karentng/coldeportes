@@ -8,7 +8,7 @@ from entidades.models import Entidad
 from snd.models import Deportista,Escenario,Entrenador,Foto,CaracterizacionEscenario
 from .models import Transferencia
 import datetime
-from snd.utilities import calculate_age
+from coldeportes.utilities import calculate_age
 # Create your views here.
 @login_required
 def generar_transferencia(request,tipo_transfer,tipo_persona,id):

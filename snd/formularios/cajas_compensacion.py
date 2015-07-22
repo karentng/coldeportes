@@ -4,11 +4,7 @@ from django.forms import ModelForm
 from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
 from datetimewidget.widgets import TimeWidget, DateWidget
-
-def adicionarClase(campo, clase):
-    campo.widget.attrs.update({'class': clase})
-    return campo   
-   
+from coldeportes.utilities import *
 
 class CajaCompensacionForm(ModelForm):
     descripcion = forms.CharField(widget=forms.Textarea, required=False)
