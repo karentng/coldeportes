@@ -45,7 +45,7 @@
                                 {% bootstrap_field field layout="inline" %}
                             </div>
                         {% endfor %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>              
                     </div>
                 </div>
                 </form>
@@ -96,8 +96,9 @@
         <br/>
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-        {% endif %}     
-        <a href="{% url 'finalizar_ccf' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        {% endif %} 
+        <a href="{% url 'finalizar_ccf' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>
+        <a href="{% url 'finalizar_ccf' opcion='nuevo' %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar CCF Nuevo</a>    
     
 
 {% endblock %}

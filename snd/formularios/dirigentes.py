@@ -19,7 +19,7 @@ class DirigenteForm(ModelForm):
     class Meta:
         model = Dirigente
         #fields = '__all__'
-        exclude = ('entidad','activo',)
+        exclude = ('entidad',)
 
 class DirigenteFuncionesForm(ModelForm):
 

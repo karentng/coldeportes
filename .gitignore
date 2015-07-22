@@ -1,6 +1,9 @@
 *.pyc
+.gitignore
 Thumbs.db
 coldeportes/settings.py
 snd/pendiente/
 snd/migrations
 entidades/migrations
+transferencias/migrations
+gestion_usuarios/migrations

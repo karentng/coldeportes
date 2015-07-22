@@ -42,7 +42,7 @@
                                 {% bootstrap_field i layout="inline" %}
                             </div>
                         {% endfor %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Subir</button>              
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-upload"></i> Cargar</button>              
                     </div>
                 </div>
             </form>
@@ -107,12 +107,12 @@
             {% endif %}
     		<a href="{% url 'finalizar_caf' 0 %}">
     			<button class="btn btn-primary pull-right" type="submit">
-					Finalizar →
+					<i class="fa fa-save"></i> Finalizar 
 				</button>
     		</a>
             <a href="{% url 'finalizar_caf' 1 %}">
                 <button class="btn btn-warning pull-right" type="submit" style="margin-right:10px">
-                    Registrar Otro CAF →
+                    <i class="fa fa-circle-o-notch"></i> Registrar Otro CAF 
                 </button>
             </a>
     	</div>

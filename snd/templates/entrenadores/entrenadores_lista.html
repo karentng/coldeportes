@@ -70,7 +70,7 @@
                                 {% endfor %}
                             </td>
                             <td>{{entrenador.nro_id}}</td>
-                            <td>{% if entrenador.estado %} Activo {% else %} Desactivado {% endif %}</td>
+                            <td>{{ entrenador.get_estado_display }}</td>
                             <td>
                                 <a href="{% url 'ver_entrenador' entrenador.id %}" title="Ver">
                                     <i class="fa fa-eye"></i> Ver Entrenador
@@ -83,6 +83,17 @@
                                     <a href="#modal-desactivate" data-toggle="modal">
                                         <i class="fa fa-ban"></i> Activar / Desactivar
                                     </a>
+                                    <br/>
+                                    {% if entrenador.estado == 2 %}
+                                        <a href="{% url 'transferencias.views.cancelar_transferencia' entrenador.id 2 %}" title="Cancelar Tranferencia">
+                                            <i class="fa fa-times"></i> Cancelar Transferencia
+                                        </a>
+                                    {% elif entrenador.estado == 3 or entrenador.estado == 1 %}
+                                    {% else %}
+                                        <a href="{% url 'transferencias.views.generar_transferencia' 1 2 entrenador.id %}" title="Transferir">
+                                            <i class="fa fa-exchange"></i> Transferir
+                                        </a>
+                                    {% endif %}
                                     <div class="modal fade" id="modal-desactivate">
                                         <div class="modal-dialog">
                                             <div class="modal-content">

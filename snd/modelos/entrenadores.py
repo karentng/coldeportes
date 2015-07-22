@@ -7,12 +7,15 @@ from entidades.models import Ciudad, Entidad, Nacionalidad, TipoDisciplinaDeport
 
 class Entrenador(models.Model):
     ESTADOS = (
-        (1, "ACTIVO"),
-        (2, "INACTIVO"),
+        (0, "ACTIVO"),
+        (1, "INACTIVO"),
+        (2,'EN TRANSFERENCIA'),
+        (3,'TRANSFERIDO'),
     )
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
+        ('LGTBI', 'LGTBI'),
     )
 
     TIPO_IDENTIDAD = (
@@ -20,13 +23,21 @@ class Entrenador(models.Model):
         ('CEDEX', 'CÉDULA DE EXTRANJERO'),
         ('PAS', 'PASAPORTE'),
     )
-    estado = models.IntegerField(choices=ESTADOS, default=1)
+
+    ETNIAS = (
+        ('MESTIZO','MESTIZO'),
+        ('AFROCOLOMBIANO','AFROCOLOMBIANO'),
+        ('BLANCOS','BLANCOS'),
+        ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
+        ('GITANO','GITANO'),
+    )
+    estado = models.IntegerField(choices=ESTADOS, default=0)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
     foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
     tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD, default='CED')
-    nro_id = models.BigIntegerField(verbose_name='Número de identificación', unique=True)
+    identificacion = models.BigIntegerField(verbose_name='Número de identificación', unique=True)
     telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
     telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
     correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')
@@ -34,9 +45,10 @@ class Entrenador(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad, blank=True)
     #en centimetros
-    altura = models.IntegerField(blank=True, verbose_name='Altura (En Cm)')
+    altura = models.IntegerField(blank=True, null=True, verbose_name='Altura (En Cm)')
     #en Kg
-    peso = models.IntegerField(blank=True, verbose_name='Peso (En Kg)')
+    peso = models.IntegerField(blank=True, null=True, verbose_name='Peso (En Kg)')
+    etnia = models.CharField(max_length=20, choices=ETNIAS)
     entidad_vinculacion = models.ForeignKey(Entidad)
 
 class FormacionDeportiva(models.Model):

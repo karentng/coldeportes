@@ -16,30 +16,36 @@ class Dirigente(models.Model):
             os.remove(ruta_delete)
         return ruta
 
-    tipo_genero = (
+    TIPO_GENERO = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
+        ('LGTBI', 'LGTBI'),
     )
-    tipo_identificacion = (
+    TIPO_IDENTIFICACION = (
         ('CC', "Cédula de ciudadanía"),
         ('CE', "Cédula de extranjería"),
         ('PT', "Pasaporte"),
     )
-    tipo_identificacion = models.CharField(choices=tipo_identificacion, max_length=2, verbose_name="Tipo de Identificación")
-    identificacion = models.CharField(max_length=20, verbose_name="Número de Identificación", unique=True)
+    ESTADOS = (
+        (1, "Activo"),
+        (2, "Inactivo"),
+    )
+
+    tipo_identificacion = models.CharField(choices=TIPO_IDENTIFICACION, max_length=2, verbose_name="Tipo de identificación")
+    identificacion = models.CharField(max_length=20, verbose_name="Número de identificación", unique=True)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    genero = models.CharField(choices=tipo_genero,max_length=6, verbose_name='Género')
-    cargo = models.CharField(max_length=100, verbose_name="Nombre del Cargo")
+    genero = models.CharField(choices=TIPO_GENERO,max_length=6, verbose_name='Género')
+    cargo = models.CharField(max_length=100, verbose_name="Nombre del cargo")
     superior = models.ForeignKey('self', null=True, blank=True);
     telefono = models.CharField(max_length=100, verbose_name="Teléfono")
     email = models.EmailField(null=True,blank=True)
     nacionalidad = models.ManyToManyField(Nacionalidad)
-    fecha_posesion = models.DateField(verbose_name="Fecha de Posesión")
-    fecha_retiro = models.DateField(null=True,blank=True, verbose_name="Fecha de Retiro")
+    fecha_posesion = models.DateField(verbose_name="Fecha de posesión")
+    fecha_retiro = models.DateField(null=True,blank=True, verbose_name="Fecha de retiro")
+    estado = models.IntegerField(choices=ESTADOS, default=1, verbose_name="Estado del dirigente")
     foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
-    activo = models.BooleanField(default=True)
-    descripcion = models.CharField(max_length=500, verbose_name="Descripción o Logros")
+    descripcion = models.CharField(max_length=500, verbose_name="Descripción o logros")
 
     entidad = models.ForeignKey(Entidad, null=True, blank=True)
     
@@ -47,9 +53,10 @@ class Dirigente(models.Model):
     def __str__(self):
         return "{0} {1} - {2}".format(self.nombres, self.apellidos, self.cargo)
 
-    def uppercase(self):
+    def save(self, *args, **kwargs):
         self.nombres = self.nombres.upper()
         self.apellidos = self.apellidos.upper()
+        super(Dirigente, self).save(*args, **kwargs)
 
 class Funcion(models.Model):
     descripcion = models.CharField(max_length=200, verbose_name="Descripción")

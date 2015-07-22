@@ -10,6 +10,7 @@ class Deportista(models.Model):
     tipo_sexo = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
+        ('LGTBI', 'LGTBI'),
     )
     TIPO_IDENTIDAD = (
         ('TI', 'Tarjeta de Identidad'),
@@ -17,6 +18,21 @@ class Deportista(models.Model):
         ('CCEX', 'Cédula de extranjero'),
         ('PASS', 'Pasaporte'),
     )
+    ESTADOS = (
+        (0,'ACTIVO'),
+        (1,'INACTIVO'),
+        (2,'EN TRANSFERENCIA'),
+        (3,'TRANSFERIDO'),
+    )
+
+    ETNIAS = (
+        ('MESTIZO','MESTIZO'),
+        ('AFROCOLOMBIANO','AFROCOLOMBIANO'),
+        ('BLANCOS','BLANCOS'),
+        ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
+        ('GITANO','GITANO'),
+    )
+
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista',default='Hombre')
@@ -33,10 +49,14 @@ class Deportista(models.Model):
         #Entidad
     entidad = models.ForeignKey(Entidad)
         #Disciplina
-    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
-    activo = models.BooleanField(default=True)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)    #activo = models.BooleanField()
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    etnia = models.CharField(max_length=20, choices=ETNIAS)
+
+    def __str__(self):
+        return self.nombres+" "+self.apellidos
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):
@@ -54,13 +74,21 @@ class ComposicionCorporal(models.Model):
         ('Niño','Niño'),
         ('Adulto','Adulto'),
     )
+    tallas_choices = (
+        ('XS','XS'),
+        ('S','S'),
+        ('M','M'),
+        ('L','L'),
+        ('XL','XL'),
+        ('XXL','XXL'),
+    )
     deportista = models.ForeignKey(Deportista)
     peso = models.FloatField(help_text="En kg", verbose_name="Peso (kg)")
     estatura = models.IntegerField(help_text="En cm", verbose_name="Estatura (cm)")
     RH = models.CharField(max_length=4,choices=tipos_rh,default='O+')
     tipo_talla = models.CharField(max_length=7,choices=tipos_talla_choices,default='Adulto',verbose_name='Talla para')
-    talla_camisa = models.CharField(max_length=2)
-    talla_pantaloneta = models.CharField(max_length=2)
+    talla_camisa = models.CharField(max_length=3, choices=tallas_choices)
+    talla_pantaloneta = models.CharField(max_length=3, choices=tallas_choices)
     talla_zapato = models.CharField(max_length=2)
     porcentaje_grasa = models.CharField(max_length=7)
     porcentaje_musculo = models.CharField(max_length=7)

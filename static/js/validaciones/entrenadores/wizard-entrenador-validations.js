@@ -1,14 +1,5 @@
-$(document).ready(function() {
-    var faIcon = {
-        valid: 'fa fa-check-circle fa-lg text-success',
-        invalid: 'fa fa-times-circle fa-lg',
-        validating: 'fa fa-refresh'
-    }
-
-    $('#form-wizard-entrenador').bootstrapValidator({
-            feedbackIcons: faIcon,
-            excluded: ':disabled',
-            fields: {
+form = "#form-wizard-entrenador";
+fields = {
             nombres: {
                 validators: {
                     notEmpty: {
@@ -27,6 +18,14 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'Por favor escoja un género'
+                    }
+                }
+            },
+            foto: {
+                validators: {
+                    file: {
+                        extension: 'png,jpg,jpeg,svg',
+                        message: 'Seleccione una imagen con alguno de los siguientes formatos (png, jpg, jpeg, svg)'
                     }
                 }
             },
@@ -59,17 +58,11 @@ $(document).ready(function() {
                 }
             },
             nacionalidad: {
-                    validators: {
-                        callback: {
-                            message: 'Escoja al menos una nacionalidad',
-                            callback: function(value, validator, $field) {
-                                // Get the selected options
-
-                                var options = validator.getFieldElements('nacionalidad').val();
-                                return (options != null && options.length > 0);
-                            }
-                        }
+                validators: {
+                    notEmpty: {
+                      message:"Escoja almenos una nacionalidad"
                     }
+                }
             },
             ciudad: {
                     validators: {
@@ -91,24 +84,13 @@ $(document).ready(function() {
                         message: 'El peso solo puede contener números'
                     }
                 }
-            },
-
-
             }
-        }).on('success.field.bv', function(e, data) {
-            // $(e.target)  --> The field element
-            // data.bv      --> The BootstrapValidator instance
-            // data.field   --> The field name
-            // data.element --> The field element
 
-            var $parent = data.element.parents('.form-group');
 
-            // Remove the has-success class
-            $parent.removeClass('has-success');
-        });
-
-    //Revalidar campos que usan plugins al ser actualizados
+        };
+//Revalidar campos al ser actualizados
     $("#id_fecha_nacimiento").on('change',function(e){
-        $("#form-wizard-entrenador").bootstrapValidator('revalidateField', 'fecha_nacimiento');
+        $(form).bootstrapValidator('revalidateField', 'fecha_nacimiento');
     });
-});
+$.getScript(base+"js/validaciones/validations-base.js");
+

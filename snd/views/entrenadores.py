@@ -64,7 +64,7 @@ def finalizar_entrenador(request, opcion):
     if opcion=='nuevo':
         return redirect('entrenador_nuevo')
     elif opcion =='listar':
-        return redirect('listar_entrenador')
+        return redirect('entrenador_listar')
 
 
 @login_required
@@ -136,12 +136,10 @@ def wizard_formacion_deportiva(request,id_entrenador):
         formacion_deportiva = FormacionDeportiva.objects.filter(entrenador=id_entrenador)
     except Exception:
         formacion_deportiva = None
-
     formaciondep_form = FormacionDeportivaForm()
 
     if request.method == 'POST':
         formaciondep_form = FormacionDeportivaForm(request.POST)
-
         if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
             formacion_deportiva.entrenador = Entrenador.objects.get(id=id_entrenador)
@@ -263,7 +261,7 @@ def eliminar_experiencia_laboral(request,id_entrenador,id_experiencia):
 
 
 @login_required
-@permission_required('snd.delete_entrenador')
+@permission_required('snd.change_entrenador')
 def desactivar_entrenador(request,id_entrenador):
     """
     Junio 9 / 2015

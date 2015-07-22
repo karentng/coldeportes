@@ -21,6 +21,9 @@ class Entidad(TenantMixin): # Entidad deportiva
     actores = models.OneToOneField(Actores, null=True)
     auto_create_schema = True
 
+    def __str__(self):
+        return self.nombre
+
 class Departamento(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     codigo = models.CharField(max_length=10, null=True, verbose_name='código')
