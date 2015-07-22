@@ -12,6 +12,7 @@ class Entrenador(models.Model):
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
     )
+
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
