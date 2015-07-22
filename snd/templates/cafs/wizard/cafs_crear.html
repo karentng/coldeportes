@@ -49,6 +49,12 @@
 					<div class="col-md-6">
 						{% bootstrap_field form.email layout="vertical" %}
 					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.web layout="vertical" %}
+					</div>
+					<div class="col-md-6">
+						{% bootstrap_field form.nombre_administrador layout="vertical" %}
+					</div>
 				</div>
 				<hr>
 				<strong><h4>Ubicación</h4></strong>
@@ -76,16 +82,10 @@
 					</div>
 				</div>
 				<hr>
-				<strong><h4>Estado y Contacto</h4></strong>
+				<strong><h4>Estado</h4></strong>
 				<div class="row">
 					<div class="col-md-6">
 						{% bootstrap_field form.estado layout="vertical" %}
-					</div>
-					<div class="col-md-6">
-						{% bootstrap_field form.nombre_administrador layout="vertical" %}
-					</div>
-					<div class="col-md-6">
-						{% bootstrap_field form.contacto layout="vertical" %}
 					</div>
 				</div>
 				<div class="row">
