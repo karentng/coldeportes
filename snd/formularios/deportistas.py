@@ -17,7 +17,7 @@ class DeportistaForm(ModelForm):
 
     class Meta:
         model = Deportista
-        exclude = ('entidad','activo',)
+        exclude = ('entidad','estado',)
 
 class ComposicionCorporalForm(ModelForm):
     def __init__(self, *args, **kwargs):
