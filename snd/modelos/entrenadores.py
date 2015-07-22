@@ -12,6 +12,7 @@ class Entrenador(models.Model):
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
     )
+
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
@@ -48,7 +49,7 @@ class Entrenador(models.Model):
     altura = models.IntegerField(blank=True, null=True, verbose_name='Altura (En Cm)')
     #en Kg
     peso = models.IntegerField(blank=True, null=True, verbose_name='Peso (En Kg)')
-    etnia = models.CharField(max_length=20, choices=ETNIAS)
+    etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
     entidad_vinculacion = models.ForeignKey(Entidad)
 
 class FormacionDeportiva(models.Model):
