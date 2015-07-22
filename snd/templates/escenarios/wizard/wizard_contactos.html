@@ -102,7 +102,7 @@
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
         <a href="{% url 'finalizar_escenario'  opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar </a>
-        <a href="{% url 'finalizar_escenario' opcion='nuevo' %}" class="btn btn-info pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar Escenario Nuevo</a>
+        <a href="{% url 'finalizar_escenario' opcion='nuevo' %}" class="btn btn-danger pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar Escenario Nuevo</a>
 
 {% endblock %}
 

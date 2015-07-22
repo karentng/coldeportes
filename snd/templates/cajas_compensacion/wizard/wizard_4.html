@@ -96,8 +96,9 @@
         <br/>
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-        {% endif %}     
-        <a href="{% url 'finalizar_ccf' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>
+        {% endif %} 
+        <a href="{% url 'finalizar_ccf' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>
+        <a href="{% url 'finalizar_ccf' opcion='nuevo' %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar CCF Nuevo</a>    
     
 
 {% endblock %}

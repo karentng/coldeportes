@@ -68,8 +68,8 @@
         <br/>
         <ul class="pager bwizard-buttons">
             <a href="{% url 'dirigentes_wizard_identificacion' dirigente_id %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
-            <a href="{% url 'dirigentes_finalizar' opcion='listar' %}" class="btn btn-primary pull-right">{% trans 'Finalizar →' %}</a>
-            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">{% trans 'Finalizar y Guardar Nuevo →' %}</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i>{% trans ' Finalizar' %}</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i>{% trans ' Finalizar y Guardar Nuevo →' %}</a>
         </ul>
 
 {% endblock %}
