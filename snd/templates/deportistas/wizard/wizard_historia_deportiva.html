@@ -8,14 +8,7 @@
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
-    <style>
-		.control-label{
-        	display: none;
-    	}
-		.form-control-feedback{
-        	margin-top: -31px;
-    	}
-	</style>
+
 {% endblock %}
 
 {% block miga_pan %}
@@ -45,9 +38,6 @@
                         <h3>{{titulo}}</h3>
                         {% for i in form %}
                             <div class="col-lg-6">
-                                <label for="{{ i.id_for_label }}">{{ i.label }}
-       							    {% if i.field.required %}<span class="special_class">*</span>{% endif %}
-							    </label>
 							    {% bootstrap_field i layout="vertical" %}
                             </div>
                         {% endfor %}
@@ -73,7 +63,13 @@
                     {% for historico in historicos %}
                         <tr>
                             <td align="center">{{historico.fecha_inicial}}</td>
-                            <td align="center">{{historico.fecha_final}}</td>
+                            <td align="center">
+                                {%if historico.fecha_final%}
+                                    {{historico.fecha_final}}
+                                {%else%}
+                                    ACTUAL
+                                {%endif%}
+                            </td>
                             <td align="center">{{historico.tipo}}</td>
                             <td align="center">{{historico.lugar}}</td>
                             <td align="center">{{historico.descripcion|linebreaksbr}}</td>
@@ -122,6 +118,14 @@
 {% block script %}
     <script>
         $(document).ready(function() {
+            $("#id_actual").change(function(){
+               if($(this).is(":checked")){
+                   $("#id_fecha_final").val("");
+                   $("#id_fecha_final").parent().css('display','none');
+               }else{
+                   $("#id_fecha_final").parent().css('display','block');
+               }
+            });
             App.init();
             FormWizard.init();
         });

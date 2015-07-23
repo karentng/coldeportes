@@ -102,7 +102,8 @@ class HistorialDeportivo(models.Model):
         ('Premio','Premio'),
     )
     fecha_inicial = models.DateField()
-    fecha_final = models.DateField()
+    fecha_final = models.DateField(blank=True, null=True)
+    actual = models.BooleanField(verbose_name='¿Aún en formación?',default=False)
     lugar = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
     institucion_equipo = models.CharField(max_length=100,blank=True,null=True, verbose_name='Club deportivo')

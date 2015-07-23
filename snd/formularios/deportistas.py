@@ -6,6 +6,7 @@ from datetimewidget.widgets import DateWidget
 from coldeportes.utilities import adicionarClase
 
 class DeportistaForm(ModelForm):
+    fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
     def __init__(self, *args, **kwargs):
         super(DeportistaForm, self).__init__(*args, **kwargs)
         self.fields['ciudad_residencia'] = adicionarClase(self.fields['ciudad_residencia'], 'one')
@@ -38,6 +39,15 @@ class HistorialDeportivoForm(ModelForm):
         self.fields['fecha_inicial'] = adicionarClase(self.fields['fecha_inicial'], 'fecha')
         self.fields['fecha_final'] = adicionarClase(self.fields['fecha_final'], 'fecha')
         self.fields['descripcion'].widget.attrs['rows'] = 3
+
+    def clean(self):
+        fecha_comienzo = self.cleaned_data['fecha_inicial']
+        fecha_fin = self.cleaned_data['fecha_final']
+        if fecha_fin != None:
+            if fecha_fin < fecha_comienzo:
+                msg = "La fecha de finalización es menor a la fecha de comienzo"
+                self.add_error('fecha_inicial', msg)
+                self.add_error('fecha_final', msg)
 
     class Meta:
         model = HistorialDeportivo

@@ -107,7 +107,11 @@
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
         <a href="{% url 'finalizar_deportista' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>
-        <a href="{% url 'finalizar_deportista' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">Finalizar,Guardar y Nuevo →</a>
+        <a href="{% url 'finalizar_deportista' opcion='nuevo' %}">
+                <button class="btn btn-warning pull-right" type="submit" style="margin-right:10px">
+                    <i class="fa fa-circle-o-notch"></i> Guardar y Registrar otro Deportista
+                </button>
+        </a>
     
 
 {% endblock %}
