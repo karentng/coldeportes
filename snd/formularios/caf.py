@@ -7,7 +7,6 @@ class CentroAcondicionamientoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CentroAcondicionamientoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
-        self.fields['contacto'].widget.attrs['rows'] = 3
 
     class Meta:
         model = CentroAcondicionamiento

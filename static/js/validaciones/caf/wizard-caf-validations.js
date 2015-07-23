@@ -86,6 +86,14 @@ fields = {
                 message: 'El nombre del administrador no puede ser vacío'
             }
         }
+    },
+    web: {
+        validators: {
+            uri: {
+                message: 'La página web no es válida'
+            }
+        }
     }
+
 };
 $.getScript(base+"js/validaciones/validations-base.js");
