@@ -29,7 +29,7 @@ fields = {
                     }
                 }
             },
-            nro_id: {
+            identificacion: {
                 validators: {
                     notEmpty: {
                         message: 'El número de identificación no puede ser vacío'

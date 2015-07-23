@@ -325,6 +325,7 @@ def ver_entrenador(request,id_entrenador):
     formacion_deportiva = FormacionDeportiva.objects.filter(entrenador=entrenador)
     experiencia_laboral = ExperienciaLaboral.objects.filter(entrenador=entrenador)
     entrenador.edad = calculate_age(entrenador.fecha_nacimiento)
+    print(entrenador.edad)
     return render(request,'entrenadores/ver_entrenador.html',{
             'entrenador':entrenador,
             'formacion_deportiva':formacion_deportiva,
