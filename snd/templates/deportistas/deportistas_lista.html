@@ -41,7 +41,7 @@
                     <tr>
                         <th>Foto</th>
                         <th>Nombre</th>
-                        <th>Ciudad (Departamento) Nacimiento</th>
+                        <th>Ciudad (Departamento) Residencia</th>
                         {% if perms.snd.change_deportista %}
                             <th>Tipo Identificación</th>
                             <th>Identificación</th>
@@ -67,7 +67,7 @@
                                 {%endif%}
                             </td>
                             <td>{{deportista.nombres}} {{deportista.apellidos}}</td>
-                            <td>{{deportista.ciudad_nacimiento}}</td>
+                            <td>{{deportista.ciudad_residencia}}</td>
                             {% if perms.snd.change_deportista %}
                                 <td>{{ deportista.tipo_id }}</td>
                                 <td>{{deportista.identificacion}}</td>

@@ -8,7 +8,7 @@ from coldeportes.utilities import adicionarClase
 class DeportistaForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(DeportistaForm, self).__init__(*args, **kwargs)
-        self.fields['ciudad_nacimiento'] = adicionarClase(self.fields['ciudad_nacimiento'], 'one')
+        self.fields['ciudad_residencia'] = adicionarClase(self.fields['ciudad_residencia'], 'one')
         self.fields['genero'] = adicionarClase(self.fields['genero'], 'one')
         self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
