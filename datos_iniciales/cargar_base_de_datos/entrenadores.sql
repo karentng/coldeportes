@@ -1,4 +1,4 @@
-﻿INSERT INTO entidad1.snd_entrenador (id,nombres, apellidos,genero,tipo_id,nro_id,telefono_fijo,telefono_celular,
+﻿INSERT INTO entidad1.snd_entrenador (id,nombres, apellidos,genero,tipo_id,identificacion,telefono_fijo,telefono_celular,
                             correo_electronico,fecha_nacimiento,altura,peso,ciudad_id,entidad_vinculacion_id,estado) VALUES
 (100,'JUAN PEDRO','GONZALEZ MEJIA','HOMBRE','CED','11440908798','3729434','3137654326','juanpe@hotmail.com','1990-10-26','156','70',54,2,1);
 

@@ -5,6 +5,7 @@ from coldeportes.utilities import adicionarClase
 
 
 class EntrenadorForm(ModelForm):
+    fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
     def __init__(self, *args, **kwargs):
         super(EntrenadorForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')

@@ -69,7 +69,7 @@
                                     {% endif %}
                                 {% endfor %}
                             </td>
-                            <td>{{entrenador.nro_id}}</td>
+                            <td>{{entrenador.identificacion}}</td>
                             <td>{{ entrenador.get_estado_display }}</td>
                             <td>
                                 <a href="{% url 'ver_entrenador' entrenador.id %}" title="Ver">
