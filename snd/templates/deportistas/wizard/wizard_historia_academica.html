@@ -57,14 +57,14 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Historial Académico Actual:</h4>
+                <h4>Historial Académico Registrado:</h4>
                 <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th align="center">Nivel</th>
                             <th align="center">Institucion</th>
-                            <th align="center">País</th>
+                            <th align="center">Fecha Finalizacion</th>
                             <th align="center">Estado</th>
                         </tr>
                     </thead>
@@ -73,7 +73,7 @@
                         <tr>
                             <td align="center">{{historico.nivel}}</td>
                             <td align="center">{{historico.institucion}}</td>
-                            <td align="center">{{historico.pais}}</td>
+                            <td align="center">{% if historico.fecha_finalizacion %} {{historico.fecha_finalizacion}} {%else%} Actual {%endif%}</td>
                             <td align="center">{{historico.estado}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate-{{ historico.id }}" data-toggle="modal"><i class="fa fa-trash"></i></a>

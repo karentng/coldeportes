@@ -102,10 +102,11 @@ class HistorialDeportivo(models.Model):
         ('Participacion en Equipo','Participacion en Equipo'),
         ('Premio','Premio'),
     )
-    fecha = models.DateField()
+    fecha_inicial = models.DateField()
+    fecha_final = models.DateField()
     lugar = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
-    institucion_equipo = models.CharField(max_length=100,blank=True,null=True)
+    institucion_equipo = models.CharField(max_length=100,blank=True,null=True, verbose_name='Club deportivo')
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Tipo Historial',default='Competencia')
     deportista = models.ForeignKey(Deportista)
 
@@ -128,7 +129,7 @@ class InformacionAcademica(models.Model):
     nivel = models.CharField(choices=tipo_academica,max_length=20)
     estado = models.CharField(choices=tipo_estado,max_length=20)
     profesion =  models.CharField(max_length=100,blank=True,null=True)
-    grado_semestre = models.IntegerField(verbose_name='Grado o Semestre', null=True, blank=True)
+    grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
 

@@ -57,12 +57,13 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Historial Deportivo Actual:</h4>
+                <h4>Historial Deportivo Registrado:</h4>
                 <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th align="center">Fecha</th>
+                            <th align="center">Fecha Inicial</th>
+                            <th align="center">Fecha Final</th>
                             <th align="center">Tipo</th>
                             <th align="center">Lugar</th>
                             <th align="center">Descripción</th>
@@ -71,7 +72,8 @@
                     <tbody>
                     {% for historico in historicos %}
                         <tr>
-                            <td align="center">{{historico.fecha}}</td>
+                            <td align="center">{{historico.fecha_inicial}}</td>
+                            <td align="center">{{historico.fecha_final}}</td>
                             <td align="center">{{historico.tipo}}</td>
                             <td align="center">{{historico.lugar}}</td>
                             <td align="center">{{historico.descripcion|linebreaksbr}}</td>

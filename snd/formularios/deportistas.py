@@ -34,7 +34,8 @@ class HistorialDeportivoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
-        self.fields['fecha'] = adicionarClase(self.fields['fecha'], 'fecha')
+        self.fields['fecha_inicial'] = adicionarClase(self.fields['fecha_inicial'], 'fecha')
+        self.fields['fecha_final'] = adicionarClase(self.fields['fecha_final'], 'fecha')
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
