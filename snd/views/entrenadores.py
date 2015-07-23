@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from snd.formularios.entrenadores import EntrenadorForm, FormacionDeportivaForm, ExperienciaLaboralForm
 from snd.models import Entrenador, FormacionDeportiva, ExperienciaLaboral
-from snd.utilities import calculate_age
+from coldeportes.utilities import calculate_age
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 

@@ -9,7 +9,7 @@ from snd.formularios.deportistas  import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
-from snd.utilities import calculate_age,all_permission_required
+from coldeportes.utilities import calculate_age,all_permission_required
 
 @login_required
 @all_permission_required('snd.add_deportista')

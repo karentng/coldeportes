@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django import forms
 from django.forms import ModelForm
-from snd.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase
 from .models import Transferencia
 
 class TransferenciaForm(ModelForm):

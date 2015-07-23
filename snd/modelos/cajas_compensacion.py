@@ -4,7 +4,7 @@ from entidades.models import *
 from django.db import models
 
 class CajaCompensacion(models.Model):
-    tipo_estado = ((0,'ACTIVO'), (1,'INACTIVO'), (2,'EN TRANSFERENCIA'),(3,'TRANSFERIDO'),)
+    tipo_estado = ((0,'ACTIVO'), (1,'INACTIVO'),)
     clases = ( ('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
     tipo_region = ( ('U', 'Urbano'), ('R', 'Rural'), )
     tipo_infraesctructura = ( ('P', 'Propia'), ('C', 'Convenio'), )
