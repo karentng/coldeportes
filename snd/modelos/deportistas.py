@@ -39,21 +39,20 @@ class Deportista(models.Model):
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100,unique=True)
     fecha_nacimiento = models.DateField()
-    nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
     barrio = models.CharField(max_length=100)
     comuna = models.CharField(max_length=100)
     email = models.EmailField(null=True,blank=True)
     telefono = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
-        #Entidad
     entidad = models.ForeignKey(Entidad)
-        #Disciplina
-    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)    #activo = models.BooleanField()
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
+    etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
-    etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
+    nacionalidad = models.ManyToManyField(Nacionalidad)
+
 
     def __str__(self):
         return self.nombres+" "+self.apellidos

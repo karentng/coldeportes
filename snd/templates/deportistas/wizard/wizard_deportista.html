@@ -7,6 +7,7 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
 	<style>
 		.control-label{
@@ -37,34 +38,146 @@
 
 {% block contenido_panel %}
 	{% include 'deportistas/wizard/_wizard.html' %}
-	<fieldset>
-		<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-			<div class="well row">
+
+	<form id="form-wizard-deportista" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+		<fieldset>
 				<div class="col-xs-12">
 					<h3>{{titulo}}</h3>
-					{% for i in form %}
-						<div class="col-md-6">
-							<label for="{{ i.id_for_label }}">{{ i.label }}
-       							{% if i.field.required %}<span class="special_class">*</span>{% endif %}
-							</label>
-							{% bootstrap_field i layout="vertical" %}
+
+					<div class="well row">
+						<strong><h4>Identificación</h4></strong>
+
+						<div class="row">
+							<div class="col-md-6">
+								<label for="{{ form.nombres.id_for_label }}">{{ form.nombres.label }}
+									{% if form.nombres.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.nombres layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.apellidos.id_for_label }}">{{ form.apellidos.label }}
+									{% if form.apellidos.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.apellidos layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.genero.id_for_label }}">{{ form.genero.label }}
+									{% if form.genero.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.genero layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.tipo_id.id_for_label }}">{{ form.tipo_id.label }}
+									{% if form.tipo_id.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.tipo_id layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.identificacion.id_for_label }}">{{ form.identificacion.label }}
+									{% if form.identificacion.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.identificacion layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.fecha_nacimiento.id_for_label }}">{{ form.fecha_nacimiento.label }}
+									{% if form.fecha_nacimiento.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.fecha_nacimiento layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.foto.id_for_label }}">{{ form.foto.label }}
+									{% if form.foto.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.foto layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.video.id_for_label }}">{{ form.video.label }}
+									{% if form.video.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.video layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.disciplinas.id_for_label }}">{{ form.disciplinas.label }}
+									{% if form.disciplinas.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.disciplinas layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.nacionalidad.id_for_label }}">{{ form.nacionalidad.label }}
+									{% if form.nacionalidad.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.nacionalidad layout="vertical" %}
+							</div>
 						</div>
-					{% endfor %}
+						<hr>
+						<strong><h4>Ubicación</h4></strong>
+						<div class="row">
+							<div class="col-md-6">
+								<label for="{{ form.barrio.id_for_label }}">{{ form.barrio.label }}
+									{% if form.barrio.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.barrio layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.comuna.id_for_label }}">{{ form.comuna.label }}
+									{% if form.comuna.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.comuna layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.email.id_for_label }}">{{ form.email.label }}
+									{% if form.email.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.email layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.telefono.id_for_label }}">{{ form.telefono.label }}
+									{% if form.telefono.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.telefono layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.ciudad_residencia.id_for_label }}">{{ form.ciudad_residencia.label }}
+									{% if form.ciudad_residencia.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.ciudad_residencia layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}
+									{% if form.direccion.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.direccion layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								<label for="{{ form.etnia.id_for_label }}">{{ form.etnia.label }}
+									{% if form.etnia.field.required %}<span class="special_class">*</span>{% endif %}
+								</label>
+								{% bootstrap_field form.etnia layout="vertical" %}
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-xs-12">
+								{% if wizard_stage > 1 %}
+									<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+								{% endif %}
+								<button class="btn btn-primary pull-right" type="submit">
+									Siguiente →
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<hr>
-			{% if wizard_stage > 1 %}
-			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-			{% endif %}		
-			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
-		</form>
-	</fieldset>
+		</fieldset>
+	</form>
+
 	
 
 {% endblock %}
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-deportista-validations.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 	
 {% endblock %}

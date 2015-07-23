@@ -46,7 +46,7 @@ def wizard_deportista_nuevo(request):
 
 
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
-        'titulo': 'Identificación del Deportista',
+        'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
     })
@@ -92,7 +92,7 @@ def wizard_deportista(request,id_depor):
 
 
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
-        'titulo': 'Identificación del Deportista',
+        'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
     })

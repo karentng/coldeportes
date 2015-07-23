@@ -14,6 +14,7 @@ class DeportistaForm(ModelForm):
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
         self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
         self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'],'fecha')
+        self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
 
     class Meta:
         model = Deportista
