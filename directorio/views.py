@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from directorio.forms import *
 
 # Create your views here.
 @login_required
@@ -15,5 +16,8 @@ def directorio_buscar(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
+
+    form = DirectorioBusquedaForm()
     return render(request, 'directorio_buscar.html', {
+    	'form': form,
     })
