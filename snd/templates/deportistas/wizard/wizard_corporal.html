@@ -8,14 +8,6 @@
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
 	{{form.media}} {# js y css para datetime #}
-	<style>
-		.control-label{
-        	display: none;
-    	}
-		.form-control-feedback{
-        	margin-top: -31px;
-    	}
-	</style>
 {% endblock %}
 
 {% block miga_pan %}
@@ -44,9 +36,6 @@
 					<h3>{{titulo}}</h3>
 					{% for i in form %}
 						<div class="col-md-6">
-							<label for="{{ i.id_for_label }}">{{ i.label }}
-       							{% if i.field.required %}<span class="special_class">*</span>{% endif %}
-							</label>
 							{% bootstrap_field i layout="vertical" %}
 						</div>
 					{% endfor %}

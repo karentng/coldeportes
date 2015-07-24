@@ -45,7 +45,10 @@ fields = {
                     },
                     date: {
 					    message: 'El valor ingresado no es una fecha válida',
-                        format: 'YYYY-MM-DD'
+                        format: 'YYYY-MM-DD',
+                        message: 'La fecha de nacimiento no puede ser mayor a hoy',
+                        max: ($.datepicker.formatDate('yy-mm-dd', new Date())).toString()
+
 				    }
                 }
             },
@@ -127,4 +130,3 @@ fields = {
         $(form).bootstrapValidator('revalidateField', 'fecha_nacimiento');
     });
 $.getScript(base+"js/validaciones/validations-base.js");
-

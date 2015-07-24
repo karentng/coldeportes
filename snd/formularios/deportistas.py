@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import ModelForm
 from snd.models import *
-from datetimewidget.widgets import DateWidget
+import datetime
 from coldeportes.utilities import adicionarClase
 
 class DeportistaForm(ModelForm):
@@ -16,6 +16,12 @@ class DeportistaForm(ModelForm):
         self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
         self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'],'fecha')
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
+
+    def clean(self):
+        fecha_nacimiento = self.cleaned_data['fecha_nacimiento']
+        if fecha_nacimiento > datetime.date.today():
+                msg = "La fecha de nacimiento no puede ser mayor al día de hoy"
+                self.add_error('fecha_nacimiento', msg)
 
     class Meta:
         model = Deportista
