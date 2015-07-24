@@ -1,10 +1,14 @@
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from snd.formularios.entrenadores import EntrenadorForm, FormacionDeportivaForm, ExperienciaLaboralForm
+from snd.formularios.entrenadores import EntrenadorForm, FormacionDeportivaForm, ExperienciaLaboralForm, VerificarExistenciaForm
 from snd.models import Entrenador, FormacionDeportiva, ExperienciaLaboral
 from coldeportes.utilities import calculate_age
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
+from entidades.models import Entidad
+
 
 @login_required
 @permission_required('snd.add_entrenador')
@@ -331,3 +335,71 @@ def ver_entrenador(request,id_entrenador):
             'formacion_deportiva':formacion_deportiva,
             'experiencia_laboral':experiencia_laboral
         })
+
+@login_required
+def verificar_entrenador(request):
+    """
+    Julio 24 /2015
+    Autor: Milton Lenis
+
+    Verificación de la existencia de un entrenador
+    Se verifica si existe el entrenador en la entidad actual, si existe en otra entidad o si no existe.
+    Dependiendo del caso se muestra una respuesta diferente al usuario
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    """
+    if request.method=='POST':
+        form = VerificarExistenciaForm(request.POST)
+
+        if form.is_valid():
+            datos = {
+                'tipo_id': form.cleaned_data['tipo_id'],
+                'identificacion': form.cleaned_data['identificacion']
+            }
+
+            #Verificación de existencia dentro del tenant actual
+            try:
+                entrenador = Entrenador.objects.get(identificacion=datos['identificacion'])
+            except Exception:
+                entrenador = None
+
+            if entrenador:
+                #Si se encuentra el entrenador se carga el template con la existe=True para desplegar el aviso al usuario
+                return render(request,'entrenadores/verificar_entrenador.html',{'existe':True,
+                                                                   'entrenador':entrenador})
+
+            if not entrenador:
+                #Si no se encuentra el entrenador entonces se redirecciona a registro de entrenador con los datos iniciales en una sesión
+                request.session['datos'] = datos
+                return redirect('entrenador_nuevo')
+
+            #Verificación de existencia en otros tenants
+            #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+            existencia = False
+            tenant_existencia = None
+            entidades = Entidad.objects.all()
+            for entidad in entidades:
+                connection.set_tenant(entidad)
+                ContentType.objects.clear_cache()
+                try:
+                    entrenador = Entrenador.objects.get(identificacion=datos['identificacion'])
+                    existencia = True
+                    tenant_existencia = entidad
+                    break
+                except Exception:
+                    pass
+
+            if existencia:
+                return render(request,'entrenadores/verificar_entrenador.html',{'existe':True,
+                                                                   'entrenador':entrenador,
+                                                                   'tenant_existencia':tenant_existencia})
+            else:
+                #Si no se encuentra el entrenador entonces se redirecciona a registro de entrenador con los datos iniciales en una sesión
+                request.session['datos'] = datos
+                return redirect('entrenador_nuevo')
+
+    else:
+        form = VerificarExistenciaForm()
+    return render(request,'entrenadores/verificar_entrenador.html',{'form':form,
+                                                       'existe':False})

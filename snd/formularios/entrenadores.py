@@ -17,6 +17,17 @@ class EntrenadorForm(ModelForm):
         exclude = ('estado','entidad_vinculacion',)
 
 
+class VerificarExistenciaForm(forms.Form):
+    TIPO_IDENTIDAD = (
+        ('CED', 'CÉDULA DE CIUDADANÍA'),
+        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
+        ('PAS', 'PASAPORTE'),
+    )
+    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)
+    identificacion = forms.IntegerField(label="Identificación")
+
+
+
 class FormacionDeportivaForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FormacionDeportivaForm, self).__init__(*args, **kwargs)
