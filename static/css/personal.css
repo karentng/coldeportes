@@ -1,0 +1,7 @@
+.required label:after{
+    content: ' *';
+}
+
+.form-control-feedback{
+    top: -10px !important;
+}

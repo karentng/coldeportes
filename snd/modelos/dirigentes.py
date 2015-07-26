@@ -27,8 +27,8 @@ class Dirigente(models.Model):
         ('PT', "Pasaporte"),
     )
     ESTADOS = (
-        (1, "Activo"),
-        (2, "Inactivo"),
+        (0, "Activo"),
+        (1, "Inactivo"),
     )
 
     tipo_identificacion = models.CharField(choices=TIPO_IDENTIFICACION, max_length=2, verbose_name="Tipo de identificación")
@@ -41,14 +41,14 @@ class Dirigente(models.Model):
     telefono = models.CharField(max_length=100, verbose_name="Teléfono")
     email = models.EmailField(null=True,blank=True)
     nacionalidad = models.ManyToManyField(Nacionalidad)
+    ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="Estado del dirigente")
     fecha_posesion = models.DateField(verbose_name="Fecha de posesión")
     fecha_retiro = models.DateField(null=True,blank=True, verbose_name="Fecha de retiro")
-    estado = models.IntegerField(choices=ESTADOS, default=1, verbose_name="Estado del dirigente")
     foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
-    descripcion = models.CharField(max_length=500, verbose_name="Descripción o logros")
+    perfil = models.TextField(max_length=500, verbose_name="Perfil profesional")
 
     entidad = models.ForeignKey(Entidad, null=True, blank=True)
-    
 
     def __str__(self):
         return "{0} {1} - {2}".format(self.nombres, self.apellidos, self.cargo)
@@ -59,7 +59,7 @@ class Dirigente(models.Model):
         super(Dirigente, self).save(*args, **kwargs)
 
 class Funcion(models.Model):
-    descripcion = models.CharField(max_length=200, verbose_name="Descripción")
+    descripcion = models.TextField(max_length=200, verbose_name="Descripción")
     dirigente = models.ForeignKey(Dirigente)
 
 
