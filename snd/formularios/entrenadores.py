@@ -18,12 +18,12 @@ class EntrenadorForm(ModelForm):
 
 
 class VerificarExistenciaForm(forms.Form):
-    TIPO_IDENTIDAD = (
+    """TIPO_IDENTIDAD = (
         ('CED', 'CÉDULA DE CIUDADANÍA'),
         ('CEDEX', 'CÉDULA DE EXTRANJERO'),
         ('PAS', 'PASAPORTE'),
     )
-    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)
+    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
     identificacion = forms.IntegerField(label="Identificación")
 
 

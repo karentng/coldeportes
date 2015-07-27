@@ -42,7 +42,7 @@
                 {% if existe %}
                     {% if tenant_existencia %}
                         <div class="note note-warning">
-                            <h4>¡Entrenador encontrado!</h4>
+                            <h4><i class="fa fa-warning"></i>¡Entrenador encontrado!</h4>
                             <p>
                                 Se ha encontrado al entrenador {{ entrenador.nombre }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
                                 con la entidad para solicitar una transferencia de este entrenador o intente con otro número de identificación si así lo desea
@@ -51,13 +51,13 @@
                         </div>
                     {% else %}
                         <div class="note note-warning">
-                            <h4>¡Entrenador encontrado!</h4>
+                            <h4><i class="fa fa-warning"></i> ¡Entrenador encontrado!</h4>
                             <p>
                                 Este entrenador ya se encuentra registrado en esta entidad, por favor escoja una opción:
                                 <div class="p-t-5">
-                                    <p><a href="{% url 'verificar_entrenador' %}" class="btn btn-warning btn-sm m-r-5">Intentar con otra identificación</a></p>
-                                    <p><a href="{% url 'verificar_entrenador' %}" class="btn btn-warning btn-sm m-r-5">Modificar información de este entrenador</a></p>
-                                    <p><a href="{% url 'verificar_entrenador' %}" class="btn btn-warning btn-sm m-r-5">Ver este entrenador</a></p>
+                                    <p><a href="{% url 'verificar_entrenador' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a></p>
+                                    <p><a href="{% url 'edicion_entrenador' entrenador.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este entrenador</a></p>
+                                    <p><a href="{% url 'ver_entrenador' entrenador.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este entrenador</a></p>
                                 </div>
                             </p>
                         </div>

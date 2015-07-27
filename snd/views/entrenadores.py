@@ -354,7 +354,6 @@ def verificar_entrenador(request):
 
         if form.is_valid():
             datos = {
-                'tipo_id': form.cleaned_data['tipo_id'],
                 'identificacion': form.cleaned_data['identificacion']
             }
 
@@ -402,4 +401,4 @@ def verificar_entrenador(request):
     else:
         form = VerificarExistenciaForm()
     return render(request,'entrenadores/verificar_entrenador.html',{'form':form,
-                                                       'existe':False})
+                                                                    'existe':False})
