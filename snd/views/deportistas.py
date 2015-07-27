@@ -25,7 +25,6 @@ def wizard_deportista_nuevo(request):
     :param request: Petición Realizada
     :type request:    WSGIRequest
     """
-
     deportista_form = DeportistaForm()
 
     if request.method == 'POST':

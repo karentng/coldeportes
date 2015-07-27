@@ -27,17 +27,6 @@
                     Verificación de la existencia de un entrenador
                 </h4>
             </div>
-            {% for msg in messages %}
-                <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">
-                    <span class="close" data-dismiss="alert">×</span>
-                    {% if msg.tags == 'error' %}
-                        <i class="fa fa-times fa-2x pull-left"></i>
-                    {% else %}
-                        <i class="fa fa-check fa-2x pull-left"></i>
-                    {% endif %}
-                    <p>{{msg}}</p>
-                </div>
-            {% endfor %}
             <div class="panel-body">
                 {% if existe %}
                     {% if tenant_existencia %}
@@ -46,7 +35,7 @@
                             <p>
                                 Se ha encontrado al entrenador {{ entrenador.nombre }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
                                 con la entidad para solicitar una transferencia de este entrenador o intente con otro número de identificación si así lo desea
-                                <a href="{% url 'verificar_entrenador' %}" class="btn btn-primary btn-sm m-r-5">Intentar con otra identificación</a>
+                                <p><a href="{% url 'verificar_entrenador' %}" class="btn btn-primary btn-sm m-r-5">Intentar con otra identificación</a></p>
                             </p>
                         </div>
                     {% else %}

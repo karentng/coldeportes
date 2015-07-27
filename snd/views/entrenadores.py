@@ -25,9 +25,8 @@ def wizard_entrenador_nuevo(request):
     :param request: Petición Realizada
     :type request:    WSGIRequest
     """
-
+    print(request.session['datos'])
     entrenador_form = EntrenadorForm()
-
     if request.method == 'POST':
 
         entrenador_form = EntrenadorForm(request.POST, request.FILES)
@@ -41,6 +40,7 @@ def wizard_entrenador_nuevo(request):
             entrenador.save()
             entrenador_form.save()
             return redirect('wizard_formacion_deportiva', entrenador.id)
+
 
 
     return render(request, 'entrenadores/wizard/wizard_entrenador.html', {
