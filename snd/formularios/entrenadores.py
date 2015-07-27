@@ -24,7 +24,7 @@ class VerificarExistenciaForm(forms.Form):
         ('PAS', 'PASAPORTE'),
     )
     tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
-    identificacion = forms.IntegerField(label="Identificación")
+    identificacion = forms.IntegerField(label="Identificación del entrenador")
 
 
 
