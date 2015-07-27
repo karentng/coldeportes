@@ -6,7 +6,9 @@ import datetime
 from coldeportes.utilities import adicionarClase
 
 class DeportistaForm(ModelForm):
-    fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
+    #fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(DeportistaForm, self).__init__(*args, **kwargs)
         self.fields['ciudad_residencia'] = adicionarClase(self.fields['ciudad_residencia'], 'one')
@@ -28,6 +30,9 @@ class DeportistaForm(ModelForm):
         exclude = ('entidad','estado',)
 
 class ComposicionCorporalForm(ModelForm):
+
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(ComposicionCorporalForm, self).__init__(*args, **kwargs)
         self.fields['RH'] = adicionarClase(self.fields['RH'], 'one')
@@ -38,13 +43,15 @@ class ComposicionCorporalForm(ModelForm):
         exclude = ('deportista',)
 
 class HistorialDeportivoForm(ModelForm):
-    descripcion = forms.CharField(widget=forms.Textarea, required=False)
+
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['fecha_inicial'] = adicionarClase(self.fields['fecha_inicial'], 'fecha')
         self.fields['fecha_final'] = adicionarClase(self.fields['fecha_final'], 'fecha')
-        self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
 
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_inicial']
@@ -60,6 +67,9 @@ class HistorialDeportivoForm(ModelForm):
         exclude = ('deportista',)
 
 class InformacionAcademicaForm(ModelForm):
+
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(InformacionAcademicaForm, self).__init__(*args, **kwargs)
         self.fields['nivel'] = adicionarClase(self.fields['nivel'], 'one')
