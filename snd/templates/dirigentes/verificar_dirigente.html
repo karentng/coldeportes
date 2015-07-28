@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Dirigentes - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Verificar existencia de un dirigente
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Verificar dirigente</li>
+{% endblock %}
+
+
+
+{% block contenido %}
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel {% if existe %}panel-warning{% else %}panel-success{% endif %}">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title">
+                    Verificación de la existencia de un dirigente
+                </h4>
+            </div>
+            <div class="panel-body">
+                {% if existe %}
+                    <div class="note note-warning">
+                        <h4><i class="fa fa-warning"></i> ¡Dirigente encontrado!</h4>
+                        <p>
+                            Este dirigente ya se encuentra registrado en esta entidad, por favor escoja una opción:
+                            <div class="p-t-5">
+                                <p><a href="{% url 'verificar_dirigente' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a></p>
+                                <p><a href="{% url 'dirigentes_wizard_identificacion' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este dirigente</a></p>
+                                <p><a href="{% url 'dirigentes_ver' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este dirigente</a></p>
+                            </div>
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <form action="" method="post" id="form-verificacion">
+                                {% csrf_token %}
+                                {% bootstrap_form form %}
+                                <button class="btn btn-primary pull-right" type="submit">Verificar</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

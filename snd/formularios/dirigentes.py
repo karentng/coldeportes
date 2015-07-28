@@ -5,6 +5,15 @@ from datetimewidget.widgets import DateWidget
 from coldeportes.utilities import adicionarClase
 
 
+class VerificarExistenciaForm(forms.Form):
+    """TIPO_IDENTIDAD = (
+        ('CED', 'CÉDULA DE CIUDADANÍA'),
+        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
+        ('PAS', 'PASAPORTE'),
+    )
+    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
+    identificacion = forms.IntegerField(label="Identificación del dirigente")
+
 class DirigenteForm(ModelForm):
 
     required_css_class = 'required'

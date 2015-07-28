@@ -7,6 +7,7 @@ from snd.formularios.dirigentes  import *
 from django.conf import settings
 from coldeportes.utilities import *
 import json
+from coldeportes.snd.formularios.dirigentes import VerificarExistenciaForm
 
 
 @login_required
@@ -22,6 +23,16 @@ def wizard_identificacion_nuevo(request):
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
+    """
+
+    """
+    try:
+        datos = request.session['datos']
+        del request.session['datos']
+    except Exception:
+        return redirect('verificar_dirigente')
+
+    identificacion_form = DirigenteForm(initial=datos)
     """
 
     identificacion_form = DirigenteForm( )
@@ -252,3 +263,47 @@ def ver(request, dirigente_id):
         'dirigente': dirigente,
         'funciones': funciones
     })
+
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def verificar_dirigente(request):
+    """
+    Julio 28 /2015
+    Autor: Milton Lenis
+
+    Verificación de la existencia de un dirigente
+    Se verifica si existe el dirigente en la entidad actual o si no existe.
+    Dependiendo del caso se muestra una respuesta diferente al usuario
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    """
+    if request.method=='POST':
+        form = VerificarExistenciaForm(request.POST)
+
+        if form.is_valid():
+            datos = {
+                'identificacion': form.cleaned_data['identificacion']
+            }
+
+            #Verificación de existencia dentro del tenant actual
+            try:
+                dirigente = Dirigente.objects.get(identificacion=datos['identificacion'])
+            except Exception:
+                dirigente = None
+
+            if dirigente:
+                #Si se encuentra el dirigente se carga el template con la existe=True para desplegar el aviso al usuario
+                return render(request,'dirigentes/verificar_dirigente.html',{'existe':True,
+                                                                             'dirigente':dirigente})
+
+            else:
+                #Si no se encuentra el dirigente entonces se redirecciona a registro de dirigente con los datos iniciales en una sesión
+                request.session['datos'] = datos
+                return redirect('dirigentes_wizard_identificacion_nuevo')
+
+    else:
+        form = VerificarExistenciaForm()
+    return render(request,'dirigentes/verificar_dirigente.html',{'form':form,
+                                                                 'existe':False})

@@ -25,7 +25,16 @@ def wizard_entrenador_nuevo(request):
     :param request: Petición Realizada
     :type request:    WSGIRequest
     """
-    print(request.session['datos'])
+
+    """
+    try:
+        datos = request.session['datos']
+        del request.session['datos']
+    except Exception:
+        return redirect('verificar_entrenador')
+
+    entrenador_form = EntrenadorForm(initial=datos)
+    """
     entrenador_form = EntrenadorForm()
     if request.method == 'POST':
 
@@ -337,6 +346,7 @@ def ver_entrenador(request,id_entrenador):
         })
 
 @login_required
+@permission_required('snd.add_entrenador')
 def verificar_entrenador(request):
     """
     Julio 24 /2015
