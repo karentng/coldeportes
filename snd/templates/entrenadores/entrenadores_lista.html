@@ -75,6 +75,7 @@
                                 <a href="{% url 'ver_entrenador' entrenador.id %}" title="Ver">
                                     <i class="fa fa-eye"></i> Ver Entrenador
                                 </a>
+                                <br/>
                                 {% if perms.snd.change_entrenador %}
                                     <a href="{% url 'edicion_entrenador' entrenador.id %}" title="Modificar">
                                         <i class="fa fa-gear"></i> Editar

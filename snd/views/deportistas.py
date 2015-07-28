@@ -25,7 +25,6 @@ def wizard_deportista_nuevo(request):
     :param request: Petición Realizada
     :type request:    WSGIRequest
     """
-
     deportista_form = DeportistaForm()
 
     if request.method == 'POST':
@@ -173,8 +172,12 @@ def wizard_historia_deportiva(request,id_depor):
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
             hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
-            hist_depor_nuevo.lugar = hist_depor_nuevo.lugar.upper()
-            hist_depor_nuevo.descripcion = hist_depor_nuevo.descripcion.upper()
+            hist_depor_nuevo.nombre = hist_depor_nuevo.nombre.upper()
+            hist_depor_nuevo.marca = hist_depor_nuevo.marca.upper()
+            hist_depor_nuevo.modalidad = hist_depor_nuevo.modalidad.upper()
+            hist_depor_nuevo.division = hist_depor_nuevo.division.upper()
+            hist_depor_nuevo.prueba = hist_depor_nuevo.prueba.upper()
+            hist_depor_nuevo.categoria = hist_depor_nuevo.categoria.upper()
             hist_depor_nuevo.institucion_equipo = hist_depor_nuevo.institucion_equipo.upper()
             hist_depor_nuevo.save()
             hist_depor_form.save()

@@ -7,6 +7,7 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     {{form.media}} {# js y css para datetime #}
 
 {% endblock %}
@@ -32,8 +33,69 @@
     {% include 'deportistas/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" method="post">{% csrf_token %}
-                <div class="well row">
+                <form id="form-wizard-deportiva" action="" method="post">{% csrf_token %}
+                    <fieldset>
+                        <div class="col-xs-12">
+                            <h3>{{titulo}}</h3>
+
+                            <div class="well row">
+                                <strong><h4>Campeonato</h4></strong>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.nombre layout="verical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.pais layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.actual layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.fecha_inicial layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.fecha_final layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.institucion_equipo layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.tipo layout="vertical" %}
+                                    </div>
+                                </div>
+                                <hr>
+                                <strong><h4>Participación</h4></strong>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.puesto layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.marca layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.modalidad layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.division layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.prueba layout="vertical" %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% bootstrap_field form.categoria layout="vertical" %}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </fieldset>
+                <!--div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
                         {% for i in form %}
@@ -43,7 +105,7 @@
                         {% endfor %}
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>              
                     </div>
-                </div>
+                </div-->
                 </form>
             </fieldset> 
             <div class="col-md-5">
@@ -56,7 +118,7 @@
                             <th align="center">Fecha Final</th>
                             <th align="center">Tipo</th>
                             <th align="center">Lugar</th>
-                            <th align="center">Descripción</th>
+                            <th align="center">Puesto</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,8 +133,8 @@
                                 {%endif%}
                             </td>
                             <td align="center">{{historico.tipo}}</td>
-                            <td align="center">{{historico.lugar}}</td>
-                            <td align="center">{{historico.descripcion|linebreaksbr}}</td>
+                            <td align="center">{{historico.pais}}</td>
+                            <td align="center">{{historico.puesto}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate-{{ historico.id }}" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate-{{ historico.id }}">
@@ -111,6 +173,7 @@
 
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-deportiva-validations.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     
 {% endblock %}

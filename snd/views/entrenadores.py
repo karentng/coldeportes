@@ -25,9 +25,8 @@ def wizard_entrenador_nuevo(request):
     :param request: Petición Realizada
     :type request:    WSGIRequest
     """
-
+    print(request.session['datos'])
     entrenador_form = EntrenadorForm()
-
     if request.method == 'POST':
 
         entrenador_form = EntrenadorForm(request.POST, request.FILES)
@@ -41,6 +40,7 @@ def wizard_entrenador_nuevo(request):
             entrenador.save()
             entrenador_form.save()
             return redirect('wizard_formacion_deportiva', entrenador.id)
+
 
 
     return render(request, 'entrenadores/wizard/wizard_entrenador.html', {
@@ -354,7 +354,6 @@ def verificar_entrenador(request):
 
         if form.is_valid():
             datos = {
-                'tipo_id': form.cleaned_data['tipo_id'],
                 'identificacion': form.cleaned_data['identificacion']
             }
 
@@ -370,36 +369,33 @@ def verificar_entrenador(request):
                                                                    'entrenador':entrenador})
 
             if not entrenador:
-                #Si no se encuentra el entrenador entonces se redirecciona a registro de entrenador con los datos iniciales en una sesión
-                request.session['datos'] = datos
-                return redirect('entrenador_nuevo')
+                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
+                #Verificación de existencia en otros tenants
+                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+                existencia = False
+                tenant_existencia = None
+                entidades = Entidad.objects.all()
+                for entidad in entidades:
+                    connection.set_tenant(entidad)
+                    ContentType.objects.clear_cache()
+                    try:
+                        entrenador = Entrenador.objects.get(identificacion=datos['identificacion'])
+                        existencia = True
+                        tenant_existencia = entidad
+                        break
+                    except Exception:
+                        pass
 
-            #Verificación de existencia en otros tenants
-            #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
-            existencia = False
-            tenant_existencia = None
-            entidades = Entidad.objects.all()
-            for entidad in entidades:
-                connection.set_tenant(entidad)
-                ContentType.objects.clear_cache()
-                try:
-                    entrenador = Entrenador.objects.get(identificacion=datos['identificacion'])
-                    existencia = True
-                    tenant_existencia = entidad
-                    break
-                except Exception:
-                    pass
-
-            if existencia:
-                return render(request,'entrenadores/verificar_entrenador.html',{'existe':True,
-                                                                   'entrenador':entrenador,
-                                                                   'tenant_existencia':tenant_existencia})
-            else:
-                #Si no se encuentra el entrenador entonces se redirecciona a registro de entrenador con los datos iniciales en una sesión
-                request.session['datos'] = datos
-                return redirect('entrenador_nuevo')
+                if existencia:
+                    return render(request,'entrenadores/verificar_entrenador.html',{'existe':True,
+                                                                                   'entrenador':entrenador,
+                                                                                   'tenant_existencia':tenant_existencia})
+                else:
+                    #Si no se encuentra el entrenador entonces se redirecciona a registro de entrenador con los datos iniciales en una sesión
+                    request.session['datos'] = datos
+                    return redirect('entrenador_nuevo')
 
     else:
         form = VerificarExistenciaForm()
     return render(request,'entrenadores/verificar_entrenador.html',{'form':form,
-                                                       'existe':False})
+                                                                    'existe':False})
