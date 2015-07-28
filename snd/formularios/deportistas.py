@@ -5,6 +5,15 @@ from snd.models import *
 import datetime
 from coldeportes.utilities import adicionarClase
 
+class VerificarExistenciaForm(forms.Form):
+    """TIPO_IDENTIDAD = (
+        ('CED', 'CÉDULA DE CIUDADANÍA'),
+        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
+        ('PAS', 'PASAPORTE'),
+    )
+    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
+    identificacion = forms.IntegerField(label="Identificación del deportista")
+
 class DeportistaForm(ModelForm):
     #fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
     required_css_class = 'required'

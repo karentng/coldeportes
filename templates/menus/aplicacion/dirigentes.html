@@ -7,7 +7,7 @@
     <ul class="sub-menu">
         {% if perms.snd.add_dirigente %}
             <li {% if "/dirigentes/nuevo/wizard/identificacion" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'dirigentes_wizard_identificacion_nuevo' %}">Registro</a>
+                <a href="{% url 'verificar_dirigente' %}">Registro</a>
             </li>
         {% endif %}
         <li {% if "/dirigentes/listar" in request.path %} class="active" {% endif %}>

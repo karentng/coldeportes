@@ -92,6 +92,7 @@
                                     <a href="{% url 'dirigentes_wizard_identificacion' dirigente.id %}" title="Editar">
                                         <i class="fa fa-gear"></i> Editar
                                     </a>
+                                    {% comment %}
                                     <br/>
                                     <a href="#modal-desactivate{{dirigente.id}}" data-toggle="modal">
                                         <i class="fa fa-ban"></i> Activar / Desactivar
@@ -114,6 +115,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% endcomment %}
                                 {% endif %}
                             </td>
                         {% endif %}
