@@ -1,10 +1,23 @@
 {% if request.user.is_superuser %}
     {% include "menus/aplicacion/usuarios.html" %}
 {% else %}
-    {% include "menus/aplicacion/dirigentes.html" %}
-    {% include "menus/aplicacion/escenarios.html" %}    
-    {% include "menus/aplicacion/caf.html" %}
-    {% include "menus/aplicacion/deportistas.html" %}
-    {% include "menus/aplicacion/entrenadores.html" %}
-    {% include "menus/aplicacion/cajas_compensacion.html" %}
+    {% if request.tenant.actores.dirigentes %}
+        {% include "menus/aplicacion/dirigentes.html" %}
+    {% endif %}
+    {% if request.tenant.actores.escenarios %}
+    	{% include "menus/aplicacion/escenarios.html" %}
+    {% endif %}
+    {% if request.tenant.actores.centros %}
+        {% include "menus/aplicacion/caf.html" %}
+    {% endif %}
+    {% if request.tenant.actores.deportistas %}
+        {% include "menus/aplicacion/deportistas.html" %}
+    {% endif %}
+    {% if request.tenant.actores.entrenadores %}
+        {% include "menus/aplicacion/entrenadores.html" %}
+    {% endif %}
+    {% if request.tenant.actores.cajas %}
+        {% include "menus/aplicacion/cajas_compensacion.html" %}
+    {% endif %}
+    {% include "menus/aplicacion/directorio.html" %}
 {% endif %}

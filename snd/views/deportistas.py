@@ -9,9 +9,10 @@ from snd.formularios.deportistas  import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
-from snd.utilities import calculate_age
+from coldeportes.utilities import calculate_age,all_permission_required
 
 @login_required
+@all_permission_required('snd.add_deportista')
 def wizard_deportista_nuevo(request):
     """
     Junio 7 / 2015
@@ -51,6 +52,7 @@ def wizard_deportista_nuevo(request):
     })
 
 @login_required
+@all_permission_required('snd.add_deportista')
 def wizard_deportista(request,id_depor):
     """
     Junio 7 / 2015
@@ -96,6 +98,7 @@ def wizard_deportista(request,id_depor):
     })
 
 @login_required
+@all_permission_required('snd.add_deportista')
 def wizard_corporal(request,id_depor):
     """
 
@@ -142,6 +145,7 @@ def wizard_corporal(request,id_depor):
     })
 
 @login_required
+@all_permission_required('snd.add_deportista')
 def wizard_historia_deportiva(request,id_depor):
     """
     Junio 8 / 2015
@@ -187,6 +191,7 @@ def wizard_historia_deportiva(request,id_depor):
 
 #Eliminacion Historia Deportiva
 @login_required
+@all_permission_required('snd.add_deportista')
 def eliminar_historia_deportiva(request,id_depor,id_historia):
     """
     Junio 8 / 2015
@@ -215,6 +220,7 @@ def eliminar_historia_deportiva(request,id_depor,id_historia):
 
 
 @login_required
+@all_permission_required('snd.add_deportista')
 def wizard_historia_academica(request,id_depor):
     """
     8 Junio / 2015
@@ -259,6 +265,7 @@ def wizard_historia_academica(request,id_depor):
 
 #Eliminacion Historia Academica
 @login_required
+@all_permission_required('snd.add_deportista')
 def eliminar_historia_academica(request,id_depor,id_historia):
     """
     Junio 8 / 2015
@@ -285,6 +292,7 @@ def eliminar_historia_academica(request,id_depor,id_historia):
 #Fin eliminacion historia academica
 
 @login_required
+@all_permission_required('snd.add_deportista')
 def desactivar_deportista(request,id_depor):
     """
     Junio 8 / 2015
@@ -292,7 +300,7 @@ def desactivar_deportista(request,id_depor):
 
     Desactivar deportista
 
-    Se obtiene el estado actual y se invierte
+    Se cambia el estado actual a activo en caso de estar inactivo o inactivo en caso de estar activo
 
     :param request: Petición Realizada
     :type request: WSGIRequest
@@ -301,8 +309,8 @@ def desactivar_deportista(request,id_depor):
     """
     try:
         deportista = Deportista.objects.get(id=id_depor)
-        estado_actual = deportista.activo
-        deportista.activo = not(estado_actual)
+        estado_actual = deportista.estado
+        deportista.estado = not estado_actual
         deportista.save()
         messages.warning(request, "Deportista desactivado/activado correctamente.")
         return redirect('deportista_listar')
@@ -327,6 +335,8 @@ def listar_deportista(request):
     deportistas = Deportista.objects.all()
     for dep in deportistas:
         dep.edad = calculate_age(dep.fecha_nacimiento)
+        dep.disciplinas_deportivas = ",".join(str(x) for x in dep.disciplinas.all())
+
     return render(request, 'deportistas/deportistas_lista.html', {
         'deportistas':deportistas,
     })
@@ -365,6 +375,7 @@ def ver_deportista(request,id_depor):
         })
 
 @login_required
+@all_permission_required('snd.add_deportista')
 def finalizar_deportista(request,opcion):
     """
     Junio 10 / 2015

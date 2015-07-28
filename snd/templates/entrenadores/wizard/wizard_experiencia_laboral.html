@@ -7,6 +7,7 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -31,7 +32,7 @@
     {% include 'entrenadores/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-5" >
-                <form action="" method="post">{% csrf_token %}
+                <form id="form-experiencia" action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
@@ -40,7 +41,7 @@
 							{% bootstrap_field i layout="vertical" %}
 						</div>
 					    {% endfor %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Añadir</button>
                     </div>
                 </div>
                 </form>
@@ -62,7 +63,13 @@
                             <td align="center">{{historico.nombre_cargo}}</td>
                             <td align="center">{{historico.institucion}}</td>
                             <td align="center">{{historico.fecha_comienzo}}</td>
-                            <td align="center">{{historico.fecha_fin}}</td>
+                            <td align="center">
+                                {% if historico.fecha_fin == None %}
+                                    ACTUAL
+                                {% else %}
+                                    {{historico.fecha_fin}}
+                                {% endif %}
+                            </td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
@@ -93,7 +100,8 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}
-        <a href="{% url 'entrenador_listar' %}" class="btn btn-primary pull-right">Finalizar →</a>
+        <a href="{% url 'finalizar_entrenador' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-cirlce-o-notch"></i> Finalizar</a>
+        <a href="{% url 'finalizar_entrenador' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">Finalizar y registrar otro →</a>
 
 
 {% endblock %}
@@ -101,6 +109,7 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-experiencia-validations.js"></script>
 
 {% endblock %}
 
@@ -108,6 +117,16 @@
     <script>
 
         $(document).ready(function() {
+            $("#id_actual").change(function(){
+               if($(this).is(":checked")){
+                   $("#id_fecha_fin").val("");
+                   $("#id_fecha_fin").parent().css('display','none');
+               }else{
+                   $("#id_fecha_fin").parent().css('display','block');
+               }
+            });
+
+
             App.init();
             FormWizard.init();
         });

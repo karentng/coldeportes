@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Transferencias - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Transferencias
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li>Transferencias</li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Transferencias entre Entidades
+{% endblock %}
+
+{% block contenido_panel %}
+    <!-- begin vertical-box -->
+		    <div class="vertical-box">
+		        <!-- begin vertical-box-column -->
+		        <div class="vertical-box-column width-250">
+		            <!-- begin wrapper -->
+                    <div class="wrapper bg-silver text-center">
+                        <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
+                                    {% url 'listar_escenarios' %}
+                                 {% else %}
+                                    {% ifequal 'Entrenador' objeto.tipo_objeto %}
+                                        {% url 'entrenador_listar' %}
+                                    {% else %}
+                                        {% ifequal 'Deportista' objeto.tipo_objeto %}
+                                            {% url 'deportista_listar' %}
+                                        {% endifequal %}
+                                    {% endifequal %}
+                                 {% endifequal %}"
+                            class="btn btn-success p-l-40 p-r-40 btn-sm">
+                            Regresar
+                        </a>
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+                    <div class="wrapper">
+                        <p><b>Detalles</b></p>
+                        <ul class="nav nav-pills nav-stacked nav-sm">
+                            <li><a ><i class="fa fa-briefcase fa-fw m-r-5"></i> {{ objeto.tipo_objeto }} <span class="badge pull-right">1</span></a></li>
+                            {% ifequal 'Escenario' objeto.tipo_objeto %}
+                                <li><a ><i class="fa fa-location-arrow fa-fw m-r-5"></i> {{ objeto.direccion }}</a></li>
+                                <li><a ><i class="fa fa-users fa-fw m-r-5"></i> {{ objeto.capacidad }} Espectadores</a></li>
+                                <li><a ><i class="fa fa-bicycle fa-fw m-r-5"></i> {{ objeto.tipo_escenario }}</a></li>
+                                <li><a ><i class="fa fa-globe fa-fw m-r-5"></i> {{ objeto.ciudad }}</a></li>
+                            {% else %}
+                                <li><a ><i class="fa fa-archive fa-fw m-r-5"></i> {{ objeto.tipo_id }}.{% ifequal 'Deportista' objeto.tipo_objeto%} {{ objeto.identificacion }} {% else %} {{ objeto.nro_id }} {% endifequal %}</a></li>
+                                <li><a ><i class="fa fa-info fa-fw m-r-5"></i> {{ objeto.edad }} Años</a></li>
+                                <li><a ><i class="fa fa-user fa-fw m-r-5"></i> {{ objeto.genero }}</a></li>
+                                <li><a ><i class="fa fa-globe fa-fw m-r-5"></i> {{ objeto.nacionalidad_str }}</a></li>
+                            {% endifequal %}
+                        </ul>
+                    </div>
+		            <!-- end wrapper -->
+		        </div>
+		        <!-- end vertical-box-column -->
+		        <!-- begin vertical-box-column -->
+		        <div class="vertical-box-column bg-white">
+		            <!-- begin wrapper -->
+                    <div class="wrapper bg-silver-lighter clearfix">
+
+                        <div class="pull-right">
+                            <div class="btn-group btn-toolbar">
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+                            </div>
+                            <div class="btn-group m-l-5">
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+                    <div class="wrapper">
+                        <h4 class="m-b-15 m-t-0 p-b-10 underline">{% ifequal 'Escenario' objeto.tipo_objeto %} {{ objeto.nombre }} {% else %} {{ objeto.nombres }} {{ objeto.apellidos }} {% endifequal %}</h4>
+                        <ul class="media-list underline m-b-20 p-b-15">
+                            <li class="media media-sm clearfix">
+                                <a href="javascript:;" class="pull-left">
+                                    <i class="fa fa-exchange fa-2x modal-icon"></i>
+                                </a>
+                                <div class="media-body">
+                                    <span class="email-from text-inverse f-w-600">
+                                        Desde: {{ objeto.entidad }}
+
+                                    </span><span class="text-muted m-l-5"><i class="fa fa-clock-o fa-fw"></i> {{ objeto.fecha }}</span><br />
+                                </div>
+                            </li>
+						</ul>
+                        <ul class="attached-document clearfix">
+                            <strong>Fotos</strong><br/><br/>
+                            {% for f in objeto.fotos %}
+                            <li>
+                                <div class="media-object rounded-corner">
+
+                                        <img src="{{ MEDIA_URL }}{{ f }}" alt="" />
+
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <strong>Descripcion</strong> <br/><br/>
+                        <p class="f-s-12 text-inverse">
+                            {% if objeto.descripcion %}
+                                {{ objeto.descripcion }}
+                            {% else %}
+                                No disponible
+                            {% endif %}
+                        </p>
+                        <strong>Sobre la transferencia</strong><br/><br/>
+                        <p class="f-s-12 text-inverse">
+                            Esta es una solicitud de transferencia, al aceptala usted accede a renunciar sobre la responsabilidad <br />
+                            como entidad sobre esta persona y delega dichos deberes a la entidad a transferir
+                        </p>
+                        <strong>Nota Legal</strong><br/><br/>
+                        <p class="f-s-12 text-inverse">
+                            Aceptando esta solicitud uste accede a que la entidad que usted elija tenga acceso COMPLETO <br />
+                            a la informacion del {{ objeto.tipo_objeto }} a transferir durante y despues de la transferencia.
+                            Usted no tendra acceso a la informacion de este deportista mientras este pendiente de transferencia y una vez haya sido transferido
+                        </p>
+                        <strong>Seleccion de Entidad</strong><br/><br/>
+                        <!-- begin email form -->
+                        <form action="" method="POST">{% csrf_token %}
+                            <!-- begin email subject -->
+                            <div class="col-lg-8">
+                                <select class="form-control one" id="id_entidad" name="entidad" required title tabindex="-1" style="display: none;" >
+                                    {% for en in entidades %}
+                                        <option value="{{ en.id }}">{{ en.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <!-- end email subject -->
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p class="f-s-12 text-inverse">
+
+                                Coordialmente,<br />
+                                Deportivo Cali.<br />
+                                Entidad del SND,<br />
+                                Coldeportes<br />
+                            </p>
+                            <button type="submit" class="btn btn-primary p-l-40 p-r-40">Enviar</button>
+                        </form>
+                        <!-- end email form -->
+                        <br />
+                        <br />
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+                    <div class="wrapper bg-silver-lighter text-right clearfix">
+                        Transferencias entre entidades suscritas al <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+                    </div>
+		            <!-- end wrapper -->
+		        </div>
+		        <!-- end vertical-box-column -->
+		    </div>
+		    <!-- end vertical-box -->
+{% endblock %}

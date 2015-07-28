@@ -4,8 +4,8 @@ from entidades.models import Ciudad, Entidad, CAClase, CAServicio
 
 class CentroAcondicionamiento(models.Model):
     ESTADOS = (
-        (1, "Activo"),
-        (2, "Inactivo"),
+        (0, "Activo"),
+        (1, "Inactivo"),
     )
     ESTRATOS = (
         (1, 'Uno'),
@@ -19,6 +19,8 @@ class CentroAcondicionamiento(models.Model):
     direccion = models.CharField(max_length=100, verbose_name="dirección")
     telefono = models.CharField(max_length=50, verbose_name="teléfono")
     email = models.EmailField()
+    web = models.URLField(verbose_name="página web", blank=True, null=True)
+    nombre_administrador = models.CharField(max_length=50, blank=True, null=True)
     ciudad = models.ForeignKey(Ciudad)
     comuna = models.CharField(max_length=10)
     barrio = models.CharField(max_length=20)
@@ -26,10 +28,8 @@ class CentroAcondicionamiento(models.Model):
     latitud = models.FloatField(max_length=10)
     longitud = models.FloatField(max_length=10)
     altura = models.FloatField(max_length=10)
-    nombre_administrador = models.CharField(max_length=50, null=True)
-    contacto = models.TextField(verbose_name='información de contacto', null=True, blank=True)
     
-    estado = models.IntegerField(choices=ESTADOS, default=1, verbose_name="estado del Centro de Acondicionamiento Físico")
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Centro de Acondicionamiento Físico")
     # Pestañas adicionales
     servicios = models.ManyToManyField(CAServicio, blank=True)
     clases = models.ManyToManyField(CAClase, blank=True)
@@ -42,7 +42,6 @@ class CentroAcondicionamiento(models.Model):
         self.comuna = self.comuna.upper()
         self.barrio = self.barrio.upper()
         self.nombre_administrador = self.nombre_administrador.upper()
-        self.contacto = self.contacto.upper()
         super(CentroAcondicionamiento, self).save(*args, **kwargs)
 
 class CAPlan(models.Model):

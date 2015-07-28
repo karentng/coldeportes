@@ -29,8 +29,8 @@ from snd.models import *
 MODELOS_DE_DATOS = (
     (
         CentroAcondicionamiento,
-        ['nombre','direccion', 'telefono', 'ciudad', 'estado'],
-        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Estado'],
+        ['nombre','direccion', 'telefono', 'ciudad', 'email', 'web', 'estado'],
+        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
         None,
         [
             [

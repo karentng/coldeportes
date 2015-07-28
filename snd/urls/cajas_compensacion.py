@@ -8,7 +8,7 @@ urlpatterns = patterns('snd.views.cajas_compensacion',
     url(r'^listar$', 'listar_ccfs', name='listar_ccfs'), 
     url(r'^desactivar/(\d+)$', 'desactivar_ccf', name='desactivar_ccf'),
     url(r'^ver/(\d+)$', 'ver_ccf', name='ver_ccf'),
-    url(r'^finalizar', 'finalizar_ccf', name='finalizar_ccf'),
+    url(r'^finalizar/(?P<opcion>.+)', 'finalizar_ccf', name='finalizar_ccf'),
 
 
     #urls wizard

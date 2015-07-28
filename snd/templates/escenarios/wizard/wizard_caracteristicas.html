@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+	Registro Escenario
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+	<script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_escenario-validations.js"></script>
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	{{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+	<li class="active">Editar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Escenarios Deportivos
+{% endblock %}
+
+{% block titulo_panel %}
+	Registro de Escenarios Deportivos
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'escenarios/wizard/_wizard.html' %}
+	<fieldset>
+		<form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
+			<div class="well row">
+				<div class="col-xs-12">
+					<h3>{{titulo}}</h3>
+					
+					{% for field in form %}
+						<div class="col-md-6">
+							<label for="{{ field.label }}">{{ field.label_tag }}
+								{% if field.field.required %}<span class="special_class">*</span>{% endif %}
+							</label>
+							{% bootstrap_field field layout="inline" %}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<hr>
+			<a href="{% url 'wizard_identificacion' escenario_id %}" class="btn btn-success pull-left" type="button">← Anterior</a>
+			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+		</form>
+	</fieldset>
+	
+
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	<script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+{% endblock %}
+
+{% block script %}
+	<script>
+		$(document).ready(function() {
+			App.init();
+			FormWizard.init();
+		});
+	</script>
+{% endblock %}

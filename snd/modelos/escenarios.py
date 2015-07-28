@@ -12,6 +12,12 @@ class Escenario(models.Model):
         ('5', 'Cinco'),
         ('6', 'Seis'),
     )
+    ESTADOS = (
+        (0,'ACTIVO'),
+        (1,'INACTIVO'),
+        (2,'EN TRANSFERENCIA'),
+        (3,'TRANSFERIDO'),
+    )
     nombre =  models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
     latitud = models.FloatField(max_length=10)
@@ -23,7 +29,7 @@ class Escenario(models.Model):
     estrato = models.CharField(choices=estratos, max_length=1)
     nombre_administrador = models.CharField(max_length=50, null=True)
     entidad = models.ForeignKey(Entidad)    
-    activo = models.BooleanField(default=True)
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Escenario")
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
 class CaracterizacionEscenario(models.Model):   

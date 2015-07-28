@@ -8,8 +8,8 @@
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
-    <link href="{{ STATIC_URL }}plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}plugins/DataTables/css/data-table.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block miga_pan %}
@@ -33,7 +33,7 @@
     {% include 'entrenadores/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-5" >
-                <form action="" method="post">{% csrf_token %}
+                <form action="" id="form-formacion" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
@@ -42,15 +42,16 @@
 							{% bootstrap_field i layout="vertical" %}
 						</div>
 					    {% endfor %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Añadir</button>
                     </div>
                 </div>
                 </form>
             </fieldset>
-            <div class="col-md-4">
+            <div class="col-md-7">
                 <h4>Formación deportiva actual:</h4>
-                <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
-                    <thead>
+                <div class="table-responsive">
+                    <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
+                        <thead>
                         <tr>
                             <th align="center">Disciplina</th>
                             <th align="center">Denominación diploma</th>
@@ -60,55 +61,60 @@
                             <th class="min-desktop" align="center">Fecha comienzo</th>
                             <th class="min-desktop" align="center">Fecha fin</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                    {% for historico in historicos %}
-                        <tr>
-                            <td align="center">
-                                {% for disciplina in historico.disciplina_deportiva.all %}
-                                    {% if forloop.last %}
-                                        {{ disciplina }}
+                        </thead>
+                        <tbody>
+                        {% for historico in historicos %}
+                            <tr>
+                                <td align="center">
+                                    {% for disciplina in historico.disciplina_deportiva.all %}
+                                        {% if forloop.last %}
+                                            {{ disciplina }}
+                                        {% else %}
+                                            {{disciplina}},
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td align="center">{{historico.denominacion_diploma}}</td>
+                                <td align="center">{{historico.nivel}}</td>
+                                <td align="center">{{historico.institucion_formacion}}</td>
+                                <td align="center">{{historico.pais_formacion}}</td>
+                                <td align="center">{{historico.fecha_comienzo}}</td>
+                                <td align="center">
+                                    {% if historico.fecha_fin == None %}
+                                        ACTUAL
                                     {% else %}
-                                        {{disciplina}},
+                                        {{historico.fecha_fin}}
                                     {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td align="center">{{historico.denominacion_diploma}}</td>
-                            <td align="center">{{historico.nivel}}</td>
-                            <td align="center">{{historico.institucion_formacion}}</td>
-                            <td align="center">{{historico.pais_formacion}}</td>
-                            <td align="center">{{historico.fecha_comienzo}}</td>
-                            <td align="center">{{historico.fecha_fin}}</td>
-                            <td align="center">
-                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
-                                <div class="modal fade" id="modal-desactivate">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Eliminar Formación deportiva:</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Está seguro que desea eliminar esta formación deportiva?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_formacion_deportiva' id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                </td>
+                                <td align="center">
+                                    <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                    <div class="modal fade" id="modal-desactivate">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    <h4 class="modal-title">Eliminar Formación deportiva:</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Está seguro que desea eliminar esta formación deportiva?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                    <a href="{% url 'eliminar_formacion_deportiva'  id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <br/>
-        {% if wizard_stage > 1 %}
-        <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-        {% endif %}
+        <a href="{% url 'edicion_entrenador' id_entrenador %}" class="btn btn-success pull-left" type="button">← Anterior</a>
         <a href="{% url 'wizard_experiencia_laboral' id_entrenador %}" class="btn btn-primary pull-right">Siguiente →</a>
 
 
@@ -118,22 +124,24 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <!--DataTables [ OPTIONAL ]-->
-    <script src="{{ STATIC_URL }}plugins/datatables/media/js/jquery.dataTables.js"></script>
-    <script src="{{ STATIC_URL }}plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-    <script src="{{ STATIC_URL }}plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
-    <script>
-        $(window).on('load', function() {
-            $('#tabla-formacion-deportiva').dataTable({
-                "responsive": true
-            });
-        });
-    </script>
+    <script src="{{ STATIC_URL }}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-formacion-validations.js"></script>
+
 {% endblock %}
 
 {% block script %}
     <script>
 
         $(document).ready(function() {
+            $("#id_actual").change(function(){
+               if($(this).is(":checked")){
+                   $("#id_fecha_fin").val("");
+                   $("#id_fecha_fin").parent().css('display','none');
+               }else{
+                   $("#id_fecha_fin").parent().css('display','block');
+               }
+            });
+
             App.init();
             FormWizard.init();
         });

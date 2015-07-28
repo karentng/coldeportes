@@ -1,13 +1,12 @@
 #-*- coding: utf-8 -*-
 from django import forms
 from snd.models import *
-from snd.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase
 
 class CentroAcondicionamientoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CentroAcondicionamientoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
-        self.fields['contacto'].widget.attrs['rows'] = 3
 
     class Meta:
         model = CentroAcondicionamiento

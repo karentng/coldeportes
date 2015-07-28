@@ -1,10 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from formtools.wizard.views import SessionWizardView
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
-import os
 from snd.formularios.escenarios  import *
 from snd.models import *
 from entidades.models import *
@@ -30,7 +28,7 @@ def listar_escenarios(request):
     })
 
 @login_required
-def finalizar_escenario(request):
+def finalizar_escenario(request, opcion):
     """
     Junio 10 / 2015
     Autor: Karent Narvaez Grisales
@@ -42,8 +40,10 @@ def finalizar_escenario(request):
     :type request:    WSGIRequest
     """
     messages.success(request, "Escenario registrado correctamente.")
-    
-    return redirect('listar_escenarios')
+    if opcion == 'nuevo':
+        return redirect('wizard_nuevo_identificacion')
+    elif opcion == 'otro':
+        return redirect('listar_escenarios')
 
 @login_required
 def desactivar_escenario(request, escenario_id):
@@ -61,8 +61,8 @@ def desactivar_escenario(request, escenario_id):
     :type escenario_id:    String
     """
     escenario = Escenario.objects.get(id=escenario_id)
-    estado_actual = escenario.activo
-    escenario.activo = not(estado_actual)
+    estado_actual = escenario.estado
+    escenario.estado = not(estado_actual)
     escenario.save()
     messages.warning(request, "Escenario cambiado de estado correctamente.")
     return redirect('listar_escenarios')
@@ -218,10 +218,11 @@ def wizard_caracterizacion(request, escenario_id):
             return redirect('wizard_horarios', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/wizard_escenario.html', {
+    return render(request, 'escenarios/wizard/wizard_caracteristicas.html', {
         'titulo': 'Caracterización del Escenario',
         'wizard_stage': 2,
         'form': caracterizacion_form,
+        'escenario_id': escenario_id,
     })
 
 @login_required

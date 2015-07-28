@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+    
+{% endblock %}
+
+{% block css %}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{{STATIC_URL}}plugins/isotope/isotope.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}plugins/lightbox/css/lightbox.css" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+    
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script>
+    <!-- ================== END BASE JS ================== -->
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Directorio</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Directorio
+{% endblock %}
+
+{% block titulo_panel %}
+    Directorio de Contactos
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <form method="POST">
+            <div class="col-md-10">       
+            {% for field in form %}
+                <div class="col-md-4">
+                    {% bootstrap_field field layout="vertical" %}
+                </div>
+            {% endfor %}
+            </div>
+            </br>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">
+                    <span class="fa fa-search"></span> Búscar
+                </button>
+            </div>
+        </form>
+    </div></br></br>
+    <div class="row">
+        <div class="container">
+            <div class="col-md-12">
+                <h1 class="page-header">Resultados:<small> los siguientes son los resultados obtenidos de acuerdo a los criterios ingresados.</small></h1>
+            </div>
+            <div class="col-md-12">         
+                <div id="options" class="m-b-10">
+                    <span class="gallery-option-set" id="filter" data-option-key="filter">
+                        <a href="#show-all" class="btn btn-default btn-xs active" data-option-value="*">
+                            Mostrar Todos
+                        </a>
+                        <a href="#gallery-group-4" class="btn btn-default btn-xs" data-option-value=".gallery-group-4">
+                            Cajas de Compensación
+                        </a>
+                        <a href="#gallery-group-1" class="btn btn-default btn-xs" data-option-value=".gallery-group-1">
+                            Deportistas
+                        </a>
+                        <a href="#gallery-group-4" class="btn btn-default btn-xs" data-option-value=".gallery-group-4">
+                            Dirigentes
+                        </a>
+                        <a href="#gallery-group-2" class="btn btn-default btn-xs" data-option-value=".gallery-group-2">
+                            Escenarios Deportivos
+                        </a>
+                        <a href="#gallery-group-3" class="btn btn-default btn-xs" data-option-value=".gallery-group-3">
+                            Entrenadores
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div id="gallery" class="gallery">
+                    <div class="image gallery-group-1">
+                        <div class="image-inner">
+                            <a href="{{STATIC_URL}}img/male.png" data-lightbox="gallery-group-1">
+                                <img src="{{STATIC_URL}}img/male.png" alt="" />
+                            </a>
+                            <p class="image-caption">
+                                #1382 - 3D Arch
+                            </p>
+                        </div>
+                        <div class="image-info">
+                            <h5 class="title">Lorem ipsum dolor sit amet</h5>
+                            <div class="pull-right">
+                                <small>by</small> <a href="javascript:;">Sean Ngu</a>
+                            </div>
+                            <div class="rating">
+                                <span class="star active"></span>
+                                <span class="star active"></span>
+                                <span class="star active"></span>
+                                <span class="star"></span>
+                                <span class="star"></span>
+                            </div>
+                            <div class="desc">
+                                Nunc velit urna, aliquam at interdum sit amet, lacinia sit amet ligula. Quisque et erat eros. Aenean auctor metus in tortor placerat, non luctus justo blandit.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src="{{STATIC_URL}}plugins/isotope/jquery.isotope.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/lightbox/js/lightbox-2.6.min.js"></script>
+    <script src="{{STATIC_URL}}js/gallery.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+    <!-- ================== END PAGE LEVEL JS ================== -->
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            Gallery.init();
+        });
+    </script>
+{% endblock %}

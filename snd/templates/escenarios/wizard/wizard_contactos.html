@@ -7,6 +7,8 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_contactos-validations.js"></script>
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -31,12 +33,19 @@
     {% include 'escenarios/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" method="post">{% csrf_token %}
+                <form id="form-wizard-contactos" action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
-                        {% bootstrap_form form layout="horizontal" %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                        {% for field in form %}
+                            <div class="col-lg-6">
+                                <label for="{{ field.label }}">{{ field.label_tag }}
+                                    {% if field.field.required %}<span class="special_class">*</span>{% endif %}
+                                </label>
+                                {% bootstrap_field field layout="inline" %}
+                            </div>
+                        {% endfor %}
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>              
                     </div>
                 </div>
                 </form>
@@ -92,14 +101,16 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'finalizar_escenario' %}" class="btn btn-primary pull-right">Finalizar →</a>
-    
+        <a href="{% url 'finalizar_escenario'  opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar </a>
+        <a href="{% url 'finalizar_escenario' opcion='nuevo' %}" class="btn btn-danger pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar Escenario Nuevo</a>
 
 {% endblock %}
 
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+
     
 {% endblock %}
 

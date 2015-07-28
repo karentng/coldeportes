@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.views.generic.base import TemplateView
 from snd.views.caf import *
 from snd.formularios.caf  import *
-from snd.utilities import all_permission_required
+from coldeportes.utilities import all_permission_required
 
 
 urlpatterns = patterns('snd.views.caf',

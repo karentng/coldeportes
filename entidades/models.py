@@ -1,13 +1,28 @@
 from django.db import models
 from tenant_schemas.models import TenantMixin
 
+class Actores(models.Model):
+    centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico")
+    escenarios = models.BooleanField(verbose_name="Escenarios")
+    deportistas = models.BooleanField(verbose_name="Deportistas")
+    entrenadores = models.BooleanField(verbose_name="Entrenadores")
+    dirigentes = models.BooleanField(verbose_name="Dirigentes")
+    cajas = models.BooleanField(verbose_name="Cajas de Compensación")
+
 class Entidad(TenantMixin): # Entidad deportiva
+    TIPOS = (
+        (1, 'Ente Municipal'),
+        (2, 'Ente Departamental'),
+        (3, 'Club'),
+        (4, 'Cajas de Compensación'),
+    )
     nombre = models.CharField(max_length=255)
+    tipo = models.IntegerField(choices=TIPOS, null=True)
+    actores = models.OneToOneField(Actores, null=True)
     auto_create_schema = True
 
     def __str__(self):
-        return ("%s")%(self.nombre)
-
+        return self.nombre
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')

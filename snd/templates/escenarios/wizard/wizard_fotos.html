@@ -6,6 +6,9 @@
 {% endblock %}
 
 {% block css %}
+    
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_fotos-validations.js"></script>
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
@@ -31,12 +34,12 @@
     {% include 'escenarios/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <form id="form-wizard-fotos" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
                         {% bootstrap_form form layout="horizontal" %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-upload"></i> Cargar</button>              
                     </div>
                 </div>
                 </form>
@@ -96,6 +99,8 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+
     
 {% endblock %}
 

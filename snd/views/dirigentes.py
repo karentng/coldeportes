@@ -4,10 +4,13 @@ from django.http import HttpResponse
 from django.contrib import messages
 from formtools.wizard.views import *
 from snd.formularios.dirigentes  import *
-from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from coldeportes.utilities import *
+import json
+
 
 @login_required
+@all_permission_required('snd.add_dirigente')
 def wizard_identificacion_nuevo(request):
     """
     Junio 14 / 2015
@@ -30,11 +33,16 @@ def wizard_identificacion_nuevo(request):
         if identificacion_form.is_valid():
             dirigente = identificacion_form.save(commit=False)
             dirigente.entidad =  request.tenant
-            dirigente.uppercase()
             dirigente.save()
-            identificacion_form.save()
+            identificacion_form.save_m2m()
             return redirect('dirigentes_wizard_funciones', dirigente.id)
 
+    if request.is_ajax():
+        try:
+            dirigente = Dirigente.objects.get(identificacion=request.GET['id_dirigente'])
+            return HttpResponse(json.dumps({'id_dirigente':dirigente.id}), content_type="application/json")
+        except Dirigente.DoesNotExist:
+            return HttpResponse(json.dumps({'id_dirigente':'ninguno'}), content_type="application/json")
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
@@ -42,6 +50,7 @@ def wizard_identificacion_nuevo(request):
     })
 
 @login_required
+@all_permission_required('snd.add_dirigente')
 def wizard_identificacion(request, dirigente_id):
     """
     Junio 14 / 2015
@@ -59,8 +68,9 @@ def wizard_identificacion(request, dirigente_id):
 
     try:
         dirigente = Dirigente.objects.get(id=dirigente_id)
-    except Exception:
-        dirigente = None
+    except Dirigente.DoesNotExist:
+        messages.error(request, "Está tratando de editar un dirigente inexistente.")
+        return redirect('dirigentes_listar')
 
     identificacion_form = DirigenteForm(instance=dirigente)
 
@@ -70,11 +80,9 @@ def wizard_identificacion(request, dirigente_id):
 
         if identificacion_form.is_valid():
             dirigente = identificacion_form.save(commit=False)
-            dirigente.uppercase()
             dirigente.save()
-            identificacion_form.save()
+            identificacion_form.save_m2m()
             return redirect('dirigentes_wizard_funciones', dirigente_id)
-
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
@@ -82,6 +90,7 @@ def wizard_identificacion(request, dirigente_id):
     })
 
 @login_required
+@all_permission_required('snd.add_dirigente')
 def wizard_funciones(request, dirigente_id):
     """
     Junio 14 / 2015
@@ -99,11 +108,7 @@ def wizard_funciones(request, dirigente_id):
     :type dirigente_id:    String
     """
 
-    try:
-        funciones = Funcion.objects.filter(dirigente=dirigente_id)
-    except Exception:
-        funciones = None
-
+    funciones = Funcion.objects.filter(dirigente=dirigente_id)
     funciones_form = DirigenteFuncionesForm()
 
     if request.method == 'POST':
@@ -111,9 +116,12 @@ def wizard_funciones(request, dirigente_id):
 
         if funciones_form.is_valid():
             funcion_nueva = funciones_form.save(commit=False)
-            funcion_nueva.dirigente = Dirigente.objects.get(id=dirigente_id)
+            try:
+                funcion_nueva.dirigente = Dirigente.objects.get(id=dirigente_id)
+            except Dirigente.DoesNotExist:
+                messages.error(request, "Está tratando de adicionarle funciones a un dirigente inexistente.")
+                return redirect('dirigentes_listar')
             funcion_nueva.save()
-            #funciones_form.save()#<PENDIENTE> por qué se guarda el form
             return redirect('dirigentes_wizard_funciones', dirigente_id)
 
     return render(request, 'dirigentes/wizard/wizard_funciones.html', {
@@ -124,6 +132,7 @@ def wizard_funciones(request, dirigente_id):
     })
 
 @login_required
+@all_permission_required('snd.add_dirigente')
 def eliminar_funcion(request, dirigente_id, funcion_id):
     """
     Junio 14 / 2015
@@ -146,7 +155,8 @@ def eliminar_funcion(request, dirigente_id, funcion_id):
         funcion.delete()
         return redirect('dirigentes_wizard_funciones', dirigente_id)
 
-    except Exception:
+    except Funcion.DoesNotExist:
+        messages.error(request,'Está tratando de eliminar un función inexistente.')
         return redirect('dirigentes_wizard_funciones', dirigente_id)
 
 @login_required
@@ -168,6 +178,7 @@ def listar(request):
     })
 
 @login_required
+@all_permission_required('snd.add_dirigente')
 def finalizar(request, opcion):
     """
     Junio 14 / 2015
@@ -186,7 +197,7 @@ def finalizar(request, opcion):
     elif opcion == "listar":
         return redirect('dirigentes_listar')
 
-@login_required
+'''@login_required
 def activar_desactivar(request, dirigente_id):
     """
     Junio 14 / 2015
@@ -211,6 +222,7 @@ def activar_desactivar(request, dirigente_id):
         message = "Dirigente activado correctamente."
     messages.warning(request, message)
     return redirect('dirigentes_listar')
+'''
 
 @login_required
 def ver(request, dirigente_id):
@@ -228,7 +240,12 @@ def ver(request, dirigente_id):
     :type dirigente_id:    String
     """
 
-    dirigente = Dirigente.objects.get(id=dirigente_id)
+    try:
+        dirigente = Dirigente.objects.get(id=dirigente_id)
+    except Dirigente.DoesNotExist:
+        messages.error(request, 'El dirigente que desea ver no existe')
+        return redirect('dirigentes_listar')
+
     funciones = Funcion.objects.filter(dirigente=dirigente)
 
     return render(request, 'dirigentes/dirigentes_ver.html', {

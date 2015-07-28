@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 from datetimewidget.widgets import DateWidget
-from snd.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase
 
 
 class DirigenteForm(ModelForm):
@@ -19,7 +19,7 @@ class DirigenteForm(ModelForm):
     class Meta:
         model = Dirigente
         #fields = '__all__'
-        exclude = ('entidad','activo',)
+        exclude = ('entidad',)
 
 class DirigenteFuncionesForm(ModelForm):
 
