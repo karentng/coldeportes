@@ -88,8 +88,10 @@ class ComposicionCorporal(models.Model):
     talla_camisa = models.CharField(max_length=3, choices=tallas_choices,verbose_name='Talla Camisa')
     talla_pantaloneta = models.CharField(max_length=3, choices=tallas_choices,verbose_name='Talla Pantaloneta')
     talla_zapato = models.CharField(max_length=2,verbose_name='Talla Zapato')
-    porcentaje_grasa = models.CharField(max_length=7,verbose_name='Porcentaje Grasa')
-    porcentaje_musculo = models.CharField(max_length=7,verbose_name='Porcentaje Musculo')
+    imc = models.FloatField(verbose_name='Indice de Masa Corporal')
+    porcentaje_grasa = models.FloatField(verbose_name='Porcentaje de Grasa Corporal')
+    masa_corporal_magra = models.FloatField(verbose_name='Masa Corporal Magra')
+    eps = models.ForeignKey(EPS,verbose_name='EPS')
 
 
 #Hitorial deportivo

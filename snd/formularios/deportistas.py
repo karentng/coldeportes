@@ -40,6 +40,7 @@ class ComposicionCorporalForm(ModelForm):
         self.fields['talla_camisa'] = adicionarClase(self.fields['talla_camisa'], 'one')
         self.fields['talla_pantaloneta'] = adicionarClase(self.fields['talla_pantaloneta'], 'one')
         self.fields['talla_zapato'] = adicionarClase(self.fields['talla_zapato'], 'one')
+        self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
 
     class Meta:
         model = ComposicionCorporal

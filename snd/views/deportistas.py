@@ -128,11 +128,6 @@ def wizard_corporal(request,id_depor):
         if corporal_form.is_valid():
             corporal = corporal_form.save(commit=False)
             corporal.deportista = Deportista.objects.get(id=id_depor)
-            corporal.talla_camisa = corporal.talla_camisa.upper()
-            corporal.talla_pantaloneta = corporal.talla_pantaloneta.upper()
-            corporal.talla_zapato = corporal.talla_zapato.upper()
-            corporal.porcentaje_grasa = corporal.porcentaje_grasa.upper()
-            corporal.porcentaje_musculo = corporal.porcentaje_musculo.upper()
             corporal.save()
             corporal_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -140,7 +135,7 @@ def wizard_corporal(request,id_depor):
     return render(request, 'deportistas/wizard/wizard_corporal.html', {
         'titulo': 'Composición Corporal del Deportista',
         'wizard_stage': 2,
-        'form': corporal_form,
+        'form': corporal_form
     })
 
 @login_required
