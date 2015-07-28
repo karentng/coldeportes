@@ -7,7 +7,7 @@ from snd.formularios.dirigentes  import *
 from django.conf import settings
 from coldeportes.utilities import *
 import json
-from coldeportes.snd.formularios.dirigentes import VerificarExistenciaForm
+from snd.formularios.dirigentes import VerificarExistenciaForm
 
 
 @login_required
@@ -25,7 +25,7 @@ def wizard_identificacion_nuevo(request):
     :type request:    WSGIRequest
     """
 
-    """
+    print(request.session)
     try:
         datos = request.session['datos']
         del request.session['datos']
@@ -33,9 +33,9 @@ def wizard_identificacion_nuevo(request):
         return redirect('verificar_dirigente')
 
     identificacion_form = DirigenteForm(initial=datos)
-    """
 
-    identificacion_form = DirigenteForm( )
+
+    #identificacion_form = DirigenteForm( )
 
     if request.method == 'POST':
 
@@ -302,6 +302,7 @@ def verificar_dirigente(request):
             else:
                 #Si no se encuentra el dirigente entonces se redirecciona a registro de dirigente con los datos iniciales en una sesión
                 request.session['datos'] = datos
+                print(request.session)
                 return redirect('dirigentes_wizard_identificacion_nuevo')
 
     else:

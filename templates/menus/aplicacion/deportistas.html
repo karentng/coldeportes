@@ -7,7 +7,7 @@
     <ul class="sub-menu">
         {% if perms.snd.add_deportista %}
             <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'deportista_nuevo' %}">Registro</a>
+                <a href="{% url 'verificar_deportista' %}">Registro</a>
             </li>
         {% endif %}
         <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>

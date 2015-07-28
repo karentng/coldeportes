@@ -26,7 +26,7 @@ def wizard_entrenador_nuevo(request):
     :type request:    WSGIRequest
     """
 
-    """
+
     try:
         datos = request.session['datos']
         del request.session['datos']
@@ -34,8 +34,8 @@ def wizard_entrenador_nuevo(request):
         return redirect('verificar_entrenador')
 
     entrenador_form = EntrenadorForm(initial=datos)
-    """
-    entrenador_form = EntrenadorForm()
+
+    #entrenador_form = EntrenadorForm()
     if request.method == 'POST':
 
         entrenador_form = EntrenadorForm(request.POST, request.FILES)
@@ -359,6 +359,7 @@ def verificar_entrenador(request):
     :param request: Petición Realizada
     :type request: WSGIRequest
     """
+
     if request.method=='POST':
         form = VerificarExistenciaForm(request.POST)
 
@@ -383,6 +384,7 @@ def verificar_entrenador(request):
                 #Verificación de existencia en otros tenants
                 #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
                 existencia = False
+                tenant_actual = connection.tenant
                 tenant_existencia = None
                 entidades = Entidad.objects.all()
                 for entidad in entidades:
@@ -395,6 +397,8 @@ def verificar_entrenador(request):
                         break
                     except Exception:
                         pass
+
+                connection.set_tenant(tenant_actual)
 
                 if existencia:
                     return render(request,'entrenadores/verificar_entrenador.html',{'existe':True,

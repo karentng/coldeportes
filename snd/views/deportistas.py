@@ -12,7 +12,7 @@ from snd.models import *
 from entidades.models import *
 from django.contrib import messages
 from coldeportes.utilities import calculate_age,all_permission_required
-from coldeportes.snd.formularios.deportistas import VerificarExistenciaForm
+from snd.formularios.deportistas import VerificarExistenciaForm
 
 
 @login_required
@@ -30,7 +30,7 @@ def wizard_deportista_nuevo(request):
     :type request:    WSGIRequest
     """
 
-    """
+
     try:
         datos = request.session['datos']
         del request.session['datos']
@@ -38,9 +38,9 @@ def wizard_deportista_nuevo(request):
         return redirect('verificar_deportista')
 
     deportista_form = DeportistaForm(initial=datos)
-    """
 
-    deportista_form = DeportistaForm()
+
+    #deportista_form = DeportistaForm()
 
     if request.method == 'POST':
 
@@ -453,6 +453,7 @@ def verificar_deportista(request):
                 #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
                 existencia = False
                 tenant_existencia = None
+                tenant_actual = connection.tenant
                 entidades = Entidad.objects.all()
                 for entidad in entidades:
                     connection.set_tenant(entidad)
@@ -464,6 +465,9 @@ def verificar_deportista(request):
                         break
                     except Exception:
                         pass
+
+                connection.set_tenant(tenant_actual)
+
 
                 if existencia:
                     return render(request,'deportistas/verificar_deportista.html',{'existe':True,
