@@ -109,3 +109,18 @@ def sincronizar(request):
             actualizarLocalizacionCaf(i)
 
         return JsonResponse({'response': True})
+
+def listar_entrenadores_nacionales(request):
+    pass
+
+def listar_dirigentes_nacionales(request):
+    pass
+
+def listar_deportistas_nacionales(request):
+    pass
+
+def listar_escenarios_nacionales(request):
+    pass
+
+def listar_escenarios_nacionales(request):
+    pass

@@ -5,6 +5,7 @@ from coldeportes.utilities import adicionarClase
 
 
 class EntrenadorForm(ModelForm):
+    fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
     def __init__(self, *args, **kwargs):
         super(EntrenadorForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
@@ -14,6 +15,17 @@ class EntrenadorForm(ModelForm):
     class Meta:
         model = Entrenador
         exclude = ('estado','entidad_vinculacion',)
+
+
+class VerificarExistenciaForm(forms.Form):
+    TIPO_IDENTIDAD = (
+        ('CED', 'CÉDULA DE CIUDADANÍA'),
+        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
+        ('PAS', 'PASAPORTE'),
+    )
+    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)
+    identificacion = forms.IntegerField(label="Identificación")
+
 
 
 class FormacionDeportivaForm(ModelForm):

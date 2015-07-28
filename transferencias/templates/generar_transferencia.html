@@ -52,7 +52,7 @@
                                 <li><a ><i class="fa fa-bicycle fa-fw m-r-5"></i> {{ objeto.tipo_escenario }}</a></li>
                                 <li><a ><i class="fa fa-globe fa-fw m-r-5"></i> {{ objeto.ciudad }}</a></li>
                             {% else %}
-                                <li><a ><i class="fa fa-archive fa-fw m-r-5"></i> {{ objeto.tipo_id }}.{% ifequal 'Deportista' objeto.tipo_objeto%} {{ objeto.identificacion }} {% else %} {{ objeto.nro_id }} {% endifequal %}</a></li>
+                                <li><a ><i class="fa fa-archive fa-fw m-r-5"></i> {{ objeto.tipo_id }}.{% ifequal 'Deportista' objeto.tipo_objeto%} {{ objeto.identificacion }} {% else %} {{ objeto.identificacion }} {% endifequal %}</a></li>
                                 <li><a ><i class="fa fa-info fa-fw m-r-5"></i> {{ objeto.edad }} Años</a></li>
                                 <li><a ><i class="fa fa-user fa-fw m-r-5"></i> {{ objeto.genero }}</a></li>
                                 <li><a ><i class="fa fa-globe fa-fw m-r-5"></i> {{ objeto.nacionalidad_str }}</a></li>

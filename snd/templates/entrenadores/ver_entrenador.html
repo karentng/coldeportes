@@ -74,7 +74,7 @@
                                         <div class="col-lg-6">
                                         <p style="margin-left: 50px">
                                             {% if perms.snd.change_entrenador %}
-                                                {{entrenador.get_tipo_id_display | title}}: {{entrenador.nro_id}}<br />
+                                                {{entrenador.get_tipo_id_display | title}}: {{entrenador.identificacion}}<br />
                                             {% endif %}
                                             Género: {{entrenador.genero}}<br/>
                                             Edad: {{ entrenador.edad }}<br/>
@@ -185,7 +185,13 @@
                                         <td>{{formacion.institucion_formacion}}</td>
                                         <td>{{formacion.pais_formacion}}</td>
                                         <td>{{formacion.fecha_comienzo}}</td>
-                                        <td>{{formacion.fecha_fin}}</td>
+                                        <td>
+                                            {% if formacion.fecha_fin == None %}
+                                                ACTUAL
+                                            {% else %}
+                                                {{ formacion.fecha_fin }}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -223,7 +229,13 @@
                                         <td>{{experiencia.nombre_cargo}}</td>
                                         <td>{{experiencia.institucion}}</td>
                                         <td>{{experiencia.fecha_comienzo}}</td>
-                                        <td>{{experiencia.fecha_fin}}</td>
+                                        <td>
+                                            {% if formacion.fecha_fin == None %}
+                                                ACTUAL
+                                            {% else %}
+                                                {{ formacion.fecha_fin }}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

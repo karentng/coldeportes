@@ -205,21 +205,22 @@ def activar_desactivar(request, dirigente_id):
     
     activar/desactivar dirigente
 
-    Se obtienen el estado actual del escenario y se invierte.
+    Se obtienen el estado actual del dirigente y se invierte.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
     :param dirigente_id:   Identificador del dirigente
     :type dirigente_id:    String
     """
+
     dirigente = Dirigente.objects.get(id=dirigente_id)
-    estado_actual = dirigente.activo
-    dirigente.activo = not(estado_actual)
+    estado_actual = dirigente.estado
+    dirigente.estado = int(not(estado_actual))
     dirigente.save()
     if(estado_actual):
-        message = "Dirigente desactivado correctamente."
-    else:
         message = "Dirigente activado correctamente."
+    else:
+        message = "Dirigente desactivado correctamente."
     messages.warning(request, message)
     return redirect('dirigentes_listar')
 '''
