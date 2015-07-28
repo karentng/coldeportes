@@ -2,7 +2,7 @@
 from django.forms import *
 from django import forms
 from entidades.models import *
-from snd.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase
 
 class EntidadForm(forms.ModelForm):
     pagina = forms.CharField(label="Página Web")

@@ -4,11 +4,8 @@ from django.forms import ModelForm
 from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
 from datetimewidget.widgets import TimeWidget, DateWidget
+from coldeportes.utilities import adicionarClase
 
-def adicionarClase(campo, clase):
-    campo.widget.attrs.update({'class': clase})
-    return campo   
-   
 
 class IdentificacionForm(ModelForm):
     descripcion = forms.CharField(widget=forms.Textarea, required=False, label="Descripción")

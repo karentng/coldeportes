@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from gestion_usuarios.forms import *
 from django.contrib.auth.models import *
 from django.contrib import messages
-from snd.utilities import superuser_only,calculate_age
+from coldeportes.utilities import superuser_only,calculate_age
 from snd.models import Entrenador
 from snd.modelos.deportistas import Deportista
 from snd.modelos.escenarios import Escenario,CaracterizacionEscenario

@@ -5,7 +5,7 @@ from django.contrib import messages
 from formtools.wizard.views import *
 from snd.formularios.dirigentes  import *
 from django.conf import settings
-from snd.utilities import *
+from coldeportes.utilities import *
 import json
 
 

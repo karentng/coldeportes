@@ -8,7 +8,7 @@ from snd.models import *
 from entidades.models import *
 from snd.formularios.caf import *
 from django.contrib import messages
-from snd.utilities import *
+from coldeportes.utilities import *
 
 #==================================================================
 # Crear / Modificar CAF

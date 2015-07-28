@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 from datetimewidget.widgets import DateWidget
-from snd.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase
 
 class DeportistaForm(ModelForm):
     def __init__(self, *args, **kwargs):
