@@ -10,4 +10,8 @@ urlpatterns = patterns('entidades.views',
 	url(r'^cafs$', 'listar_cafs_nacionales', name='listar_cafs_nacionales'),
 	url(r'^cajas-compensacion$', 'listar_cajas_nacionales', name='listar_cajas_nacionales'),
     url(r'^registro/(\d+)$', 'registro', name='entidad_registro'),
+    url(r'^test/$', 'test', name='test'),
+    url(r'^cafs/$', 'cafs', name='cafs'),
+    url(r'^sincronizar/$', 'sincronizar', name='sincronizar'),
+    url(r'^localizacion/$', 'actualizarLocalizacion', name='actualizarLocalizacion'),
 )
