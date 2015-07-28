@@ -46,12 +46,18 @@ class Deportista(models.Model):
     telefono = models.CharField(max_length=100,verbose_name='Telefono')
     direccion = models.CharField(max_length=100,verbose_name='Direccion')
     entidad = models.ForeignKey(Entidad)
+
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
+
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,verbose_name='Disciplinas Deportivas')
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
+
+    def __str__(self):
+        return self.nombres+" "+self.apellidos
 
     def __str__(self):
         return self.nombres+" "+self.apellidos

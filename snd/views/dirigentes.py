@@ -208,7 +208,7 @@ def finalizar(request, opcion):
     elif opcion == "listar":
         return redirect('dirigentes_listar')
 
-@login_required
+'''@login_required
 def activar_desactivar(request, dirigente_id):
     """
     Junio 14 / 2015
@@ -234,6 +234,7 @@ def activar_desactivar(request, dirigente_id):
         message = "Dirigente desactivado correctamente."
     messages.warning(request, message)
     return redirect('dirigentes_listar')
+'''
 
 @login_required
 def ver(request, dirigente_id):
