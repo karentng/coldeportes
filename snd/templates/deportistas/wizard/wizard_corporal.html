@@ -31,16 +31,61 @@
 	{% include 'deportistas/wizard/_wizard.html' %}
 	<fieldset>
 		<form action="" method="post">{% csrf_token %}
-			<div class="well row">
+			<fieldset>
 				<div class="col-xs-12">
 					<h3>{{titulo}}</h3>
-					{% for i in form %}
-						<div class="col-md-6">
-							{% bootstrap_field i layout="vertical" %}
+
+					<div class="well row">
+						<strong><h4>Composición</h4></strong>
+
+						<div class="row">
+							<div class="col-md-6">
+								{% bootstrap_field form.peso layout="verical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.estatura layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.RH layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.tipo_talla layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.talla_camisa layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.talla_pantaloneta layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.talla_zapato layout="vertical" %}
+							</div>
 						</div>
-					{% endfor %}
+						<hr>
+						<strong><h4>Porcentaje Muscular</h4></strong>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="col-md-8">
+									{% bootstrap_field form.porcentaje_grasa layout="vertical" %}
+								</div>
+								<div class="col-md-8">
+									{% bootstrap_field form.masa_corporal_magra layout="vertical" %}
+								</div>
+							</div>
+							<div class="col-md-4">
+								{% bootstrap_field form.imc layout="vertical" %}
+							</div>
+						</div>
+						<hr>
+						<strong><h4>Salud</h4></strong>
+						<div class="row">
+							<div class="col-md-10">
+								{% bootstrap_field form.eps layout="vertical" %}
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
+			</fieldset>
 			<hr>
 			{% if wizard_stage > 1 %}
 			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
@@ -63,6 +108,25 @@
 		$(document).ready(function() {
 			App.init();
 			FormWizard.init();
+			$('#id_imc').css("pointer-events","none");
 		});
+
+		$('#id_peso').change(function() {
+			var altura = $('#id_estatura').val() / 100;
+			if (altura != undefined){
+				var peso = $('#id_peso').val();
+				var imc  =  peso/(altura*altura);
+				$('#id_imc').val(imc);
+			}
+		})
+
+		$('#id_estatura').change(function() {
+			var peso = $('#id_peso').val();
+			if (peso != undefined){
+				var altura = $('#id_estatura').val() / 100;
+				var imc  =  peso/(altura*altura);
+				$('#id_imc').val(imc);
+			}
+		})
 	</script>
 {% endblock %}

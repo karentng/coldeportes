@@ -41,25 +41,6 @@ def registro(request, tipo):
         'dominio': dominio,
     })
 
-
-def listar_entrenadores_nacionales(request):
-    pass
-
-def listar_dirigentes_nacionales(request):
-    pass
-
-def listar_deportistas_nacionales(request):
-    pass
-
-def listar_escenarios_nacionales(request):
-    pass
-
-def listar_cajas_nacionales(request):
-    pass
-
-def listar_cafs_nacionales(request):
-    pass
-
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 @csrf_exempt
@@ -127,3 +108,21 @@ def sincronizar(request):
             actualizarLocalizacionCaf(i)
 
         return JsonResponse({'response': True})
+
+def listar_entrenadores_nacionales(request):
+    pass
+
+def listar_dirigentes_nacionales(request):
+    pass
+
+def listar_deportistas_nacionales(request):
+    pass
+
+def listar_escenarios_nacionales(request):
+    pass
+
+def listar_cajas_nacionales(request):
+    pass
+
+def listar_cafs_nacionales(request):
+    pass

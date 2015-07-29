@@ -1,17 +1,17 @@
-INSERT INTO entidad1.snd_deportista (id,nombres, apellidos,genero,tipo_id,identificacion,fecha_nacimiento,barrio,comuna,email,telefono,direccion,activo,video,foto,ciudad_nacimiento_id,entidad_id) VALUES
-(2,'ANDRES FELIPE','ROA','Hombre','CC','11448808798','1990-10-26','CANEY','12','aroaaa@deporcali.com','3129807898','CALLE 56 # 45 09',TRUE,'''','''',5,3);
+INSERT INTO indervalle.snd_deportista (id,nombres, apellidos,genero,tipo_id,identificacion,fecha_nacimiento,barrio,comuna,email,telefono,direccion,entidad_id,estado,etnia,ciudad_residencia_id,video,foto) VALUES
+(3,'ANDRES','PEREZ','Hombre','CC','11441237654','1992-07-07','MELENDEZ','12','aperez@deporcali.com','3127693402','CALLE 5 # 39 00',2,0,'''',152,'''','''');
 
-INSERT INTO entidad1.snd_composicioncorporal (id,peso,estatura,"RH",tipo_talla,talla_camisa,talla_pantaloneta,talla_zapato,porcentaje_grasa,porcentaje_musculo,deportista_id) VALUES 
-(2,81,180,'O+','Adulto','M','M','41','12','80',2);
+INSERT INTO indervalle.snd_composicioncorporal (id,peso,estatura,"RH",tipo_talla,talla_camisa,talla_pantaloneta,talla_zapato,deportista_id,imc,masa_corporal_magra,porcentaje_grasa,eps_id) VALUES 
+(3,72,172,'O+','Adulto','S','S','40',3,20,20,20,1);
 
-INSERT INTO entidad1.snd_deportista_disciplinas (id,deportista_id,tipodisciplinadeportiva_id) VALUES
-(2,2,4);
+INSERT INTO indervalle.snd_deportista_disciplinas (id,deportista_id,tipodisciplinadeportiva_id) VALUES
+(3,3,4);
 
-INSERT INTO entidad1.snd_deportista_nacionalidad (id,deportista_id,nacionalidad_id) VALUES
-(2,2,52);
+INSERT INTO indervalle.snd_deportista_nacionalidad (id,deportista_id,nacionalidad_id) VALUES
+(3,3,52);
 
-INSERT INTO entidad1.snd_historialdeportivo (id,fecha ,lugar ,descripcion ,institucion_equipo ,tipo ,deportista_id) VALUES
-(2,'2015-06-01','COLOMBIA','CAMPEÓN LIGA AGUILA II','DEPORTIVO CALI','Competencia',2);
+INSERT INTO indervalle.snd_historialdeportivo (id,fecha_inicial, institucion_equipo,tipo,deportista_id,fecha_final,actual,categoria,division,marca,modalidad,nombre,pais_id,prueba,puesto) VALUES
+(3,'2015-07-27','INTER DE MILAN','Campeonato Internacional',3,NULL,TRUE,'MAYORES','''','''','FUTBOL 11','MUNDIAL DE CLUBES',112,'''',1);
 
-INSERT INTO entidad1.snd_informacionacademica (id,institucion,nivel,estado,profesion,grado_semestre,deportista_id,pais_id) VALUES
-(2,'UNIVALLE','Pregrado','Actual','DEPORTE',2,2,52);
+INSERT INTO indervalle.snd_informacionacademica (id,institucion,nivel,estado,profesion,grado_semestre,fecha_finalizacion,deportista_id,pais_id) VALUES
+(3,'UNIVALLE','Pregrado','Finalizado','INGENIERO DE SISTEMAS',NULL,2016,3,52);

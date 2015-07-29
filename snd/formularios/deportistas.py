@@ -46,6 +46,11 @@ class ComposicionCorporalForm(ModelForm):
         super(ComposicionCorporalForm, self).__init__(*args, **kwargs)
         self.fields['RH'] = adicionarClase(self.fields['RH'], 'one')
         self.fields['tipo_talla'] = adicionarClase(self.fields['tipo_talla'], 'one')
+        self.fields['talla_camisa'] = adicionarClase(self.fields['talla_camisa'], 'one')
+        self.fields['talla_pantaloneta'] = adicionarClase(self.fields['talla_pantaloneta'], 'one')
+        self.fields['talla_zapato'] = adicionarClase(self.fields['talla_zapato'], 'one')
+        self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
+        self.fields['imc'].widget.attrs['readonly'] = 1
 
     class Meta:
         model = ComposicionCorporal
