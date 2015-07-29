@@ -16,7 +16,7 @@ class Entrenador(models.Model):
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
-        ('LGTBI', 'LGTBI'),
+        ('Indefinido', 'Indefinido'),
     )
 
     TIPO_IDENTIDAD = (
@@ -31,6 +31,8 @@ class Entrenador(models.Model):
         ('BLANCOS','BLANCOS'),
         ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
         ('GITANO','GITANO'),
+        ('PALENQUERO','PALENQUERO'),
+        ('RAIZAL','RAIZAL'),
     )
     estado = models.IntegerField(choices=ESTADOS, default=0)
     nombres = models.CharField(max_length=50)
