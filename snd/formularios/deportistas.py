@@ -51,6 +51,7 @@ class ComposicionCorporalForm(ModelForm):
         self.fields['talla_zapato'] = adicionarClase(self.fields['talla_zapato'], 'one')
         self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
         self.fields['imc'].widget.attrs['readonly'] = 1
+        self.fields['masa_corporal_magra'].widget.attrs['readonly'] = 1
 
     class Meta:
         model = ComposicionCorporal

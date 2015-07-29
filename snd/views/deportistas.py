@@ -136,13 +136,17 @@ def wizard_corporal(request,id_depor):
         corporal = None
 
     corporal_form = ComposicionCorporalForm(instance=corporal)
+    deportista = Deportista.objects.get(id=id_depor)
+    mujer = False
+    if deportista.genero == 'Mujer':
+        mujer=True
 
     if request.method == 'POST':
         corporal_form = ComposicionCorporalForm(request.POST, instance=corporal)
 
         if corporal_form.is_valid():
             corporal = corporal_form.save(commit=False)
-            corporal.deportista = Deportista.objects.get(id=id_depor)
+            corporal.deportista = deportista
             corporal.save()
             corporal_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -150,7 +154,8 @@ def wizard_corporal(request,id_depor):
     return render(request, 'deportistas/wizard/wizard_corporal.html', {
         'titulo': 'Composición Corporal del Deportista',
         'wizard_stage': 2,
-        'form': corporal_form
+        'form': corporal_form,
+        'mujer' : mujer
     })
 
 @login_required

@@ -36,7 +36,7 @@
 					<h3>{{titulo}}</h3>
 
 					<div class="well row">
-						<strong><h4>Composición</h4></strong>
+						<strong><h4>Características Físicas</h4></strong>
 
 						<div class="row">
 							<div class="col-md-6">
@@ -62,22 +62,68 @@
 							</div>
 						</div>
 						<hr>
-						<strong><h4>Porcentaje Muscular</h4></strong>
+						<strong><h4>Composición Muscular</h4></strong>
 						<div class="row">
-							<div class="col-md-6">
-								<div class="col-md-8">
-									{% bootstrap_field form.porcentaje_grasa layout="vertical" %}
+							<div class="well row">
+								<div class="col-md-4">
+									<div class="note note-success">
+										<h5>Nota!</h5>
+										<p>
+											Si conoce el porcentaje de grasa del deportista ingreselo, en caso contrario presione calcular
+											e ingrese los datos para realizar el calculo
+										</p>
+									</div>
 								</div>
-								<div class="col-md-8">
+								<div class="col-md-4">
+									{% bootstrap_field form.porcentaje_grasa layout="vertical" %}
 									{% bootstrap_field form.masa_corporal_magra layout="vertical" %}
 								</div>
-							</div>
-							<div class="col-md-4">
-								{% bootstrap_field form.imc layout="vertical" %}
+								<div class="col-md-4">
+									<br/>
+
+									<a data-toggle="popover" data-html="true" data-content="
+										<div>
+											Medida en centímetros de cuello
+											<br/>
+											<input id='id_cuello' class='form-control' type='number' onchange='calculo_cuello()'/>
+											<br/>
+											Medida en centímetros de cintura
+											<br/>
+											<input id='id_cintura' class='form-control' type='number' onchange='calculo_cintura()' />
+											{% if mujer %}
+											<br/>
+											Medida en centímetros de cadera
+											<br/>
+											<input id='id_cadera' class='form-control' type='number' onchange='calculo_cadera()' />
+											{% endif %}
+
+										</div>
+									" title="Calculo de Porcentaje de Grasa">
+									<span id="bt-calcular-porcentaje" class="btn btn-warning  btn-active-success" >Calcular →</span></a><br/><br/><br/>
+									<i class="ion ion-help-circled fa-2x add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="Masa Magra = peso × (100 - grasa)"></i>
+								</div>
+							</div><br/>
+							<div class="well row">
+								<div class="col-md-4">
+									<div class="note note-info">
+										<h5>Nota!</h5>
+										<p>
+											El IMC es un valor calculado automáticamente de acuerdo al peso y estatura ingresado anteriormente
+										</p>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<br/>
+									{% bootstrap_field form.imc layout="vertical" %}
+								</div>
+								<div class="col-md-4">
+									<br/><br/>
+									<i class="ion ion-help-circled fa-2x add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="IMC = peso/(estatura)^2"></i>
+								</div>
 							</div>
 						</div>
 						<hr>
-						<strong><h4>Salud</h4></strong>
+						<strong><h4>Información de Salud</h4></strong>
 						<div class="row">
 							<div class="col-md-10">
 								{% bootstrap_field form.eps layout="vertical" %}
@@ -99,7 +145,10 @@
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{STATIC_URL}}js/tooltip.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	<script src="{{STATIC_URL}}js/funciones_calculos/deportistas/composicion_muscular.js"></script>
+
 	
 {% endblock %}
 
@@ -109,24 +158,8 @@
 			App.init();
 			FormWizard.init();
 			$('#id_imc').css("pointer-events","none");
+			$('#id_masa_corporal_magra').css("pointer-events","none");
 		});
-
-		$('#id_peso').change(function() {
-			var altura = $('#id_estatura').val() / 100;
-			if (altura != undefined){
-				var peso = $('#id_peso').val();
-				var imc  =  peso/(altura*altura);
-				$('#id_imc').val(imc);
-			}
-		})
-
-		$('#id_estatura').change(function() {
-			var peso = $('#id_peso').val();
-			if (peso != undefined){
-				var altura = $('#id_estatura').val() / 100;
-				var imc  =  peso/(altura*altura);
-				$('#id_imc').val(imc);
-			}
-		})
+		var mujer = {{mujer|yesno:"true,false" }};
 	</script>
 {% endblock %}
