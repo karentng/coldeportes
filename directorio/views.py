@@ -34,7 +34,6 @@ def directorio_buscar(request):
     #inicialización de variables resultados
     escenarios=[]
 
-
     if request.method == 'POST':
 
         form = DirectorioBusquedaForm(request.POST)
