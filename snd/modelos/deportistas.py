@@ -10,7 +10,7 @@ class Deportista(models.Model):
     tipo_sexo = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
-        ('LGTBI', 'LGTBI'),
+        ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIDAD = (
         ('TI', 'Tarjeta de Identidad'),
@@ -31,6 +31,8 @@ class Deportista(models.Model):
         ('BLANCOS','BLANCOS'),
         ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
         ('GITANO','GITANO'),
+        ('PALENQUERO','PALENQUERO'),
+        ('RAIZAL','RAIZAL'),
     )
 
     nombres = models.CharField(max_length=100, verbose_name='Nombres')
