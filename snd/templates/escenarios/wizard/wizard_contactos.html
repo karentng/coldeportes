@@ -10,6 +10,14 @@
     <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_contactos-validations.js"></script>
     {{form.media}} {# js y css para datetime #}
+    <style>
+    .control-label{
+        display: none;
+    }
+    .form-control-feedback{
+        margin-top: -31px;
+    }
+    </style>
 {% endblock %}
 
 {% block miga_pan %}
@@ -39,7 +47,7 @@
                         <h3>{{titulo}}</h3>
                         {% for field in form %}
                             <div class="col-lg-6">
-                                <label for="{{ field.label }}">{{ field.label_tag }}
+                                <label for="{{ field.id_for_label }}">{{ field.label_tag }}
                                     {% if field.field.required %}<span class="special_class">*</span>{% endif %}
                                 </label>
                                 {% bootstrap_field field layout="inline" %}
@@ -102,7 +110,7 @@
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
         <a href="{% url 'finalizar_escenario'  opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar </a>
-        <a href="{% url 'finalizar_escenario' opcion='nuevo' %}" class="btn btn-danger pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar Escenario Nuevo</a>
+        <a href="{% url 'finalizar_escenario' opcion='nuevo' %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar Escenario Nuevo</a>
 
 {% endblock %}
 

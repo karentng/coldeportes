@@ -10,6 +10,15 @@
     <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_escenario-validations.js"></script>
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
+    <style>
+    .control-label{
+        display: none;
+    }
+    .form-control-feedback{
+        margin-top: -31px;
+    }
+    </style>
+    
 {% endblock %}
 
 {% block miga_pan %}
@@ -39,10 +48,10 @@
                     
                     {% for field in form %}
                         <div class="col-md-6">
-                            <label for="{{ field.label }}">{{ field.label_tag }}
+                            <label for="{{ field.id_for_label }}">{{ field.label_tag }}
                                 {% if field.field.required %}<span class="special_class">*</span>{% endif %}
                             </label>
-                            {% bootstrap_field field layout="inline" %}
+                            {% bootstrap_field field layout="vertical" %}
                         </div>
                     {% endfor %}
                 </div>

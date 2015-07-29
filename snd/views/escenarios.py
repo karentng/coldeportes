@@ -42,7 +42,7 @@ def finalizar_escenario(request, opcion):
     messages.success(request, "Escenario registrado correctamente.")
     if opcion == 'nuevo':
         return redirect('wizard_nuevo_identificacion')
-    elif opcion == 'otro':
+    else:
         return redirect('listar_escenarios')
 
 @login_required
