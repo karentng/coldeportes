@@ -7,6 +7,7 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -30,7 +31,7 @@
 {% block contenido_panel %}
 	{% include 'deportistas/wizard/_wizard.html' %}
 	<fieldset>
-		<form action="" method="post">{% csrf_token %}
+		<form id="form-wizard-corporal" action="" method="post">{% csrf_token %}
 			<fieldset>
 				<div class="col-xs-12">
 					<h3>{{titulo}}</h3>
@@ -162,4 +163,5 @@
 		});
 		var mujer = {{mujer|yesno:"true,false" }};
 	</script>
+	<script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-corporal-validations.js"></script>
 {% endblock %}

@@ -7,6 +7,7 @@ $('#id_peso').change(function() {
         var peso = $(this).val();
         var imc  =  peso/(altura*altura);
         $('#id_imc').val(imc);
+        $(form).bootstrapValidator('revalidateField', 'imc');
     }
 });
 
@@ -16,18 +17,21 @@ $('#id_estatura').change(function() {
         var altura = $(this).val() / 100;
         var imc  =  peso/(altura*altura);
         $('#id_imc').val(imc);
+        $(form).bootstrapValidator('revalidateField', 'imc');
     }
 });
 function masa_magra() {
     var peso = $('#id_peso').val();
     var magra = peso*((100 - $('#id_porcentaje_grasa').val()) / 100);
     $('#id_masa_corporal_magra').val(magra);
+    $(form).bootstrapValidator('revalidateField', 'masa_corporal_magra');
 };
 
 $('#id_porcentaje_grasa').change(function () {
     var peso = $('#id_peso').val();
     var magra = peso*((100 - $('#id_porcentaje_grasa').val()) / 100);
     $('#id_masa_corporal_magra').val(magra);
+    $(form).bootstrapValidator('revalidateField', 'masa_corporal_magra');
 });
 
 function calculo_cuello() {
@@ -40,12 +44,14 @@ function calculo_cuello() {
             var grasa = (495 / (1.29579- 0.35004 * (Math.log10(cintura+cadera - cuello))  +0.22100*(Math.log10(altura))) )-450;
             $('#id_porcentaje_grasa').val(grasa);
             masa_magra();
+             $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');
         }
     }else{
         if(cintura != undefined){
             var grasa = (495/ (1.0324 - (0.19077 * (Math.log10( cintura - cuello ))) + (0.15456 * (Math.log10(altura)) ) ) ) - 450;
             $('#id_porcentaje_grasa').val(grasa);
             masa_magra();
+             $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');
         }
     }
 
@@ -61,12 +67,14 @@ function calculo_cintura() {
             var grasa = (495/(1.29579-0.35004*(Math.log10(cintura+cadera-cuello))+0.22100*(Math.log10(altura))))-450;
             $('#id_porcentaje_grasa').val(grasa);
             masa_magra();
+            $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');
         }
     }else{
         if(cuello != undefined){
             var grasa = (495/(1.0324-0.19077*(Math.log10(cintura-cuello))+0.15456*(Math.log10(altura))) ) -450;
             $('#id_porcentaje_grasa').val(grasa);
             masa_magra();
+            $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');
         }
     }
 
@@ -79,5 +87,6 @@ function calculo_cadera() {
         var grasa = (495/(1.29579-0.35004*(Math.log10(cintura+$('#id_cadera').val()-cuello))+0.22100*(Math.log10(altura))))-450;
         $('#id_porcentaje_grasa').val(grasa);
         masa_magra();
+        $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');
     }
 };
