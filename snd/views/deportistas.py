@@ -135,11 +135,12 @@ def wizard_corporal(request,id_depor):
     except Exception:
         corporal = None
 
-    corporal_form = ComposicionCorporalForm(instance=corporal)
     deportista = Deportista.objects.get(id=id_depor)
     mujer = False
     if deportista.genero == 'Mujer':
         mujer=True
+
+    corporal_form = ComposicionCorporalForm(mujer,instance=corporal)
 
     if request.method == 'POST':
         corporal_form = ComposicionCorporalForm(request.POST, instance=corporal)
