@@ -29,7 +29,6 @@ def wizard_entrenador_nuevo(request):
 
     try:
         datos = request.session['datos']
-        del request.session['datos']
     except Exception:
         return redirect('verificar_entrenador')
 
@@ -74,6 +73,7 @@ def finalizar_entrenador(request, opcion):
     :type opcion: String
     """
     messages.success(request, "Entrenador registrado correctamente.")
+    del request.session['datos']
     if opcion=='nuevo':
         return redirect('entrenador_nuevo')
     elif opcion =='listar':

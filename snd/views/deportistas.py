@@ -33,7 +33,6 @@ def wizard_deportista_nuevo(request):
 
     try:
         datos = request.session['datos']
-        del request.session['datos']
     except Exception:
         return redirect('verificar_deportista')
 
@@ -409,6 +408,7 @@ def finalizar_deportista(request,opcion):
     :type opcion: String
     """
     messages.success(request, "Deportista registrado correctamente.")
+    del request.session['datos']
     if opcion=='nuevo':
         return redirect('deportista_nuevo')
     elif opcion =='listar':
