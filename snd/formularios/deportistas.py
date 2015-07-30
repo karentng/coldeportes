@@ -41,9 +41,11 @@ class DeportistaForm(ModelForm):
 class ComposicionCorporalForm(ModelForm):
 
     required_css_class = 'required'
+    is_mujer = None
 
-    def __init__(self, is_mujer,*args, **kwargs):
+    def __init__(self,is_mujer ,*args, **kwargs):
         super(ComposicionCorporalForm, self).__init__(*args, **kwargs)
+        self.is_mujer = is_mujer
         self.fields['RH'] = adicionarClase(self.fields['RH'], 'one')
         self.fields['tipo_talla'] = adicionarClase(self.fields['tipo_talla'], 'one')
         self.fields['talla_camisa'] = adicionarClase(self.fields['talla_camisa'], 'one')

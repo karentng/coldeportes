@@ -96,24 +96,35 @@
 						</ul>
                         <ul class="attached-document clearfix">
                             <strong>Fotos</strong><br/><br/>
-                            {% for f in objeto.fotos %}
-                                {%if f%}
-                                    <li>
-                                        <div class="media-object rounded-corner">
-                                            <img src="{{ MEDIA_URL }}{{ f }}" alt="" />
-                                        </div>
-                                    </li>
-                                {%else%}
-                                    <li>
-                                        <div class="document-name">No hay foto disponible</div>
-                                        <div class="document-file">
-                                            <a >
-                                                <i class="fa fa-file-photo-o"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                {%endif%}
-                            {% endfor %}
+                            {%if objeto.fotos%}
+                                {% for f in objeto.fotos %}
+                                    {%if f%}
+                                        <li>
+                                            <div class="media-object rounded-corner">
+                                                <img src="{{ MEDIA_URL }}{{ f }}" alt="" />
+                                            </div>
+                                        </li>
+                                    {%else%}
+                                        <li>
+                                            <div class="document-name">No hay foto disponible</div>
+                                            <div class="document-file">
+                                                <a >
+                                                    <i class="fa fa-file-photo-o"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    {%endif%}
+                                {% endfor %}
+                            {%else%}
+                                <li>
+                                    <div class="document-name">No hay fotos disponibles</div>
+                                    <div class="document-file">
+                                        <a >
+                                            <i class="fa fa-file-photo-o"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            {%endif%}
                         </ul>
                         <strong>Descripcion</strong> <br/><br/>
                         <p class="f-s-12 text-inverse">
