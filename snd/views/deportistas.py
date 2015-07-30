@@ -31,15 +31,12 @@ def wizard_deportista_nuevo(request):
     """
 
 
-    '''try:
+    try:
         datos = request.session['datos']
     except Exception:
-        return redirect('verificar_deportista')'''
+        return redirect('verificar_deportista')
 
-    #deportista_form = DeportistaForm(initial=datos)
-
-
-    deportista_form = DeportistaForm()
+    deportista_form = DeportistaForm(initial=datos)
 
     if request.method == 'POST':
 
