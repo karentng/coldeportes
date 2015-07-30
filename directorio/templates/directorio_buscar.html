@@ -52,46 +52,51 @@
         </form>
     </div></br></br>
     <div >       
-        <h1 class="page-header">Resultados:<small> los siguientes son los resultados obtenidos de acuerdo a los criterios ingresados.</small></h1>
+        <h1 class="page-header">Resultados Obtenidos</h1>
         <div id="options" class="m-b-10">
             <span class="gallery-option-set" id="filter" data-option-key="filter">
-                <a href="#show-all" class="btn btn-default btn-xs active" data-option-value="*">
+                <a href="#show-all" class="btn btn-primary btn-xs active" data-option-value="*">
                     Mostrar Todos
                 </a>
-                <a href="#gallery-group-4" class="btn btn-default btn-xs" data-option-value=".gallery-group-4">
+                <a href="#CajasView" class="btn btn-primary btn-xs" data-option-value=".CajasView">
                     Cajas de Compensación
                 </a>
-                <a href="#gallery-group-1" class="btn btn-default btn-xs" data-option-value=".gallery-group-1">
+                <a href="#CAFView" class="btn btn-primary btn-xs" data-option-value=".CAFView">
+                    Centro de Acondicionamiento
+                </a>
+                <a href="#gallery-group-2" class="btn btn-primary btn-xs" data-option-value=".gallery-group-1">
                     Deportistas
                 </a>
-                <a href="#gallery-group-4" class="btn btn-default btn-xs" data-option-value=".gallery-group-4">
+                <a href="#gallery-group-3" class="btn btn-primary btn-xs" data-option-value=".gallery-group-4">
                     Dirigentes
                 </a>
-                <a href="#gallery-group-2" class="btn btn-default btn-xs" data-option-value=".gallery-group-2">
+                <a href="#EscenarioView" class="btn btn-primary btn-xs" data-option-value=".EscenarioView">
                     Escenarios Deportivos
                 </a>
-                <a href="#gallery-group-3" class="btn btn-default btn-xs" data-option-value=".gallery-group-3">
+                <a href="#gallery-group-5" class="btn btn-primary btn-xs" data-option-value=".gallery-group-3">
                     Entrenadores
                 </a>
             </span>
         </div>
-        {% if escenarios %}
+        {% if listado_resultados %}
+        {{lista_resultados}}
+        </br></br>
         <div id="gallery" class="gallery">
-        {% for lista_escenarios in escenarios %}
-            {% for escenario in lista_escenarios %}
-            <div class="image gallery-group-1">
+        {% for tupla in listado_resultados %}
+            {% for resultado in tupla %}
+            <div class="image {{resultado.grupo}}">
                 <div class="image-inner">
-                    <a href="{{STATIC_URL}}{% if not escenario.foto %}img/actores/default_escenarios.png{% else %}{{escenario.foto}}{% endif %}" data-lightbox="gallery-group-1">
-                        <img src="{{STATIC_URL}}{% if not escenario.foto %}img/actores/default_escenarios.png{% else %}{{escenario.foto}}{% endif %}" alt="" />
+                    <a href="{{STATIC_URL}}{% if not resultado.foto %}img/actores/{{resultado.grupo}}.png{% else %}{{resultado.foto}}{% endif %}" data-lightbox="gallery-group-1">
+                        <img src="{{STATIC_URL}}{% if not resultado.foto %}img/actores/{{resultado.grupo}}.png{% else %}{{resultado.foto}}{% endif %}" alt="" />
                     </a>
                     <p class="image-caption">
-                        {{escenario.ciudad.nombre}}
+                        {{resultado.ciudad.nombre}}
                     </p>
                 </div>
                 <div class="image-info">
-                    <h5 class="title">{{escenario.nombre}}</h5>
+                    <h5 class="title">{{resultado.nombre}}</h5>
                     <div class="pull-right">
-                        <small>De: </small> <a href="javascript:;">{{escenario.entidad.nombre}}</a>
+                        <small>De: </small> <a href="javascript:;">{{resultado.entidad.nombre}}</a>
                     </div>
                     <div class="rating">
                         <span class="star active"></span>
@@ -101,7 +106,7 @@
                         <span class="star"></span>
                     </div>
                     <div class="desc">
-                        {{escenario.direccion}}, {{escenario.ciudad.nombre}}
+                        {{resultado.direccion}}, {{resultado.ciudad.nombre}}
                     </div>
                 </div>
             </div>
