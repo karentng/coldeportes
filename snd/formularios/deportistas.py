@@ -42,7 +42,7 @@ class ComposicionCorporalForm(ModelForm):
 
     required_css_class = 'required'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, is_mujer,*args, **kwargs):
         super(ComposicionCorporalForm, self).__init__(*args, **kwargs)
         self.fields['RH'] = adicionarClase(self.fields['RH'], 'one')
         self.fields['tipo_talla'] = adicionarClase(self.fields['tipo_talla'], 'one')
@@ -52,6 +52,17 @@ class ComposicionCorporalForm(ModelForm):
         self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
         self.fields['imc'].widget.attrs['readonly'] = 1
         self.fields['masa_corporal_magra'].widget.attrs['readonly'] = 1
+
+    def clean(self):
+        porcentaje_grasa = self.cleaned_data['porcentaje_grasa']
+        if self.is_mujer:
+            if porcentaje_grasa<8 or porcentaje_grasa>40:
+                msg = 'Por favor ingrese datos reales'
+                self.add_error('porcentaje_grasa',msg)
+        else:
+            if porcentaje_grasa<6  or porcentaje_grasa>35:
+                msg = 'Por favor ingrese datos reales'
+                self.add_error('porcentaje_grasa',msg)
 
     class Meta:
         model = ComposicionCorporal

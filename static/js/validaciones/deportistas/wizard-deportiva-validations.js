@@ -64,6 +64,9 @@ fields = {
             },
             fecha_final: {
                 validators: {
+                    notEmpty: {
+                        message: 'La fecha de finalización de campeonato no puede ser vacía'
+                    },
                     date: {
                         message: 'El valor ingresado no es una fecha válida',
                         format: 'YYYY-MM-DD',
@@ -76,7 +79,6 @@ fields = {
 //Revalidar campos al ser actualizados
     $("#id_fecha_inicial").on('change',function(e){
         $(form).bootstrapValidator('revalidateField', 'fecha_inicial');
-        $(form).bootstrapValidator('revalidateField', 'fecha_final');
     });
 //Revalidar campos al ser actualizados
     $("#id_fecha_final").on('change',function(e){
