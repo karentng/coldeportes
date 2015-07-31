@@ -29,6 +29,7 @@ class CajaCompensacion(models.Model):
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField(choices=tipo_estado, default=0, verbose_name="estado del Escenario")
     descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
+    ciudad = models.ForeignKey(Ciudad)
 
 class HorarioDisponibilidadCajas(models.Model):
     caja_compensacion = models.ForeignKey(CajaCompensacion)

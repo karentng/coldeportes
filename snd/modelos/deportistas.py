@@ -56,13 +56,10 @@ class Deportista(models.Model):
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,verbose_name='Disciplinas Deportivas')
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
-    etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
 
     def __str__(self):
         return self.nombres+" "+self.apellidos
 
-    def __str__(self):
-        return self.nombres+" "+self.apellidos
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):

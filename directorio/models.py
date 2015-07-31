@@ -33,7 +33,7 @@ class EscenarioView(models.Model):
     descripcion_horario = models.CharField(max_length=1024)
     #campos modelo Foto
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
-    #campo pra búsqueda
+    #campo para búsqueda
     contenido = models.TextField()
 
 class CAFView(models.Model):
@@ -57,6 +57,84 @@ class CAFView(models.Model):
     estado = models.IntegerField()
     #campo de modelo CAfoto
     foto = models.ImageField(upload_to='ruta_fotos_cafs')
-    #campo pra búsqueda
+    #campo para búsqueda
+    contenido = models.TextField()
+
+
+    
+class DeportistaView(models.Model):
+    class Meta:
+        managed = False
+    #campos deportista
+    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
+    genero = models.CharField(max_length=11, verbose_name='Genero del Deportista',default='Hombre')
+    ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
+    barrio = models.CharField(max_length=100,verbose_name='Barrio')
+    comuna = models.CharField(max_length=100,verbose_name='Comuna')
+    email = models.EmailField(null=True,blank=True)
+    telefono = models.CharField(max_length=100,verbose_name='Telefono')
+    direccion = models.CharField(max_length=100,verbose_name='Direccion')
+    estado = models.IntegerField(default=0, verbose_name="estado del Deportista")
+    etnia = models.CharField(max_length=20, blank=True)
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    entidad = models.ForeignKey(Entidad)   
+    #campo para búsqueda
+    contenido = models.TextField()
+     
+class EntrenadorView(models.Model):
+    class Meta:
+        managed = False
+    #campos deportista
+    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    telefono_fijo = models.CharField(max_length=100,verbose_name='Telefono')
+    apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
+    genero = models.CharField(verbose_name='Género', max_length=11)
+    telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
+    ciudad = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
+    correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    entidad_vinculacion = models.ForeignKey(Entidad)
+    estado = models.IntegerField(default=0)
+    etnia = models.CharField(max_length=20, blank=True)
+    foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
+    #campo para búsqueda
+    contenido = models.TextField()
+
+
+class DirigenteView(models.Model):
+    class Meta:
+        managed = False
+
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    genero = models.CharField(max_length=6, verbose_name='Género')
+    ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
+    telefono = models.CharField(max_length=100, verbose_name="Teléfono")
+    email = models.EmailField(null=True,blank=True)
+    cargo = models.CharField(max_length=100, verbose_name="Nombre del cargo")
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    estado = models.IntegerField(default=0, verbose_name="Estado del dirigente")    
+    foto = models.ImageField(null=True, blank=True)
+    entidad = models.ForeignKey(Entidad) 
+    #campo para búsqueda
+    contenido = models.TextField()
+
+class CajaCompensacionView(models.Model):
+    class Meta:
+        managed = False
+
+    nombre =  models.CharField(max_length=100)    
+    clasificacion = models.CharField(max_length=1)
+    foto = models.ImageField(null=True, blank=True)
+    entidad = models.ForeignKey(Entidad)    
+    estado = models.IntegerField(default=0, verbose_name="estado del Escenario")    
+    entidad = models.ForeignKey(Entidad) 
+    nombre_contacto =  models.CharField(max_length=50)
+    telefono = models.CharField(max_length=20)
+    email = models.EmailField()
+    descripcion = models.CharField(max_length=1024, null=True)
+    #campo para búsqueda
     contenido = models.TextField()
 
