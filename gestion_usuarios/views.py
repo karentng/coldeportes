@@ -97,6 +97,7 @@ def inicio_tenant(request):
             objeto_trans.procedencia = entidad_cambio
             objeto_trans.fecha_solicitud = t.fecha_solicitud
             objeto_trans.nacionalidad_str = ','.join(x.nombre for x in objeto_trans.nacionalidad.all())
+            objeto_trans.id_trans = t.id
             transfer_personas.append(objeto_trans)
         #Caso contrario es escenario
         elif t.tipo_objeto=='Escenario':
@@ -104,7 +105,11 @@ def inicio_tenant(request):
             objeto_trans.procedencia = entidad_cambio
             objeto_trans.tipo = CaracterizacionEscenario.objects.get(escenario=objeto_trans).tipo_escenario
             objeto_trans.fecha_solicitud = t.fecha_solicitud
+            objeto_trans.id_trans = t.id
             transfer_escenarios.append(objeto_trans)
+
+    connection.set_tenant(request.tenant)
+    ContentType.objects.clear_cache()
     #Fin consulta de transferencias
 
     return render(request,'index_tenant.html',{

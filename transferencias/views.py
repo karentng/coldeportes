@@ -83,8 +83,59 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     })
 
 @login_required
-def procesar_transferencia(request,id_transfer):
-    pass
+def procesar_transferencia(request,id_transfer,opcion):
+    """
+    Julio 31, 2015
+    Autor: Daniel Correa
+
+    Función para procesar una transferencia , ya sea rechazarla o aceptarla. El protocolo dice 0 para rechazar 1 para aceptar
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_transfer: Identificacion del objeto transferencia
+    :type id_transfer: int
+    :param opcion: Opcion elegida, 0 rechazo, 1 acepto
+    :type opcion: string
+    """
+    try:
+        transferencia = Transferencia.objects.get(id=id_transfer)
+    except:
+        messages.error(request,'Transferencia no encontrada')
+        return redirect('inicio_tenant')
+
+    entidad_cambio = transferencia.entidad
+    connection.set_tenant(entidad_cambio)
+    ContentType.objects.clear_cache()
+
+    tipo_objeto = transferencia.tipo_objeto
+    objeto = None
+    #Seleccion del objeto
+    if tipo_objeto=='Deportista':
+        objeto =  Deportista.objects.get(id=transferencia.id_objeto)
+    elif tipo_objeto == 'Entrenador':
+        objeto = Entrenador.objects.get(id=transferencia.id_objeto)
+    elif tipo_objeto== 'Escenario':
+        objeto = Escenario.objects.get(id=transferencia.id_objeto)
+
+    #Procesamiento del objeto
+    if opcion == '0':
+        #Rechazo de transferencia
+        objeto.estado = 0
+        objeto.save()
+
+        connection.set_tenant(request.tenant)
+        ContentType.objects.clear_cache()
+
+        transferencia.estado = 'Rechazada'
+        transferencia.save()
+
+        messages.warning(request,'Transferencia rechazada exitosamente')
+    else:
+        #Aceptacion de transferencia
+        pass
+        messages.success(request,'Transferencia procesada exitosamente')
+
+    return redirect('inicio_tenant')
 
 @login_required
 def cancelar_transferencia(request,id_objeto,tipo_objeto):
