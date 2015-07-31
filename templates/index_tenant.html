@@ -13,6 +13,14 @@
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
 {% endblock %}
 
+{%block css%}
+    <style>
+        .profile-image {
+            border: 0;
+        }
+    </style>
+{%endblock%}
+
 {% block contenido %}
     <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
 
@@ -54,21 +62,21 @@
                                                 <ul class="media-list media-list-with-divider">
                                                 {% for t in transfer_persona %}
                                                     <li class="media media-sm">
-                                                        <a class="media-left" href="javascript:;">
+                                                        <a class="media-left">
                                                             {%if t.foto%}
                                                                 <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{t.foto}}" alt=""  />
-                                                            {%elif t.genero == "Hombre"%}
-                                                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" />
-                                                            {%else%}
+                                                            {%elif t.genero == "Mujer" or t.genero == "MUJER" %}
                                                                 <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" />
+                                                            {%else%}
+                                                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" />
                                                             {%endif%}
                                                         </a>
                                                         <div class="media-body">
                                                             <h4 class="media-heading">{{ t.nombres }} {{ t.apellidos }}<small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small></h4>
-                                                            <p><em>Identificación: </em>{{ t.tipo_id }}.{{ t.identificacion }}. <br/>
-                                                                <em>Edad:</em> {{ t.edad }} <br/>
-                                                                <em>Genero:</em> {{ t.genero }} <br/>
-                                                                <em>Ciudad(Departamento):</em> {{ t.ciudad_nacimiento }} <br/>
+                                                            <p>Identificación: {{ t.tipo_id }}.{{ t.identificacion }}. <br/>
+                                                                Edad: {{ t.edad }} <br/>
+                                                                Genero: {{ t.genero }} <br/>
+                                                                Ciudad de Residencia: {{ t.ciudad }} <br/>
                                                                 <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
                                                             </p>
                                                             <p>
@@ -92,10 +100,10 @@
                                                                                 <div class="profile-image">
                                                                                     {%if t.foto%}
                                                                                         <img  src="{{MEDIA_URL}}{{t.foto}}" alt=""  />
-                                                                                    {%elif t.genero == "Hombre"%}
-                                                                                        <img  src="{{STATIC_URL}}img/male.png" alt="" />
-                                                                                    {%else%}
+                                                                                    {%elif t.genero == "Mujer" or t.genero == "MUJER" %}
                                                                                         <img  src="{{STATIC_URL}}img/female.png" alt="" />
+                                                                                    {%else%}
+                                                                                        <img  src="{{STATIC_URL}}img/male.png" alt="" />
                                                                                     {%endif%}
 
                                                                                     <i class="fa fa-user hide"></i>
@@ -127,12 +135,12 @@
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td class="field">Tipo Identificación:</td>
-                                                                                                    <td><i class="fa fa-wallet fa-lg m-r-5"></i> {{ t.tipo_id }}</td>
+                                                                                                    <td class="field">Identificación</td>
+                                                                                                    <td> {{ t.tipo_id }}. {{ t.identificacion }}</td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td class="field">Identificación</td>
-                                                                                                    <td>{{ t.identificacion }}</td>
+                                                                                                    <td class="field">Nacionalidades:</td>
+                                                                                                    <td><i class="ion ion-earth fa-lg m-r-5"></i>{{t.nacionalidad_str}}</td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Edad</td>
@@ -142,8 +150,8 @@
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr class="highlight">
-                                                                                                    <td class="field">Ciudad de Nacimiento</td>
-                                                                                                    <td>{{ t.ciudad_nacimiento }}</td>
+                                                                                                    <td class="field">Ciudad de Residencia</td>
+                                                                                                    <td>{{ t.ciudad }}</td>
                                                                                                 </tr>
                                                                                                 <tr class="divider">
                                                                                                     <td colspan="2"></td>
@@ -213,9 +221,9 @@
                                                     <li class="media media-sm">
                                                         <div class="media-body">
                                                             <h4 class="media-heading">{{ t.nombre }}</h4> <small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small>
-                                                            <p><em>Dirección:</em> {{ t.direccion }} <br/>
-                                                                <em>Ciudad(Departamento):</em> {{ t.ciudad }} <br/>
-                                                                <em>Tipo:</em> {{ t.tipo }}<br/>
+                                                            <p>Dirección: {{ t.direccion }} <br/>
+                                                                Ciudad(Departamento): {{ t.ciudad }} <br/>
+                                                                Tipo: {{ t.tipo }}<br/>
                                                                 <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
                                                             </p>
                                                             <p>
