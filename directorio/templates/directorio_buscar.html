@@ -1,21 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
-{% block head %}
-    
-{% endblock %}
-
-{% block css %}
-    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
-    <link href="{{STATIC_URL}}plugins/isotope/isotope.css" rel="stylesheet" />
-    <link href="{{STATIC_URL}}plugins/lightbox/css/lightbox.css" rel="stylesheet" />
-    <!-- ================== END PAGE LEVEL STYLE ================== -->
-    
-    <!-- ================== BEGIN BASE JS ================== -->
-    <script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script>
-    <!-- ================== END BASE JS ================== -->
-{% endblock %}
-
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li class="active">Directorio</li>
@@ -33,7 +18,6 @@
 {% endblock %}
 
 {% block contenido_panel %}
-
     <div class="row">
         <form action="{% url 'directorio_buscar' %}" method="POST">{% csrf_token %}
             <div class="col-md-10">       
@@ -51,29 +35,29 @@
             </div>
         </form>
     </div></br></br>
-    <div >       
+    <div style="margin-left:70px;">       
         <h1 class="page-header">Resultados Obtenidos</h1>
         <div id="options" class="m-b-10">
             <span class="gallery-option-set" id="filter" data-option-key="filter">
                 <a href="#show-all" class="btn btn-primary btn-xs active" data-option-value="*">
                     Mostrar Todos
                 </a>
-                <a href="#CajasView" class="btn btn-primary btn-xs" data-option-value=".CajasView">
+                <a href="#CajaCompensancionView" class="btn btn-primary btn-xs" data-option-value=".CajaCompensacionView">
                     Cajas de Compensación
                 </a>
                 <a href="#CAFView" class="btn btn-primary btn-xs" data-option-value=".CAFView">
                     Centro de Acondicionamiento
                 </a>
-                <a href="#gallery-group-2" class="btn btn-primary btn-xs" data-option-value=".gallery-group-1">
+                <a href="#DeportistaView" class="btn btn-primary btn-xs" data-option-value=".DeportistaView">
                     Deportistas
                 </a>
-                <a href="#gallery-group-3" class="btn btn-primary btn-xs" data-option-value=".gallery-group-4">
+                <a href="#DirigenteView" class="btn btn-primary btn-xs" data-option-value=".DirigenteView">
                     Dirigentes
                 </a>
                 <a href="#EscenarioView" class="btn btn-primary btn-xs" data-option-value=".EscenarioView">
                     Escenarios Deportivos
                 </a>
-                <a href="#gallery-group-5" class="btn btn-primary btn-xs" data-option-value=".gallery-group-3">
+                <a href="#EntrenadorView" class="btn btn-primary btn-xs" data-option-value=".EntrenadorView">
                     Entrenadores
                 </a>
             </span>
@@ -84,48 +68,51 @@
         <div id="gallery" class="gallery">
         {% for tupla in listado_resultados %}
             {% for resultado in tupla %}
-            <div class="image {{resultado.grupo}}">
-                <div class="image-inner">
-                    <a href="{{STATIC_URL}}{% if not resultado.foto %}img/actores/{{resultado.grupo}}.png{% else %}{{resultado.foto}}{% endif %}" data-lightbox="gallery-group-1">
-                        <img src="{{STATIC_URL}}{% if not resultado.foto %}img/actores/{{resultado.grupo}}.png{% else %}{{resultado.foto}}{% endif %}" alt="" />
-                    </a>
-                    <p class="image-caption">
-                        {{resultado.ciudad.nombre}}
-                    </p>
-                </div>
-                <div class="image-info">
-                    <h5 class="title">{{resultado.nombre}}</h5>
-                    <div class="pull-right">
-                        <small>De: </small> <a href="javascript:;">{{resultado.entidad.nombre}}</a>
+                <div class="image {{resultado.grupo}}" >
+                    <div class="image-inner">
+                        <a href="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.png{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" data-lightbox="{{resultado.grupo}}">
+                            <img src="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.png{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" alt="" />
+                        </a>
+                        <p class="image-caption">
+                            {{resultado.ciudad.nombre}}{{resultado.ciudad_residencia.nombre}}
+                        </p>
                     </div>
-                    <div class="rating">
-                        <span class="star active"></span>
-                        <span class="star active"></span>
-                        <span class="star active"></span>
-                        <span class="star"></span>
-                        <span class="star"></span>
-                    </div>
-                    <div class="desc">
-                        {{resultado.direccion}}, {{resultado.ciudad.nombre}}
+                    <div class="image-info">
+                        <h5 class="title">{{resultado.nombre}} {{resultado.nombres}} {{resultado.apellidos}}</h5>
+                        <div class="pull-right">
+                            <small>Entidad: </small> <a href="javascript:;">{{resultado.entidad.nombre}}</a>
+                        </div>
+                        <button class="btn btn-xs btn-warning">Ver Detalles</button>                        
+                        <div class="desc">
+                            Dirección: {{resultado.direccion}},</br>  {{resultado.ciudad.nombre}} {{resultado.ciudad_residencia.nombre}}
+                        </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}                    
         {% endfor %}
         </div>
         {% endif %}
     </div>
 
+
+{% endblock %}
+{% block css %}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{{STATIC_URL}}plugins/isotope/isotope.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}plugins/lightbox/css/lightbox.css" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+    
 {% endblock %}
 
-
 {% block js %}
+    
     <!-- ================== BEGIN PAGE LEVEL JS ================== -->
     <script src="{{STATIC_URL}}plugins/isotope/jquery.isotope.min.js"></script>
     <script src="{{STATIC_URL}}plugins/lightbox/js/lightbox-2.6.min.js"></script>
     <script src="{{STATIC_URL}}js/gallery.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
-    <!-- ================== END PAGE LEVEL JS ================== -->
+    <!-- ================== END PAGE LEVEL JS ================== --> 
+    
 {% endblock %}
 
 {% block script %}
