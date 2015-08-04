@@ -49,6 +49,9 @@ fields = {
     },
     fecha_fin: {
         validators: {
+            notEmpty: {
+                message: 'La fecha de finalización no puede ser vacía'
+            },
             date: {
                 message: 'El valor ingresado no es una fecha válida, verifique que no sea menor a la de inicio',
                 format: 'YYYY-MM-DD',

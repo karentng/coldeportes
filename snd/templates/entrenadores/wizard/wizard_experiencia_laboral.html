@@ -110,26 +110,6 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-experiencia-validations.js"></script>
-
+    <script src="{{ STATIC_URL }}js/funciones_calculos/entrenadores/experiencia_y_formacion.js"></script>
 {% endblock %}
 
-{% block script %}
-    <script>
-
-        $(document).ready(function() {
-            $("#id_actual").change(function(){
-               if($(this).is(":checked")){
-                   $("#id_fecha_fin").val("");
-                   $("#id_fecha_fin").parent().css('display','none');
-               }else{
-                   $("#id_fecha_fin").parent().css('display','block');
-               }
-            });
-
-
-            App.init();
-            FormWizard.init();
-        });
-
-    </script>
-{% endblock %}
