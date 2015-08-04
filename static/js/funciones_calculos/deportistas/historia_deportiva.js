@@ -28,6 +28,5 @@ $(document).ready(function() {
            $(form).bootstrapValidator('revalidateField', 'fecha_final');
        }
     });
-    App.init();
     FormWizard.init();
 });
