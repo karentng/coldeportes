@@ -77,20 +77,20 @@
                                 </a>
                                 <br/>
                                 {% if perms.snd.change_entrenador %}
-                                    <a href="{% url 'edicion_entrenador' entrenador.id %}" title="Modificar">
-                                        <i class="fa fa-gear"></i> Editar
-                                    </a>
-                                    <br/>
-                                    <a href="#modal-desactivate" data-toggle="modal">
-                                        <i class="fa fa-ban"></i> Activar / Desactivar
-                                    </a>
-                                    <br/>
                                     {% if entrenador.estado == 2 %}
                                         <a href="{% url 'transferencias.views.cancelar_transferencia' entrenador.id 2 %}" title="Cancelar Tranferencia">
                                             <i class="fa fa-times"></i> Cancelar Transferencia
                                         </a>
-                                    {% elif entrenador.estado == 3 or entrenador.estado == 1 %}
+                                    {% elif entrenador.estado == 3%}
                                     {% else %}
+                                        <a href="{% url 'edicion_entrenador' entrenador.id %}" title="Modificar">
+                                            <i class="fa fa-gear"></i> Editar
+                                        </a>
+                                        <br/>
+                                        <a href="#modal-desactivate" data-toggle="modal">
+                                            <i class="fa fa-ban"></i> Activar / Desactivar
+                                        </a>
+                                        <br/>
                                         <a href="{% url 'transferencias.views.generar_transferencia' 1 2 entrenador.id %}" title="Transferir">
                                             <i class="fa fa-exchange"></i> Transferir
                                         </a>

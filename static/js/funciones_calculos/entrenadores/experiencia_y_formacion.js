@@ -1,18 +1,18 @@
 /**
- * Created by daniel on 30/07/15.
+ * Created by Milton on 04/08/15.
  */
 $(document).ready(function() {
-    $('#id_fecha_final').prop('required',true);
+    $('#id_fecha_fin').prop('required',true);
     $("#id_actual").change(function(){
        if($(this).is(":checked")){
-           $("#id_fecha_final").val("");
-           $("#id_fecha_final").parent().css('display','none');
-           $('#id_fecha_final').prop('required',false);
+           $("#id_fecha_fin").val("");
+           $("#id_fecha_fin").parent().css('display','none');
+           $('#id_fecha_fin').prop('required',false);
            delete fields['fecha_final'];
 
        }else{
-           $("#id_fecha_final").parent().css('display','block');
-           $('#id_fecha_final').prop('required',true);
+           $("#id_fecha_fin").parent().css('display','block');
+           $('#id_fecha_fin').prop('required',true);
            fields['fecha_final'] = {
                validators: {
                    notEmpty: {
@@ -28,5 +28,6 @@ $(document).ready(function() {
            $(form).bootstrapValidator('revalidateField', 'fecha_final');
        }
     });
+    App.init();
     FormWizard.init();
 });

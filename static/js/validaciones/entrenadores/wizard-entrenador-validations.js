@@ -53,7 +53,9 @@ fields = {
                     },
                     date: {
 					    message: 'El valor ingresado no es una fecha válida',
-                        format: 'YYYY-MM-DD'
+                        format: 'YYYY-MM-DD',
+                        message: 'La fecha de nacimiento no puede ser mayor a hoy',
+                        max: ($.datepicker.formatDate('yy-mm-dd', new Date())).toString()
 				    }
                 }
             },
@@ -75,6 +77,11 @@ fields = {
                 validators: {
                     numeric: {
                         message: 'La altura solo puede contener números'
+                    },
+                    greaterThan: {
+                        message: 'La altura no puede ser menor o igual a 0',
+                        value: 1
+
                     }
                 }
             },
@@ -82,6 +89,11 @@ fields = {
                 validators: {
                     numeric: {
                         message: 'El peso solo puede contener números'
+                    },
+                    greaterThan: {
+                        message: 'La estatura no puede ser menor o igual a 0',
+                        value: 1
+
                     }
                 }
             }

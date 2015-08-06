@@ -68,8 +68,10 @@
                                     <a href="javascript:;" class="media-left"></a>
                                     {%if deportista.foto%}
                                         <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" style="float: left; width=100 height=100" />
+                                    {%elif deportista.genero == "Hombre"%}
+                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" width="60" height="60"/>
                                     {%else%}
-                                        <span class="fa fa-4x fa-smile-o media-object" style="float: left;"></span>
+                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" width="60" height="60"/>
                                     {%endif%}
                                     <div class="media-body">
                                         <div class="col-lg-6">
@@ -89,10 +91,7 @@
                                             {% else %}
                                                 Ninguna
                                             {% endif %}<br/>
-                                            Disciplinas:
-                                            {%for d in deportista.disciplinas.all%}
-                                                {{ d }},
-                                            {% endfor %}<br/>
+                                            Disciplinas: {{ deportista.disciplinas_str }}<br/>
                                             {% if perms.snd.change_deportista %}
                                                 <strong>Contacto:</strong> <br/>
                                                 Teléfono: {{deportista.telefono}}<br/>
@@ -105,9 +104,10 @@
                                                 {% endif %}<br/>
                                                 <strong>Ubicación:</strong> <br/>
                                                 Barrio: {{ deportista.barrio }} <br/>
-                                                Comuna: {{ deportista.comuna }}
+                                                Comuna: {{ deportista.comuna }} <br/>
+                                                Etinia: {%if deportista.etinia %}{{ deportista.etnia}} {%else%} Ninguna {%endif%}
                                             {% endif %}
-                                            {{ deportista.etnia}}
+
                                         </p>
                                         </div>
                                         <div class="col-lg-6">
@@ -155,8 +155,10 @@
                                                 Camisa: {{ composicion.talla_camisa }}<br/>
                                                 Pantaloneta: {{ composicion.talla_pantaloneta }}<br/>
                                                 Zapato: {{ composicion.talla_zapato }}<br/>
-                                                Grasa: {{ composicion.porcentaje_grasa }}% <br/>
-                                                Musculo: {{ composicion.porcentaje_musculo }}%
+                                                Indice de Masa Corporal: {{composicion.imc}} kg/m^2<br/>
+                                                Porcentaje Grasa: {{ composicion.porcentaje_grasa }}% <br/>
+                                                Masa Muscular Magra: {{ composicion.masa_corporal_magra }} kg <br/>
+                                                <b>EPS:</b> {{composicion.eps}}
                                             </p>
                                         </div>
                                         <div class="col-lg-6">
@@ -189,21 +191,39 @@
                             <table class="table table-invoice">
                                 <thead>
                                     <tr>
-                                        <th>FECHA</th>
-                                        <th>LUGAR</th>
+                                        <th>NOMBRE COMPETENCIA</th>
+                                        <th>FECHA INICIAL</th>
+                                        <th>FECHA FINALIZACIÓN</th>
+                                        <th>PAÍS</th>
                                         <th>INSTITUCIÓN O EQUIPO</th>
                                         <th>TIPO</th>
-                                        <th>DESCRIPCION</th>
+                                        <th>PUESTO</th>
+                                        <th>CATEGORIA</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for historial in historial_deportivo %}
                                     <tr>
-                                        <td>{{historial.fecha}}</td>
-                                        <td>{{historial.lugar}}</td>
-                                        <td>{% if historial.institucion_equipo %}{{ historial.institucion_equipo }}{% else %}Ninguno{% endif %}</td>
-                                        <td>{{ historial.tipo }}</td>
-                                        <td>{{historial.descripcion}}</td>
+                                        <td>{{historial.nombre}}</td>
+                                        <td>{{historial.fecha_inicial}}</td>
+                                        <td>
+                                            {% if not historial.actual %}
+                                                {{ historial.fecha_final }}
+                                            {% else %}
+                                                ACTUAL
+                                            {%endif%}
+                                        </td>
+                                        <td>{{historial.pais}}</td>
+                                        <td>
+                                            {% if historial.institucion_equipo %}
+                                                {{ historial.institucion_equipo }}
+                                            {% else %}
+                                                Ninguno
+                                            {% endif %}
+                                        </td>
+                                        <td>{{historial.tipo}}</td>
+                                        <td>{{historial.puesto}}</td>
+                                        <td>{{historial.categoria}}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

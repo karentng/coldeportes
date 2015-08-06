@@ -6,8 +6,6 @@ var profesion = document.getElementById("id_profesion");
 var fecha_finalizacion = document.getElementById("id_fecha_finalizacion");
 
 $(document).ready(function() {
-    App.init();
-    FormWizard.init();
     grado_semestre.disabled=true;
     profesion.disabled=true;
     fecha_finalizacion.disabled=true;

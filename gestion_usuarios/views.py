@@ -81,6 +81,8 @@ def inicio_tenant(request):
     :param request: Petición Realizada
     :type request: WSGIRequest
     """
+
+    #Inicio consulta de transferencias
     transferencias = Transferencia.objects.filter(estado='Pendiente')
     transfer_personas = []
     transfer_escenarios = []
@@ -88,36 +90,34 @@ def inicio_tenant(request):
         entidad_cambio = t.entidad
         connection.set_tenant(entidad_cambio)
         ContentType.objects.clear_cache()
-        if t.tipo_objeto=='Deportista':
-            depor = Deportista.objects.get(id=t.id_objeto)
-            depor.edad = calculate_age(depor.fecha_nacimiento)
-            depor.procedencia = entidad_cambio
-            depor.fecha_solicitud = t.fecha_solicitud
-            transfer_personas.append(depor)
-        elif t.tipo_objeto=='Entrenador':
-            entre = Entrenador.objects.get(id=t.id_objeto)
-            entre.edad = calculate_age(entre.fecha_nacimiento)
-            entre.procedencia = entidad_cambio
-            entre.fecha_solicitud = t.fecha_solicitud
-            transfer_personas.append(entre)
+        objeto_trans = None
+        #Si es persona
+        if t.tipo_objeto =='Deportista' or t.tipo_objeto=='Entrenador':
+            #Si es deportista
+            if t.tipo_objeto =='Deportista':
+                objeto_trans = Deportista.objects.get(id=t.id_objeto)
+                objeto_trans.ciudad = objeto_trans.ciudad_residencia
+            #Si es entrenador
+            elif t.tipo_objeto =='Entrenador':
+                objeto_trans = Entrenador.objects.get(id=t.id_objeto)
+            objeto_trans.edad = calculate_age(objeto_trans.fecha_nacimiento)
+            objeto_trans.procedencia = entidad_cambio
+            objeto_trans.fecha_solicitud = t.fecha_solicitud
+            objeto_trans.nacionalidad_str = ','.join(x.nombre for x in objeto_trans.nacionalidad.all())
+            objeto_trans.id_trans = t.id
+            transfer_personas.append(objeto_trans)
+        #Caso contrario es escenario
         elif t.tipo_objeto=='Escenario':
-            escenario = Escenario.objects.get(id=t.id_objeto)
-            escenario.procedencia = entidad_cambio
-            escenario.tipo = CaracterizacionEscenario.objects.get(escenario=escenario).tipo_escenario
-            escenario.fecha_solicitud = t.fecha_solicitud
-            transfer_escenarios.append(escenario)
+            objeto_trans = Escenario.objects.get(id=t.id_objeto)
+            objeto_trans.procedencia = entidad_cambio
+            objeto_trans.tipo = CaracterizacionEscenario.objects.get(escenario=objeto_trans).tipo_escenario
+            objeto_trans.fecha_solicitud = t.fecha_solicitud
+            objeto_trans.id_trans = t.id
+            transfer_escenarios.append(objeto_trans)
 
-    """transfer_depor = Deportista.objects.all()
-    for d in transfer_depor:
-        #disciplinas = ','.join(str(x) for x in d.disciplinas.all())
-        #d.disciplinas_str = disciplinas
-        d.edad= calculate_age(d.fecha_nacimiento)
-        d.procedencia = 'Deportivo Cali'
-
-    transfer_es = Escenario.objects.all()
-    for e in transfer_es:
-        e.tipo = CaracterizacionEscenario.objects.get(escenario=e).tipo_escenario
-        e.procedencia= 'Deportivo Cali'"""
+    connection.set_tenant(request.tenant)
+    ContentType.objects.clear_cache()
+    #Fin consulta de transferencias
 
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,

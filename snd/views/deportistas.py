@@ -33,14 +33,10 @@ def wizard_deportista_nuevo(request):
 
     try:
         datos = request.session['datos']
-        del request.session['datos']
     except Exception:
         return redirect('verificar_deportista')
 
     deportista_form = DeportistaForm(initial=datos)
-
-
-    #deportista_form = DeportistaForm()
 
     if request.method == 'POST':
 
@@ -143,7 +139,7 @@ def wizard_corporal(request,id_depor):
     corporal_form = ComposicionCorporalForm(mujer,instance=corporal)
 
     if request.method == 'POST':
-        corporal_form = ComposicionCorporalForm(request.POST, instance=corporal)
+        corporal_form = ComposicionCorporalForm(mujer,request.POST, instance=corporal)
 
         if corporal_form.is_valid():
             corporal = corporal_form.save(commit=False)
@@ -156,7 +152,8 @@ def wizard_corporal(request,id_depor):
         'titulo': 'Composición Corporal del Deportista',
         'wizard_stage': 2,
         'form': corporal_form,
-        'mujer' : mujer
+        'mujer' : mujer,
+        'id_deportista' : deportista.id
     })
 
 @login_required
@@ -386,6 +383,7 @@ def ver_deportista(request,id_depor):
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista)
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     deportista.edad = calculate_age(deportista.fecha_nacimiento)
+    deportista.disciplinas_str = ','.join(x.descripcion for x in deportista.disciplinas.all())
     return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
             'composicion':composicion,
@@ -409,6 +407,7 @@ def finalizar_deportista(request,opcion):
     :type opcion: String
     """
     messages.success(request, "Deportista registrado correctamente.")
+    del request.session['datos']
     if opcion=='nuevo':
         return redirect('deportista_nuevo')
     elif opcion =='listar':
@@ -468,7 +467,6 @@ def verificar_deportista(request):
                         pass
 
                 connection.set_tenant(tenant_actual)
-
 
                 if existencia:
                     return render(request,'deportistas/verificar_deportista.html',{'existe':True,

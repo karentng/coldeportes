@@ -81,20 +81,21 @@
                                 </a>
                                 <br/>
                                 {% if perms.snd.change_deportista %}
-                                    <a href="{% url 'edicion_deportista' deportista.id %}" title="Modificar">
-                                        <i class="fa fa-gear"></i> Editar
-                                    </a>
-                                    <br/>
-                                    <a href="#modal-desactivate-{{ deportista.id }}" data-toggle="modal">
-                                        <i class="fa fa-ban"></i> Activar / Inactivar
-                                    </a>
-                                    <br/>
+
                                     {% if deportista.estado == 2 %}
                                         <a href="{% url 'transferencias.views.cancelar_transferencia' deportista.id 1 %}" title="Cancelar Tranferencia">
                                             <i class="fa fa-times"></i> Cancelar Transferencia
                                         </a>
-                                    {% elif deportista.estado == 3 or deportista.estado == 1 %}
+                                    {% elif deportista.estado == 3 %}
                                     {% else %}
+                                        <a href="{% url 'edicion_deportista' deportista.id %}" title="Modificar">
+                                            <i class="fa fa-gear"></i> Editar
+                                        </a>
+                                        <br/>
+                                        <a href="#modal-desactivate-{{ deportista.id }}" data-toggle="modal">
+                                            <i class="fa fa-ban"></i> Activar / Inactivar
+                                        </a>
+                                        <br/>
                                         <a href="{% url 'transferencias.views.generar_transferencia' 1 1 deportista.id %}" title="Transferir">
                                             <i class="fa fa-exchange"></i> Transferir
                                         </a>
