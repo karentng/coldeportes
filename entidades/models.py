@@ -9,6 +9,14 @@ class Actores(models.Model):
     dirigentes = models.BooleanField(verbose_name="Dirigentes")
     cajas = models.BooleanField(verbose_name="Cajas de Compensación")
 
+    def resumen(self):
+        actores = []
+        campos = self._meta.fields
+        for i in campos:
+            if getattr(self, i.name) == True and i.name != 'id':
+                actores.append(i.verbose_name)
+        return actores
+
 class Entidad(TenantMixin): # Entidad deportiva
     TIPOS = (
         (1, 'Ente Municipal'),

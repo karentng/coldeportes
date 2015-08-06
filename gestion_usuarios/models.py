@@ -1,3 +1,16 @@
 from django.db import models
 
-# Create your models here.
+PERMISOS_DIGITADOR = [
+    ['add_cajacompensacion', 'cajas'],
+    ['change_cajacompensacion', 'cajas'],
+    ['add_dirigente', 'dirigentes'],
+    ['change_dirigente', 'dirigentes'],
+    ['add_deportista', 'deportistas'],
+    ['change_deportista', 'deportistas'],
+    ['add_centroacondicionamiento', 'centros'],
+    ['change_centroacondicionamiento', 'centros'],
+    ['add_entrenador', 'entrenadores'],
+    ['change_entrenador', 'entrenadores'],
+    ['add_escenario', 'escenarios'],
+    ['change_escenario', 'escenarios'],
+]

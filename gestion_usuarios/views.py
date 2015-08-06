@@ -10,36 +10,43 @@ from snd.modelos.escenarios import Escenario,CaracterizacionEscenario
 from transferencias.models import Transferencia
 from django.db import connection
 from django.contrib.contenttypes.models import ContentType
+from gestion_usuarios.models import PERMISOS_DIGITADOR
+from django.db.models import Q
+from coldeportes.utilities import permisosPermitidos
 
-PERMISOS_DIGITADOR = [
-    'add_cajacompensacion',
-    'change_cajacompensacion',
-    'add_dirigente',
-    'change_dirigente',
-    'add_deportista',
-    'change_deportista',
-    'add_centroacondicionamiento',
-    'change_centroacondicionamiento',
-    'add_entrenador',
-    'change_entrenador',
-    'add_escenario',
-    'change_escenario',
-]
-
-def asignarPermisosGrupo(grupo, permisos):
+def asignarPermisosGrupo(request, grupo, permisos):
+    permisos = permisosPermitidos(request, permitidos)
     permisos = Permission.objects.filter(codename__in=permisos)
     for permiso in permisos:
         grupo.permissions.add(permiso)
+
+def cambiarNombreDePermisos():
+    permisos = Permission.objects.filter(
+        Q(name__icontains='Can delete')|
+        Q(name__icontains='Can add')|
+        Q(name__icontains='Can change')
+    )
+    for i in permisos:
+        nombre_permiso = i.name
+        if 'Can delete' in nombre_permiso:
+            nombre_permiso = nombre_permiso.replace('Can delete', 'Permite eliminar')
+        elif 'Can add' in nombre_permiso:
+            nombre_permiso = nombre_permiso.replace('Can add', 'Permite crear')
+        elif 'Can change' in nombre_permiso:
+            nombre_permiso = nombre_permiso.replace('Can change', 'Permite editar')
+        i.name = nombre_permiso
+        i.save()
 
 def inicio(request):
     digitador = None
 
     grupos = Group.objects.all()
+    cambiarNombreDePermisos()
     if len(grupos) == 0:
         digitador = Group(name='Digitador')
         digitador.save()
         Group(name='Solo lectura').save()
-        asignarPermisosGrupo(digitador, PERMISOS_DIGITADOR)
+        asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
@@ -224,10 +231,10 @@ def grupos_listar(request):
 @login_required
 @superuser_only
 def grupos_crear(request):
-    form = GroupForm()
+    form = GroupForm(request=request)
 
     if request.method == 'POST':
-        form = GroupForm(request.POST)
+        form = GroupForm(request.POST, request=request)
         if form.is_valid():
             form.save()
             messages.success(request, "Grupo creado correctamente")

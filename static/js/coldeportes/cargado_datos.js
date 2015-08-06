@@ -163,7 +163,9 @@ $.ajax( {
                         }else{
                         	return api.columns().indexes().toArray();
                         }
-                    }
+                    },
+                    "sButtonClass": "btn",
+                    "sButtonText": "<i class='fa fa-copy bigger-110 pink'></i> Copiar",
                 },
                 {
                     "sExtends": "csv",
@@ -174,7 +176,9 @@ $.ajax( {
                         }else{
                         	return api.columns().indexes().toArray();
                         }
-                    }
+                    },
+                    "sButtonClass": "btn",
+                    "sButtonText": "<i class='fa fa-file-text-o bigger-110 green'></i> CSV"
                 },
                 {
                     "sExtends": "xls",
@@ -185,7 +189,9 @@ $.ajax( {
                         }else{
                         	return api.columns().indexes().toArray();
                         }
-                    }
+                    },
+                    "sButtonClass": "btn",
+                    "sButtonText": "<i class='fa fa-file-excel-o bigger-110 green'></i> XLS"
                 },
                 {
                     "sExtends": "pdf",
@@ -196,7 +202,9 @@ $.ajax( {
                         }else{
                         	return api.columns().indexes().toArray();
                         }
-                    }
+                    },
+                    "sButtonClass": "btn",
+                    "sButtonText": "<i class='fa fa-file-pdf-o bigger-110 red'></i> PDF"
                 },
                 {
                     "sExtends": "print",
@@ -207,7 +215,9 @@ $.ajax( {
                         }else{
                         	return api.columns().indexes().toArray();
                         }
-                    }
+                    },
+                    "sButtonClass": "btn",
+                    "sButtonText": "<i class='fa fa-print bigger-110 grey'></i> Imprimir",
                 },
             ],
         },

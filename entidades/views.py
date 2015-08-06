@@ -42,16 +42,56 @@ def registro(request, tipo):
         'dominio': dominio,
     })
 
+@login_required
+def editar(request, idEntidad):
+    try:
+        entidad = Entidad.objects.get(id=idEntidad)
+    except Exception:
+        return redirect('entidad_listar')
+
+    form = EntidadEditarForm(instance=entidad)
+    form2 = ActoresForm(instance=entidad.actores)
+
+    if request.method == 'POST':
+        form = EntidadEditarForm(request.POST, instance=entidad)
+        form2 = ActoresForm(request.POST, instance=entidad.actores)
+        if form.is_valid() and form2.is_valid():
+            actores = form2.save()
+            obj = form.save()
+            messages.success(request, "Entidad editada correctamente.")
+            return redirect('entidad_listar')
+
+    return render(request, 'entidad_editar.html', {
+        'form': form,
+        'form2': form2,
+    })
+
+@login_required
+def listar(request):
+    entidades = Entidad.objects.exclude(schema_name="public")
+    return render(request, 'entidad_listar.html', {
+        'entidades': entidades,
+    })
+
+
+from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.db import connection
+
 @csrf_exempt
-def test(request):
+def appMovilLogin(request):
     from django.contrib.auth.models import User
     from django.contrib.auth import authenticate, login
 
     if request.method == 'GET':
         username = request.GET['name']
         password = request.GET['pw']
+        entidad = request.GET['entidad']
+
+        entidad = Entidad.objects.get(schema_name=entidad)
+        connection.set_tenant(entidad)
+
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
@@ -59,53 +99,79 @@ def test(request):
 
     return JsonResponse({'id': None})
 
-from django.db import connection
-from django.contrib.contenttypes.models import ContentType
 from snd.modelos.cafs import *
-def cafs(request):
-    entidad = Entidad.objects.get(schema_name='cliente1')
-    connection.set_tenant(entidad)
-    centros = CentroAcondicionamiento.objects.all()
+from snd.modelos.escenarios import *
+def appMovilObtenerActores(request):
     datos = {'escenarios':[], 'cafs':[]} # [Escenarios, CAFS]
-    for i in centros:
-        dato = {
-            'id': i.id,
-            'nombre': i.nombre,
-            'latitud': i.latitud,
-            'longitud': i.longitud,
-            'sincronizar': False,
-        }
-        datos['cafs'].append(dato)
+    if request.method == 'GET':
+        entidad = request.GET.get('entidad')
+        entidad = Entidad.objects.get(schema_name=entidad)
+        connection.set_tenant(entidad)
+        centros = CentroAcondicionamiento.objects.all()
+        
+        for i in centros:
+            dato = {
+                'id': i.id,
+                'nombre': i.nombre,
+                'latitud': i.latitud,
+                'longitud': i.longitud,
+                'altura': i.altura,
+                'sincronizar': False,
+            }
+            datos['cafs'].append(dato)
+
+        escenarios = Escenario.objects.all()
+        for i in escenarios:
+            dato = {
+                'id': i.id,
+                'nombre': i.nombre,
+                'latitud': i.latitud,
+                'longitud': i.longitud,
+                'altura': i.altura,
+                'sincronizar': False,
+            }
+            datos['escenarios'].append(dato)
+
     return JsonResponse(datos)
 
-def actualizarLocalizacionCaf(actor):
-    centro = CentroAcondicionamiento.objects.get(id=actor['id'])
-    centro.latitud = actor['latitud']
-    centro.longitud = actor['longitud']
-    centro.save()
+def actualizarLocalizacionActor(actor, modelo):
+    instancia = modelo.objects.get(id=actor['id'])
+    instancia.latitud = actor['latitud']
+    instancia.longitud = actor['longitud']
+    instancia.altura = actor['altura']
+    instancia.save()
 
 import json
-def actualizarLocalizacion(request):
+def appMovilActualizarLocalizacion(request):
     if request.method == 'GET':
-        entidad = Entidad.objects.get(schema_name='cliente1')
+        entidad = request.GET['entidad']
+        entidad = Entidad.objects.get(schema_name=entidad)
         connection.set_tenant(entidad)
 
         tipoActor = request.GET['tipoActor']
         actor = json.loads(request.GET['actor'])
 
         if tipoActor == '1':
-            actualizarLocalizacionCaf(actor)
+            actualizarLocalizacionActor(actor, CentroAcondicionamiento)
             return JsonResponse({'response': True})
 
-def sincronizar(request):
+        if tipoActor == '0':
+            actualizarLocalizacionActor(actor, Escenario)
+            return JsonResponse({'response': True})
+
+def appMovilSincronizar(request):
     if request.method == 'GET':
-        entidad = Entidad.objects.get(schema_name='cliente1')
+        entidad = request.GET.get('entidad')
+        entidad = Entidad.objects.get(schema_name=entidad)
         connection.set_tenant(entidad)
 
         escenarios = json.loads(request.GET.get('escenarios', '[]'))
         cafs = json.loads(request.GET.get('cafs', '[]'))
 
         for i in cafs:
-            actualizarLocalizacionCaf(i)
+            actualizarLocalizacionActor(i, CentroAcondicionamiento)
+
+        for i in escenarios:
+            actualizarLocalizacionActor(i, Escenario)
 
         return JsonResponse({'response': True})
