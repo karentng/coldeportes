@@ -12,6 +12,7 @@ class IdentificacionForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(IdentificacionForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+        self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
         self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
 

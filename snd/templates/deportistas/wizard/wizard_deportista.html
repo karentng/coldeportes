@@ -7,6 +7,7 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -29,31 +30,95 @@
 
 {% block contenido_panel %}
 	{% include 'deportistas/wizard/_wizard.html' %}
-	<fieldset>
-		<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-			<div class="well row">
+
+	<form id="form-wizard-deportista" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+		<fieldset>
 				<div class="col-xs-12">
 					<h3>{{titulo}}</h3>
-					{% for i in form %}
-						<div class="col-md-6">
-							{% bootstrap_field i layout="vertical" %}
+
+					<div class="well row">
+						<strong><h4>Identificación</h4></strong>
+
+						<div class="row">
+							<div class="col-md-6">
+								{% bootstrap_field form.nombres layout="verical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.apellidos layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.genero layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.tipo_id layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.identificacion layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.fecha_nacimiento layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.video layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.disciplinas layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.foto layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.nacionalidad layout="vertical" %}
+							</div>
 						</div>
-					{% endfor %}
+						<hr>
+						<strong><h4>Ubicación</h4></strong>
+						<div class="row">
+							<div class="col-md-6">
+								{% bootstrap_field form.barrio layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.comuna layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.email layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.telefono layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.ciudad_residencia layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.direccion layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.etnia layout="vertical" %}
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-xs-12">
+								{% if wizard_stage > 1 %}
+									<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+								{% endif %}
+								<button class="btn btn-primary pull-right" type="submit">
+									Siguiente →
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<hr>
-			{% if wizard_stage > 1 %}
-			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-			{% endif %}		
-			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
-		</form>
-	</fieldset>
+		</fieldset>
+	</form>
+
 	
 
 {% endblock %}
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-deportista-validations.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 	
 {% endblock %}

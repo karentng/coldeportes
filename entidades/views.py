@@ -5,7 +5,6 @@ from entidades.models import *
 from entidades.forms import *
 from django.conf import settings
 from django.contrib import messages
-from snd.modelos.cafs import CentroAcondicionamiento
 
 @login_required
 def tipo(request):
@@ -175,3 +174,21 @@ def appMovilSincronizar(request):
             actualizarLocalizacionActor(i, Escenario)
 
         return JsonResponse({'response': True})
+
+def listar_entrenadores_nacionales(request):
+    pass
+
+def listar_dirigentes_nacionales(request):
+    pass
+
+def listar_deportistas_nacionales(request):
+    pass
+
+def listar_escenarios_nacionales(request):
+    pass
+
+def listar_cajas_nacionales(request):
+    pass
+
+def listar_cafs_nacionales(request):
+    pass

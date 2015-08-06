@@ -10,6 +10,14 @@
 	<script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_escenario-validations.js"></script>
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
 	{{form.media}} {# js y css para datetime #}
+	<style>
+    .control-label{
+        display: none;
+    }
+    .form-control-feedback{
+        margin-top: -31px;
+    }
+    </style>
 {% endblock %}
 
 {% block miga_pan %}

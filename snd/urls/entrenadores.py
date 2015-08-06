@@ -21,4 +21,5 @@ urlpatterns = patterns('snd.views.entrenadores',
     url(r'^desactivar/(\d+)$', 'desactivar_entrenador', name='entrenador_desactivar'),
     url(r'^finalizar//(?P<opcion>.+)', 'finalizar_entrenador', name='finalizar_entrenador'),
     url(r'^ver/(\d+)$','ver_entrenador',name='ver_entrenador'),
+    url(r'^verificar$', 'verificar_entrenador', name='verificar_entrenador'),
 )

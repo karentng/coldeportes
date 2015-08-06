@@ -15,7 +15,8 @@ ACTORES = (
 )
 
 class DirectorioBusquedaForm(forms.Form):
-    texto_a_buscar = forms.CharField(label="Búsqueda", widget=forms.TextInput(attrs={'placeholder': 'Ingrese las palabras clave'}))
+
+    texto_a_buscar = forms.CharField(required=False, label="Búsqueda", widget=forms.TextInput(attrs={'placeholder': 'Ingrese las palabras clave'}))
     ciudad = forms.ModelMultipleChoiceField(queryset=Ciudad.objects.none(), required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Ciudad'}))
     actor = forms.MultipleChoiceField(label="Categoría", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Categoría'}), choices=ACTORES)
 
@@ -23,5 +24,4 @@ class DirectorioBusquedaForm(forms.Form):
         super(DirectorioBusquedaForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'].queryset = Ciudad.objects.all()
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'many')
-        #self.fields['texto_a_buscar'] = adicionarClase(self.fields['texto_a_buscar'], 'navbar-form full-width')
         self.fields['actor'] = adicionarClase(self.fields['actor'], 'many')

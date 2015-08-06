@@ -3,7 +3,9 @@
 Thumbs.db
 coldeportes/settings.py
 snd/pendiente/
+media/
 snd/migrations
+directorio/migrations
 entidades/migrations
 transferencias/migrations
 gestion_usuarios/migrations

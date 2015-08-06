@@ -131,6 +131,9 @@ def adicionarClase(campo, clase):
     campo.widget.attrs.update({'class': clase})
     if clase == 'fecha':
         campo.widget.attrs.update({'readonly': True})
+        campo.widget.format = '%Y-%m-%d'
+        campo.input_formats=('%Y-%m-%d',)
+    campo.widget.attrs.update({'class': clase})
     return campo
 
 def calculate_age(born):

@@ -7,6 +7,7 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -31,13 +32,13 @@
     {% include 'deportistas/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" method="post">{% csrf_token %}
+                <form id="form-wizard-academica" action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
                         {% for i in form %}
                             <div class="col-lg-6">
-                                {% bootstrap_field i layout="vertical" %}
+							    {% bootstrap_field i layout="vertical" %}
                             </div>
                         {% endfor %}
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>              
@@ -46,14 +47,14 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Historial Académico Actual:</h4>
+                <h4>Historial Académico Registrado:</h4>
                 <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th align="center">Nivel</th>
                             <th align="center">Institucion</th>
-                            <th align="center">País</th>
+                            <th align="center">Fecha Finalizacion</th>
                             <th align="center">Estado</th>
                         </tr>
                     </thead>
@@ -62,7 +63,7 @@
                         <tr>
                             <td align="center">{{historico.nivel}}</td>
                             <td align="center">{{historico.institucion}}</td>
-                            <td align="center">{{historico.pais}}</td>
+                            <td align="center">{% if historico.fecha_finalizacion %} {{historico.fecha_finalizacion}} {%else%} Actual {%endif%}</td>
                             <td align="center">{{historico.estado}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate-{{ historico.id }}" data-toggle="modal"><i class="fa fa-trash"></i></a>
@@ -96,64 +97,20 @@
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
         <a href="{% url 'finalizar_deportista' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>
-        <a href="{% url 'finalizar_deportista' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">Finalizar,Guardar y Nuevo →</a>
+        <a href="{% url 'finalizar_deportista' opcion='nuevo' %}">
+                <button class="btn btn-warning pull-right" type="submit" style="margin-right:10px">
+                    <i class="fa fa-circle-o-notch"></i> Guardar y Registrar otro Deportista
+                </button>
+        </a>
     
 
 {% endblock %}
 
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-academica-validations.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/funciones_calculos/deportistas/historia_academica.js"></script>
     
 {% endblock %}
 
-{% block script %}
-    <script>
-        var grado_semestre = document.getElementById("id_grado_semestre");
-        var profesion = document.getElementById("id_profesion");
-        var fecha_finalizacion = document.getElementById("id_fecha_finalizacion");
-
-        $(document).ready(function() {
-            App.init();
-            FormWizard.init();
-            grado_semestre.disabled=true;
-            profesion.disabled=true;
-            fecha_finalizacion.disabled=true;
-        });
-
-        document.getElementById("id_nivel").onchange=function(){
-            var nivel = document.getElementById("id_nivel").value + "";
-            if(nivel == "Pregrado" || nivel == "Postgrado"){
-                profesion.disabled=false;
-            }else{
-                profesion.disabled=true;
-                profesion.value='';
-            }
-
-        };
-
-        document.getElementById("id_estado").onchange=function(){
-            var estado = document.getElementById("id_estado").value + "";
-            if(estado=="Actual"){
-                //se quita fecha
-                fecha_finalizacion.disabled=true;
-                fecha_finalizacion.value='';
-                //se pone grado
-                grado_semestre.disabled=false;
-            }else{
-                if(estado == "Finalizado" || estado=="Incompleto") {
-                    //se pone fecha
-                    fecha_finalizacion.disabled = false;
-                    //se quita grado
-                    grado_semestre.disabled = true;
-                    grado_semestre.value = '';
-                }else{
-                    //Algun otro caso
-                    grado_semestre.disabled=true;
-                    fecha_finalizacion.disabled=true;
-                }
-            }
-
-        };
-    </script>
-{% endblock %}

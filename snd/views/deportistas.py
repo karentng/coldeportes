@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from formtools.wizard.views import SessionWizardView
@@ -10,6 +12,8 @@ from snd.models import *
 from entidades.models import *
 from django.contrib import messages
 from coldeportes.utilities import calculate_age,all_permission_required
+from snd.formularios.deportistas import VerificarExistenciaForm
+
 
 @login_required
 @all_permission_required('snd.add_deportista')
@@ -26,7 +30,17 @@ def wizard_deportista_nuevo(request):
     :type request:    WSGIRequest
     """
 
-    deportista_form = DeportistaForm()
+
+    try:
+        datos = request.session['datos']
+        del request.session['datos']
+    except Exception:
+        return redirect('verificar_deportista')
+
+    deportista_form = DeportistaForm(initial=datos)
+
+
+    #deportista_form = DeportistaForm()
 
     if request.method == 'POST':
 
@@ -46,7 +60,7 @@ def wizard_deportista_nuevo(request):
 
 
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
-        'titulo': 'Identificación del Deportista',
+        'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
     })
@@ -92,7 +106,7 @@ def wizard_deportista(request,id_depor):
 
 
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
-        'titulo': 'Identificación del Deportista',
+        'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
     })
@@ -121,19 +135,19 @@ def wizard_corporal(request,id_depor):
     except Exception:
         corporal = None
 
-    corporal_form = ComposicionCorporalForm(instance=corporal)
+    deportista = Deportista.objects.get(id=id_depor)
+    mujer = False
+    if deportista.genero == 'Mujer':
+        mujer=True
+
+    corporal_form = ComposicionCorporalForm(mujer,instance=corporal)
 
     if request.method == 'POST':
         corporal_form = ComposicionCorporalForm(request.POST, instance=corporal)
 
         if corporal_form.is_valid():
             corporal = corporal_form.save(commit=False)
-            corporal.deportista = Deportista.objects.get(id=id_depor)
-            corporal.talla_camisa = corporal.talla_camisa.upper()
-            corporal.talla_pantaloneta = corporal.talla_pantaloneta.upper()
-            corporal.talla_zapato = corporal.talla_zapato.upper()
-            corporal.porcentaje_grasa = corporal.porcentaje_grasa.upper()
-            corporal.porcentaje_musculo = corporal.porcentaje_musculo.upper()
+            corporal.deportista = deportista
             corporal.save()
             corporal_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -142,6 +156,7 @@ def wizard_corporal(request,id_depor):
         'titulo': 'Composición Corporal del Deportista',
         'wizard_stage': 2,
         'form': corporal_form,
+        'mujer' : mujer
     })
 
 @login_required
@@ -173,8 +188,12 @@ def wizard_historia_deportiva(request,id_depor):
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
             hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
-            hist_depor_nuevo.lugar = hist_depor_nuevo.lugar.upper()
-            hist_depor_nuevo.descripcion = hist_depor_nuevo.descripcion.upper()
+            hist_depor_nuevo.nombre = hist_depor_nuevo.nombre.upper()
+            hist_depor_nuevo.marca = hist_depor_nuevo.marca.upper()
+            hist_depor_nuevo.modalidad = hist_depor_nuevo.modalidad.upper()
+            hist_depor_nuevo.division = hist_depor_nuevo.division.upper()
+            hist_depor_nuevo.prueba = hist_depor_nuevo.prueba.upper()
+            hist_depor_nuevo.categoria = hist_depor_nuevo.categoria.upper()
             hist_depor_nuevo.institucion_equipo = hist_depor_nuevo.institucion_equipo.upper()
             hist_depor_nuevo.save()
             hist_depor_form.save()
@@ -394,3 +413,73 @@ def finalizar_deportista(request,opcion):
         return redirect('deportista_nuevo')
     elif opcion =='listar':
         return redirect('deportista_listar')
+
+
+@login_required
+@all_permission_required('snd.add_deportista')
+def verificar_deportista(request):
+    """
+    Julio 28 /2015
+    Autor: Milton Lenis
+
+    Verificación de la existencia de un deportista
+    Se verifica si existe el deportista en la entidad actual, si existe en otra entidad o si no existe.
+    Dependiendo del caso se muestra una respuesta diferente al usuario
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    """
+    if request.method=='POST':
+        form = VerificarExistenciaForm(request.POST)
+
+        if form.is_valid():
+            datos = {
+                'identificacion': form.cleaned_data['identificacion']
+            }
+
+            #Verificación de existencia dentro del tenant actual
+            try:
+                deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+            except Exception:
+                deportista = None
+
+            if deportista:
+                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
+                return render(request,'deportistas/verificar_deportista.html',{'existe':True,
+                                                                               'deportista':deportista})
+
+            if not deportista:
+                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
+                #Verificación de existencia en otros tenants
+                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+                existencia = False
+                tenant_existencia = None
+                tenant_actual = connection.tenant
+                entidades = Entidad.objects.all()
+                for entidad in entidades:
+                    connection.set_tenant(entidad)
+                    ContentType.objects.clear_cache()
+                    try:
+                        deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+                        existencia = True
+                        tenant_existencia = entidad
+                        break
+                    except Exception:
+                        pass
+
+                connection.set_tenant(tenant_actual)
+
+
+                if existencia:
+                    return render(request,'deportistas/verificar_deportista.html',{'existe':True,
+                                                                                   'deportista':deportista,
+                                                                                   'tenant_existencia':tenant_existencia})
+                else:
+                    #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
+                    request.session['datos'] = datos
+                    return redirect('deportista_nuevo')
+
+    else:
+        form = VerificarExistenciaForm()
+    return render(request,'deportistas/verificar_deportista.html',{'form':form,
+                                                                   'existe':False})

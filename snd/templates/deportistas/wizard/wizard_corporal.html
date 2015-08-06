@@ -7,6 +7,7 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -30,17 +31,108 @@
 {% block contenido_panel %}
 	{% include 'deportistas/wizard/_wizard.html' %}
 	<fieldset>
-		<form action="" method="post">{% csrf_token %}
-			<div class="well row">
+		<form id="form-wizard-corporal" action="" method="post">{% csrf_token %}
+			<fieldset>
 				<div class="col-xs-12">
 					<h3>{{titulo}}</h3>
-					{% for i in form %}
-						<div class="col-md-6">
-							{% bootstrap_field i layout="vertical" %}
+
+					<div class="well row">
+						<strong><h4>Características Físicas</h4></strong>
+
+						<div class="row">
+							<div class="col-md-6">
+								{% bootstrap_field form.peso layout="verical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.estatura layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.RH layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.tipo_talla layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.talla_camisa layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.talla_pantaloneta layout="vertical" %}
+							</div>
+							<div class="col-md-6">
+								{% bootstrap_field form.talla_zapato layout="vertical" %}
+							</div>
 						</div>
-					{% endfor %}
+						<hr>
+						<strong><h4>Composición Muscular</h4></strong>
+						<div class="row">
+							<div class="well row">
+								<div class="col-md-4">
+									<div class="note note-success">
+										<h5>Nota!</h5>
+										<p>
+											Si conoce el porcentaje de grasa del deportista ingreselo, en caso contrario presione calcular
+											e ingrese los datos para realizar el calculo
+										</p>
+									</div>
+								</div>
+								<div class="col-md-4">
+									{% bootstrap_field form.porcentaje_grasa layout="vertical" %}
+									{% bootstrap_field form.masa_corporal_magra layout="vertical" %}
+								</div>
+								<div class="col-md-4">
+									<br/>
+
+									<a data-toggle="popover" data-html="true" data-content="
+										<div>
+											Medida en centímetros de cuello
+											<br/>
+											<input id='id_cuello' class='form-control' type='number' onchange='calculo_cuello()'/>
+											<br/>
+											Medida en centímetros de cintura
+											<br/>
+											<input id='id_cintura' class='form-control' type='number' onchange='calculo_cintura()' />
+											{% if mujer %}
+											<br/>
+											Medida en centímetros de cadera
+											<br/>
+											<input id='id_cadera' class='form-control' type='number' onchange='calculo_cadera()' />
+											{% endif %}
+
+										</div>
+									" title="Calculo de Porcentaje de Grasa">
+									<span id="bt-calcular-porcentaje" class="btn btn-warning  btn-active-success" >Calcular →</span></a><br/><br/><br/>
+									<i class="ion ion-help-circled fa-2x add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="Masa Magra = peso × (100 - grasa)"></i>
+								</div>
+							</div><br/>
+							<div class="well row">
+								<div class="col-md-4">
+									<div class="note note-info">
+										<h5>Nota!</h5>
+										<p>
+											El IMC es un valor calculado automáticamente de acuerdo al peso y estatura ingresado anteriormente
+										</p>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<br/>
+									{% bootstrap_field form.imc layout="vertical" %}
+								</div>
+								<div class="col-md-4">
+									<br/><br/>
+									<i class="ion ion-help-circled fa-2x add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="IMC = peso/(estatura)^2"></i>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<strong><h4>Información de Salud</h4></strong>
+						<div class="row">
+							<div class="col-md-10">
+								{% bootstrap_field form.eps layout="vertical" %}
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
+			</fieldset>
 			<hr>
 			{% if wizard_stage > 1 %}
 			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
@@ -54,7 +146,10 @@
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{STATIC_URL}}js/tooltip.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	<script src="{{STATIC_URL}}js/funciones_calculos/deportistas/composicion_muscular.js"></script>
+
 	
 {% endblock %}
 
@@ -63,6 +158,10 @@
 		$(document).ready(function() {
 			App.init();
 			FormWizard.init();
+			$('#id_imc').css("pointer-events","none");
+			$('#id_masa_corporal_magra').css("pointer-events","none");
 		});
+		var mujer = {{mujer|yesno:"true,false" }};
 	</script>
+	<script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-corporal-validations.js"></script>
 {% endblock %}

@@ -129,3 +129,10 @@ class CAServicio(models.Model):
     
     def __str__(self):
         return self.nombre
+
+class EPS(models.Model):
+    nombre = models.CharField(max_length=300)
+    codigo = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
