@@ -183,7 +183,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
         arregloAtributos = atributo.split(" ")
         for elementoAtributo in arregloAtributos:
             for palabra in busqueda:
-                instruccion = "%s__contains" % elementoAtributo
+                instruccion = "%s__icontains" % elementoAtributo
                 query = {instruccion : palabra}
 
                 try:
