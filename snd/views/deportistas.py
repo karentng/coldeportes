@@ -384,6 +384,7 @@ def ver_deportista(request,id_depor):
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     deportista.edad = calculate_age(deportista.fecha_nacimiento)
     deportista.disciplinas_str = ','.join(x.descripcion for x in deportista.disciplinas.all())
+    deportista.nacionalidad_str = ','.join(x.nombre for x in deportista.nacionalidad.all())
     return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
             'composicion':composicion,

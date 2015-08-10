@@ -228,8 +228,8 @@
                                                             </p>
                                                             <p>
                                                                 <a href="#modal-desactivate-escenario-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
-                                                                <a href="javascript:;" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
-                                                                <a href="javascript:;" class="btn btn-sm btn-success m-r-5">Aceptar</a>
+                                                                <a href="{%url 'procesar_transferencia' t.id_trans 0 %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
+                                                                <a href="{%url 'procesar_transferencia' t.id_trans 1 %}" class="btn btn-sm btn-success m-r-5">Aceptar</a>
                                                             </p>
                                                         </div>
                                                     </li>
