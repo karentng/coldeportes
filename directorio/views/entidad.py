@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from directorio.forms import *
 from directorio.models import *
 from snd.models import *
-from directorio.inicializacion_vistas_directorio import crear_vistas 
+
     
 def buscar_contenido(texto, listado_resultados):
     listado_resultados.append(EscenarioView.objects.filter(contenido__icontains=texto).distinct('id'))
@@ -76,8 +76,7 @@ def directorio_buscar(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-    # lectura y creación de vistas sql
-    crear_vistas()
+    
 
     #inicializado formulario de búsqueda
     form = DirectorioBusquedaForm()

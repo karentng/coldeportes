@@ -13,6 +13,9 @@ from django.contrib.contenttypes.models import ContentType
 from gestion_usuarios.models import PERMISOS_DIGITADOR
 from django.db.models import Q
 from coldeportes.utilities import permisosPermitidos
+from directorio.inicializacion_vistas_directorio import crear_vistas
+from directorio.models import * 
+
 
 def asignarPermisosGrupo(request, grupo, permisos):
     permisos = permisosPermitidos(request, permitidos)
@@ -40,6 +43,7 @@ def cambiarNombreDePermisos():
 def inicio(request):
     digitador = None
 
+
     grupos = Group.objects.all()
     cambiarNombreDePermisos()
     if len(grupos) == 0:
@@ -58,9 +62,24 @@ def inicio(request):
         digitador.user_set.add(user)
 
     if request.user.is_authenticated():
+        # lectura y creación de vistas del directorio sql
+        
+        try:
+            EscenarioView.objects.all().exists()
+            CAFView.objects.all().exists()
+            DeportistaView.objects.all().exists()
+            EntrenadorView.objects.all().exists()
+            DirigenteView.objects.all().exists()
+            CajaCompensacionView.objects.all().exists()
+
+        except Exception:
+            crear_vistas()
+
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')
         else:
+                
+            
             if request.user.is_superuser:
                 return redirect('usuarios_lista')
             else:

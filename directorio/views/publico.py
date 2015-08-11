@@ -66,8 +66,6 @@ def agregar_grupo(resultados):
 
 
 def buscar_resultados(ciudades, categoria, texto, listado_resultados):
-    # lectura y creación de vistas sql
-    crear_vistas()
 
     #Si busca solo con texto
     if categoria ==None and ciudades==None:
