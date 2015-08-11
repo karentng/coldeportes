@@ -18,7 +18,7 @@ class Escenario(models.Model):
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
     )
-    nombre =  models.CharField(max_length=100)
+    nombre =  models.CharField(max_length=100,unique=True)
     direccion = models.CharField(max_length=100)
     latitud = models.FloatField(max_length=10)
     longitud = models.FloatField(max_length=10)
