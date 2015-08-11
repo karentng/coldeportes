@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
 from snd.models import Deportista,Escenario,Entrenador,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto
+from snd.formularios.deportistas import DeportistaForm,ComposicionCorporalForm,HistorialDeportivoForm,InformacionAcademicaForm
 from .models import Transferencia
 import datetime
 from coldeportes.utilities import calculate_age
@@ -125,15 +126,11 @@ def procesar_transferencia(request,id_transfer,opcion):
 
         messages.warning(request,'Transferencia rechazada exitosamente')
     else:
-        #Aceptacion de transferencia
         objeto.estado = 3
         objeto.save()
 
         connection.set_tenant(request.tenant)
         ContentType.objects.clear_cache()
-
-        transferencia.estado = 'Aprobada'
-        transferencia.save()
 
         existe,id_obj_antiguo = existencia_objeto(identificacion,tipo_objeto)
 
@@ -142,9 +139,13 @@ def procesar_transferencia(request,id_transfer,opcion):
             obj_antiguo,identi_antiguo,adicio_antiguo = obtener_objeto(id_obj_antiguo,tipo_objeto)
         else:
             objeto.estado = 0
+            objeto.entidad = request.tenant
             guardar_objeto(objeto,adicionales,tipo_objeto)
 
         messages.success(request,'Transferencia procesada exitosamente')
+
+        transferencia.estado = 'Aprobada'
+        transferencia.save()
 
     return redirect('inicio_tenant')
 
@@ -174,11 +175,32 @@ def guardar_objeto(objeto,adicionales,tipo):
             ad.save()
 
     elif tipo == 'Entrenador':
-        pass
+
+        for na in objeto.nacionalidades_obj:
+            objeto.nacionalidad.add(na)
+
+        for ad in adicionales:
+            ad.save()
+            if type(ad) is FormacionDeportiva:
+                for disc in ad.disciplinas_form:
+                    ad.disciplina_deportiva.add(disc)
 
     elif tipo == 'Escenario':
-        pass
 
+        for ad in adicionales:
+            ad.save()
+            if type(ad) is CaracterizacionEscenario:
+                for tipo_d in ad.tipo_disciplinas_obj:
+                    ad.tipo_disciplinas.add(tipo_d)
+                for tipo_super in ad.tipo_superficie_juego_obj:
+                    ad.tipo_superficie_juego.add(tipo_super)
+                for carac in ad.caracteristicas_obj:
+                    ad.caracteristicas.add(carac)
+                for clase_uso in ad.clase_uso_obj:
+                    ad.clase_uso.add(clase_uso)
+            elif type(ad) is HorarioDisponibilidad:
+                for di in ad.dias_obj:
+                    ad.dias.add(di)
     objeto.save()
 
 def obtener_objeto(id_obj,tipo_objeto):
@@ -201,19 +223,10 @@ def obtener_objeto(id_obj,tipo_objeto):
 
         objeto = Deportista.objects.get(id=id_obj)
 
-        #Obtener muchos a muchos
-        nacionalidades_obj = []
-        for a in objeto.nacionalidad.all():
-            nacionalidades_obj.append(a)
-        disciplinas_obj = []
-        for b in objeto.disciplinas.all():
-            disciplinas_obj.append(b)
-        #Fin obtener muchos a muchos
-
-        #Guardar muchos a muchos como attr apartes
-        objeto.nacionalidades_obj = nacionalidades_obj
-        objeto.disciplinas_obj = disciplinas_obj
-        #Fin guardar muchos a muchos como attr apartes
+        #Obtener muchos a muchos y guardarlos como attr apartes
+        objeto.nacionalidades_obj = [a for a in objeto.nacionalidad.all()]
+        objeto.disciplinas_obj = [b for b in objeto.disciplinas.all()]
+        #Fin obtener muchos a muchos y guardarlos como attr apartes
 
         identificacion = objeto.identificacion
         adicionales += ComposicionCorporal.objects.filter(deportista=objeto)
@@ -223,16 +236,45 @@ def obtener_objeto(id_obj,tipo_objeto):
     elif tipo_objeto == 'Entrenador':
 
         objeto = Entrenador.objects.get(id=id_obj)
+
+        #Obtener muchos a muchos y guardarlos como attr apartes
+        objeto.nacionalidades_obj = [a for a in objeto.nacionalidad.all()]
+        #Fin obtener muchos a muchos y guardarlos como attr apartes
+
         identificacion = objeto.identificacion
-        adicionales += FormacionDeportiva.objects.filter(entrenador=objeto)
+
+        #Sacar y asignar muchos a muchos de formacion deportiva
+        formaciones = FormacionDeportiva.objects.filter(entrenador=objeto)
+        for form in formaciones:
+            form.disciplinas_form = [disc for disc in form.disciplina_deportiva.all()]
+        #Fin sacar y asignar muchos a muchos de formacion deportiva
+
+        adicionales += formaciones
         adicionales += ExperienciaLaboral.objects.filter(entrenador=objeto)
 
     elif tipo_objeto == 'Escenario':
 
         objeto = Escenario.objects.get(id=id_obj)
         identificacion = objeto.nombre
-        adicionales += CaracterizacionEscenario.objects.filter(escenario=objeto)
-        adicionales += HorarioDisponibilidad.objects.filter(escenario=objeto)
+
+        #Sacar y asignar muchos a muchos caracterizacion
+        caracterizaciones = CaracterizacionEscenario.objects.filter(escenario=objeto)
+        for car in caracterizaciones:
+            car.tipo_disciplinas_obj = [x for x in car.tipo_disciplinas.all()]
+            car.tipo_superficie_juego_obj = [x for x in car.tipo_superficie_juego.all()]
+            car.caracteristicas_obj = [x for x in car.caracteristicas.all()]
+            car.clase_uso_obj = [x for x in car.clase_uso.all()]
+        #Fin sacar y asignar m2m caracteristicas
+
+        adicionales += caracterizaciones
+
+        #Sacar y asignar m2m a horarios
+        horarios = HorarioDisponibilidad.objects.filter(escenario=objeto)
+        for h in horarios:
+            h.dias_obj = [x for x in h.dias.all()]
+        #Fin sacar y asignar m2ma horarios
+
+        adicionales += horarios
         adicionales += Foto.objects.filter(escenario=objeto)
         adicionales += Video.objects.filter(escenario=objeto)
         adicionales += DatoHistorico.objects.filter(escenario=objeto)
