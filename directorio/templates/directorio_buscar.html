@@ -30,39 +30,39 @@
             </br>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary">
-                    <span class="fa fa-search"></span> Búscar
+                    <span class="fa fa-search"></span> Buscar
                 </button>
             </div>
         </form>
     </div></br></br>
-    <div style="margin-left:70px;">       
-        <h1 class="page-header">Resultados Obtenidos</h1>
-        <div id="options" class="m-b-10">
-            <span class="gallery-option-set" id="filter" data-option-key="filter">
-                <a href="#show-all" class="btn btn-primary btn-xs active" data-option-value="*">
-                    Mostrar Todos
-                </a>
-                <a href="#CajaCompensancionView" class="btn btn-primary btn-xs" data-option-value=".CajaCompensacionView">
-                    Cajas de Compensación
-                </a>
-                <a href="#CAFView" class="btn btn-primary btn-xs" data-option-value=".CAFView">
-                    Centro de Acondicionamiento
-                </a>
-                <a href="#DeportistaView" class="btn btn-primary btn-xs" data-option-value=".DeportistaView">
-                    Deportistas
-                </a>
-                <a href="#DirigenteView" class="btn btn-primary btn-xs" data-option-value=".DirigenteView">
-                    Dirigentes
-                </a>
-                <a href="#EscenarioView" class="btn btn-primary btn-xs" data-option-value=".EscenarioView">
-                    Escenarios Deportivos
-                </a>
-                <a href="#EntrenadorView" class="btn btn-primary btn-xs" data-option-value=".EntrenadorView">
-                    Entrenadores
-                </a>
-            </span>
-        </div>
-        {% if listado_resultados %}
+    {% if listado_resultados %}
+        <div style="margin-left:70px;">       
+            <h1 class="page-header">Resultados Obtenidos</h1>
+            <div id="options" class="m-b-10">
+                <span class="gallery-option-set" id="filter" data-option-key="filter">
+                    <a href="#show-all" class="btn btn-primary btn-xs active" data-option-value="*">
+                        Mostrar Todos
+                    </a>
+                    <a href="#CajaCompensancionView" class="btn btn-primary btn-xs" data-option-value=".CajaCompensacionView">
+                        Cajas de Compensación
+                    </a>
+                    <a href="#CAFView" class="btn btn-primary btn-xs" data-option-value=".CAFView">
+                        Centro de Acondicionamiento
+                    </a>
+                    <a href="#DeportistaView" class="btn btn-primary btn-xs" data-option-value=".DeportistaView">
+                        Deportistas
+                    </a>
+                    <a href="#DirigenteView" class="btn btn-primary btn-xs" data-option-value=".DirigenteView">
+                        Dirigentes
+                    </a>
+                    <a href="#EscenarioView" class="btn btn-primary btn-xs" data-option-value=".EscenarioView">
+                        Escenarios Deportivos
+                    </a>
+                    <a href="#EntrenadorView" class="btn btn-primary btn-xs" data-option-value=".EntrenadorView">
+                        Entrenadores
+                    </a>
+                </span>
+            </div>
         {{lista_resultados}}
         </br></br>
         <div id="gallery" class="gallery">
@@ -91,6 +91,8 @@
             {% endfor %}                    
         {% endfor %}
         </div>
+        {% else %}
+        <div class="container"><h5>No hay resultados para la búsqueda.</h5></div>
         {% endif %}
     </div>
 
