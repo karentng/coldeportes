@@ -9,6 +9,8 @@ from snd.formularios.cajas_compensacion import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 @login_required
@@ -62,7 +64,12 @@ def desactivar_ccf(request, ccf_id):
     :param escenario_id:   Identificador del escenario
     :type escenario_id:    String
     """
-    ccf = CajaCompensacion.objects.get(id=ccf_id)
+    try:
+        ccf = CajaCompensacion.objects.get(id=ccf_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, "La Caja de compensación que intenta acceder no existe.")
+        return redirect('listar_ccfs')
+
     estado_actual = ccf.activo
     ccf.activo = not(estado_actual)
     ccf.save()
@@ -84,7 +91,11 @@ def ver_ccf(request, ccf_id):
     :param ccf_id:   Identificador del escenario
     :type ccf_id:    String
     """
-    ccf = CajaCompensacion.objects.get(id=ccf_id)
+    try:
+        ccf = CajaCompensacion.objects.get(id=ccf_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, "La caja de compensación que intenta acceder no existe.")
+        return redirect('listar_ccfs')
     horarios = HorarioDisponibilidadCajas.objects.filter(caja_compensacion=ccf_id)
     tarifas = Tarifa.objects.filter(caja_compensacion=ccf_id)
     contactos = ContactoCajas.objects.filter(caja_compensacion=ccf_id)
