@@ -181,7 +181,6 @@ def obtenerDatos(request, modelo):
         cantidadObjetos = len(objetos)
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
-
     objetos = definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion)
     datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones)
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
@@ -218,10 +217,12 @@ def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion):
     if direccion == 'desc':
         orden = True
 
-    if getattr(objetos[0],columna).__class__ == str:
-        llave = attrgetter(columna)
-    else:
-        llave = methodcaller('__str__')
+    llave = None
+    if len(objetos) > 0:
+        if getattr(objetos[0],columna).__class__ == str:
+            llave = attrgetter(columna)
+        else:
+            llave = methodcaller('__str__')
 
     objetos_procesados = sorted(objetos, key=llave, reverse=orden)
     return objetos_procesados[inicio:fin]
