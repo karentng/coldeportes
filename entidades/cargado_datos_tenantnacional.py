@@ -1,11 +1,12 @@
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from snd.models import *
-from django.http import HttpResponse
-from django.db.models import Q
-from snd.modelos_de_datos import MODELOS_DE_DATOS
-import operator
-import json
+from entidades.modelos_de_datos_tenantnacional import MODELOS_DE_DATOS
+from operator import attrgetter
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection
+from entidades.models import Entidad
+
 
 def obtenerCantidadColumnas(request, modelo):
     columnas = MODELOS_DE_DATOS[modelo][2]
@@ -14,7 +15,7 @@ def obtenerCantidadColumnas(request, modelo):
         modeloBD = MODELOS_DE_DATOS[modelo][0]
         cantidadDeColumnas = len(modeloBD._meta.get_all_field_names())
 
-    return {'cantidadDeColumnas': cantidadDeColumnas, 'columnas': columnas, 'url': reverse('cargar_datos', args=[modelo])}
+    return {'cantidadDeColumnas': cantidadDeColumnas, 'columnas': columnas, 'url': reverse('cargar_datos_tenantnacional', args=[modelo])}
 
 def obtenerAtributosModelo(modelo):
     atributos = MODELOS_DE_DATOS[modelo][1]
@@ -52,7 +53,13 @@ def obtenerDato(modelo, campos):
             try:
                 valor = getattr(modelo, campo)
                 if valor.__class__.__name__ == 'ManyRelatedManager':
-                    valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
+                    connection.set_tenant(modelo.entidad)
+                    ContentType.objects.clear_cache()
+                    try:
+                        valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
+                    except Exception as e:
+                        print(e)
+                    connection.set_schema_to_public()
                 else:
                     valor = ('%s'%valor)
             except Exception:
@@ -136,7 +143,6 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
         aux.append(acciones)
 
         datos.append(aux)
-
     return datos
 
 def obtenerDatos(request, modelo):
@@ -157,46 +163,62 @@ def obtenerDatos(request, modelo):
     inicio, fin, columna, direccion = obtenerOrganizacionDatos(request, atributos)
     
     busqueda = request.GET['search[value]']
-    
     if busqueda:
         objetos = realizarFiltroDeCampos(modeloTipo, atributos, busqueda)
         cantidadObjetos = len(objetos)
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
     else:
-        objetos = modelo.objects.all()
+        objetos = []
+        entidades = Entidad.objects.exclude(schema_name='public')
+        for entidad in entidades:
+            connection.set_tenant(entidad)
+            ContentType.objects.clear_cache()
+            qs = modeloTipo.objects.filter(estado=0)
+            for objeto in qs:
+                objetos.append(objeto)
+        connection.set_schema_to_public()
         cantidadObjetos = len(objetos)
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
 
     objetos = definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion)
     datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones)
-    
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
 
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
-    objetos = modeloTipo.objects.none()
+    qs = modeloTipo.objects.none()
+    objetos = []
     busqueda = busqueda.split(" ")
 
-    Qr = None
-    for atributo in atributos:
-        arregloAtributos = atributo.split(" ")
-        for elementoAtributo in arregloAtributos:
-            for palabra in busqueda:
-                instruccion = "%s__icontains" % elementoAtributo
-                query = {instruccion : palabra}
+    entidades = Entidad.objects.exclude(schema_name='public')
+    for entidad in entidades:
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+        for atributo in atributos:
+            arregloAtributos = atributo.split(" ")
+            for elementoAtributo in arregloAtributos:
+                for palabra in busqueda:
+                    instruccion = "%s__contains" % elementoAtributo
+                    query = {instruccion : palabra}
 
-                try:
-                    objetos = objetos | modeloTipo.objects.filter(**query)
-                except Exception:
-                    pass
+                    try:
+                        qs = qs | modeloTipo.objects.filter(**query).filter(estado=0)
+                    except Exception:
+                        pass
+        for objeto in qs:
+            objetos.append(objeto)
+    connection.set_schema_to_public()
 
     return objetos
 
 def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion):
     columna = columna.split(" ")[0]
-    orden = ''
+    orden = False
     if direccion == 'desc':
-        orden = "-"
+        orden = True
 
-    return objetos.order_by(orden+columna)[inicio:fin]
+    llave = attrgetter(columna)
+
+    objetos_procesados = sorted(objetos, key=llave, reverse=orden)
+    return objetos_procesados[inicio:fin]

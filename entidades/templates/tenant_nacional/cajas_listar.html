@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Cajas de compensación - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista de Cajas de compensación a nivel nacional
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Cajas de compensación</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-cajas-nacionales";
+        opciones = true;
+
+        url = "{% url 'cargar_columnas_tenantnacional' 5 %}";
+    </script>
+
+
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block titulo_panel %}
+    Cajas de compensación a nivel nacional
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="table-responsive">
+        <table id="tabla-cajas-nacionales" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+
+        </table>
+    </div>
+{% endblock %}
