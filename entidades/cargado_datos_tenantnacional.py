@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from snd.models import *
 from entidades.modelos_de_datos_tenantnacional import MODELOS_DE_DATOS
-from operator import attrgetter
+from operator import attrgetter, methodcaller
 from django.contrib.contenttypes.models import ContentType
 from django.db import connection
 from entidades.models import Entidad
@@ -218,7 +218,10 @@ def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion):
     if direccion == 'desc':
         orden = True
 
-    llave = attrgetter(columna)
+    if getattr(objetos[0],columna).__class__ == str:
+        llave = attrgetter(columna)
+    else:
+        llave = methodcaller('__str__')
 
     objetos_procesados = sorted(objetos, key=llave, reverse=orden)
     return objetos_procesados[inicio:fin]
