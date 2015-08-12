@@ -7,6 +7,8 @@ class CentroAcondicionamientoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CentroAcondicionamientoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+        self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
+        self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
 
     class Meta:
         model = CentroAcondicionamiento

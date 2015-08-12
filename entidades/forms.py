@@ -15,6 +15,11 @@ class EntidadForm(forms.ModelForm):
         model = Entidad
         fields = ('nombre',)
 
+class EntidadEditarForm(forms.ModelForm):
+    class Meta:
+        model = Entidad
+        fields = ('nombre', 'tipo',)
+
 class ActoresForm(forms.ModelForm):
     class Meta:
         model = Actores

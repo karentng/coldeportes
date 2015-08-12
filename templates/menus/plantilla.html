@@ -21,3 +21,6 @@
     {% endif %}
     {% include "menus/aplicacion/directorio.html" %}
 {% endif %}
+{% if request.tenant.schema_name == 'public' %}
+    {% include "menus/aplicacion/entidades.html" %}
+{% endif %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Entidades</a>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de Entidades
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de Entidades
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-entidades";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>URL</th>
+                            <th>Schema</th>
+                            <th>Tipo</th>
+                            <th>Actores</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entidad in entidades %}
+                        <tr>
+                            <td>{{entidad.nombre}}</td>
+                            <td>{{entidad.domain_url}}</td>
+                            <td>{{entidad.schema_name}}</td>
+                            <td>{{entidad.get_tipo_display}}</td>
+                            <td>
+                                <ul>
+                                    {% if entidad.actores != None %}
+                                        {% for actor in entidad.actores.resumen %}
+                                            <li>{{actor}}</li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li>No tiene</li>
+                                    {% endif %}
+                                </ul>
+                            </td>
+                            <td>
+                                <a href='{% url 'entidad_editar' entidad.id %}' class="btn btn-primary">
+                                    <i class="fa fa-edit"></i> Editar
+                                </a>
+                                <br/>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
