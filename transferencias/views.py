@@ -110,7 +110,7 @@ def procesar_transferencia(request,id_transfer,opcion):
 
     tipo_objeto = transferencia.tipo_objeto
     id_obj = transferencia.id_objeto
-    objeto,identificacion,adicionales = obtener_objeto(id_obj,tipo_objeto)
+    objeto,adicionales = obtener_objeto(id_obj,tipo_objeto)
 
     #Procesamiento del objeto
     if opcion == '0':
@@ -132,12 +132,17 @@ def procesar_transferencia(request,id_transfer,opcion):
         connection.set_tenant(request.tenant)
         ContentType.objects.clear_cache()
 
-        existe,id_obj_antiguo = existencia_objeto(identificacion,tipo_objeto)
+        existe,id_obj_antiguo = existencia_objeto(objeto,tipo_objeto)
 
-        if existe:
-            #Falta verificar caso deportista cambio de documento
-            obj_antiguo,identi_antiguo,adicio_antiguo = obtener_objeto(id_obj_antiguo,tipo_objeto)
-        else:
+        if existe == 2:
+            #Verificacion cambio de documento
+            posibilidades = id_obj_antiguo
+
+        elif existe == 1:
+            #Verificacion ya exisitia en este tenant
+            obj_antiguo,adicio_antiguo = obtener_objeto(id_obj_antiguo,tipo_objeto)
+
+        elif existe == 0:
             objeto.estado = 0
             objeto.entidad = request.tenant
             guardar_objeto(objeto,adicionales,tipo_objeto)
@@ -228,7 +233,6 @@ def obtener_objeto(id_obj,tipo_objeto):
         objeto.disciplinas_obj = [b for b in objeto.disciplinas.all()]
         #Fin obtener muchos a muchos y guardarlos como attr apartes
 
-        identificacion = objeto.identificacion
         adicionales += ComposicionCorporal.objects.filter(deportista=objeto)
         adicionales += HistorialDeportivo.objects.filter(deportista=objeto)
         adicionales += InformacionAcademica.objects.filter(deportista=objeto)
@@ -240,8 +244,6 @@ def obtener_objeto(id_obj,tipo_objeto):
         #Obtener muchos a muchos y guardarlos como attr apartes
         objeto.nacionalidades_obj = [a for a in objeto.nacionalidad.all()]
         #Fin obtener muchos a muchos y guardarlos como attr apartes
-
-        identificacion = objeto.identificacion
 
         #Sacar y asignar muchos a muchos de formacion deportiva
         formaciones = FormacionDeportiva.objects.filter(entrenador=objeto)
@@ -255,7 +257,6 @@ def obtener_objeto(id_obj,tipo_objeto):
     elif tipo_objeto == 'Escenario':
 
         objeto = Escenario.objects.get(id=id_obj)
-        identificacion = objeto.nombre
 
         #Sacar y asignar muchos a muchos caracterizacion
         caracterizaciones = CaracterizacionEscenario.objects.filter(escenario=objeto)
@@ -280,9 +281,9 @@ def obtener_objeto(id_obj,tipo_objeto):
         adicionales += DatoHistorico.objects.filter(escenario=objeto)
         adicionales += Contacto.objects.filter(escenario=objeto)
 
-    return objeto,identificacion,adicionales
+    return objeto,adicionales
 
-def existencia_objeto(identificacion,tipo_objeto):
+def existencia_objeto(objeto,tipo_objeto):
     """
     Agosto 6, 2015
     Autor: Daniel Correa
@@ -297,23 +298,27 @@ def existencia_objeto(identificacion,tipo_objeto):
     """
     if tipo_objeto == 'Deportista':
         try:
-           obj = Deportista.objects.get(identificacion=identificacion)
+           obj = Deportista.objects.get(identificacion=objeto.identificacion)
         except:
-            return False,None
+            posibilidades = Deportista.objects.filter(nombres=objeto.nombres, apellidos=objeto.apellidos).exclude(tipo_id=objeto.tipo_id)
+            if len(posibilidades) == 0:
+                return 0,None
+            else:
+                return 2,posibilidades
 
     elif tipo_objeto == 'Entrenador':
         try:
-            obj = Entrenador.objects.get(identificacion=identificacion)
+            obj = Entrenador.objects.get(identificacion=objeto.identificacion)
         except:
-            return False,None
+            return 0,None
 
     elif tipo_objeto == 'Escenario':
         try:
-           obj = Entrenador.objects.get(nombre=identificacion)
+           obj = Entrenador.objects.get(nombre=objeto.nombre)
         except:
-            return False,None
+            return 0,None
 
-    return True,obj.id
+    return 1,obj.id
 
 @login_required
 def cancelar_transferencia(request,id_objeto,tipo_objeto):
