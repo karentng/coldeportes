@@ -1,0 +1,15 @@
+<li class="has-sub {% if '/entidades/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-building"></i>
+        <span class="colorMenu">Entidades</span>
+    </a>
+    <ul class="sub-menu">
+        <li {% if "/entidades/tipo" in request.path or "/entidades/registro" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'entidad_tipo' %}">Registro</a>
+        </li>
+        <li {% if "/entidades/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'entidad_listar' %}">Listar Entidades</a>
+        </li>
+    </ul>
+</li>

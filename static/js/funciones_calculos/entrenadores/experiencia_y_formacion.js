@@ -8,12 +8,12 @@ $(document).ready(function() {
            $("#id_fecha_fin").val("");
            $("#id_fecha_fin").parent().css('display','none');
            $('#id_fecha_fin').prop('required',false);
-           delete fields['fecha_final'];
+           delete fields['fecha_fin'];
 
        }else{
            $("#id_fecha_fin").parent().css('display','block');
            $('#id_fecha_fin').prop('required',true);
-           fields['fecha_final'] = {
+           fields['fecha_fin'] = {
                validators: {
                    notEmpty: {
                        message: 'La fecha de inicio de campeonato no puede ser vacía'
@@ -21,13 +21,11 @@ $(document).ready(function() {
                    date: {
                        message: 'El valor ingresado no es una fecha válida',
                        format: 'YYYY-MM-DD',
-                       min: 'fecha_inicial'
+                       min: 'fecha_comienzo'
                    }
                }
            };
-           $(form).bootstrapValidator('revalidateField', 'fecha_final');
+           $(form).bootstrapValidator('revalidateField', 'fecha_fin');
        }
     });
-    App.init();
-    FormWizard.init();
 });

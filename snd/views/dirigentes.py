@@ -202,7 +202,10 @@ def finalizar(request, opcion):
     :type request:    WSGIRequest
     """
     messages.success(request, "Dirigente registrado correctamente.")
-    del request.session['datos']
+    try:
+        del request.session['datos']
+    except:
+        pass
     
     if opcion == "nuevo":
         return redirect('dirigentes_wizard_identificacion_nuevo')

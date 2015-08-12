@@ -6,6 +6,7 @@ from django.core.files.storage import FileSystemStorage
 from snd.formularios.escenarios  import *
 from snd.models import *
 from entidades.models import *
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 
 
@@ -60,7 +61,12 @@ def desactivar_escenario(request, escenario_id):
     :param escenario_id:   Identificador del escenario
     :type escenario_id:    String
     """
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, "El escenario que intenta acceder no existe.")
+        return redirect('listar_escenarios')
+        
     estado_actual = escenario.estado
     escenario.estado = not(estado_actual)
     escenario.save()
@@ -82,7 +88,12 @@ def ver_escenario(request, escenario_id):
     :param escenario_id:   Identificador del escenario
     :type escenario_id:    String
     """
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, "El escenario que intenta acceder no existe.")
+        return redirect('listar_escenarios')
+
     caracteristicas = CaracterizacionEscenario.objects.filter(escenario=escenario) 
     horarios = HorarioDisponibilidad.objects.filter(escenario=escenario)
     fotos = Foto.objects.filter(escenario=escenario)

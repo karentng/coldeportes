@@ -3,6 +3,8 @@ from django import forms
 from django.contrib.auth.models import *
 from django.contrib.auth.forms import UserCreationForm
 from snd.formularios.caf import adicionarClase
+from gestion_usuarios.models import PERMISOS_DIGITADOR
+from coldeportes.utilities import permisosPermitidos
 
 class UserForm(UserCreationForm):
     grupo = forms.ModelChoiceField(queryset=Group.objects.all())
@@ -23,7 +25,9 @@ class UserPasswordForm(forms.Form):
 
 class GroupForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
         super(GroupForm, self).__init__(*args, **kwargs)
+        self.fields['permissions'].queryset = self.fields['permissions'].queryset.filter(codename__in=permisosPermitidos(request, PERMISOS_DIGITADOR))
         self.fields['permissions'] = adicionarClase(self.fields['permissions'], 'many')
 
     class Meta:

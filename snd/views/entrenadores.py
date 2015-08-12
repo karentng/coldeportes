@@ -73,7 +73,10 @@ def finalizar_entrenador(request, opcion):
     :type opcion: String
     """
     messages.success(request, "Entrenador registrado correctamente.")
-    del request.session['datos']
+    try:
+        del request.session['datos']
+    except:
+        pass
     if opcion=='nuevo':
         return redirect('entrenador_nuevo')
     elif opcion =='listar':
