@@ -127,6 +127,7 @@ def procesar_transferencia(request,id_transfer,opcion):
         messages.warning(request,'Transferencia rechazada exitosamente')
     else:
         objeto.estado = 3
+        objeto.tenant = request.tenant
         objeto.save()
 
         connection.set_tenant(request.tenant)
@@ -144,7 +145,7 @@ def procesar_transferencia(request,id_transfer,opcion):
 
         elif existe == 0:
             objeto.estado = 0
-            objeto.entidad = request.tenant
+            #objeto.entidad = request.tenant
             guardar_objeto(objeto,adicionales,tipo_objeto)
 
         messages.success(request,'Transferencia procesada exitosamente')
