@@ -142,8 +142,6 @@ def procesar_transferencia(request,id_transfer,opcion):
             objeto.estado = 0
             guardar_objeto(objeto,adicionales,tipo_objeto)
 
-        #messages.success(request,'Transferencia procesada exitosamente')
-
     return finalizar_transferencia(request,entidad_cambio,objeto,tipo_objeto,transferencia)
 
 def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transferencia):
@@ -448,6 +446,18 @@ def obtener_objeto(id_obj,tipo_objeto):
     return objeto,adicionales
 
 def existencia_objeto(objeto,tipo_objeto):
+    """
+    Agosto 13, 2015
+    Autor: Daniel Correa
+
+    Permite conocer si este caso de transferencia es un caso de cambio de documento por parte del deportista, es decir , el caso especial en transferencias:
+    Un deportista es transferido de la entidad Y a la entidad X , en dicha entidad cambia de tipo de documento , vuelve a la entidad Y, se debe verificar su existencia como transferido
+    para evitar registros duplicados
+
+    :param objeto: objeto transferible
+    :param tipo_objeto: tipo del objeto transferible
+    :return:
+    """
     if tipo_objeto == 'Deportista':
         try:
            obj = Deportista.objects.get(identificacion=objeto.identificacion)
@@ -477,13 +487,12 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
     """
 
     objeto = ''
+    obj_trans = None
     if tipo_objeto=='1':
         objeto = 'Deportista'
         redir = 'deportista_listar'
         try:
-            depor = Deportista.objects.get(id=id_objeto)
-            depor.estado = 0
-            depor.save()
+            obj_trans = Deportista.objects.get(id=id_objeto)
         except:
             messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
             return redirect(redir)
@@ -491,9 +500,7 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
         objeto='Entrenador'
         redir='entrenador_listar'
         try:
-            entre = Entrenador.objects.get(id=id_objeto)
-            entre.estado = 0
-            entre.save()
+            obj_trans = Entrenador.objects.get(id=id_objeto)
         except:
             messages.error(request,'Error: No se puede procesar la solicitud, Entrenador no existe')
             return redirect(redir)
@@ -501,13 +508,13 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
         objeto='Escenario'
         redir='listar_escenarios'
         try:
-            esce = Escenario.objects.get(id=id_objeto)
-            esce.estado = 0
-            esce.save()
+            obj_trans = Escenario.objects.get(id=id_objeto)
         except:
             messages.error(request,'Error: No se puede procesar la solicitud, Escenario no existe')
             return redirect(redir)
 
+    obj_trans.estado = 0
+    obj_trans.save()
     entidad_solicitante = request.tenant
     entidades = Entidad.objects.exclude(nombre__in=['publico',entidad_solicitante.nombre])
 
