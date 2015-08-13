@@ -1,9 +1,14 @@
 #encoding:utf-8
 
 from django.db import models
+from entidades.models import Entidad
 from entidades.models import Ciudad, Entidad, Nacionalidad, TipoDisciplinaDeportiva
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection
 #=======================================================================================================
 #Modelos para Entrenadores
+
+
 
 class Entrenador(models.Model):
     ESTADOS = (
@@ -53,6 +58,9 @@ class Entrenador(models.Model):
     peso = models.IntegerField(blank=True, null=True, verbose_name='Peso (En Kg)')
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
     entidad_vinculacion = models.ForeignKey(Entidad)
+
+    def __str__(self):
+        return "%s %s"%(self.nombres, self.apellidos)
 
 class FormacionDeportiva(models.Model):
     disciplina_deportiva = models.ManyToManyField(TipoDisciplinaDeportiva)

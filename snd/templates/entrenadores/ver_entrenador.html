@@ -53,7 +53,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'entrenador_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_entrenadores_nacionales' %}
+                                 {% else %}
+                                    {% url 'entrenadores_listar' %}
+                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{entrenador.nombres}} {{entrenador.apellidos}}
@@ -67,7 +71,7 @@
                                     <a href="javascript:;" class="media-left"></a>
                                     {%if entrenador.foto%}
                                         <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{entrenador.foto}}" alt="" />
-                                    {%elif entrenador.genero == "Hombre"%}
+                                    {%elif entrenador.genero == "HOMBRE"%}
                                         <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" />
                                     {%else%}
                                         <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" />
@@ -75,8 +79,10 @@
                                     <div class="media-body">
                                         <div class="col-lg-6">
                                         <p style="margin-left: 50px">
-                                            {% if perms.snd.change_entrenador %}
+                                            {% if perms.snd.change_entrenador and not tenant_nacional %}
                                                 {{entrenador.get_tipo_id_display | title}}: {{entrenador.identificacion}}<br />
+                                            {% else %}
+                                                Entidad: {{ entrenador.entidad_vinculacion }}<br/>
                                             {% endif %}
                                             Género: {{entrenador.genero}}<br/>
                                             Edad: {{ entrenador.edad }}<br/>
@@ -151,7 +157,11 @@
                 <div class="invoice">
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
-                        <a href="{% url 'entrenador_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="{% if tenant_nacional %}
+                                    {% url 'listar_entrenadores_nacionales' %}
+                                 {% else %}
+                                    {% url 'entrenadores_listar' %}
+                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                         <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                         </span>
                         {{entrenador.nombres}} {{entrenador.apellidos}}
@@ -209,7 +219,11 @@
                 <div class="invoice">
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
-                        <a href="{% url 'entrenador_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="{% if tenant_nacional %}
+                                    {% url 'listar_entrenadores_nacionales' %}
+                                 {% else %}
+                                    {% url 'entrenadores_listar' %}
+                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                         <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                         </span>
                         {{entrenador.nombres}} {{entrenador.apellidos}}

@@ -34,7 +34,7 @@
                         <p>
                             Este dirigente ya se encuentra registrado en esta entidad, por favor escoja una opción:
                             <div class="p-t-5">
-                                <p><a href="{% url 'verificar_dirigente' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a></p>
+                                <p><a href="{% url 'dirigentes_verificar' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a></p>
                                 <p><a href="{% url 'dirigentes_wizard_identificacion' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este dirigente</a></p>
                                 <p><a href="{% url 'dirigentes_ver' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este dirigente</a></p>
                             </div>

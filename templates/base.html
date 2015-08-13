@@ -143,7 +143,11 @@
                 <!-- begin sidebar nav -->
                 <ul class="nav">
                     <li class="nav-header"><span class="colorMenu">Navegación</span></li>
-                    {% include "menus/plantilla.html" %}
+                    {% if tenant_nacional %}
+                        {% include "menus/tenant_nacional_menu.html" %}
+                    {% else %}
+                        {% include "menus/plantilla.html" %}
+                    {% endif %}
                     <!-- begin sidebar minify button -->
                     
                     <!-- end sidebar minify button -->

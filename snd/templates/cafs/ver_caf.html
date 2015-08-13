@@ -56,7 +56,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10">
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cafs_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_cafs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10">
                     	<i class="fa fa-chevron-left m-r-5"></i> Volver
                     </a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10">
@@ -98,7 +102,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cafs_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_cafs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{centro.nombre}}
@@ -142,7 +150,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cafs_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_cafs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{centro.nombre}}
@@ -166,7 +178,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cafs_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_cafs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{centro.nombre}}
@@ -190,7 +206,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_cafs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cafs_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_cafs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{centro.nombre}}

@@ -21,7 +21,8 @@ from snd.models import *
                     ]+
                 ] | None
             ]+ | []
-        ]
+        ],
+        False | True            -> Se consulta en todos los tenants o no
     ),
 )
 '''
@@ -47,7 +48,7 @@ MODELOS_DE_DATOS = (
                 'fa-gear',
                 None
             ],
-        ]
+        ],
     ),
 )
 

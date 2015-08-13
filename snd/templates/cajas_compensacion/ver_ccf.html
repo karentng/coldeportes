@@ -44,7 +44,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_ccfs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cajas_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_ccfs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{ccf.nombre}}
@@ -71,7 +75,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_ccfs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cajas_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_ccfs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     Horarios
@@ -109,7 +117,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_ccfs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cajas_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_ccfs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     Tarifas
@@ -145,7 +157,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'listar_ccfs' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_cajas_nacionales' %}
+                                 {% else %}
+                                    {% url 'listar_ccfs' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>  
                     Contactos                  
