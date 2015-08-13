@@ -522,13 +522,3 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
 
     messages.error(request,'Error: No existe la transferencia solicitada')
     return redirect(redir)
-
-def test_acepto(request):
-    objeto = Deportista.objects.all()[1]
-    objeto.tipo_objeto='Deportista'
-    objeto.edad = calculate_age(objeto.fecha_nacimiento)
-    objeto.nacionalidad_str = ",".join(str(x) for x in objeto.nacionalidad.all())
-    objeto.fotos = [objeto.foto]
-    return render(request,'transferencia_exitosa.html',{
-        'objeto' : objeto
-    })
