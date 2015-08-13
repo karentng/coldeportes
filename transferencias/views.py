@@ -127,25 +127,20 @@ def procesar_transferencia(request,id_transfer,opcion):
         messages.warning(request,'Transferencia rechazada exitosamente')
     else:
         objeto.estado = 3
-        objeto.tenant = request.tenant
+        objeto.entidad = request.tenant
+        objeto.entidad_vinculacion = request.tenant #quitar luego de cambio
         objeto.save()
 
         connection.set_tenant(request.tenant)
         ContentType.objects.clear_cache()
 
-        existe,id_obj_antiguo = existencia_objeto(objeto,tipo_objeto)
+        existe,posibilidades = existencia_objeto(objeto,tipo_objeto)
 
-        if existe == 2:
-            #Verificacion cambio de documento
-            posibilidades = id_obj_antiguo
+        if existe:
+            pass
 
-        elif existe == 1:
-            #Verificacion ya exisitia en este tenant
-            obj_antiguo,adicio_antiguo = obtener_objeto(id_obj_antiguo,tipo_objeto)
-
-        elif existe == 0:
+        else:
             objeto.estado = 0
-            #objeto.entidad = request.tenant
             guardar_objeto(objeto,adicionales,tipo_objeto)
 
         messages.success(request,'Transferencia procesada exitosamente')
@@ -167,47 +162,182 @@ def guardar_objeto(objeto,adicionales,tipo):
     :param tipo: tipo de objeto
     """
 
-    objeto.save()
-
     if tipo == 'Deportista':
 
-        for na in objeto.nacionalidades_obj:
-            objeto.nacionalidad.add(na)
+        nacionalidades_obj = objeto.nacionalidades_obj
+        disciplinas_obj = objeto.disciplinas_obj
+        #Diccionario para defaults
+        obj_dict = objeto.__dict__
+        del obj_dict['id']
+        del obj_dict['_entidad_cache']
+        del obj_dict['disciplinas_obj']
+        del obj_dict['nacionalidades_obj']
+        del obj_dict['_state']
+        del obj_dict['entidad_vinculacion'] #quitar luego de cambio
+        #Fin diccionario
+        deportista, created = Deportista.objects.update_or_create(
+            identificacion=objeto.identificacion,
+            defaults= obj_dict,
+        )
 
-        for di in objeto.disciplinas_obj:
-            objeto.disciplinas.add(di)
+        for na in nacionalidades_obj:
+            deportista.nacionalidad.add(na)
+
+        for di in disciplinas_obj:
+            deportista.disciplinas.add(di)
 
         for ad in adicionales:
-            ad.save()
+            diccionario = ad.__dict__
+            del diccionario['id']
+            del diccionario['_state']
+            del diccionario['deportista_id']
+            if type(ad) is HistorialDeportivo:
+                HistorialDeportivo.objects.update_or_create(
+                    deportista=deportista,
+                    nombre=ad.nombre,
+                    modalidad=ad.modalidad,
+                    division=ad.division,
+                    prueba=ad.prueba,
+                    categoria=ad.categoria,
+                    defaults=ad.__dict__
+                )
+            elif type(ad) is InformacionAcademica:
+                InformacionAcademica.objects.update_or_create(
+                    deportista=deportista,
+                    institucion=ad.institucion,
+                    nivel=ad.nivel,
+                    profesion=ad.profesion,
+                    defaults=ad.__dict__
+                )
+            else:
+                ComposicionCorporal.objects.update_or_create(
+                    deportista=deportista,
+                    defaults=ad.__dict__
+                )
 
     elif tipo == 'Entrenador':
 
-        for na in objeto.nacionalidades_obj:
-            objeto.nacionalidad.add(na)
+        nacionalidades_obj = objeto.nacionalidades_obj
+
+        #Diccionario para defaults
+        obj_dict = objeto.__dict__
+        del obj_dict['id']
+        del obj_dict['nacionalidades_obj']
+        del obj_dict['_state']
+        del obj_dict['entidad'] #quitar luego de cambio
+        del obj_dict['_entidad_vinculacion_cache'] #quitar luego de cambio
+        #Fin diccionario
+
+        entrenador, created = Entrenador.objects.update_or_create(
+            identificacion=objeto.identificacion,
+            defaults= obj_dict,
+        )
+
+        for na in nacionalidades_obj:
+            entrenador.nacionalidad.add(na)
 
         for ad in adicionales:
-            ad.save()
-            if type(ad) is FormacionDeportiva:
-                for disc in ad.disciplinas_form:
-                    ad.disciplina_deportiva.add(disc)
+            diccionario = ad.__dict__
+            del diccionario['id']
+            del diccionario['_state']
+            del diccionario['entrenador_id']
+            if type(ad) is FormacionDeportiva: #cambiar luego del cambio de personal apoyo
+                disciplinas_form = ad.disciplinas_form
+                del diccionario['disciplinas_form']
+                formacion, created = FormacionDeportiva.objects.update_or_create(
+                    entrenador=entrenador,
+                    denominacion_diploma=ad.denominacion_diploma,
+                    defaults=ad.__dict__
+                )
+                for disc in disciplinas_form:
+                    formacion.disciplina_deportiva.add(disc)
+            else:
+                ExperienciaLaboral.objects.update_or_create(
+                    entrenador=entrenador,
+                    nombre_cargo=ad.nombre_cargo,
+                    defaults=ad.__dict__
+                )
 
     elif tipo == 'Escenario':
 
+        #Diccionario para defaults
+        obj_dict = objeto.__dict__
+        del obj_dict['id']
+        del obj_dict['_entidad_cache']
+        del obj_dict['_state']
+        del obj_dict['entidad_vinculacion'] #quitar luego de cambio
+        #Fin diccionario
+
+        escenario, created = Escenario.objects.update_or_create(
+            nombre=objeto.nombre,
+            defaults= obj_dict,
+        )
         for ad in adicionales:
-            ad.save()
+            diccionario = ad.__dict__
+            del diccionario['id']
+            del diccionario['_state']
+            del diccionario['escenario_id']
             if type(ad) is CaracterizacionEscenario:
-                for tipo_d in ad.tipo_disciplinas_obj:
-                    ad.tipo_disciplinas.add(tipo_d)
-                for tipo_super in ad.tipo_superficie_juego_obj:
-                    ad.tipo_superficie_juego.add(tipo_super)
-                for carac in ad.caracteristicas_obj:
-                    ad.caracteristicas.add(carac)
-                for clase_uso in ad.clase_uso_obj:
-                    ad.clase_uso.add(clase_uso)
+                tipo_disciplinas_obj = ad.tipo_disciplinas_obj
+                tipo_superficie_juego_obj= ad.tipo_superficie_juego_obj
+                caracteristicas_obj=ad.caracteristicas_obj
+                clase_uso_obj=ad.clase_uso_obj
+
+                del diccionario['tipo_disciplinas_obj']
+                del diccionario['tipo_superficie_juego_obj']
+                del diccionario['caracteristicas_obj']
+                del diccionario['clase_uso_obj']
+
+                caracterizacion, created = CaracterizacionEscenario.objects.update_or_create(
+                    escenario=escenario,
+                    defaults=ad.__dict__
+                )
+                for tipo_d in tipo_disciplinas_obj:
+                    caracterizacion.tipo_disciplinas.add(tipo_d)
+                for tipo_super in tipo_superficie_juego_obj:
+                    caracterizacion.tipo_superficie_juego.add(tipo_super)
+                for carac in caracteristicas_obj:
+                    caracterizacion.caracteristicas.add(carac)
+                for clase_uso in clase_uso_obj:
+                    caracterizacion.clase_uso.add(clase_uso)
+
             elif type(ad) is HorarioDisponibilidad:
-                for di in ad.dias_obj:
-                    ad.dias.add(di)
-    objeto.save()
+                dias_obj = ad.dias_obj
+
+                del diccionario['dias_obj']
+
+                horario, created = HorarioDisponibilidad.objects.update_or_create(
+                    escenario=escenario,
+                    descripcion=objeto.descripcion,
+                    defaults=ad.__dict__
+                )
+
+                for di in dias_obj:
+                    horario.dias.add(di)
+            elif type(ad) is Foto:
+                Foto.objects.update_or_create(
+                    escenario=escenario,
+                    foto=ad.foto,
+                    defaults=ad.__dict__
+                )
+            elif type(ad) is Video:
+                Video.objects.update_or_create(
+                    escenario=escenario,
+                    url=ad.url,
+                    defaults=ad.__dict__
+                )
+            elif type(ad) is DatoHistorico:
+                DatoHistorico.objects.update_or_create(
+                    escenario=escenario,
+                    descripcion=ad.descripcion,
+                    defaults=ad.__dict__
+                )
+            elif type(ad) is Contacto:
+                Contacto.objects.update_or_create(
+                    escenario=escenario,
+                    nombre=ad.nombre,
+                    defaults=ad.__dict__
+                )
 
 def obtener_objeto(id_obj,tipo_objeto):
     """
@@ -285,6 +415,19 @@ def obtener_objeto(id_obj,tipo_objeto):
     return objeto,adicionales
 
 def existencia_objeto(objeto,tipo_objeto):
+    if tipo_objeto == 'Deportista':
+        try:
+           obj = Deportista.objects.get(identificacion=objeto.identificacion)
+        except:
+            posibilidades = Deportista.objects.filter(nombres=objeto.nombres, apellidos=objeto.apellidos).exclude(tipo_id=objeto.tipo_id)
+            if len(posibilidades) == 0:
+                return False,None
+            else:
+                return True,posibilidades
+    return False,None
+
+'''
+def existencia_objeto(objeto,tipo_objeto):
     """
     Agosto 6, 2015
     Autor: Daniel Correa
@@ -320,7 +463,7 @@ def existencia_objeto(objeto,tipo_objeto):
             return 0,None
 
     return 1,obj.id
-
+'''
 @login_required
 def cancelar_transferencia(request,id_objeto,tipo_objeto):
     """

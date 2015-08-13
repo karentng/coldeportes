@@ -13,10 +13,10 @@ class Deportista(models.Model):
         ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIDAD = (
-        ('TI', 'Tarjeta de Identidad'),
-        ('CC', 'Cédula de ciudadanía'),
-        ('CCEX', 'Cédula de extranjero'),
-        ('PASS', 'Pasaporte'),
+        ('TI', 'TARJETA DE IDENTIDAD'),
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
     )
     ESTADOS = (
         (0,'ACTIVO'),
