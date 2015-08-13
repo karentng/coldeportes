@@ -27,7 +27,6 @@ def wizard_identificacion_nuevo(request):
     print(request.session)
     try:
         datos = request.session['datos']
-        del request.session['datos']
     except Exception:
         return redirect('dirigentes_verificar')
 
@@ -42,7 +41,8 @@ def wizard_identificacion_nuevo(request):
             dirigente.entidad =  request.tenant
             dirigente.save()
             identificacion_form.save_m2m()
-            return redirect('dirigentes_wizard_funciones', dirigente.id)
+            del request.session['datos']
+            return redirect('dirigentes_wizard_cargos', dirigente.id)
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
