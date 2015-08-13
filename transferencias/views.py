@@ -126,6 +126,7 @@ def procesar_transferencia(request,id_transfer,opcion):
 
         messages.warning(request,'Transferencia rechazada exitosamente')
     else:
+        #Acepto transferencia
         objeto.estado = 3
         objeto.entidad = request.tenant
         objeto.entidad_vinculacion = request.tenant #quitar luego de cambio
@@ -199,20 +200,21 @@ def guardar_objeto(objeto,adicionales,tipo):
                     division=ad.division,
                     prueba=ad.prueba,
                     categoria=ad.categoria,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
             elif type(ad) is InformacionAcademica:
+                print()
                 InformacionAcademica.objects.update_or_create(
                     deportista=deportista,
                     institucion=ad.institucion,
                     nivel=ad.nivel,
                     profesion=ad.profesion,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
             else:
                 ComposicionCorporal.objects.update_or_create(
                     deportista=deportista,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
 
     elif tipo == 'Entrenador':
@@ -247,7 +249,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                 formacion, created = FormacionDeportiva.objects.update_or_create(
                     entrenador=entrenador,
                     denominacion_diploma=ad.denominacion_diploma,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
                 for disc in disciplinas_form:
                     formacion.disciplina_deportiva.add(disc)
@@ -255,7 +257,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                 ExperienciaLaboral.objects.update_or_create(
                     entrenador=entrenador,
                     nombre_cargo=ad.nombre_cargo,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
 
     elif tipo == 'Escenario':
@@ -290,7 +292,7 @@ def guardar_objeto(objeto,adicionales,tipo):
 
                 caracterizacion, created = CaracterizacionEscenario.objects.update_or_create(
                     escenario=escenario,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
                 for tipo_d in tipo_disciplinas_obj:
                     caracterizacion.tipo_disciplinas.add(tipo_d)
@@ -308,8 +310,8 @@ def guardar_objeto(objeto,adicionales,tipo):
 
                 horario, created = HorarioDisponibilidad.objects.update_or_create(
                     escenario=escenario,
-                    descripcion=objeto.descripcion,
-                    defaults=ad.__dict__
+                    descripcion=ad.descripcion,
+                    defaults=diccionario
                 )
 
                 for di in dias_obj:
@@ -318,25 +320,25 @@ def guardar_objeto(objeto,adicionales,tipo):
                 Foto.objects.update_or_create(
                     escenario=escenario,
                     foto=ad.foto,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
             elif type(ad) is Video:
                 Video.objects.update_or_create(
                     escenario=escenario,
                     url=ad.url,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
             elif type(ad) is DatoHistorico:
                 DatoHistorico.objects.update_or_create(
                     escenario=escenario,
                     descripcion=ad.descripcion,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
             elif type(ad) is Contacto:
                 Contacto.objects.update_or_create(
                     escenario=escenario,
                     nombre=ad.nombre,
-                    defaults=ad.__dict__
+                    defaults=diccionario
                 )
 
 def obtener_objeto(id_obj,tipo_objeto):
@@ -426,44 +428,6 @@ def existencia_objeto(objeto,tipo_objeto):
                 return True,posibilidades
     return False,None
 
-'''
-def existencia_objeto(objeto,tipo_objeto):
-    """
-    Agosto 6, 2015
-    Autor: Daniel Correa
-
-    Permite verificar la existencia de un objeto transferible en el tenant a transferir, esto para el caso en que el objeto transferible vuelva a alguna entidad por la cual ya habia pasado
-
-    :param identificacion: identificacion del objeto transferible
-    :type identificacion: string
-    :param tipo_objeto: tipo del objeto transferible
-    :type tipo_objeto: string
-    :return: valor de existencia
-    """
-    if tipo_objeto == 'Deportista':
-        try:
-           obj = Deportista.objects.get(identificacion=objeto.identificacion)
-        except:
-            posibilidades = Deportista.objects.filter(nombres=objeto.nombres, apellidos=objeto.apellidos).exclude(tipo_id=objeto.tipo_id)
-            if len(posibilidades) == 0:
-                return 0,None
-            else:
-                return 2,posibilidades
-
-    elif tipo_objeto == 'Entrenador':
-        try:
-            obj = Entrenador.objects.get(identificacion=objeto.identificacion)
-        except:
-            return 0,None
-
-    elif tipo_objeto == 'Escenario':
-        try:
-           obj = Entrenador.objects.get(nombre=objeto.nombre)
-        except:
-            return 0,None
-
-    return 1,obj.id
-'''
 @login_required
 def cancelar_transferencia(request,id_objeto,tipo_objeto):
     """
