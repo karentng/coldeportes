@@ -19,7 +19,7 @@
 
 {% block contenido_panel %}
     <div class="row">
-        <form  method="POST">{% csrf_token %}
+        <form action="{% url 'directorio_publico_buscar' %}" method="POST">{% csrf_token %}
             <div class="col-md-10">       
             {% for field in form %}
                 <div class="col-md-4">
