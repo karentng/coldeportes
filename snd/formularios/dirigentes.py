@@ -53,11 +53,14 @@ class DirigenteFuncionesForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         dirigente_id = kwargs.pop('dirigente_id', False)
+        cargo_id = kwargs.pop('cargo_id', False)
         super(DirigenteFuncionesForm, self).__init__(*args, **kwargs)
         if dirigente_id:
             self.fields['cargo'].queryset=DirigenteCargo.objects.filter(dirigente=dirigente_id)
             self.fields['dirigente'].widget = forms.HiddenInput()
             self.fields['dirigente'].initial = dirigente_id
+        if cargo_id:
+            self.fields['cargo'].initial = cargo_id
 
     class Meta:
         model = DirigenteFuncion

@@ -30,7 +30,7 @@
 {% block js %}
     <script type="text/javascript">
         var idTabla = "tabla-dirigentes";
-        var options = [{visible : false, targets : [1,3,7,8,9,10]}];
+        //var options = [{visible : false, targets : [1,3,7,8,9,10]}];
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
@@ -48,13 +48,9 @@
                     <th>Identificación</th>
                     <th>Nombre</th>
                     <th>Género</th>
-                    <th>Cargo</th>
-                    <th>Superior</th>
-                    <th>Estado</th>
                     <th>Teléfono</th>
                     <th>Email</th>
-                    <th>Fecha de Posesión</th>
-                    <th>Fecha de Retiro</th>
+                    <th>Estado</th>
                     {% if perms.snd.change_dirigente %}
                         <th>Opciones</th>
                     {% endif %}
@@ -75,13 +71,9 @@
                         <td>{{dirigente.tipo_identificacion}}. {{dirigente.identificacion}}</td>
                         <td>{{dirigente.nombres}} {{dirigente.apellidos}}</td>
                         <td>{{dirigente.genero}}</td>
-                        <td>{{dirigente.cargo}}</td>
-                        <td>{{dirigente.superior.nombres}} {{dirigente.superior.apellidos}}</td>
-                        <td>{{dirigente.get_estado_display}}</td>
                         <td>{{dirigente.telefono}}</td>
                         <td>{{dirigente.email}}</td>
-                        <td>{{dirigente.fecha_posesion}}</td>
-                        <td>{{dirigente.fecha_retiro}}</td>
+                        <td>{{dirigente.get_estado_display}}</td>
                         {% if perms.snd.change_dirigente %}
                             <td>
                                 <a href="{% url 'dirigentes_ver' dirigente.id %}" data-toggle="modal">
