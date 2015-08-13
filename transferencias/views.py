@@ -127,10 +127,6 @@ def procesar_transferencia(request,id_transfer,opcion):
         messages.warning(request,'Transferencia rechazada exitosamente')
     else:
         #Acepto transferencia
-        objeto.estado = 3
-        objeto.entidad = request.tenant
-        objeto.entidad_vinculacion = request.tenant #quitar luego de cambio
-        objeto.save()
 
         connection.set_tenant(request.tenant)
         ContentType.objects.clear_cache()
@@ -141,15 +137,50 @@ def procesar_transferencia(request,id_transfer,opcion):
             pass
 
         else:
+            objeto.entidad = request.tenant
+            objeto.entidad_vinculacion = request.tenant #quitar luego de cambio
             objeto.estado = 0
             guardar_objeto(objeto,adicionales,tipo_objeto)
 
-        messages.success(request,'Transferencia procesada exitosamente')
+        #messages.success(request,'Transferencia procesada exitosamente')
 
-        transferencia.estado = 'Aprobada'
-        transferencia.save()
+    return finalizar_transferencia(request,entidad_cambio,objeto,tipo_objeto,transferencia)
 
-    return redirect('inicio_tenant')
+def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transferencia):
+
+    transferencia.estado = 'Aprobada'
+    transferencia.save()
+
+    connection.set_tenant(entidad_saliente)
+    ContentType.objects.clear_cache()
+
+    objeto.estado = 3
+    if tipo_objeto=='Deportista' or tipo_objeto=='Entrenador':
+        new_obj, created = objeto.__class__.objects.update_or_create(
+            identificacion = objeto.identificacion,
+            defaults=objeto.__dict__
+        )
+        new_obj.edad = calculate_age(new_obj.fecha_nacimiento)
+        new_obj.nacionalidad_str = ",".join(str(x) for x in new_obj.nacionalidad.all())
+        new_obj.fotos = [new_obj.foto]
+    else:
+        new_obj, created =  objeto.__class__.objects.update_or_create(
+            nombre=objeto.nombre,
+            defaults=objeto.__dict__
+        )
+        fotos = [x.foto for x in Foto.objects.filter(escenario=new_obj)]
+        caracteristicas = CaracterizacionEscenario.objects.get(escenario=new_obj)
+        new_obj.capacidad = caracteristicas.capacidad_espectadores
+        new_obj.tipo_escenario = caracteristicas.tipo_escenario
+        new_obj.fotos=fotos
+
+    new_obj.tipo_objeto = new_obj.__class__.__name__
+    new_obj.fecha = datetime.date.today()
+    new_obj.entidad_sol = entidad_saliente
+
+    return render(request,'transferencia_exitosa.html',{
+        'objeto': new_obj
+    })
 
 def guardar_objeto(objeto,adicionales,tipo):
     """
@@ -491,3 +522,13 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
 
     messages.error(request,'Error: No existe la transferencia solicitada')
     return redirect(redir)
+
+def test_acepto(request):
+    objeto = Deportista.objects.all()[1]
+    objeto.tipo_objeto='Deportista'
+    objeto.edad = calculate_age(objeto.fecha_nacimiento)
+    objeto.nacionalidad_str = ",".join(str(x) for x in objeto.nacionalidad.all())
+    objeto.fotos = [objeto.foto]
+    return render(request,'transferencia_exitosa.html',{
+        'objeto' : objeto
+    })
