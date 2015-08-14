@@ -18,7 +18,8 @@ urlpatterns = patterns('',
 
     url(r'^gestion-usuarios/', include('gestion_usuarios.urls')),
     url(r'^transferencias/',include('transferencias.urls')),#urls del modulo de transferencias
-    url(r'^directorio/',include('directorio.urls')),#urls del modulo de directorio
+    url(r'^directorio/',include('directorio.entidad_urls')),#urls del modulo de directorio perfil entidad
+    url(r'^directorio-publico/',include('directorio.publico_urls')),#urls del modulo de directorio publico
     
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
