@@ -3,7 +3,7 @@
 from django.db import models
 from entidades.models import Entidad
 from entidades.models import Ciudad, Entidad, Nacionalidad
-#=======================================================================================================
+#======================= ================================================================================
 #Modelos para PersonalApoyo
 
 
@@ -23,9 +23,10 @@ class PersonalApoyo(models.Model):
     )
 
     TIPO_IDENTIDAD = (
-        ('CED', 'CÉDULA DE CIUDADANÍA'),
-        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
-        ('PAS', 'PASAPORTE'),
+        ('TI', 'TARJETA DE IDENTIDAD'),
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
     )
 
     ETNIAS = (
@@ -57,7 +58,7 @@ class PersonalApoyo(models.Model):
         (15,'RECREADOR'),
         (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
     )
-    actividad = models.IntegerField(choices=ACTIVIDADES)
+    actividad = models.IntegerField(choices=ACTIVIDADES,verbose_name='Actividad a desempeñar')
     estado = models.IntegerField(choices=ESTADOS, default=0)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)

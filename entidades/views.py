@@ -19,7 +19,6 @@ from coldeportes.utilities import calculate_age
 @login_required
 def tipo(request):
     return render(request, 'entidad_tipo.html', {
-        'tenant_nacional':True
     })
 
 @login_required
@@ -49,8 +48,7 @@ def registro(request, tipo):
     return render(request, 'entidad_registro.html', {
         'form': form,
         'form2': form2,
-        'dominio': dominio,
-        'tenant_nacional':True
+        'dominio': dominio
     })
 
 @login_required
@@ -212,22 +210,22 @@ def cargar_columnas_tenantnacional(request, modelo):
 
 
 def listar_personal_apoyo_nacionales(request):
-    return render(request,'tenant_nacional/personal_apoyo_listar.html',{'tenant_nacional':True})
+    return render(request,'tenant_nacional/personal_apoyo_listar.html',{})
 
 def listar_dirigentes_nacionales(request):
-    return render(request,'tenant_nacional/dirigentes_listar.html',{'tenant_nacional':True})
+    return render(request,'tenant_nacional/dirigentes_listar.html',{})
 
 def listar_deportistas_nacionales(request):
-    return render(request,'tenant_nacional/deportistas_listar.html',{'tenant_nacional':True})
+    return render(request,'tenant_nacional/deportistas_listar.html',{})
 
 def listar_escenarios_nacionales(request):
-    return render(request,'tenant_nacional/escenarios_listar.html',{'tenant_nacional':True})
+    return render(request,'tenant_nacional/escenarios_listar.html',{})
 
 def listar_cajas_nacionales(request):
-    return render(request,'tenant_nacional/cajas_listar.html',{'tenant_nacional':True})
+    return render(request,'tenant_nacional/cajas_listar.html',{})
 
 def listar_cafs_nacionales(request):
-    return render(request,'tenant_nacional/cafs_listar.html',{'tenant_nacional':True})
+    return render(request,'tenant_nacional/cafs_listar.html',{})
 
 def ver_personal_apoyo_tenantnacional(request, id_personal_apoyo, tenant):
     """
