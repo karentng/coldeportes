@@ -309,6 +309,7 @@ def ver_caf(request, idCAF):
         'centro': centro,
         'planes': planes,
         'fotos': fotos,
+        'contenidoSinPadding': True,
     })
 
 '''

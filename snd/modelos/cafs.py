@@ -60,4 +60,6 @@ def ruta_fotos_cafs(instance, filename):
 
 class CAFoto(models.Model):
     centro = models.ForeignKey(CentroAcondicionamiento)
+    titulo = models.CharField(max_length=255, verbose_name="título")
     foto = models.ImageField(upload_to='ruta_fotos_cafs')
+    descripcion = models.TextField(blank=True, null=True, verbose_name="descripción")
