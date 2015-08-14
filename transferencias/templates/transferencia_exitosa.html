@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Transferencias - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Transferencia Exitosa
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li>Transferencias</li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Transferencia Exitosa
+{% endblock %}
+
+{% block contenido_panel %}
+    <!-- begin vertical-box -->
+		    <div class="vertical-box">
+		        <!-- begin vertical-box-column -->
+		        <div class="vertical-box-column width-250">
+		            <!-- begin wrapper -->
+                    <div class="wrapper bg-silver text-center">
+                        <div class="btn-group btn-toolbar">
+                            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+                            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+                        </div>
+                        <div class="btn-group m-l-5">
+                            <a  class="btn btn-white btn-sm disabled"><i class="ion ion-information-circled"></i></a>
+                        </div>
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+                    <div class="wrapper">
+                        <p><b>Detalles</b></p>
+                        <ul class="nav nav-pills nav-stacked nav-sm">
+                            <li><a ><i class="fa fa-briefcase fa-fw m-r-5"></i> {{ objeto.tipo_objeto }} <span class="badge pull-right">1</span></a></li>
+                            {% ifequal 'Escenario' objeto.tipo_objeto %}
+                                <li><a ><i class="fa fa-location-arrow fa-fw m-r-5"></i> {{ objeto.direccion }}</a></li>
+                                <li><a ><i class="fa fa-users fa-fw m-r-5"></i> {{ objeto.capacidad }} Espectadores</a></li>
+                                <li><a ><i class="fa fa-bicycle fa-fw m-r-5"></i> {{ objeto.tipo_escenario }}</a></li>
+                                <li><a ><i class="fa fa-globe fa-fw m-r-5"></i> {{ objeto.ciudad }}</a></li>
+                            {% else %}
+                                <li><a ><i class="fa fa-archive fa-fw m-r-5"></i> {{ objeto.tipo_id }}.{% ifequal 'Deportista' objeto.tipo_objeto%} {{ objeto.identificacion }} {% else %} {{ objeto.identificacion }} {% endifequal %}</a></li>
+                                <li><a ><i class="fa fa-info fa-fw m-r-5"></i> {{ objeto.edad }} Años</a></li>
+                                <li><a ><i class="fa fa-user fa-fw m-r-5"></i> {{ objeto.genero }}</a></li>
+                                <li><a ><i class="fa fa-globe fa-fw m-r-5"></i> {{ objeto.nacionalidad_str }}</a></li>
+                            {% endifequal %}
+                        </ul>
+                    </div>
+		            <!-- end wrapper -->
+		        </div>
+		        <!-- end vertical-box-column -->
+		        <!-- begin vertical-box-column -->
+		        <div class="vertical-box-column bg-white">
+		            <!-- begin wrapper -->
+                    <div class="wrapper bg-silver-lighter clearfix">
+
+                        <div class="pull-right">
+                            <div class="btn-group btn-toolbar">
+                                <a  class="btn btn-white btn-sm disabled"><i class="ion ion-ribbon-a"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="ion ion-checkmark-circled"></i></a>
+                            </div>
+                            <div class="btn-group m-l-5">
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-left"></i></a>
+                            </div>
+                        </div>
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+                    <div class="wrapper">
+                        <h4 class="m-b-15 m-t-0 p-b-10 underline">{% ifequal 'Escenario' objeto.tipo_objeto %} {{ objeto.nombre }} {% else %} {{ objeto.nombres }} {{ objeto.apellidos }} {% endifequal %}</h4>
+                        <ul class="media-list underline m-b-20 p-b-15">
+                            <li class="media media-sm clearfix">
+                                <a class="pull-left">
+                                    <i class="fa fa-exchange fa-2x modal-icon"></i>
+                                </a>
+                                <div class="media-body">
+                                    <span class="email-from text-inverse f-w-600">
+                                        Desde: {{ objeto.entidad_sol }}
+
+                                    </span><span class="text-muted m-l-5"><i class="fa fa-clock-o fa-fw"></i> {{ objeto.fecha }}</span><br />
+                                </div>
+                            </li>
+						</ul>
+                        <ul class="attached-document clearfix">
+                            <strong>Fotos</strong><br/><br/>
+                            {%if objeto.fotos%}
+                                {% for f in objeto.fotos %}
+                                    {%if f%}
+                                        <li>
+                                            <div class="media-object rounded-corner">
+                                                <img src="{{ MEDIA_URL }}{{ f }}" alt="" />
+                                            </div>
+                                        </li>
+                                    {%else%}
+                                        <li>
+                                            <div class="document-name">No hay foto disponible</div>
+                                            <div class="document-file">
+                                                <a >
+                                                    <i class="fa fa-file-photo-o"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    {%endif%}
+                                {% endfor %}
+                            {%else%}
+                                <li>
+                                    <div class="document-name">No hay fotos disponibles</div>
+                                    <div class="document-file">
+                                        <a >
+                                            <i class="fa fa-file-photo-o"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            {%endif%}
+                        </ul>
+                        <strong>Descripcion</strong> <br/><br/>
+                        <p class="f-s-12 text-inverse">
+                            {% if objeto.descripcion %}
+                                {{ objeto.descripcion }}
+                            {% else %}
+                                No disponible
+                            {% endif %}
+                        </p>
+                        <strong>Sobre la transferencia</strong><br/><br/>
+                        <p class="f-s-12 text-inverse">
+                            Usted a aceptado a este {{objeto.tipo_objeto}} en transferencia y a partir de este momento los derechos deportivos son responsabilidad de su entidad<br />
+                        </p>
+                        <strong>Acciones</strong><br/><br/>
+                        <div class="col-lg-8">
+                            <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
+                                        {% url 'listar_escenarios' %}
+                                     {% else %}
+                                        {% ifequal 'Entrenador' objeto.tipo_objeto %}
+                                            {% url 'entrenador_listar' %}
+                                        {% else %}
+                                            {% ifequal 'Deportista' objeto.tipo_objeto %}
+                                                {% url 'deportista_listar' %}
+                                            {% endifequal %}
+                                        {% endifequal %}
+                                     {% endifequal %}"
+                                class="btn btn-success p-l-40 p-r-40 btn-sm">
+                                Continuar
+                            </a>
+                            <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
+                                        {% url 'wizard_identificacion' objeto.id %}
+                                     {% else %}
+                                        {% ifequal 'Entrenador' objeto.tipo_objeto %}
+                                            {% url 'edicion_entrenador' objeto.id %}
+                                        {% else %}
+                                            {% ifequal 'Deportista' objeto.tipo_objeto %}
+                                                {% url 'edicion_deportista' objeto.id %}
+                                            {% endifequal %}
+                                        {% endifequal %}
+                                     {% endifequal %}"
+                                class="btn btn-warning p-l-40 p-r-40 btn-sm">
+                                Editar Datos
+                            </a>
+                        </div>
+                        <br />
+                        <br />
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+                    <div class="wrapper bg-silver-lighter text-right clearfix">
+                        Transferencias entre entidades suscritas al <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+                    </div>
+		            <!-- end wrapper -->
+		        </div>
+		        <!-- end vertical-box-column -->
+		    </div>
+		    <!-- end vertical-box -->
+{% endblock %}
