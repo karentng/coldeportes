@@ -18,6 +18,7 @@ urlpatterns = patterns('snd.views.dirigentes',
     url(r'^nuevo/wizard/identificacion/(\d+)$', 'wizard_identificacion', name='dirigentes_wizard_identificacion'), 
     url(r'^nuevo/wizard/cargos/(\d+)$', 'wizard_cargos', name='dirigentes_wizard_cargos'),
     url(r'^nuevo/wizard/funciones/(\d+)$', 'wizard_funciones', name='dirigentes_wizard_funciones'),
+    url(r'^nuevo/wizard/funciones/(\d+)/(\d+)$', 'wizard_funciones', name='dirigentes_wizard_funciones'),
 
     #urls para eliminar los pasos de los que se pueden registrar muchos en el wizard
     url(r'^eliminar/funcion/(\d+)/(\d+)/(\d+)$', 'eliminar_funcion', name='dirigentes_eliminar_funcion'),

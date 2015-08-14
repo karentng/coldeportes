@@ -27,7 +27,6 @@ def wizard_identificacion_nuevo(request):
     print(request.session)
     try:
         datos = request.session['datos']
-        del request.session['datos']
     except Exception:
         return redirect('dirigentes_verificar')
 
@@ -42,7 +41,8 @@ def wizard_identificacion_nuevo(request):
             dirigente.entidad =  request.tenant
             dirigente.save()
             identificacion_form.save_m2m()
-            return redirect('dirigentes_wizard_funciones', dirigente.id)
+            del request.session['datos']
+            return redirect('dirigentes_wizard_cargos', dirigente.id)
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
@@ -91,7 +91,7 @@ def wizard_identificacion(request, dirigente_id):
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def wizard_funciones(request, dirigente_id):
+def wizard_funciones(request, dirigente_id, cargo_id=None):
     """
     Junio 14 / 2015
     Autor: Cristian Leonardo Ríos López
@@ -109,7 +109,7 @@ def wizard_funciones(request, dirigente_id):
     :type dirigente_id:    String
     """
 
-    funciones_form = DirigenteFuncionesForm(dirigente_id=dirigente_id)
+    funciones_form = DirigenteFuncionesForm(dirigente_id=dirigente_id, cargo_id=cargo_id)
 
     if request.method == 'POST':
         funciones_form = DirigenteFuncionesForm(request.POST)
@@ -122,7 +122,7 @@ def wizard_funciones(request, dirigente_id):
                 messages.error(request, "Está tratando de adicionarle funciones a un dirigente inexistente.")
                 return redirect('dirigentes_listar')
             funcion_nueva.save()
-            return redirect('dirigentes_wizard_funciones', dirigente_id)
+            return redirect('dirigentes_wizard_funciones', dirigente_id, funcion_nueva.cargo.id)
 
     return render(request, 'dirigentes/wizard/wizard_funciones.html', {
         'wizard_stage': 3,
@@ -179,11 +179,12 @@ def eliminar_funcion(request, dirigente_id, cargo_id, funcion_id):
     try:
         funcion = DirigenteFuncion.objects.get(id=funcion_id, cargo=cargo_id, dirigente=dirigente_id)
         funcion.delete()
-        return redirect('dirigentes_wizard_funciones', dirigente_id)
+        messages.success(request,'La función ha sido eliminada con éxito.')
+        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
 
     except DirigenteFuncion.DoesNotExist:
         messages.error(request,'Está tratando de eliminar un función inexistente.')
-        return redirect('dirigentes_wizard_funciones', dirigente_id)
+        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
 
 @login_required
 @all_permission_required('snd.add_dirigente')
@@ -372,11 +373,13 @@ def ver(request, dirigente_id):
         messages.error(request, 'El dirigente que desea ver no existe')
         return redirect('dirigentes_listar')
 
-    funciones = Funcion.objects.filter(dirigente=dirigente)
+    cargos = DirigenteCargo.objects.filter(dirigente=dirigente)
+    for cargo in cargos:
+        cargo.funciones = DirigenteFuncion.objects.filter(dirigente=dirigente, cargo=cargo.id)
 
     return render(request, 'dirigentes/dirigentes_ver.html', {
         'dirigente': dirigente,
-        'funciones': funciones
+        'cargos': cargos
     })
 
 
