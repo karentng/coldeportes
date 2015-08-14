@@ -59,11 +59,11 @@
                         <tr>
                             <td align="center">
                                 {%if deportista.foto%}
-                                    <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" width="60" height="60" />
+                                    <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="Foto del Deportista" width="60" height="60" />
                                 {%elif deportista.genero == "Hombre"%}
-                                    <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" width="60" height="60"/>
+                                    <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="Foto del Deportista" width="60" height="60"/>
                                 {%else%}
-                                    <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" width="60" height="60"/>
+                                    <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="Foto del Deportista" width="60" height="60"/>
                                 {%endif%}
                             </td>
                             <td>{{deportista.nombres}} {{deportista.apellidos}}</td>
