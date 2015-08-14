@@ -18,7 +18,7 @@ from directorio.models import *
 
 
 def asignarPermisosGrupo(request, grupo, permisos):
-    permisos = permisosPermitidos(request, permitidos)
+    permisos = permisosPermitidos(request, permisos)
     permisos = Permission.objects.filter(codename__in=permisos)
     for permiso in permisos:
         grupo.permissions.add(permiso)
@@ -272,9 +272,9 @@ def grupos_modificar(request, idGrupo):
     except Exception:
         return redirect('grupos_listar')
 
-    form = GroupForm(instance=grupo)
+    form = GroupForm(instance=grupo, request=request)
     if request.method == 'POST':
-        form = GroupForm(request.POST, instance=grupo)
+        form = GroupForm(request.POST, instance=grupo, request=request)
         if form.is_valid():
             form.save()
             messages.success(request, "Grupo modificado correctamente")

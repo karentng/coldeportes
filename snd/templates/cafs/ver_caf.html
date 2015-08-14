@@ -11,7 +11,8 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li class="active">Ver CAF</li>
+    <li><a href="{% url 'listar_cafs' %}">CAF</a></li>
+    <li class="active">Visualizar</li>
 {% endblock %}
 
 {% block css %}
@@ -21,213 +22,208 @@
     Detalles del CAF
 {% endblock %}
 
-{% block contenido_panel %}
-<div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
-    <div class="panel-heading p-0">
-        <div class="panel-heading-btn m-r-10 m-t-10">
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+{% block contenido %}
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
+            </a>
         </div>
-        
-        <div class="tab-overflow">
-            <ul class="nav nav-tabs">
-                <li class="prev-button">
-                	<a href="javascript:;" data-click="prev-tab" class="text-inverse">
-                		<i class="fa fa-arrow-left"></i>
-                	</a>
-                </li>
-
-                <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-
-                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-dollar"></i> Planes</a></li>
-
-                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-users"></i> Clases</a></li>
-
-                <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-phone"></i> Servicios</a></li>
-
-                <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
-                
-                
-                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
-            </ul>
-        </div>
+        <h4 class="panel-title">
+            {{centro.nombre}}
+        </h4>
     </div>
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="nav-tab2-12">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cafs_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_cafs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10">
-                    	<i class="fa fa-chevron-left m-r-5"></i> Volver
-                    </a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10">
-                    	<i class="fa fa-print m-r-5"></i> Imprimir
-                    </a>
-                    </span>
-                    {{centro.nombre}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                            <p><b>Estado: {{centro.get_estado_display}}</b></p>
-                            <p>Dirección: {{centro.direccion}}</p>
-                            <p>Teléfono: {{centro.telefono}}</p>
-                            <p>Email: {{centro.email}}</p>
-                            <p>Ciudad: {{centro.ciudad}}</p>
-                            <p>Comuna: {{centro.comuna}}</p>
-                            <p>Barrio: {{centro.barrio}}</p>
-                            <p>Estrato: {{centro.estrato}}</p>
-                            <p>{{centro.ciudad.nombre}}, {{centro.ciudad.departamento.nombre}}</p>
-                            <p>Latitud: {{centro.latitud}} Longitud: {{centro.longitud}} Altura: {{centro.altura}}</p>
+    <div class="panel-body" style="padding:0">
+        <div class="row">
+            <div class="col-sm-12">
+                <img src="http://fitaffinitynews.com/wp-content/uploads/2015/03/gimnasio.jpg" alt="gimnasio" style="width:100%; height:250px">
+                <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                    <div class="panel-heading p-0">
+                        <div class="panel-heading-btn m-r-10 m-t-10">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
+                        
+                        <div class="tab-overflow">
+                            <ul class="nav nav-tabs">
+                                <li class="prev-button">
+                                    <a href="javascript:;" data-click="prev-tab" class="text-inverse">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                </li>
 
-                            <p>Administrador: {{centro.nombre_administrador}}</p>
-                        </address>
-                    </div>                    
-                </div>
-                <h5 class="m-t-10">Información de contacto:</h5>
-                <p>
-                	{% if escenario.contacto == None %}
-                		No hay información disponible actualmente
-                	{% else %}
-                		{{escenario.contacto|linebreaksbr}}
-                	{% endif %}
-                </p>
-            </div>
-        </div>
-        
-        <div class="tab-pane fade" id="nav-tab2-13">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cafs_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_cafs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{centro.nombre}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                            <b>Planes que ofrece el Centro de Acondicionamiento Físico:</b>
-                        	<div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th align="center">Nombre</th>
-                                            <th align="center">Precio</th>
-                                            <th align="center">Descripción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for plan in planes %}
-                                        <tr>
-                                            <td>{{plan.nombre}}</td>
-                                            <td>{{plan.precio}}</td>
-                                            <td>{{plan.descripcion|linebreaksbr}}</td>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="4" align="center">
-                                                    <b>No hay planes registrados</b>
-                                                </td>
-                                            </tr>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                        </address>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tab-pane fade" id="nav-tab2-14">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cafs_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_cafs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{centro.nombre}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                        	<b>Clases que ofrece el Centro de Acondicionamiento Físico:</b>
-                        	<ul>
-                        		{% for i in centro.clases.all %}
-                        		<li>{{i}}</li>
-                        		{% endfor %}
-                        	</ul>
-                        </address>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tab-pane fade" id="nav-tab2-15">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cafs_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_cafs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{centro.nombre}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                        	<b>Servicios que ofrece el Centro de Acondicionamiento Físico:</b>
-                        	<ul>
-                                {% for i in centro.servicios.all %}
-                                <li>{{i}}</li>
-                                {% endfor %}
+                                <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-dollar"></i> Planes</a></li>
+
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-users"></i> Clases</a></li>
+
+                                <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-phone"></i> Servicios</a></li>
+
+                                <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
+                                
+                                
+                                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                             </ul>
-                        </address>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-pane fade" id="nav-tab2-16">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cafs_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_cafs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{centro.nombre}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                            <b>Fotos del Centro de Acondicionamiento Físico:</b>
-                            <!-- begin superbox -->
-                            <div class="superbox" data-offset="54">
-                                {% for foto in fotos %}
-                                <div class="superbox-list">
-                                    <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" alt="" class="superbox-img" />
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="nav-tab2-12">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{centro.nombre}}</b>
                                 </div>
-                                {% endfor %}
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <p><b>Estado: {{centro.get_estado_display}}</b></p>
+                                            <p>{{centro.direccion}}, Barrio {{centro.barrio}}</p>
+                                            <p>{{centro.ciudad}}</p>
+                                            <p>Latitud: {{centro.latitud}} Longitud: {{centro.longitud}} Altura: {{centro.altura}}</p>
+                                            <p>Estrato {{centro.estrato}}, Comuna {{centro.comuna}}</p>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>                    
+                                </div>
+                                <h5 class="m-t-10">Información de contacto:</h5>
+                                <p>Teléfono: {{centro.telefono}}</p>
+                                <p>Email: {{centro.email}}</p>
+                                <p>Nombre del Administrador: {{centro.nombre_administrador}}</p>
                             </div>
-                        </address>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="nav-tab2-13">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    {{centro.nombre}}
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <b>Planes que ofrece el Centro de Acondicionamiento Físico:</b>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th align="center">Nombre</th>
+                                                            <th align="center">Precio</th>
+                                                            <th align="center">Descripción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for plan in planes %}
+                                                        <tr>
+                                                            <td>{{plan.nombre}}</td>
+                                                            <td>{{plan.precio}}</td>
+                                                            <td>{{plan.descripcion|linebreaksbr}}</td>
+                                                            {% empty %}
+                                                            <tr>
+                                                                <td colspan="4" align="center">
+                                                                    <b>No hay planes registrados</b>
+                                                                </td>
+                                                            </tr>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    {{centro.nombre}}
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <b>Clases que ofrece el Centro de Acondicionamiento Físico:</b>
+                                            <ul>
+                                                {% for i in centro.clases.all %}
+                                                <li>{{i}}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="nav-tab2-15">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    {{centro.nombre}}
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <b>Servicios que ofrece el Centro de Acondicionamiento Físico:</b>
+                                            <ul>
+                                                {% for i in centro.servicios.all %}
+                                                <li>{{i}}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-tab2-16">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    {{centro.nombre}}
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <b>Fotos del Centro de Acondicionamiento Físico:</b>
+                                            <!-- begin superbox -->
+                                            {% if fotos.0 == None %}
+                                                <p>No hay fotos disponibles</p>
+                                            {% else %}
+                                                <div class="superbox" data-offset="54">
+                                                {% for foto in fotos %}
+                                                    <div class="superbox-list">
+                                                        <img src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" data-titulo="{{foto.titulo}}" data-descripcion="{{foto.descripcion}}" alt="" class="superbox-img" />
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

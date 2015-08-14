@@ -10,6 +10,13 @@ fields = {
                 message: 'Debe seleccionar una imagen'
             }
         }
-    }
+    },
+    titulo: {
+        validators: {
+            notEmpty: {
+                message: 'El título no puede ser vacío'
+            }
+        }
+    },
 };
 $.getScript(base+"js/validaciones/validations-base.js");

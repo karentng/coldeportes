@@ -14,12 +14,15 @@
 	$.fn.SuperBox = function(options) {
 		
 		var superbox      = $('<div class="superbox-show"></div>');
+		var tituloDiv = $('<div></div>');
+		var descripcionDiv = $('<div></div>');
 		var superboximg   = $('<img src="" class="superbox-current-img">');
 		var superboxclose = $('<div class="superbox-close"></div>');
 		
-		superbox.append(superboximg).append(superboxclose);
+		superbox.append(tituloDiv).append(descripcionDiv).append(superboximg).append(superboxclose);
 		
-		return this.each(function() {
+		 
+		var X = this.each(function() {
 			
 			$('.superbox-list').click(function() {
 		
@@ -27,7 +30,12 @@
 				var imgData = currentimg.data('img');
 				var offset = $('.superbox').attr('data-offset');
 				    offset = (offset) ? offset : 0;
-				    
+				
+				var titulo = "<div><h1 style='color:white'>"+currentimg.data('titulo')+"</h1></div>";
+				var descripcion = "<div><h5 style='color:white'>"+currentimg.data('descripcion')+"</h5></div>";
+				tituloDiv.html(titulo);
+				descripcionDiv.html(descripcion);
+				
 				superboximg.attr('src', imgData);
 				$('.superbox-list').removeClass('active');
 				
@@ -56,5 +64,6 @@
 			});
 			
 		});
+		return X;
 	};
 })(jQuery);
