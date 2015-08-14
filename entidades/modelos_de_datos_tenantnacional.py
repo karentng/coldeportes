@@ -30,8 +30,8 @@ from snd.models import *
 MODELOS_DE_DATOS = (
     (
         PersonalApoyo,
-        ['nombres','apellidos', 'entidad', 'correo_electronico'],
-        ['Nombres','Apellidos', 'Entidad', 'Correo electrónico'],
+        ['nombres','apellidos','actividad', 'entidad', 'correo_electronico'],
+        ['Nombres','Apellidos','Actividad Desempeñada', 'Entidad', 'Correo electrónico'],
         None,
         [
             [

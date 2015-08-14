@@ -147,7 +147,7 @@
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
                         <a href="{% if tenant_nacional %}
-                                    {% url 'listar_personal_apoyo_nacional' %}
+                                    {% url 'listar_personal_apoyo_nacionales' %}
                                  {% else %}
                                     {% url 'personal_apoyo_listar' %}
                                  {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
@@ -160,7 +160,6 @@
                             <table class="table table-invoice">
                                 <thead>
                                     <tr>
-                                        <th>DISCIPLINAS</th>
                                         <th>DENOMINACIÓN DIPLOMA</th>
                                         <th>NIVEL</th>
                                         <th>INSTITUCIÓN FORMACIÓN</th>
@@ -172,15 +171,6 @@
                                 <tbody>
                                     {% for formacion in formacion_deportiva %}
                                     <tr>
-                                        <td>
-                                            {% for disciplina in formacion.disciplina_deportiva.all %}
-                                                {% if forloop.last %}
-                                                    {{ disciplina }}
-                                                {% else %}
-                                                    {{disciplina}},
-                                                {% endif %}
-                                            {% endfor %}
-                                        </td>
                                         <td>{{formacion.denominacion_diploma}}</td>
                                         <td>{{formacion.nivel}}</td>
                                         <td>{{formacion.institucion_formacion}}</td>
@@ -209,7 +199,7 @@
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
                         <a href="{% if tenant_nacional %}
-                                    {% url 'listar_personal_apoyo_nacional' %}
+                                    {% url 'listar_personal_apoyo_nacionales' %}
                                  {% else %}
                                     {% url 'personal_apoyo_listar' %}
                                  {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>

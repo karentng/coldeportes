@@ -53,7 +53,6 @@
                     <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th align="center">Disciplina</th>
                             <th align="center">Denominación diploma</th>
                             <th class="min-tablet" align="center">Nivel</th>
                             <th class="min-desktop" align="center">Institución formación</th>
@@ -65,15 +64,6 @@
                         <tbody>
                         {% for historico in historicos %}
                             <tr>
-                                <td align="center">
-                                    {% for disciplina in historico.disciplina_deportiva.all %}
-                                        {% if forloop.last %}
-                                            {{ disciplina }}
-                                        {% else %}
-                                            {{disciplina}},
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
                                 <td align="center">{{historico.denominacion_diploma}}</td>
                                 <td align="center">{{historico.nivel}}</td>
                                 <td align="center">{{historico.institucion_formacion}}</td>
@@ -93,10 +83,10 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                    <h4 class="modal-title">Eliminar Formación deportiva:</h4>
+                                                    <h4 class="modal-title">Eliminar Formación académica:</h4>
                                                 </div>
                                                 <div class="modal-body">
-                                                    ¿Está seguro que desea eliminar esta formación deportiva?
+                                                    ¿Está seguro que desea eliminar esta formación académica?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
