@@ -1,13 +1,13 @@
 from django import forms
 from django.forms import ModelForm
-from snd.models import Entrenador, FormacionDeportiva, ExperienciaLaboral
+from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
 from coldeportes.utilities import adicionarClase
 
 
-class EntrenadorForm(ModelForm):
+class PersonalApoyoForm(ModelForm):
     fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
     def __init__(self, *args, **kwargs):
-        super(EntrenadorForm, self).__init__(*args, **kwargs)
+        super(PersonalApoyoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
         self.fields['genero'] = adicionarClase(self.fields['genero'], 'one')
@@ -16,8 +16,8 @@ class EntrenadorForm(ModelForm):
         self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'], 'fecha')
 
     class Meta:
-        model = Entrenador
-        exclude = ('estado','entidad_vinculacion',)
+        model = PersonalApoyo
+        exclude = ('estado','entidad',)
 
 
 class VerificarExistenciaForm(forms.Form):
@@ -27,14 +27,13 @@ class VerificarExistenciaForm(forms.Form):
         ('PAS', 'PASAPORTE'),
     )
     tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
-    identificacion = forms.IntegerField(label="Identificación del entrenador")
+    identificacion = forms.IntegerField(label="Identificación del personal de apoyo")
 
 
 
 class FormacionDeportivaForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FormacionDeportivaForm, self).__init__(*args, **kwargs)
-        self.fields['disciplina_deportiva'] = adicionarClase(self.fields['disciplina_deportiva'], 'many')
         self.fields['pais_formacion'] = adicionarClase(self.fields['pais_formacion'], 'one')
         self.fields['fecha_comienzo'] = adicionarClase(self.fields['fecha_comienzo'], 'fecha')
         self.fields['fecha_fin'] = adicionarClase(self.fields['fecha_fin'], 'fecha')
@@ -50,7 +49,7 @@ class FormacionDeportivaForm(ModelForm):
 
     class Meta:
         model = FormacionDeportiva
-        exclude = ('entrenador',)
+        exclude = ('personal_apoyo',)
 
 
 class ExperienciaLaboralForm(ModelForm):
@@ -70,4 +69,4 @@ class ExperienciaLaboralForm(ModelForm):
 
     class Meta:
         model = ExperienciaLaboral
-        exclude = ('entrenador',)
+        exclude = ('personal_apoyo',)

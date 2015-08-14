@@ -66,9 +66,9 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('entrenadores'),
+    tenant_actor('personal_apoyo'),
     patterns('',
-        url(r'^entrenadores/', include('snd.urls.entrenadores')), #urls de entrenadores
+        url(r'^personal-apoyo/', include('snd.urls.personal_apoyo')), #urls de personal de apoyo
     )
     
 )

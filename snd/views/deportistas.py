@@ -408,7 +408,12 @@ def finalizar_deportista(request,opcion):
     :type opcion: String
     """
     messages.success(request, "Deportista registrado correctamente.")
-    del request.session['datos']
+
+    try:
+        del request.session['datos']
+    except:
+        pass
+
     if opcion=='nuevo':
         return redirect('deportista_nuevo')
     elif opcion =='listar':

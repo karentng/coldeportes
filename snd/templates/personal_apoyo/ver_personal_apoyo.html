@@ -2,16 +2,16 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Entrenadores - SND COLDEPORTES
+    Personal de apoyo - SND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
-    Ver detalles de entrenador
+    Ver detalles de personal de apoyo
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li class="active">Ver Entrenador</li>
+    <li class="active">Ver Personal de apoyo</li>
 {% endblock %}
 
 {% block css %}
@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Detalles del Entrenador
+    Detalles del Personal de apoyo
 {% endblock %}
 
 {% block contenido_panel %}
@@ -53,10 +53,14 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'entrenador_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_personal_apoyo_nacionales' %}
+                                 {% else %}
+                                    {% url 'personal_apoyo_listar' %}
+                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
-                    {{entrenador.nombres}} {{entrenador.apellidos}}
+                    {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
                 </div>
                 <div class="invoice-header">
                     <div class="invoice-from">
@@ -65,9 +69,9 @@
 
                                 <li class="media">
                                     <a href="javascript:;" class="media-left"></a>
-                                    {%if entrenador.foto%}
-                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{entrenador.foto}}" alt="" />
-                                    {%elif entrenador.genero == "Hombre"%}
+                                    {%if personal_apoyo.foto%}
+                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{personal_apoyo.foto}}" alt="" />
+                                    {%elif personal_apoyo.genero == "HOMBRE"%}
                                         <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" />
                                     {%else%}
                                         <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" />
@@ -75,13 +79,16 @@
                                     <div class="media-body">
                                         <div class="col-lg-6">
                                         <p style="margin-left: 50px">
-                                            {% if perms.snd.change_entrenador %}
-                                                {{entrenador.get_tipo_id_display | title}}: {{entrenador.identificacion}}<br />
+                                            {% if perms.snd.change_personalapoyo and not tenant_nacional %}
+                                                {{personal_apoyo.get_tipo_id_display | title}}: {{personal_apoyo.identificacion}}<br />
+                                            {% else %}
+                                                Entidad: {{ personal_apoyo.entidad }}<br/>
                                             {% endif %}
-                                            Género: {{entrenador.genero}}<br/>
-                                            Edad: {{ entrenador.edad }}<br/>
+                                            Género: {{personal_apoyo.genero}}<br/>
+                                            Actividad: {{personal_apoyo.get_actividad_display}}<br/>
+                                            Edad: {{ personal_apoyo.edad }}<br/>
                                             Nacionalidades:
-                                            {% for nac in entrenador.nacionalidad.all %}
+                                            {% for nac in personal_apoyo.nacionalidad.all %}
                                                 {% if forloop.last %}
                                                     {{ nac }}
                                                 {% else %}
@@ -89,52 +96,40 @@
                                                 {% endif %}
                                             {% endfor %}<br/>
                                             Ciudad (Departamento) de Nacimiento:
-                                            {% if entrenador.ciudad %}
-                                                {{ entrenador.ciudad }}
+                                            {% if personal_apoyo.ciudad %}
+                                                {{ personal_apoyo.ciudad }}
                                             {% else %}
                                                 Ninguna
                                             {% endif %}<br/>
-                                            Altura:
-                                                {%if entrenador.altura %}
-                                                    {{entrenador.altura}} Cm
-                                                {% else %}
-                                                    Ninguno
-                                                {% endif %}<br/>
-                                            Peso:
-                                                {%if entrenador.peso %}
-                                                    {{entrenador.peso}} Kg
-                                                {% else %}
-                                                    Ninguno
-                                                {% endif %}<br/>
-                                            {% if perms.snd.change_entrenador %}
+                                            {% if perms.snd.change_personalapoyo %}
                                                 <strong>Contacto:</strong> <br/>
                                                 Teléfono fijo:
-                                                {% if entrenador.telefono_fijo %}
-                                                    {{entrenador.telefono_fijo}}
+                                                {% if personal_apoyo.telefono_fijo %}
+                                                    {{personal_apoyo.telefono_fijo}}
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                                 Teléfono celular:
-                                                {% if entrenador.telefono_celular %}
-                                                    {{entrenador.telefono_celular}}
+                                                {% if personal_apoyo.telefono_celular %}
+                                                    {{personal_apoyo.telefono_celular}}
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                                 Dirección:
-                                                {% if entrenador.direccion %}
-                                                    {{entrenador.direccion}}
+                                                {% if personal_apoyo.direccion %}
+                                                    {{personal_apoyo.direccion}}
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                                 Correo electrónico:
-                                                {% if entrenador.correo_electronico %}
-                                                    {{entrenador.correo_electronico}}
+                                                {% if personal_apoyo.correo_electronico %}
+                                                    {{personal_apoyo.correo_electronico}}
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}<br/>
                                             {% endif %}
                                             Etnia:
-                                            {{ entrenador.etnia}}
+                                            {{ personal_apoyo.etnia}}
                                         </p>
                                         </div>
                                     </div>
@@ -151,17 +146,20 @@
                 <div class="invoice">
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
-                        <a href="{% url 'entrenador_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="{% if tenant_nacional %}
+                                    {% url 'listar_personal_apoyo_nacionales' %}
+                                 {% else %}
+                                    {% url 'personal_apoyo_listar' %}
+                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                         <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                         </span>
-                        {{entrenador.nombres}} {{entrenador.apellidos}}
+                        {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
                     </div>
                     <div class="invoice-content">
                         <div class="table-responsive">
                             <table class="table table-invoice">
                                 <thead>
                                     <tr>
-                                        <th>DISCIPLINAS</th>
                                         <th>DENOMINACIÓN DIPLOMA</th>
                                         <th>NIVEL</th>
                                         <th>INSTITUCIÓN FORMACIÓN</th>
@@ -173,15 +171,6 @@
                                 <tbody>
                                     {% for formacion in formacion_deportiva %}
                                     <tr>
-                                        <td>
-                                            {% for disciplina in formacion.disciplina_deportiva.all %}
-                                                {% if forloop.last %}
-                                                    {{ disciplina }}
-                                                {% else %}
-                                                    {{disciplina}},
-                                                {% endif %}
-                                            {% endfor %}
-                                        </td>
                                         <td>{{formacion.denominacion_diploma}}</td>
                                         <td>{{formacion.nivel}}</td>
                                         <td>{{formacion.institucion_formacion}}</td>
@@ -209,10 +198,14 @@
                 <div class="invoice">
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
-                        <a href="{% url 'entrenador_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="{% if tenant_nacional %}
+                                    {% url 'listar_personal_apoyo_nacionales' %}
+                                 {% else %}
+                                    {% url 'personal_apoyo_listar' %}
+                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                         <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                         </span>
-                        {{entrenador.nombres}} {{entrenador.apellidos}}
+                        {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
                     </div>
                     <div class="invoice-content">
                         <div class="table-responsive">

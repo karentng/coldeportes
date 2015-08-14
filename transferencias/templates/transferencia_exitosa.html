@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-    Transferencias
+    Transferencia Exitosa
 {% endblock %}
 
 {% block miga_pan %}
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Transferencias entre Entidades
+    Transferencia Exitosa
 {% endblock %}
 
 {% block contenido_panel %}
@@ -25,20 +25,13 @@
 		        <div class="vertical-box-column width-250">
 		            <!-- begin wrapper -->
                     <div class="wrapper bg-silver text-center">
-                        <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
-                                    {% url 'listar_escenarios' %}
-                                 {% else %}
-                                    {% ifequal 'PersonalApoyo' objeto.tipo_objeto %}
-                                        {% url 'personal_apoyo_listar' %}
-                                    {% else %}
-                                        {% ifequal 'Deportista' objeto.tipo_objeto %}
-                                            {% url 'deportista_listar' %}
-                                        {% endifequal %}
-                                    {% endifequal %}
-                                 {% endifequal %}"
-                            class="btn btn-success p-l-40 p-r-40 btn-sm">
-                            Regresar
-                        </a>
+                        <div class="btn-group btn-toolbar">
+                            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+                            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+                        </div>
+                        <div class="btn-group m-l-5">
+                            <a  class="btn btn-white btn-sm disabled"><i class="ion ion-information-circled"></i></a>
+                        </div>
                     </div>
 		            <!-- end wrapper -->
 		            <!-- begin wrapper -->
@@ -69,11 +62,11 @@
 
                         <div class="pull-right">
                             <div class="btn-group btn-toolbar">
-                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
-                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="ion ion-ribbon-a"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="ion ion-checkmark-circled"></i></a>
                             </div>
                             <div class="btn-group m-l-5">
-                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-left"></i></a>
                             </div>
                         </div>
                     </div>
@@ -88,7 +81,7 @@
                                 </a>
                                 <div class="media-body">
                                     <span class="email-from text-inverse f-w-600">
-                                        Desde: {{ objeto.entidad }}
+                                        Desde: {{ objeto.entidad_sol }}
 
                                     </span><span class="text-muted m-l-5"><i class="fa fa-clock-o fa-fw"></i> {{ objeto.fecha }}</span><br />
                                 </div>
@@ -136,41 +129,39 @@
                         </p>
                         <strong>Sobre la transferencia</strong><br/><br/>
                         <p class="f-s-12 text-inverse">
-                            Esta es una solicitud de transferencia, al aceptarla usted accede a renunciar sobre la responsabilidad <br />
-                            como entidad sobre esta persona y delega dichos deberes a la entidad a transferir
+                            Usted a aceptado a este {{objeto.tipo_objeto}} en transferencia y a partir de este momento los derechos deportivos son responsabilidad de su entidad<br />
                         </p>
-                        <strong>Nota Legal</strong><br/><br/>
-                        <p class="f-s-12 text-inverse">
-                            Aceptando esta solicitud usted accede a que la entidad que usted elija tenga acceso COMPLETO <br />
-                            a la información del {{ objeto.tipo_objeto }} a transferir durante y después de la transferencia.
-                            Usted no tendrá acceso a la información de este deportista mientras este pendiente de transferencia y una vez haya sido transferido
-                        </p>
-                        <strong>Seleccion de Entidad</strong><br/><br/>
-                        <!-- begin email form -->
-                        <form action="" method="POST">{% csrf_token %}
-                            <!-- begin email subject -->
-                            <div class="col-lg-8">
-                                <select class="form-control one" id="id_entidad" name="entidad" required title tabindex="-1" style="display: none;" >
-                                    {% for en in entidades %}
-                                        <option value="{{ en.id }}">{{ en.nombre }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <!-- end email subject -->
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <p class="f-s-12 text-inverse">
-
-                                Coordialmente,<br />
-                                Deportivo Cali.<br />
-                                Entidad del SND,<br />
-                                Coldeportes<br />
-                            </p>
-                            <button type="submit" class="btn btn-primary p-l-40 p-r-40">Enviar</button>
-                        </form>
-                        <!-- end email form -->
+                        <strong>Acciones</strong><br/><br/>
+                        <div class="col-lg-8">
+                            <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
+                                        {% url 'listar_escenarios' %}
+                                     {% else %}
+                                        {% ifequal 'Entrenador' objeto.tipo_objeto %}
+                                            {% url 'entrenador_listar' %}
+                                        {% else %}
+                                            {% ifequal 'Deportista' objeto.tipo_objeto %}
+                                                {% url 'deportista_listar' %}
+                                            {% endifequal %}
+                                        {% endifequal %}
+                                     {% endifequal %}"
+                                class="btn btn-success p-l-40 p-r-40 btn-sm">
+                                Continuar
+                            </a>
+                            <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
+                                        {% url 'wizard_identificacion' objeto.id %}
+                                     {% else %}
+                                        {% ifequal 'Entrenador' objeto.tipo_objeto %}
+                                            {% url 'edicion_entrenador' objeto.id %}
+                                        {% else %}
+                                            {% ifequal 'Deportista' objeto.tipo_objeto %}
+                                                {% url 'edicion_deportista' objeto.id %}
+                                            {% endifequal %}
+                                        {% endifequal %}
+                                     {% endifequal %}"
+                                class="btn btn-warning p-l-40 p-r-40 btn-sm">
+                                Editar Datos
+                            </a>
+                        </div>
                         <br />
                         <br />
                     </div>

@@ -83,7 +83,7 @@ class DeportistaView(models.Model):
     #campo para búsqueda
     contenido = models.TextField()
      
-class EntrenadorView(models.Model):
+class PersonalApoyoView(models.Model):
     class Meta:
         managed = False
     #campos deportista
@@ -95,10 +95,10 @@ class EntrenadorView(models.Model):
     ciudad = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
     correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')
     nacionalidad = models.ForeignKey(Nacionalidad)
-    entidad_vinculacion = models.ForeignKey(Entidad)
+    entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField(default=0)
     etnia = models.CharField(max_length=20, blank=True)
-    foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
+    foto = models.ImageField(upload_to='fotos_personal_apoyo', null=True, blank=True)
     #campo para búsqueda
     contenido = models.TextField()
 

@@ -57,7 +57,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'dirigentes_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_dirigentes_nacionales' %}
+                                 {% else %}
+                                    {% url 'dirigentes_listar' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{dirigente.nombres}} {{dirigente.apellidos}}
@@ -77,7 +81,11 @@
                                     {%endif%}
                                     <div class="media-body">
                                         <p style="margin-left: 50px">
-                                            Identificación: {{dirigente.tipo_identificacion}}. {{dirigente.identificacion}}<br />
+                                            {% if tenant_nacional %}
+                                                Entidad: {{ dirigente.entidad }}<br/>
+                                            {% else %}
+                                                Identificación: {{dirigente.tipo_identificacion}}. {{dirigente.identificacion}}<br />
+                                            {% endif %}
                                             Género: {{dirigente.genero}}<br/>
                                             Teléfono: {{dirigente.telefono}}<br/>
                                             Email: 
@@ -107,7 +115,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'dirigentes_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_dirigentes_nacionales' %}
+                                 {% else %}
+                                    {% url 'dirigentes_listar' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{dirigente.nombres}} {{dirigente.apellidos}}

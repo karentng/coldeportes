@@ -1,16 +1,16 @@
-form = "#form-wizard-entrenador";
+form = "#form-wizard-personal-apoyo";
 fields = {
             nombres: {
                 validators: {
                     notEmpty: {
-                        message: 'El nombre del entrenador no puede ser vacío'
+                        message: 'El nombre no puede ser vacío'
                     }
                 }
             },
             apellidos: {
                 validators: {
                     notEmpty: {
-                        message: 'Los apellidos del entrenador no pueden ser vacíos'
+                        message: 'Los apellidos no pueden ser vacíos'
                     }
                 }
             },
@@ -72,30 +72,6 @@ fields = {
                         message: 'Por favor escoja una ciudad'
                         }
                     }
-            },
-            altura: {
-                validators: {
-                    numeric: {
-                        message: 'La altura solo puede contener números'
-                    },
-                    greaterThan: {
-                        message: 'La altura no puede ser menor o igual a 0',
-                        value: 1
-
-                    }
-                }
-            },
-            peso: {
-                validators: {
-                    numeric: {
-                        message: 'El peso solo puede contener números'
-                    },
-                    greaterThan: {
-                        message: 'La estatura no puede ser menor o igual a 0',
-                        value: 1
-
-                    }
-                }
             }
 
 

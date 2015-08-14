@@ -5,7 +5,7 @@ class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico")
     escenarios = models.BooleanField(verbose_name="Escenarios")
     deportistas = models.BooleanField(verbose_name="Deportistas")
-    entrenadores = models.BooleanField(verbose_name="Entrenadores")
+    personal_apoyo = models.BooleanField(verbose_name="Personal de apoyo")
     dirigentes = models.BooleanField(verbose_name="Dirigentes")
     cajas = models.BooleanField(verbose_name="Cajas de Compensación")
 

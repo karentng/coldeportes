@@ -107,3 +107,9 @@ class InformacionAcademicaForm(ModelForm):
     class Meta:
         model = InformacionAcademica
         exclude = ('deportista',)
+
+#Formularios para transferencias
+class DeportistaTransfer(ModelForm):
+    class Meta:
+        model = Deportista
+        exclude = ('entidad','estado',)

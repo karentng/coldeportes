@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    CAFs - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista de CAFs a nivel nacional
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">CAFs</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-cafs-nacionales";
+        opciones = true;
+
+        url = "{% url 'cargar_columnas_tenantnacional' 4 %}";
+    </script>
+
+
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block titulo_panel %}
+    CAFs a nivel nacional
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="table-responsive">
+        <table id="tabla-cafs-nacionales" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+
+        </table>
+    </div>
+{% endblock %}

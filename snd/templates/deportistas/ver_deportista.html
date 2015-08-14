@@ -54,7 +54,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_deportistas_nacionales' %}
+                                 {% else %}
+                                    {% url 'deportista_listar' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{deportista.nombres}} {{deportista.apellidos}}
@@ -76,15 +80,17 @@
                                     <div class="media-body">
                                         <div class="col-lg-6">
                                         <p style="margin-left: 50px">
-                                            {% if perms.snd.change_deportista %}
+                                            {% if perms.snd.change_deportista and not tenant_nacional%}
                                                 Identificación: {{deportista.tipo_id}}: {{deportista.identificacion}}<br />
+                                            {% else %}
+                                                Entidad: {{ deportista.entidad }}
                                             {% endif %}
                                             Género: {{deportista.genero}}<br/>
                                             Edad: {{ deportista.edad }}<br/>
                                             Nacionalidades: {{deportista.nacionalidad_str}}<br/>
-                                            Ciudad (Departamento) de Nacimiento:
-                                            {% if deportista.ciudad_nacimiento %}
-                                                {{ deportista.ciudad_nacimiento }}
+                                            Ciudad (Departamento) de Residencia:
+                                            {% if deportista.ciudad_residencia %}
+                                                {{ deportista.ciudad_residencia }}
                                             {% else %}
                                                 Ninguna
                                             {% endif %}<br/>
@@ -128,7 +134,11 @@
             <div class="invoice">
                 <div class="invoice-company">
                     <span class="pull-right hidden-print">
-                    <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                    <a href="{% if tenant_nacional %}
+                                    {% url 'listar_deportistas_nacionales' %}
+                                 {% else %}
+                                    {% url 'deportista_listar' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                     <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                     </span>
                     {{deportista.nombres}} {{deportista.apellidos}}
@@ -178,7 +188,11 @@
                 <div class="invoice">
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
-                        <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="{% if tenant_nacional %}
+                                    {% url 'listar_deportistas_nacionales' %}
+                                 {% else %}
+                                    {% url 'deportista_listar' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                         <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                         </span>
                         {{deportista.nombres}} {{deportista.apellidos}}
@@ -236,7 +250,11 @@
                 <div class="invoice">
                     <div class="invoice-company">
                         <span class="pull-right hidden-print">
-                        <a href="{% url 'deportista_listar' %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                        <a href="{% if tenant_nacional %}
+                                    {% url 'listar_deportistas_nacionales' %}
+                                 {% else %}
+                                    {% url 'deportista_listar' %}
+                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
                         <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
                         </span>
                         {{deportista.nombres}} {{deportista.apellidos}}

@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block head %}
-    Registro Entrenadores
+    Registro Personal de apoyo
 {% endblock %}
 
 {% block css %}
@@ -14,23 +14,23 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'entrenador_listar' %}">Entrenadores</a>
+    <li><a href="{% url 'personal_apoyo_listar' %}">Personal de apoyo</a>
     <li class="active">Editar</li>
 {% endblock %}
 
 {% block titulo_contenido %}
-    Entrenadores
+    Personal de apoyo
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Entrenadores
+    Registro de Personal de apoyo
 {% endblock %}
 
 {% block panel_botones %}
 {% endblock %}
 
 {% block contenido_panel %}
-    {% include 'entrenadores/wizard/_wizard.html' %}
+    {% include 'personal_apoyo/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-5" >
                 <form action="" id="form-formacion" method="post">{% csrf_token %}
@@ -53,7 +53,6 @@
                     <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th align="center">Disciplina</th>
                             <th align="center">Denominación diploma</th>
                             <th class="min-tablet" align="center">Nivel</th>
                             <th class="min-desktop" align="center">Institución formación</th>
@@ -65,15 +64,6 @@
                         <tbody>
                         {% for historico in historicos %}
                             <tr>
-                                <td align="center">
-                                    {% for disciplina in historico.disciplina_deportiva.all %}
-                                        {% if forloop.last %}
-                                            {{ disciplina }}
-                                        {% else %}
-                                            {{disciplina}},
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
                                 <td align="center">{{historico.denominacion_diploma}}</td>
                                 <td align="center">{{historico.nivel}}</td>
                                 <td align="center">{{historico.institucion_formacion}}</td>
@@ -93,14 +83,14 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                    <h4 class="modal-title">Eliminar Formación deportiva:</h4>
+                                                    <h4 class="modal-title">Eliminar Formación académica:</h4>
                                                 </div>
                                                 <div class="modal-body">
-                                                    ¿Está seguro que desea eliminar esta formación deportiva?
+                                                    ¿Está seguro que desea eliminar esta formación académica?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                    <a href="{% url 'eliminar_formacion_deportiva'  id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                    <a href="{% url 'eliminar_formacion_deportiva'  id_personal_apoyo historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -114,8 +104,8 @@
             </div>
         </div>
         <br/>
-        <a href="{% url 'edicion_entrenador' id_entrenador %}" class="btn btn-success pull-left" type="button">← Anterior</a>
-        <a href="{% url 'wizard_experiencia_laboral' id_entrenador %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'edicion_personal_apoyo' id_personal_apoyo %}" class="btn btn-success pull-left" type="button">← Anterior</a>
+        <a href="{% url 'wizard_experiencia_laboral' id_personal_apoyo %}" class="btn btn-primary pull-right">Siguiente →</a>
 
 
 {% endblock %}
@@ -125,7 +115,7 @@
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <!--DataTables [ OPTIONAL ]-->
     <script src="{{ STATIC_URL }}plugins/DataTables/js/jquery.dataTables.js"></script>
-    <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-formacion-validations.js"></script>
-    <script src="{{ STATIC_URL }}js/funciones_calculos/entrenadores/experiencia_y_formacion.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/personal_apoyo/wizard-formacion-validations.js"></script>
+    <script src="{{ STATIC_URL }}js/funciones_calculos/personal_apoyo/experiencia_y_formacion.js"></script>
 {% endblock %}
 
