@@ -28,7 +28,7 @@ class Deportista(models.Model):
     ETNIAS = (
         ('MESTIZO','MESTIZO'),
         ('AFROCOLOMBIANO','AFROCOLOMBIANO'),
-        ('BLANCOS','BLANCOS'),
+        ('BLANCO','BLANCO'),
         ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
         ('GITANO','GITANO'),
         ('PALENQUERO','PALENQUERO'),
