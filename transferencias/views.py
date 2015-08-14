@@ -68,7 +68,6 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         transferencia.id_objeto = objeto.id
         transferencia.tipo_objeto = objeto.tipo_objeto
         transferencia.save()
-        #
         #Cambiar estado de objeto a "En Transferencia"
         connection.set_tenant(request.tenant)
         ContentType.objects.clear_cache()
@@ -125,6 +124,7 @@ def procesar_transferencia(request,id_transfer,opcion):
         transferencia.save()
 
         messages.warning(request,'Transferencia rechazada exitosamente')
+        return redirect('inicio_tenant')
     else:
         #Acepto transferencia
 
@@ -138,14 +138,26 @@ def procesar_transferencia(request,id_transfer,opcion):
 
         else:
             objeto.entidad = request.tenant
-            objeto.entidad_vinculacion = request.tenant #quitar luego de cambio
             objeto.estado = 0
             guardar_objeto(objeto,adicionales,tipo_objeto)
+            messages.success(request,'Transferencia recibida exitosamente')
 
     return finalizar_transferencia(request,entidad_cambio,objeto,tipo_objeto,transferencia)
 
 def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transferencia):
+    """
+    Agosto 12, 2015
+    Autor: Daniel Correa
 
+    Función que permite finalizar la transferencia una vez es aceptada
+
+    :param request: request
+    :param entidad_saliente: entidad de donde vino el objeto transferible
+    :param objeto: objeto transferible
+    :param tipo_objeto: tipo del objeto transferible
+    :param transferencia: objeto transferencia
+    :return: render con la pagina de aprobación
+    """
     transferencia.estado = 'Aprobada'
     transferencia.save()
 
@@ -203,7 +215,6 @@ def guardar_objeto(objeto,adicionales,tipo):
         del obj_dict['disciplinas_obj']
         del obj_dict['nacionalidades_obj']
         del obj_dict['_state']
-        del obj_dict['entidad_vinculacion'] #quitar luego de cambio
         #Fin diccionario
         deportista, created = Deportista.objects.update_or_create(
             identificacion=objeto.identificacion,
@@ -255,8 +266,7 @@ def guardar_objeto(objeto,adicionales,tipo):
         del obj_dict['id']
         del obj_dict['nacionalidades_obj']
         del obj_dict['_state']
-        del obj_dict['entidad'] #quitar luego de cambio
-        del obj_dict['_entidad_vinculacion_cache'] #quitar luego de cambio
+        del obj_dict['_entidad_cache']
         #Fin diccionario
 
         personal_apoyo, created = PersonalApoyo.objects.update_or_create(
@@ -272,16 +282,12 @@ def guardar_objeto(objeto,adicionales,tipo):
             del diccionario['id']
             del diccionario['_state']
             del diccionario['personal_apoyo_id']
-            if type(ad) is FormacionDeportiva: #cambiar luego del cambio de personal apoyo
-                disciplinas_form = ad.disciplinas_form
-                del diccionario['disciplinas_form']
-                formacion, created = FormacionDeportiva.objects.update_or_create(
+            if type(ad) is FormacionDeportiva:
+                FormacionDeportiva.objects.update_or_create(
                     personal_apoyo=personal_apoyo,
                     denominacion_diploma=ad.denominacion_diploma,
                     defaults=diccionario
                 )
-                for disc in disciplinas_form:
-                    formacion.disciplina_deportiva.add(disc)
             else:
                 ExperienciaLaboral.objects.update_or_create(
                     personal_apoyo=personal_apoyo,
@@ -296,7 +302,6 @@ def guardar_objeto(objeto,adicionales,tipo):
         del obj_dict['id']
         del obj_dict['_entidad_cache']
         del obj_dict['_state']
-        del obj_dict['entidad_vinculacion'] #quitar luego de cambio
         #Fin diccionario
 
         escenario, created = Escenario.objects.update_or_create(
@@ -383,7 +388,6 @@ def obtener_objeto(id_obj,tipo_objeto):
     """
 
     objeto = None
-    identificacion = ""
     adicionales = []
     #Seleccion del objeto
     if tipo_objeto =='Deportista':
@@ -407,13 +411,7 @@ def obtener_objeto(id_obj,tipo_objeto):
         objeto.nacionalidades_obj = [a for a in objeto.nacionalidad.all()]
         #Fin obtener muchos a muchos y guardarlos como attr apartes
 
-        #Sacar y asignar muchos a muchos de formacion deportiva
-        formaciones = FormacionDeportiva.objects.filter(personal_apoyo=objeto)
-        for form in formaciones:
-            form.disciplinas_form = [disc for disc in form.disciplina_deportiva.all()]
-        #Fin sacar y asignar muchos a muchos de formacion deportiva
-
-        adicionales += formaciones
+        adicionales += FormacionDeportiva.objects.filter(personal_apoyo=objeto)
         adicionales += ExperienciaLaboral.objects.filter(personal_apoyo=objeto)
 
     elif tipo_objeto == 'Escenario':
@@ -500,9 +498,7 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
         objeto='PersonalApoyo'
         redir='personal_apoyo_listar'
         try:
-            entre = PersonalApoyo.objects.get(id=id_objeto)
-            entre.estado = 0
-            entre.save()
+            obj_trans = PersonalApoyo.objects.get(id=id_objeto)
         except:
             messages.error(request,'Error: No se puede procesar la solicitud, PersonalApoyo no existe')
             return redirect(redir)
