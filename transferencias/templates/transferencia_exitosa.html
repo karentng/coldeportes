@@ -136,8 +136,8 @@
                             <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
                                         {% url 'listar_escenarios' %}
                                      {% else %}
-                                        {% ifequal 'Entrenador' objeto.tipo_objeto %}
-                                            {% url 'entrenador_listar' %}
+                                        {% ifequal 'PersonalApoyo' objeto.tipo_objeto %}
+                                            {% url 'personal_apoyo_listar' %}
                                         {% else %}
                                             {% ifequal 'Deportista' objeto.tipo_objeto %}
                                                 {% url 'deportista_listar' %}
@@ -150,8 +150,8 @@
                             <a href="{% ifequal 'Escenario' objeto.tipo_objeto %}
                                         {% url 'wizard_identificacion' objeto.id %}
                                      {% else %}
-                                        {% ifequal 'Entrenador' objeto.tipo_objeto %}
-                                            {% url 'edicion_entrenador' objeto.id %}
+                                        {% ifequal 'PersonalApoyo' objeto.tipo_objeto %}
+                                            {% url 'edicion_personal_apoyo' objeto.id %}
                                         {% else %}
                                             {% ifequal 'Deportista' objeto.tipo_objeto %}
                                                 {% url 'edicion_deportista' objeto.id %}

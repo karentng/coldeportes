@@ -5,7 +5,7 @@ def checkear_inicializacion_directorio():
         EscenarioView.objects.all().exists()
         CAFView.objects.all().exists()
         DeportistaView.objects.all().exists()
-        EntrenadorView.objects.all().exists()
+        PersonalApoyoView.objects.all().exists()
         DirigenteView.objects.all().exists()
         CajaCompensacionView.objects.all().exists()
 

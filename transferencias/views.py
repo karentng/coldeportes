@@ -153,7 +153,7 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
     ContentType.objects.clear_cache()
 
     objeto.estado = 3
-    if tipo_objeto=='Deportista' or tipo_objeto=='Entrenador':
+    if tipo_objeto=='Deportista' or tipo_objeto=='PersonalApoyo':
         new_obj, created = objeto.__class__.objects.update_or_create(
             identificacion = objeto.identificacion,
             defaults=objeto.__dict__
@@ -259,24 +259,24 @@ def guardar_objeto(objeto,adicionales,tipo):
         del obj_dict['_entidad_vinculacion_cache'] #quitar luego de cambio
         #Fin diccionario
 
-        entrenador, created = Entrenador.objects.update_or_create(
+        personal_apoyo, created = PersonalApoyo.objects.update_or_create(
             identificacion=objeto.identificacion,
             defaults= obj_dict,
         )
 
         for na in nacionalidades_obj:
-            entrenador.nacionalidad.add(na)
+            personal_apoyo.nacionalidad.add(na)
 
         for ad in adicionales:
             diccionario = ad.__dict__
             del diccionario['id']
             del diccionario['_state']
-            del diccionario['entrenador_id']
+            del diccionario['personal_apoyo_id']
             if type(ad) is FormacionDeportiva: #cambiar luego del cambio de personal apoyo
                 disciplinas_form = ad.disciplinas_form
                 del diccionario['disciplinas_form']
                 formacion, created = FormacionDeportiva.objects.update_or_create(
-                    entrenador=entrenador,
+                    personal_apoyo=personal_apoyo,
                     denominacion_diploma=ad.denominacion_diploma,
                     defaults=diccionario
                 )
@@ -284,7 +284,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                     formacion.disciplina_deportiva.add(disc)
             else:
                 ExperienciaLaboral.objects.update_or_create(
-                    entrenador=entrenador,
+                    personal_apoyo=personal_apoyo,
                     nombre_cargo=ad.nombre_cargo,
                     defaults=diccionario
                 )
