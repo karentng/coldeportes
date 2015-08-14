@@ -78,7 +78,7 @@
                                     <i class="fa fa-eye"></i> Ver Personal de apoyo
                                 </a>
                                 <br/>
-                                {% if perms.snd.change_personal_apoyo %}
+                                {% if perms.snd.change_personalapoyo %}
                                     {% if personal_apoyo.estado == 2 %}
                                         <a href="{% url 'transferencias.views.cancelar_transferencia' personal_apoyo.id 2 %}" title="Cancelar Tranferencia">
                                             <i class="fa fa-times"></i> Cancelar Transferencia

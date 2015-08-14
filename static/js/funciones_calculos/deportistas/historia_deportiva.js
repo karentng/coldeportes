@@ -8,7 +8,7 @@ $(document).ready(function() {
            $("#id_fecha_final").val("");
            $("#id_fecha_final").parent().css('display','none');
            $('#id_fecha_final').prop('required',false);
-           delete fields['fecha_final'];
+           $(form).bootstrapValidator('removeField','fecha_final');
 
        }else{
            $("#id_fecha_final").parent().css('display','block');
@@ -25,8 +25,8 @@ $(document).ready(function() {
                    }
                }
            };
+           $(form).bootstrapValidator('addField', 'fecha_final');
            $(form).bootstrapValidator('revalidateField', 'fecha_final');
        }
     });
-    FormWizard.init();
 });

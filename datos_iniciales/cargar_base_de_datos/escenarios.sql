@@ -1,4 +1,4 @@
-INSERT INTO "indervalle.snd_escenario" ("id", "nombre", "direccion", "latitud", "longitud", "altura", "comuna", "barrio", "estrato", "nombre_administrador", "descripcion", "ciudad_id", "entidad_id", "estado") VALUES
+﻿INSERT INTO indervalle.snd_escenario ("id", "nombre", "direccion", "latitud", "longitud", "altura", "comuna", "barrio", "estrato", "nombre_administrador", "descripcion", "ciudad_id", "entidad_id", "estado") VALUES
 (3,	'PASCUAL GUERRERO',	'CALLE 5 # 32-54',	6.05,	5.01,	3.25,	'10',	'SAN FERNANDO',	'4',	'JOSE TULIO RODRIGUEZ',	'Estadio de fútbol y pista de atletismo.',	152,	2,	0),
 (2,	'COLISEO EVANGELISTA MORA',	'CALLE 23 # 33A 04',	1,	1.45,	230,	'10',	'SAN FERNANDO',	'2',	'JOSE PEREZ',	'Ubicado en la zona oriente de Cali.',	152,	2,	0),
 (4,	'DIABLO AZTECA',	'CALLE 13 # 57-12',	7,	8,	300,	'3',	'INGENIO',	'5',	'JUAN CARLOS RODRIGUEZ',	'Cancha sintética',	152,	2,	0);

@@ -8,8 +8,7 @@ $(document).ready(function() {
            $("#id_fecha_fin").val("");
            $("#id_fecha_fin").parent().css('display','none');
            $('#id_fecha_fin').prop('required',false);
-           delete fields['fecha_fin'];
-
+           $(form).bootstrapValidator('removeField','fecha_fin');
        }else{
            $("#id_fecha_fin").parent().css('display','block');
            $('#id_fecha_fin').prop('required',true);
@@ -25,6 +24,7 @@ $(document).ready(function() {
                    }
                }
            };
+           $(form).bootstrapValidator('addField', 'fecha_fin');
            $(form).bootstrapValidator('revalidateField', 'fecha_fin');
        }
     });

@@ -71,4 +71,5 @@ fields = {
         $(form).bootstrapValidator('revalidateField', 'fecha_fin');
     });
 
+console.log(fields['fecha_fin']);
 $.getScript(base+"js/validaciones/validations-base.js");
