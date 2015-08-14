@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.db import connection
-from snd.modelos.entrenadores import *
+from snd.modelos.personal_apoyo import *
 from snd.modelos.escenarios import *
 from snd.modelos.deportistas import *
 from snd.modelos.cafs import *
@@ -211,8 +211,8 @@ def cargar_columnas_tenantnacional(request, modelo):
     return JsonResponse(datos)
 
 
-def listar_entrenadores_nacionales(request):
-    return render(request,'tenant_nacional/entrenadores_listar.html',{'tenant_nacional':True})
+def listar_personal_apoyo_nacionales(request):
+    return render(request,'tenant_nacional/personal_apoyo_listar.html',{'tenant_nacional':True})
 
 def listar_dirigentes_nacionales(request):
     return render(request,'tenant_nacional/dirigentes_listar.html',{'tenant_nacional':True})
@@ -229,19 +229,19 @@ def listar_cajas_nacionales(request):
 def listar_cafs_nacionales(request):
     return render(request,'tenant_nacional/cafs_listar.html',{'tenant_nacional':True})
 
-def ver_entrenador_tenantnacional(request, id_entrenador, tenant):
+def ver_personal_apoyo_tenantnacional(request, id_personal_apoyo, tenant):
     """
     Agosto 11 /2015
     Autor: Milton Lenis
 
-    Ver Entrenador en el tenant nacional
-    Se identifica el tenant al que pertenece un entrenador y se busca
-    Se obtiene la informacion general del entrenador desde la base de datos y se muestra
+    Ver Personal de apoyo en el tenant nacional
+    Se identifica el tenant al que pertenece un personal de apoyo y se busca
+    Se obtiene la informacion general del personal de apoyo desde la base de datos y se muestra
 
     :param request: Petición Realizada
     :type request: WSGIRequest
-    :param id_entrenador: Llave primaria del entrenador
-    :type id_entrenador: String
+    :param id_personal_apoyo: Llave primaria del personal de apoyo
+    :type id_personal_apoyo: String
     :param tenant: Nombre del esquema del tenant
     :type tenant: String
     """
@@ -249,21 +249,21 @@ def ver_entrenador_tenantnacional(request, id_entrenador, tenant):
         entidad = Entidad.objects.get(nombre=tenant)
     except Exception:
         messages.error(request, "Error: La entidad solicitada no existe")
-        return redirect('listar_entrenadores_nacionales')
+        return redirect('listar_personal_apoyo_nacionales')
 
     connection.set_tenant(entidad)
     ContentType.objects.clear_cache()
     try:
-        entrenador = Entrenador.objects.get(id=id_entrenador)
+        personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
     except:
-        messages.error(request, "Error: No existe el entrenador solicitado o su información es incompleta")
-        return redirect('listar_entrenadores_nacionales')
-    formacion_deportiva = FormacionDeportiva.objects.filter(entrenador=entrenador)
-    experiencia_laboral = ExperienciaLaboral.objects.filter(entrenador=entrenador)
-    entrenador.edad = calculate_age(entrenador.fecha_nacimiento)
+        messages.error(request, "Error: No existe el personal de apoyo solicitado o su información es incompleta")
+        return redirect('listar_personal_apoyo_nacionales')
+    formacion_deportiva = FormacionDeportiva.objects.filter(personal_apoyo=personal_apoyo)
+    experiencia_laboral = ExperienciaLaboral.objects.filter(personal_apoyo=personal_apoyo)
+    personal_apoyo.edad = calculate_age(personal_apoyo.fecha_nacimiento)
 
-    return render(request,'entrenadores/ver_entrenador.html',{
-            'entrenador':entrenador,
+    return render(request,'personal_apoyo/ver_personal_apoyo.html',{
+            'personal_apoyo':personal_apoyo,
             'formacion_deportiva':formacion_deportiva,
             'experiencia_laboral':experiencia_laboral,
             'tenant_nacional':True

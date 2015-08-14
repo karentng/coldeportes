@@ -11,7 +11,7 @@ def buscar_contenido(texto, listado_resultados):
     listado_resultados.append(EscenarioView.objects.filter(contenido__icontains=texto).distinct('id'))
     listado_resultados.append(CAFView.objects.filter(contenido__icontains=texto).distinct('id'))
     listado_resultados.append(DeportistaView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados.append(EntrenadorView.objects.filter(contenido__icontains=texto).distinct('id'))
+    listado_resultados.append(PersonalApoyoView.objects.filter(contenido__icontains=texto).distinct('id'))
     listado_resultados.append(DirigenteView.objects.filter(contenido__icontains=texto).distinct('id'))
     listado_resultados.append(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id'))
     
@@ -21,7 +21,7 @@ def buscar_contenido_ciudad(texto, ciudad, listado_resultados):
     listado_resultados.append(EscenarioView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
     listado_resultados.append(CAFView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
     listado_resultados.append(DeportistaView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
-    listado_resultados.append(EntrenadorView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
+    listado_resultados.append(PersonalApoyoView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
     listado_resultados.append(DirigenteView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
     listado_resultados.append(CajaCompensacionView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
 
@@ -37,7 +37,7 @@ def buscar_contenido_actor(texto, actor,listado_resultados):
     elif actor=='DI':
         listado_resultados.append(DirigenteView.objects.filter(contenido__icontains=texto).distinct('id'))
     elif actor=='EN':
-        listado_resultados.append(EntrenadorView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados.append(PersonalApoyoView.objects.filter(contenido__icontains=texto).distinct('id'))
     elif actor=='CF':
         listado_resultados.append(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id'))
 
@@ -53,7 +53,7 @@ def buscar_contenido_actor_ciudad(actor, ciudad, texto, listado_resultados):
     elif actor=='DI':
         listado_resultados.append(DirigenteView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
     elif actor=='EN':
-        listado_resultados.append(EntrenadorView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
+        listado_resultados.append(PersonalApoyoView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
     elif actor=='CF':
         listado_resultados.append(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id')) 
 

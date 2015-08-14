@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
-from snd.models import Deportista,Escenario,Entrenador,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto
+from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto
 from snd.formularios.deportistas import DeportistaForm,ComposicionCorporalForm,HistorialDeportivoForm,InformacionAcademicaForm
 from .models import Transferencia
 import datetime
@@ -17,7 +17,7 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     Julio 15, 2015
     Autor: Daniel Correa
 
-    Transferencia de objetos entre entidades, esta definida la transferencia de personas (Deportistas, Entrenadores) y Escenarios
+    Transferencia de objetos entre entidades, esta definida la transferencia de personas (Deportistas, Personal de apoyo) y Escenarios
     Dentro de personas el protocolo es , 1 para Deportistas y 2 para Enetrenadores
 
     :param request: Petición Realizada
@@ -38,10 +38,10 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
             objeto = Deportista.objects.get(id=id)
             objeto.tipo_objeto='Deportista'
             redir='deportista_listar'
-        elif tipo_persona=='2': #Transferencia de entrenadores
-            objeto = Entrenador.objects.get(id=id)
-            objeto.tipo_objeto='Entrenador'
-            redir='entrenador_listar'
+        elif tipo_persona=='2': #Transferencia de personal_apoyo
+            objeto = PersonalApoyo.objects.get(id=id)
+            objeto.tipo_objeto='PersonalApoyo'
+            redir='personal_apoyo_listar'
         objeto.edad = calculate_age(objeto.fecha_nacimiento)
         objeto.nacionalidad_str = ",".join(str(x) for x in objeto.nacionalidad.all())
         objeto.fotos = [objeto.foto]
@@ -180,7 +180,7 @@ def guardar_objeto(objeto,adicionales,tipo):
         for ad in adicionales:
             ad.save()
 
-    elif tipo == 'Entrenador':
+    elif tipo == 'PersonalApoyo':
 
         for na in objeto.nacionalidades_obj:
             objeto.nacionalidad.add(na)
@@ -238,22 +238,22 @@ def obtener_objeto(id_obj,tipo_objeto):
         adicionales += HistorialDeportivo.objects.filter(deportista=objeto)
         adicionales += InformacionAcademica.objects.filter(deportista=objeto)
 
-    elif tipo_objeto == 'Entrenador':
+    elif tipo_objeto == 'PersonalApoyo':
 
-        objeto = Entrenador.objects.get(id=id_obj)
+        objeto = PersonalApoyo.objects.get(id=id_obj)
 
         #Obtener muchos a muchos y guardarlos como attr apartes
         objeto.nacionalidades_obj = [a for a in objeto.nacionalidad.all()]
         #Fin obtener muchos a muchos y guardarlos como attr apartes
 
         #Sacar y asignar muchos a muchos de formacion deportiva
-        formaciones = FormacionDeportiva.objects.filter(entrenador=objeto)
+        formaciones = FormacionDeportiva.objects.filter(personal_apoyo=objeto)
         for form in formaciones:
             form.disciplinas_form = [disc for disc in form.disciplina_deportiva.all()]
         #Fin sacar y asignar muchos a muchos de formacion deportiva
 
         adicionales += formaciones
-        adicionales += ExperienciaLaboral.objects.filter(entrenador=objeto)
+        adicionales += ExperienciaLaboral.objects.filter(personal_apoyo=objeto)
 
     elif tipo_objeto == 'Escenario':
 
@@ -307,15 +307,15 @@ def existencia_objeto(objeto,tipo_objeto):
             else:
                 return 2,posibilidades
 
-    elif tipo_objeto == 'Entrenador':
+    elif tipo_objeto == 'PersonalApoyo':
         try:
-            obj = Entrenador.objects.get(identificacion=objeto.identificacion)
+            obj = PersonalApoyo.objects.get(identificacion=objeto.identificacion)
         except:
             return 0,None
 
     elif tipo_objeto == 'Escenario':
         try:
-           obj = Entrenador.objects.get(nombre=objeto.nombre)
+           obj = PersonalApoyo.objects.get(nombre=objeto.nombre)
         except:
             return 0,None
 
@@ -328,7 +328,7 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
     Autor: Daniel Correa
 
     Funcion para calcelacion de transferencia por parte del solicitante, el protocolo para conocer que clase de objeto es el que se solicita su cancelacion es:
-    1 para Deportista, 2 para Entrenador, 3 para Escenario
+    1 para Deportista, 2 para PersonalApoyo, 3 para Escenario
 
     :param request: Petición Realizada
     :type request: WSGIRequest
@@ -350,14 +350,14 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
             messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
             return redirect(redir)
     elif tipo_objeto=='2':
-        objeto='Entrenador'
-        redir='entrenador_listar'
+        objeto='PersonalApoyo'
+        redir='personal_apoyo_listar'
         try:
-            entre = Entrenador.objects.get(id=id_objeto)
+            entre = PersonalApoyo.objects.get(id=id_objeto)
             entre.estado = 0
             entre.save()
         except:
-            messages.error(request,'Error: No se puede procesar la solicitud, Entrenador no existe')
+            messages.error(request,'Error: No se puede procesar la solicitud, PersonalApoyo no existe')
             return redirect(redir)
     elif tipo_objeto=='3':
         objeto='Escenario'

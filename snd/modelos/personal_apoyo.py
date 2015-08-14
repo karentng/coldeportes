@@ -2,15 +2,13 @@
 
 from django.db import models
 from entidades.models import Entidad
-from entidades.models import Ciudad, Entidad, Nacionalidad, TipoDisciplinaDeportiva
-from django.contrib.contenttypes.models import ContentType
-from django.db import connection
+from entidades.models import Ciudad, Entidad, Nacionalidad
 #=======================================================================================================
-#Modelos para Entrenadores
+#Modelos para PersonalApoyo
 
 
 
-class Entrenador(models.Model):
+class PersonalApoyo(models.Model):
     ESTADOS = (
         (0, "ACTIVO"),
         (1, "INACTIVO"),
@@ -21,7 +19,7 @@ class Entrenador(models.Model):
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
-        ('Indefinido', 'Indefinido'),
+        ('INDEFINIDO', 'INDEFINIDO'),
     )
 
     TIPO_IDENTIDAD = (
@@ -33,17 +31,38 @@ class Entrenador(models.Model):
     ETNIAS = (
         ('MESTIZO','MESTIZO'),
         ('AFROCOLOMBIANO','AFROCOLOMBIANO'),
-        ('BLANCOS','BLANCOS'),
+        ('BLANCO','BLANCO'),
         ('COLOMBOINDIGENA','COLOMBOINDIGENA'),
         ('GITANO','GITANO'),
         ('PALENQUERO','PALENQUERO'),
         ('RAIZAL','RAIZAL'),
     )
+
+    ACTIVIDADES = (
+        (0,'MÉDICO DEPORTÓLOGO'),
+        (1,'FISIOTERAPEUTA'),
+        (2,'PSICÓLOGO DEPORTIVO'),
+        (3,'NUTRICIONISTA'),
+        (4,'QUINESIÓLOGO'),
+        (5,'QUIROPRÁCTICO'),
+        (6,'PREPARADOR FÍSICO'),
+        (7,'TRABAJADOR SOCIAL'),
+        (8,'FISIÓLOGO'),
+        (9,'BIOMECÁNICO'),
+        (10,'METODÓLOGO'),
+        (11,'ENTRENADOR'),
+        (12,'MONITOR'),
+        (13,'ENTRENADOR PERSONALIZADO'),
+        (14,'ANIMADOR SOCIOCULTURAL'),
+        (15,'RECREADOR'),
+        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+    )
+    actividad = models.IntegerField(choices=ACTIVIDADES)
     estado = models.IntegerField(choices=ESTADOS, default=0)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
-    foto = models.ImageField(upload_to='fotos_entrenadores', null=True, blank=True)
+    foto = models.ImageField(upload_to='fotos_personal_apoyo', null=True, blank=True)
     tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD, default='CED')
     identificacion = models.BigIntegerField(verbose_name='Número de identificación', unique=True)
     telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
@@ -52,18 +71,13 @@ class Entrenador(models.Model):
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad, blank=True, verbose_name='Ciudad de residencia')
-    #en centimetros
-    altura = models.IntegerField(blank=True, null=True, verbose_name='Altura (En Cm)')
-    #en Kg
-    peso = models.IntegerField(blank=True, null=True, verbose_name='Peso (En Kg)')
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
-    entidad_vinculacion = models.ForeignKey(Entidad)
+    entidad = models.ForeignKey(Entidad)
 
     def __str__(self):
         return "%s %s"%(self.nombres, self.apellidos)
 
 class FormacionDeportiva(models.Model):
-    disciplina_deportiva = models.ManyToManyField(TipoDisciplinaDeportiva)
     denominacion_diploma = models.CharField(max_length=150, verbose_name='Denominación del diploma')
     nivel = models.CharField(max_length=50, blank=True)
     institucion_formacion = models.CharField(max_length=100, verbose_name='Institución de formación')
@@ -71,7 +85,7 @@ class FormacionDeportiva(models.Model):
     fecha_comienzo = models.DateField()
     actual = models.BooleanField(verbose_name='¿Aún en formación?',default=False)
     fecha_fin = models.DateField(blank=True, null=True)
-    entrenador = models.ForeignKey(Entrenador)
+    personal_apoyo = models.ForeignKey(PersonalApoyo)
 
 
 class ExperienciaLaboral(models.Model):
@@ -80,4 +94,4 @@ class ExperienciaLaboral(models.Model):
     fecha_comienzo = models.DateField()
     actual = models.BooleanField(verbose_name='¿Aún en el cargo?',default=False)
     fecha_fin = models.DateField(blank=True, null=True)
-    entrenador = models.ForeignKey(Entrenador)
+    personal_apoyo = models.ForeignKey(PersonalApoyo)

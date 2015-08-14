@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block head %}
-    Registro Entrenadores
+    Registro Personal de apoyo
 {% endblock %}
 
 {% block css %}
@@ -13,23 +13,23 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'entrenador_listar' %}">Entrenadores</a>
+    <li><a href="{% url 'personal_apoyo_listar' %}">Personal de apoyo</a>
     <li class="active">Editar</li>
 {% endblock %}
 
 {% block titulo_contenido %}
-    Entrenadores
+    Personal de apoyo
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Entrenadores
+    Registro de Personal de apoyo
 {% endblock %}
 
 {% block panel_botones %}
 {% endblock %}
 
 {% block contenido_panel %}
-    {% include 'entrenadores/wizard/_wizard.html' %}
+    {% include 'personal_apoyo/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-5" >
                 <form id="form-experiencia" action="" method="post">{% csrf_token %}
@@ -84,7 +84,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_experiencia_laboral' id_entrenador historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_experiencia_laboral' id_personal_apoyo historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -100,8 +100,8 @@
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}
-        <a href="{% url 'finalizar_entrenador' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-cirlce-o-notch"></i> Finalizar</a>
-        <a href="{% url 'finalizar_entrenador' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">Finalizar y registrar otro →</a>
+        <a href="{% url 'finalizar_personal_apoyo' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-cirlce-o-notch"></i> Finalizar</a>
+        <a href="{% url 'finalizar_personal_apoyo' opcion='nuevo' %}" class="btn btn-primary pull-right" style="margin-right: 20px;">Finalizar y registrar otro →</a>
 
 
 {% endblock %}
@@ -109,7 +109,7 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
-    <script src="{{ STATIC_URL }}js/validaciones/entrenadores/wizard-experiencia-validations.js"></script>
-    <script src="{{ STATIC_URL }}js/funciones_calculos/entrenadores/experiencia_y_formacion.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/personal_apoyo/wizard-experiencia-validations.js"></script>
+    <script src="{{ STATIC_URL }}js/funciones_calculos/personal_apoyo/experiencia_y_formacion.js"></script>
 {% endblock %}
 

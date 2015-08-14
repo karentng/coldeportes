@@ -2,16 +2,16 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Entrenadores - SND COLDEPORTES
+    Personal de apoyo - SND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
-    Lista de Entrenadores a nivel nacional
+    Lista de Personal de apoyo a nivel nacional
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li class="active">Entrenadores</li>
+    <li class="active">Personal de apoyo</li>
 {% endblock %}
 
 {% block css %}
@@ -20,7 +20,7 @@
 
 {% block js %}
     <script type="text/javascript">
-        idTabla = "tabla-entrenadores-nacionales";
+        idTabla = "tabla-personal-apoyo-nacionales";
         opciones = true;
 
         url = "{% url 'cargar_columnas_tenantnacional' 0 %}";
@@ -31,12 +31,12 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Entrenadores a nivel nacional
+    Personal de apoyo a nivel nacional
 {% endblock %}
 
 {% block contenido_panel %}
     <div class="table-responsive">
-        <table id="tabla-entrenadores-nacionales" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+        <table id="tabla-personal-apoyo-nacionales" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
 
         </table>
     </div>

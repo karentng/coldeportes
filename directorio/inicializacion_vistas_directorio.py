@@ -58,7 +58,7 @@ def crear_vistas():
     LEFT join public.entidades_nacionalidad N on DPN.nacionalidad_id=N.id
     LEFT join public.entidades_entidad EN on D.entidad_id=EN.id;
 
-    create or replace view directorio_entrenadorview as 
+    create or replace view directorio_personalapoyoview as
     select  EN.id, EN.nombres,
             EN.telefono_fijo,
             EN.apellidos, EN.genero,         
@@ -66,12 +66,12 @@ def crear_vistas():
             EN.ciudad_id,
             EN.correo_electronico,      
             ENN.nacionalidad_id,         
-            EN.entidad_vinculacion_id, EN.estado, EN.etnia,        
+            EN.entidad_id, EN.estado, EN.etnia,
             EN.foto,     
             EN.nombres||' '||EN.apellidos||' '||E.nombre as contenido
-    from snd_entrenador EN
-    LEFT join public.entidades_entidad E on EN.entidad_vinculacion_id=E.id
-    LEFT join snd_entrenador_nacionalidad ENN on ENN.entrenador_id=EN.id
+    from snd_personalapoyo EN
+    LEFT join public.entidades_entidad E on EN.entidad_id=E.id
+    LEFT join snd_personalapoyo_nacionalidad ENN on ENN.personalapoyo_id=EN.id
     LEFT join public.entidades_nacionalidad N on ENN.nacionalidad_id=N.id;
 
 

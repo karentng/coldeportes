@@ -4,7 +4,7 @@ from gestion_usuarios.forms import *
 from django.contrib.auth.models import *
 from django.contrib import messages
 from coldeportes.utilities import superuser_only,calculate_age
-from snd.models import Entrenador
+from snd.models import PersonalApoyo
 from snd.modelos.deportistas import Deportista
 from snd.modelos.escenarios import Escenario,CaracterizacionEscenario
 from transferencias.models import Transferencia
@@ -68,12 +68,13 @@ def inicio(request):
             EscenarioView.objects.all().exists()
             CAFView.objects.all().exists()
             DeportistaView.objects.all().exists()
-            EntrenadorView.objects.all().exists()
+            PersonalApoyoView.objects.all().exists()
             DirigenteView.objects.all().exists()
             CajaCompensacionView.objects.all().exists()
 
         except Exception:
-            crear_vistas()
+            pass
+            #crear_vistas()
 
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')
@@ -111,14 +112,14 @@ def inicio_tenant(request):
         ContentType.objects.clear_cache()
         objeto_trans = None
         #Si es persona
-        if t.tipo_objeto =='Deportista' or t.tipo_objeto=='Entrenador':
+        if t.tipo_objeto =='Deportista' or t.tipo_objeto=='PersonalApoyo':
             #Si es deportista
             if t.tipo_objeto =='Deportista':
                 objeto_trans = Deportista.objects.get(id=t.id_objeto)
                 objeto_trans.ciudad = objeto_trans.ciudad_residencia
-            #Si es entrenador
-            elif t.tipo_objeto =='Entrenador':
-                objeto_trans = Entrenador.objects.get(id=t.id_objeto)
+            #Si es personal de apoyo
+            elif t.tipo_objeto =='PersonalApoyo':
+                objeto_trans = PersonalApoyo.objects.get(id=t.id_objeto)
             objeto_trans.edad = calculate_age(objeto_trans.fecha_nacimiento)
             objeto_trans.procedencia = entidad_cambio
             objeto_trans.fecha_solicitud = t.fecha_solicitud

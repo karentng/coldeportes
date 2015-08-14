@@ -9,8 +9,8 @@ PERMISOS_DIGITADOR = [
     ['change_deportista', 'deportistas'],
     ['add_centroacondicionamiento', 'centros'],
     ['change_centroacondicionamiento', 'centros'],
-    ['add_entrenador', 'entrenadores'],
-    ['change_entrenador', 'entrenadores'],
+    ['add_personalapoyo', 'personal_apoyo'],
+    ['change_personalapoyo', 'personal_apoyo'],
     ['add_escenario', 'escenarios'],
     ['change_escenario', 'escenarios'],
 ]

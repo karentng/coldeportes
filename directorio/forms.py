@@ -10,7 +10,7 @@ ACTORES = (
     ('CA', 'Centros de Acondicionamiento'),
     ('DE', 'Deportistas'),
     ('DI', 'Dirigentes'),
-    ('EN', 'Entrenadores'),
+    ('PA', 'Personal de apoyo'),
     ('ES', 'Escenarios Deportivos'),
 )
 

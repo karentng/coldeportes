@@ -29,15 +29,15 @@ from snd.models import *
 
 MODELOS_DE_DATOS = (
     (
-        Entrenador,
-        ['nombres','apellidos', 'entidad_vinculacion', 'correo_electronico'],
+        PersonalApoyo,
+        ['nombres','apellidos', 'entidad', 'correo_electronico'],
         ['Nombres','Apellidos', 'Entidad', 'Correo electrónico'],
         None,
         [
             [
                 "Ver más",
-                'ver_entrenador_tenantnacional',
-                ['id','entidad_vinculacion'],
+                'ver_personal_apoyo_tenantnacional',
+                ['id','entidad'],
                 'fa-eye',
                 None
             ],

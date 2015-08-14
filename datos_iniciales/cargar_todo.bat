@@ -7,4 +7,4 @@ python3 ../manage.py dbshell < cargar_base_de_datos/escenarios.sql
 python3 ../manage.py dbshell < cargar_base_de_datos/cafs.sql
 python3 ../manage.py dbshell < cargar_base_de_datos/deportistas.sql
 python3 ../manage.py dbshell < cargar_base_de_datos/dirigentes.sql
-python3 ../manage.py dbshell < cargar_base_de_datos/entrenadores.sql
+python3 ../manage.py dbshell < cargar_base_de_datos/personal_apoyo.sql
