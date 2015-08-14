@@ -1,13 +1,12 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib import messages
 from formtools.wizard.views import *
 from snd.formularios.dirigentes  import *
 from django.conf import settings
 from coldeportes.utilities import *
 import json
-from snd.formularios.dirigentes import VerificarExistenciaForm
 
 
 @login_required
@@ -28,14 +27,10 @@ def wizard_identificacion_nuevo(request):
     print(request.session)
     try:
         datos = request.session['datos']
-        del request.session['datos']
     except Exception:
-        return redirect('verificar_dirigente')
+        return redirect('dirigentes_verificar')
 
     identificacion_form = DirigenteForm(initial=datos)
-
-
-    #identificacion_form = DirigenteForm( )
 
     if request.method == 'POST':
 
@@ -46,14 +41,8 @@ def wizard_identificacion_nuevo(request):
             dirigente.entidad =  request.tenant
             dirigente.save()
             identificacion_form.save_m2m()
-            return redirect('dirigentes_wizard_funciones', dirigente.id)
-
-    if request.is_ajax():
-        try:
-            dirigente = Dirigente.objects.get(identificacion=request.GET['id_dirigente'])
-            return HttpResponse(json.dumps({'id_dirigente':dirigente.id}), content_type="application/json")
-        except Dirigente.DoesNotExist:
-            return HttpResponse(json.dumps({'id_dirigente':'ninguno'}), content_type="application/json")
+            del request.session['datos']
+            return redirect('dirigentes_wizard_cargos', dirigente.id)
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
@@ -93,7 +82,7 @@ def wizard_identificacion(request, dirigente_id):
             dirigente = identificacion_form.save(commit=False)
             dirigente.save()
             identificacion_form.save_m2m()
-            return redirect('dirigentes_wizard_funciones', dirigente_id)
+            return redirect('dirigentes_wizard_cargos', dirigente_id)
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
@@ -102,25 +91,25 @@ def wizard_identificacion(request, dirigente_id):
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def wizard_funciones(request, dirigente_id):
+def wizard_funciones(request, dirigente_id, cargo_id=None):
     """
     Junio 14 / 2015
     Autor: Cristian Leonardo Ríos López
     
     Funciones del cargo de un dirigente
 
-    Se obtienen el formulario de las funciones del cargo y se muestran las funciones actualmente añadidas al dirigente
+    Se obtienen el formulario de las funciones del cargo y se muestran las funciones actualmente añadidas al dirigente según el cargo
     y si hay modificaciones se guardan.
-    Si el dirigente es nuevo se inicializa en nulo.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
+    :param cargo_id:   Identificador del cargo del dirigente
+    :type cargo_id:    String
     :param dirigente_id:   Identificador del dirigente
     :type dirigente_id:    String
     """
 
-    funciones = Funcion.objects.filter(dirigente=dirigente_id)
-    funciones_form = DirigenteFuncionesForm()
+    funciones_form = DirigenteFuncionesForm(dirigente_id=dirigente_id, cargo_id=cargo_id)
 
     if request.method == 'POST':
         funciones_form = DirigenteFuncionesForm(request.POST)
@@ -133,42 +122,166 @@ def wizard_funciones(request, dirigente_id):
                 messages.error(request, "Está tratando de adicionarle funciones a un dirigente inexistente.")
                 return redirect('dirigentes_listar')
             funcion_nueva.save()
-            return redirect('dirigentes_wizard_funciones', dirigente_id)
+            return redirect('dirigentes_wizard_funciones', dirigente_id, funcion_nueva.cargo.id)
 
     return render(request, 'dirigentes/wizard/wizard_funciones.html', {
-        'wizard_stage': 2,
+        'wizard_stage': 3,
         'form': funciones_form,
-        'funciones': funciones,
         'dirigente_id': dirigente_id
     })
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def eliminar_funcion(request, dirigente_id, funcion_id):
+def funciones_ajax(request):
+    """
+    Agosto 09 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    Funciones del cargo de un dirigente
+
+    Función Ajax. Se obtienen las funciones del cargo del dirigente.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param id_cargo:   Identificador del cargo del dirigente
+    :type id_cargo:    String
+    :param id_dirigente:   Identificador del dirigente
+    :type id_dirigente:    String
+    """
+    if request.is_ajax():
+        funciones = DirigenteFuncion.objects.filter(dirigente=request.GET['id_dirigente'], cargo=request.GET['id_cargo'])
+        funciones_ = []
+        for funcion in funciones:
+            funciones_.append({'id':funcion.id, 'descripcion':funcion.descripcion})
+        return HttpResponse(json.dumps({'funciones': funciones_}), content_type="application/json")
+    else:
+        raise Http404
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def eliminar_funcion(request, dirigente_id, cargo_id, funcion_id):
     """
     Junio 14 / 2015
     Autor: Cristian Leonardo Ríos López
-    
+
     Eliminar función
 
     Se obtienen la función de la base de datos y se elimina
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
-    :param dirigente_id:   Identificador del dirigente
-    :type escenario_id:    String
+    :param cargo_id   Identificador del cargo del dirigente
+    :type cargo_id    String
     :param funcion_id   Identificador de la función
     :type funcion_id    String
     """
 
     try:
-        funcion = Funcion.objects.get(id=funcion_id, dirigente=dirigente_id)
+        funcion = DirigenteFuncion.objects.get(id=funcion_id, cargo=cargo_id, dirigente=dirigente_id)
         funcion.delete()
-        return redirect('dirigentes_wizard_funciones', dirigente_id)
+        messages.success(request,'La función ha sido eliminada con éxito.')
+        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
 
-    except Funcion.DoesNotExist:
+    except DirigenteFuncion.DoesNotExist:
         messages.error(request,'Está tratando de eliminar un función inexistente.')
-        return redirect('dirigentes_wizard_funciones', dirigente_id)
+        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def wizard_cargos(request, dirigente_id):
+    """
+    Agosto 05 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    Cargos de un dirigente
+
+    Se obtiene el formulario de los cargos del dirigente y se muestran los cargos actualmente añadido
+    y si hay modificaciones se guardan.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param dirigente_id:   Identificador del dirigente
+    :type dirigente_id:    String
+    """
+
+    cargos = DirigenteCargo.objects.filter(dirigente=dirigente_id)
+    cargos_form = DirigenteCargosForm(dirigente_id=dirigente_id)
+
+    if request.method == 'POST':
+        cargos_form = DirigenteCargosForm(request.POST)
+
+        if cargos_form.is_valid():
+            cargo_nuevo = cargos_form.save(commit=False)
+            try:
+                cargo_nuevo.dirigente = Dirigente.objects.get(id=dirigente_id)
+            except Dirigente.DoesNotExist:
+                messages.error(request, "Está tratando de adicionarle cargos a un dirigente inexistente.")
+                return redirect('dirigentes_listar')
+            cargo_nuevo.save()
+            return redirect('dirigentes_wizard_cargos', dirigente_id)
+                
+
+    return render(request, 'dirigentes/wizard/wizard_cargos.html', {
+        'wizard_stage': 2,
+        'form': cargos_form,
+        'cargos': cargos,
+        'dirigente_id': dirigente_id
+        })
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def cargos_ajax(request):
+    """
+    Agosto 09 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    Cargos de un dirigente
+
+    Función Ajax. Se obtienen las funciones del cargo del dirigente.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param id_dirigente:   Identificador del dirigente
+    :type id_dirigente:    String
+    """
+    if request.is_ajax():
+        cargos = DirigenteCargo.objects.filter(dirigente=request.GET['id_dirigente'])
+        cargos_ = []
+        for cargo in cargos:
+            cargos_.append({'value':cargo.id, 'text':cargo.__str__()})
+        return HttpResponse(json.dumps({'cargos': cargos_}), content_type="application/json")
+    else:
+        raise Http404
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def eliminar_cargo(request, cargo_id, dirigente_id):
+    """
+    Agosto 05 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    Eliminar cargo
+
+    Se obtienen el cargo del dirigente de la base de datos y se elimina
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param dirigente_id   Identificador del dirigente
+    :type dirigente_id    String
+    :param cargo_id   Identificador del cargo del dirigente
+    :type cargo_id    String
+    """
+
+    try:
+        cargo = DirigenteCargo.objects.get(id=cargo_id, dirigente_id = dirigente_id)
+        cargo.delete()
+        messages.success(request,'El cargo ha sido eliminado con éxito.')
+        return redirect('dirigentes_wizard_cargos', dirigente_id)
+
+    except DirigenteCargo.DoesNotExist:
+        messages.error(request,'Está tratando de eliminar un cargo inexistente.')
+        return redirect('dirigentes_wizard_cargos', dirigente_id)
+
 
 @login_required
 def listar(request):
@@ -202,14 +315,13 @@ def finalizar(request, opcion):
     :type request:    WSGIRequest
     """
     messages.success(request, "Dirigente registrado correctamente.")
-    del request.session['datos']
     
     if opcion == "nuevo":
         return redirect('dirigentes_wizard_identificacion_nuevo')
     elif opcion == "listar":
         return redirect('dirigentes_listar')
 
-'''@login_required
+@login_required
 def activar_desactivar(request, dirigente_id):
     """
     Junio 14 / 2015
@@ -235,7 +347,6 @@ def activar_desactivar(request, dirigente_id):
         message = "Dirigente desactivado correctamente."
     messages.warning(request, message)
     return redirect('dirigentes_listar')
-'''
 
 @login_required
 def ver(request, dirigente_id):
@@ -259,17 +370,19 @@ def ver(request, dirigente_id):
         messages.error(request, 'El dirigente que desea ver no existe')
         return redirect('dirigentes_listar')
 
-    funciones = Funcion.objects.filter(dirigente=dirigente)
+    cargos = DirigenteCargo.objects.filter(dirigente=dirigente)
+    for cargo in cargos:
+        cargo.funciones = DirigenteFuncion.objects.filter(dirigente=dirigente, cargo=cargo.id)
 
     return render(request, 'dirigentes/dirigentes_ver.html', {
         'dirigente': dirigente,
-        'funciones': funciones
+        'cargos': cargos
     })
 
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def verificar_dirigente(request):
+def verificar(request):
     """
     Julio 28 /2015
     Autor: Milton Lenis
@@ -282,7 +395,7 @@ def verificar_dirigente(request):
     :type request: WSGIRequest
     """
     if request.method=='POST':
-        form = VerificarExistenciaForm(request.POST)
+        form = DirigenteVerificarExistenciaForm(request.POST)
 
         if form.is_valid():
             datos = {
@@ -297,7 +410,7 @@ def verificar_dirigente(request):
 
             if dirigente:
                 #Si se encuentra el dirigente se carga el template con la existe=True para desplegar el aviso al usuario
-                return render(request,'dirigentes/verificar_dirigente.html',{'existe':True,
+                return render(request,'dirigentes/dirigentes_verificar.html',{'existe':True,
                                                                              'dirigente':dirigente})
 
             else:
@@ -307,6 +420,6 @@ def verificar_dirigente(request):
                 return redirect('dirigentes_wizard_identificacion_nuevo')
 
     else:
-        form = VerificarExistenciaForm()
-    return render(request,'dirigentes/verificar_dirigente.html',{'form':form,
+        form = DirigenteVerificarExistenciaForm()
+    return render(request,'dirigentes/dirigentes_verificar.html',{'form':form,
                                                                  'existe':False})

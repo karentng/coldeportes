@@ -3,7 +3,7 @@ fields = {
     tipo_identificacion: {
         validators: {
             notEmpty: {
-                message: 'El tipo de identificación del dirigente no puede ser vacío'
+                message: 'Debe de seleccionar un tipo de identificación para el dirigente'
             }
         }
     },
@@ -34,14 +34,7 @@ fields = {
     genero: {
         validators: {
             notEmpty: {
-                message: 'Por favor selecciones un género'
-            }
-        }
-    },
-    cargo: {
-        validators: {
-            notEmpty: {
-                message: 'El cargo del dirigente no puede ser vacío'
+                message: 'Debe de seleccionar un género para el dirigente'
             }
         }
     },
@@ -65,28 +58,7 @@ fields = {
     nacionalidad: {
         validators: {
             notEmpty: {
-                message: 'Por favor seleccione al menos una nacionalidad para el dirigente'
-            }
-        }
-    },
-    fecha_posesion: {
-        validators: {
-            notEmpty: {
-                message: 'La fecha de posesión del dirigente no puede ser vacía'
-            },
-            date: {
-                message: 'El valor ingresado no es una fecha válida',
-                format: 'YYYY-MM-DD',
-                max: 'fecha_retiro'
-            }
-        }
-    },
-    fecha_retiro: {
-        validators: {
-            date: {
-                message: 'El valor ingresado no es una fecha válida',
-                format: 'YYYY-MM-DD',
-                min: 'fecha_posesion'
+                message: 'Debe de seleccione al menos una nacionalidad para el dirigente'
             }
         }
     },
@@ -98,20 +70,13 @@ fields = {
             }
         }
     },
-    descripcion: {
+    perfil: {
         validators: {
             notEmpty: {
-                message: 'Descripción y/o logros del dirigente no puede ser vacío'
+                message: 'El perfil del dirigente no puede ser vacío'
             }
         }
     },
     
 };
-//Revalidar campos al ser actualizados
-$("#id_fecha_posesion").on('change',function(e){
-    $("#form-wizard-identificacion").bootstrapValidator('revalidateField', 'fecha_posesion');
-});
-$("#id_fecha_retiro").on('change',function(e){
-    $("#form-wizard-identificacion").bootstrapValidator('revalidateField', 'fecha_retiro');
-});
 $.getScript(base+"js/validaciones/validations-base.js");

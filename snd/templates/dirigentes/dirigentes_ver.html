@@ -47,7 +47,7 @@
             <ul class="nav nav-tabs">
                 <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
                 <li class="active"><a href="#nav-tab2-1" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-                {% if funciones %}<li class=""><a href="#nav-tab2-2" data-toggle="tab"><i class="fa fa-paint-brush"></i> Funciones</a></li>{% endif %}
+                {% if cargos %}<li class=""><a href="#nav-tab2-2" data-toggle="tab"><i class="fa fa-paint-brush"></i>Cargos</a></li>{% endif %}
                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
             </ul>
         </div>
@@ -79,26 +79,12 @@
                                         <p style="margin-left: 50px">
                                             Identificación: {{dirigente.tipo_identificacion}}. {{dirigente.identificacion}}<br />
                                             Género: {{dirigente.genero}}<br/>
-                                            Cargo: {{dirigente.cargo}}<br/>
-                                            Superior: 
-                                            {% if dirigente.superior %}
-                                                {{dirigente.superior.nombres}} {{dirigente.superior.apellidos}} - {{dirigente.superior.cargo}}
-                                            {% else %} 
-                                                Ninguno  
-                                            {% endif %}<br/>
                                             Teléfono: {{dirigente.telefono}}<br/>
                                             Email: 
                                             {% if dirigente.email %} 
                                                 {{dirigente.email}} 
                                             {% else %} 
                                                 Ninguno 
-                                            {% endif %}<br/>
-                                            Fecha de Posesión: {{dirigente.fecha_posesion}}<br/>
-                                            Fecha de Retiro: 
-                                            {% if dirigente.fecha_retiro %} 
-                                                {{dirigente.fecha_retiro}} 
-                                            {% else %} 
-                                                Aún activo 
                                             {% endif %}<br/>
                                             Nacionalidad: 
                                             {% for nac in dirigente.nacionalidad.all %}
@@ -111,12 +97,12 @@
                         </address>
                     </div>                    
                 </div>
-                <h5 class="m-t-10">Descripción:</h5>
-                <p>{{dirigente.descripcion}}</p>
+                <h5 class="m-t-10">Perfil Profesional:</h5>
+                <p>{{dirigente.perfil}}</p>
             </div>
         </div>
         
-        {% if funciones %}
+        {% if cargos %}
         <div class="tab-pane fade" id="nav-tab2-2">
             <div class="invoice">
                 <div class="invoice-company">
@@ -129,12 +115,34 @@
                 <div class="invoice-header">
                     <div class="invoice-from">
                         <address class="m-t-5 m-b-5">
-                        <strong>Cargo: {{dirigente.cargo}}</strong><br/><br/>
-                        <ul class="funciones">
-                            {% for funcion in funciones %}
-                                <li class="fa fa-lg fa-tag">{{funcion.descripcion}}</li>
-                            {% endfor %}
-                        </ul>
+                        {% for cargo in cargos %}
+                            <strong>Cargo: {{cargo.nombre}}</strong><br/>
+                            Fecha de Posesión: {{cargo.fecha_posesion}}<br/>
+                            Fecha de Retiro: 
+                            {% if cargo.fecha_retiro %} 
+                                {{cargo.fecha_retiro}} 
+                            {% else %} 
+                                Aún activo 
+                            {% endif %}<br/>
+                            Superior: 
+                            {% if cargo.superior %}
+                                {{cargo.superior.nombres}} {{cargo.superior.apellidos}}
+                                {% if cargo.superior_cargo%} 
+                                    - {{cargo.superior_cargo.nombre}}
+                                {% endif %}
+                            {% else %} 
+                                Ninguno  
+                            {% endif %}<br/>
+                            {%if cargo.funciones %}
+                                <em>Funciones del Cargo</em>
+                                <ul class="funciones">
+                                    {% for funcion in cargo.funciones %}
+                                        <li class="fa fa-lg fa-tag">{{funcion.descripcion}}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <br/>
+                        {% endfor %}
                         </address>
                     </div>
                 </div>

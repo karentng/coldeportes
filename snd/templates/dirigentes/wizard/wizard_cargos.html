@@ -1,0 +1,73 @@
+{% extends 'dirigentes/wizard/wizard_identificacion.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/validaciones/dirigentes/wizard_cargos-validations.js"></script>
+    <script src="{{STATIC_URL}}js/funciones_calculos/dirigentes/cargos.js"></script>
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'dirigentes/wizard/_wizard.html' %}
+        <div class="row">
+            <fieldset class="col-md-6" >
+                <form id="form-wizard-cargos" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <legend class="pull-left width-full">
+                            {% include 'dirigentes/wizard/_mensajes.html' %}
+                        </legend>
+                        {% bootstrap_form form layout='vertical' %}
+
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                    </div>
+                </div>
+                </form>
+            </fieldset> 
+            <div class="col-md-6">
+                <h4>Cargos Actuales:</h4>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th align="center">Nombre del cargo [Periodo]</th>
+                            <th align="center">Superior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cargo in cargos %}
+                        <tr>
+                            <td align="center">{{cargo}}</td>
+                            <td align="center">{%if cargo.superior%} {{cargo.superior}} {%if cargo.superior_cargo%} - {{cargo.superior_cargo.nombre}} {%endif%} {%else%}Ninguno{%endif%}</td>
+                            <td align="center">
+                                <a href="#modal-desactivate{{cargo.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate{{cargo.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Eliminar Cargo:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar este cargo?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                <a href="{% url 'dirigentes_eliminar_cargo' cargo.id dirigente_id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br/>
+        <ul class="pager bwizard-buttons">
+            <a href="{% url 'dirigentes_wizard_identificacion' dirigente_id %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
+            <a href="{% url 'dirigentes_wizard_funciones' dirigente_id %}" class="btn btn-primary pull-right">{% trans 'Siguiente →' %}</a>
+        </ul>
+
+{% endblock %}
