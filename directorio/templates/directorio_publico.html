@@ -19,7 +19,7 @@
 
 {% block contenido_panel %}
     <div class="row">
-        <form  method="POST">{% csrf_token %}
+        <form action="{% url 'directorio_publico_buscar' %}" method="POST">{% csrf_token %}
             <div class="col-md-10">       
             {% for field in form %}
                 <div class="col-md-4">
@@ -58,8 +58,8 @@
                     <a href="#EscenarioView" class="btn btn-primary btn-xs" data-option-value=".EscenarioView">
                         Escenarios Deportivos
                     </a>
-                    <a href="#PersonalApoyoView" class="btn btn-primary btn-xs" data-option-value=".PersonalApoyoView">
-                        Personal de apoyo
+                    <a href="#EntrenadorView" class="btn btn-primary btn-xs" data-option-value=".EntrenadorView">
+                        Entrenadores
                     </a>
                 </span>
             </div>
