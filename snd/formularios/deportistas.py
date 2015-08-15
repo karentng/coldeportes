@@ -14,8 +14,18 @@ class VerificarExistenciaForm(forms.Form):
     tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
     identificacion = forms.IntegerField(label="Identificación del deportista")
 
+class CambioDocumentoForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(CambioDocumentoForm, self).__init__(*args, **kwargs)
+        self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
+
+    class Meta:
+        model = Deportista
+        exclude = ('entidad','estado','nombres','apellidos','genero','fecha_nacimiento','ciudad_residencia','barrio','comuna','email','telefono','direccion','etnia','video','disciplinas','nacionalidad','foto',)
+
 class DeportistaForm(ModelForm):
-    #fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
@@ -24,9 +34,10 @@ class DeportistaForm(ModelForm):
         self.fields['genero'] = adicionarClase(self.fields['genero'], 'one')
         self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
-        self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
         self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'],'fecha')
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
+        self.fields['tipo_id'].widget.attrs.update({'readonly': True})
+        self.fields['identificacion'].widget.attrs.update({'readonly': True})
 
     def clean(self):
         fecha_nacimiento = self.cleaned_data['fecha_nacimiento']

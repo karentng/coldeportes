@@ -12,7 +12,6 @@ from snd.models import *
 from entidades.models import *
 from django.contrib import messages
 from coldeportes.utilities import calculate_age,all_permission_required
-from snd.formularios.deportistas import VerificarExistenciaForm
 
 
 @login_required
@@ -487,3 +486,31 @@ def verificar_deportista(request):
         form = VerificarExistenciaForm()
     return render(request,'deportistas/verificar_deportista.html',{'form':form,
                                                                    'existe':False})
+
+def cambio_tipo_documento_deportista(request,id):
+    try:
+        depor = Deportista.objects.get(id=id)
+    except:
+        messages.error(request,'Error: Deportista no encontrado')
+
+    tipo_id_ant = depor.tipo_id
+    id_ant = depor.identificacion
+    form = CambioDocumentoForm(instance=depor)
+    if request.method == 'POST':
+        form = CambioDocumentoForm(request.POST,instance=depor)
+        if form.is_valid():
+            historial = CambioDocumentoDeportista(
+                deportista=depor,
+                tipo_documento_anterior=tipo_id_ant,
+                identificacion_anterior=id_ant,
+                tipo_documento_nuevo=form.cleaned_data['tipo_id'],
+                identificacion_nuevo=form.cleaned_data['identificacion']
+            )
+            historial.save()
+            form.save()
+            messages.success(request,'Cambio de documento exitoso')
+            return redirect('deportista_listar')
+
+    return render(request,'deportistas/cambio_documento_deportista.html',{
+        'form': form
+    })

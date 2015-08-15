@@ -145,3 +145,16 @@ class InformacionAcademica(models.Model):
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
 
+class CambioDocumentoDeportista(models.Model):
+    TIPO_IDENTIDAD = (
+        ('TI', 'TARJETA DE IDENTIDAD'),
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
+    )
+
+    deportista = models.ForeignKey(Deportista)
+    tipo_documento_anterior = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC')
+    identificacion_anterior = models.CharField(max_length=100)
+    tipo_documento_nuevo = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC')
+    identificacion_nuevo = models.CharField(max_length=100)
