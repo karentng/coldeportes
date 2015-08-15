@@ -488,6 +488,17 @@ def verificar_deportista(request):
                                                                    'existe':False})
 
 def cambio_tipo_documento_deportista(request,id):
+    """
+    Agosto 15 /2015
+    Autor: Daniel Correa
+
+    Permite llevar el historial del cambio del tipo y valor de documento del deportista
+
+    :param request: peticion
+    :type request: WSGIRequest
+    :param id: id del deportista
+    :type id: string
+    """
     try:
         depor = Deportista.objects.get(id=id)
     except:
@@ -495,19 +506,17 @@ def cambio_tipo_documento_deportista(request,id):
 
     tipo_id_ant = depor.tipo_id
     id_ant = depor.identificacion
-    form = CambioDocumentoForm(instance=depor)
+    form = CambioDocumentoForm(initial={'tipo_documento_anterior':tipo_id_ant,'identificacion_anterior':id_ant})
+
     if request.method == 'POST':
-        form = CambioDocumentoForm(request.POST,instance=depor)
+        form = CambioDocumentoForm(request.POST,initial={'tipo_documento_anterior':tipo_id_ant,'identificacion_anterior':id_ant})
         if form.is_valid():
-            historial = CambioDocumentoDeportista(
-                deportista=depor,
-                tipo_documento_anterior=tipo_id_ant,
-                identificacion_anterior=id_ant,
-                tipo_documento_nuevo=form.cleaned_data['tipo_id'],
-                identificacion_nuevo=form.cleaned_data['identificacion']
-            )
-            historial.save()
-            form.save()
+            depor.tipo_id = form.cleaned_data['tipo_documento_nuevo']
+            depor.identificacion = form.cleaned_data['identificacion_nuevo']
+            depor.save()
+            hist = form.save(commit=False)
+            hist.deportista = depor
+            hist.save()
             messages.success(request,'Cambio de documento exitoso')
             return redirect('deportista_listar')
 

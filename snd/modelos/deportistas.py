@@ -154,7 +154,7 @@ class CambioDocumentoDeportista(models.Model):
     )
 
     deportista = models.ForeignKey(Deportista)
-    tipo_documento_anterior = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC')
-    identificacion_anterior = models.CharField(max_length=100)
-    tipo_documento_nuevo = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC')
-    identificacion_nuevo = models.CharField(max_length=100)
+    tipo_documento_anterior = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Documento Acutual', help_text='Este es el tipo de documento que tiene el deportista actualmente')
+    identificacion_anterior = models.CharField(max_length=100,verbose_name='Identificación Actual',help_text='Este es el numero de documento actual o valor de documento en caso diferente a CC y TI')
+    tipo_documento_nuevo = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Nuevo Tipo de Documento')
+    identificacion_nuevo = models.CharField(max_length=100,verbose_name='Nueva Identificación')

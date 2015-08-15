@@ -29,6 +29,7 @@
         idTabla = "tabla-deportistas";
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
 {% endblock %}
 
 {% block contenido_panel %}
@@ -93,8 +94,8 @@
                                         </a>
                                         <br/>
                                         <a href="{% url 'cambio_documento_deportista' deportista.id %}" title="Modificar Tipo Doc">
-                                            <i class="fa fa-gear"></i> Cambiar tipo de documento
-                                        </a>
+                                            <i class="fa fa-archive"></i> CTD
+                                        </a> <i class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Cambiar documento de identificación"></i>
                                         <br/>
                                         <a href="#modal-desactivate-{{ deportista.id }}" data-toggle="modal">
                                             <i class="fa fa-ban"></i> Activar / Inactivar

@@ -19,11 +19,13 @@ class CambioDocumentoForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CambioDocumentoForm, self).__init__(*args, **kwargs)
-        self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
+        self.fields['tipo_documento_nuevo'] = adicionarClase(self.fields['tipo_documento_nuevo'], 'one')
+        self.fields['tipo_documento_anterior'].widget.attrs.update({'readonly': True})
+        self.fields['identificacion_anterior'].widget.attrs.update({'readonly': True})
 
     class Meta:
-        model = Deportista
-        exclude = ('entidad','estado','nombres','apellidos','genero','fecha_nacimiento','ciudad_residencia','barrio','comuna','email','telefono','direccion','etnia','video','disciplinas','nacionalidad','foto',)
+        model = CambioDocumentoDeportista
+        exclude = ('deportista',)
 
 class DeportistaForm(ModelForm):
     required_css_class = 'required'

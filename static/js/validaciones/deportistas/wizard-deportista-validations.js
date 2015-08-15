@@ -33,9 +33,6 @@ fields = {
                     notEmpty: {
                         message: 'El número de identificación no puede ser vacío'
                     },
-                    numeric: {
-                        message: 'El número de identificación solo puede contener números'
-                    },
                 }
             },
             fecha_nacimiento: {
