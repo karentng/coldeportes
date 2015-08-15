@@ -17,51 +17,51 @@
 
 
 {% block contenido %}
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="panel {% if existe %}panel-warning{% else %}panel-success{% endif %}">
-            <div class="panel-heading">
-                <div class="panel-heading-btn">
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="panel {% if existe %}panel-warning{% else %}panel-success{% endif %}">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                    </div>
+                    <h4 class="panel-title">
+                        Verificación de la existencia de un personal de apoyo
+                    </h4>
                 </div>
-                <h4 class="panel-title">
-                    Verificación de la existencia de un personal de apoyo
-                </h4>
-            </div>
-            <div class="panel-body">
-                {% if existe %}
-                    {% if tenant_existencia %}
-                        <div class="note note-warning">
-                            <h4><i class="fa fa-warning"></i>¡Personal de apoyo encontrado!</h4>
-                            <p>
-                                Se ha encontrado al personal de apoyo {{ personal_apoyo.nombre }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
-                                con la entidad para solicitar una transferencia de este personal de apoyo o intente con otro número de identificación si así lo desea
-                                <p><a href="{% url 'verificar_personal_apoyo' %}" class="btn btn-primary btn-sm m-r-5">Intentar con otra identificación</a></p>
-                            </p>
-                        </div>
+                <div class="panel-body">
+                    {% if existe %}
+                        {% if tenant_existencia %}
+                                <h4 class="text-warning"><i class="fa fa-warning"></i>¡Personal de apoyo encontrado!</h4>
+                                <p>
+                                    Se ha encontrado al personal de apoyo {{ personal_apoyo.nombre }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
+                                    con la entidad para solicitar una transferencia de este personal de apoyo o intente con otro número de identificación si así lo desea
+                                    <div class="p-t-5 pull-right">
+                                        <a href="{% url 'verificar_personal_apoyo' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a>
+                                    </div>
+                                </p>
+                        {% else %}
+                                <h4 class="text-warning"><i class="fa fa-warning"></i> ¡Personal de apoyo encontrado!</h4>
+                                <p>
+                                    Este personal de apoyo ya se encuentra registrado en esta entidad, por favor escoja una opción:
+                                    <div class="p-t-5 pull-right">
+                                        <a href="{% url 'verificar_personal_apoyo' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a>
+                                        <a href="{% url 'edicion_personal_apoyo' personal_apoyo.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este personal de apoyo</a>
+                                        <a href="{% url 'ver_personal_apoyo' personal_apoyo.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este personal de apoyo</a>
+                                    </div>
+                                </p>
+                        {% endif %}
                     {% else %}
-                        <div class="note note-warning">
-                            <h4><i class="fa fa-warning"></i> ¡Personal de apoyo encontrado!</h4>
-                            <p>
-                                Este personal de apoyo ya se encuentra registrado en esta entidad, por favor escoja una opción:
-                                <div class="p-t-5">
-                                    <p><a href="{% url 'verificar_personal_apoyo' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a></p>
-                                    <p><a href="{% url 'edicion_personal_apoyo' personal_apoyo.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este personal de apoyo</a></p>
-                                    <p><a href="{% url 'ver_personal_apoyo' personal_apoyo.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este personal de apoyo</a></p>
-                                </div>
-                            </p>
+                        <div class="row">
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <form action="" method="post" id="form-verificacion">
+                                    {% csrf_token %}
+                                    {% bootstrap_form form %}
+                                    <button class="btn btn-primary pull-right" type="submit">Verificar</button>
+                                </form>
+                            </div>
                         </div>
                     {% endif %}
-                {% else %}
-                    <div class="row">
-                        <div class="col-sm-8 col-sm-offset-2">
-                            <form action="" method="post" id="form-verificacion">
-                                {% csrf_token %}
-                                {% bootstrap_form form %}
-                                <button class="btn btn-primary pull-right" type="submit">Verificar</button>
-                            </form>
-                        </div>
-                    </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>

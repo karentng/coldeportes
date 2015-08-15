@@ -2,245 +2,285 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Personal de apoyo - SND COLDEPORTES
+    Personal de Apoyo - SND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
-    Ver detalles de personal de apoyo
+    Ver Detalles de personal de apyoo
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li class="active">Ver Personal de apoyo</li>
+    <li><a href="{% if request.tenant.schema_name == 'public' %}
+                    {% url 'listar_personal_apoyo_nacionales' %}
+                 {% else %}
+                    {% url 'personal_apoyo_listar' %}
+                 {% endif %}">Personal de Apoyo</a></li>
+    <li class="active">Visualizar</li>
 {% endblock %}
 
 {% block css %}
-    <style type="text/css">
-    .funciones li{
-        list-style: none;
-        display: list-item;
-        line-height: 20px;
-    }
-    .funciones li:before {
-        margin-right: 10px;
-    }
+    <style>
+        .profile-image img {
+          display: block;
+          width: 100%;
+          max-height: 100%;
+        }
     </style>
 {% endblock %}
 
-{% block titulo_panel %}
-    Detalles del Personal de apoyo
-{% endblock %}
 
-{% block contenido_panel %}
-<div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
-    <div class="panel-heading p-0">
-        <div class="panel-heading-btn m-r-10 m-t-10">
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+{% block contenido %}
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
+            </a>
         </div>
-        <!-- begin nav-tabs -->
-        <div class="tab-overflow">
-            <ul class="nav nav-tabs">
-                <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
-                <li class="active"><a href="#nav-tab2-1" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-                {% if formacion_deportiva %}<li class=""><a href="#nav-tab2-3" data-toggle="tab"><i class="fa fa-paint-brush"></i> Formación deportiva</a></li>{% endif %}
-                {% if experiencia_laboral %}<li class=""><a href="#nav-tab2-4" data-toggle="tab"><i class="fa fa-paint-brush"></i> Experiencia laboral</a></li>{% endif %}
-                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
-            </ul>
-        </div>
+        <h4 class="panel-title">
+            Información del personal de apoyo: {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
+        </h4>
     </div>
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="nav-tab2-1">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_personal_apoyo_nacionales' %}
-                                 {% else %}
-                                    {% url 'personal_apoyo_listar' %}
-                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                            <ul class="media-list">
+    <div class="panel-body" style="padding:0">
+        <div class="row">
+            <div class="col-sm-12">
+                <img src="http://www.fitnessalud.com/wp-content/uploads/2014/04/entrenador-personal-fitness.jpg" alt="personal de apoyo" style="width:100%; height:250px">
+                <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                    <div class="panel-heading p-0">
+                        <div class="panel-heading-btn m-r-10 m-t-10">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
 
-                                <li class="media">
-                                    <a href="javascript:;" class="media-left"></a>
-                                    {%if personal_apoyo.foto%}
-                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{personal_apoyo.foto}}" alt="" />
-                                    {%elif personal_apoyo.genero == "HOMBRE"%}
-                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" />
-                                    {%else%}
-                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" />
-                                    {%endif%}
-                                    <div class="media-body">
-                                        <div class="col-lg-6">
-                                        <p style="margin-left: 50px">
-                                            {% if perms.snd.change_personalapoyo and not tenant_nacional %}
-                                                {{personal_apoyo.get_tipo_id_display | title}}: {{personal_apoyo.identificacion}}<br />
+                        <div class="tab-overflow">
+                            <ul class="nav nav-tabs">
+                                <li class="prev-button">
+                                    <a href="javascript:;" data-click="prev-tab" class="text-inverse">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                </li>
+
+                                <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-graduation-cap"></i> Formación Académica</a></li>
+
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-briefcase"></i> Experiencia Laboral</a></li>
+
+
+                                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" style="margin-bottom:0px;padding-bottom:0px">
+                        <div class="tab-pane fade active in" id="nav-tab2-12" style="margin-bottom:0px">
+                            <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
+                                <div class="invoice-company">
+                                    <b>{{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="profile-left">
+                                                <div class="profile-image">
+                                                    {%if personal_apoyo.foto %}
+                                                        <img src="{{MEDIA_URL}}{{personal_apoyo.foto}}">
+                                                    {%elif personal_apoyo.genero == "HOMBRE"%}
+                                                        <img src="{{STATIC_URL}}img/male.png" alt="" />
+                                                    {%else%}
+                                                        <img src="{{STATIC_URL}}img/female.png" alt="" />
+                                                    {%endif%}
+                                                    <i class="fa fa-user hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="profile-right">
+                                            <p>{% if perms.snd.change_personalapoyo and request.tenant.schema_name != 'public' %}
+                                                <b>{{personal_apoyo.get_tipo_id_display | title}} </b>: {{personal_apoyo.identificacion}}<br />
                                             {% else %}
-                                                Entidad: {{ personal_apoyo.entidad }}<br/>
-                                            {% endif %}
-                                            Género: {{personal_apoyo.genero}}<br/>
-                                            Actividad: {{personal_apoyo.get_actividad_display}}<br/>
-                                            Edad: {{ personal_apoyo.edad }}<br/>
-                                            Nacionalidades:
-                                            {% for nac in personal_apoyo.nacionalidad.all %}
-                                                {% if forloop.last %}
-                                                    {{ nac }}
+                                                <b>Entidad:</b> {{ personal_apoyo.entidad | upper}}<br/>
+                                            {% endif %}</p>
+                                            <p><b>Estado:</b> {{personal_apoyo.get_estado_display}}</p>
+                                            <p><b>Actividad:</b> {{personal_apoyo.get_actividad_display}}</p>
+                                            <p><b>Género:</b> {{personal_apoyo.genero}}</p>
+                                            <p><b>Edad:</b> {{ personal_apoyo.edad }}</p>
+                                            <p><b>Nacionalidades:</b>
+                                                {% for nac in personal_apoyo.nacionalidad.all %}
+                                                    {% if forloop.last %}
+                                                        {{ nac |upper }}
+                                                    {% else %}
+                                                        {{nac | upper}},
+                                                    {% endif %}
+                                                {% empty %}
+                                                    Ninguna
+                                                {% endfor %}</p>
+                                            <p><b>Ciudad (Departamento) de Nacimiento:</b>
+                                                {% if personal_apoyo.ciudad %}
+                                                    {{ personal_apoyo.ciudad | upper}}
                                                 {% else %}
-                                                    {{nac}},
-                                                {% endif %}
-                                            {% endfor %}<br/>
-                                            Ciudad (Departamento) de Nacimiento:
-                                            {% if personal_apoyo.ciudad %}
-                                                {{ personal_apoyo.ciudad }}
-                                            {% else %}
-                                                Ninguna
-                                            {% endif %}<br/>
+                                                    Ninguna
+                                                {% endif %}</p>
                                             {% if perms.snd.change_personalapoyo %}
-                                                <strong>Contacto:</strong> <br/>
-                                                Teléfono fijo:
-                                                {% if personal_apoyo.telefono_fijo %}
-                                                    {{personal_apoyo.telefono_fijo}}
-                                                {% else %}
-                                                    Ninguno
-                                                {% endif %}<br/>
-                                                Teléfono celular:
+                                                <p><b>Teléfono fijo:</b>
+                                                    {% if personal_apoyo.telefono_fijo %}
+                                                        {{personal_apoyo.telefono_fijo}}
+                                                    {% else %}
+                                                        Ninguno
+                                                    {% endif %}</p>
+                                                <p><b>Teléfono celular:</b>
                                                 {% if personal_apoyo.telefono_celular %}
                                                     {{personal_apoyo.telefono_celular}}
                                                 {% else %}
                                                     Ninguno
-                                                {% endif %}<br/>
-                                                Dirección:
+                                                {% endif %}</p>
+                                                <p><b>Dirección:</b>
                                                 {% if personal_apoyo.direccion %}
                                                     {{personal_apoyo.direccion}}
                                                 {% else %}
                                                     Ninguno
-                                                {% endif %}<br/>
-                                                Correo electrónico:
+                                                {% endif %}</p>
+                                                <p><b>Correo electrónico:</b>
                                                 {% if personal_apoyo.correo_electronico %}
                                                     {{personal_apoyo.correo_electronico}}
                                                 {% else %}
                                                     Ninguno
-                                                {% endif %}<br/>
+                                                {% endif %}</p>
                                             {% endif %}
-                                            Etnia:
-                                            {{ personal_apoyo.etnia}}
-                                        </p>
+                                            <p><b>Etnia:</b>
+                                            {{ personal_apoyo.etnia}}</p>
+                                            </div>
+                                        </address>
+
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
                                         </div>
                                     </div>
-                                </li>
-                            </ul>
-                        </address>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-tab2-13">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>DENOMINACIÓN DIPLOMA</th>
+                                                            <th>NIVEL</th>
+                                                            <th>INSTITUCIÓN FORMACIÓN</th>
+                                                            <th>PAÍS</th>
+                                                            <th>FECHA COMIENZO</th>
+                                                            <th>FECHA FIN</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for formacion in formacion_deportiva %}
+                                                        <tr>
+                                                            <td>{{formacion.denominacion_diploma}}</td>
+                                                            <td>{{formacion.nivel}}</td>
+                                                            <td>{{formacion.institucion_formacion}}</td>
+                                                            <td>{{formacion.pais_formacion}}</td>
+                                                            <td>{{formacion.fecha_comienzo}}</td>
+                                                            <td>
+                                                                {% if formacion.fecha_fin == None %}
+                                                                    ACTUAL
+                                                                {% else %}
+                                                                    {{ formacion.fecha_fin }}
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>NOMBRE CARGO</th>
+                                                            <th>INSTITUCIÓN</th>
+                                                            <th>FECHA COMIENZO</th>
+                                                            <th>FECHA FIN</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for experiencia in experiencia_laboral %}
+                                                        <tr>
+                                                            <td>{{experiencia.nombre_cargo}}</td>
+                                                            <td>{{experiencia.institucion}}</td>
+                                                            <td>{{experiencia.fecha_comienzo}}</td>
+                                                            <td>
+                                                                {% if formacion.fecha_fin == None %}
+                                                                    ACTUAL
+                                                                {% else %}
+                                                                    {{ formacion.fecha_fin }}
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <!--FORMACIÓN DEPORTIVA-->
-        {% if formacion_deportiva %}
-            <div class="tab-pane fade" id="nav-tab2-3">
-                <div class="invoice">
-                    <div class="invoice-company">
-                        <span class="pull-right hidden-print">
-                        <a href="{% if tenant_nacional %}
-                                    {% url 'listar_personal_apoyo_nacionales' %}
-                                 {% else %}
-                                    {% url 'personal_apoyo_listar' %}
-                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                        </span>
-                        {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
-                    </div>
-                    <div class="invoice-content">
-                        <div class="table-responsive">
-                            <table class="table table-invoice">
-                                <thead>
-                                    <tr>
-                                        <th>DENOMINACIÓN DIPLOMA</th>
-                                        <th>NIVEL</th>
-                                        <th>INSTITUCIÓN FORMACIÓN</th>
-                                        <th>PAÍS</th>
-                                        <th>FECHA COMIENZO</th>
-                                        <th>FECHA FIN</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for formacion in formacion_deportiva %}
-                                    <tr>
-                                        <td>{{formacion.denominacion_diploma}}</td>
-                                        <td>{{formacion.nivel}}</td>
-                                        <td>{{formacion.institucion_formacion}}</td>
-                                        <td>{{formacion.pais_formacion}}</td>
-                                        <td>{{formacion.fecha_comienzo}}</td>
-                                        <td>
-                                            {% if formacion.fecha_fin == None %}
-                                                ACTUAL
-                                            {% else %}
-                                                {{ formacion.fecha_fin }}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <!--EXPERIENCIA LABORAL-->
-        {% if experiencia_laboral %}
-            <div class="tab-pane fade" id="nav-tab2-4">
-                <div class="invoice">
-                    <div class="invoice-company">
-                        <span class="pull-right hidden-print">
-                        <a href="{% if tenant_nacional %}
-                                    {% url 'listar_personal_apoyo_nacionales' %}
-                                 {% else %}
-                                    {% url 'personal_apoyo_listar' %}
-                                 {% endif %} " class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                        </span>
-                        {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
-                    </div>
-                    <div class="invoice-content">
-                        <div class="table-responsive">
-                            <table class="table table-invoice">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre cargo</th>
-                                        <th>Institución</th>
-                                        <th>Fecha comienzo</th>
-                                        <th>Fecha fin</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for experiencia in experiencia_laboral %}
-                                    <tr>
-                                        <td>{{experiencia.nombre_cargo}}</td>
-                                        <td>{{experiencia.institucion}}</td>
-                                        <td>{{experiencia.fecha_comienzo}}</td>
-                                        <td>
-                                            {% if formacion.fecha_fin == None %}
-                                                ACTUAL
-                                            {% else %}
-                                                {{ formacion.fecha_fin }}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     </div>
 </div>
 
+{% endblock %}
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/gallery-v2.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            Gallery.init();
+        });
+    </script>
 {% endblock %}

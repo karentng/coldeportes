@@ -12,6 +12,7 @@ class PersonalApoyoForm(ModelForm):
         self.fields['tipo_id'] = adicionarClase(self.fields['tipo_id'], 'one')
         self.fields['genero'] = adicionarClase(self.fields['genero'], 'one')
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
+        self.fields['actividad'] = adicionarClase(self.fields['actividad'], 'one')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
         self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'], 'fecha')
 

@@ -14,6 +14,6 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': 'login'}, name='logout'),
     url(r'^cambiar-pass/$', 'django.contrib.auth.views.password_change', {'template_name':'cambiar-pass.html', 'post_change_redirect':'inicio'}, name='cambiar_pass'),
     url(r'^entidades/', include('entidades.urls')),
-)
+)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

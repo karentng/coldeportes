@@ -11,7 +11,11 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'listar_cafs' %}">CAF</a></li>
+    <li><a href="{% if request.tenant.schema_name == 'public' %}
+                    {% url 'listar_cafs_nacionales' %}
+                 {% else %}
+                    {% url 'listar_cafs' %}
+                 {% endif %}">CAF</a></li>
     <li class="active">Visualizar</li>
 {% endblock %}
 

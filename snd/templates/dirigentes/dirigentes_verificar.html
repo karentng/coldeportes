@@ -17,7 +17,8 @@
 
 
 {% block contenido %}
-    <div class="col-lg-8 col-lg-offset-2">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
         <div class="panel {% if existe %}panel-warning{% else %}panel-success{% endif %}">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
@@ -29,17 +30,15 @@
             </div>
             <div class="panel-body">
                 {% if existe %}
-                    <div class="note note-warning">
-                        <h4><i class="fa fa-warning"></i> ¡Dirigente encontrado!</h4>
+                        <h4 class="text-warning"><i class="fa fa-warning"></i> ¡Dirigente encontrado!</h4>
                         <p>
                             Este dirigente ya se encuentra registrado en esta entidad, por favor escoja una opción:
-                            <div class="p-t-5">
-                                <p><a href="{% url 'dirigentes_verificar' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a></p>
-                                <p><a href="{% url 'dirigentes_wizard_identificacion' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este dirigente</a></p>
-                                <p><a href="{% url 'dirigentes_ver' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este dirigente</a></p>
+                            <div class="p-t-5 pull-right">
+                                <a href="{% url 'dirigentes_verificar' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a>
+                                <a href="{% url 'dirigentes_wizard_identificacion' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este dirigente</a>
+                                <a href="{% url 'dirigentes_ver' dirigente.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este dirigente</a>
                             </div>
                         </p>
-                    </div>
                 {% else %}
                     <div class="row">
                         <div class="col-sm-8 col-sm-offset-2">
@@ -53,5 +52,6 @@
                 {% endif %}
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
