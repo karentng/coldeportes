@@ -74,7 +74,7 @@ def inicio(request):
 
         except Exception:
             pass
-            #crear_vistas()
+            crear_vistas()
 
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')

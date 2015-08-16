@@ -21,176 +21,205 @@
     Detalles de Cajas de Compensación
 {% endblock %}
 
-{% block contenido_panel %}
-<div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
-    <div class="panel-heading p-0">
-        <div class="panel-heading-btn m-r-10 m-t-10">
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+{% block contenido %}
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
+            </a>
         </div>
-        <!-- begin nav-tabs -->
-        <div class="tab-overflow">
-            <ul class="nav nav-tabs">
-                <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
-                {% if ccf %}<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>{% endif %}                
-                {% if horarios %}<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>{% endif %}
-                {% if tarifas %}<li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-money"></i> Tarifas</a></li>{% endif %}
-                {% if contactos %}<li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>{% endif %}
-                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
-            </ul>
-        </div>
+        <h4 class="panel-title">
+            {{ccf.nombre}}
+        </h4>
     </div>
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="nav-tab2-12">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cajas_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_ccfs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{ccf.nombre}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                            <strong>Clasificación de CCF: {{ccf.get_clasificacion_display}}, Región: {{ccf.get_region_display}}</strong><br />
-                            Público {{ccf.get_publico_display}}, Tipo de Infraestructura {{ccf.get_infraestructura_display}}<br />
-                            Tipo de Institución {{ccf.get_tipo_institucion_display}}
-                        </address>
-                    </div>                    
-                </div>
-                <h5 class="m-t-10">Servicios:</h5>
-                <ul>
-                {% for servicio in ccf.servicios.all %}
-                <li>{{servicio.descripcion}}</li>
-                {% endfor %}
-                </ul>
-            </div>
-        </div>
-        {% if horarios %}
-        <div class="tab-pane fade" id="nav-tab2-14">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cajas_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_ccfs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    Horarios
-                </div>
-                <h1 class="page-header">{{ccf.nombre}}</h1>
-                <div class="invoice-content">
-                    <div class="table-responsive">
-                        <table class="table table-invoice">
-                            <thead>
-                                <tr>
-                                    <th>HORA INICIO</th>
-                                    <th>HORA FIN</th>
-                                    <th>DIAS</th>
-                                    <th>DESCRIPCION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for horario in horarios %}
-                                <tr>
-                                    <td>{{horario.hora_inicio}}</td>
-                                    <td>{{horario.hora_fin}}</td>
-                                    <td>{% for dia in horario.dias.all %} {{dia.nombre}} {% endfor %}</td>
-                                    <td>{{horario.descripcion}}</td>
-                                </tr> 
-                                {% endfor %}                               
-                            </tbody>
-                        </table>
+    <div class="panel-body" style="padding:0">
+        <div class="panel-body" style="padding:0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <img src="http://www.bleukey.com/site/images/bleukey-images/banner-viajes-familia.jpg" alt="gimnasio" style="width:100%; height:250px">
+                    <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                    <div class="panel-heading p-0">
+                        <div class="panel-heading-btn m-r-10 m-t-10">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
+                        <!-- begin nav-tabs -->
+                        <div class="tab-overflow">
+                            <ul class="nav nav-tabs">
+                                <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
+                                {% if ccf %}<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>{% endif %}                
+                                {% if horarios %}<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>{% endif %}
+                                {% if tarifas %}<li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-money"></i> Tarifas</a></li>{% endif %}
+                                {% if contactos %}<li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>{% endif %}
+                                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="nav-tab2-12">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <span class="pull-right hidden-print">
+                                    <a href="{% if tenant_nacional %}
+                                                    {% url 'listar_cajas_nacionales' %}
+                                                 {% else %}
+                                                    {% url 'listar_ccfs' %}
+                                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                                    </span>
+                                    {{ccf.nombre}}
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <strong>Clasificación de CCF: {{ccf.get_clasificacion_display}}, Región: {{ccf.get_region_display}}</strong><br />
+                                            Público {{ccf.get_publico_display}}, Tipo de Infraestructura {{ccf.get_infraestructura_display}}<br />
+                                            Tipo de Institución {{ccf.get_tipo_institucion_display}}
+                                        </address>
+                                    </div>                    
+                                </div>
+                                <h5 class="m-t-10">Servicios:</h5>
+                                <ul>
+                                {% for servicio in ccf.servicios.all %}
+                                <li>{{servicio.descripcion}}</li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% if horarios %}
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <span class="pull-right hidden-print">
+                                    <a href="{% if tenant_nacional %}
+                                                    {% url 'listar_cajas_nacionales' %}
+                                                 {% else %}
+                                                    {% url 'listar_ccfs' %}
+                                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                                    </span>
+                                    Horarios
+                                </div>
+                                <h1 class="page-header">{{ccf.nombre}}</h1>
+                                <div class="invoice-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>HORA INICIO</th>
+                                                    <th>HORA FIN</th>
+                                                    <th>DIAS</th>
+                                                    <th>DESCRIPCION</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for horario in horarios %}
+                                                <tr>
+                                                    <td>{{horario.hora_inicio}}</td>
+                                                    <td>{{horario.hora_fin}}</td>
+                                                    <td>{% for dia in horario.dias.all %} {{dia.nombre}} {% endfor %}</td>
+                                                    <td>{{horario.descripcion}}</td>
+                                                </tr> 
+                                                {% endfor %}                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if tarifas %}
+                        <div class="tab-pane fade" id="nav-tab2-16">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <span class="pull-right hidden-print">
+                                    <a href="{% if tenant_nacional %}
+                                                    {% url 'listar_cajas_nacionales' %}
+                                                 {% else %}
+                                                    {% url 'listar_ccfs' %}
+                                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                                    </span>
+                                    Tarifas
+                                </div>
+                                <h1 class="page-header">{{ccf.nombre}}</h1>
+                                <div class="invoice-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>TITULO</th>
+                                                    <th>PRECIO</th>
+                                                    <th>DESCRIPCIÓN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for tarifa in tarifas %}
+                                                <tr>
+                                                    <td>{{tarifa.titulo}}</td>
+                                                    <td>${{tarifa.precio}}</td>
+                                                    <td>{{tarifa.descripcion}}</td>
+                                                </tr> 
+                                                {% endfor %}                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if contactos %}
+                        <div class="tab-pane fade" id="nav-tab2-18">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <span class="pull-right hidden-print">
+                                    <a href="{% if tenant_nacional %}
+                                                    {% url 'listar_cajas_nacionales' %}
+                                                 {% else %}
+                                                    {% url 'listar_ccfs' %}
+                                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
+                                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                                    </span>  
+                                    Contactos                  
+                                </div>
+                                <h1 class="page-header">{{ccf.nombre}}</h1>
+                                <!-- end page-header -->
+                                <div class="table-responsive">
+                                    <table class="table table-invoice">
+                                        <thead>
+                                            <tr>
+                                                <th>NOMBRE</th>
+                                                <th>TELÉFONO</th>
+                                                <th>EMAIL</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for contacto in contactos %}
+                                            <tr>                        
+                                                <td>{{contacto.nombre}}</td>
+                                                <td>{{contacto.telefono}}</td>
+                                                <td>{{contacto.email}}</td>
+                                            </tr> 
+                                            {% endfor %}                               
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
-        {% if tarifas %}
-        <div class="tab-pane fade" id="nav-tab2-16">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cajas_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_ccfs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    Tarifas
-                </div>
-                <h1 class="page-header">{{ccf.nombre}}</h1>
-                <div class="invoice-content">
-                    <div class="table-responsive">
-                        <table class="table table-invoice">
-                            <thead>
-                                <tr>
-                                    <th>TITULO</th>
-                                    <th>PRECIO</th>
-                                    <th>DESCRIPCIÓN</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for tarifa in tarifas %}
-                                <tr>
-                                    <td>{{tarifa.titulo}}</td>
-                                    <td>${{tarifa.precio}}</td>
-                                    <td>{{tarifa.descripcion}}</td>
-                                </tr> 
-                                {% endfor %}                               
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {% if contactos %}
-        <div class="tab-pane fade" id="nav-tab2-18">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_cajas_nacionales' %}
-                                 {% else %}
-                                    {% url 'listar_ccfs' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>  
-                    Contactos                  
-                </div>
-                <h1 class="page-header">{{ccf.nombre}}</h1>
-                <!-- end page-header -->
-                <div class="table-responsive">
-                    <table class="table table-invoice">
-                        <thead>
-                            <tr>
-                                <th>NOMBRE</th>
-                                <th>TELÉFONO</th>
-                                <th>EMAIL</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for contacto in contactos %}
-                            <tr>                        
-                                <td>{{contacto.nombre}}</td>
-                                <td>{{contacto.telefono}}</td>
-                                <td>{{contacto.email}}</td>
-                            </tr> 
-                            {% endfor %}                               
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
 </div>
 

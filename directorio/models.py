@@ -113,7 +113,6 @@ class DirigenteView(models.Model):
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
     telefono = models.CharField(max_length=100, verbose_name="Teléfono")
     email = models.EmailField(null=True,blank=True)
-    cargo = models.CharField(max_length=100, verbose_name="Nombre del cargo")
     nacionalidad = models.ForeignKey(Nacionalidad)
     estado = models.IntegerField(default=0, verbose_name="Estado del dirigente")    
     foto = models.ImageField(null=True, blank=True)

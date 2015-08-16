@@ -1,5 +1,5 @@
 INSERT INTO indervalle.snd_deportista (id,nombres, apellidos,genero,tipo_id,identificacion,fecha_nacimiento,barrio,comuna,email,telefono,direccion,entidad_id,estado,etnia,ciudad_residencia_id,video,foto) VALUES
-(3,'ANDRES','PEREZ','Hombre','CC','11441237654','1992-07-07','MELENDEZ','12','aperez@deporcali.com','3127693402','CALLE 5 # 39 00',2,0,'''',152,'''','''');
+(3,'ANDRES','PEREZ','Hombre','CC','11441237654','1992-07-07','MELENDEZ','12','aperez@deporcali.com','3127693402','CALLE 5 # 39 00',2,0,'''',152,'''','');
 
 INSERT INTO indervalle.snd_composicioncorporal (id,peso,estatura,"RH",tipo_talla,talla_camisa,talla_pantaloneta,talla_zapato,deportista_id,imc,masa_corporal_magra,porcentaje_grasa,eps_id) VALUES 
 (3,72,172,'O+','Adulto','S','S','40',3,20,20,20,1);
