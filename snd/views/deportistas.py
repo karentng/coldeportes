@@ -384,7 +384,7 @@ def ver_deportista(request,id_depor):
     deportista.edad = calculate_age(deportista.fecha_nacimiento)
     deportista.disciplinas_str = ','.join(x.descripcion for x in deportista.disciplinas.all())
     deportista.nacionalidad_str = ','.join(x.nombre for x in deportista.nacionalidad.all())
-    return render(request,'deportistas/ver_deportista.html',{
+    return render(request,'deportistas/ver_deportista_2.html',{
             'deportista':deportista,
             'composicion':composicion,
             'historial_deportivo':historial_deportivo,
@@ -487,6 +487,8 @@ def verificar_deportista(request):
     return render(request,'deportistas/verificar_deportista.html',{'form':form,
                                                                    'existe':False})
 
+@login_required
+@all_permission_required('snd.add_deportista')
 def cambio_tipo_documento_deportista(request,id):
     """
     Agosto 15 /2015

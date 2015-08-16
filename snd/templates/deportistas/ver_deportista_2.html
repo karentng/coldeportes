@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Deportistas - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Ver Detalles de Deportista
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'deportista_listar' %}">Deportistas</a></li>
+    <li class="active">Ver Deportista</li>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .profile-image img {
+          display: block;
+          width: 100%;
+          max-height: 100%;
+        }
+    </style>
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
+            </a>
+        </div>
+        <h4 class="panel-title">
+            Información del deportista: {{deportista.nombres}} {{deportista.apellidos}}
+        </h4>
+    </div>
+    <div class="panel-body" style="padding:0">
+        <div class="row">
+            <div class="col-sm-12">
+                <img src="http://www.fitnessalud.com/wp-content/uploads/2014/04/entrenador-personal-fitness.jpg" alt="personal de apoyo" style="width:100%; height:250px">
+                <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                    <div class="panel-heading p-0">
+                        <div class="panel-heading-btn m-r-10 m-t-10">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
+
+                        <div class="tab-overflow">
+                            <ul class="nav nav-tabs">
+                                <li class="prev-button">
+                                    <a href="javascript:;" data-click="prev-tab" class="text-inverse">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                </li>
+
+                                <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-graduation-cap"></i> Composición Corporal</a></li>
+
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-briefcase"></i> Historial Deportivo</a></li>
+
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-briefcase"></i> Información Academica</a></li>
+
+                                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" style="margin-bottom:0px;padding-bottom:0px">
+                        <div class="tab-pane fade active in" id="nav-tab2-12" style="margin-bottom:0px">
+                            <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="profile-left">
+                                                <div class="profile-image">
+                                                    {%if deportista.foto %}
+                                                        <img src="{{MEDIA_URL}}{{deportista.foto}}">
+                                                    {%elif deportista.genero == "Mujer"%}
+                                                        <img src="{{STATIC_URL}}img/female.png" alt="" />
+                                                    {%else%}
+                                                        <img src="{{STATIC_URL}}img/male.png" alt="" />
+                                                    {%endif%}
+                                                    <i class="fa fa-user hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="profile-right">
+                                                <div class="col-lg-9">
+                                                    <p>{% if perms.snd.change_deporita and request.tenant.schema_name != 'public' %}
+                                                        <b>{{deportista.get_tipo_id_display | title}} </b>: {{deportista.identificacion}}<br />
+                                                    {% else %}
+                                                        <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
+                                                    {% endif %}</p>
+                                                    <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
+                                                    <p><b>Actividad:</b> {{deportista.get_actividad_display}}</p>
+                                                    <p><b>Género:</b> {{deportista.genero}}</p>
+                                                    <p><b>Edad:</b> {{ deportista.edad }}</p>
+                                                    <p><b>Disciplinas:</b> {{ deportista.disciplinas_str }}</p>
+                                                    <p><b>Etnia:</b> {{ deportista.etnia}}</p>
+                                                    <p><b>Nacionalidades:</b> {{deportista.nacionalidad_str}}</p>
+                                                    <p><b>Ciudad (Departamento) de Residencia:</b> {{ deportista.ciudad_residencia}}</p>
+                                                </div>
+                                            {% if perms.snd.change_deportista %}
+                                                <p><strong>Contacto:</strong></p>
+                                                <p><b>Teléfono:</b>{{deportista.telefono}}</p>
+                                                <p><b>Dirección:</b>{{deportista.direccion}}</p>
+                                                <p><b>Correo electrónico:</b>
+                                                {% if deportista.email %}
+                                                    {{deportista.email}}
+                                                {% else %}
+                                                    Ninguno
+                                                {% endif %}</p>
+                                                <p><b>Barrio:</b> {{ deportista.barrio }} <p/>
+                                                <p><b>Comuna:</b> {{ deportista.comuna }} <p/>
+                                            {% endif %}
+                                            <p><strong>Video:</strong></p>
+                                            {% if deportista.video %}
+                                                {{deportista.video}}
+                                            {% else %}
+                                                Ninguno
+                                            {% endif %}
+                                        </div>
+                                        </address>
+
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-tab2-13">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>DENOMINACIÓN DIPLOMA</th>
+                                                            <th>NIVEL</th>
+                                                            <th>INSTITUCIÓN FORMACIÓN</th>
+                                                            <th>PAÍS</th>
+                                                            <th>FECHA COMIENZO</th>
+                                                            <th>FECHA FIN</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for formacion in formacion_deportiva %}
+                                                        <tr>
+                                                            <td>{{formacion.denominacion_diploma}}</td>
+                                                            <td>{{formacion.nivel}}</td>
+                                                            <td>{{formacion.institucion_formacion}}</td>
+                                                            <td>{{formacion.pais_formacion}}</td>
+                                                            <td>{{formacion.fecha_comienzo}}</td>
+                                                            <td>
+                                                                {% if formacion.fecha_fin == None %}
+                                                                    ACTUAL
+                                                                {% else %}
+                                                                    {{ formacion.fecha_fin }}
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>NOMBRE CARGO</th>
+                                                            <th>INSTITUCIÓN</th>
+                                                            <th>FECHA COMIENZO</th>
+                                                            <th>FECHA FIN</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for experiencia in experiencia_laboral %}
+                                                        <tr>
+                                                            <td>{{experiencia.nombre_cargo}}</td>
+                                                            <td>{{experiencia.institucion}}</td>
+                                                            <td>{{experiencia.fecha_comienzo}}</td>
+                                                            <td>
+                                                                {% if formacion.fecha_fin == None %}
+                                                                    ACTUAL
+                                                                {% else %}
+                                                                    {{ formacion.fecha_fin }}
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/gallery-v2.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            Gallery.init();
+        });
+    </script>
+{% endblock %}
