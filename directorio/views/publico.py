@@ -27,7 +27,7 @@ def buscar_contenido_ciudad(texto, ciudad):
 
     return listado_resultados
     
-def buscar_contenido_actor(texto, actor):
+def buscar_contenido_actor(texto, actor, listado_resultados):
     if actor == 'ES':
         listado_resultados += list(EscenarioView.objects.filter(contenido__icontains=texto).distinct('id'))
     elif actor == 'CA':
