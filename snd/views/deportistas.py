@@ -384,7 +384,7 @@ def ver_deportista(request,id_depor):
     deportista.edad = calculate_age(deportista.fecha_nacimiento)
     deportista.disciplinas_str = ','.join(x.descripcion for x in deportista.disciplinas.all())
     deportista.nacionalidad_str = ','.join(x.nombre for x in deportista.nacionalidad.all())
-    return render(request,'deportistas/ver_deportista_2.html',{
+    return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
             'composicion':composicion,
             'historial_deportivo':historial_deportivo,
@@ -521,6 +521,7 @@ def cambio_tipo_documento_deportista(request,id):
             hist.save()
             messages.success(request,'Cambio de documento exitoso')
             return redirect('deportista_listar')
+        print(form.errors)
 
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form
