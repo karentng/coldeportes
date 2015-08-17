@@ -5,8 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
-from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto
-from snd.formularios.deportistas import DeportistaForm,ComposicionCorporalForm,HistorialDeportivoForm,InformacionAcademicaForm
+from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
 from .models import Transferencia
 import datetime
 from coldeportes.utilities import calculate_age
@@ -131,18 +130,80 @@ def procesar_transferencia(request,id_transfer,opcion):
         connection.set_tenant(request.tenant)
         ContentType.objects.clear_cache()
 
-        existe,posibilidades = existencia_objeto(objeto,tipo_objeto)
+        #Posibilidad de cambio de documento de deportista
+        existe,match = existencia_caso_cambio_tipo_id(request,objeto,tipo_objeto,entidad_cambio)
 
         if existe:
-            pass
+            id_old = match.identificacion
+            match.identificacion = objeto.identificacion
+            match.tipo_id = objeto.tipo_id
+            match.entidad = request.tenant
+            match.estado = 0
+
+            obj_dict = match.__dict__
+            del obj_dict['id']
+            del obj_dict['_entidad_cache']
+            del obj_dict['_state']
+
+            deportista, created = Deportista.objects.update_or_create(
+                identificacion=id_old,
+                defaults= obj_dict,
+            )
+            deportista.nacionalidades_obj = objeto.nacionalidades_obj
+            deportista.disciplinas_obj = objeto.disciplinas_obj
+            deportista.entidad = request.tenant
+            guardar_objeto(deportista,adicionales,tipo_objeto)
+            messages.success(request,'Transferencia recibida exitosamente')
+            transferido = deportista
 
         else:
             objeto.entidad = request.tenant
             objeto.estado = 0
             guardar_objeto(objeto,adicionales,tipo_objeto)
             messages.success(request,'Transferencia recibida exitosamente')
+            transferido = objeto
 
-    return finalizar_transferencia(request,entidad_cambio,objeto,tipo_objeto,transferencia)
+    return finalizar_transferencia(request,entidad_cambio,transferido,tipo_objeto,transferencia)
+
+def existencia_caso_cambio_tipo_id(request,objeto,tipo_objeto,entidad_saliente):
+    """
+    Agosto 13, 2015
+    Autor: Daniel Correa
+
+    Permite conocer si este caso de transferencia es un caso de cambio de documento por parte del deportista, es decir , el caso especial en transferencias:
+    Un deportista es transferido de la entidad Y a la entidad X , en dicha entidad cambia de tipo de documento , vuelve a la entidad Y, se debe verificar su existencia como transferido
+    para evitar registros duplicados
+
+    :param objeto: objeto transferible
+    :type id: string
+    :param tipo_objeto: tipo del objeto transferible
+    :type tipo_objeto: string
+    :return:
+    """
+    if tipo_objeto == 'Deportista':
+        try:
+           Deportista.objects.get(identificacion=objeto.identificacion)
+        except:
+            posibilidades = list(Deportista.objects.filter(nombres=objeto.nombres, apellidos=objeto.apellidos).exclude(tipo_id=objeto.tipo_id))
+            if len(posibilidades) == 0:
+                return False,None
+            else:
+                connection.set_tenant(entidad_saliente)
+                ContentType.objects.clear_cache()
+                for p in posibilidades:
+                    id_old = p.identificacion
+                    tipo_old = p.tipo_id
+                    try:
+                        CambioDocumentoDeportista.objects.get(deportista=objeto,tipo_documento_anterior=tipo_old,identificacion_anterior=id_old)
+                        connection.set_tenant(request.tenant)
+                        ContentType.objects.clear_cache()
+                        return True,p
+                    except:
+                        pass
+                connection.set_tenant(request.tenant)
+                ContentType.objects.clear_cache()
+
+    return False,None
 
 def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transferencia):
     """
@@ -383,7 +444,9 @@ def obtener_objeto(id_obj,tipo_objeto):
     Permite obtener los datos de un objeto para su procesamiento de transferencia
 
     :param id: id del objeto transferible
+    :type id: string
     :param tipo_objeto: tipo del objeto transferible
+    :type tipo_objeto: string
     :return:
     """
 
@@ -442,30 +505,6 @@ def obtener_objeto(id_obj,tipo_objeto):
         adicionales += Contacto.objects.filter(escenario=objeto)
 
     return objeto,adicionales
-
-def existencia_objeto(objeto,tipo_objeto):
-    """
-    Agosto 13, 2015
-    Autor: Daniel Correa
-
-    Permite conocer si este caso de transferencia es un caso de cambio de documento por parte del deportista, es decir , el caso especial en transferencias:
-    Un deportista es transferido de la entidad Y a la entidad X , en dicha entidad cambia de tipo de documento , vuelve a la entidad Y, se debe verificar su existencia como transferido
-    para evitar registros duplicados
-
-    :param objeto: objeto transferible
-    :param tipo_objeto: tipo del objeto transferible
-    :return:
-    """
-    if tipo_objeto == 'Deportista':
-        try:
-           obj = Deportista.objects.get(identificacion=objeto.identificacion)
-        except:
-            posibilidades = Deportista.objects.filter(nombres=objeto.nombres, apellidos=objeto.apellidos).exclude(tipo_id=objeto.tipo_id)
-            if len(posibilidades) == 0:
-                return False,None
-            else:
-                return True,posibilidades
-    return False,None
 
 @login_required
 def cancelar_transferencia(request,id_objeto,tipo_objeto):
