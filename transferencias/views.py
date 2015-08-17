@@ -8,7 +8,7 @@ from entidades.models import Entidad
 from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
 from .models import Transferencia
 import datetime
-from coldeportes.utilities import calculate_age
+from coldeportes.utilities import calculate_age,not_transferido_required
 # Create your views here.
 @login_required
 def generar_transferencia(request,tipo_transfer,tipo_persona,id):
@@ -53,6 +53,10 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         objeto.fotos=fotos
         objeto.tipo_objeto='Escenario'
         redir='listar_escenarios'
+
+    non_permission = not_transferido_required(objeto)
+    if non_permission:
+        return non_permission
 
     objeto.fecha = datetime.date.today()
     objeto.entidad = entidad_solicitante

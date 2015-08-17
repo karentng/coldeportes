@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from datetime import date
 from django.contrib.auth.models import *
+from snd.models import Deportista, PersonalApoyo, Escenario
 
 def inicializarComponentes():
     """
@@ -156,12 +157,17 @@ def calculate_age(born):
     else:
         return today.year - born.year
 
-def not_transferido_required(tipo):
-    def decorator(view_func):
-        print('dentro del decorador')
-        print(tipo)
-        return True
-    return decorator
+def not_transferido_required(objeto):
+    """
+    Agosto 17 / 2015
+    Autor: Daniel Correa
+
+    Permite validar si el estado del objeto es diferente a En transferencia o Transferido para ejecutar una funcionalidad de una vista
+
+    :param objeto: objeto transferible
+    """
+    if objeto.estado in (2,3):
+        return redirect('inicio_tenant')
 
 '''
     Julio 15 / 2015

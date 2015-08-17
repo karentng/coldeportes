@@ -84,6 +84,10 @@ def wizard_deportista(request,id_depor):
 
     deportista_form = DeportistaForm( instance=deportista)
 
+    non_permission = not_transferido_required(deportista)
+    if non_permission:
+        return non_permission
+
     if request.method == 'POST':
 
         deportista_form = DeportistaForm(request.POST, request.FILES, instance=deportista)
@@ -131,6 +135,11 @@ def wizard_corporal(request,id_depor):
         corporal = None
 
     deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(deportista)
+    if non_permission:
+        return non_permission
+
     mujer = False
     if deportista.genero == 'Mujer':
         mujer=True
@@ -176,6 +185,12 @@ def wizard_historia_deportiva(request,id_depor):
     except Exception:
         hist_depor = None
 
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(deportista)
+    if non_permission:
+        return non_permission
+
     hist_depor_form = HistorialDeportivoForm()
 
     if request.method == 'POST':
@@ -183,7 +198,7 @@ def wizard_historia_deportiva(request,id_depor):
 
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
-            hist_depor_nuevo.deportista = Deportista.objects.get(id=id_depor)
+            hist_depor_nuevo.deportista = deportista
             hist_depor_nuevo.nombre = hist_depor_nuevo.nombre.upper()
             hist_depor_nuevo.marca = hist_depor_nuevo.marca.upper()
             hist_depor_nuevo.modalidad = hist_depor_nuevo.modalidad.upper()
@@ -255,6 +270,12 @@ def wizard_historia_academica(request,id_depor):
     except Exception:
         inf_academ = None
 
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(deportista)
+    if non_permission:
+        return non_permission
+
     inf_academ_form = InformacionAcademicaForm()
 
     if request.method == 'POST':
@@ -262,7 +283,7 @@ def wizard_historia_academica(request,id_depor):
 
         if inf_academ_form.is_valid():
             inf_academ_nuevo = inf_academ_form.save(commit=False)
-            inf_academ_nuevo.deportista = Deportista.objects.get(id=id_depor)
+            inf_academ_nuevo.deportista = deportista
             inf_academ_nuevo.institucion = inf_academ_nuevo.institucion.upper()
             inf_academ_nuevo.profesion = inf_academ_nuevo.profesion.upper()
             inf_academ_nuevo.save()
@@ -324,6 +345,11 @@ def desactivar_deportista(request,id_depor):
     """
     try:
         deportista = Deportista.objects.get(id=id_depor)
+
+        non_permission = not_transferido_required(deportista)
+        if non_permission:
+            return non_permission
+
         estado_actual = deportista.estado
         deportista.estado = not estado_actual
         deportista.save()
@@ -489,7 +515,6 @@ def verificar_deportista(request):
 
 @login_required
 @all_permission_required('snd.add_deportista')
-#@not_transferido_required('Deportista')
 def cambio_tipo_documento_deportista(request,id):
     """
     Agosto 15 /2015
@@ -506,6 +531,10 @@ def cambio_tipo_documento_deportista(request,id):
         depor = Deportista.objects.get(id=id)
     except:
         messages.error(request,'Error: Deportista no encontrado')
+
+    non_permission = not_transferido_required(depor)
+    if non_permission:
+        return non_permission
 
     tipo_id_ant = depor.tipo_id
     id_ant = depor.identificacion

@@ -8,6 +8,7 @@ from snd.models import *
 from entidades.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from coldeportes.utilities import not_transferido_required
 
 
 @login_required
@@ -66,7 +67,11 @@ def desactivar_escenario(request, escenario_id):
     except ObjectDoesNotExist:
         messages.warning(request, "El escenario que intenta acceder no existe.")
         return redirect('listar_escenarios')
-        
+
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     estado_actual = escenario.estado
     escenario.estado = not(estado_actual)
     escenario.save()
@@ -170,6 +175,10 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     identificacion_form = IdentificacionForm( instance=escenario)
 
     if request.method == 'POST':
@@ -216,6 +225,12 @@ def wizard_caracterizacion(request, escenario_id):
     except Exception:
         caracteristicas = None
 
+    escenario = Escenario.objects.get(id=escenario_id)
+
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
 
     if request.method == 'POST':
@@ -223,7 +238,7 @@ def wizard_caracterizacion(request, escenario_id):
 
         if caracterizacion_form.is_valid():
             caracteristicas = caracterizacion_form.save(commit=False)
-            caracteristicas.escenario = Escenario.objects.get(id=escenario_id)
+            caracteristicas.escenario = escenario
             caracteristicas.save()
             caracterizacion_form.save()
             return redirect('wizard_horarios', escenario_id)
@@ -259,6 +274,12 @@ def wizard_horarios(request, escenario_id):
     except Exception:
         horarios = None
 
+    escenario = Escenario.objects.get(id=escenario_id)
+
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     horarios_form = HorariosDisponibleForm()
 
     if request.method == 'POST':
@@ -266,7 +287,7 @@ def wizard_horarios(request, escenario_id):
 
         if horarios_form.is_valid():
             horario_nuevo = horarios_form.save(commit=False)
-            horario_nuevo.escenario = Escenario.objects.get(id=escenario_id)
+            horario_nuevo.escenario = escenario
             horario_nuevo.save()
             horarios_form.save()
             return redirect('wizard_horarios', escenario_id)
@@ -303,6 +324,12 @@ def wizard_historicos(request, escenario_id):
     except Exception:
         historicos = None
 
+    escenario = Escenario.objects.get(id=escenario_id)
+
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     historico_form = DatoHistoricoForm()
 
     if request.method == 'POST':
@@ -310,7 +337,7 @@ def wizard_historicos(request, escenario_id):
 
         if historico_form.is_valid():
             historico_nuevo = historico_form.save(commit=False)
-            historico_nuevo.escenario = Escenario.objects.get(id=escenario_id)
+            historico_nuevo.escenario = escenario
             historico_nuevo.save()
             return redirect('wizard_historicos', escenario_id)
 
@@ -347,6 +374,12 @@ def wizard_fotos(request, escenario_id):
     except Exception:
         fotos = None
 
+    escenario = Escenario.objects.get(id=escenario_id)
+
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     fotos_form = FotoEscenarioForm()
 
     if request.method == 'POST':
@@ -354,7 +387,7 @@ def wizard_fotos(request, escenario_id):
 
         if fotos_form.is_valid():
             foto_nueva = fotos_form.save(commit=False)
-            foto_nueva.escenario = Escenario.objects.get(id=escenario_id)
+            foto_nueva.escenario = escenario
             foto_nueva.save()
             return redirect('wizard_fotos', escenario_id)
 
@@ -391,6 +424,12 @@ def wizard_videos(request, escenario_id):
     except Exception:
         videos = None
 
+    escenario = Escenario.objects.get(id=escenario_id)
+
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     videos_form = VideoEscenarioForm()
 
     if request.method == 'POST':
@@ -398,7 +437,7 @@ def wizard_videos(request, escenario_id):
 
         if videos_form.is_valid():
             video_nuevo = videos_form.save(commit=False)
-            video_nuevo.escenario = Escenario.objects.get(id=escenario_id)
+            video_nuevo.escenario = escenario
             video_nuevo.save()
             return redirect('wizard_videos', escenario_id)
 
@@ -435,6 +474,12 @@ def wizard_contactos(request, escenario_id):
     except Exception:
         contactos = None
 
+    escenario = Escenario.objects.get(id=escenario_id)
+
+    non_permission = not_transferido_required(escenario)
+    if non_permission:
+        return non_permission
+
     contactos_form = ContactoForm()
 
     if request.method == 'POST':
@@ -442,7 +487,7 @@ def wizard_contactos(request, escenario_id):
 
         if contactos_form.is_valid():
             contacto_nuevo = contactos_form.save(commit=False)
-            contacto_nuevo.escenario = Escenario.objects.get(id=escenario_id)
+            contacto_nuevo.escenario = escenario
             contacto_nuevo.nombre = contacto_nuevo.nombre.upper()
             contacto_nuevo.save()
             #messages.success(request, "¡Escenario guardado exitósamente!")

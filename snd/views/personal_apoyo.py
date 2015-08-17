@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from snd.formularios.personal_apoyo import PersonalApoyoForm, FormacionDeportivaForm, ExperienciaLaboralForm, VerificarExistenciaForm
 from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
-from coldeportes.utilities import calculate_age
+from coldeportes.utilities import calculate_age,not_transferido_required
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from entidades.models import Entidad
@@ -25,7 +25,6 @@ def wizard_personal_apoyo_nuevo(request):
     :param request: Petición Realizada
     :type request:    WSGIRequest
     """
-
 
     try:
         datos = request.session['datos']
@@ -105,6 +104,10 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
     except Exception:
         personal_apoyo = None
 
+    non_permission = not_transferido_required(personal_apoyo)
+    if non_permission:
+        return non_permission
+
     personal_apoyo_form = PersonalApoyoForm(instance=personal_apoyo)
 
     if request.method == 'POST':
@@ -152,13 +155,20 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         formacion_deportiva = FormacionDeportiva.objects.filter(personal_apoyo=id_personal_apoyo)
     except Exception:
         formacion_deportiva = None
+
+    personal_apoyo= PersonalApoyo.objects.get(id=id_personal_apoyo)
+
+    non_permission = not_transferido_required(personal_apoyo)
+    if non_permission:
+        return non_permission
+
     formaciondep_form = FormacionDeportivaForm()
 
     if request.method == 'POST':
         formaciondep_form = FormacionDeportivaForm(request.POST)
         if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
-            formacion_deportiva.personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+            formacion_deportiva.personal_apoyo = personal_apoyo
             formacion_deportiva.denominacion_diploma = formacion_deportiva.denominacion_diploma.upper()
             formacion_deportiva.nivel = formacion_deportiva.nivel.upper()
             formacion_deportiva.institucion_formacion = formacion_deportiva.institucion_formacion.upper()
@@ -224,6 +234,12 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
     except Exception:
         experiencia_laboral = None
 
+    personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+
+    non_permission = not_transferido_required(personal_apoyo)
+    if non_permission:
+        return non_permission
+
     experiencia_laboral_form = ExperienciaLaboralForm()
 
     if request.method == 'POST':
@@ -231,7 +247,7 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
 
         if experiencia_laboral_form.is_valid():
             experiencia_laboral_nuevo = experiencia_laboral_form.save(commit=False)
-            experiencia_laboral_nuevo.personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+            experiencia_laboral_nuevo.personal_apoyo = personal_apoyo
             experiencia_laboral_nuevo.nombre_cargo = experiencia_laboral_nuevo.nombre_cargo.upper()
             experiencia_laboral_nuevo.institucion = experiencia_laboral_nuevo.institucion.upper()
             experiencia_laboral_nuevo.save()
@@ -292,7 +308,16 @@ def desactivar_personal_apoyo(request,id_personal_apoyo):
     :param id_personal_apoyo: Llave primaria del personal de apoyo
     :type id_personal_apoyo: String
     """
-    personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    try:
+        personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    except:
+        messages.error(request, "Error: Personal de apoyo no existe .")
+        return redirect('personal_apoyo_listar')
+
+    non_permission = not_transferido_required(personal_apoyo)
+    if non_permission:
+        return non_permission
+
     estado_actual = personal_apoyo.estado
     personal_apoyo.estado = not(estado_actual)
     personal_apoyo.save()
