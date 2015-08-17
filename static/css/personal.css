@@ -5,3 +5,37 @@
 .form-control-feedback{
     top: -10px !important;
 }
+
+
+.footer{
+    bottom: 0;
+	z-index:1020;
+	padding:10px 0;
+	margin:0 0px 0 220px;
+	line-height:20px
+}
+
+.contenido-footer{
+    padding: 8px 40px;
+    font-size: 14px;
+    z-index: 20;
+    font-weight: 300;
+    min-width: 680px;
+}
+
+.item-footer{
+    padding-right:40px;
+    display: inline-block;
+}
+
+.contact-footer{
+    vertical-align:middle;
+    font-weight: bold;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+
+#footer{
+    background: rgba(0, 0, 0, 0.7) none repeat scroll 0% 0%;
+    color: #999;
+}
