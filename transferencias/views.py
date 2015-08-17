@@ -528,31 +528,21 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
     """
 
     objeto = ''
-    obj_trans = None
     if tipo_objeto=='1':
         objeto = 'Deportista'
         redir = 'deportista_listar'
-        try:
-            obj_trans = Deportista.objects.get(id=id_objeto)
-        except:
-            messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
-            return redirect(redir)
     elif tipo_objeto=='2':
         objeto='PersonalApoyo'
         redir='personal_apoyo_listar'
-        try:
-            obj_trans = PersonalApoyo.objects.get(id=id_objeto)
-        except:
-            messages.error(request,'Error: No se puede procesar la solicitud, PersonalApoyo no existe')
-            return redirect(redir)
     elif tipo_objeto=='3':
         objeto='Escenario'
         redir='listar_escenarios'
-        try:
-            obj_trans = Escenario.objects.get(id=id_objeto)
-        except:
-            messages.error(request,'Error: No se puede procesar la solicitud, Escenario no existe')
-            return redirect(redir)
+
+    try:
+        obj_trans = globals()[objeto].objects.get(id=id_objeto)
+    except:
+        messages.error(request,'Error: No se puede procesar la solicitud, '+objeto+' no existe')
+        return redirect(redir)
 
     obj_trans.estado = 0
     obj_trans.save()
