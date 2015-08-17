@@ -11,7 +11,7 @@ from snd.formularios.deportistas  import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
-from coldeportes.utilities import calculate_age,all_permission_required
+from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required
 
 
 @login_required
@@ -487,6 +487,9 @@ def verificar_deportista(request):
     return render(request,'deportistas/verificar_deportista.html',{'form':form,
                                                                    'existe':False})
 
+@login_required
+@all_permission_required('snd.add_deportista')
+#@not_transferido_required('Deportista')
 def cambio_tipo_documento_deportista(request,id):
     """
     Agosto 15 /2015
@@ -519,6 +522,7 @@ def cambio_tipo_documento_deportista(request,id):
             hist.save()
             messages.success(request,'Cambio de documento exitoso')
             return redirect('deportista_listar')
+        print(form.errors)
 
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form

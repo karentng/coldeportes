@@ -11,286 +11,299 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'deportista_listar' %}">Deportistas</a></li>
     <li class="active">Ver Deportista</li>
 {% endblock %}
 
 {% block css %}
-    <style type="text/css">
-    .funciones li{
-        list-style: none;
-        display: list-item;
-        line-height: 20px;
-    }
-    .funciones li:before {
-        margin-right: 10px;
-    }
+    <style>
+        .profile-image img {
+          display: block;
+          width: 100%;
+          max-height: 100%;
+        }
     </style>
 {% endblock %}
 
-{% block titulo_panel %}
-    Detalles del Deportista
-{% endblock %}
 
-{% block contenido_panel %}
-<div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
-    <div class="panel-heading p-0">
-        <div class="panel-heading-btn m-r-10 m-t-10">
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+{% block contenido %}
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
+            </a>
+            <a href="">
+                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
+            </a>
         </div>
-        <!-- begin nav-tabs -->
-        <div class="tab-overflow">
-            <ul class="nav nav-tabs">
-                <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
-                <li class="active"><a href="#nav-tab2-1" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-                <li class=""><a href="#nav-tab2-2" data-toggle="tab"><i class="fa fa-paint-brush"></i> Composición Corporal</a></li>
-                {% if historial_deportivo %}<li class=""><a href="#nav-tab2-3" data-toggle="tab"><i class="fa fa-paint-brush"></i> Historial Deportivo</a></li>{% endif %}
-                {% if informacion_academica %}<li class=""><a href="#nav-tab2-4" data-toggle="tab"><i class="fa fa-paint-brush"></i> Información Academica</a></li>{% endif %}
-                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
-            </ul>
-        </div>
+        <h4 class="panel-title">
+            Información del deportista: {{deportista.nombres}} {{deportista.apellidos}}
+        </h4>
     </div>
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="nav-tab2-1">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_deportistas_nacionales' %}
-                                 {% else %}
-                                    {% url 'deportista_listar' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{deportista.nombres}} {{deportista.apellidos}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                            <ul class="media-list">
+    <div class="panel-body" style="padding:0">
+        <div class="row">
+            <div class="col-sm-12">
+                <img src="http://www.fitnessalud.com/wp-content/uploads/2014/04/entrenador-personal-fitness.jpg" alt="personal de apoyo" style="width:100%; height:250px">
+                <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                    <div class="panel-heading p-0">
+                        <div class="panel-heading-btn m-r-10 m-t-10">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
 
-                                <li class="media">
-                                    <a href="javascript:;" class="media-left"></a>
-                                    {%if deportista.foto%}
-                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="" style="float: left; width=100 height=100" />
-                                    {%elif deportista.genero == "Hombre"%}
-                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" width="60" height="60"/>
-                                    {%else%}
-                                        <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" width="60" height="60"/>
-                                    {%endif%}
-                                    <div class="media-body">
-                                        <div class="col-lg-6">
-                                        <p style="margin-left: 50px">
-                                            {% if perms.snd.change_deportista and not tenant_nacional%}
-                                                Identificación: {{deportista.tipo_id}}: {{deportista.identificacion}}<br />
-                                            {% else %}
-                                                Entidad: {{ deportista.entidad }}
-                                            {% endif %}
-                                            Género: {{deportista.genero}}<br/>
-                                            Edad: {{ deportista.edad }}<br/>
-                                            Nacionalidades: {{deportista.nacionalidad_str}}<br/>
-                                            Ciudad (Departamento) de Residencia:
-                                            {% if deportista.ciudad_residencia %}
-                                                {{ deportista.ciudad_residencia }}
-                                            {% else %}
-                                                Ninguna
-                                            {% endif %}<br/>
-                                            Disciplinas: {{ deportista.disciplinas_str }}<br/>
+                        <div class="tab-overflow">
+                            <ul class="nav nav-tabs">
+                                <li class="prev-button">
+                                    <a href="javascript:;" data-click="prev-tab" class="text-inverse">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                </li>
+
+                                <li class="active"><a href="#nav-tab2-11" data-toggle="tab"><i class="fa fa-globe"></i> Datos de Identificación</a></li>
+
+                                <li class=""><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-stethoscope"></i> Composición Corporal</a></li>
+
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="ion fa-md ion-trophy"></i> Historial Deportivo</a></li>
+
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-graduation-cap"></i> Información Academica</a></li>
+
+                                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" style="margin-bottom:0px;padding-bottom:0px">
+                        <div class="tab-pane fade active in" id="nav-tab2-11" style="margin-bottom:0px">
+                            <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="profile-left">
+                                                <div class="profile-image">
+                                                    {%if deportista.foto %}
+                                                        <img src="{{MEDIA_URL}}{{deportista.foto}}">
+                                                    {%elif deportista.genero == "Mujer"%}
+                                                        <img src="{{STATIC_URL}}img/female.png" alt="" />
+                                                    {%else%}
+                                                        <img src="{{STATIC_URL}}img/male.png" alt="" />
+                                                    {%endif%}
+                                                    <i class="fa fa-user hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="profile-right">
+                                                <div class="col-lg-9">
+                                                    <p>{% if perms.snd.change_deporita and request.tenant.schema_name != 'public' %}
+                                                        <b>{{deportista.get_tipo_id_display | title}} </b>: {{deportista.identificacion}}<br />
+                                                    {% else %}
+                                                        <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
+                                                    {% endif %}</p>
+                                                    <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
+                                                    <p><b>Actividad:</b> {{deportista.get_actividad_display}}</p>
+                                                    <p><b>Género:</b> {{deportista.genero}}</p>
+                                                    <p><b>Edad:</b> {{ deportista.edad }}</p>
+                                                    <p><b>Disciplinas:</b> {{ deportista.disciplinas_str }}</p>
+                                                    <p><b>Etnia:</b> {{ deportista.etnia}}</p>
+                                                    <p><b>Nacionalidades:</b> {{deportista.nacionalidad_str}}</p>
+                                                    <p><b>Ciudad (Departamento) de Residencia:</b> {{ deportista.ciudad_residencia}}</p>
+                                                </div>
                                             {% if perms.snd.change_deportista %}
-                                                <strong>Contacto:</strong> <br/>
-                                                Teléfono: {{deportista.telefono}}<br/>
-                                                Direccion: {{deportista.direccion}}<br/>
-                                                Email:
+                                                <p><strong>Contacto:</strong></p>
+                                                <p><b>Teléfono:</b> {{deportista.telefono}}</p>
+                                                <p><b>Dirección:</b> {{deportista.direccion}}</p>
+                                                <p><b>Correo electrónico:</b>
                                                 {% if deportista.email %}
                                                     {{deportista.email}}
                                                 {% else %}
                                                     Ninguno
-                                                {% endif %}<br/>
-                                                <strong>Ubicación:</strong> <br/>
-                                                Barrio: {{ deportista.barrio }} <br/>
-                                                Comuna: {{ deportista.comuna }} <br/>
-                                                Etinia: {%if deportista.etinia %}{{ deportista.etnia}} {%else%} Ninguna {%endif%}
+                                                {% endif %}</p>
+                                                <p><b>Barrio:</b> {{ deportista.barrio }} <p/>
+                                                <p><b>Comuna:</b> {{ deportista.comuna }} <p/>
                                             {% endif %}
-
-                                        </p>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <strong>Video:</strong><br/>
+                                            <p><strong>Video:</strong></p>
                                             {% if deportista.video %}
                                                 {{deportista.video}}
                                             {% else %}
                                                 Ninguno
                                             {% endif %}
                                         </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </address>
-                    </div>                    
-                </div>
-            </div>
-        </div>
-        <!-- COMPOSICION CORPORAL -->
-        <div class="tab-pane fade" id="nav-tab2-2">
-            <div class="invoice">
-                <div class="invoice-company">
-                    <span class="pull-right hidden-print">
-                    <a href="{% if tenant_nacional %}
-                                    {% url 'listar_deportistas_nacionales' %}
-                                 {% else %}
-                                    {% url 'deportista_listar' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                    </span>
-                    {{deportista.nombres}} {{deportista.apellidos}}
-                </div>
-                <div class="invoice-header">
-                    <div class="invoice-from">
-                        <address class="m-t-5 m-b-5">
-                            <ul class="media-list">
+                                        </address>
 
-                                <li class="media">
-                                    <a href="javascript:;" class="media-left"></a>
-                                    {%if deportista.foto%}
-                                        <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{deportista.foto}}" alt="Foto del Deportista" style="float: left; width=100 height=100" />
-                                    {%else%}
-                                        <span class="fa fa-4x fa-smile-o media-object" style="float: left;"></span>
-                                    {%endif%}
-                                    <div class="media-body">
-                                        <div class="col-lg-6">
-                                            <p style="margin-left: 50px">
-                                            <strong>Composicion Corporal:</strong><br/>
-                                                Camisa: {{ composicion.talla_camisa }}<br/>
-                                                Pantaloneta: {{ composicion.talla_pantaloneta }}<br/>
-                                                Zapato: {{ composicion.talla_zapato }}<br/>
-                                                Indice de Masa Corporal: {{composicion.imc}} kg/m^2<br/>
-                                                Porcentaje Grasa: {{ composicion.porcentaje_grasa }}% <br/>
-                                                Masa Muscular Magra: {{ composicion.masa_corporal_magra }} kg <br/>
-                                                <b>EPS:</b> {{composicion.eps}}
-                                            </p>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <br/>
-                                             <strong> {{ composicion.RH }} </strong><br/>
-                                            <strong> {{ composicion.estatura }} cm</strong><br/>
-                                            <strong> {{ composicion.peso }} kg</strong>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
                                         </div>
                                     </div>
-                                </li>
-                            </ul>
-                        </address>
+                                </div>
+                            </div>
+                        </div>
+                        <!--COMPOSICION CORPORAL-->
+                        <div class="tab-pane fade" id="nav-tab2-12">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="col-lg-6">
+                                                <p><strong>Composicion Corporal:</strong></p>
+                                                <p><b>Camisa:</b> {{ composicion.talla_camisa }}</p>
+                                                <p><b>Pantaloneta:</b> {{ composicion.talla_pantaloneta }}<p/>
+                                                <p><b>Zapato:</b>{{ composicion.talla_zapato }}</p>
+                                                <p><b>Indice de Masa Corporal:</b> {{composicion.imc}} kg/m^2</p>
+                                                <p><b>Porcentaje Grasa:</b> {{ composicion.porcentaje_grasa }}% </p>
+                                                <p><b>Masa Muscular Magra:</b> {{ composicion.masa_corporal_magra }} kg </p>
+                                                <p><b>EPS:</b> {{composicion.eps}}</p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <br/>
+                                                 <strong> {{ composicion.RH }} </strong><br/>
+                                                <strong> {{ composicion.estatura }} cm</strong><br/>
+                                                <strong> {{ composicion.peso }} kg</strong>
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--HISTORIAL DEPORTIVO-->
+                        <div class="tab-pane fade" id="nav-tab2-13">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>NOMBRE COMPETENCIA</th>
+                                                            <th>FECHA INICIAL</th>
+                                                            <th>FECHA FINALIZACIÓN</th>
+                                                            <th>PAÍS</th>
+                                                            <th>INSTITUCIÓN O EQUIPO</th>
+                                                            <th>TIPO</th>
+                                                            <th>PUESTO</th>
+                                                            <th>CATEGORIA</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for historial in historial_deportivo %}
+                                                            <tr>
+                                                                <td>{{historial.nombre}}</td>
+                                                                <td>{{historial.fecha_inicial}}</td>
+                                                                <td>
+                                                                    {% if not historial.actual %}
+                                                                        {{ historial.fecha_final }}
+                                                                    {% else %}
+                                                                        Actual
+                                                                    {%endif%}
+                                                                </td>
+                                                                <td>{{historial.pais}}</td>
+                                                                <td>
+                                                                    {% if historial.institucion_equipo %}
+                                                                        {{ historial.institucion_equipo }}
+                                                                    {% else %}
+                                                                        Ninguno
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>{{historial.tipo}}</td>
+                                                                <td>{{historial.puesto}}</td>
+                                                                <td>{{historial.categoria}}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                                {%if not historial_deportivo%}
+                                                    <p align="center">No hay resultados disponibles</p>
+                                                {%endif%}
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--INFORMACION ACADEMICA-->
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>INSTITUCIÓN</th>
+                                                            <th>NIVEL</th>
+                                                            <th>ESTADO</th>
+                                                            <th>PROFESIÓN</th>
+                                                            <th>PAÍS</th>
+                                                            <th>AÑO FINALIZACIÓN</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for academico in informacion_academica %}
+                                                            <tr>
+                                                                <td>{{academico.institucion}}</td>
+                                                                <td>{{academico.nivel}}</td>
+                                                                <td>{{academico.estado}}</td>
+                                                                <td>{% if academico.profesion %}{{ academico.profesion }}{% else %}N/A{% endif %}</td>
+                                                                <td>{{ academico.pais }}</td>
+                                                                <td>{% if academico.fecha_finalizacion %}{{ academico.fecha_finalizacion }}{% else %}Actual{% endif %}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                                {%if not informacion_academica%}
+                                                    <p align="center">No hay resultados disponibles</p>
+                                                {%endif%}
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.jpg" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <!--HISTORIAL DEPORTIVO-->
-        {% if historial_deportivo %}
-            <div class="tab-pane fade" id="nav-tab2-3">
-                <div class="invoice">
-                    <div class="invoice-company">
-                        <span class="pull-right hidden-print">
-                        <a href="{% if tenant_nacional %}
-                                    {% url 'listar_deportistas_nacionales' %}
-                                 {% else %}
-                                    {% url 'deportista_listar' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                        </span>
-                        {{deportista.nombres}} {{deportista.apellidos}}
-                    </div>
-                    <div class="invoice-content">
-                        <div class="table-responsive">
-                            <table class="table table-invoice">
-                                <thead>
-                                    <tr>
-                                        <th>NOMBRE COMPETENCIA</th>
-                                        <th>FECHA INICIAL</th>
-                                        <th>FECHA FINALIZACIÓN</th>
-                                        <th>PAÍS</th>
-                                        <th>INSTITUCIÓN O EQUIPO</th>
-                                        <th>TIPO</th>
-                                        <th>PUESTO</th>
-                                        <th>CATEGORIA</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for historial in historial_deportivo %}
-                                    <tr>
-                                        <td>{{historial.nombre}}</td>
-                                        <td>{{historial.fecha_inicial}}</td>
-                                        <td>
-                                            {% if not historial.actual %}
-                                                {{ historial.fecha_final }}
-                                            {% else %}
-                                                ACTUAL
-                                            {%endif%}
-                                        </td>
-                                        <td>{{historial.pais}}</td>
-                                        <td>
-                                            {% if historial.institucion_equipo %}
-                                                {{ historial.institucion_equipo }}
-                                            {% else %}
-                                                Ninguno
-                                            {% endif %}
-                                        </td>
-                                        <td>{{historial.tipo}}</td>
-                                        <td>{{historial.puesto}}</td>
-                                        <td>{{historial.categoria}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <!--INFORMACION ACADEMICA-->
-        {% if informacion_academica %}
-            <div class="tab-pane fade" id="nav-tab2-4">
-                <div class="invoice">
-                    <div class="invoice-company">
-                        <span class="pull-right hidden-print">
-                        <a href="{% if tenant_nacional %}
-                                    {% url 'listar_deportistas_nacionales' %}
-                                 {% else %}
-                                    {% url 'deportista_listar' %}
-                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                        </span>
-                        {{deportista.nombres}} {{deportista.apellidos}}
-                    </div>
-                    <div class="invoice-content">
-                        <div class="table-responsive">
-                            <table class="table table-invoice">
-                                <thead>
-                                    <tr>
-                                        <th>INSTITUCIÓN</th>
-                                        <th>NIVEL</th>
-                                        <th>ESTADO</th>
-                                        <th>PROFESIÓN</th>
-                                        <th>PAÍS</th>
-                                        <th>AÑO FINALIZACIÓN</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for academico in informacion_academica %}
-                                    <tr>
-                                        <td>{{academico.institucion}}</td>
-                                        <td>{{academico.nivel}}</td>
-                                        <td>{{academico.estado}}</td>
-                                        <td>{% if academico.profesion %}{{ academico.profesion }}{% else %}N/A{% endif %}</td>
-                                        <td>{{ academico.pais }}</td>
-                                        <td>{% if academico.fecha_finalizacion %}{{ academico.fecha_finalizacion }}{% else %}N/A{% endif %}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     </div>
 </div>
 
+{% endblock %}
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+        });
+    </script>
 {% endblock %}

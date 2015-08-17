@@ -156,6 +156,13 @@ def calculate_age(born):
     else:
         return today.year - born.year
 
+def not_transferido_required(tipo):
+    def decorator(view_func):
+        print('dentro del decorador')
+        print(tipo)
+        return True
+    return decorator
+
 '''
     Julio 15 / 2015
     Funciones que verifican los decoradores definidos y si cumple agrega el patrón de url a grupo de patrones

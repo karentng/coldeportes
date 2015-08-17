@@ -22,6 +22,8 @@ class CambioDocumentoForm(ModelForm):
         self.fields['tipo_documento_nuevo'] = adicionarClase(self.fields['tipo_documento_nuevo'], 'one')
         self.fields['tipo_documento_anterior'].widget.attrs.update({'readonly': True})
         self.fields['identificacion_anterior'].widget.attrs.update({'readonly': True})
+        self.fields['tipo_documento_anterior'].widget.attrs.update({'form': 'form-cambio-documento'})
+        self.fields['identificacion_anterior'].widget.attrs.update({'form': 'form-cambio-documento'})
 
     class Meta:
         model = CambioDocumentoDeportista
