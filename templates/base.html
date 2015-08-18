@@ -50,7 +50,7 @@
             <div class="container-fluid">
                 <!-- begin mobile sidebar expand / collapse button -->
                 <div class="navbar-header">
-                    <img src="{{STATIC_URL}}img/LogoSND.jpg" alt="logoSND" style="margin-top:5px">
+                    <img src="{{STATIC_URL}}img/LogoSND.png" alt="logoSND" style="margin-top:5px">
                     
                     <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
                         <span class="icon-bar"></span>
@@ -151,6 +151,20 @@
                 <!-- end sidebar user -->
                 <!-- begin sidebar nav -->
                 <ul class="nav">
+					<li class="nav-profile">
+						<div class="info">
+							Entidad: <br/>
+							<span class="label label-success">
+                                {% if request.tenant.schema_name == 'public' %}
+							        COLDEPORTES
+							    {% else %}
+                                    {{ request.tenant.nombre | upper}}
+                                {% endif %}
+                            </span>
+						</div>
+					</li>
+				</ul>
+                <ul class="nav">
                     <li class="nav-header"><span class="colorMenu">Navegación</span></li>
                         {% include "menus/plantilla.html" %}
 
@@ -212,20 +226,23 @@
         </div>
 
         <div class="footer" id="footer">
-            <div class="contenido-footer">
-                <div class="item-footer">
+            <div class="row contenido-footer">
+                <div class="col-md-2 item-footer p-b-15">
                     <img src="{{STATIC_URL}}img/prosperidad.png" width="160">
                 </div>
-                <div class="item-footer">
+                <div class="col-md-3 item-footer p-b-15">
                     <img src="{{STATIC_URL}}img/coldeportes.png" width="260">
                 </div>
-                <div class="item-footer contact-footer">
+                <div class="col-md-4 item-footer contact-footer">
                     <p>
-                        Coldeportes Av. 68 No 55-65 PBX: conmutador 57-1- 4377030
+                        Coldeportes Av. 68 No 55-65
+                        PBX: conmutador 57-1- 4377030
                         <br/>
-                        Linea gratuita nacional 01 8000 910 237
+                        Linea gratuita nacional:
+                        01 8000 910 237
                         <br/>
-                        Linea gratuita Bogota 57-1- 2258745/ FAX 57-1 - 6300369
+                        Linea gratuita Bogota:
+                        57-1- 2258745/ FAX 57-1 - 6300369
                     </p>
                 </div>
             </div>
