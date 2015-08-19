@@ -9,7 +9,7 @@
 
 .contenido-footer{
     padding: 8px 40px;
-    font-size: 14px;
+    font-size: 12px;
     z-index: 20;
     font-weight: 300;
     min-width: 680px;
@@ -17,7 +17,6 @@
 
 .item-footer{
     padding-right:40px;
-
 }
 
 .contact-footer{
