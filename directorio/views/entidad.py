@@ -118,3 +118,6 @@ def directorio_buscar(request):
         'form': form,
         'listado_resultados': listado_resultados,
     })
+
+#@login_required
+#def ver_detalles(request, id, grupo):
