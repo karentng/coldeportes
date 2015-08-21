@@ -8,9 +8,10 @@
 
 .contenido-footer{
     padding: 8px 40px;
-    font-size: 12px;
+    font-size: 11px;
     z-index: 20;
     font-weight: 300;
+    line-height: 140%;
 }
 
 .item-footer{
