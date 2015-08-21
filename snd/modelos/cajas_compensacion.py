@@ -30,6 +30,9 @@ class CajaCompensacion(models.Model):
     estado = models.IntegerField(choices=tipo_estado, default=0, verbose_name="estado del Escenario")
     descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
     ciudad = models.ForeignKey(Ciudad)
+    nombre_contacto =  models.CharField(max_length=50)
+    telefono_contacto = models.CharField(max_length=20)
+    email = models.EmailField()
 
 class HorarioDisponibilidadCajas(models.Model):
     caja_compensacion = models.ForeignKey(CajaCompensacion)
@@ -43,11 +46,3 @@ class Tarifa(models.Model):
     titulo = models.CharField(max_length=100)
     precio = models.PositiveIntegerField()
     descripcion = models.TextField(verbose_name='descripción', null=True)
-
-class ContactoCajas(models.Model):
-    caja_compensacion = models.ForeignKey(CajaCompensacion)
-    nombre =  models.CharField(max_length=50)
-    telefono = models.CharField(max_length=20)
-    email = models.EmailField()
-    descripcion = models.CharField(max_length=1024, null=True)
-    
