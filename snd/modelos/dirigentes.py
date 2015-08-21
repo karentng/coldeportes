@@ -68,9 +68,16 @@ class DirigenteCargo(models.Model):
             fecha_retiro = 'Actual'
         return "{0} [{1} a {2}]".format(self.nombre, self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
 
+    def periodo(self):
+        if self.fecha_retiro != None:
+            fecha_retiro = self.fecha_retiro.strftime('%d de %B de %Y')
+        else:
+            fecha_retiro = 'Actual'
+        return "{0} a {1}".format(self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
+
 class DirigenteFuncion(models.Model):
     dirigente = models.ForeignKey(Dirigente)
     cargo = models.ForeignKey(DirigenteCargo)
-    descripcion = models.TextField(max_length=200, verbose_name="Descripción")
+    descripcion = models.TextField(max_length=200, verbose_name="Función")
 
 
