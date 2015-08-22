@@ -6,6 +6,7 @@ from django.db.models import Q
 from snd.modelos_de_datos import MODELOS_DE_DATOS
 import operator
 import json
+from operator import methodcaller
 
 def obtenerCantidadColumnas(request, modelo):
     columnas = MODELOS_DE_DATOS[modelo][2]
@@ -51,8 +52,12 @@ def obtenerDato(modelo, campos):
         else:
             try:
                 valor = getattr(modelo, campo)
+                print(valor)
                 if valor.__class__.__name__ == 'ManyRelatedManager':
                     valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
+                elif valor.__class__.__name__ == 'method':
+                    valor = valor()
+                    valor = ('%s'%valor)
                 else:
                     valor = ('%s'%valor)
             except Exception:

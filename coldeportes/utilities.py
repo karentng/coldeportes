@@ -4,7 +4,6 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from datetime import date
 from django.contrib.auth.models import *
-from snd.models import Deportista, PersonalApoyo, Escenario
 
 def inicializarComponentes():
     """
