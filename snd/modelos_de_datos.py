@@ -1,3 +1,4 @@
+import operator
 from snd.models import *
 
 '''
@@ -57,12 +58,83 @@ MODELOS_DE_DATOS = (
         None,
         [
             [
-                "Ver Deportista" ,
+                "Ver Deportista",
                 'ver_deportista',
                 ['id'],
                 'fa-eye',
                 None
             ],
+            [
+                "Editar",
+                'edicion_deportista',
+                ['id'],
+                'fa-gear',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "CTD",
+                'cambio_documento_deportista',
+                ['id'],
+                'fa-archive',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "A/I",
+                'deportista_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+
+            ],
+            [
+                "Transferir",
+                'generar_transferencia',
+                ['1','1','id'],
+                'fa-exchange',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "Cancelar Transferencia",
+                'cancelar_transferencia',
+                ['id','1'],
+                'fa-times',
+                [
+                    [
+                        ['estado'],
+                        ['EN TRANSFERENCIA'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+
         ]
     ),
 )

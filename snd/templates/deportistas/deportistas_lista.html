@@ -32,6 +32,11 @@
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+			$(".add-tooltip").tooltip();
+		});
+    </script>
 {% endblock %}
 
 {% block contenido_panel %}
