@@ -138,7 +138,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
             }
             urls.append(datosURL)
 
-        acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls})
+        acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls,"objeto":objeto})
         aux.append(acciones)
 
         datos.append(aux)
