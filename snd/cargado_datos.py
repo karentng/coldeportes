@@ -52,12 +52,13 @@ def obtenerDato(modelo, campos):
         else:
             try:
                 valor = getattr(modelo, campo)
-                print(valor)
                 if valor.__class__.__name__ == 'ManyRelatedManager':
                     valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
                 elif valor.__class__.__name__ == 'method':
                     valor = valor()
                     valor = ('%s'%valor)
+                if valor.__class__.__name__ == "ImageFieldFile":
+                    valor = render_to_string("configuracionDataTables.html", {"tipo": "foto", "valor": valor})
                 else:
                     valor = ('%s'%valor)
             except Exception:

@@ -52,8 +52,8 @@ MODELOS_DE_DATOS = (
     ),
     (
         Deportista,
-        ["nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","disciplinas_deportivas","estado"],
-        ["Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Disciplinas","Estado"],
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","disciplinas_deportivas","estado"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Disciplinas","Estado"],
         None,
         [
             [
