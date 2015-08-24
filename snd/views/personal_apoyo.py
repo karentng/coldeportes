@@ -393,12 +393,13 @@ def verificar_personal_apoyo(request):
 
         if form.is_valid():
             datos = {
-                'identificacion': form.cleaned_data['identificacion']
+                'identificacion': form.cleaned_data['identificacion'],
+                'tipo_id': form.cleaned_data['tipo_id']
             }
 
             #Verificación de existencia dentro del tenant actual
             try:
-                personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'])
+                personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
             except Exception:
                 personal_apoyo = None
 
@@ -419,7 +420,7 @@ def verificar_personal_apoyo(request):
                     connection.set_tenant(entidad)
                     ContentType.objects.clear_cache()
                     try:
-                        personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'])
+                        personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
                         existencia = True
                         tenant_existencia = entidad
                         break

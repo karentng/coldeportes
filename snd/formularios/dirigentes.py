@@ -6,12 +6,12 @@ from coldeportes.utilities import adicionarClase
 
 
 class DirigenteVerificarExistenciaForm(forms.Form):
-    """TIPO_IDENTIDAD = (
-        ('CED', 'CÉDULA DE CIUDADANÍA'),
-        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
-        ('PAS', 'PASAPORTE'),
+    TIPO_IDENTIDAD = (
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
     )
-    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
+    tipo_identificacion = forms.ChoiceField(label='Tipo de documento',choices=TIPO_IDENTIDAD)
     identificacion = forms.CharField(label="Identificación del dirigente")
 
 class DirigenteForm(ModelForm):

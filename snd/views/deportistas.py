@@ -458,12 +458,13 @@ def verificar_deportista(request):
 
         if form.is_valid():
             datos = {
-                'identificacion': form.cleaned_data['identificacion']
+                'identificacion': form.cleaned_data['identificacion'],
+                'tipo_id': form.cleaned_data['tipo_id']
             }
 
             #Verificación de existencia dentro del tenant actual
             try:
-                deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
             except Exception:
                 deportista = None
 
@@ -484,7 +485,7 @@ def verificar_deportista(request):
                     connection.set_tenant(entidad)
                     ContentType.objects.clear_cache()
                     try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
                         existencia = True
                         tenant_existencia = entidad
                         break
