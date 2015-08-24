@@ -32,8 +32,8 @@
 
 {%if tipo == 'foto' %}
 	{% if valor	%}
-		<img class="media-object rounded-corner" src="/media/{{valor}}" alt="Foto" width="60" height="60" />
+		<img class="media-object rounded-corner" src="{{MEDIA_URL}}{{valor}}" alt="Foto" width="60" height="60" />
 	{%else%}
-		<img class="media-object" src="/static/img/depor_default.png" alt="Foto del Deportista" width="60" height="60"/>
+		<img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="60" height="60"/>
 	{%endif%}
 {%endif%}

@@ -7,6 +7,7 @@ from snd.modelos_de_datos import MODELOS_DE_DATOS
 import operator
 import json
 from operator import methodcaller
+from coldeportes.settings import STATIC_URL,MEDIA_URL
 
 def obtenerCantidadColumnas(request, modelo):
     columnas = MODELOS_DE_DATOS[modelo][2]
@@ -58,7 +59,7 @@ def obtenerDato(modelo, campos):
                     valor = valor()
                     valor = ('%s'%valor)
                 if valor.__class__.__name__ == "ImageFieldFile":
-                    valor = render_to_string("configuracionDataTables.html", {"tipo": "foto", "valor": valor})
+                    valor = render_to_string("configuracionDataTables.html", {"tipo": "foto", "valor": valor,"MEDIA_URL":MEDIA_URL,"STATIC_URL":STATIC_URL})
                 else:
                     valor = ('%s'%valor)
             except Exception:
