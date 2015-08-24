@@ -23,7 +23,7 @@ def buscar_contenido_ciudad(texto, ciudad, listado_resultados):
     listado_resultados += list(DeportistaView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
     listado_resultados += list(PersonalApoyoView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
     listado_resultados += list(DirigenteView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
-    listado_resultados += list(CajaCompensacionView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
+    listado_resultados += list(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id'))
 
     return listado_resultados
     
