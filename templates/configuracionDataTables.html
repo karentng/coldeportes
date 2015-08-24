@@ -4,10 +4,21 @@
 
 {% if tipo == 'urlsOpciones'%}
 	{% for i in urls %}
-	    <a href='{{i.url}}' >
-	    	<i class="fa {{i.imagen}}"></i> {{i.nombre}}
-	    </a>
+		{%if i.nombre == 'A/I' or i.nombre == 'Activar/Desactivar' %}
+			<a href="#"  data-target="#modal-desactivate" data-toggle="modal" data-url="{{i.url}}" onclick="urlModal(this);">
+		{%else%}
+			<a href='{{i.url}}' >
+		{%endif%}
+				<i class="fa {{i.imagen}}"></i> {{i.nombre}}
+			</a>
+
+		{%if i.nombre == 'CTD' %}
+			<i id="tool-ctd" class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Cambiar documento de identificación"></i>
+		{% elif i.nombre == 'A/I' %}
+			<i id="tool-ai" class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Activar / Inactivar"></i>
+		{%endif%}
 	    <br/>
+
 	{% endfor %}
 {% endif %}
 
@@ -18,3 +29,11 @@
 	{% endfor %}
 	</ul>
 {% endif %}
+
+{%if tipo == 'foto' %}
+	{% if valor	%}
+		<img class="media-object rounded-corner" src="{{MEDIA_URL}}{{valor}}" alt="Foto" width="60" height="60" />
+	{%else%}
+		<img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="60" height="60"/>
+	{%endif%}
+{%endif%}
