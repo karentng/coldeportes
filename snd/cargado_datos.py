@@ -6,6 +6,8 @@ from django.db.models import Q
 from snd.modelos_de_datos import MODELOS_DE_DATOS
 import operator
 import json
+from operator import methodcaller
+from coldeportes.settings import STATIC_URL,MEDIA_URL
 
 def obtenerCantidadColumnas(request, modelo):
     columnas = MODELOS_DE_DATOS[modelo][2]
@@ -53,6 +55,11 @@ def obtenerDato(modelo, campos):
                 valor = getattr(modelo, campo)
                 if valor.__class__.__name__ == 'ManyRelatedManager':
                     valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
+                elif valor.__class__.__name__ == 'method':
+                    valor = valor()
+                    valor = ('%s'%valor)
+                if valor.__class__.__name__ == "ImageFieldFile":
+                    valor = render_to_string("configuracionDataTables.html", {"tipo": "foto", "valor": valor,"MEDIA_URL":MEDIA_URL,"STATIC_URL":STATIC_URL})
                 else:
                     valor = ('%s'%valor)
             except Exception:
@@ -131,8 +138,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
                 "imagen": i[3],
             }
             urls.append(datosURL)
-
-        acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls})
+        acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls,"objeto":objeto})
         aux.append(acciones)
 
         datos.append(aux)

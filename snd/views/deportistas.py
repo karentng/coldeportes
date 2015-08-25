@@ -374,9 +374,6 @@ def listar_deportista(request):
     """
 
     deportistas = Deportista.objects.all()
-    for dep in deportistas:
-        dep.edad = calculate_age(dep.fecha_nacimiento)
-        dep.disciplinas_deportivas = ",".join(str(x) for x in dep.disciplinas.all())
 
     return render(request, 'deportistas/deportistas_lista.html', {
         'deportistas':deportistas,
@@ -407,15 +404,12 @@ def ver_deportista(request,id_depor):
         composicion = composicion[0]
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista)
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
-    deportista.edad = calculate_age(deportista.fecha_nacimiento)
-    deportista.disciplinas_str = ','.join(x.descripcion for x in deportista.disciplinas.all())
-    deportista.nacionalidad_str = ','.join(x.nombre for x in deportista.nacionalidad.all())
     return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
             'composicion':composicion,
             'historial_deportivo':historial_deportivo,
             'informacion_academica':informacion_academica
-        })
+    })
 
 @login_required
 @all_permission_required('snd.add_deportista')
@@ -464,12 +458,13 @@ def verificar_deportista(request):
 
         if form.is_valid():
             datos = {
-                'identificacion': form.cleaned_data['identificacion']
+                'identificacion': form.cleaned_data['identificacion'],
+                'tipo_id': form.cleaned_data['tipo_id']
             }
 
             #Verificación de existencia dentro del tenant actual
             try:
-                deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
             except Exception:
                 deportista = None
 
@@ -490,7 +485,7 @@ def verificar_deportista(request):
                     connection.set_tenant(entidad)
                     ContentType.objects.clear_cache()
                     try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
                         existencia = True
                         tenant_existencia = entidad
                         break

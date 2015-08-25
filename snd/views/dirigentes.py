@@ -402,12 +402,13 @@ def verificar(request):
 
         if form.is_valid():
             datos = {
-                'identificacion': form.cleaned_data['identificacion']
+                'identificacion': form.cleaned_data['identificacion'],
+                'tipo_identificacion': form.cleaned_data['tipo_identificacion']
             }
 
             #Verificación de existencia dentro del tenant actual
             try:
-                dirigente = Dirigente.objects.get(identificacion=datos['identificacion'])
+                dirigente = Dirigente.objects.get(identificacion=datos['identificacion'],tipo_identificacion=datos['tipo_identificacion'])
             except Exception:
                 dirigente = None
 
