@@ -1,7 +1,7 @@
 from django.db import connection
 
 def checkear_inicializacion_directorio():
-    try:
+    """try:
         EscenarioView.objects.all().exists()
         CAFView.objects.all().exists()
         DeportistaView.objects.all().exists()
@@ -9,8 +9,8 @@ def checkear_inicializacion_directorio():
         DirigenteView.objects.all().exists()
         CajaCompensacionView.objects.all().exists()
 
-    except Exception:
-        crear_vistas()
+    except Exception:"""
+    crear_vistas()
 
 def crear_vistas():
     sql = """create or replace view directorio_escenarioview as 
@@ -42,7 +42,7 @@ def crear_vistas():
     create or replace view directorio_cafview as 
     select  CAF.id, CAF.nombre,
             CAF.direccion, CAF.latitud,         
-            CAF.longitud, CAF.telefono,
+            CAF.longitud, CAF.telefono as telefono_contacto,
             CAF.altura, CAF.email,
             CAF.web, CAF.ciudad_id, CAF.comuna,      
             CAF.barrio, CAF.estrato,        
@@ -57,7 +57,7 @@ def crear_vistas():
     create or replace view directorio_deportistaview as 
     select  D.id, D.nombres,
             D.apellidos, D.genero,         
-            D.direccion, D.telefono,
+            D.direccion, D.telefono as telefono_contacto,
             D.ciudad_residencia_id,
             D.email,  
             D.comuna, D.barrio,
@@ -72,7 +72,7 @@ def crear_vistas():
 
     create or replace view directorio_personalapoyoview as
     select  EN.id, EN.nombres,
-            EN.telefono_fijo,
+            EN.telefono_fijo as telefono_contacto,
             EN.apellidos, EN.genero,         
             EN.telefono_celular,
             EN.ciudad_id,
@@ -91,7 +91,7 @@ def crear_vistas():
     select  DI.id, DI.nombres,
             DI.apellidos, DI.genero,
             DI.ciudad_residencia_id,
-            DI.email, DI.telefono, 
+            DI.email, DI.telefono as telefono_contacto, 
             DIN.nacionalidad_id,         
             DI.entidad_id, DI.estado,       
             DI.foto,     
@@ -107,12 +107,10 @@ def crear_vistas():
             CC.ciudad_id,
             CC.clasificacion,
             CC.foto,
-            CO.telefono, CO.email,
-            CO.nombre as nombre_contacto,
-            CO.descripcion,
+            CC.telefono_contacto, CC.email,
+            CC.nombre_contacto,
             CC.nombre||' '||EN.nombre as contenido
     from snd_cajacompensacion CC
-    LEFT join snd_contactocajas CO on CO.caja_compensacion_id=CC.id
     LEFT join public.entidades_entidad EN on CC.entidad_id=EN.id;"""
 
     cursor = connection.cursor()

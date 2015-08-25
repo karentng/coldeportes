@@ -19,7 +19,7 @@
 		var superboximg   = $('<img src="" class="superbox-current-img">');
 		var superboxclose = $('<div class="superbox-close"></div>');
 		
-		superbox.append(tituloDiv).append(descripcionDiv).append(superboximg).append(superboxclose);
+		superbox.append(superboximg).append(tituloDiv).append(descripcionDiv).append(superboxclose);
 		
 		 
 		var X = this.each(function() {
@@ -31,8 +31,8 @@
 				var offset = $('.superbox').attr('data-offset');
 				    offset = (offset) ? offset : 0;
 				
-				var titulo = "<div><h1 style='color:white'>"+currentimg.data('titulo')+"</h1></div>";
-				var descripcion = "<div><h5 style='color:white'>"+currentimg.data('descripcion')+"</h5></div>";
+				var titulo = "<div><h5 style='color:white'><b>"+currentimg.data('titulo')+"</b></h5></div>";
+				var descripcion = "<div><h6 style='color:white'>"+currentimg.data('descripcion')+"</h6></div>";
 				tituloDiv.html(titulo);
 				descripcionDiv.html(descripcion);
 				

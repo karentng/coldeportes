@@ -64,7 +64,7 @@ def inicio(request):
     if request.user.is_authenticated():
         # lectura y creación de vistas del directorio sql
         
-        try:
+        """try:
             EscenarioView.objects.all().exists()
             CAFView.objects.all().exists()
             DeportistaView.objects.all().exists()
@@ -73,8 +73,8 @@ def inicio(request):
             CajaCompensacionView.objects.all().exists()
 
         except Exception:
-            pass
-            crear_vistas()
+            pass"""
+        crear_vistas()
 
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')

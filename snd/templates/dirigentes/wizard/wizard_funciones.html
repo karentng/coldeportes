@@ -19,17 +19,17 @@
                         </legend>
                         {% bootstrap_form form layout='vertical' %}
 
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>              
                     </div>
                 </div>
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Funciones Actuales:</h4>
+                <h4>Funciones del Cargo:</h4>
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Descripción de la función</th>
+                            <th align="center">Función</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +41,7 @@
         <ul class="pager bwizard-buttons">
             <a href="{% url 'dirigentes_wizard_cargos' dirigente_id %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
             <a href="{% url 'dirigentes_finalizar' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i>{% trans ' Finalizar' %}</a>
-            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i>{% trans ' Finalizar y Guardar Nuevo →' %}</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i>{% trans ' Guardar y registrar otro dirigente →' %}</a>
         </ul>
 
 {% endblock %}

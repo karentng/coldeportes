@@ -46,7 +46,7 @@ def finalizar_ccf(request, opcion):
     messages.success(request, "CCF registrado correctamente.")
     if opcion=='nuevo':
         return redirect('wizard_caja')
-    elif opcion=='listar':
+    else:
         return redirect('listar_ccfs')
 
 @login_required
@@ -98,13 +98,11 @@ def ver_ccf(request, ccf_id):
         return redirect('listar_ccfs')
     horarios = HorarioDisponibilidadCajas.objects.filter(caja_compensacion=ccf_id)
     tarifas = Tarifa.objects.filter(caja_compensacion=ccf_id)
-    contactos = ContactoCajas.objects.filter(caja_compensacion=ccf_id)
 
     return render(request, 'cajas_compensacion/ver_ccf.html', {
         'ccf': ccf,
         'horarios': horarios,
         'tarifas': tarifas,
-        'contactos': contactos
     })
 
 @login_required
@@ -226,53 +224,6 @@ def wizard_horarios_ccf(request, ccf_id):
         'ccf_id': ccf_id
     })
 
-
-
-@login_required
-def wizard_contactos_ccf(request, ccf_id):
-    """
-    Julio 5 / 2015
-    Autor: Karent Narvaez Grisales
-    
-    Contactos de un escenario de caja de compensación
-
-    Se obtienen el formulario para subir contactos y se muestran los que actualmente hay añadidos al escenario
-    y si hay modificaciones se guardan.
-    Si el escenario es nuevo se inicializa en nulo.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param ccf_id:   Identificador del escenario
-    :type ccf_id:    String
-    """
-
-    try:
-        contactos = ContactoCajas.objects.filter(caja_compensacion=ccf_id)
-    except Exception:
-        contactos = None
-
-    contactos_form = ContactoCajasForm()
-
-    if request.method == 'POST':
-        contactos_form = ContactoCajasForm(request.POST)
-
-        if contactos_form.is_valid():
-            contacto_nuevo = contactos_form.save(commit=False)
-            contacto_nuevo.caja_compensacion = CajaCompensacion.objects.get(id=ccf_id)
-            contacto_nuevo.nombre = contacto_nuevo.nombre.upper()
-            contacto_nuevo.save()
-            #messages.success(request, "¡Escenario guardado exitósamente!")
-            return redirect('wizard_contactos_ccf', ccf_id)
-
-
-    return render(request, 'cajas_compensacion/wizard/wizard_4.html', {
-        'titulo': 'Contactos de la CCF',
-        'wizard_stage': 4,
-        'form': contactos_form,
-        'contactos': contactos,
-        'ccf_id': ccf_id
-    })
-
 @login_required
 def wizard_tarifas_ccf(request, ccf_id):
     """
@@ -341,34 +292,6 @@ def eliminar_horario_ccf(request, ccf_id, horario_id):
 
     except Exception:
         return redirect('wizard_horarios_ccf', ccf_id)
-
-
-
-
-@login_required
-def eliminar_contacto_ccf(request, ccf_id, contacto_id):
-    """
-    Julio 5 / 2015
-    Autor: Karent Narvaez Grisales
-    
-    Eliminar contacto de Caja de Compensación
-
-    Se obtienen el contacto de la base de datos y se elimina
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param ccf_id:   Identificador del escenario
-    :type ccf_id:    String
-    :param contacto_id:   Identificador del contacto
-    :type contacto_id:    String
-    """
-
-    try:
-        contacto = ContactoCajas.objects.get(id=contacto_id, caja_compensacion=ccf_id)
-        contacto.delete()
-        return redirect('wizard_contactos_ccf', ccf_id)
-    except Exception:
-        return redirect('wizard_contactos_ccf', ccf_id)
 
 
 @login_required

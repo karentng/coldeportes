@@ -44,7 +44,7 @@ class CAFView(models.Model):
     direccion = models.CharField(max_length=100, verbose_name="dirección")
     latitud = models.FloatField(max_length=10)
     longitud = models.FloatField(max_length=10)
-    telefono = models.CharField(max_length=50, verbose_name="teléfono")
+    telefono_contacto = models.CharField(max_length=50, verbose_name="teléfono")
     altura = models.FloatField(max_length=10)    
     email = models.EmailField()
     web = models.URLField(verbose_name="página web", blank=True, null=True)
@@ -73,7 +73,7 @@ class DeportistaView(models.Model):
     barrio = models.CharField(max_length=100,verbose_name='Barrio')
     comuna = models.CharField(max_length=100,verbose_name='Comuna')
     email = models.EmailField(null=True,blank=True)
-    telefono = models.CharField(max_length=100,verbose_name='Telefono')
+    telefono_contacto = models.CharField(max_length=100,verbose_name='Telefono')
     direccion = models.CharField(max_length=100,verbose_name='Direccion')
     estado = models.IntegerField(default=0, verbose_name="estado del Deportista")
     etnia = models.CharField(max_length=20, blank=True)
@@ -88,7 +88,7 @@ class PersonalApoyoView(models.Model):
         managed = False
     #campos deportista
     nombres = models.CharField(max_length=100, verbose_name='Nombres')
-    telefono_fijo = models.CharField(max_length=100,verbose_name='Telefono')
+    telefono_contacto = models.CharField(max_length=100,verbose_name='Telefono')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
     genero = models.CharField(verbose_name='Género', max_length=11)
     telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
@@ -111,7 +111,7 @@ class DirigenteView(models.Model):
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(max_length=6, verbose_name='Género')
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
-    telefono = models.CharField(max_length=100, verbose_name="Teléfono")
+    telefono_contacto = models.CharField(max_length=100, verbose_name="Teléfono")
     email = models.EmailField(null=True,blank=True)
     nacionalidad = models.ForeignKey(Nacionalidad)
     estado = models.IntegerField(default=0, verbose_name="Estado del dirigente")    
@@ -131,9 +131,8 @@ class CajaCompensacionView(models.Model):
     estado = models.IntegerField(default=0, verbose_name="estado del Escenario")    
     entidad = models.ForeignKey(Entidad) 
     nombre_contacto =  models.CharField(max_length=50)
-    telefono = models.CharField(max_length=20)
+    telefono_contacto = models.CharField(max_length=20)
     email = models.EmailField()
-    descripcion = models.CharField(max_length=1024, null=True)
     #campo para búsqueda
     contenido = models.TextField()
 

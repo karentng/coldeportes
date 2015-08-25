@@ -152,20 +152,23 @@
                 <!-- begin sidebar nav -->
                 <ul class="nav">
 					<li class="nav-profile">
+                        Entidad: <br/>
 						<div class="info">
-							Entidad: <br/>
-							<span class="label label-success">
-                                {% if request.tenant.schema_name == 'public' %}
-							        COLDEPORTES
-							    {% else %}
-                                    {{ request.tenant.nombre | upper}}
-                                {% endif %}
-                            </span>
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-success" style="width: 100%">
+                                <b>
+                                    {% if request.tenant.schema_name == 'public' %}
+                                        COLDEPORTES
+                                    {% else %}
+                                        {{ request.tenant.nombre | upper}}
+                                    {% endif %}
+                                    </b>
+                                </div>
+                            </div>
 						</div>
 					</li>
 				</ul>
                 <ul class="nav">
-                    <li class="nav-header"><span class="colorMenu">Navegación</span></li>
                         {% include "menus/plantilla.html" %}
 
                     <!-- begin sidebar minify button -->
@@ -225,25 +228,27 @@
             {% endblock %}
         </div>
 
-        <div class="footer" id="footer">
-            <div class="row contenido-footer">
-                <div class="col-md-2 item-footer p-b-15">
-                    <img src="{{STATIC_URL}}img/prosperidad.png" width="160">
-                </div>
-                <div class="col-md-3 item-footer p-b-15">
-                    <img src="{{STATIC_URL}}img/coldeportes.png" width="260">
-                </div>
-                <div class="col-md-4 item-footer contact-footer">
-                    <p>
-                        Coldeportes Av. 68 No 55-65
-                        PBX: conmutador 57-1- 4377030
-                        <br/>
-                        Linea gratuita nacional:
-                        01 8000 910 237
-                        <br/>
-                        Linea gratuita Bogota:
-                        57-1- 2258745/ FAX 57-1 - 6300369
-                    </p>
+        <div class="footer hidden-xs hidden-sm" id="footer">
+            <div class=" contenido-footer">
+                <div class="row" align="center">
+                    <div class="col-md-4 col-lg-3 item-footer p-b-15">
+                        <img src="{{STATIC_URL}}img/LogoPais.svg" width="200">
+                    </div>
+                    <div class="col-md-4 col-lg-4 item-footer p-b-15">
+                        <img src="{{STATIC_URL}}img/LogoColdeportes.svg" width="260">
+                    </div>
+                    <div class="col-md-4 col-lg-5 item-footer contact-footer" style="padding:35px" align="justify">
+                        <p>
+                            Coldeportes Av. 68 No 55-65
+                            PBX: conmutador 57-1- 4377030
+                            <br/>
+                            Linea gratuita nacional:
+                            01 8000 910 237
+                            <br/>
+                            Linea gratuita Bogota:
+                            57-1- 2258745/ FAX 57-1 - 6300369
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

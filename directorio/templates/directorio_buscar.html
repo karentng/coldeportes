@@ -17,37 +17,44 @@
 {% block panel_botones %}
 {% endblock %}
 
-{% block contenido_panel %}
-    <div class="row">
-        <form  method="POST">{% csrf_token %}
-            <div class="col-md-10">       
-            {% for field in form %}
-                <div class="col-md-4">
-                    {% bootstrap_field field layout="vertical" %}
-                </div>
-            {% endfor %}
+{% block contenido %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <form  method="POST">{% csrf_token %}
+                    <div class="col-md-10">       
+                    {% for field in form %}
+                        <div class="col-md-4">
+                            {% bootstrap_field field layout="vertical" %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                    </br>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="fa fa-search"></span> Buscar
+                        </button>
+                    </div>
+                </form>
             </div>
-            </br>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">
-                    <span class="fa fa-search"></span> Buscar
-                </button>
-            </div>
-        </form>
-    </div></br></br>
+        </div>
+    </div>
+</div>
+</br></br>
     {% if listado_resultados %}
-        <div style="margin-left:70px;">       
+        <div style="margin-left:25px;">       
             <h1 class="page-header">Resultados Obtenidos</h1>
             <div id="options" class="m-b-10">
                 <span class="gallery-option-set" id="filter" data-option-key="filter">
                     <a href="#show-all" class="btn btn-primary btn-xs active" data-option-value="*">
-                        Mostrar Todos
+                        Todos
                     </a>
                     <a href="#CajaCompensancionView" class="btn btn-primary btn-xs" data-option-value=".CajaCompensacionView">
                         Cajas de Compensación
                     </a>
                     <a href="#CAFView" class="btn btn-primary btn-xs" data-option-value=".CAFView">
-                        Centro de Acondicionamiento
+                        Centros de Acondicionamiento
                     </a>
                     <a href="#DeportistaView" class="btn btn-primary btn-xs" data-option-value=".DeportistaView">
                         Deportistas
@@ -69,22 +76,21 @@
             {% for resultado in tupla %}
                 <div class="image {{resultado.grupo}}" >
                     <div class="image-inner">
-                        <a href="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.png{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" data-lightbox="{{resultado.grupo}}">
-                            <img src="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.png{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" alt="" />
+                        <a href="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" data-lightbox="{{resultado.grupo}}">
+                            <img src="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" alt="" />
                         </a>
-                        <p class="image-caption">
-                            {{resultado.ciudad.nombre}}{{resultado.ciudad_residencia.nombre}}
-                        </p>
                     </div>
                     <div class="image-info">
-                        <h5 class="title">{{resultado.nombre}} {{resultado.nombres}} {{resultado.apellidos}}</h5>
-                        <div class="pull-right">
-                            <small>Entidad: </small> <a href="javascript:;">{{resultado.entidad.nombre}}</a>
-                        </div>
-                        <button class="btn btn-xs btn-warning">Ver Detalles</button>                        
-                        <div class="desc">
-                            Dirección: {{resultado.direccion}},</br>  {{resultado.ciudad.nombre}} {{resultado.ciudad_residencia.nombre}}
-                        </div>
+                        <h5 class="title">{{resultado.nombre}} {{resultado.nombres}} {{resultado.apellidos}}</h5>                        
+                        <b>Entidad:</b> {{resultado.entidad.nombre}}<br>                        
+                        {{resultado.direccion}}<br>  
+                        {{resultado.ciudad.nombre}} {{resultado.ciudad_residencia.nombre}}<br>
+                        <button class="btn-link" data-html="true" data-container="body" data-toggle="popover" data-placement="top" 
+                            data-content="Teléfono: {% if resultado.telefono_contacto %}{{resultado.telefono_contacto}}{% else %}No hay información.{% endif %}<br/>
+                            Celular: {% if resultado.telefono_celular %}{{resultado.telefono_celular}}{% else %}No hay información.{% endif %}<br/>
+                            Contacto: {% if resultado.nombre_contacto %}{{resultado.nombre_contacto}} {% else %}No hay información.{% endif %}">
+                          Ver Teléfonos
+                        </button>                        
                     </div>
                 </div>
             {% endfor %}                    
@@ -123,4 +129,5 @@
             Gallery.init();
         });
     </script>
+
 {% endblock %}

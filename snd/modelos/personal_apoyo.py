@@ -24,7 +24,6 @@ class PersonalApoyo(models.Model):
     )
 
     TIPO_IDENTIDAD = (
-        ('TI', 'TARJETA DE IDENTIDAD'),
         ('CC', 'CÉDULA DE CIUDADANÍA'),
         ('CE', 'CÉDULA DE EXTRANJERÍA'),
         ('PS', 'PASAPORTE'),
