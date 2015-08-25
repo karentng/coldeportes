@@ -13,9 +13,9 @@
 			</a>
 
 		{%if i.nombre == 'CTD' %}
-			<i id="tool-ctd" class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Cambiar documento de identificación"></i>
+			<i class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Cambiar documento de identificación"></i>
 		{% elif i.nombre == 'A/I' %}
-			<i id="tool-ai" class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Activar / Inactivar"></i>
+			<i class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Activar / Inactivar"></i>
 		{%endif%}
 	    <br/>
 
@@ -37,3 +37,9 @@
 		<img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="60" height="60"/>
 	{%endif%}
 {%endif%}
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            $(".add-tooltip").tooltip();
+		});
+</script>
