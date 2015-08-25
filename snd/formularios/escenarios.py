@@ -74,6 +74,7 @@ class DatoHistoricoForm(ModelForm):
         
 
 class FotoEscenarioForm(ModelForm):
+
     class Meta:
         model = Foto
         exclude = ('escenario',)

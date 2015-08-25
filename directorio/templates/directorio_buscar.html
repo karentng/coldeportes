@@ -76,7 +76,7 @@
             {% for resultado in tupla %}
                 <div class="image {{resultado.grupo}}" >
                     <div class="image-inner">
-                        <a href="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.png{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" data-lightbox="{{resultado.grupo}}">
+                        <a href="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" data-lightbox="{{resultado.grupo}}">
                             <img src="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" alt="" />
                         </a>
                     </div>
