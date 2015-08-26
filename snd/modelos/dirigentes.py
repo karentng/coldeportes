@@ -24,7 +24,7 @@ class Dirigente(models.Model):
     TIPO_IDENTIFICACION = (
         ('CC', "Cédula de ciudadanía"),
         ('CE', "Cédula de extranjería"),
-        ('PT', "Pasaporte"),
+        ('PS', "Pasaporte"),
     )
     ESTADOS = (
         (0, "Activo"),
