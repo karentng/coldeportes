@@ -64,7 +64,11 @@
                         <tr>
                             <td align="center">{{plan.nombre}}</td>
                             <td align="center">{{plan.precio}}</td>
-                            <td align="center">{{plan.descripcion|linebreaksbr}}</td>
+                            <td align="justify">
+                                <div style="height:100px; overflow-y:scroll">
+                                    {{plan.descripcion|linebreaksbr}}
+                                </div>
+                            </td>
                             <td align="center">
                                 <a href="#modal-desactivate{{plan.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate{{plan.id}}">

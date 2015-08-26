@@ -1,7 +1,7 @@
 from django.db import connection
 
 def checkear_inicializacion_directorio():
-    try:
+    """try:
         EscenarioView.objects.all().exists()
         CAFView.objects.all().exists()
         DeportistaView.objects.all().exists()
@@ -9,8 +9,8 @@ def checkear_inicializacion_directorio():
         DirigenteView.objects.all().exists()
         CajaCompensacionView.objects.all().exists()
 
-    except Exception:
-        crear_vistas()
+    except Exception:"""
+    crear_vistas()
 
 def crear_vistas():
     sql = """create or replace view directorio_escenarioview as 
