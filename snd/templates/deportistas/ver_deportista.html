@@ -101,7 +101,7 @@
                                             </div>
                                             <div class="profile-right">
                                                 <div class="col-lg-9">
-                                                    <p>{% if perms.snd.change_deporita and request.tenant.schema_name != 'public' %}
+                                                    <p>{% if perms.snd.change_deportista and request.tenant.schema_name != 'public' %}
                                                         <b>{{deportista.get_tipo_id_display | title}} </b>: {{deportista.identificacion}}<br />
                                                     {% else %}
                                                         <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
