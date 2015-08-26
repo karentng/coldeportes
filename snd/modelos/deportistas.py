@@ -2,7 +2,9 @@
 
 from entidades.models import *
 from django.db import models
-
+from coldeportes.utilities import calculate_age
+from django.db.models.fields.files import ImageFieldFile, FileField
+from coldeportes.settings import STATIC_URL
 
 class Deportista(models.Model):
     #Datos personales
@@ -60,6 +62,14 @@ class Deportista(models.Model):
     def __str__(self):
         return self.nombres+" "+self.apellidos
 
+    def edad(self):
+        return calculate_age(self.fecha_nacimiento)
+
+    def disciplinas_deportivas(self):
+        return ",".join(str(x) for x in self.disciplinas.all())
+
+    def nacionalidad_str(self):
+        return ",".join(x.nombre for x in self.nacionalidad.all())
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):

@@ -22,9 +22,9 @@ class Dirigente(models.Model):
         ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIFICACION = (
-        ('CC', "Cédula de ciudadanía"),
-        ('CE', "Cédula de extranjería"),
-        ('PS', "Pasaporte"),
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
     )
     ESTADOS = (
         (0, "Activo"),
