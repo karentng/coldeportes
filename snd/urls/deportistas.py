@@ -22,4 +22,9 @@ urlpatterns = patterns('snd.views.deportistas',
     url(r'^finalizar/(?P<opcion>.+)$', 'finalizar_deportista', name='finalizar_deportista'),
     url(r'^ver/(\d+)$','ver_deportista',name='ver_deportista'),
     url(r'^cambio-documento/(\d+)$','cambio_tipo_documento_deportista',name='cambio_documento_deportista'),
+
+    #Urls de aval
+    url(r'^avalar-record$','avalar_logros_deportivos',name='avalar_logros_deportivos'),
+    url(r'^avalar-record/aceptar/(\d+)/(\d+)$','aceptar_logros_deportivos',name='aceptar_logros_deportivos'),
+    url(r'^avalar-record/rechazar/(\d+)/(\d+)$','rechazar_logros_deportivos',name='rechazar_logros_deportivos'),
 )

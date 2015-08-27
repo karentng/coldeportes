@@ -206,6 +206,8 @@ def wizard_historia_deportiva(request,id_depor):
             hist_depor_nuevo.prueba = hist_depor_nuevo.prueba.upper()
             hist_depor_nuevo.categoria = hist_depor_nuevo.categoria.upper()
             hist_depor_nuevo.institucion_equipo = hist_depor_nuevo.institucion_equipo.upper()
+            if hist_depor_nuevo.tipo not in ['Campeonato Municipal']:
+                hist_depor_nuevo.estado = 'Pendiente'
             hist_depor_nuevo.save()
             hist_depor_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -402,7 +404,7 @@ def ver_deportista(request,id_depor):
     composicion = ComposicionCorporal.objects.filter(deportista=deportista)
     if len(composicion) != 0:
         composicion = composicion[0]
-    historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista)
+    historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
@@ -551,3 +553,97 @@ def cambio_tipo_documento_deportista(request,id):
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form
     })
+
+def avalar_logros_deportivos(request):
+    """
+    Agosto 27 / 2015
+
+    Autor: Daniel Correa
+
+    Permite mostrar los logros deportivos a avalar
+
+    :param request: peticion
+    :type request: WSGIRequest
+    """
+
+    #Si es liga o federacion traer los pendientes departamentes o nacionales e internaciones respectivamente
+        #Los historiales deben ser los que sean campeonato dp, na e in dependiente de lig o fed y que su estado sea pendiente
+        #Primero traer todos los deportistas de la liga o federacion, luego sacar sus historiales que sean de tipo tal y estado pendiente
+    historiales = HistorialDeportivo.objects.all()
+
+    return render(request,'deportistas/avalar_logros.html',{
+        'historiales': historiales
+    })
+
+def aceptar_logros_deportivos(request,id_tenant,id_hist):
+    """
+    Agosto 27 / 2015
+
+    Autor: Daniel Correa
+
+    Permite avalar el logro deporitvo de un deportista , este mecanismo lo ejerce una liga o federacion
+
+    :param request: peticion
+    :type request: WSGIRequest
+    :param id_tenant: id del club donde esta el historial
+    :type id_tenant: string
+    :param id_hist: id del historial a avalar
+    :type id_hist: string
+    """
+    try:
+        entidad = Entidad.objects.get(id=id_tenant)
+    except:
+        messages.error(request,'Error: club no existe')
+        return redirect('inicio_tenant')
+
+    if entidad != request.tenant:
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+
+    try:
+        hist = HistorialDeportivo.objects.get(id=id_hist)
+    except:
+        messages.error(request,'Error: No existe el historial deportivo')
+        return redirect('inicio_tenant')
+
+    hist.estado = 'Aprobado'
+    hist.save()
+
+    messages.success(request,'Logro deportivo avalado correctamente')
+    return redirect('deportista_listar')
+
+def rechazar_logros_deportivos(request,id_tenant,id_hist):
+    """
+    Agosto 27 / 2015
+
+    Autor: Daniel Correa
+
+    Permite quitar el aval de un  logro deporitvo de un deportista , este mecanismo lo ejerce una liga o federacion
+    La negacion del aval implica la eliminacion del registro
+
+    :param request: peticion
+    :type request: WSGIRequest
+    :param id_tenant: id del club donde esta el historial
+    :type id_tenant: string
+    :param id_hist: id del historial a quitar aval
+    :type id_hist: string
+    """
+    try:
+        entidad = Entidad.objects.get(id=id_tenant)
+    except:
+        messages.error(request,'Error: club no existe')
+        return redirect('inicio_tenant')
+
+    if entidad != request.tenant:
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+    try:
+        hist = HistorialDeportivo.objects.get(id=id_hist)
+    except:
+        messages.error(request,'Error: No existe el historial deportivo')
+        return redirect('inicio_tenant')
+
+    hist.delete()
+
+    messages.warning(request,'Se ha negado el aval al logro deportivo de '+hist.deportista.nombres + ' ' + hist.deportista.apellidos)
+    return redirect('deportista_listar')

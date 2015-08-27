@@ -64,11 +64,9 @@
                                                     <li class="media media-sm">
                                                         <a class="media-left">
                                                             {%if t.foto%}
-                                                                <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{t.foto}}" alt=""  />
-                                                            {%elif t.genero == "Mujer" or t.genero == "MUJER" %}
-                                                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/female.png" alt="" />
+                                                                <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{t.foto}}" alt="Foto de la persona"  />
                                                             {%else%}
-                                                                <img class="media-object rounded-corner" src="{{STATIC_URL}}img/male.png" alt="" />
+                                                                <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto de la persona" width="100%" height="100%"/>
                                                             {%endif%}
                                                         </a>
                                                         <div class="media-body">

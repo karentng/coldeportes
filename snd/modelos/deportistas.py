@@ -117,6 +117,12 @@ class HistorialDeportivo(models.Model):
         ('Campeonato Nacional','Campeonato Nacional'),
         ('Campeonato Internacional','Campeonato Internacional'),
     )
+
+    ESTADOS_AVAL = (
+        ('Aprobado','Aprobado'),
+        ('Pendiente','Pendiente'),
+    )
+
     nombre = models.CharField(max_length=100,verbose_name='Nombre del campeonato')
     fecha_inicial = models.DateField(verbose_name='Fecha Iniciación')
     fecha_final = models.DateField(blank=True, null=True,verbose_name='Fecha Finalización ')
@@ -130,7 +136,11 @@ class HistorialDeportivo(models.Model):
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
     categoria = models.CharField(max_length=100,verbose_name='Categoria en la que participó')
+    estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
+
+    def __str__(self):
+        return self.deportista.nombres+':'+self.nombre
 
 #Informacion academica
 class InformacionAcademica(models.Model):
