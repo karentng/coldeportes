@@ -56,13 +56,13 @@
                             <div class="tab-overflow">
                                 <ul class="nav nav-tabs">
                                     <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
-                                    {% if escenario %}<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>{% endif %}
-                                    {% if caracteristicas %}<li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-paint-brush"></i> Caracterización</a></li>{% endif %}
-                                    {% if horarios %}<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>{% endif %}
-                                    {% if historicos %}<li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>{% endif %}
-                                    {% if fotos %}<li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>{% endif %}
-                                    {% if videos %}<li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>{% endif %}
-                                    {% if contactos %}<li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>{% endif %}
+                                    <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+                                    <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-paint-brush"></i> Caracterización</a></li>
+                                    <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>
+                                    <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>
+                                    <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
+                                    <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>
+                                    <li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>
                                     <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                                 </ul>
                             </div>
@@ -82,26 +82,19 @@
                                                 Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
                                                 Nombre del Administrador: {{escenario.nombre_administrador}}
                                             </address>
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
                                         </div>                    
                                     </div>
                                     <h5 class="m-t-10">Descripción:</h5>
                                     <p>{{escenario.descripcion}}</p>
                                 </div>
                             </div>
-                            {% if caracteristicas %}
+                            
                             <div class="tab-pane fade" id="nav-tab2-13">
                                 <div class="invoice">
-                                    <div class="invoice-company">
-                                        <span class="pull-right hidden-print">
-                                        <a href="{% if tenant_nacional %}
-                                                        {% url 'listar_escenarios_nacionales' %}
-                                                     {% else %}
-                                                        {% url 'listar_escenarios' %}
-                                                     {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                                        </span>
-                                        {{escenario.nombre}}
-                                    </div>
+                                {% if caracteristicas %}
                                     {% for caracteristica in caracteristicas %}
                                     <div class="invoice-header">
                                         <div class="invoice-from">
@@ -114,28 +107,24 @@
                                                 Características del escenario: {% for caracteristica in caracteristica.caracteristica.all %} {{caracteristica.descripcion}} {% endfor %} <br/>
                                                 Clases de uso: {% for uso in caracteristica.clase_uso.all %} {{uso.descripcion}} {% endfor %}                    
                                             </address>
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
                                         </div>
                                     </div>
                                     <h5 class="m-t-10">Descripción:</h5>
                                     <p>{{caracteristica.descripcion}}</p>
                                     {% endfor %}
+                                {% else %}
+                                    <p>No hay características disponibles</p>
+                                {% endif %}
                                 </div>
                             </div>
-                            {% endif %}
-                            {% if horarios %}
+                            
                             <div class="tab-pane fade" id="nav-tab2-14">
                                 <div class="invoice">
-                                    <div class="invoice-company">
-                                        <span class="pull-right hidden-print">
-                                        <a href="{% if tenant_nacional %}
-                                                        {% url 'listar_escenarios_nacionales' %}
-                                                     {% else %}
-                                                        {% url 'listar_escenarios' %}
-                                                     {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                                        </span>
-                                        {{escenario.nombre}}
-                                    </div>
+                                {% if horarios %}
+                                    
                                     <div class="invoice-content">
                                         <div class="table-responsive">
                                             <table class="table table-invoice">
@@ -160,23 +149,16 @@
                                             </table>
                                         </div>
                                     </div>
+                                {% else %}
+                                    <p>No hay horarios disponibles</p>
+                                {% endif %}
                                 </div>
                             </div>
-                            {% endif %}
-                            {% if historicos %}
+                            
+                            
                             <div class="tab-pane fade" id="nav-tab2-15">
                                 <div class="invoice">
-                                    <div class="invoice-company">
-                                        <span class="pull-right hidden-print">
-                                        <a href="{% if tenant_nacional %}
-                                                        {% url 'listar_escenarios_nacionales' %}
-                                                     {% else %}
-                                                        {% url 'listar_escenarios' %}
-                                                     {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                                        </span>
-                                        {{escenario.nombre}}
-                                    </div>
+                                {% if historicos %}
                                     <div class="invoice-content">
                                         <div class="table-responsive">
                                             <table class="table table-invoice">
@@ -199,22 +181,16 @@
                                             </table>
                                         </div>
                                     </div>
+                                {% else %}
+                                    <p>No hay datos históricos disponibles</p>
+                                {% endif %}
                                 </div>
                             </div>
-                            {% endif %}
-                            {% if fotos %}
+                            
                             <div class="tab-pane fade" id="nav-tab2-16">
                                 <div class="invoice">
-                                    <div class="invoice-company">
-                                        <span class="pull-right hidden-print">
-                                        <a href="{% if tenant_nacional %}
-                                                        {% url 'listar_escenarios_nacionales' %}
-                                                     {% else %}
-                                                        {% url 'listar_escenarios' %}
-                                                     {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                                        </span>                    
-                                    </div>
+                                {% if fotos %}
+                                    
                                     <h1 class="page-header">{{escenario.nombre}}:<small> galería de fotos</small></h1>
                                     <!-- end page-header -->
                                     
@@ -226,22 +202,15 @@
                                         </div>
                                         {% endfor %}
                                     </div>
+                                {% else %}
+                                    <p>No hay fotos disponibles</p>
+                                {% endif %}
                                 </div>
                             </div>
-                            {% endif %}
-                            {% if videos %}
                             <div class="tab-pane fade" id="nav-tab2-17">
                                 <div class="invoice">
-                                    <div class="invoice-company">
-                                        <span class="pull-right hidden-print">
-                                        <a href="{% if tenant_nacional %}
-                                                        {% url 'listar_escenarios_nacionales' %}
-                                                     {% else %}
-                                                        {% url 'listar_escenarios' %}
-                                                     {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                                        </span>                    
-                                    </div>
+                                {% if videos %} 
+                                    
                                     <h1 class="page-header">{{escenario.nombre}}</h1>
                                     <!-- end page-header -->
                                     <div class="table-responsive">
@@ -264,22 +233,16 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                {% else %}
+                                    <p>No hay videos disponibles</p>
+                                {% endif %}
                                 </div>
                             </div>
-                            {% endif %}
-                            {% if contactos %}
+                            
                             <div class="tab-pane fade" id="nav-tab2-18">
                                 <div class="invoice">
-                                    <div class="invoice-company">
-                                        <span class="pull-right hidden-print">
-                                        <a href="{% if tenant_nacional %}
-                                                        {% url 'listar_escenarios_nacionales' %}
-                                                     {% else %}
-                                                        {% url 'listar_escenarios' %}
-                                                     {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Imprimir</a>
-                                        </span>                    
-                                    </div>
+                                {% if contactos %}  
+                                    
                                     <h1 class="page-header">{{escenario.nombre}}</h1>
                                     <!-- end page-header -->
                                     <div class="table-responsive">
@@ -302,9 +265,12 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                {% else %}
+                                    <p>No hay contactos disponibles</p>
+                                {% endif %}
                                 </div>
                             </div>
-                            {% endif %}
+                            
                         </div>
                     </div>
                 </div>
