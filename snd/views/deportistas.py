@@ -563,10 +563,20 @@ def avalar_logros_deportivos(request):
     :param request: peticion
     :type request: WSGIRequest
     """
-
-    #Si es liga o federacion traer los pendientes departamentes o nacionales e internaciones respectivamente
+    #Si es liga o federacion traer los pendientes nacionales e internaciones respectivamente
         #Los historiales deben ser los que sean campeonato dp, na e in dependiente de lig o fed y que su estado sea pendiente
         #Primero traer todos los deportistas de la liga o federacion, luego sacar sus historiales que sean de tipo tal y estado pendiente
+
+    """if request.tenant.tipo == 1:
+        #Traer todos los clubs asociados a su liga , luego traer todos los deportistas activos de cada club , luego sacar los historiales de dichos deportistas
+        pass
+    elif request.tenant.tipo == 2:
+        #Traer todos las ligas [traer todos los clubes] asociados a su fed , luego traer todos los deportistas activos de cada club , luego sacar los historiales de dichos deportistas
+        pass
+    else:
+        messages.warning(request,'Usted se encuentra en una seccion no permitida')
+        return redirect('inicio_tenant')"""
+
     historiales = HistorialDeportivo.objects.all()
 
     return render(request,'deportistas/avalar_logros.html',{
