@@ -206,12 +206,11 @@ def wizard_historia_deportiva(request,id_depor):
             hist_depor_nuevo.prueba = hist_depor_nuevo.prueba.upper()
             hist_depor_nuevo.categoria = hist_depor_nuevo.categoria.upper()
             hist_depor_nuevo.institucion_equipo = hist_depor_nuevo.institucion_equipo.upper()
-            if hist_depor_nuevo.tipo not in ['Campeonato Municipal']:
+            if hist_depor_nuevo.tipo not in ['Campeonato Municipal','Campeonato Departamental']:
                 hist_depor_nuevo.estado = 'Pendiente'
             hist_depor_nuevo.save()
             hist_depor_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
-
 
     return render(request, 'deportistas/wizard/wizard_historia_deportiva.html', {
         'titulo': 'Historia Deportiva del Deportista',
@@ -292,9 +291,8 @@ def wizard_historia_academica(request,id_depor):
             inf_academ_form.save()
             return redirect('wizard_historia_academica', id_depor)
 
-
     return render(request, 'deportistas/wizard/wizard_historia_academica.html', {
-        'titulo': 'Historia Academica del Deportista',
+        'titulo': 'Historia Académica del Deportista',
         'wizard_stage': 4,
         'form': inf_academ_form,
         'historicos': inf_academ,

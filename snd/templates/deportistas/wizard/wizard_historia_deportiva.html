@@ -46,10 +46,7 @@
                                         {% bootstrap_field form.nombre layout="verical" %}
                                     </div>
                                     <div class="col-md-6">
-                                        {% bootstrap_field form.pais layout="vertical" %}
-                                    </div>
-                                    <div class="col-md-6">
-                                        {% bootstrap_field form.actual layout="vertical" %}
+                                        {% bootstrap_field form.institucion_equipo layout="vertical" %}
                                     </div>
                                     <div class="col-md-6">
                                         {% bootstrap_field form.fecha_inicial layout="vertical" %}
@@ -58,10 +55,10 @@
                                         {% bootstrap_field form.fecha_final layout="vertical" %}
                                     </div>
                                     <div class="col-md-6">
-                                        {% bootstrap_field form.institucion_equipo layout="vertical" %}
+                                        {% bootstrap_field form.tipo layout="vertical" %}
                                     </div>
                                     <div class="col-md-6">
-                                        {% bootstrap_field form.tipo layout="vertical" %}
+                                        {% bootstrap_field form.pais layout="vertical" %}
                                     </div>
                                 </div>
                                 <hr>
@@ -116,13 +113,7 @@
                         <tr>
                             <td align="center"><span class="label label-{%if historico.estado == 'Pendiente' %}warning{%else%}success{%endif%}">{{historico.estado}}</span></td>
                             <td align="center">{{historico.fecha_inicial}}</td>
-                            <td align="center">
-                                {%if historico.fecha_final%}
-                                    {{historico.fecha_final}}
-                                {%else%}
-                                    ACTUAL
-                                {%endif%}
-                            </td>
+                            <td align="center">{{historico.fecha_final}}</td>
                             <td align="center">{{historico.tipo}}</td>
                             <td align="center">{{historico.pais}}</td>
                             <td align="center">{{historico.puesto}}</td>

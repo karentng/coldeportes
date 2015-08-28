@@ -47,8 +47,8 @@ class Deportista(models.Model):
     barrio = models.CharField(max_length=100,verbose_name='Barrio')
     comuna = models.CharField(max_length=100,verbose_name='Comuna')
     email = models.EmailField(null=True,blank=True)
-    telefono = models.CharField(max_length=100,verbose_name='Telefono')
-    direccion = models.CharField(max_length=100,verbose_name='Direccion')
+    telefono = models.CharField(max_length=100,verbose_name='Teléfono')
+    direccion = models.CharField(max_length=100,verbose_name='Dirección')
     entidad = models.ForeignKey(Entidad)
 
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
@@ -125,8 +125,7 @@ class HistorialDeportivo(models.Model):
 
     nombre = models.CharField(max_length=100,verbose_name='Nombre del campeonato')
     fecha_inicial = models.DateField(verbose_name='Fecha Iniciación')
-    fecha_final = models.DateField(blank=True, null=True,verbose_name='Fecha Finalización ')
-    actual = models.BooleanField(verbose_name='¿Actualmente?',default=False)
+    fecha_final = models.DateField(verbose_name='Fecha Finalización ')
     pais = models.ForeignKey(Nacionalidad)
     institucion_equipo = models.CharField(max_length=100,blank=True,null=True, verbose_name='Club deportivo')
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato',default='Campeonato Internacional')

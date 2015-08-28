@@ -205,13 +205,7 @@
                                                             <tr>
                                                                 <td>{{historial.nombre}}</td>
                                                                 <td>{{historial.fecha_inicial}}</td>
-                                                                <td>
-                                                                    {% if not historial.actual %}
-                                                                        {{ historial.fecha_final }}
-                                                                    {% else %}
-                                                                        Actual
-                                                                    {%endif%}
-                                                                </td>
+                                                                <td>{{ historial.fecha_final }}</td>
                                                                 <td>{{historial.pais}}</td>
                                                                 <td>
                                                                     {% if historial.institucion_equipo %}
