@@ -30,36 +30,40 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     """
     objeto = None
     entidad_solicitante = request.tenant
-    entidades = Entidad.objects.exclude(nombre__in=['publico',entidad_solicitante.nombre])
+
+    if entidad_solicitante.tipo == 3:
+        entidades = Entidad.objects.filter(tipo=3).exclude(nombre__in=['publico',entidad_solicitante.nombre])
+    elif entidad_solicitante.tipo == 5:
+        entidades = Entidad.objects.filter(tipo=5).exclude(nombre__in=['publico',entidad_solicitante.nombre])
+    else:
+        messages.error(request,'Usted se encuentra en una seccion que no le corresponde')
+        return redirect('inicio_tenant')
+
     redir = ''
+    tipo_objeto = ''
     if tipo_transfer=='1': #Transferencia de personas
         if tipo_persona=='1': #Transferencia de deportistas
-            objeto = Deportista.objects.get(id=id)
-            objeto.tipo_objeto='Deportista'
+            tipo_objeto='Deportista'
             redir='deportista_listar'
         elif tipo_persona=='2': #Transferencia de personal_apoyo
-            objeto = PersonalApoyo.objects.get(id=id)
-            objeto.tipo_objeto='PersonalApoyo'
+            tipo_objeto='PersonalApoyo'
             redir='personal_apoyo_listar'
-        objeto.edad = calculate_age(objeto.fecha_nacimiento)
-        objeto.nacionalidad_str = ",".join(str(x) for x in objeto.nacionalidad.all())
-        objeto.fotos = [objeto.foto]
     elif tipo_transfer=='2': #Transferencia de escenarios
-        objeto = Escenario.objects.get(id=id)
-        fotos = [x.foto for x in Foto.objects.filter(escenario=objeto)]
-        caracteristicas = CaracterizacionEscenario.objects.get(escenario=objeto)
-        objeto.capacidad = caracteristicas.capacidad_espectadores
-        objeto.tipo_escenario = caracteristicas.tipo_escenario
-        objeto.fotos=fotos
-        objeto.tipo_objeto='Escenario'
+        tipo_objeto='Escenario'
         redir='listar_escenarios'
+
+    try:
+        objeto = globals()[tipo_objeto].objects.get(id=id)
+    except:
+        messages.error(request,'Error, no existe objeto transferible')
 
     non_permission = not_transferido_required(objeto)
     if non_permission:
         return non_permission
 
     objeto.fecha = datetime.date.today()
-    objeto.entidad = entidad_solicitante
+    objeto.tipo_objeto = tipo_objeto
+
     if request.method == 'POST':
         id_entidad_cambio = request.POST['entidad']
         entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)

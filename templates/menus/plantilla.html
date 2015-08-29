@@ -20,7 +20,9 @@
         {% include "menus/aplicacion/cajas_compensacion.html" %}
     {% endif %}
     {% include "menus/aplicacion/directorio.html" %}
-    {% include "menus/aplicacion/selecciones.html" %}
+    {%if request.tenant.tipo == 1 or request.tenant.tipo == 2 %}
+        {% include "menus/aplicacion/selecciones.html" %}
+    {%endif%}
 {% endif %}
 {% if request.tenant.schema_name == 'public' %}
     {% include "menus/aplicacion/entidades.html" %}

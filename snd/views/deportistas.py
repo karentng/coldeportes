@@ -546,12 +546,23 @@ def cambio_tipo_documento_deportista(request,id):
             hist.save()
             messages.success(request,'Cambio de documento exitoso')
             return redirect('deportista_listar')
-        print(form.errors)
 
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form
     })
 
+def obtener_historiales_por_liga(liga,tenant_actual,tipo):
+    clubes = Club.objects.filter(liga=liga)
+    historiales = []
+    for c in clubes:
+        connection.set_tenant(c)
+        ContentType.objects.clear_cache()
+        historiales += HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)
+        print(historiales)
+    connection.set_tenant(tenant_actual)
+    return historiales
+
+@login_required
 def avalar_logros_deportivos(request):
     """
     Agosto 27 / 2015
@@ -563,26 +574,27 @@ def avalar_logros_deportivos(request):
     :param request: peticion
     :type request: WSGIRequest
     """
-    #Si es liga o federacion traer los pendientes nacionales e internaciones respectivamente
-        #Los historiales deben ser los que sean campeonato dp, na e in dependiente de lig o fed y que su estado sea pendiente
-        #Primero traer todos los deportistas de la liga o federacion, luego sacar sus historiales que sean de tipo tal y estado pendiente
 
-    """if request.tenant.tipo == 1:
-        #Traer todos los clubs asociados a su liga , luego traer todos los deportistas activos de cada club , luego sacar los historiales de dichos deportistas
-        pass
+    tenant_actual = connection.tenant
+    if request.tenant.tipo == 1:
+        #Traer todos los clubs asociados a su liga , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional')
+
     elif request.tenant.tipo == 2:
-        #Traer todos las ligas [traer todos los clubes] asociados a su fed , luego traer todos los deportistas activos de cada club , luego sacar los historiales de dichos deportistas
-        pass
+        #Traer todos las ligas [traer todos los clubes] asociados a su fed , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
+        ligas = Liga.objects.filter(federacion=tenant_actual.id)
+        historiales = []
+        for l in ligas:
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional')
     else:
         messages.warning(request,'Usted se encuentra en una seccion no permitida')
-        return redirect('inicio_tenant')"""
-
-    historiales = HistorialDeportivo.objects.all()
+        return redirect('inicio_tenant')
 
     return render(request,'deportistas/avalar_logros.html',{
         'historiales': historiales
     })
 
+@login_required
 def aceptar_logros_deportivos(request,id_tenant,id_hist):
     """
     Agosto 27 / 2015
@@ -620,6 +632,7 @@ def aceptar_logros_deportivos(request,id_tenant,id_hist):
     messages.success(request,'Logro deportivo avalado correctamente')
     return redirect('deportista_listar')
 
+@login_required
 def rechazar_logros_deportivos(request,id_tenant,id_hist):
     """
     Agosto 27 / 2015
