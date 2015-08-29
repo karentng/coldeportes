@@ -13,9 +13,10 @@
         <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
         </li>
-        <!-- Permiso para avalar -->
-        <li {% if "/deportistas/avalar-record" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'avalar_logros_deportivos' %}">Avalar Historial Deportivo</a>
-        </li>
+        {%if request.tenant.tipo == 1 or request.tenant.tipo == 2 %}
+            <li {% if "/deportistas/avalar-record" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'avalar_logros_deportivos' %}">Avalar Historial Deportivo</a>
+            </li>
+        {% endif %}
     </ul>
 </li>

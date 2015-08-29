@@ -101,6 +101,7 @@
                     <thead>
                         <tr>
                             <th align="center">Estado</th>
+                            <th align="center">Nombre</th>
                             <th align="center">Fecha Inicial</th>
                             <th align="center">Fecha Final</th>
                             <th align="center">Tipo</th>
@@ -112,6 +113,7 @@
                     {% for historico in historicos %}
                         <tr>
                             <td align="center"><span class="label label-{%if historico.estado == 'Pendiente' %}warning{%else%}success{%endif%}">{{historico.estado}}</span></td>
+                            <td align="center">{{historico.nombre}}</td>
                             <td align="center">{{historico.fecha_inicial}}</td>
                             <td align="center">{{historico.fecha_final}}</td>
                             <td align="center">{{historico.tipo}}</td>
