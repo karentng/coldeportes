@@ -71,6 +71,9 @@ class Deportista(models.Model):
     def nacionalidad_str(self):
         return ",".join(x.nombre for x in self.nacionalidad.all())
 
+    def fotos(self):
+        return [self.foto]
+
 #Composicion corporal
 class ComposicionCorporal(models.Model):
     tipos_rh =(
