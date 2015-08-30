@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block js %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/validaciones/entidad/editar_entidad.js"></script>
 	<script type="text/javascript">
 		$( "#id_pagina" ).blur(function(){
 			var texto = $(this).val();
@@ -33,31 +34,59 @@
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
-			<form class="form-horizontal" action="" method="post">{% csrf_token %}
+			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
+
+				{% for key, value in form.errors.items %}
+					{% if key == '__all__' %}
+						<div class="alert alert-danger alert-dismissable alert-link">
+						    <button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>
+						    {{value}}
+						</div>
+					{% endif %}
+				{% endfor %}
 				{% for i in form %}
 					{% if i.name == 'pagina' %}
 						<div class="form-group">
 							<label class="col-md-2 control-label">
-								<p>Página Web</p>
+								<p>Página Web: *</p>
 								<small>{{i.help_text}}</small>
 							</label>
-							<div class="col-md-4">
+							<div class="col-md-4" style="padding:0">
 								<div class="input-group">
 							        {{i}}
 							        <span class="input-group-addon">{{dominio}}</span>
 							    </div>
 						    </div>
 					    </div>
+					    {% for j in i.errors %}
+					    	<div class="form-group">
+					    		<div class="col-md-4 col-md-offset-2 alert alert-danger alert-dismissable alert-link" style="padding:0" align="center">
+					    				{{j}}
+					    		</div>
+					    	</div>
+					    {% endfor %}
+					    
 					{% else %}
-						{% bootstrap_field i layout="horizontal" %}
+						<div class="form-group">
+							<label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ i.label_tag }}
+	                            {% if i.field.required %}<span class="special_class">*</span>{% endif %}
+	                        </label>
+	                        <div class="col-md-4">
+		                        {% bootstrap_field i layout="inline" %}
+		                    </div>
+						</div>
+						
 					{% endif %}
 				{% endfor %}
-				
-				
+
 			    <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
 			    {% bootstrap_form form2 layout="horizontal" %}
 
-				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Registrar</button>
+
+				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">
+					Registrar
+				</button>
+
 			</form>
 		</div>
 	</div>

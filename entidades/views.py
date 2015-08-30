@@ -55,7 +55,7 @@ def obtenerTenant(request, idEntidad, tipo):
     raise Exception
 
 @login_required
-def registro(request, tipo):
+def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
 
     form2 = ActoresForm(tipo=tipo)
@@ -78,6 +78,8 @@ def registro(request, tipo):
             obj.domain_url = pagina + dominio
             obj.actores = actores
             obj.tipo = tipo
+            if tipo == '5':
+                obj.tipo_ente = tipoEnte
             obj.save()
 
             messages.success(request, ("%s registrado correctamente.")%(nombre))
