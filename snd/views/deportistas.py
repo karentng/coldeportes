@@ -103,7 +103,6 @@ def wizard_deportista(request,id_depor):
             deportista_form.save()
             return redirect('wizard_corporal', id_depor)
 
-
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,

@@ -4,4 +4,5 @@ from snd.views.selecciones import *
 
 urlpatterns = patterns('snd.views.selecciones',
     url(r'^registro/base$', 'registrar_base', name='registrar_seleccion'),
+    url(r'^registro/deportistas', 'registrar_deportistas', name='registrar_deportistas'),
 )

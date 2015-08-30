@@ -37,13 +37,14 @@
 					<h3>{{titulo}}</h3>
 
 					<div class="well row">
-						{% bootstrap_form form%}
+						{%for i in form%}
+							<div class="col-lg-6">
+								{% bootstrap_field i%}
+							</div>
+						{%endfor%}
 						<hr>
 						<div class="row">
 							<div class="col-xs-12">
-								{% if wizard_stage > 1 %}
-									<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-								{% endif %}
 								<button class="btn btn-primary pull-right" type="submit">
 									Siguiente →
 								</button>
@@ -60,7 +61,7 @@
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
-	<!--script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-deportista-validations.js"></script-->
+	<script src="{{ STATIC_URL }}js/validaciones/selecciones/wizard-seleccion-validations.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 	
 {% endblock %}
