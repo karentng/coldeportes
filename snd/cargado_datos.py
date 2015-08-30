@@ -183,19 +183,22 @@ def obtenerDatos(request, modelo):
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
     objetos = modeloTipo.objects.none()
     busqueda = busqueda.split(" ")
-
+    print (atributos)
     Qr = None
     for atributo in atributos:
         arregloAtributos = atributo.split(" ")
         for elementoAtributo in arregloAtributos:
             for palabra in busqueda:
-                instruccion = "%s__icontains" % elementoAtributo
-                query = {instruccion : palabra}
-
                 try:
-                    objetos = objetos | modeloTipo.objects.filter(**query)
+                    instruccion = "%s__nombre__icontains" % elementoAtributo
+                    query = {instruccion : palabra}
+                    objeto = modeloTipo.objects.filter(**query)
                 except Exception:
-                    pass
+                    instruccion = "%s__icontains" % elementoAtributo
+                    query = {instruccion : palabra}
+                    objeto = modeloTipo.objects.filter(**query)
+                finally:
+                    objetos = objetos | objeto
 
     return objetos
 

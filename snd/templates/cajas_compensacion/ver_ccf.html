@@ -56,9 +56,9 @@
                         <div class="tab-overflow">
                             <ul class="nav nav-tabs">
                                 <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
-                                {% if ccf %}<li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>{% endif %}                
-                                {% if horarios %}<li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>{% endif %}
-                                {% if tarifas %}<li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-money"></i> Tarifas</a></li>{% endif %}
+                                <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>                
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>
+                                <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-money"></i> Tarifas</a></li>
                                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                             </ul>
                         </div>
@@ -80,6 +80,9 @@
                                             Correo electrónico: {{ccf.email}}
                                             Tipo de Institución {{ccf.get_tipo_institucion_display}}
                                         </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
                                     </div>                    
                                 </div>
                                 <h5 class="m-t-10">Servicios:</h5>
@@ -89,9 +92,9 @@
                                 {% endfor %}
                                 </ul>
                             </div>
-                        </div>
-                        {% if horarios %}
+                        </div>                        
                         <div class="tab-pane fade" id="nav-tab2-14">
+                            {% if horarios %}
                             <div class="invoice">
                                 <div class="invoice-company">
                                     <span class="pull-right hidden-print">
@@ -129,10 +132,12 @@
                                     </div>
                                 </div>
                             </div>
+                            {% else %}
+                                <p>No hay horarios disponibles</p>
+                            {% endif %}
                         </div>
-                        {% endif %}
-                        {% if tarifas %}
                         <div class="tab-pane fade" id="nav-tab2-16">
+                            {% if tarifas %}                            
                             <div class="invoice">
                                 <div class="invoice-company">
                                     <span class="pull-right hidden-print">
@@ -168,8 +173,10 @@
                                     </div>
                                 </div>
                             </div>
+                            {% else %}
+                                <p>No hay tarifas disponibles</p>
+                            {% endif %}
                         </div>
-                        {% endif %}                        
                     </div>
                 </div>
             </div>
