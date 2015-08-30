@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Aval Logros Deportivos - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Aval Logros Deportivos
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li>Aval logros deportivos</li>
+{% endblock %}
+
+{%block css%}
+    <style>
+        .profile-image {
+            border: 0;
+        }
+    </style>
+{%endblock%}
+
+{% block contenido %}
+    <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
+
+    <div class="row">
+    {% for msg in messages %}
+        <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">
+            <span class="close" data-dismiss="alert">×</span>
+            {% if msg.tags == 'error' %}
+                <i class="fa fa-times fa-2x pull-left"></i>
+            {% else %}
+                <i class="fa fa-check fa-2x pull-left"></i>
+            {% endif %}
+            <p>{{msg}}</p>
+        </div>
+    {% endfor %}
+    <!--Fila de notificaciones-->
+        <div class="row">
+            <div class="col-sm-12">
+                <!--Inicio transferencia de deportistas-->
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="panel-title">
+                                Aval de Logros Deportivos
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {% if historiales %}
+                                            <div class="height-sm" data-scrollbar="true">
+                                                <ul class="media-list media-list-with-divider">
+                                                {% for h in historiales %}
+                                                    <div class="col-sm-6">
+                                                        <li class="media media-sm">
+                                                            <a class="media-left">
+                                                                {%if h.deportista.foto%}
+                                                                    <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{h.deportista.foto}}" alt="Foto del Deportista"  />
+                                                                {%else%}
+                                                                    <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="60" height="60"/>
+                                                                {%endif%}
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <h4 class="media-heading">{{ h.deportista.nombres }} {{ h.deportista.apellidos }}</h4>
+                                                                <h5><strong>Club: {{ h.deportista.entidad }}</strong></h5>
+                                                                <p><strong>Identificación:</strong> {{ h.deportista.tipo_id }}. {{ h.deportista.identificacion }} <br/>
+                                                                    <strong>Nombre Campeonato:</strong> {{ h.nombre }} <br/>
+                                                                    <strong>Tipo:</strong> {{ h.tipo }} <br/>
+                                                                    <strong>Puesto Obtenido:</strong> {{ h.puesto }} <br/>
+                                                                    <strong>País:</strong> {{ h.pais }} <br/>
+                                                                    <strong>Institución/Equipo que participó:</strong> {{h.institucion_equipo}}
+                                                                </p>
+                                                                <p>
+                                                                    <a href="#modal-vermas-depor-{{ h.id }}-{{h.deportista.entidad.id}}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                                    <a href="{% url 'rechazar_logros_deportivos' h.deportista.entidad.id h.id %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
+                                                                    <a href="{% url 'aceptar_logros_deportivos' h.deportista.entidad.id h.id %}" class="btn btn-sm btn-success m-r-5">Aprobar</a>
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                    <!--modal para ver detalle -->
+                                                    <div class="modal modal-message fade" id="modal-vermas-depor-{{ h.id }}-{{h.deportista.entidad.id}}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    <div class="profile-container">
+                                                                        <!-- begin profile-section -->
+                                                                        <div class="profile-section">
+                                                                            <!-- begin profile-left -->
+                                                                            <div class="profile-left">
+                                                                                <!-- begin profile-image -->
+                                                                                <div class="profile-image">
+                                                                                    {%if h.deportista.foto%}
+                                                                                        <img class="media-object" src="{{MEDIA_URL}}{{h.deportista.foto}}" alt="Foto del Deportista"  />
+                                                                                    {%else%}
+                                                                                        <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="100%" height="100%"/>
+                                                                                    {%endif%}
+                                                                                </div>
+                                                                                <!-- end profile-image -->
+                                                                            </div>
+                                                                            <!-- end profile-left -->
+                                                                            <!-- begin profile-right -->
+                                                                            <div class="profile-right">
+                                                                                <!-- begin profile-info -->
+                                                                                <div class="profile-info">
+                                                                                    <!-- begin table -->
+                                                                                    <div class="table-responsive">
+                                                                                        <table class="table table-profile">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th></th>
+                                                                                                    <th>
+                                                                                                        <h4>{{ h.deportista.nombres }} {{ h.deportista.apellidos }} <small>{{ h.deportista.entidad }}</small></h4>
+                                                                                                    </th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <tr class="highlight">
+                                                                                                    <td class="field">Club Deportivo</td>
+                                                                                                    <td>{{ h.deportista.entidad }}</td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Identificación</td>
+                                                                                                    <td> {{ h.deportista.tipo_id }}. {{ h.deportista.identificacion }}</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Nombre Campeonato:</td>
+                                                                                                    <td><i class="ion ion-trophy fa-lg m-r-5"></i>{{h.nombre}}</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Fecha Inicial</td>
+                                                                                                    <td>{{ h.fecha_inicial }}</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Fecha de Finalización</td>
+                                                                                                    <td>{%if not h.actual %}{{ h.fecha_final }}{%else%}Actual{%endif%}</td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr class="highlight">
+                                                                                                    <td class="field">Puesto</td>
+                                                                                                    <td><i class="ion ion-bookmark fa-lg m-r-5"></i> {{ h.puesto }}</td>
+                                                                                                </tr>
+                                                                                                <tr class="divider">
+                                                                                                    <td colspan="2"></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">País</td>
+                                                                                                    <td>{{h.pais}}</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field">Categoría</td>
+                                                                                                    <td>{{h.categoria}}</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="field" >Tipo</td>
+                                                                                                    <td>{{ h.tipo }}</td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                    <!-- end table -->
+                                                                                </div>
+                                                                                <!-- end profile-info -->
+                                                                            </div>
+                                                                            <!-- end profile-right -->
+                                                                        </div>
+                                                                        <!-- end profile-section -->
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="javascript:;" class="btn btn-sm btn-warning" data-dismiss="modal">Regresar</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- fin modal para ver detalle -->
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+
+                                    {% else %}
+                                       <strong>En el momento no hay logros por avalar</strong>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!--Fin transferencia de deportistas-->
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

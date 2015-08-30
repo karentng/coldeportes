@@ -23,7 +23,6 @@ from snd.models import *
                 ] | None
             ]+ | []
         ],
-        False | True            -> Se consulta en todos los tenants o no
     ),
 )
 '''

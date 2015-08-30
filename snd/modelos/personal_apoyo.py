@@ -84,6 +84,9 @@ class PersonalApoyo(models.Model):
     def nacionalidad_str(self):
         return ",".join(x.nombre for x in self.nacionalidad.all())
 
+    def fotos(self):
+        return [self.foto]
+
 class FormacionDeportiva(models.Model):
     denominacion_diploma = models.CharField(max_length=150, verbose_name='Denominación del diploma')
     nivel = models.CharField(max_length=50, blank=True)

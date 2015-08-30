@@ -51,7 +51,7 @@
     <div class="panel-body" style="padding:0">
         <div class="row">
             <div class="col-sm-12">
-                <img src="http://www.fitnessalud.com/wp-content/uploads/2014/04/entrenador-personal-fitness.jpg" alt="personal de apoyo" style="width:100%; height:250px">
+                <img src="{{STATIC_URL}}img/ver_mas_deportistas.png" alt="deportistas" style="width:100%; height:250px">
                 <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
                     <div class="panel-heading p-0">
                         <div class="panel-heading-btn m-r-10 m-t-10">
@@ -90,18 +90,16 @@
                                             <div class="profile-left">
                                                 <div class="profile-image">
                                                     {%if deportista.foto %}
-                                                        <img src="{{MEDIA_URL}}{{deportista.foto}}">
-                                                    {%elif deportista.genero == "Mujer"%}
-                                                        <img src="{{STATIC_URL}}img/female.png" alt="" />
+                                                        <img src="{{MEDIA_URL}}{{deportista.foto}}" alt="Foto del deportista">
                                                     {%else%}
-                                                        <img src="{{STATIC_URL}}img/male.png" alt="" />
+                                                        <img src="{{STATIC_URL}}img/depor_default.png" alt="Foto del deportista" />
                                                     {%endif%}
                                                     <i class="fa fa-user hide"></i>
                                                 </div>
                                             </div>
                                             <div class="profile-right">
                                                 <div class="col-lg-9">
-                                                    <p>{% if perms.snd.change_deporita and request.tenant.schema_name != 'public' %}
+                                                    <p>{% if perms.snd.change_deportista and request.tenant.schema_name != 'public' %}
                                                         <b>{{deportista.get_tipo_id_display | title}} </b>: {{deportista.identificacion}}<br />
                                                     {% else %}
                                                         <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
@@ -128,12 +126,14 @@
                                                 <p><b>Barrio:</b> {{ deportista.barrio }} <p/>
                                                 <p><b>Comuna:</b> {{ deportista.comuna }} <p/>
                                             {% endif %}
-                                            <p><strong>Video:</strong></p>
-                                            {% if deportista.video %}
-                                                {{deportista.video}}
-                                            {% else %}
-                                                Ninguno
-                                            {% endif %}
+                                            <div class="row">
+                                                <p><strong>Video:</strong></p>
+                                                {% if deportista.video %}
+                                                    <a href="{{deportista.video}}" target="_blank">{{deportista.video}}</a>
+                                                {% else %}
+                                                    Ninguno
+                                                {% endif %}
+                                            </div>
                                         </div>
                                         </address>
 
@@ -205,13 +205,7 @@
                                                             <tr>
                                                                 <td>{{historial.nombre}}</td>
                                                                 <td>{{historial.fecha_inicial}}</td>
-                                                                <td>
-                                                                    {% if not historial.actual %}
-                                                                        {{ historial.fecha_final }}
-                                                                    {% else %}
-                                                                        Actual
-                                                                    {%endif%}
-                                                                </td>
+                                                                <td>{{ historial.fecha_final }}</td>
                                                                 <td>{{historial.pais}}</td>
                                                                 <td>
                                                                     {% if historial.institucion_equipo %}
