@@ -350,11 +350,7 @@ def listar_deportista(request):
     :type request: WSGIRequest
     """
 
-    deportistas = Deportista.objects.all()
-
-    return render(request, 'deportistas/deportistas_lista.html', {
-        'deportistas':deportistas,
-    })
+    return render(request, 'deportistas/deportistas_lista.html', {})
 
 @login_required
 def ver_deportista(request,id_depor):
