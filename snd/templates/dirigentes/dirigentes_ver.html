@@ -105,7 +105,7 @@
                                                 </div>
                                             </div>
                                             <div class="profile-right">
-                                                <div class="col-lg-4">
+                                                <div class="col-lg-6">
                                                     <p>{% if perms.snd.change_dirigente and request.tenant.schema_name != 'public' %}
                                                         <b>{{dirigente.get_tipo_identificacion_display | title}} </b>: {{dirigente.identificacion}}<br />
                                                     {% else %}
@@ -125,12 +125,11 @@
                                                             {{nac}} 
                                                         {% endfor %}</p>
                                                 </div>
-                                                <div class="col-lg-4">
+                                                <div class="col-lg-6" style="min-height:164px;">
                                                     <p><b>Perfil Profesional:</b> {{dirigente.perfil}}</p>
                                                 </div>
-                                        </div>
+                                            </div>
                                         </address>
-
                                         <div align="right">
                                             <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                         </div>
@@ -148,8 +147,8 @@
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
-                                            
                                             {% for cargo in cargos %}
+                                            <div class="row">
                                                 {% if cargo.funciones%}<div class="col-lg-6" style="margin-bottom:20px;">{% else %}<div class="col-lg-12"  style="margin-bottom:20px;">{% endif %}
                                                     <p><strong>Cargo: {{cargo.nombre}}</strong></p>
                                                     <p><b>Fecha de Posesión:</b> {{cargo.fecha_posesion}}</p>
@@ -179,6 +178,7 @@
                                                         </ul>
                                                     </div>
                                                 {% endif %}
+                                            </div>
                                             {% endfor %}
                                         </address>
                                         <div align="right">
