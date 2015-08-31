@@ -7,6 +7,7 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
 	{{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -61,12 +62,24 @@
 							</div>
 						</div><br/>
 						<div class="row">
-							<div class="col-lg-12">
+							<div class="col-lg-12 p-l-30 p-r-30">
 								<h5>Listado de Deportistas Seleccionados</h5>
 								<div class="well row">
 									<div class="table-responsive">
 										<table id="tabla-depor-seleccionados" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+											<thead>
+												<tr>
+													<th>Nombres</th>
+													<th>Tipo Identificación</th>
+													<th>Identificación</th>
+													<th>Edad</th>
+													<th>Ciudad de Residencia</th>
+													<th>Club Deportivo</th>
+												</tr>
+											</thead>
+											<tbody>
 
+											</tbody>
 										</table>
 									</div>
 								</div>
@@ -96,6 +109,7 @@
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	<script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
 	
 {% endblock %}
 
@@ -104,6 +118,7 @@
 		$(document).ready(function() {
 			App.init();
 			FormWizard.init();
+			$('#tabla-depor-seleccionados').DataTable();
 		});
 		var str_no_option = "<p align='center'>Seleccione un deportista</p>";
 		$("#sele-depor").on("change",function(e){
@@ -120,6 +135,6 @@
 				$('#vista-previa').html(str_no_option);
 			}
 
-		})
+		});
 	</script>
 {% endblock %}

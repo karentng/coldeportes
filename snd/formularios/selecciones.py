@@ -22,6 +22,7 @@ class SeleccionForm(ModelForm):
         model = Seleccion
         exclude = ('deportistas','personal_apoyo',)
 
+"""
 class SeleccionDeportistasForm(forms.Form):
 
     deportistas = forms.ModelChoiceField(widget=forms.Select(attrs={'id':'sele-depor','class':'one'}),label='Seleccione un deportista',queryset=None)
@@ -42,3 +43,4 @@ class SeleccionDeportistasForm(forms.Form):
         elif tenant.tipo == 2:
             #Fede
             pass
+"""

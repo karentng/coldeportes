@@ -131,3 +131,7 @@ def vista_previa_deportista(request,id_entidad,id_depor):
     return render(request,'selecciones/wizard/ajax_seleccion_deportistas/vista_previa.html',{
         'deportista': depor
     })
+
+@login_required
+def seleccionar_deportista(request,id_entidad,id_depor):
+    pass
