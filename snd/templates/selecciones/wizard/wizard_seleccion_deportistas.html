@@ -45,6 +45,9 @@
 						<hr>
 						<div class="row">
 							<div class="col-xs-12">
+								{% if wizard_stage > 1 %}
+									<a href="" class="btn btn-success pull-left" type="button">← Anterior</a>
+								{% endif %}
 								<button class="btn btn-primary pull-right" type="submit">
 									Siguiente →
 								</button>
@@ -61,7 +64,7 @@
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
-	<script src="{{ STATIC_URL }}js/validaciones/selecciones/wizard-seleccion-validations.js"></script>
+	<!--script src="{{ STATIC_URL }}js/validaciones/selecciones/wizard-seleccion-validations.js"></script-->
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 	
 {% endblock %}
@@ -71,7 +74,6 @@
 		$(document).ready(function() {
 			App.init();
 			FormWizard.init();
-			$('#id_tipo').css("pointer-events","none");
 		});
 	</script>
 {% endblock %}

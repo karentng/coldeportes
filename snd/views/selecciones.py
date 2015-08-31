@@ -18,10 +18,10 @@ def registrar_base(request):
     :type request: WSGIRequest
     """
 
-    form = SeleccionForm()
+    form = SeleccionForm(initial={'tipo':request.tenant.tipo})
 
     if request.method == 'POST':
-        form = SeleccionForm(request.POST)
+        form = SeleccionForm(request.tenant.tipo,request.POST)
         if form.is_valid():
             sele = form.save()
             return redirect('registrar_deportistas',sele.id)
@@ -34,7 +34,28 @@ def registrar_base(request):
 
 @login_required
 def registrar_deportistas(request,id_s):
-    return redirect('registrar_personal')
+    """
+    Agosto 31 / 2015
+    Autor: Daniel Correa
+
+    Permite registrar los deportistas de una seleccion
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_s: id de la seleccion a la cual asignar deportistas
+    :type id_s: string
+    """
+
+    try:
+        sele = Seleccion.objects.get(id=id_s)
+    except:
+        messages.error(request,'No existe la selección solicitada')
+        return redirect('listar_seleccion')
+
+    return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
+        'titulo': 'Selección de Deportistas',
+        'wizard_stage': 2
+    })
 
 @login_required
 def registrar_personal(request,id_s):
