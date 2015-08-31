@@ -79,8 +79,6 @@ def inicio(request):
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')
         else:
-                
-            
             if request.user.is_superuser:
                 return redirect('usuarios_lista')
             else:

@@ -25,6 +25,5 @@ urlpatterns = patterns('snd.views.caf',
     #url(r'^desactivar/(\d+)$', 'desactivarCAF', name='desactivar_caf'),
     
 
-    url(r'^cargar-columnas/(\d+)$', 'cargar_columnas', name='cargar_columnas'),
-    url(r'^cargar-datos/(\d+)$', 'cargar_datos', name='cargar_datos'),
+    
 )

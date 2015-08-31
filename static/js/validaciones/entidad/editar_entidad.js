@@ -42,6 +42,12 @@ fields = {
             }
         }
     },
-
+    pagina_web: {
+        validators: {
+            uri: {
+                message: 'Ingrese una URL válida (Ej: http://google.com.co)'
+            }
+        }
+    },
 };
 $.getScript(base+"js/validaciones/validations-base.js");
