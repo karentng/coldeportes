@@ -7,7 +7,7 @@ from coldeportes.utilities import adicionarClase
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
-    pagina = forms.CharField(label="Página Web")
+    pagina = forms.CharField(label="Página Web", required=True)
 
     def __init__(self, *args, **kwargs):
         instancia = kwargs.get('instance', None)
@@ -18,6 +18,15 @@ class LigaForm(forms.ModelForm):
 
         if instancia != None:
             del self.fields['pagina']
+
+    def clean(self):
+        federacion = self.cleaned_data['federacion']
+        disciplina = self.cleaned_data['disciplina']
+        if federacion != None:
+            if federacion.disciplina != disciplina:
+                raise forms.ValidationError('La disciplina de la federación asociada no es la misma que la de la liga')
+        
+        return self.cleaned_data
     
     class Meta:
         model = Liga
@@ -31,6 +40,7 @@ class FederacionForm(forms.ModelForm):
         instancia = kwargs.get('instance', None)
         super(FederacionForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
@@ -82,14 +92,15 @@ class EnteForm(forms.ModelForm):
         instancia = kwargs.get('instance', None)
         super(EnteForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
 
     class Meta:
         model = Ente
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion',)
-        fields = ('nombre', 'tipo_ente', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion', 'tipo_ente',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
@@ -100,15 +111,15 @@ class ActoresForm(forms.ModelForm):
 
         if tipo == '1':
             #Liga
-            del self.fields['centros']
-            del self.fields['escenarios']
-            del self.fields['deportistas']
+            #del self.fields['centros']
+            #del self.fields['escenarios']
+            #del self.fields['deportistas']
             del self.fields['cajas']
         elif tipo == '2':
             #Federacion
-            del self.fields['centros']
-            del self.fields['escenarios']
-            del self.fields['deportistas']
+            #del self.fields['centros']
+            #del self.fields['escenarios']
+            #del self.fields['deportistas']
             del self.fields['cajas']
         elif tipo == '3':
             #Club
