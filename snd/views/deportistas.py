@@ -29,7 +29,6 @@ def wizard_deportista_nuevo(request):
     :type request:    WSGIRequest
     """
 
-
     try:
         datos = request.session['datos']
     except Exception:
@@ -44,11 +43,6 @@ def wizard_deportista_nuevo(request):
         if deportista_form.is_valid():
             deportista = deportista_form.save(commit=False)
             deportista.entidad = request.tenant
-            deportista.nombres = deportista.nombres.upper()
-            deportista.apellidos = deportista.apellidos.upper()
-            deportista.barrio = deportista.barrio.upper()
-            deportista.comuna = deportista.comuna.upper()
-            deportista.direccion = deportista.direccion.upper()
             deportista.save()
             deportista_form.save()
             return redirect('wizard_corporal', deportista.id)
@@ -94,15 +88,9 @@ def wizard_deportista(request,id_depor):
 
         if deportista_form.is_valid():
             deportista = deportista_form.save(commit=False)
-            deportista.nombres = deportista.nombres.upper()
-            deportista.apellidos = deportista.apellidos.upper()
-            deportista.barrio = deportista.barrio.upper()
-            deportista.comuna = deportista.comuna.upper()
-            deportista.direccion = deportista.direccion.upper()
             deportista.save()
             deportista_form.save()
             return redirect('wizard_corporal', id_depor)
-
 
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
         'titulo': 'Información del Deportista',
@@ -199,15 +187,6 @@ def wizard_historia_deportiva(request,id_depor):
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
             hist_depor_nuevo.deportista = deportista
-            hist_depor_nuevo.nombre = hist_depor_nuevo.nombre.upper()
-            hist_depor_nuevo.marca = hist_depor_nuevo.marca.upper()
-            hist_depor_nuevo.modalidad = hist_depor_nuevo.modalidad.upper()
-            hist_depor_nuevo.division = hist_depor_nuevo.division.upper()
-            hist_depor_nuevo.prueba = hist_depor_nuevo.prueba.upper()
-            hist_depor_nuevo.categoria = hist_depor_nuevo.categoria.upper()
-            hist_depor_nuevo.institucion_equipo = hist_depor_nuevo.institucion_equipo.upper()
-            if hist_depor_nuevo.tipo not in ['Campeonato Municipal','Campeonato Departamental']:
-                hist_depor_nuevo.estado = 'Pendiente'
             hist_depor_nuevo.save()
             hist_depor_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -285,8 +264,6 @@ def wizard_historia_academica(request,id_depor):
         if inf_academ_form.is_valid():
             inf_academ_nuevo = inf_academ_form.save(commit=False)
             inf_academ_nuevo.deportista = deportista
-            inf_academ_nuevo.institucion = inf_academ_nuevo.institucion.upper()
-            inf_academ_nuevo.profesion = inf_academ_nuevo.profesion.upper()
             inf_academ_nuevo.save()
             inf_academ_form.save()
             return redirect('wizard_historia_academica', id_depor)
@@ -552,13 +529,24 @@ def cambio_tipo_documento_deportista(request,id):
     })
 
 def obtener_historiales_por_liga(liga,tenant_actual,tipo):
+    """
+    Agosto 28 /2015
+    Autor: Daniel Correa
+
+    Permite obtener los historiales deportivos de una liga, es decir, busca en todos los clubes de dicha liga
+
+    :param liga: liga a la cual buscar
+    :param tenant_actual: tenant de la liga actual
+    :param tipo: tipo de busqueda, DEPARTAMENTAL O MUNICIPAL
+    :return: historiales deportivos de la liga
+    """
     clubes = Club.objects.filter(liga=liga)
     historiales = []
     for c in clubes:
         connection.set_tenant(c)
         ContentType.objects.clear_cache()
         historiales += HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)
-        print(historiales)
+        print(historiales) #No quitar, necesario para ejecucion de lazy queryset y obtencion de informacion desde la bd
     connection.set_tenant(tenant_actual)
     return historiales
 

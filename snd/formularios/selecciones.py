@@ -12,6 +12,8 @@ class SeleccionForm(ModelForm):
         super(SeleccionForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['tipo_campeonato'] = adicionarClase(self.fields['tipo_campeonato'], 'one')
+        self.fields['fecha_inicial'] = adicionarClase(self.fields['fecha_inicial'],'fecha')
+        self.fields['fecha_final'] = adicionarClase(self.fields['fecha_final'],'fecha')
 
     class Meta:
         model = Seleccion

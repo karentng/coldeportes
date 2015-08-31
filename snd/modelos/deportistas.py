@@ -74,6 +74,14 @@ class Deportista(models.Model):
     def fotos(self):
         return [self.foto]
 
+    def save(self, *args, **kwargs):
+        self.nombres = self.nombres.upper()
+        self.apellidos = self.apellidos.upper()
+        self.barrio = self.barrio.upper()
+        self.comuna = self.comuna.upper()
+        self.direccion = self.direccion.upper()
+        super(Deportista, self).save(*args, **kwargs)
+
 #Composicion corporal
 class ComposicionCorporal(models.Model):
     tipos_rh =(
@@ -130,7 +138,7 @@ class HistorialDeportivo(models.Model):
     fecha_inicial = models.DateField(verbose_name='Fecha Iniciación')
     fecha_final = models.DateField(verbose_name='Fecha Finalización ')
     pais = models.ForeignKey(Nacionalidad)
-    institucion_equipo = models.CharField(max_length=100,blank=True,null=True, verbose_name='Club deportivo')
+    institucion_equipo = models.CharField(max_length=100, verbose_name='Club deportivo')
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato',default='Campeonato Internacional')
     puesto = models.IntegerField(verbose_name='Puesto obtenido')
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
@@ -143,6 +151,19 @@ class HistorialDeportivo(models.Model):
 
     def __str__(self):
         return self.deportista.nombres+':'+self.nombre
+
+    def save(self, *args, **kwargs):
+        self.nombre = self.nombre.upper()
+        self.marca = self.marca.upper()
+        self.modalidad = self.modalidad.upper()
+        self.division = self.division.upper()
+        self.prueba = self.prueba.upper()
+        self.categoria = self.categoria.upper()
+        self.institucion_equipo = self.institucion_equipo.upper()
+        if self.tipo not in ['Campeonato Municipal','Campeonato Departamental']:
+                self.estado = 'Pendiente'
+
+        super(HistorialDeportivo, self).save(*args, **kwargs)
 
 #Informacion academica
 class InformacionAcademica(models.Model):
@@ -166,6 +187,11 @@ class InformacionAcademica(models.Model):
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
+
+    def save(self, *args, **kwargs):
+        self.institucion = self.institucion.upper()
+        self.profesion = self.profesion.upper()
+        super(InformacionAcademica, self).save(*args, **kwargs)
 
 class CambioDocumentoDeportista(models.Model):
     TIPO_IDENTIDAD = (
