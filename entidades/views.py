@@ -21,18 +21,56 @@ def tipo(request):
     return render(request, 'entidad_tipo.html', {
     })
 
+def obtenerFormularioTenant(tipo, post=None, instance=None):
+    if tipo == '1':
+        nombre = 'Liga'
+        form = LigaForm(post, instance=instance)
+    elif tipo == '2':
+        nombre = 'Federación'
+        form = FederacionForm(post, instance=instance)
+    elif tipo == '3':
+        nombre = 'Club'
+        form = ClubForm(post, instance=instance)
+    elif tipo == '4':
+        nombre = 'Caja de Compensación'
+        form = CajaDeCompensacionForm(post, instance=instance)
+    elif tipo == '5':
+        nombre = 'Ente'
+        form = EnteForm(post, instance=instance)
+
+    return [nombre, form]
+
 @login_required
-def registro(request, tipo):
-    form = EntidadForm()
-    form2 = ActoresForm()
+def obtenerTenant(request, idEntidad, tipo):
+    if tipo == '1':
+        return Liga.objects.get(id=idEntidad)
+    elif tipo == '2':
+        return Federacion.objects.get(id=idEntidad)
+    elif tipo == '3':
+        return Club.objects.get(id=idEntidad)
+    elif tipo == '4':
+        return CajaDeCompensacion.objects.get(id=idEntidad)
+    elif tipo == '5':
+        return Ente.objects.get(id=idEntidad)
+    raise Exception
+
+@login_required
+def registro(request, tipo, tipoEnte=None):
+    nombre, form = obtenerFormularioTenant(tipo)
+
+    form2 = ActoresForm(tipo=tipo)
 
     dominio = settings.SUBDOMINIO_URL
 
     if request.method == 'POST':
-        form = EntidadForm(request.POST)
+        nombre, form = obtenerFormularioTenant(tipo, request.POST)
+        #form = EntidadForm(request.POST)
         form2 = ActoresForm(request.POST)
         if form.is_valid() and form2.is_valid():
             actores = form2.save()
+            if tipo == '4':
+                actores.cajas = True
+                actores.save()
 
             pagina = form.cleaned_data['pagina']
             obj = form.save(commit=False)
@@ -40,37 +78,44 @@ def registro(request, tipo):
             obj.domain_url = pagina + dominio
             obj.actores = actores
             obj.tipo = tipo
+            if tipo == '5':
+                obj.tipo_ente = tipoEnte
             obj.save()
 
-            messages.success(request, "Entidad registrada correctamente.")
+            messages.success(request, ("%s registrado correctamente.")%(nombre))
             return redirect('entidad_registro', tipo)
 
     return render(request, 'entidad_registro.html', {
+        'nombre': nombre,
         'form': form,
         'form2': form2,
         'dominio': dominio
     })
 
 @login_required
-def editar(request, idEntidad):
+def editar(request, idEntidad, tipo):
     try:
-        entidad = Entidad.objects.get(id=idEntidad)
+        instance = obtenerTenant(request, idEntidad, tipo)
     except Exception:
         return redirect('entidad_listar')
 
-    form = EntidadEditarForm(instance=entidad)
-    form2 = ActoresForm(instance=entidad.actores)
+    nombre, form = obtenerFormularioTenant(tipo, instance=instance)
+    form2 = ActoresForm(instance=instance.actores, tipo=tipo)
 
     if request.method == 'POST':
-        form = EntidadEditarForm(request.POST, instance=entidad)
-        form2 = ActoresForm(request.POST, instance=entidad.actores)
+        nombre, form = obtenerFormularioTenant(tipo, post=request.POST, instance=instance)
+        form2 = ActoresForm(request.POST, instance=instance.actores)
         if form.is_valid() and form2.is_valid():
             actores = form2.save()
+            if tipo == '4':
+                actores.cajas = True
+                actores.save()
             obj = form.save()
-            messages.success(request, "Entidad editada correctamente.")
+            messages.success(request, ("%s editado correctamente.")%(nombre))
             return redirect('entidad_listar')
 
     return render(request, 'entidad_editar.html', {
+        'nombre': nombre,
         'form': form,
         'form2': form2,
     })

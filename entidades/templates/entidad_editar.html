@@ -7,18 +7,18 @@
 	<li class="active">Editar</li>
 {% endblock %}
 
-{% block titulo_contenido %}
-	Editar Entidad
+{% block js %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/validaciones/entidad/editar_entidad.js"></script>
 {% endblock %}
 
 {% block titulo_panel %}
-	Editar Entidad
+	Editar {{nombre}}
 {% endblock %}
 
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
-			<form class="form-horizontal" action="" method="post">{% csrf_token %}
+			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
 				{% bootstrap_form form layout="horizontal" %}
 
 			    <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>

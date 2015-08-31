@@ -7,6 +7,7 @@ class CentroAcondicionamiento(models.Model):
         (0, "Activo"),
         (1, "Inactivo"),
     )
+    
     ESTRATOS = (
         (1, 'Uno'),
         (2, 'Dos'),

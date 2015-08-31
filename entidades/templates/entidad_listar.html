@@ -47,7 +47,13 @@
                             <td>{{entidad.nombre}}</td>
                             <td>{{entidad.domain_url}}</td>
                             <td>{{entidad.schema_name}}</td>
-                            <td>{{entidad.get_tipo_display}}</td>
+                            <td>
+                                {% if entidad.tipo == 5 %}
+                                    {{entidad.obtenerTenant.get_tipo_ente_display}}
+                                {% else %}
+                                    {{entidad.get_tipo_display}}
+                                {% endif %}
+                            </td>
                             <td>
                                 <ul>
                                     {% if entidad.actores != None %}
@@ -60,7 +66,7 @@
                                 </ul>
                             </td>
                             <td>
-                                <a href='{% url 'entidad_editar' entidad.id %}' class="btn btn-primary">
+                                <a href='{% url 'entidad_editar' entidad.id entidad.tipo %}' class="btn btn-primary">
                                     <i class="fa fa-edit"></i> Editar
                                 </a>
                                 <br/>
