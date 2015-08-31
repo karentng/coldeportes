@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^directorio/',include('directorio.entidad_urls')),#urls del modulo de directorio perfil entidad
     url(r'^directorio-publico/',include('directorio.publico_urls')),#urls del modulo de directorio publico
     url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
+    url(r'cargado-datos/', include('snd.urls.cargado_datos')),
     
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
