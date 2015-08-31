@@ -1,12 +1,10 @@
-<h5>Vista Previa</h5>
-<div class="well row">
-    <!--p align="center">No se ha cargado información</p-->
+{%if deportista%}
     <div class="media media-sm">
         <div class="col-lg-3">
             <br/>
             <a class="media-left">
                 {%if deportista.foto%}
-                    <img class="media-object" src="{{MEDIA_URL}}{{h.deportista.foto}}" alt="Foto del Deportista"  />
+                    <img class="media-object" src="{{MEDIA_URL}}{{deportista.foto}}" alt="Foto del Deportista" width="70" height="70" />
                 {%else%}
                     <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="70" height="70"/>
                 {%endif%}
@@ -27,4 +25,6 @@
     </div>
 
     <button type="button" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Añadir</button>
-</div>
+{%else%}
+    <p align="center">Seleccione un deportista</p>
+{%endif%}

@@ -7,4 +7,8 @@ urlpatterns = patterns('snd.views.selecciones',
     url(r'^registro/deportistas/(\d+)$', 'registrar_deportistas', name='registrar_deportistas'),
     url(r'^registro/personal/(\d+)$', 'registrar_personal', name='registrar_personal'),
     url(r'^listar$', 'listar_seleccion', name='listar_seleccion'),
+
+    #URLS para AJAX selecciones
+        #URLS AJAX SELECCION DEPORTISTAS
+    url(r'^vista-previa/(\d+)/(\d+)$', 'vista_previa_deportista', name='vista_previa_deportista'),
 )

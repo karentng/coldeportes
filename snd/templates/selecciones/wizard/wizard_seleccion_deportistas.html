@@ -7,7 +7,6 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -42,11 +41,22 @@
 								<div class="col-md-6 eq-box-md  box-vmiddle-wrap">
 									<h5>Deportistas</h5>
 									<div class="well row">
-										{% bootstrap_form form %}
+										<div class="form-group">
+											<label class="control-label" for="sele-depor">Seleccione un deportista</label>
+											<select class="form-control one" id="sele-depor" required>
+												<option value selected>---------</option>
+												{%for d in deportistas%}
+													<option value="{{d.id}}" data-entidad="{{d.entidad.id}}">{{d}}</option>
+												{%endfor%}
+											</select>
+										</div>
 									</div>
 								</div>
-								<div class="col-md-6 eq-box-md  box-vmiddle-wrap " id="vista-previa">
-									{% include 'selecciones/wizard/ajax_seleccion_deportistas/vista_previa.html' %}
+								<div class="col-md-6 eq-box-md  box-vmiddle-wrap " >
+									<h5>Vista Previa</h5>
+									<div class="well row" id="vista-previa">
+										{% include 'selecciones/wizard/ajax_seleccion_deportistas/vista_previa.html' %}
+									</div>
 								</div>
 							</div>
 						</div><br/>
@@ -79,7 +89,6 @@
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
-	<!--script src="{{ STATIC_URL }}js/validaciones/selecciones/wizard-seleccion-validations.js"></script-->
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 	
 {% endblock %}
@@ -90,5 +99,21 @@
 			App.init();
 			FormWizard.init();
 		});
+		var str_no_option = "<p align='center'>Seleccione un deportista</p>";
+		$("#sele-depor").on("change",function(e){
+			var id_depor = $(this).val();
+			if(id_depor){
+				var id_entidad = $(this).find(':selected').attr('data-entidad');
+				$.ajax({
+					url: '/selecciones/vista-previa/'+id_entidad+'/'+id_depor,
+					success: function(data) {
+						$('#vista-previa').html(data);
+					}
+				});
+			}else{
+				$('#vista-previa').html(str_no_option);
+			}
+
+		})
 	</script>
 {% endblock %}

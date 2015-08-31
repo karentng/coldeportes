@@ -53,12 +53,24 @@ def registrar_deportistas(request,id_s):
         messages.error(request,'No existe la selección solicitada')
         return redirect('listar_seleccion')
 
-    form = SeleccionDeportistasForm(request.tenant)
+    depor = None
+    if request.tenant.tipo == 1:
+        #Liga
+        clubes = Club.objects.filter(liga=request.tenant.id)
+        connection.set_tenant(clubes[0])
+        ContentType.objects.clear_cache()
+        depor = Deportista.objects.all()
+    elif request.tenant.tipo == 2:
+        #Fede
+        pass
+
+    #form = SeleccionDeportistasForm(request.tenant)
 
     return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
         'titulo': 'Selección de Deportistas',
         'wizard_stage': 2,
-        'form': form
+        #'form': form
+        'deportistas': depor
     })
 
 @login_required
@@ -81,4 +93,39 @@ def listar_seleccion(request):
 
     return render(request,'selecciones/listar_selecciones.html',{
         'selecciones': selecciones
+    })
+
+#AJAX SELECCIONES
+
+#AJAX SELECCION DE DEPORTISTAS
+@login_required
+def vista_previa_deportista(request,id_entidad,id_depor):
+    """
+    Agosto 31 / 2015
+    Autor: Daniel Correa
+
+    Permite obtener la vista previa del deportista a seleccionar
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_entidad: id entidad a traer deportista
+    :param id_depor: id deportistas a mostrar
+    """
+    try:
+        ent = Entidad.objects.get(id=id_entidad)
+    except:
+        messages.error(request,'Entidad no encontrada')
+        return redirect('listar_seleccion')
+
+    connection.set_tenant(ent)
+    ContentType.objects.clear_cache()
+
+    try:
+        depor = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Deportista no existe')
+        return redirect('listar_seleccion')
+
+    return render(request,'selecciones/wizard/ajax_seleccion_deportistas/vista_previa.html',{
+        'deportista': depor
     })
