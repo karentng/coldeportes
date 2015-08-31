@@ -6,6 +6,7 @@ from snd.formularios.selecciones import *
 from django.contrib import messages
 from snd.models import *
 from entidades.models import *
+from django.http import JsonResponse
 
 @login_required
 def registrar_base(request):
@@ -69,10 +70,16 @@ def registrar_deportistas(request,id_s):
         messages.error(request,'Usted esta en una sección que no le corresponde')
         return redirect('inicio_tenant')
 
+    #depor_seleccionados = DeportistasSeleccion.objects.filter(seleccion=sele)
+    depor_registrados = []
+    #depor_registrados = [Deportista.objects.get(id=x.deportista) for x in depor_seleccionados]
+
     return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
         'titulo': 'Selección de Deportistas',
         'wizard_stage': 2,
-        'deportistas': deportistas
+        'deportistas': deportistas,
+        'sele_id': sele.id,
+        'depor_registrados': depor_registrados
     })
 
 @login_required
@@ -133,5 +140,45 @@ def vista_previa_deportista(request,id_entidad,id_depor):
     })
 
 @login_required
-def seleccionar_deportista(request,id_entidad,id_depor):
-    pass
+def seleccionar_deportista(request,id_s,id_entidad,id_depor):
+    """
+    Agosto 31 / 2015
+    Autor: Daniel Correa
+
+    Permite guardar los deportistas seleccionados de la seleccion id_s
+
+    :param request:
+    :param id_s:
+    :param id_entidad:
+    :param id_depor:
+    :return:
+    """
+    try:
+        ent = Entidad.objects.get(id=id_entidad)
+    except:
+        messages.error(request,'Entidad no encontrada')
+        return redirect('listar_seleccion')
+
+    connection.set_tenant(ent)
+    ContentType.objects.clear_cache()
+
+    try:
+        depor = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Deportista no existe')
+        return redirect('listar_seleccion')
+
+    connection.set_tenant(request.tenant)
+
+    try:
+        sele = Seleccion.objects.get(id=id_s)
+    except:
+        messages.error(request,'No existe la seleccion solicitada')
+        return redirect('listar_seleccion')
+
+    depor_sele = DeportistasSeleccion(deportista=depor.id,entidad=ent,seleccion=sele)
+    depor_sele.save()
+
+    return JsonResponse({
+        'respuesta': [depor.nombres + ' ' +depor.apellidos,depor.tipo_id,depor.identificacion,depor.edad(),depor.ciudad_residencia.__str__(),depor.entidad.nombre,]
+    })

@@ -11,5 +11,5 @@ urlpatterns = patterns('snd.views.selecciones',
     #URLS para AJAX selecciones
         #URLS AJAX SELECCION DEPORTISTAS
     url(r'^vista-previa/(\d+)/(\d+)$', 'vista_previa_deportista', name='vista_previa_deportista'),
-    url(r'^guardar-deportista/(\d+)/(\d+)$', 'seleccionar_deportista', name='selecvionar_deportista'),
+    url(r'^guardar-deportista/(\d+)/(\d+)/(\d+)$', 'seleccionar_deportista', name='selecvionar_deportista'),
 )

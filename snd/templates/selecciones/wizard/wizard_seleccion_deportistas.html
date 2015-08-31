@@ -70,14 +70,24 @@
 											<thead>
 												<tr>
 													<th>Nombres</th>
-													<th>Tipo Identificación</th>
-													<th>Identificación</th>
+													<th>Tipo Identificacion</th>
+													<th>Identificacion</th>
 													<th>Edad</th>
 													<th>Ciudad de Residencia</th>
 													<th>Club Deportivo</th>
 												</tr>
 											</thead>
 											<tbody>
+												{%for d in depor_registrados%}
+													<tr>
+														<td>{{d.nombres}} {{d.apellidos}}</td>
+														<td>{{d.tipo_id}}</td>
+														<td>{{d.identificacion}}</td>
+														<td>{{d.edad}}</td>
+														<td>{{d.ciudad_residencia}}</td>
+														<td>{{d.entidad}}</td>
+													</tr>
+												{%endfor%}
 
 											</tbody>
 										</table>
@@ -115,12 +125,14 @@
 
 {% block script %}
 	<script>
+
 		$(document).ready(function() {
 			App.init();
 			FormWizard.init();
-			$('#tabla-depor-seleccionados').DataTable();
 		});
+		var table = $('#tabla-depor-seleccionados').DataTable();
 		var str_no_option = "<p align='center'>Seleccione un deportista</p>";
+		var sele_id = {{sele_id}};
 		$("#sele-depor").on("change",function(e){
 			var id_depor = $(this).val();
 			if(id_depor){
@@ -135,6 +147,23 @@
 				$('#vista-previa').html(str_no_option);
 			}
 
+		});
+
+		$(document).on('click','#bt-seleccionar',function(){
+			var id_entidad = $(this).attr("data-entidad");
+			var id_depor = $(this).attr("data-depor");
+			$.ajax({
+				url: '/selecciones/guardar-deportista/'+sele_id+'/'+id_entidad+'/'+id_depor,
+
+				success: function(data) {
+					$("#bt-seleccionar").attr('disabled',1);
+					$("#sele-depor").find(':selected').remove();
+					table.row.add(data.respuesta).draw();
+					//var sele = $("#sele-depor").find(':selected');
+					//sele.attr('disabled','disabled');
+					//console.log(sele)
+				}
+			});
 		});
 	</script>
 {% endblock %}

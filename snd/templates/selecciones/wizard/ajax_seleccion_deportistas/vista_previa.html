@@ -1,4 +1,4 @@
-{%if deportista%}
+{%if deportista %}
     <div class="media media-sm">
         <div class="col-lg-3">
             <br/>
@@ -18,13 +18,13 @@
                 <strong>Genero:</strong> {{ deportista.genero }} <br/>
                 <strong>Edad:</strong> {{ deportista.edad }} <br/>
                 <strong>Disciplinas Deportivas:</strong> {{ deportista.disciplinas_deportivas }} <br/>
-                <strong>Ciudad de Residencia:</strong> {{deportista.ciudad}}
+                <strong>Ciudad de Residencia:</strong> {{deportista.ciudad_residencia}}
             </p>
         </div>
         </div>
     </div>
 
-    <button type="button" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Añadir</button>
+    <button type="button" id="bt-seleccionar" data-entidad="{{deportista.entidad.id}}" data-depor="{{deportista.id}}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Añadir</button>
 {%else%}
     <p align="center">Seleccione un deportista</p>
 {%endif%}
