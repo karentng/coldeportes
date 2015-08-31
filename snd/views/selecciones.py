@@ -34,7 +34,7 @@ def registrar_base(request):
 
 @login_required
 def registrar_deportistas(request,id_s):
-    return redirect('inicio_tenant')
+    return redirect('registrar_personal')
 
 @login_required
 def registrar_personal(request,id_s):
