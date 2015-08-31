@@ -108,7 +108,7 @@ class HistorialDeportivoForm(ModelForm):
 
     class Meta:
         model = HistorialDeportivo
-        exclude = ('deportista',)
+        exclude = ('deportista','estado')
 
 class InformacionAcademicaForm(ModelForm):
 

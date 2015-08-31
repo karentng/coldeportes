@@ -47,8 +47,8 @@ class Deportista(models.Model):
     barrio = models.CharField(max_length=100,verbose_name='Barrio')
     comuna = models.CharField(max_length=100,verbose_name='Comuna')
     email = models.EmailField(null=True,blank=True)
-    telefono = models.CharField(max_length=100,verbose_name='Telefono')
-    direccion = models.CharField(max_length=100,verbose_name='Direccion')
+    telefono = models.CharField(max_length=100,verbose_name='Teléfono')
+    direccion = models.CharField(max_length=100,verbose_name='Dirección')
     entidad = models.ForeignKey(Entidad)
 
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
@@ -70,6 +70,9 @@ class Deportista(models.Model):
 
     def nacionalidad_str(self):
         return ",".join(x.nombre for x in self.nacionalidad.all())
+
+    def fotos(self):
+        return [self.foto]
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):
@@ -117,10 +120,15 @@ class HistorialDeportivo(models.Model):
         ('Campeonato Nacional','Campeonato Nacional'),
         ('Campeonato Internacional','Campeonato Internacional'),
     )
+
+    ESTADOS_AVAL = (
+        ('Aprobado','Aprobado'),
+        ('Pendiente','Pendiente'),
+    )
+
     nombre = models.CharField(max_length=100,verbose_name='Nombre del campeonato')
     fecha_inicial = models.DateField(verbose_name='Fecha Iniciación')
-    fecha_final = models.DateField(blank=True, null=True,verbose_name='Fecha Finalización ')
-    actual = models.BooleanField(verbose_name='¿Actualmente?',default=False)
+    fecha_final = models.DateField(verbose_name='Fecha Finalización ')
     pais = models.ForeignKey(Nacionalidad)
     institucion_equipo = models.CharField(max_length=100,blank=True,null=True, verbose_name='Club deportivo')
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato',default='Campeonato Internacional')
@@ -130,7 +138,11 @@ class HistorialDeportivo(models.Model):
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
     categoria = models.CharField(max_length=100,verbose_name='Categoria en la que participó')
+    estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
+
+    def __str__(self):
+        return self.deportista.nombres+':'+self.nombre
 
 #Informacion academica
 class InformacionAcademica(models.Model):

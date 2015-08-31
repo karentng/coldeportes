@@ -3,7 +3,7 @@
  */
 $(document).ready(function() {
     $('#id_fecha_final').prop('required',true);
-    $("#id_actual").change(function(){
+    /*$("#id_actual").change(function(){
        if($(this).is(":checked")){
            $("#id_fecha_final").val("");
            $("#id_fecha_final").parent().css('display','none');
@@ -28,5 +28,5 @@ $(document).ready(function() {
            $(form).bootstrapValidator('addField', 'fecha_final');
            $(form).bootstrapValidator('revalidateField', 'fecha_final');
        }
-    });
+    });*/
 });

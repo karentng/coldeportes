@@ -51,7 +51,7 @@
     <div class="panel-body" style="padding:0">
         <div class="row">
             <div class="col-sm-12">
-                <img src="http://www.pulzo.com/sites/default/files/styles/pulzo2_wide/public/nicole_col_2_1002.jpg?itok=r1mGa3jP" alt="deportistas" style="width:100%; height:250px">
+                <img src="{{STATIC_URL}}img/ver_mas_deportistas.png" alt="deportistas" style="width:100%; height:250px">
                 <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
                     <div class="panel-heading p-0">
                         <div class="panel-heading-btn m-r-10 m-t-10">
@@ -205,13 +205,7 @@
                                                             <tr>
                                                                 <td>{{historial.nombre}}</td>
                                                                 <td>{{historial.fecha_inicial}}</td>
-                                                                <td>
-                                                                    {% if not historial.actual %}
-                                                                        {{ historial.fecha_final }}
-                                                                    {% else %}
-                                                                        Actual
-                                                                    {%endif%}
-                                                                </td>
+                                                                <td>{{ historial.fecha_final }}</td>
                                                                 <td>{{historial.pais}}</td>
                                                                 <td>
                                                                     {% if historial.institucion_equipo %}

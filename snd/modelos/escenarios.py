@@ -32,6 +32,18 @@ class Escenario(models.Model):
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Escenario")
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
+    def fotos(self):
+        return [x.foto for x in Foto.objects.filter(escenario=self)]
+
+    def caracteristicas(self):
+        return CaracterizacionEscenario.objects.get(escenario=self)
+
+    def capacidad(self):
+        return self.caracteristicas().capacidad_espectadores
+
+    def tipo_escenario(self):
+        return self.caracteristicas().tipo_escenario
+
 class CaracterizacionEscenario(models.Model):   
     accesos = (
         ('pr', 'Privado'),
