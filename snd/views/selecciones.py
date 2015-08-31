@@ -53,24 +53,26 @@ def registrar_deportistas(request,id_s):
         messages.error(request,'No existe la selección solicitada')
         return redirect('listar_seleccion')
 
-    depor = None
+    deportistas = []
     if request.tenant.tipo == 1:
         #Liga
         clubes = Club.objects.filter(liga=request.tenant.id)
-        connection.set_tenant(clubes[0])
-        ContentType.objects.clear_cache()
-        depor = Deportista.objects.all()
+        for c in clubes:
+            connection.set_tenant(c)
+            ContentType.objects.clear_cache()
+            deportistas += Deportista.objects.filter(estado=0)
+        connection.set_tenant(request.tenant)
     elif request.tenant.tipo == 2:
         #Fede
         pass
-
-    #form = SeleccionDeportistasForm(request.tenant)
+    else:
+        messages.error(request,'Usted esta en una sección que no le corresponde')
+        return redirect('inicio_tenant')
 
     return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
         'titulo': 'Selección de Deportistas',
         'wizard_stage': 2,
-        #'form': form
-        'deportistas': depor
+        'deportistas': deportistas
     })
 
 @login_required
