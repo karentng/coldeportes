@@ -546,7 +546,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo):
         connection.set_tenant(c)
         ContentType.objects.clear_cache()
         historiales += HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)
-        print(historiales)
+        print(historiales) #No quitar, necesario para ejecucion de lazy queryset y obtencion de informacion desde la bd
     connection.set_tenant(tenant_actual)
     return historiales
 

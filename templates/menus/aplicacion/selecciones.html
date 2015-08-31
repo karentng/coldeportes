@@ -9,7 +9,7 @@
             <a href="{% url 'registrar_seleccion' %}">Registro</a>
         </li>
         <li {% if "/selecciones/listar" in request.path %} class="active" {% endif %}>
-            <a href="">Listar Selecciones</a>
+            <a href="{% url 'listar_seleccion' %}">Listar Selecciones</a>
         </li>
     </ul>
 </li>

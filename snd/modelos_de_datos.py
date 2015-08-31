@@ -136,6 +136,28 @@ MODELOS_DE_DATOS = (
 
         ]
     ),
+    (
+        Seleccion,
+        ["nombre", "tipo", "fecha_inicial", "fecha_final", "campeonato", "tipo_campeonato"],
+        ["Nombre", "Tipo de Selección", "Fecha Convocatoria", "Fecha Finaliza Convocatoria", "Nombre Campeonato", "Tipo Campeonato"],
+        None,
+        [
+            [
+                "Ver Seleccion",
+                'ver_deportista',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'edicion_deportista',
+                ['id'],
+                'fa-gear',
+                None
+            ],
+        ]
+    ),
 )
 
 '''
