@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from snd.formularios.selecciones import *
 from django.contrib import messages
 from snd.models import *
+from entidades.models import *
 
 @login_required
 def registrar_base(request):
@@ -52,9 +53,12 @@ def registrar_deportistas(request,id_s):
         messages.error(request,'No existe la selección solicitada')
         return redirect('listar_seleccion')
 
+    form = SeleccionDeportistasForm(request.tenant)
+
     return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
         'titulo': 'Selección de Deportistas',
-        'wizard_stage': 2
+        'wizard_stage': 2,
+        'form': form
     })
 
 @login_required

@@ -37,11 +37,26 @@
 					<h3>{{titulo}}</h3>
 
 					<div class="well row">
-						{%for i in form%}
-							<div class="col-lg-6">
-								{% bootstrap_field i%}
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="col-md-6 eq-box-md  box-vmiddle-wrap">
+									<h5>Deportistas</h5>
+									<div class="well row">
+										{% bootstrap_form form %}
+									</div>
+								</div>
+								<div class="col-md-6 eq-box-md  box-vmiddle-wrap " id="vista-previa">
+									{% include 'selecciones/wizard/ajax_seleccion_deportistas/vista_previa.html' %}
+								</div>
 							</div>
-						{%endfor%}
+						</div><br/>
+						<div class="row">
+							<div class="col-lg-12">
+								<h5>Listado de Deportistas Seleccionados</h5>
+								<div class="well row"></div>
+							</div>
+						</div>
+						<br/>
 						<hr>
 						<div class="row">
 							<div class="col-xs-12">
