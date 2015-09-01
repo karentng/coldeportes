@@ -5,10 +5,12 @@
         <span class="colorMenu">Centro de Acondicionamiento</span>
     </a>
     <ul class="sub-menu">
-        {% if perms.snd.add_centroacondicionamiento %}
-            <li {% if "/caf/crear-editar" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'crear_caf' 'Identificación' %}">Registro</a>
-            </li>
+        {% if perms.snd.add_centroacondicionamiento%}
+            {% if request.tenant.tipo != 1 and request.tenant.tipo != 2 %}
+                <li {% if "/caf/crear-editar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'crear_caf' 'Identificación' %}">Registro</a>
+                </li>
+            {% endif %}
         {% endif %}
         <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_cafs' %}">Listar CAF</a>

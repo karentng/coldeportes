@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
@@ -7,6 +9,7 @@ from snd.formularios.dirigentes  import *
 from django.conf import settings
 from coldeportes.utilities import *
 import json
+from entidades.models import Entidad
 
 
 @login_required
@@ -351,7 +354,7 @@ def activar_desactivar(request, dirigente_id):
     return redirect('dirigentes_listar')
 
 @login_required
-def ver(request, dirigente_id):
+def ver(request, dirigente_id,id_entidad):
     """
     Junio 21 / 2015
     Autor: Cristian Leonardo Ríos López
@@ -360,12 +363,20 @@ def ver(request, dirigente_id):
 
     Se obtienen toda la información registrada del dirigente dado y se muestra.
 
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
     :param request:   Petición realizada
     :type request:    WSGIRequest
     :param dirigente_id:   Identificador del dirigente
     :type dirigente_id:    String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
-
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
     try:
         dirigente = Dirigente.objects.get(id=dirigente_id)
     except Dirigente.DoesNotExist:

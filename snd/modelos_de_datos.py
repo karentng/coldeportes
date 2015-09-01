@@ -37,7 +37,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver CAF",
                 'ver_caf',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -60,7 +60,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver CAF",
                 'ver_caf',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -75,7 +75,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -162,7 +162,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ]
@@ -177,7 +177,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_personal_apoyo',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -242,7 +242,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_personal_apoyo',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -278,7 +278,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'dirigentes_ver',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -315,7 +315,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'dirigentes_ver',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -351,7 +351,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_escenario',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -388,7 +388,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_escenario',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -403,7 +403,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Seleccion",
                 'ver_seleccion',
-                ['id'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
