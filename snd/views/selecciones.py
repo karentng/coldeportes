@@ -356,7 +356,16 @@ def seleccionar_deportista(request,id_s,id_entidad,id_depor):
     depor_sele.save()
 
     return JsonResponse({
-        'respuesta': [depor.nombres + ' ' +depor.apellidos,depor.tipo_id,depor.identificacion,depor.edad(),depor.ciudad_residencia.__str__(),depor.entidad.nombre,]
+        'respuesta':
+            [
+                depor.nombres + ' ' +depor.apellidos,
+                depor.tipo_id,
+                depor.identificacion,
+                depor.edad(),
+                depor.ciudad_residencia.__str__(),
+                depor.entidad.nombre,
+                "<a data-depor="+depor.id+" data-entidad="+depor.entidad.id+" onclick = 'clickBorrar(this);' ><i class='fa fa-trash'></i> Borrar</a>"
+            ]
     })
 
 #AJAX SELECCION DE PERSONAL DE APOYO

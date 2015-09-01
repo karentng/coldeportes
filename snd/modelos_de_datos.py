@@ -403,7 +403,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Seleccion",
                 'ver_seleccion',
-                ['id','entidad.id'],
+                ['id'],
                 'fa-eye',
                 None
             ],
