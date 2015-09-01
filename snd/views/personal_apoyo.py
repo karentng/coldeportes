@@ -338,9 +338,8 @@ def listar_personal_apoyo(request):
     :type request: WSGIRequest
     """
 
-    personales_apoyo = PersonalApoyo.objects.all()
     return render(request, 'personal_apoyo/personal_apoyo_lista.html', {
-        'personales_apoyo':personales_apoyo,
+        'tipo_tenant':request.tenant.tipo
     })
 
 @login_required

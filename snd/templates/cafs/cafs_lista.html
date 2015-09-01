@@ -22,8 +22,11 @@
     <script type="text/javascript">
         idTabla = "tabla-cafs";
         opciones = {% if perms.snd.change_centroacondicionamiento %} true {% else %} false {% endif %};
-
-        url = "{% url 'cargar_columnas' 0 %}";
+        {% if tipo_tenant == 1 or tipo_tenant == 2 %}
+            url = "{% url 'cargar_columnas' 1 %}";
+        {% else %}
+            url = "{% url 'cargar_columnas' 0 %}";
+        {% endif %}
     </script>
 
 

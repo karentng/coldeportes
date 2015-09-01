@@ -7,6 +7,10 @@
 	<li class="active">Editar</li>
 {% endblock %}
 
+{% block js %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/validaciones/entidad/editar_entidad.js"></script>
+{% endblock %}
+
 {% block titulo_panel %}
 	Editar {{nombre}}
 {% endblock %}
@@ -14,13 +18,13 @@
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
-			<form class="form-horizontal" action="" method="post">{% csrf_token %}
+			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
 				{% bootstrap_form form layout="horizontal" %}
 
 			    <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
 			    {% bootstrap_form form2 layout="horizontal" %}
 
-				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Editar</button>
+				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Guardar</button>
 			</form>
 		</div>
 	</div>
