@@ -350,7 +350,7 @@ def listar_deportista(request):
     :type request: WSGIRequest
     """
 
-    return render(request, 'deportistas/deportistas_lista.html', {})
+    return render(request, 'deportistas/deportistas_lista.html', {'tipo_tenant':request.tenant.tipo})
 
 @login_required
 def ver_deportista(request,id_depor):

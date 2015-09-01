@@ -277,10 +277,8 @@ def listarCAFS(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-    
-    cafs = CentroAcondicionamiento.objects.all()
     return render(request, 'cafs/cafs_lista.html', {
-        'cafs': cafs,
+        'tipo_tenant':request.tenant.tipo
     })
 
 @login_required

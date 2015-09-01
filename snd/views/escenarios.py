@@ -24,9 +24,8 @@ def listar_escenarios(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-    escenarios = Escenario.objects.all()
     return render(request, 'escenarios/escenarios_lista.html', {
-        'escenarios': escenarios,
+        'tipo_tenant':request.tenant.tipo
     })
 
 @login_required

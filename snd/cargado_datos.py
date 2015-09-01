@@ -152,7 +152,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
 
 def obtener_objetos_por_tenant(request,modelo):
     #Tenant de tipo liga
-    if request.tenant.tipo==1:
+    if request.tenant.tipo == 1:
         objetos = []
         tenant_actual = request.tenant
         #Saco los objetos del modelo dado para la liga, esto se hace para el caso de dirigentes y personal_apoyo que puede tener la liga propia

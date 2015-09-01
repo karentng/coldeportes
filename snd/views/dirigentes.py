@@ -296,9 +296,8 @@ def listar(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-    dirigentes = Dirigente.objects.all()
     return render(request, 'dirigentes/dirigentes_lista.html', {
-        'dirigentes': dirigentes,
+        'tipo_tenant':request.tenant.tipo
     })
 
 @login_required
