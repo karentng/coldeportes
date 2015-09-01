@@ -11,7 +11,7 @@ urlpatterns = patterns('snd.views.dirigentes',
     url(r'^verificar$', 'verificar', name='dirigentes_verificar'),
     url(r'^finalizar/(?P<opcion>.+)$', 'finalizar', name='dirigentes_finalizar'),
     url(r'^activar_desactivar/(\d+)$', 'activar_desactivar', name='dirigentes_activar_desactivar'),
-    url(r'^ver/(\d+)$', 'ver', name='dirigentes_ver'),
+    url(r'^ver/(\d+)/(\d+)$', 'ver', name='dirigentes_ver'),
 
     #urls wizard
     url(r'^nuevo/wizard/identificacion$', 'wizard_identificacion_nuevo', name='dirigentes_wizard_identificacion_nuevo'),

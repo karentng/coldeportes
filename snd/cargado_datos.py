@@ -55,6 +55,11 @@ def obtenerDato(modelo, campos):
         campo = campos[0]
         if hasattr(modelo, 'get_%s_display' % campo):
             valor = (getattr(modelo, 'get_%s_display' % campo)())
+        elif '.' in campo:
+            atributos = campo.split('.')
+            valor = modelo
+            for atributo in atributos:
+                valor = getattr(valor,atributo)
         else:
             try:
                 valor = getattr(modelo, campo)

@@ -353,7 +353,7 @@ def listar_deportista(request):
     return render(request, 'deportistas/deportistas_lista.html', {'tipo_tenant':request.tenant.tipo})
 
 @login_required
-def ver_deportista(request,id_depor):
+def ver_deportista(request,id_depor,id_entidad):
     """
     Junio 22 /2015
     Autor: Daniel Correa
@@ -362,11 +362,21 @@ def ver_deportista(request,id_depor):
 
     Se obtiene la informacion general del deportista desde la base de datos y se muestra
 
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
     :param request: Petición Realizada
     :type request: WSGIRequest
     :param id_depor: Llave primaria del deportista
     :type id_depor: String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
+
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
     try:
         deportista = Deportista.objects.get(id=id_depor)
     except:
