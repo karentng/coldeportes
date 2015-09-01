@@ -100,32 +100,13 @@
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
                                             <b>Deportistas Seleccionados:</b>
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th align="center">Nombre</th>
-                                                            <th align="center">Precio</th>
-                                                            <th align="center">Descripción</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {% for plan in planes %}
-                                                        <tr>
-                                                            <td>{{plan.nombre}}</td>
-                                                            <td>{{plan.precio}}</td>
-                                                            <td>{{plan.descripcion|linebreaksbr}}</td>
-                                                            {% empty %}
-                                                            <tr>
-                                                                <td colspan="4" align="center">
-                                                                    <b>No hay planes registrados</b>
-                                                                </td>
-                                                            </tr>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                            <ul>
+                                                {% for i in depor_sele %}
+                                                <li>{{i}}</li>
+                                                {%empty%}
+                                                <li>No hay deportistas registrado</li>
+                                                {% endfor %}
+                                            </ul>
                                         </address>
                                         <div align="right">
                                             <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
@@ -138,15 +119,17 @@
                         <div class="tab-pane fade" id="nav-tab2-14">
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    <b>{{seleccion.nombre}}<b/>
+                                    <b> {{seleccion.nombre}} </b>
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
                                             <b>Personal de Apoyo Seleccionado:</b>
                                             <ul>
-                                                {% for i in centro.clases.all %}
+                                                {% for i in personal_sele %}
                                                 <li>{{i}}</li>
+                                                {%empty%}
+                                                <li>No hay personal registrado</li>
                                                 {% endfor %}
                                             </ul>
                                         </address>
