@@ -364,7 +364,7 @@ def seleccionar_deportista(request,id_s,id_entidad,id_depor):
                 depor.edad(),
                 depor.ciudad_residencia.__str__(),
                 depor.entidad.nombre,
-                "<a data-depor="+depor.id+" data-entidad="+depor.entidad.id+" onclick = 'clickBorrar(this);' ><i class='fa fa-trash'></i> Borrar</a>"
+               # "<a data-depor="+str(depor.id)+" data-entidad="+str(depor.entidad.id)+" onclick = 'clickBorrar(this);' ><i class='fa fa-trash'></i> Borrar</a>"
             ]
     })
 
