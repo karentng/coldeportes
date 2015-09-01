@@ -110,10 +110,17 @@ def registrar_deportistas(request,id_s):
         messages.error(request,'Usted esta en una sección que no le corresponde')
         return redirect('inicio_tenant')
 
-    #Traer el listado de deportistas seleccionados para mostrar en tabla [para edicion] y acomodar select para que traiga los que son
-    #depor_seleccionados = DeportistasSeleccion.objects.filter(seleccion=sele)
     depor_registrados = []
-    #depor_registrados = [Deportista.objects.get(id=x.deportista) for x in depor_seleccionados]
+    for d in DeportistasSeleccion.objects.filter(seleccion=sele): #Obtener deportistas seleccionados al momento
+        entidad = d.entidad
+        depor = d.deportista
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+        depor_registrados += [Deportista.objects.get(id=depor)]
+
+    for depo in depor_registrados: #Quitar de la lista de deportistas los que ya estan registrados
+        if depo in deportistas:
+            deportistas.remove(depo)
 
     return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
         'titulo': 'Selección de Deportistas',
@@ -165,6 +172,16 @@ def registrar_personal(request,id_s):
         return redirect('inicio_tenant')
 
     personal_registrados = []
+    for d in PersonalSeleccion.objects.filter(seleccion=sele): #Obtener personal seleccionado al momento
+        entidad = d.entidad
+        per = d.personal
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+        personal_registrados += [PersonalApoyo.objects.get(id=per)]
+
+    for person in personal_registrados: #Quitar de la lista de personal los que ya estan registrados
+        if person in personal:
+            personal.remove(person)
 
     return render(request,'selecciones/wizard/wizard_seleccion_personal.html',{
         'titulo': 'Selección de Personal de Apoyo',

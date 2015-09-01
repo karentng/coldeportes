@@ -98,11 +98,9 @@
 					<hr>
 					<div class="row">
 						<div class="col-xs-12">
-							{%comment%}
 							{% if wizard_stage > 1 %}
-								<a href="" class="btn btn-success pull-left" type="button">← Anterior</a>
+								<a href="{% url 'registrar_deportistas' sele_id %}" class="btn btn-success pull-left" type="button">← Anterior</a>
 							{% endif %}
-							{%endcomment%}
 							<a class="btn btn-primary pull-right" href="{%url 'finalizar_registro_seleccion'%}">
 								Finalizar →
 							</a>
