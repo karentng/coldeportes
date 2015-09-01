@@ -160,7 +160,7 @@ def obtener_objetos_por_tenant(request,modelo):
     if request.tenant.tipo == 1:
         if modelo.__name__ == 'Seleccion':
             objetos = []
-            #Saco los objetos propios de la federacion
+            #Saco los objetos propios de la liga
             qs = modelo.objects.all()
             for objeto in qs:
                 objetos.append(objeto)
@@ -179,7 +179,7 @@ def obtener_objetos_por_tenant(request,modelo):
                 for objeto in qs:
                     objetos.append(objeto)
             connection.set_tenant(tenant_actual)
-            return objetos
+        return objetos
     #Tenant de tipo Federación
     elif request.tenant.tipo == 2:
         if modelo.__name__ == 'Seleccion':
