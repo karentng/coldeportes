@@ -229,22 +229,36 @@ def ver_seleccion(request,id_s):
         return redirect('listar_seleccion')
 
     depor_registrados = []
+    count = 0
     for d in DeportistasSeleccion.objects.filter(seleccion=sele):
         entidad = d.entidad
         depor = d.deportista
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
-        depor_registrados += [Deportista.objects.get(id=depor)]
+        deportista = Deportista.objects.get(id=depor)
+        if count % 2 == 0:
+            deportista.par = True
+        else:
+            deportista.par = False
+        count +=1
+        depor_registrados += [deportista]
 
     connection.set_tenant(request.tenant)
 
+    count = 0
     personal_registrados = []
     for d in PersonalSeleccion.objects.filter(seleccion=sele):
         entidad = d.entidad
         per = d.personal
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
-        personal_registrados += [PersonalApoyo.objects.get(id=per)]
+        personal = PersonalApoyo.objects.get(id=per)
+        if count % 2 == 0:
+            personal.par = True
+        else:
+            personal.par = False
+        count+=1
+        personal_registrados += [personal]
 
     return render(request,'selecciones/ver_seleccion.html',{
         'seleccion': sele,

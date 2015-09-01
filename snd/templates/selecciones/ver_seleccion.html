@@ -100,11 +100,59 @@
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
                                             <b>Deportistas Seleccionados:</b>
-                                            <ul>
+
+                                            <ul class="media-list media-list-with-divider">
+                                                <br/>
                                                 {% for i in depor_sele %}
-                                                <li>{{i}}</li>
+                                                    {%if i.par %}
+                                                    <div class="col-lg-6">
+                                                        <li class="media media-sm">
+                                                            <a class="media-left">
+                                                                {%if i.foto%}
+                                                                    <img src="{{MEDIA_URL}}{{i.foto}}" alt="Foto del deportista" class="media-object rounded-corner" width="70" height="70"/>
+                                                                {%else%}
+                                                                    <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="70" height="70"/>
+                                                                {%endif%}
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <h4 class="media-heading">{{i.nombres}} {{i.apellidos}}</h4>
+                                                                <p>
+                                                                    <b>Club Deportivo:</b> {{i.entidad}} <br/>
+                                                                    <b>{{i.get_tipo_id_display}}:</b> {{i.identificacion}}<br/>
+                                                                    <b>Genero:</b> {{ i.genero }} <br/>
+                                                                    <b>Edad:</b> {{ i.edad }} <br/>
+                                                                    <b>Disciplinas Deportivas:</b> {{ i.disciplinas_deportivas }} <br/>
+                                                                    <b>Ciudad de Residencia:</b> {{i.ciudad_residencia}}
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                    {%else%}
+                                                    <div class="col-lg-6">
+                                                        <li class="media media-sm">
+                                                            <div class="media-body text-right">
+                                                                <h4 class="media-heading">{{i.nombres}} {{i.apellidos}}</h4>
+                                                                <p>
+                                                                    <b>Club Deportivo:</b> {{i.entidad}} <br/>
+                                                                    <b>{{i.get_tipo_id_display}}:</b> {{i.identificacion}}<br/>
+                                                                    <b>Genero:</b> {{ i.genero }} <br/>
+                                                                    <b>Edad:</b> {{ i.edad }} <br/>
+                                                                    <b>Disciplinas Deportivas:</b> {{ i.disciplinas_deportivas }} <br/>
+                                                                    <b>Ciudad de Residencia:</b> {{i.ciudad_residencia}}
+                                                                </p>
+                                                            </div>
+                                                            <a class="media-left">
+                                                                {%if i.foto%}
+                                                                    <img src="{{MEDIA_URL}}{{i.foto}}" alt="Foto del deportista" class="media-object rounded-corner" width="70" height="70"/>
+                                                                {%else%}
+                                                                    <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="70" height="70"/>
+                                                                {%endif%}
+                                                            </a>
+                                                        </li>
+                                                    </div>
+                                                    {%endif%}
                                                 {%empty%}
-                                                <li>No hay deportistas registrado</li>
+                                                    <li>No hay deportistas registrados</li>
                                                 {% endfor %}
                                             </ul>
                                         </address>
@@ -125,11 +173,60 @@
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
                                             <b>Personal de Apoyo Seleccionado:</b>
-                                            <ul>
+                                            <ul class="media-list media-list-with-divider">
+                                                <br/>
                                                 {% for i in personal_sele %}
-                                                <li>{{i}}</li>
+                                                    {%if i.par %}
+                                                    <div class="col-lg-6">
+                                                        <li class="media media-sm">
+                                                            <a class="media-left">
+                                                                {%if i.foto%}
+                                                                    <img src="{{MEDIA_URL}}{{i.foto}}" alt="Foto del personal" class="media-object rounded-corner" width="70" height="70"/>
+                                                                {%else%}
+                                                                    <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del personal" width="70" height="70"/>
+                                                                {%endif%}
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <h4 class="media-heading">{{i.nombres}} {{i.apellidos}}</h4>
+                                                                <p>
+                                                                    <b>Club Deportivo: {{ i.entidad }}</b><br/>
+                                                                    <b>{{ i.get_tipo_id_display }} :</b> {{ i.identificacion }} <br/>
+                                                                    <b>Genero:</b> {{ i.genero }} <br/>
+                                                                    <b>Actividad:</b> {{ i.actividad }} <br/>
+                                                                    <b>Edad:</b> {{ i.edad }} <br/>
+                                                                    <b>Nacionalidad:</b> {{ i.nacionalidad_str }} <br/>
+                                                                    <b>Ciudad de Residencia:</b> {{i.ciudad}}
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                    {%else%}
+                                                    <div class="col-lg-6">
+                                                        <li class="media media-sm">
+                                                            <div class="media-body text-right">
+                                                                <h4 class="media-heading">{{i.nombres}} {{i.apellidos}}</h4>
+                                                                <p>
+                                                                    <b>Club Deportivo: {{ i.entidad }}</b><br/>
+                                                                    <b>{{ i.get_tipo_id_display }} :</b> {{ i.identificacion }} <br/>
+                                                                    <b>Genero:</b> {{ i.genero }} <br/>
+                                                                    <b>Actividad:</b> {{ i.actividad }} <br/>
+                                                                    <b>Edad:</b> {{ i.edad }} <br/>
+                                                                    <b>Nacionalidad:</b> {{ i.nacionalidad_str }} <br/>
+                                                                    <b>Ciudad de Residencia:</b> {{i.ciudad}}
+                                                                </p>
+                                                            </div>
+                                                            <a class="media-left">
+                                                                {%if i.foto%}
+                                                                    <img src="{{MEDIA_URL}}{{i.foto}}" alt="Foto del personal" class="media-object rounded-corner" width="70" height="70"/>
+                                                                {%else%}
+                                                                    <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del personal" width="70" height="70"/>
+                                                                {%endif%}
+                                                            </a>
+                                                        </li>
+                                                    </div>
+                                                    {%endif%}
                                                 {%empty%}
-                                                <li>No hay personal registrado</li>
+                                                    <li>No hay personal registrado</li>
                                                 {% endfor %}
                                             </ul>
                                         </address>
