@@ -6,9 +6,11 @@
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_escenario %}
-        <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
-        </li>      
+            {% if request.tenant.tipo != 1 and request.tenant.tipo != 2 %}
+                <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
+                </li>
+            {% endif %}
         {% endif %} 
         <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>

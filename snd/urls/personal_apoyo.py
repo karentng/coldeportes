@@ -20,6 +20,6 @@ urlpatterns = patterns('snd.views.personal_apoyo',
     url(r'^listar$', 'listar_personal_apoyo', name='personal_apoyo_listar'),
     url(r'^desactivar/(\d+)$', 'desactivar_personal_apoyo', name='personal_apoyo_desactivar'),
     url(r'^finalizar/(?P<opcion>.+)', 'finalizar_personal_apoyo', name='finalizar_personal_apoyo'),
-    url(r'^ver/(\d+)$','ver_personal_apoyo',name='ver_personal_apoyo'),
+    url(r'^ver/(\d+)/(\d+)$','ver_personal_apoyo',name='ver_personal_apoyo'),
     url(r'^verificar$', 'verificar_personal_apoyo', name='verificar_personal_apoyo'),
 )

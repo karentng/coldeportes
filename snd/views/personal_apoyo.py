@@ -343,7 +343,7 @@ def listar_personal_apoyo(request):
     })
 
 @login_required
-def ver_personal_apoyo(request,id_personal_apoyo):
+def ver_personal_apoyo(request,id_personal_apoyo,id_entidad):
     """
     Junio 23 /2015
     Autor: Milton Lenis
@@ -352,11 +352,20 @@ def ver_personal_apoyo(request,id_personal_apoyo):
 
     Se obtiene la informacion general del personal de apoyo desde la base de datos y se muestra
 
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
     :param request: Petición Realizada
     :type request: WSGIRequest
     :param id_personal_apoyo: Llave primaria del personal de apoyo
     :type id_personal_apoyo: String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
     try:
         personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
     except:
@@ -365,7 +374,6 @@ def ver_personal_apoyo(request,id_personal_apoyo):
     formacion_deportiva = FormacionDeportiva.objects.filter(personal_apoyo=personal_apoyo)
     experiencia_laboral = ExperienciaLaboral.objects.filter(personal_apoyo=personal_apoyo)
     personal_apoyo.edad = calculate_age(personal_apoyo.fecha_nacimiento)
-    print(personal_apoyo.edad)
     return render(request,'personal_apoyo/ver_personal_apoyo.html',{
             'personal_apoyo':personal_apoyo,
             'formacion_deportiva':formacion_deportiva,
