@@ -60,7 +60,7 @@ class Deportista(models.Model):
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
     def __str__(self):
-        return self.nombres+" "+self.apellidos
+        return self.identificacion + "-" + self.nombres+" "+self.apellidos
 
     def edad(self):
         return calculate_age(self.fecha_nacimiento)
@@ -171,6 +171,8 @@ class InformacionAcademica(models.Model):
         ('Jardin','Jardin'),
         ('Primaria','Primaria'),
         ('Bachillerato','Bachillerato'),
+        ('Técnico','Técnico'),
+        ('Tecnólogo','Tecnólogo'),
         ('Pregrado','Pregrado'),
         ('Postgrado','Postgrado'),
     )

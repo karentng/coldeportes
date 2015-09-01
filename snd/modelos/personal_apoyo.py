@@ -76,7 +76,7 @@ class PersonalApoyo(models.Model):
     entidad = models.ForeignKey(Entidad)
 
     def __str__(self):
-        return "%s %s"%(self.nombres, self.apellidos)
+        return "%s - %s %s"%(self.identificacion,self.nombres, self.apellidos)
 
     def edad(self):
         return calculate_age(self.fecha_nacimiento)

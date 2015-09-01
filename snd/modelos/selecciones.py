@@ -2,8 +2,6 @@
 
 from entidades.models import *
 from django.db import models
-from .deportistas import Deportista
-from .personal_apoyo import PersonalApoyo
 
 class Seleccion(models.Model):
     TIPO_SELECCION = (
@@ -15,17 +13,28 @@ class Seleccion(models.Model):
         (2,'Eliminatoria'),
         (3,'Profesional'),
     )
+    ESTADOS_SELE = (
+        (0,'Activo'),
+    )
     fecha_inicial = models.DateField(verbose_name='Fecha de convocatoria')
     fecha_final = models.DateField(verbose_name='Fecha de finalización de convocatoria')
     nombre = models.CharField(max_length=100,verbose_name='Nombre de la Selección')
     campeonato = models.CharField(verbose_name='Nombre Campeonato',max_length=100)
     tipo = models.IntegerField(choices=TIPO_SELECCION,verbose_name='Tipo de Selección')
     tipo_campeonato = models.IntegerField(choices=TIPO_CAMPEONATO)
-    deportistas = models.ManyToManyField(Deportista,blank=True)
-    personal_apoyo = models.ManyToManyField(PersonalApoyo,blank=True)
+    estado = models.IntegerField(choices=ESTADOS_SELE,default=0)
 
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
         self.campeonato = self.campeonato.upper()
         super(Seleccion, self).save(*args, **kwargs)
 
+class DeportistasSeleccion(models.Model):
+    deportista = models.CharField(max_length=100)
+    entidad = models.ForeignKey(Entidad)
+    seleccion = models.ForeignKey(Seleccion)
+
+class PersonalSeleccion(models.Model):
+    personal = models.CharField(max_length=100)
+    entidad = models.ForeignKey(Entidad)
+    seleccion = models.ForeignKey(Seleccion)
