@@ -27,8 +27,8 @@ class Dirigente(models.Model):
         ('PS', 'PASAPORTE'),
     )
     ESTADOS = (
-        (0, "Activo"),
-        (1, "Inactivo"),
+        (0, "ACTIVO"),
+        (1, "INACTIVO"),
     )
 
     tipo_identificacion = models.CharField(choices=TIPO_IDENTIFICACION, max_length=2, verbose_name="Tipo de identificación")

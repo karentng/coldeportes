@@ -18,8 +18,10 @@ from coldeportes.utilities import *
 def cargar_datos(request, modelo):
     from snd.cargado_datos import obtenerDatos
     from django.http import JsonResponse
-
-    datos = obtenerDatos(request, int(modelo))
+    try:
+        datos = obtenerDatos(request, int(modelo))
+    except Exception as e:
+        print(e)
 
     return JsonResponse(datos)
 
