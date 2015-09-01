@@ -187,6 +187,8 @@ def wizard_historia_deportiva(request,id_depor):
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
             hist_depor_nuevo.deportista = deportista
+            if hist_depor_nuevo.tipo not in ['Campeonato Municipal','Campeonato Departamental']:
+                hist_depor_nuevo.estado = 'Pendiente'
             hist_depor_nuevo.save()
             hist_depor_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
@@ -620,8 +622,12 @@ def aceptar_logros_deportivos(request,id_tenant,id_hist):
         messages.error(request,'Error: No existe el historial deportivo')
         return redirect('inicio_tenant')
 
+    print('Historial')
+    print(hist)
     hist.estado = 'Aprobado'
+    print(hist.estado)
     hist.save()
+    print(hist.estado)
 
     messages.success(request,'Logro deportivo avalado correctamente')
     return redirect('deportista_listar')

@@ -160,8 +160,6 @@ class HistorialDeportivo(models.Model):
         self.prueba = self.prueba.upper()
         self.categoria = self.categoria.upper()
         self.institucion_equipo = self.institucion_equipo.upper()
-        if self.tipo not in ['Campeonato Municipal','Campeonato Departamental']:
-                self.estado = 'Pendiente'
 
         super(HistorialDeportivo, self).save(*args, **kwargs)
 
