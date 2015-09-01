@@ -212,7 +212,45 @@ def listar_seleccion(request):
 
 @login_required
 def ver_seleccion(request,id_s):
-    return redirect('listar_seleccion')
+    """
+    Agosto 31/ 2015
+    Autor: Daniel Correa
+
+    Permite ver en detalle la informacion de la seleccion
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_s: id de la seleccion a consultar
+    """
+    try:
+        sele = Seleccion.objects.get(id=id_s)
+    except:
+        messages.error(request,'No existe la seleccion solicitada')
+        return redirect('listar_seleccion')
+
+    depor_registrados = []
+    for d in DeportistasSeleccion.objects.filter(seleccion=sele):
+        entidad = d.entidad
+        depor = d.deportista
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+        depor_registrados += [Deportista.objects.get(id=depor)]
+
+    connection.set_tenant(request.tenant)
+
+    personal_registrados = []
+    for d in PersonalSeleccion.objects.filter(seleccion=sele):
+        entidad = d.entidad
+        per = d.personal
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+        personal_registrados += [PersonalApoyo.objects.get(id=per)]
+
+    return render(request,'selecciones/ver_seleccion.html',{
+        'seleccion': sele,
+        'personal_sele': personal_registrados,
+        'depor_sele': depor_registrados
+    })
 
 @login_required
 def finalizar_registro_seleccion(request):
