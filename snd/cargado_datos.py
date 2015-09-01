@@ -153,7 +153,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
 def obtener_objetos_por_tenant(request,modelo):
     #Tenant de tipo liga
     if request.tenant.tipo == 1:
-        if modelo.__class__.__name__ == 'Seleccion':
+        if modelo.__name__ == 'Seleccion':
             objetos = []
             #Saco los objetos propios de la federacion
             qs = modelo.objects.all()
@@ -177,7 +177,7 @@ def obtener_objetos_por_tenant(request,modelo):
             return objetos
     #Tenant de tipo Federación
     elif request.tenant.tipo == 2:
-        if modelo.__class__.__name__ == 'Seleccion':
+        if modelo.__name__ == 'Seleccion':
             objetos = []
             #Saco los objetos propios de la federacion
             qs = modelo.objects.all()
@@ -289,7 +289,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
 
     #Cuando el tipo de tenant es una liga hay que ejecutar las busquedas dentro de la liga y dentro de sus clubes
     if request.tenant.tipo == 1:
-        if modeloTipo.__class__.__name__ == 'Seleccion':
+        if modeloTipo.__name__ == 'Seleccion':
             objetos = []
             tenant_actual = request.tenant
             #Saco los objetos propios de la federacion
@@ -311,7 +311,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
             return objetos
     #Cuando el tipo de tenant es una federación hay que ejecutar las busquedas dentro de la federación, dentro de sus ligas y dentro de los clubes de cada liga
     elif request.tenant.tipo == 2:
-        if modeloTipo.__class__.__name__ == 'Seleccion':
+        if modeloTipo.__name__ == 'Seleccion':
             objetos = []
             tenant_actual = request.tenant
             #Saco los objetos propios de la federacion
