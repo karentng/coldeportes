@@ -150,7 +150,7 @@ MODELOS_DE_DATOS = (
 
             ],
 
-        ]
+        ],
     ),
     #MODELO DE DATOS PARA DEPORTISTAS PARA EL TENANT TIPO LIGA Y FEDERACIÓN
     (
@@ -166,7 +166,7 @@ MODELOS_DE_DATOS = (
                 'fa-eye',
                 None
             ]
-        ]
+        ],
     ),
     (
         PersonalApoyo,
@@ -414,6 +414,6 @@ MODELOS_DE_DATOS = (
                 'fa-gear',
                 None
             ],
-        ]
+        ],
     ),
 )
