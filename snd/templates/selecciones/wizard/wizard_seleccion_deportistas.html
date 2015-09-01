@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+	Selecciones
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+	{{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'listar_seleccion' %}">Selecciones</a>
+	<li class="active">Editar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Selecciones
+{% endblock %}
+
+{% block titulo_panel %}
+	Selecciones
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'selecciones/wizard/_wizard.html' %}
+
+	<fieldset>
+			<div class="col-xs-12">
+				<h3>{{titulo}}</h3>
+
+				<div class="well row">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="col-md-6 eq-box-md  box-vmiddle-wrap">
+								<h5>Deportistas</h5>
+								<div class="well row">
+									<div class="form-group">
+										<label class="control-label" for="sele-depor">Seleccione un deportista</label>
+										<select class="form-control one" id="sele-depor" required>
+											<option value selected>---------</option>
+											{%for d in deportistas%}
+												<option value="{{d.id}}" data-entidad="{{d.entidad.id}}">{{d}}</option>
+											{%endfor%}
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 eq-box-md  box-vmiddle-wrap " >
+								<h5>Vista Previa</h5>
+								<div class="well row" id="vista-previa">
+									{% include 'selecciones/wizard/ajax_seleccion_deportistas/vista_previa.html' %}
+								</div>
+							</div>
+						</div>
+					</div><br/>
+					<div class="row">
+						<div class="col-lg-12 p-l-30 p-r-30">
+							<h5>Listado de Deportistas Seleccionados</h5>
+							<div class="well row">
+								<div class="table-responsive">
+									<table id="tabla-depor-seleccionados" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+										<thead>
+											<tr>
+												<th>Nombres</th>
+												<th>Tipo Identificacion</th>
+												<th>Identificacion</th>
+												<th>Edad</th>
+												<th>Ciudad de Residencia</th>
+												<th>Club Deportivo</th>
+											</tr>
+										</thead>
+										<tbody>
+											{%for d in depor_registrados%}
+												<tr>
+													<td>{{d.nombres}} {{d.apellidos}}</td>
+													<td>{{d.tipo_id}}</td>
+													<td>{{d.identificacion}}</td>
+													<td>{{d.edad}}</td>
+													<td>{{d.ciudad_residencia}}</td>
+													<td>{{d.entidad}}</td>
+												</tr>
+											{%endfor%}
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							{% if wizard_stage > 1 %}
+								<a href="{% url 'editar_seleccion' sele_id %}" class="btn btn-success pull-left" type="button">← Anterior</a>
+							{% endif %}
+							<a class="btn btn-primary pull-right" href="{% url 'registrar_personal' sele_id %}">
+								Siguiente →
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+	</fieldset>
+
+	
+
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	<script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+	
+{% endblock %}
+
+{% block script %}
+	<script>
+
+		$(document).ready(function() {
+			App.init();
+			FormWizard.init();
+		});
+		var table = $('#tabla-depor-seleccionados').DataTable();
+		var str_no_option = "<p align='center'>Seleccione un deportista</p>";
+		var sele_id = {{sele_id}};
+		$("#sele-depor").on("change",function(e){
+			var id_depor = $(this).val();
+			if(id_depor){
+				var id_entidad = $(this).find(':selected').attr('data-entidad');
+				$.ajax({
+					url: '/selecciones/vista-previa-depor/'+id_entidad+'/'+id_depor,
+					success: function(data) {
+						$('#vista-previa').html(data);
+					}
+				});
+			}else{
+				$('#vista-previa').html(str_no_option);
+			}
+
+		});
+
+		$(document).on('click','#bt-seleccionar',function(){
+			var id_entidad = $(this).attr("data-entidad");
+			var id_depor = $(this).attr("data-depor");
+			$.ajax({
+				url: '/selecciones/guardar-deportista/'+sele_id+'/'+id_entidad+'/'+id_depor,
+
+				success: function(data) {
+					$("#bt-seleccionar").attr('disabled',1);
+					$("#sele-depor").find(':selected').remove();
+					table.row.add(data.respuesta).draw();
+				}
+			});
+		});
+	</script>
+{% endblock %}

@@ -50,6 +50,22 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #MODELO DE DATOS CAF PARA LIGAS Y FEDERACIONES
+    (
+        CentroAcondicionamiento,
+        ['nombre','direccion', 'telefono', 'ciudad', 'email', 'web', 'entidad'],
+        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Entidad'],
+        None,
+        [
+            [
+                "Ver CAF",
+                'ver_caf',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+        ],
+    ),
     (
         Deportista,
         ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","disciplinas_deportivas","estado"],
@@ -136,6 +152,248 @@ MODELOS_DE_DATOS = (
 
         ]
     ),
+    #MODELO DE DATOS PARA DEPORTISTAS PARA EL TENANT TIPO LIGA Y FEDERACIÓN
+    (
+        Deportista,
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","disciplinas_deportivas","entidad"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Disciplinas","Entidad"],
+        None,
+        [
+            [
+                "Ver Deportista",
+                'ver_deportista',
+                ['id'],
+                'fa-eye',
+                None
+            ]
+        ]
+    ),
+    (
+        PersonalApoyo,
+        ['foto','nombres apellidos', 'actividad', 'identificacion', 'estado'],
+        ['foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_personal_apoyo',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'edicion_personal_apoyo',
+                ['id'],
+                'fa-gear',
+                None
+            ],
+            [
+                "A/I",
+                'personal_apoyo_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+
+            ],
+            [
+                "Transferir",
+                'generar_transferencia',
+                ['1','2','id'],
+                'fa-exchange',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "Cancelar Transferencia",
+                'cancelar_transferencia',
+                ['id','2'],
+                'fa-times',
+                [
+                    [
+                        ['estado'],
+                        ['EN TRANSFERENCIA'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+        ],
+    ),
+    #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y CLUBES
+    (
+        PersonalApoyo,
+        ['foto','nombres apellidos', 'actividad', 'identificacion', 'entidad'],
+        ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Entidad'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_personal_apoyo',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'edicion_personal_apoyo',
+                ['id'],
+                'fa-gear',
+                None
+            ],
+            [
+                "A/I",
+                'personal_apoyo_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+
+            ]
+        ],
+    ),
+    (
+        Dirigente,
+        ['foto','identificacion','nombres apellidos', 'estado'],
+        ['Foto','Identificación','Nombre', 'Estado'],
+        None,
+        [
+            [
+                "Ver más",
+                'dirigentes_ver',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'dirigentes_wizard_identificacion',
+                ['id'],
+                'fa-gear',
+                None
+            ],
+            [
+                "A/I",
+                'dirigentes_activar_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+
+            ]
+        ],
+    ),
+    #MODELO DE DATOS DIRIGENTE PARA LIGA Y FEDERACIÓN
+    (
+        Dirigente,
+        ['foto','identificacion','nombres apellidos', 'entidad'],
+        ['Foto','Identificación','Nombre', 'Entidad'],
+        None,
+        [
+            [
+                "Ver más",
+                'dirigentes_ver',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'dirigentes_wizard_identificacion',
+                ['id'],
+                'fa-gear',
+                None
+            ],
+            [
+                "A/I",
+                'dirigentes_activar_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+
+            ]
+        ],
+    ),
+    (
+        Escenario,
+        ['nombre','ciudad','estrato', 'estado'],
+        ['Nombre','Ciudad(Departamento)','Estrato', 'Estado'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_escenario',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'wizard_identificacion',
+                ['id'],
+                'fa-gear',
+                None
+            ],
+            [
+                "A/I",
+                'desactivar_escenario',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+
+            ]
+        ],
+    ),
+    #MODELO DE DATOS PARA ESCENARIO LIGAS Y FEDERACIONES
+    (
+        Escenario,
+        ['nombre','ciudad','estrato', 'entidad'],
+        ['Nombre','Ciudad(Departamento)','Estrato', 'Entidad'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_escenario',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+        ],
+    ),
     (
         Seleccion,
         ["nombre", "tipo", "fecha_inicial", "fecha_final", "campeonato", "tipo_campeonato"],
@@ -144,14 +402,14 @@ MODELOS_DE_DATOS = (
         [
             [
                 "Ver Seleccion",
-                'ver_deportista',
+                'ver_seleccion',
                 ['id'],
                 'fa-eye',
                 None
             ],
             [
                 "Editar",
-                'edicion_deportista',
+                'editar_seleccion',
                 ['id'],
                 'fa-gear',
                 None
@@ -159,13 +417,3 @@ MODELOS_DE_DATOS = (
         ]
     ),
 )
-
-'''
-    [
-        "Activar/Desactivar",
-        'desactivar_caf',
-        ['id'],
-        'fa-ban',
-        None
-    ],
-'''

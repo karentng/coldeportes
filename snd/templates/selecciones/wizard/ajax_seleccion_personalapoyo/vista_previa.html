@@ -1,0 +1,31 @@
+{%if per %}
+    <div class="media media-sm">
+        <div class="col-lg-3">
+            <br/>
+            <a class="media-left">
+                {%if per.foto%}
+                    <img class="media-object" src="{{MEDIA_URL}}{{per.foto}}" alt="Foto del personal" width="70" height="70" />
+                {%else%}
+                    <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del personal" width="70" height="70"/>
+                {%endif%}
+            </a>
+        </div>
+        <div class="col-lg-8">
+        <div class="media-body">
+            <h5 class="media-heading">{{per.nombres}} {{per.apellidos}}</h5>
+            <h5><strong>Club: {{ per.entidad }}</strong></h5>
+            <p><strong>Identificación:</strong> {{ per.tipo_id }}. {{ per.identificacion }} <br/>
+                <strong>Genero:</strong> {{ per.genero }} <br/>
+                <strong>Actividad:</strong> {{ per.actividad }} <br/>
+                <strong>Edad:</strong> {{ per.edad }} <br/>
+                <strong>Nacionalidad:</strong> {{ per.nacionalidad_str }} <br/>
+                <strong>Ciudad de Residencia:</strong> {{per.ciudad}}
+            </p>
+        </div>
+        </div>
+    </div>
+
+    <button type="button" id="bt-seleccionar" data-entidad="{{per.entidad.id}}" data-per="{{per.id}}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Añadir</button>
+{%else%}
+    <p align="center">Seleccione un personal</p>
+{%endif%}

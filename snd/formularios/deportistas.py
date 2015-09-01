@@ -7,8 +7,8 @@ from coldeportes.utilities import adicionarClase
 
 class VerificarExistenciaForm(forms.Form):
     TIPO_IDENTIDAD = (
-        ('TI', 'TARJETA DE IDENTIDAD'),
         ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('TI', 'TARJETA DE IDENTIDAD'),
         ('CE', 'CÉDULA DE EXTRANJERÍA'),
         ('PS', 'PASAPORTE'),
     )
