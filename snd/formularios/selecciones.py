@@ -20,7 +20,7 @@ class SeleccionForm(ModelForm):
 
     class Meta:
         model = Seleccion
-        exclude = ('deportistas','personal_apoyo',)
+        exclude = ('deportistas','personal_apoyo','estado',)
 
 """
 class SeleccionDeportistasForm(forms.Form):

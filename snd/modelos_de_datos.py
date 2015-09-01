@@ -402,14 +402,14 @@ MODELOS_DE_DATOS = (
         [
             [
                 "Ver Seleccion",
-                'ver_deportista',
+                'ver_seleccion',
                 ['id'],
                 'fa-eye',
                 None
             ],
             [
                 "Editar",
-                'edicion_deportista',
+                'editar_seleccion',
                 ['id'],
                 'fa-gear',
                 None
