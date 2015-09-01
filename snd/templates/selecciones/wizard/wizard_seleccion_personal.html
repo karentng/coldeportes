@@ -39,14 +39,14 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="col-md-6 eq-box-md  box-vmiddle-wrap">
-								<h5>Deportistas</h5>
+								<h5>Personal de Apoyo</h5>
 								<div class="well row">
 									<div class="form-group">
-										<label class="control-label" for="sele-depor">Seleccione un deportista</label>
-										<select class="form-control one" id="sele-depor" required>
+										<label class="control-label" for="sele-per">Seleccione un personal</label>
+										<select class="form-control one" id="sele-per" required>
 											<option value selected>---------</option>
-											{%for d in deportistas%}
-												<option value="{{d.id}}" data-entidad="{{d.entidad.id}}">{{d}}</option>
+											{%for p in personal%}
+												<option value="{{p.id}}" data-entidad="{{p.entidad.id}}">{{p}}</option>
 											{%endfor%}
 										</select>
 									</div>
@@ -55,36 +55,36 @@
 							<div class="col-md-6 eq-box-md  box-vmiddle-wrap " >
 								<h5>Vista Previa</h5>
 								<div class="well row" id="vista-previa">
-									{% include 'selecciones/wizard/ajax_seleccion_deportistas/vista_previa.html' %}
+									{% include 'selecciones/wizard/ajax_seleccion_personalapoyo/vista_previa.html' %}
 								</div>
 							</div>
 						</div>
 					</div><br/>
 					<div class="row">
 						<div class="col-lg-12 p-l-30 p-r-30">
-							<h5>Listado de Deportistas Seleccionados</h5>
+							<h5>Listado de Personal de Apoyo Seleccionado</h5>
 							<div class="well row">
 								<div class="table-responsive">
-									<table id="tabla-depor-seleccionados" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+									<table id="tabla-person-seleccionados" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
 										<thead>
 											<tr>
 												<th>Nombres</th>
 												<th>Tipo Identificacion</th>
 												<th>Identificacion</th>
-												<th>Edad</th>
+												<th>Actividad</th>
 												<th>Ciudad de Residencia</th>
-												<th>Club Deportivo</th>
+												<th>Club(Entidad) Deportivo</th>
 											</tr>
 										</thead>
 										<tbody>
-											{%for d in depor_registrados%}
+											{%for p in personal_registrados%}
 												<tr>
-													<td>{{d.nombres}} {{d.apellidos}}</td>
-													<td>{{d.tipo_id}}</td>
-													<td>{{d.identificacion}}</td>
-													<td>{{d.edad}}</td>
-													<td>{{d.ciudad_residencia}}</td>
-													<td>{{d.entidad}}</td>
+													<td>{{p.nombres}} {{p.apellidos}}</td>
+													<td>{{p.tipo_id}}</td>
+													<td>{{p.identificacion}}</td>
+													<td>{{p.actividad}}</td>
+													<td>{{p.ciudad}}</td>
+													<td>{{p.entidad}}</td>
 												</tr>
 											{%endfor%}
 
@@ -103,8 +103,8 @@
 								<a href="" class="btn btn-success pull-left" type="button">← Anterior</a>
 							{% endif %}
 							{%endcomment%}
-							<a class="btn btn-primary pull-right" href="{% url 'registrar_personal' sele_id %}">
-								Siguiente →
+							<a class="btn btn-primary pull-right" href="{%url 'finalizar_registro_seleccion'%}">
+								Finalizar →
 							</a>
 						</div>
 					</div>
@@ -130,15 +130,15 @@
 			App.init();
 			FormWizard.init();
 		});
-		var table = $('#tabla-depor-seleccionados').DataTable();
-		var str_no_option = "<p align='center'>Seleccione un deportista</p>";
+		var table = $('#tabla-person-seleccionados').DataTable();
+		var str_no_option = "<p align='center'>Seleccione un personal</p>";
 		var sele_id = {{sele_id}};
-		$("#sele-depor").on("change",function(e){
-			var id_depor = $(this).val();
-			if(id_depor){
+		$("#sele-per").on("change",function(e){
+			var id_per = $(this).val();
+			if(id_per){
 				var id_entidad = $(this).find(':selected').attr('data-entidad');
 				$.ajax({
-					url: '/selecciones/vista-previa-depor/'+id_entidad+'/'+id_depor,
+					url: '/selecciones/vista-previa-per/'+id_entidad+'/'+id_per,
 					success: function(data) {
 						$('#vista-previa').html(data);
 					}
@@ -151,13 +151,13 @@
 
 		$(document).on('click','#bt-seleccionar',function(){
 			var id_entidad = $(this).attr("data-entidad");
-			var id_depor = $(this).attr("data-depor");
+			var id_per = $(this).attr("data-per");
 			$.ajax({
-				url: '/selecciones/guardar-deportista/'+sele_id+'/'+id_entidad+'/'+id_depor,
+				url: '/selecciones/guardar-personal/'+sele_id+'/'+id_entidad+'/'+id_per,
 
 				success: function(data) {
 					$("#bt-seleccionar").attr('disabled',1);
-					$("#sele-depor").find(':selected').remove();
+					$("#sele-per").find(':selected').remove();
 					table.row.add(data.respuesta).draw();
 				}
 			});

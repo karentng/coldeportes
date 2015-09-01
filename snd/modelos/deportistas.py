@@ -171,6 +171,8 @@ class InformacionAcademica(models.Model):
         ('Jardin','Jardin'),
         ('Primaria','Primaria'),
         ('Bachillerato','Bachillerato'),
+        ('Técnico','Técnico'),
+        ('Tecnólogo','Tecnólogo'),
         ('Pregrado','Pregrado'),
         ('Postgrado','Postgrado'),
     )
