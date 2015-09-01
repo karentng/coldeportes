@@ -13,12 +13,16 @@ class Seleccion(models.Model):
         (2,'Eliminatoria'),
         (3,'Profesional'),
     )
+    ESTADOS_SELE = (
+        (0,'Activo'),
+    )
     fecha_inicial = models.DateField(verbose_name='Fecha de convocatoria')
     fecha_final = models.DateField(verbose_name='Fecha de finalización de convocatoria')
     nombre = models.CharField(max_length=100,verbose_name='Nombre de la Selección')
     campeonato = models.CharField(verbose_name='Nombre Campeonato',max_length=100)
     tipo = models.IntegerField(choices=TIPO_SELECCION,verbose_name='Tipo de Selección')
     tipo_campeonato = models.IntegerField(choices=TIPO_CAMPEONATO)
+    estado = models.IntegerField(choices=ESTADOS_SELE,default=0)
 
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
