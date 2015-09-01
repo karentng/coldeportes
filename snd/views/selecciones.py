@@ -212,7 +212,25 @@ def listar_seleccion(request):
 
 @login_required
 def ver_seleccion(request,id_s):
-    return redirect('listar_seleccion')
+    """
+    Agosto 31/ 2015
+    Autor: Daniel Correa
+
+    Permite ver en detalle la informacion de la seleccion
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_s: id de la seleccion a consultar
+    """
+    try:
+        sele = Seleccion.objects.get(id=id_s)
+    except:
+        messages.error(request,'No existe la seleccion solicitada')
+        return redirect('listar_seleccion')
+
+    return render(request,'selecciones/ver_seleccion.html',{
+        'seleccion': sele
+    })
 
 @login_required
 def finalizar_registro_seleccion(request):
