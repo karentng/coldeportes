@@ -74,6 +74,7 @@
 												<th>Edad</th>
 												<th>Ciudad de Residencia</th>
 												<th>Club Deportivo</th>
+												<th>Opciones</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -85,6 +86,9 @@
 													<td>{{d.edad}}</td>
 													<td>{{d.ciudad_residencia}}</td>
 													<td>{{d.entidad}}</td>
+													<td>
+														<a  onclick = "clickBorrar(this);"><i class="fa fa-trash"></i> Borrar</a>
+													</td>
 												</tr>
 											{%endfor%}
 
@@ -160,5 +164,9 @@
 				}
 			});
 		});
+
+		function clickBorrar(enlace){
+
+		}
 	</script>
 {% endblock %}
