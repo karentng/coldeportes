@@ -5,13 +5,20 @@
         <span span class="colorMenu">Deportistas</span>
     </a>
     <ul class="sub-menu">
-        {% if perms.snd.add_deportista %}
-            <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'verificar_deportista' %}">Registro</a>
-            </li>
+        {% if perms.snd.add_deportista%}
+            {% if request.tenant.tipo != 1 and request.tenant.tipo != 2 %}
+                <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'verificar_deportista' %}">Registro</a>
+                </li>
+            {% endif %}
         {% endif %}
         <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
         </li>
+        {%if request.tenant.tipo == 1 or request.tenant.tipo == 2 %}
+            <li {% if "/deportistas/avalar-record" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'avalar_logros_deportivos' %}">Avalar Historial Deportivo</a>
+            </li>
+        {% endif %}
     </ul>
 </li>

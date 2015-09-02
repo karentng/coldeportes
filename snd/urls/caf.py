@@ -19,7 +19,7 @@ urlpatterns = patterns('snd.views.caf',
     
 
     url(r'^listar$', 'listarCAFS', name='listar_cafs'),
-    url(r'^ver/(\d+)$', 'ver_caf', name='ver_caf'),
+    url(r'^ver/(\d+)/(\d+)$', 'ver_caf', name='ver_caf'),
     
     
     #url(r'^desactivar/(\d+)$', 'desactivarCAF', name='desactivar_caf'),

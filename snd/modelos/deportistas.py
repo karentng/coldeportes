@@ -2,7 +2,9 @@
 
 from entidades.models import *
 from django.db import models
-
+from coldeportes.utilities import calculate_age
+from django.db.models.fields.files import ImageFieldFile, FileField
+from coldeportes.settings import STATIC_URL
 
 class Deportista(models.Model):
     #Datos personales
@@ -13,8 +15,8 @@ class Deportista(models.Model):
         ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIDAD = (
-        ('TI', 'TARJETA DE IDENTIDAD'),
         ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('TI', 'TARJETA DE IDENTIDAD'),
         ('CE', 'CÉDULA DE EXTRANJERÍA'),
         ('PS', 'PASAPORTE'),
     )
@@ -45,8 +47,8 @@ class Deportista(models.Model):
     barrio = models.CharField(max_length=100,verbose_name='Barrio')
     comuna = models.CharField(max_length=100,verbose_name='Comuna')
     email = models.EmailField(null=True,blank=True)
-    telefono = models.CharField(max_length=100,verbose_name='Telefono')
-    direccion = models.CharField(max_length=100,verbose_name='Direccion')
+    telefono = models.CharField(max_length=100,verbose_name='Teléfono')
+    direccion = models.CharField(max_length=100,verbose_name='Dirección')
     entidad = models.ForeignKey(Entidad)
 
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
@@ -58,8 +60,27 @@ class Deportista(models.Model):
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
     def __str__(self):
-        return self.nombres+" "+self.apellidos
+        return self.identificacion + "-" + self.nombres+" "+self.apellidos
 
+    def edad(self):
+        return calculate_age(self.fecha_nacimiento)
+
+    def disciplinas_deportivas(self):
+        return ",".join(str(x) for x in self.disciplinas.all())
+
+    def nacionalidad_str(self):
+        return ",".join(x.nombre for x in self.nacionalidad.all())
+
+    def fotos(self):
+        return [self.foto]
+
+    def save(self, *args, **kwargs):
+        self.nombres = self.nombres.upper()
+        self.apellidos = self.apellidos.upper()
+        self.barrio = self.barrio.upper()
+        self.comuna = self.comuna.upper()
+        self.direccion = self.direccion.upper()
+        super(Deportista, self).save(*args, **kwargs)
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):
@@ -107,12 +128,17 @@ class HistorialDeportivo(models.Model):
         ('Campeonato Nacional','Campeonato Nacional'),
         ('Campeonato Internacional','Campeonato Internacional'),
     )
+
+    ESTADOS_AVAL = (
+        ('Aprobado','Aprobado'),
+        ('Pendiente','Pendiente'),
+    )
+
     nombre = models.CharField(max_length=100,verbose_name='Nombre del campeonato')
     fecha_inicial = models.DateField(verbose_name='Fecha Iniciación')
-    fecha_final = models.DateField(blank=True, null=True,verbose_name='Fecha Finalización ')
-    actual = models.BooleanField(verbose_name='¿Actualmente?',default=False)
+    fecha_final = models.DateField(verbose_name='Fecha Finalización ')
     pais = models.ForeignKey(Nacionalidad)
-    institucion_equipo = models.CharField(max_length=100,blank=True,null=True, verbose_name='Club deportivo')
+    institucion_equipo = models.CharField(max_length=100, verbose_name='Club deportivo')
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato',default='Campeonato Internacional')
     puesto = models.IntegerField(verbose_name='Puesto obtenido')
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
@@ -120,7 +146,22 @@ class HistorialDeportivo(models.Model):
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
     categoria = models.CharField(max_length=100,verbose_name='Categoria en la que participó')
+    estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
+
+    def __str__(self):
+        return self.deportista.nombres+':'+self.nombre
+
+    def save(self, *args, **kwargs):
+        self.nombre = self.nombre.upper()
+        self.marca = self.marca.upper()
+        self.modalidad = self.modalidad.upper()
+        self.division = self.division.upper()
+        self.prueba = self.prueba.upper()
+        self.categoria = self.categoria.upper()
+        self.institucion_equipo = self.institucion_equipo.upper()
+
+        super(HistorialDeportivo, self).save(*args, **kwargs)
 
 #Informacion academica
 class InformacionAcademica(models.Model):
@@ -128,6 +169,8 @@ class InformacionAcademica(models.Model):
         ('Jardin','Jardin'),
         ('Primaria','Primaria'),
         ('Bachillerato','Bachillerato'),
+        ('Técnico','Técnico'),
+        ('Tecnólogo','Tecnólogo'),
         ('Pregrado','Pregrado'),
         ('Postgrado','Postgrado'),
     )
@@ -144,6 +187,11 @@ class InformacionAcademica(models.Model):
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
+
+    def save(self, *args, **kwargs):
+        self.institucion = self.institucion.upper()
+        self.profesion = self.profesion.upper()
+        super(InformacionAcademica, self).save(*args, **kwargs)
 
 class CambioDocumentoDeportista(models.Model):
     TIPO_IDENTIDAD = (

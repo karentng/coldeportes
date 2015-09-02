@@ -22,13 +22,13 @@ class Dirigente(models.Model):
         ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIFICACION = (
-        ('CC', "Cédula de ciudadanía"),
-        ('CE', "Cédula de extranjería"),
-        ('PT', "Pasaporte"),
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
     )
     ESTADOS = (
-        (0, "Activo"),
-        (1, "Inactivo"),
+        (0, "ACTIVO"),
+        (1, "INACTIVO"),
     )
 
     tipo_identificacion = models.CharField(choices=TIPO_IDENTIFICACION, max_length=2, verbose_name="Tipo de identificación")
@@ -68,9 +68,16 @@ class DirigenteCargo(models.Model):
             fecha_retiro = 'Actual'
         return "{0} [{1} a {2}]".format(self.nombre, self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
 
+    def periodo(self):
+        if self.fecha_retiro != None:
+            fecha_retiro = self.fecha_retiro.strftime('%d de %B de %Y')
+        else:
+            fecha_retiro = 'Actual'
+        return "{0} a {1}".format(self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
+
 class DirigenteFuncion(models.Model):
     dirigente = models.ForeignKey(Dirigente)
     cargo = models.ForeignKey(DirigenteCargo)
-    descripcion = models.TextField(max_length=200, verbose_name="Descripción")
+    descripcion = models.TextField(max_length=200, verbose_name="Función")
 
 

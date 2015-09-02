@@ -338,13 +338,12 @@ def listar_personal_apoyo(request):
     :type request: WSGIRequest
     """
 
-    personales_apoyo = PersonalApoyo.objects.all()
     return render(request, 'personal_apoyo/personal_apoyo_lista.html', {
-        'personales_apoyo':personales_apoyo,
+        'tipo_tenant':request.tenant.tipo
     })
 
 @login_required
-def ver_personal_apoyo(request,id_personal_apoyo):
+def ver_personal_apoyo(request,id_personal_apoyo,id_entidad):
     """
     Junio 23 /2015
     Autor: Milton Lenis
@@ -353,11 +352,20 @@ def ver_personal_apoyo(request,id_personal_apoyo):
 
     Se obtiene la informacion general del personal de apoyo desde la base de datos y se muestra
 
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
     :param request: Petición Realizada
     :type request: WSGIRequest
     :param id_personal_apoyo: Llave primaria del personal de apoyo
     :type id_personal_apoyo: String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
     try:
         personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
     except:
@@ -366,7 +374,6 @@ def ver_personal_apoyo(request,id_personal_apoyo):
     formacion_deportiva = FormacionDeportiva.objects.filter(personal_apoyo=personal_apoyo)
     experiencia_laboral = ExperienciaLaboral.objects.filter(personal_apoyo=personal_apoyo)
     personal_apoyo.edad = calculate_age(personal_apoyo.fecha_nacimiento)
-    print(personal_apoyo.edad)
     return render(request,'personal_apoyo/ver_personal_apoyo.html',{
             'personal_apoyo':personal_apoyo,
             'formacion_deportiva':formacion_deportiva,
@@ -393,12 +400,13 @@ def verificar_personal_apoyo(request):
 
         if form.is_valid():
             datos = {
-                'identificacion': form.cleaned_data['identificacion']
+                'identificacion': form.cleaned_data['identificacion'],
+                'tipo_id': form.cleaned_data['tipo_id']
             }
 
             #Verificación de existencia dentro del tenant actual
             try:
-                personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'])
+                personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
             except Exception:
                 personal_apoyo = None
 
@@ -419,7 +427,7 @@ def verificar_personal_apoyo(request):
                     connection.set_tenant(entidad)
                     ContentType.objects.clear_cache()
                     try:
-                        personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'])
+                        personal_apoyo = PersonalApoyo.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
                         existencia = True
                         tenant_existencia = entidad
                         break

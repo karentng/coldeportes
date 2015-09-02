@@ -3,7 +3,7 @@ fields = {
             nombre: {
                 validators: {
                     notEmpty: {
-                        message: 'El nombre del campeonato no puede ser vació'
+                        message: 'El nombre del campeonato no puede ser vacío'
                     }
                 }
             },
@@ -17,7 +17,7 @@ fields = {
             institucion_equipo: {
                 validators: {
                     notEmpty: {
-                        message: 'El Club Deportivo no puede ser vació'
+                        message: 'El Club Deportivo no puede ser vacío'
                     }
                 }
             },
@@ -31,7 +31,7 @@ fields = {
             puesto: {
                 validators: {
                     notEmpty: {
-                        message: 'El puesto no puede ser vació'
+                        message: 'El puesto no puede ser vacío'
                     },
                     numeric: {
                         message: 'El puesto debe ser numérico'
@@ -46,7 +46,7 @@ fields = {
             categoria: {
                 validators: {
                     notEmpty: {
-                        message: 'La categoría no puede ser vaciá'
+                        message: 'La categoría no puede ser vacía'
                     },
                 }
             },

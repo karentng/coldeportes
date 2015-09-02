@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+	Selecciones
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+	{{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'listar_seleccion' %}">Selecciones</a>
+	<li class="active">Editar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+	Selecciones
+{% endblock %}
+
+{% block titulo_panel %}
+	Selecciones
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'selecciones/wizard/_wizard.html' %}
+
+	<form id="form-wizard-selecciones" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+		<fieldset>
+				<div class="col-xs-12">
+					<h3>{{titulo}}</h3>
+
+					<div class="well row">
+						{%for i in form%}
+							<div class="col-lg-6">
+								{% bootstrap_field i%}
+							</div>
+						{%endfor%}
+						<hr>
+						<div class="row">
+							<div class="col-xs-12">
+								<button class="btn btn-primary pull-right" type="submit">
+									Siguiente →
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+		</fieldset>
+	</form>
+
+	
+
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{ STATIC_URL }}js/validaciones/selecciones/wizard-seleccion-validations.js"></script>
+	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+	
+{% endblock %}
+
+{% block script %}
+	<script>
+		$(document).ready(function() {
+			App.init();
+			FormWizard.init();
+			$('#id_tipo').css("pointer-events","none");
+		});
+	</script>
+{% endblock %}

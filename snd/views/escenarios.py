@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -24,9 +26,8 @@ def listar_escenarios(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-    escenarios = Escenario.objects.all()
     return render(request, 'escenarios/escenarios_lista.html', {
-        'escenarios': escenarios,
+        'tipo_tenant':request.tenant.tipo
     })
 
 @login_required
@@ -81,7 +82,7 @@ def desactivar_escenario(request, escenario_id):
     return redirect('listar_escenarios')
 
 @login_required
-def ver_escenario(request, escenario_id):
+def ver_escenario(request, escenario_id, id_entidad):
     """
     Mayo 30 / 2015
     Autor: Karent Narvaez Grisales
@@ -90,11 +91,21 @@ def ver_escenario(request, escenario_id):
 
     Se obtienen toda la información registrada del escenario dado y se muestra.
 
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
     :param request:   Petición realizada
     :type request:    WSGIRequest
     :param escenario_id:   Identificador del escenario
     :type escenario_id:    String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
+
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
     try:
         escenario = Escenario.objects.get(id=escenario_id)
     except ObjectDoesNotExist:

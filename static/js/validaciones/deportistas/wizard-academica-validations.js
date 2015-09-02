@@ -10,7 +10,7 @@ fields = {
             institucion: {
                 validators: {
                     notEmpty: {
-                        message: 'La institución de formación no puede ser vacia'
+                        message: 'La institución de formación no puede ser vacía'
                     }
                 }
             },

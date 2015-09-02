@@ -30,36 +30,40 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     """
     objeto = None
     entidad_solicitante = request.tenant
-    entidades = Entidad.objects.exclude(nombre__in=['publico',entidad_solicitante.nombre])
+
+    if entidad_solicitante.tipo == 3:
+        entidades = Entidad.objects.filter(tipo=3).exclude(nombre__in=['publico',entidad_solicitante.nombre])
+    elif entidad_solicitante.tipo == 5:
+        entidades = Entidad.objects.filter(tipo=5).exclude(nombre__in=['publico',entidad_solicitante.nombre])
+    else:
+        messages.error(request,'Usted se encuentra en una seccion que no le corresponde')
+        return redirect('inicio_tenant')
+
     redir = ''
+    tipo_objeto = ''
     if tipo_transfer=='1': #Transferencia de personas
         if tipo_persona=='1': #Transferencia de deportistas
-            objeto = Deportista.objects.get(id=id)
-            objeto.tipo_objeto='Deportista'
+            tipo_objeto='Deportista'
             redir='deportista_listar'
         elif tipo_persona=='2': #Transferencia de personal_apoyo
-            objeto = PersonalApoyo.objects.get(id=id)
-            objeto.tipo_objeto='PersonalApoyo'
+            tipo_objeto='PersonalApoyo'
             redir='personal_apoyo_listar'
-        objeto.edad = calculate_age(objeto.fecha_nacimiento)
-        objeto.nacionalidad_str = ",".join(str(x) for x in objeto.nacionalidad.all())
-        objeto.fotos = [objeto.foto]
     elif tipo_transfer=='2': #Transferencia de escenarios
-        objeto = Escenario.objects.get(id=id)
-        fotos = [x.foto for x in Foto.objects.filter(escenario=objeto)]
-        caracteristicas = CaracterizacionEscenario.objects.get(escenario=objeto)
-        objeto.capacidad = caracteristicas.capacidad_espectadores
-        objeto.tipo_escenario = caracteristicas.tipo_escenario
-        objeto.fotos=fotos
-        objeto.tipo_objeto='Escenario'
+        tipo_objeto='Escenario'
         redir='listar_escenarios'
+
+    try:
+        objeto = globals()[tipo_objeto].objects.get(id=id)
+    except:
+        messages.error(request,'Error, no existe objeto transferible')
 
     non_permission = not_transferido_required(objeto)
     if non_permission:
         return non_permission
 
     objeto.fecha = datetime.date.today()
-    objeto.entidad = entidad_solicitante
+    objeto.tipo_objeto = tipo_objeto
+
     if request.method == 'POST':
         id_entidad_cambio = request.POST['entidad']
         entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
@@ -156,16 +160,14 @@ def procesar_transferencia(request,id_transfer,opcion):
             deportista.nacionalidades_obj = objeto.nacionalidades_obj
             deportista.disciplinas_obj = objeto.disciplinas_obj
             deportista.entidad = request.tenant
-            guardar_objeto(deportista,adicionales,tipo_objeto)
+            transferido = guardar_objeto(deportista,adicionales,tipo_objeto)
             messages.success(request,'Transferencia recibida exitosamente')
-            transferido = deportista
 
         else:
             objeto.entidad = request.tenant
             objeto.estado = 0
-            guardar_objeto(objeto,adicionales,tipo_objeto)
+            transferido = guardar_objeto(objeto,adicionales,tipo_objeto)
             messages.success(request,'Transferencia recibida exitosamente')
-            transferido = objeto
 
     return finalizar_transferencia(request,entidad_cambio,transferido,tipo_objeto,transferencia)
 
@@ -230,28 +232,20 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
     ContentType.objects.clear_cache()
 
     objeto.estado = 3
+    objeto.entidad = entidad_saliente
+
     if tipo_objeto=='Deportista' or tipo_objeto=='PersonalApoyo':
         new_obj, created = objeto.__class__.objects.update_or_create(
             identificacion = objeto.identificacion,
             defaults=objeto.__dict__
         )
-        new_obj.edad = calculate_age(new_obj.fecha_nacimiento)
-        new_obj.nacionalidad_str = ",".join(str(x) for x in new_obj.nacionalidad.all())
-        new_obj.fotos = [new_obj.foto]
     else:
         new_obj, created =  objeto.__class__.objects.update_or_create(
             nombre=objeto.nombre,
             defaults=objeto.__dict__
         )
-        fotos = [x.foto for x in Foto.objects.filter(escenario=new_obj)]
-        caracteristicas = CaracterizacionEscenario.objects.get(escenario=new_obj)
-        new_obj.capacidad = caracteristicas.capacidad_espectadores
-        new_obj.tipo_escenario = caracteristicas.tipo_escenario
-        new_obj.fotos=fotos
-
     new_obj.tipo_objeto = new_obj.__class__.__name__
     new_obj.fecha = datetime.date.today()
-    new_obj.entidad_sol = entidad_saliente
 
     return render(request,'transferencia_exitosa.html',{
         'objeto': new_obj
@@ -321,7 +315,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                     deportista=deportista,
                     defaults=diccionario
                 )
-
+        return deportista
     elif tipo == 'PersonalApoyo':
 
         nacionalidades_obj = objeto.nacionalidades_obj
@@ -359,7 +353,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                     nombre_cargo=ad.nombre_cargo,
                     defaults=diccionario
                 )
-
+        return personal_apoyo
     elif tipo == 'Escenario':
 
         #Diccionario para defaults
@@ -439,6 +433,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                     nombre=ad.nombre,
                     defaults=diccionario
                 )
+        return escenario
 
 def obtener_objeto(id_obj,tipo_objeto):
     """

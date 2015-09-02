@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Selecciones-SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista de Selecciones
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Selecciones</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+
+
+{% block titulo_panel %}
+    Listar Deportistas
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script type="text/javascript">
+        idTabla = "tabla-selecciones";
+        opciones = true;//false;
+        url = "{% url 'cargar_columnas' 10 %}";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block contenido_panel %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+            <table id="tabla-selecciones" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+
+            </table>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

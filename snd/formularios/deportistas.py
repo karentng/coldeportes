@@ -6,12 +6,13 @@ import datetime
 from coldeportes.utilities import adicionarClase
 
 class VerificarExistenciaForm(forms.Form):
-    """TIPO_IDENTIDAD = (
-        ('CED', 'CÉDULA DE CIUDADANÍA'),
-        ('CEDEX', 'CÉDULA DE EXTRANJERO'),
-        ('PAS', 'PASAPORTE'),
+    TIPO_IDENTIDAD = (
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('TI', 'TARJETA DE IDENTIDAD'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
     )
-    tipo_id = forms.ChoiceField(choices=TIPO_IDENTIDAD)"""
+    tipo_id = forms.ChoiceField(label='Tipo de documento',choices=TIPO_IDENTIDAD)
     identificacion = forms.IntegerField(label="Identificación del deportista")
 
 class CambioDocumentoForm(ModelForm):
@@ -107,7 +108,7 @@ class HistorialDeportivoForm(ModelForm):
 
     class Meta:
         model = HistorialDeportivo
-        exclude = ('deportista',)
+        exclude = ('deportista','estado')
 
 class InformacionAcademicaForm(ModelForm):
 

@@ -3,6 +3,7 @@
 from django.db import models
 from entidades.models import Entidad
 from entidades.models import Ciudad, Entidad, Nacionalidad
+from coldeportes.utilities import calculate_age
 #======================= ================================================================================
 #Modelos para PersonalApoyo
 
@@ -23,7 +24,6 @@ class PersonalApoyo(models.Model):
     )
 
     TIPO_IDENTIDAD = (
-        ('TI', 'TARJETA DE IDENTIDAD'),
         ('CC', 'CÉDULA DE CIUDADANÍA'),
         ('CE', 'CÉDULA DE EXTRANJERÍA'),
         ('PS', 'PASAPORTE'),
@@ -76,7 +76,16 @@ class PersonalApoyo(models.Model):
     entidad = models.ForeignKey(Entidad)
 
     def __str__(self):
-        return "%s %s"%(self.nombres, self.apellidos)
+        return "%s - %s %s"%(self.identificacion,self.nombres, self.apellidos)
+
+    def edad(self):
+        return calculate_age(self.fecha_nacimiento)
+
+    def nacionalidad_str(self):
+        return ",".join(x.nombre for x in self.nacionalidad.all())
+
+    def fotos(self):
+        return [self.foto]
 
 class FormacionDeportiva(models.Model):
     denominacion_diploma = models.CharField(max_length=150, verbose_name='Denominación del diploma')

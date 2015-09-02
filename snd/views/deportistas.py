@@ -29,7 +29,6 @@ def wizard_deportista_nuevo(request):
     :type request:    WSGIRequest
     """
 
-
     try:
         datos = request.session['datos']
     except Exception:
@@ -44,11 +43,6 @@ def wizard_deportista_nuevo(request):
         if deportista_form.is_valid():
             deportista = deportista_form.save(commit=False)
             deportista.entidad = request.tenant
-            deportista.nombres = deportista.nombres.upper()
-            deportista.apellidos = deportista.apellidos.upper()
-            deportista.barrio = deportista.barrio.upper()
-            deportista.comuna = deportista.comuna.upper()
-            deportista.direccion = deportista.direccion.upper()
             deportista.save()
             deportista_form.save()
             return redirect('wizard_corporal', deportista.id)
@@ -94,15 +88,9 @@ def wizard_deportista(request,id_depor):
 
         if deportista_form.is_valid():
             deportista = deportista_form.save(commit=False)
-            deportista.nombres = deportista.nombres.upper()
-            deportista.apellidos = deportista.apellidos.upper()
-            deportista.barrio = deportista.barrio.upper()
-            deportista.comuna = deportista.comuna.upper()
-            deportista.direccion = deportista.direccion.upper()
             deportista.save()
             deportista_form.save()
             return redirect('wizard_corporal', id_depor)
-
 
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
         'titulo': 'Información del Deportista',
@@ -199,17 +187,11 @@ def wizard_historia_deportiva(request,id_depor):
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
             hist_depor_nuevo.deportista = deportista
-            hist_depor_nuevo.nombre = hist_depor_nuevo.nombre.upper()
-            hist_depor_nuevo.marca = hist_depor_nuevo.marca.upper()
-            hist_depor_nuevo.modalidad = hist_depor_nuevo.modalidad.upper()
-            hist_depor_nuevo.division = hist_depor_nuevo.division.upper()
-            hist_depor_nuevo.prueba = hist_depor_nuevo.prueba.upper()
-            hist_depor_nuevo.categoria = hist_depor_nuevo.categoria.upper()
-            hist_depor_nuevo.institucion_equipo = hist_depor_nuevo.institucion_equipo.upper()
+            if hist_depor_nuevo.tipo not in ['Campeonato Municipal','Campeonato Departamental']:
+                hist_depor_nuevo.estado = 'Pendiente'
             hist_depor_nuevo.save()
             hist_depor_form.save()
             return redirect('wizard_historia_deportiva', id_depor)
-
 
     return render(request, 'deportistas/wizard/wizard_historia_deportiva.html', {
         'titulo': 'Historia Deportiva del Deportista',
@@ -284,15 +266,12 @@ def wizard_historia_academica(request,id_depor):
         if inf_academ_form.is_valid():
             inf_academ_nuevo = inf_academ_form.save(commit=False)
             inf_academ_nuevo.deportista = deportista
-            inf_academ_nuevo.institucion = inf_academ_nuevo.institucion.upper()
-            inf_academ_nuevo.profesion = inf_academ_nuevo.profesion.upper()
             inf_academ_nuevo.save()
             inf_academ_form.save()
             return redirect('wizard_historia_academica', id_depor)
 
-
     return render(request, 'deportistas/wizard/wizard_historia_academica.html', {
-        'titulo': 'Historia Academica del Deportista',
+        'titulo': 'Historia Académica del Deportista',
         'wizard_stage': 4,
         'form': inf_academ_form,
         'historicos': inf_academ,
@@ -373,17 +352,10 @@ def listar_deportista(request):
     :type request: WSGIRequest
     """
 
-    deportistas = Deportista.objects.all()
-    for dep in deportistas:
-        dep.edad = calculate_age(dep.fecha_nacimiento)
-        dep.disciplinas_deportivas = ",".join(str(x) for x in dep.disciplinas.all())
-
-    return render(request, 'deportistas/deportistas_lista.html', {
-        'deportistas':deportistas,
-    })
+    return render(request, 'deportistas/deportistas_lista.html', {'tipo_tenant':request.tenant.tipo})
 
 @login_required
-def ver_deportista(request,id_depor):
+def ver_deportista(request,id_depor,id_entidad):
     """
     Junio 22 /2015
     Autor: Daniel Correa
@@ -392,11 +364,21 @@ def ver_deportista(request,id_depor):
 
     Se obtiene la informacion general del deportista desde la base de datos y se muestra
 
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
     :param request: Petición Realizada
     :type request: WSGIRequest
     :param id_depor: Llave primaria del deportista
     :type id_depor: String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
+
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
     try:
         deportista = Deportista.objects.get(id=id_depor)
     except:
@@ -405,17 +387,14 @@ def ver_deportista(request,id_depor):
     composicion = ComposicionCorporal.objects.filter(deportista=deportista)
     if len(composicion) != 0:
         composicion = composicion[0]
-    historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista)
+    historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
-    deportista.edad = calculate_age(deportista.fecha_nacimiento)
-    deportista.disciplinas_str = ','.join(x.descripcion for x in deportista.disciplinas.all())
-    deportista.nacionalidad_str = ','.join(x.nombre for x in deportista.nacionalidad.all())
     return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
             'composicion':composicion,
             'historial_deportivo':historial_deportivo,
             'informacion_academica':informacion_academica
-        })
+    })
 
 @login_required
 @all_permission_required('snd.add_deportista')
@@ -464,12 +443,13 @@ def verificar_deportista(request):
 
         if form.is_valid():
             datos = {
-                'identificacion': form.cleaned_data['identificacion']
+                'identificacion': form.cleaned_data['identificacion'],
+                'tipo_id': form.cleaned_data['tipo_id']
             }
 
             #Verificación de existencia dentro del tenant actual
             try:
-                deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
             except Exception:
                 deportista = None
 
@@ -490,7 +470,7 @@ def verificar_deportista(request):
                     connection.set_tenant(entidad)
                     ContentType.objects.clear_cache()
                     try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'])
+                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
                         existencia = True
                         tenant_existencia = entidad
                         break
@@ -551,8 +531,140 @@ def cambio_tipo_documento_deportista(request,id):
             hist.save()
             messages.success(request,'Cambio de documento exitoso')
             return redirect('deportista_listar')
-        print(form.errors)
 
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form
     })
+
+def obtener_historiales_por_liga(liga,tenant_actual,tipo):
+    """
+    Agosto 28 /2015
+    Autor: Daniel Correa
+
+    Permite obtener los historiales deportivos de una liga, es decir, busca en todos los clubes de dicha liga
+
+    :param liga: liga a la cual buscar
+    :param tenant_actual: tenant de la liga actual
+    :param tipo: tipo de busqueda, DEPARTAMENTAL O MUNICIPAL
+    :return: historiales deportivos de la liga
+    """
+    clubes = Club.objects.filter(liga=liga)
+    historiales = []
+    for c in clubes:
+        connection.set_tenant(c)
+        ContentType.objects.clear_cache()
+        historiales += HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)
+        print(historiales) #No quitar, necesario para ejecucion de lazy queryset y obtencion de informacion desde la bd
+    connection.set_tenant(tenant_actual)
+    return historiales
+
+@login_required
+def avalar_logros_deportivos(request):
+    """
+    Agosto 27 / 2015
+
+    Autor: Daniel Correa
+
+    Permite mostrar los logros deportivos a avalar
+
+    :param request: peticion
+    :type request: WSGIRequest
+    """
+
+    tenant_actual = connection.tenant
+    if request.tenant.tipo == 1:
+        #Traer todos los clubs asociados a su liga , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional')
+
+    elif request.tenant.tipo == 2:
+        #Traer todos las ligas [traer todos los clubes] asociados a su fed , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
+        ligas = Liga.objects.filter(federacion=tenant_actual.id)
+        historiales = []
+        for l in ligas:
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional')
+    else:
+        messages.warning(request,'Usted se encuentra en una seccion no permitida')
+        return redirect('inicio_tenant')
+
+    return render(request,'deportistas/avalar_logros.html',{
+        'historiales': historiales
+    })
+
+@login_required
+def aceptar_logros_deportivos(request,id_tenant,id_hist):
+    """
+    Agosto 27 / 2015
+
+    Autor: Daniel Correa
+
+    Permite avalar el logro deporitvo de un deportista , este mecanismo lo ejerce una liga o federacion
+
+    :param request: peticion
+    :type request: WSGIRequest
+    :param id_tenant: id del club donde esta el historial
+    :type id_tenant: string
+    :param id_hist: id del historial a avalar
+    :type id_hist: string
+    """
+    try:
+        entidad = Entidad.objects.get(id=id_tenant)
+    except:
+        messages.error(request,'Error: club no existe')
+        return redirect('inicio_tenant')
+
+    if entidad != request.tenant:
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+
+    try:
+        hist = HistorialDeportivo.objects.get(id=id_hist)
+    except:
+        messages.error(request,'Error: No existe el historial deportivo')
+        return redirect('inicio_tenant')
+
+    print('Historial')
+    print(hist)
+    hist.estado = 'Aprobado'
+    print(hist.estado)
+    hist.save()
+    print(hist.estado)
+
+    messages.success(request,'Logro deportivo avalado correctamente')
+    return redirect('deportista_listar')
+
+@login_required
+def rechazar_logros_deportivos(request,id_tenant,id_hist):
+    """
+    Agosto 27 / 2015
+
+    Autor: Daniel Correa
+
+    Permite quitar el aval de un  logro deporitvo de un deportista , este mecanismo lo ejerce una liga o federacion
+    La negacion del aval implica la eliminacion del registro
+
+    :param request: peticion
+    :type request: WSGIRequest
+    :param id_tenant: id del club donde esta el historial
+    :type id_tenant: string
+    :param id_hist: id del historial a quitar aval
+    :type id_hist: string
+    """
+    try:
+        entidad = Entidad.objects.get(id=id_tenant)
+    except:
+        messages.error(request,'Error: club no existe')
+        return redirect('inicio_tenant')
+
+    if entidad != request.tenant:
+        connection.set_tenant(entidad)
+        ContentType.objects.clear_cache()
+    try:
+        hist = HistorialDeportivo.objects.get(id=id_hist)
+    except:
+        messages.error(request,'Error: No existe el historial deportivo')
+        return redirect('inicio_tenant')
+
+    hist.delete()
+
+    messages.warning(request,'Se ha negado el aval al logro deportivo de '+hist.deportista.nombres + ' ' + hist.deportista.apellidos)
+    return redirect('deportista_listar')
