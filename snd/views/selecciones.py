@@ -358,9 +358,47 @@ def seleccionar_deportista(request,id_s,id_entidad,id_depor):
                 depor.edad(),
                 depor.ciudad_residencia.__str__(),
                 depor.entidad.nombre,
-                "<a data-depor="+str(depor.id)+" data-entidad="+str(depor.entidad.id)+" onclick = 'clickBorrar(this);' ><i class='fa fa-trash'></i> Borrar</a>"
+                "<a data-depor="+str(depor.id)+" data-entidad="+str(depor.entidad.id)+" style='cursor:pointer;'	class='bt-borrar' ><i class='fa fa-trash'></i> Borrar</a>"
             ]
     })
+
+@login_required
+def quitar_deportista(request,id_s,id_entidad,id_depor):
+    """
+    Septiembre 2 / 2015
+    Autor: Daniel Correa
+
+    Permite quitar a un deportista de una seleccion
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_s: id de la seleccion
+    :param id_entidad: id de la entidad del deportista
+    :param id_depor: id del deportista
+    """
+    try:
+        entidad = Entidad.objects.get(id=id_entidad)
+        depor_sele = DeportistasSeleccion.objects.get(deportista=id_depor,entidad=entidad,seleccion=id_s)
+
+    except:
+        messages.error(request,'No existe el registro de selección del deportista ingresado')
+        return redirect('listar_seleccion')
+
+    depor_sele.delete()
+
+    connection.set_tenant(entidad)
+    ContentType.objects.clear_cache()
+
+    deportista = Deportista.objects.get(id=id_depor)
+
+    connection.set_tenant(request.tenant)
+
+    return JsonResponse({
+        'id' : id_depor,
+        'valor': deportista.__str__(),
+        'entidad': deportista.entidad.id
+    })
+
 
 #AJAX SELECCION DE PERSONAL DE APOYO
 @login_required

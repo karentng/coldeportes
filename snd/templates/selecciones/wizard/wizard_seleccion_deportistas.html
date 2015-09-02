@@ -46,7 +46,7 @@
 										<select class="form-control one" id="sele-depor" required>
 											<option value selected>---------</option>
 											{%for d in deportistas%}
-												<option value="{{d.id}}" data-entidad="{{d.entidad.id}}">{{d}}</option>
+												<option value="{{d.id}}" data_entidad="{{d.entidad.id}}">{{d}}</option>
 											{%endfor%}
 										</select>
 									</div>
@@ -87,7 +87,7 @@
 													<td>{{d.ciudad_residencia}}</td>
 													<td>{{d.entidad}}</td>
 													<td>
-														<a class="bt-borrar" data-depor="{{depor.id}}" data-entidad="{{depor.entidad.id}}"><i class="fa fa-trash"></i> Borrar</a>
+														<a style="cursor:pointer;"	class="bt-borrar" data-depor="{{d.id}}" data-entidad="{{d.entidad.id}}"><i class="fa fa-trash"></i> Borrar</a>
 													</td>
 												</tr>
 											{%endfor%}
@@ -132,13 +132,15 @@
 			App.init();
 			FormWizard.init();
 		});
+
 		var table = $('#tabla-depor-seleccionados').DataTable();
 		var str_no_option = "<p align='center'>Seleccione un deportista</p>";
 		var sele_id = {{sele_id}};
-		$("#sele-depor").on("change",function(e){
+
+		$(document).on("change","#sele-depor",function(e){
 			var id_depor = $(this).val();
 			if(id_depor){
-				var id_entidad = $(this).find(':selected').attr('data-entidad');
+				var id_entidad = $(this).find(':selected').attr('data_entidad');
 				$.ajax({
 					url: '/selecciones/vista-previa-depor/'+id_entidad+'/'+id_depor,
 					success: function(data) {
@@ -166,8 +168,25 @@
 		});
 
 		$(document).on('click','.bt-borrar',function(e){
-			console.log($(this).attr('data-depor'));
-			console.log($(this).attr('data-entidad'));
+			var id_depor = $(this).attr('data-depor');
+			var id_entidad = $(this).attr('data-entidad');
+			var row = table.row($(this).parents('tr'));
+
+			$.ajax({
+				url: '/selecciones/borrar-deportista/'+sele_id+'/'+id_entidad+'/'+id_depor,
+				dataType: 'json',
+				success: function(data) {
+					row.remove().draw();
+					var id = data.id;
+					var valor = data.valor;
+					var entidad = data.entidad;
+					$('#sele-depor').append($('<option>', {
+						value: id,
+						text: valor,
+						data_entidad: entidad
+					}));
+				}
+			});
 		});
 
 	</script>
