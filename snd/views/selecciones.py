@@ -229,18 +229,12 @@ def ver_seleccion(request,id_s):
         return redirect('listar_seleccion')
 
     depor_registrados = []
-    count = 0
     for d in DeportistasSeleccion.objects.filter(seleccion=sele):
         entidad = d.entidad
         depor = d.deportista
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
         deportista = Deportista.objects.get(id=depor)
-        if count % 2 == 0:
-            deportista.par = True
-        else:
-            deportista.par = False
-        count +=1
         depor_registrados += [deportista]
 
     connection.set_tenant(request.tenant)
@@ -364,7 +358,7 @@ def seleccionar_deportista(request,id_s,id_entidad,id_depor):
                 depor.edad(),
                 depor.ciudad_residencia.__str__(),
                 depor.entidad.nombre,
-               # "<a data-depor="+str(depor.id)+" data-entidad="+str(depor.entidad.id)+" onclick = 'clickBorrar(this);' ><i class='fa fa-trash'></i> Borrar</a>"
+                "<a data-depor="+str(depor.id)+" data-entidad="+str(depor.entidad.id)+" onclick = 'clickBorrar(this);' ><i class='fa fa-trash'></i> Borrar</a>"
             ]
     })
 

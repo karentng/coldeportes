@@ -22,6 +22,7 @@
           width: 100%;
           max-height: 100%;
         }
+
     </style>
 {% endblock %}
 
@@ -132,15 +133,15 @@
                                                 <p><b>Barrio:</b> {{ deportista.barrio }} <p/>
                                                 <p><b>Comuna:</b> {{ deportista.comuna }} <p/>
                                             {% endif %}
-                                            <div class="row">
-                                                <p><strong>Video:</strong></p>
-                                                {% if deportista.video %}
-                                                    <a href="{{deportista.video}}" target="_blank">{{deportista.video}}</a>
-                                                {% else %}
-                                                    Ninguno
-                                                {% endif %}
+                                                <div class="row">
+                                                    <p><strong>Video:</strong></p>
+                                                    {% if deportista.video %}
+                                                        <a href="{{deportista.video}}" target="_blank">{{deportista.video}}</a>
+                                                    {% else %}
+                                                        Ninguno
+                                                    {% endif %}
+                                                </div>
                                             </div>
-                                        </div>
                                         </address>
 
                                         <div align="right">
@@ -158,30 +159,32 @@
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
-                                        <address class="m-t-5 m-b-5">
-                                            <div class="col-lg-6">
-                                                <p><strong>Composicion Corporal:</strong></p>
-                                                <p><b>Camisa:</b> {{ composicion.talla_camisa }}</p>
-                                                <p><b>Pantaloneta:</b> {{ composicion.talla_pantaloneta }}<p/>
-                                                <p><b>Zapato:</b>{{ composicion.talla_zapato }}</p>
-                                                <p><b>Indice de Masa Corporal:</b> {{composicion.imc}} kg/m^2</p>
-                                                <p><b>Porcentaje Grasa:</b> {{ composicion.porcentaje_grasa }}% </p>
-                                                <p><b>Masa Muscular Magra:</b> {{ composicion.masa_corporal_magra }} kg </p>
-                                                <p><b>EPS:</b> {{composicion.eps}}</p>
+                                        <div class="row">
+                                            <address class="m-t-5 m-b-5">
+                                                <div class="col-lg-6">
+                                                    <p><strong>Composicion Corporal:</strong></p>
+                                                    <p><b>Camisa:</b> {{ composicion.talla_camisa }}</p>
+                                                    <p><b>Pantaloneta:</b> {{ composicion.talla_pantaloneta }}<p/>
+                                                    <p><b>Zapato:</b>{{ composicion.talla_zapato }}</p>
+                                                    <p><b>Indice de Masa Corporal:</b> {{composicion.imc}} kg/m^2</p>
+                                                    <p><b>Porcentaje Grasa:</b> {{ composicion.porcentaje_grasa }}% </p>
+                                                    <p><b>Masa Muscular Magra:</b> {{ composicion.masa_corporal_magra }} kg </p>
+                                                    <p><b>EPS:</b> {{composicion.eps}}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <br/>
+                                                    <strong> {{ composicion.RH }} </strong><br/>
+                                                    <strong> {{ composicion.estatura }} cm</strong><br/>
+                                                    <strong> {{ composicion.peso }} kg</strong><br/>
+
+                                                </div>
+                                            </address>
+                                        </div>
+                                        <div class="row">
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                             </div>
-                                            <div class="col-lg-6">
-                                                <br/>
-                                                <strong> {{ composicion.RH }} </strong><br/>
-                                                <strong> {{ composicion.estatura }} cm</strong><br/>
-                                                <strong> {{ composicion.peso }} kg</strong><br/>
-                                                <br/><br/><br/><br/><br/><br/><br/>
-                                                <p>
-                                                    <div align="right">
-                                                        <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
-                                                    </div>
-                                                </p>
-                                            </div>
-                                        </address>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

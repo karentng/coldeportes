@@ -74,7 +74,7 @@
 												<th>Edad</th>
 												<th>Ciudad de Residencia</th>
 												<th>Club Deportivo</th>
-												<!--th>Opciones</th-->
+												<th>Opciones</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -86,9 +86,9 @@
 													<td>{{d.edad}}</td>
 													<td>{{d.ciudad_residencia}}</td>
 													<td>{{d.entidad}}</td>
-													<!--td>
-														<a data-depor="{{depor.id}}" data-entidad="{{depor.entidad.id}}" onclick = "clickBorrar(this);"><i class="fa fa-trash"></i> Borrar</a>
-													</td-->
+													<td>
+														<a class="bt-borrar" data-depor="{{depor.id}}" data-entidad="{{depor.entidad.id}}"><i class="fa fa-trash"></i> Borrar</a>
+													</td>
 												</tr>
 											{%endfor%}
 
@@ -165,10 +165,10 @@
 			});
 		});
 
-		function clickBorrar(enlace){
-			console.log(enlace.attr('data-depor'));
-			console.log(enlace.attr('data-entidad'))
+		$(document).on('click','.bt-borrar',function(e){
+			console.log($(this).attr('data-depor'));
+			console.log($(this).attr('data-entidad'));
+		});
 
-		};
 	</script>
 {% endblock %}
