@@ -46,7 +46,7 @@
 										<select class="form-control one" id="sele-per" required>
 											<option value selected>---------</option>
 											{%for p in personal%}
-												<option value="{{p.id}}" data-entidad="{{p.entidad.id}}">{{p}}</option>
+												<option value="{{p.id}}" data_entidad="{{p.entidad.id}}">{{p}}</option>
 											{%endfor%}
 										</select>
 									</div>
@@ -74,6 +74,7 @@
 												<th>Actividad</th>
 												<th>Ciudad de Residencia</th>
 												<th>Club(Entidad) Deportivo</th>
+												<th>Opciones</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -85,6 +86,9 @@
 													<td>{{p.actividad}}</td>
 													<td>{{p.ciudad}}</td>
 													<td>{{p.entidad}}</td>
+													<td>
+														<a style="cursor:pointer;"	class="bt-borrar" data-per="{{p.id}}" data-entidad="{{p.entidad.id}}"><i class="fa fa-trash"></i> Borrar</a>
+													</td>
 												</tr>
 											{%endfor%}
 
@@ -131,10 +135,11 @@
 		var table = $('#tabla-person-seleccionados').DataTable();
 		var str_no_option = "<p align='center'>Seleccione un personal</p>";
 		var sele_id = {{sele_id}};
-		$("#sele-per").on("change",function(e){
+
+		$(document).on("change","#sele-per",function(e){
 			var id_per = $(this).val();
 			if(id_per){
-				var id_entidad = $(this).find(':selected').attr('data-entidad');
+				var id_entidad = $(this).find(':selected').attr('data_entidad');
 				$.ajax({
 					url: '/selecciones/vista-previa-per/'+id_entidad+'/'+id_per,
 					success: function(data) {
@@ -157,6 +162,28 @@
 					$("#bt-seleccionar").attr('disabled',1);
 					$("#sele-per").find(':selected').remove();
 					table.row.add(data.respuesta).draw();
+				}
+			});
+		});
+
+		$(document).on('click','.bt-borrar',function(e){
+			var id_per = $(this).attr('data-per');
+			var id_entidad = $(this).attr('data-entidad');
+			var row = table.row($(this).parents('tr'));
+
+			$.ajax({
+				url: '/selecciones/borrar-personal/'+sele_id+'/'+id_entidad+'/'+id_per,
+				dataType: 'json',
+				success: function(data) {
+					row.remove().draw();
+					var id = data.id;
+					var valor = data.valor;
+					var entidad = data.entidad;
+					$('#sele-per').append($('<option>', {
+						value: id,
+						text: valor,
+						data_entidad: entidad
+					}));
 				}
 			});
 		});

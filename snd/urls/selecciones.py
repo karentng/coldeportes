@@ -19,4 +19,5 @@ urlpatterns = patterns('snd.views.selecciones',
         #URLS AJAX SELECCION PERSONAL
     url(r'^vista-previa-per/(\d+)/(\d+)$', 'vista_previa_personal', name='vista_previa_personal'),
     url(r'^guardar-personal/(\d+)/(\d+)/(\d+)$', 'seleccionar_personal', name='selecvionar_personal'),
+    url(r'^borrar-personal/(\d+)/(\d+)/(\d+)$', 'quitar_personal', name='quitar_personal'),
 )

@@ -443,7 +443,7 @@ def seleccionar_personal(request,id_s,id_entidad,id_personal):
     :param request: Petición Realizada
     :type request: WSGIRequest
     :param id_s: id de la seleccion a guardar el personal
-    :param id_entidad: id de la entidad a la cual pertente el personal
+    :param id_entidad: id de la entidad a la cual pertenece el personal
     :param id_personal: id del personal de apoyo
     """
     try:
@@ -473,5 +473,51 @@ def seleccionar_personal(request,id_s,id_entidad,id_personal):
     per_sele.save()
 
     return JsonResponse({
-        'respuesta': [per.nombres + ' ' +per.apellidos,per.tipo_id,per.identificacion,per.actividad,per.ciudad.__str__(),per.entidad.nombre]
+        'respuesta':
+            [
+                per.nombres + ' ' +per.apellidos,
+                per.tipo_id,
+                per.identificacion,
+                per.actividad,
+                per.ciudad.__str__(),
+                per.entidad.nombre,
+                "<a data-per="+str(per.id)+" data-entidad="+str(per.entidad.id)+" style='cursor:pointer;'	class='bt-borrar' ><i class='fa fa-trash'></i> Borrar</a>"
+             ]
+    })
+
+@login_required
+def quitar_personal(request,id_s,id_entidad,id_personal):
+    """
+    Septiembre 2 / 2015
+    Autor: Daniel Correa
+    
+    Permite quitar de seleccion a un personal de apoyo mediante ajax
+    
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_s: id de la seleccion a guardar el personal
+    :param id_entidad: id de la entidad a la cual pertenece el personal
+    :param id_personal: id del personal de apoyo
+    """
+    try:
+        entidad = Entidad.objects.get(id=id_entidad)
+        person_sele = PersonalSeleccion.objects.get(personal=id_personal,entidad=entidad,seleccion=id_s)
+
+    except:
+        messages.error(request,'No existe el registro de selección del deportista ingresado')
+        return redirect('listar_seleccion')
+
+    person_sele.delete()
+
+    connection.set_tenant(entidad)
+    ContentType.objects.clear_cache()
+
+    personalapoyo = PersonalApoyo.objects.get(id=id_personal)
+
+    connection.set_tenant(request.tenant)
+
+    return JsonResponse({
+        'id' : id_personal,
+        'valor': personalapoyo.__str__(),
+        'entidad': personalapoyo.entidad.id
     })
