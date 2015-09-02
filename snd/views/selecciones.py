@@ -172,9 +172,9 @@ def registrar_personal(request,id_s):
         return redirect('inicio_tenant')
 
     personal_registrados = []
-    for d in PersonalSeleccion.objects.filter(seleccion=sele): #Obtener personal seleccionado al momento
-        entidad = d.entidad
-        per = d.personal
+    for p in PersonalSeleccion.objects.filter(seleccion=sele): #Obtener personal seleccionado al momento
+        entidad = p.entidad
+        per = p.personal
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
         personal_registrados += [PersonalApoyo.objects.get(id=per)]
