@@ -8,6 +8,8 @@ from coldeportes.utilities import adicionarClase
 
 
 class IdentificacionForm(ModelForm):
+    required_css_class = 'required'
+
     descripcion = forms.CharField(widget=forms.Textarea, required=False, label="Descripción")
     def __init__(self, *args, **kwargs):
         super(IdentificacionForm, self).__init__(*args, **kwargs)
@@ -21,6 +23,8 @@ class IdentificacionForm(ModelForm):
         exclude = ('entidad',)
 
 class CaracterizacionForm(forms.ModelForm):
+    required_css_class = 'required'
+
     descripcion = forms.CharField(widget=forms.Textarea, required=False)
 
     def __init__(self, *args, **kwargs):
@@ -43,6 +47,8 @@ class CaracterizacionForm(forms.ModelForm):
         
 
 class HorariosDisponibleForm(ModelForm):
+    required_css_class = 'required'
+
     descripcion = forms.CharField(widget=forms.Textarea, required=True)
 
     def __init__(self, *args, **kwargs):
@@ -60,6 +66,8 @@ class HorariosDisponibleForm(ModelForm):
         }
 
 class DatoHistoricoForm(ModelForm):
+    required_css_class = 'required'
+
     descripcion = forms.CharField(widget=forms.Textarea, required=True)
     
     def __init__(self, *args, **kwargs):
@@ -74,17 +82,22 @@ class DatoHistoricoForm(ModelForm):
         
 
 class FotoEscenarioForm(ModelForm):
+    required_css_class = 'required'
 
     class Meta:
         model = Foto
         exclude = ('escenario',)
 
 class VideoEscenarioForm(ModelForm):
+    required_css_class = 'required'
+
     class Meta:
         model = Video
         exclude = ('escenario',)
 
 class ContactoForm(ModelForm):
+    required_css_class = 'required'
+    
     descripcion = forms.CharField(widget=forms.Textarea, required=True)
 
     def __init__(self, *args, **kwargs):

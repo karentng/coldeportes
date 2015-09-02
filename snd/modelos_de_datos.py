@@ -232,7 +232,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y CLUBES
+    #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y LIGAS
     (
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'entidad'],

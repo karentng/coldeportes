@@ -10,7 +10,7 @@ from snd.models import *
 from entidades.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from coldeportes.utilities import not_transferido_required
+from coldeportes.utilities import *
 
 
 @login_required
@@ -31,6 +31,7 @@ def listar_escenarios(request):
     })
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def finalizar_escenario(request, opcion):
     """
     Junio 10 / 2015
@@ -49,6 +50,7 @@ def finalizar_escenario(request, opcion):
         return redirect('listar_escenarios')
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def desactivar_escenario(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -128,6 +130,7 @@ def ver_escenario(request, escenario_id, id_entidad):
     })
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def wizard_nuevo_identificacion(request):
     """
     Mayo 30 / 2015
@@ -166,6 +169,7 @@ def wizard_nuevo_identificacion(request):
     })
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def wizard_identificacion(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -215,6 +219,7 @@ def wizard_identificacion(request, escenario_id):
     })
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def wizard_caracterizacion(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -263,6 +268,7 @@ def wizard_caracterizacion(request, escenario_id):
     })
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def wizard_horarios(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -313,6 +319,7 @@ def wizard_horarios(request, escenario_id):
     })
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def wizard_historicos(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -363,6 +370,7 @@ def wizard_historicos(request, escenario_id):
 
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def wizard_fotos(request, escenario_id):
     """
     Mayo 30 / 2015

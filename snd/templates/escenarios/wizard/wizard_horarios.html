@@ -8,16 +8,8 @@
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
-    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_horarios-validations.js"></script>
     {{form.media}} {# js y css para datetime #}
-    <style>
-    .control-label{
-        display: none;
-    }
-    .form-control-feedback{
-        margin-top: -31px;
-    }
-    </style>
+    
 {% endblock %}
 
 {% block miga_pan %}
@@ -47,10 +39,8 @@
                         <h3>{{titulo}}</h3>
                         {% for field in form %}
                             <div class="col-lg-6">
-                                <label for="{{ field.label }}">{{ field.label_tag }}
-                                    {% if field.field.required %}<span class="special_class">*</span>{% endif %}
-                                </label>
-                                {% bootstrap_field field layout="inline" %}
+                                
+                                {% bootstrap_field field layout="vertical" %}
                             </div>
                         {% endfor %}
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>              
@@ -114,6 +104,7 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_horarios-validations.js"></script>
 
     
 {% endblock %}
