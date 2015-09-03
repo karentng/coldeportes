@@ -52,6 +52,7 @@ $(document).on('click','.bt-borrar',function(e){
                 text: valor,
                 data_entidad: entidad
             }));
+            $('#vista-previa').html(str_no_option);
         }
     });
 });
