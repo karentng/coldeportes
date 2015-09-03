@@ -8,7 +8,6 @@
 {% block css %}
     
     <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
-    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_fotos-validations.js"></script>
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
@@ -100,7 +99,8 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
-
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_fotos-validations.js"></script>
+    
     
 {% endblock %}
 
