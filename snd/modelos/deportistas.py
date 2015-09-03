@@ -12,7 +12,6 @@ class Deportista(models.Model):
     tipo_sexo = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
-        ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIDAD = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),

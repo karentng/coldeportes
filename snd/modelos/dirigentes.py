@@ -19,7 +19,6 @@ class Dirigente(models.Model):
     TIPO_GENERO = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
-        ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIFICACION = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
