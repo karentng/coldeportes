@@ -87,6 +87,9 @@ class ComposicionCorporalForm(ModelForm):
     class Meta:
         model = ComposicionCorporal
         exclude = ('deportista',)
+        widgets = {
+            'fecha_inicia_deporte': MyDateWidget(),
+        }
 
 
 class HistorialDeportivoForm(ModelForm):
