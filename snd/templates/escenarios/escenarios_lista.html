@@ -23,13 +23,17 @@
     <script type="text/javascript">
         idTabla = "tabla-escenarios";
         opciones = {% if perms.snd.change_escenario %} true {% else %} false {% endif %};
+
         {% if tipo_tenant == 1 or tipo_tenant == 2 %}
             url = "{% url 'cargar_columnas' 9 %}";
         {% else %}
             url = "{% url 'cargar_columnas' 8 %}";
         {% endif %}
     </script>
+
+
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+
     <script>
         function urlModal(link) {
             //Funcionalidad para agregar la url al modal
@@ -38,6 +42,7 @@
         };
     </script>
 
+
 {% endblock %}
 
 {% block titulo_panel %}
@@ -45,6 +50,7 @@
 {% endblock titulo_panel %}
 
 {% block contenido_panel %}
+
     <div class="row">
         <div class="col-sm-12">
             <table id="tabla-escenarios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
@@ -69,5 +75,6 @@
             </div>
         </div>
     </div>
+
     
 {% endblock %}
