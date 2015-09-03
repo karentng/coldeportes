@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 import datetime
-from coldeportes.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase,MyDateWidget
 
 class VerificarExistenciaForm(forms.Form):
     TIPO_IDENTIDAD = (
@@ -39,7 +39,6 @@ class DeportistaForm(ModelForm):
         self.fields['genero'] = adicionarClase(self.fields['genero'], 'one')
         self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
-        self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'],'fecha')
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
         self.fields['tipo_id'].widget.attrs.update({'readonly': True})
         self.fields['identificacion'].widget.attrs.update({'readonly': True})
@@ -53,6 +52,9 @@ class DeportistaForm(ModelForm):
     class Meta:
         model = Deportista
         exclude = ('entidad','estado',)
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
 
 class ComposicionCorporalForm(ModelForm):
 
@@ -86,6 +88,7 @@ class ComposicionCorporalForm(ModelForm):
         model = ComposicionCorporal
         exclude = ('deportista',)
 
+
 class HistorialDeportivoForm(ModelForm):
 
     required_css_class = 'required'
@@ -93,8 +96,6 @@ class HistorialDeportivoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
-        self.fields['fecha_inicial'] = adicionarClase(self.fields['fecha_inicial'], 'fecha')
-        self.fields['fecha_final'] = adicionarClase(self.fields['fecha_final'], 'fecha')
         self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
 
     def clean(self):
@@ -109,6 +110,10 @@ class HistorialDeportivoForm(ModelForm):
     class Meta:
         model = HistorialDeportivo
         exclude = ('deportista','estado')
+        widgets = {
+            'fecha_inicial': MyDateWidget(),
+            'fecha_final': MyDateWidget(),
+        }
 
 class InformacionAcademicaForm(ModelForm):
 

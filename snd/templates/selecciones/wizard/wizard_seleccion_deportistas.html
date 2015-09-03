@@ -46,7 +46,7 @@
 										<select class="form-control one" id="sele-depor" required>
 											<option value selected>---------</option>
 											{%for d in deportistas%}
-												<option value="{{d.id}}" data-entidad="{{d.entidad.id}}">{{d}}</option>
+												<option value="{{d.id}}" data_entidad="{{d.entidad.id}}">{{d}}</option>
 											{%endfor%}
 										</select>
 									</div>
@@ -74,7 +74,7 @@
 												<th>Edad</th>
 												<th>Ciudad de Residencia</th>
 												<th>Club Deportivo</th>
-												<!--th>Opciones</th-->
+												<th>Opciones</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -86,9 +86,9 @@
 													<td>{{d.edad}}</td>
 													<td>{{d.ciudad_residencia}}</td>
 													<td>{{d.entidad}}</td>
-													<!--td>
-														<a data-depor="{{depor.id}}" data-entidad="{{depor.entidad.id}}" onclick = "clickBorrar(this);"><i class="fa fa-trash"></i> Borrar</a>
-													</td-->
+													<td>
+														<a style="cursor:pointer;"	class="bt-borrar" data-depor="{{d.id}}" data-entidad="{{d.entidad.id}}"><i class="fa fa-trash"></i> Borrar</a>
+													</td>
 												</tr>
 											{%endfor%}
 
@@ -122,6 +122,10 @@
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 	<script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+	<script>
+		var sele_id = {{sele_id}};
+	</script>
+	<script src="{{STATIC_URL}}js/funciones_calculos/selecciones/ajax_deportistas.js"></script>
 	
 {% endblock %}
 
@@ -132,43 +136,6 @@
 			App.init();
 			FormWizard.init();
 		});
-		var table = $('#tabla-depor-seleccionados').DataTable();
-		var str_no_option = "<p align='center'>Seleccione un deportista</p>";
-		var sele_id = {{sele_id}};
-		$("#sele-depor").on("change",function(e){
-			var id_depor = $(this).val();
-			if(id_depor){
-				var id_entidad = $(this).find(':selected').attr('data-entidad');
-				$.ajax({
-					url: '/selecciones/vista-previa-depor/'+id_entidad+'/'+id_depor,
-					success: function(data) {
-						$('#vista-previa').html(data);
-					}
-				});
-			}else{
-				$('#vista-previa').html(str_no_option);
-			}
 
-		});
-
-		$(document).on('click','#bt-seleccionar',function(){
-			var id_entidad = $(this).attr("data-entidad");
-			var id_depor = $(this).attr("data-depor");
-			$.ajax({
-				url: '/selecciones/guardar-deportista/'+sele_id+'/'+id_entidad+'/'+id_depor,
-
-				success: function(data) {
-					$("#bt-seleccionar").attr('disabled',1);
-					$("#sele-depor").find(':selected').remove();
-					table.row.add(data.respuesta).draw();
-				}
-			});
-		});
-
-		function clickBorrar(enlace){
-			console.log(enlace.attr('data-depor'));
-			console.log(enlace.attr('data-entidad'))
-
-		};
 	</script>
 {% endblock %}

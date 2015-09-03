@@ -102,10 +102,9 @@
                                             <b>Deportistas Seleccionados:</b>
 
                                             <ul class="media-list media-list-with-divider">
-                                                <br/>
                                                 {% for i in depor_sele %}
-                                                    {%if i.par %}
-                                                    <div class="col-lg-6">
+
+                                                    <div class="col-lg-6 p-t-25">
                                                         <li class="media media-sm">
                                                             <a class="media-left">
                                                                 {%if i.foto%}
@@ -127,30 +126,7 @@
                                                             </div>
                                                         </li>
                                                     </div>
-                                                    {%else%}
-                                                    <div class="col-lg-6">
-                                                        <li class="media media-sm">
-                                                            <div class="media-body text-right">
-                                                                <h4 class="media-heading">{{i.nombres}} {{i.apellidos}}</h4>
-                                                                <p>
-                                                                    <b>Club Deportivo:</b> {{i.entidad}} <br/>
-                                                                    <b>{{i.get_tipo_id_display}}:</b> {{i.identificacion}}<br/>
-                                                                    <b>Genero:</b> {{ i.genero }} <br/>
-                                                                    <b>Edad:</b> {{ i.edad }} <br/>
-                                                                    <b>Disciplinas Deportivas:</b> {{ i.disciplinas_deportivas }} <br/>
-                                                                    <b>Ciudad de Residencia:</b> {{i.ciudad_residencia}}
-                                                                </p>
-                                                            </div>
-                                                            <a class="media-left">
-                                                                {%if i.foto%}
-                                                                    <img src="{{MEDIA_URL}}{{i.foto}}" alt="Foto del deportista" class="media-object rounded-corner" width="70" height="70"/>
-                                                                {%else%}
-                                                                    <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="70" height="70"/>
-                                                                {%endif%}
-                                                            </a>
-                                                        </li>
-                                                    </div>
-                                                    {%endif%}
+
                                                 {%empty%}
                                                     <li>No hay deportistas registrados</li>
                                                 {% endfor %}
