@@ -314,7 +314,6 @@ def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actua
 
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
     busqueda = busqueda.split(" ")
-
     #Cuando el tipo de tenant es una liga hay que ejecutar las busquedas dentro de la liga y dentro de sus clubes
     if request.tenant.tipo == 1:
         if modeloTipo.__name__ == 'Seleccion':
@@ -383,7 +382,6 @@ def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion,multiples_
                 llave = operator.attrgetter(columna)
             else:
                 llave = methodcaller('__str__')
-
         objetos_procesados = sorted(objetos, key=llave, reverse=orden)
         return objetos_procesados[inicio:fin]
     else:
