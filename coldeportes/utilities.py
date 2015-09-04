@@ -22,11 +22,13 @@ def inicializarComponentes():
     Permission.__str__ = representacionStringPermisos
 inicializarComponentes()
 
-def decorator_example(function):
+def tenant_required(function):
     @wraps(function)
     def decorator(request, *args, **kwargs):
-        print (request)
-        return function(request, *args, **kwargs)
+        if request.tenant.tipo == 1 or request.tenant.tipo == 2:
+            raise PermissionDenied
+        else:
+            return function(request, *args, **kwargs)
 
     return decorator
 
