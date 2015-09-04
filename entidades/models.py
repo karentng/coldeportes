@@ -53,7 +53,7 @@ class Entidad(TenantMixin): # Entidad deportiva
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
-    pagina_web = models.URLField(verbose_name="página web propia", blank=True, null=True)
+    pagina_web = models.URLField(verbose_name="página web propia", blank=True, null=True, help_text='Si su página es "mipagina.com", por favor ingrese: "http://mipagina.com"')
     telefono = models.CharField(max_length=255, verbose_name="teléfono", blank=True)
     descripcion = models.TextField(verbose_name="descripción", blank=True, null=True)
 

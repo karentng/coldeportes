@@ -261,6 +261,7 @@ def obtenerDatos(request, modelo):
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
 
 def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actual):
+    print (modeloTipo)
     objetos = modeloTipo.objects.none()
     mismo_tenant = False
     if tenant_conectar.id != tenant_actual.id:
@@ -272,21 +273,36 @@ def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actua
         for elementoAtributo in arregloAtributos:
             for palabra in busqueda:
                 try:
-                    instruccion = "%s__nombre__icontains" % elementoAtributo
-                    query = {instruccion : palabra}
-                    if mismo_tenant:
-                        objeto = modeloTipo.objects.filter(**query)
-                    else:
-                        objeto = modeloTipo.objects.filter(**query).filter(estado=0)
+                    print ()
                 except Exception:
-                    instruccion = "%s__icontains" % elementoAtributo
-                    query = {instruccion : palabra}
-                    if mismo_tenant:
-                        objeto = modeloTipo.objects.filter(**query)
-                    else:
-                        objeto = modeloTipo.objects.filter(**query).filter(estado=0)
-                finally:
-                    objetos = objetos | objeto
+                    pass
+                choices = modeloTipo._meta.get_field(elementoAtributo).choices
+                if choices != []:
+                    import re
+
+                    for k, v in choices:
+                        if re.search(palabra, v, re.IGNORECASE):
+                            instruccion = "%s" % elementoAtributo
+                            query = {instruccion : k}
+                            objeto = modeloTipo.objects.filter(**query)
+                            objetos = objetos | objeto
+                else:
+                    try:
+                        instruccion = "%s__nombre__icontains" % elementoAtributo
+                        query = {instruccion : palabra}
+                        if mismo_tenant:
+                            objeto = modeloTipo.objects.filter(**query)
+                        else:
+                            objeto = modeloTipo.objects.filter(**query).filter(estado=0)
+                    except Exception:
+                        instruccion = "%s__icontains" % elementoAtributo
+                        query = {instruccion : palabra}
+                        if mismo_tenant:
+                            objeto = modeloTipo.objects.filter(**query)
+                        else:
+                            objeto = modeloTipo.objects.filter(**query).filter(estado=0)
+                    finally:
+                        objetos = objetos | objeto
     return objetos
 
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
