@@ -11,7 +11,7 @@ from snd.formularios.deportistas  import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
-from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required
+from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required,decorator_example
 
 
 @login_required

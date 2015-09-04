@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+from functools import wraps
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
@@ -20,6 +21,14 @@ def inicializarComponentes():
         return self.name
     Permission.__str__ = representacionStringPermisos
 inicializarComponentes()
+
+def decorator_example(function):
+    @wraps(function)
+    def decorator(request, *args, **kwargs):
+        print (request)
+        return function(request, *args, **kwargs)
+
+    return decorator
 
 def all_permission_required(*perms):
     """
