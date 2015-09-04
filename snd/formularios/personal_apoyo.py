@@ -34,27 +34,18 @@ class VerificarExistenciaForm(forms.Form):
 
 
 class FormacionDeportivaForm(ModelForm):
+
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(FormacionDeportivaForm, self).__init__(*args, **kwargs)
-        self.fields['pais_formacion'] = adicionarClase(self.fields['pais_formacion'], 'one')
-
-    def clean(self):
-        fecha_comienzo = self.cleaned_data['fecha_comienzo']
-        fecha_fin = self.cleaned_data['fecha_fin']
-        if fecha_fin != None:
-            if fecha_fin < fecha_comienzo:
-                msg = "La fecha de finalización es menor a la fecha de comienzo"
-                self.add_error('fecha_comienzo', msg)
-                self.add_error('fecha_fin', msg)
+        self.fields['nivel'] = adicionarClase(self.fields['nivel'], 'one')
+        self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
+        self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
 
     class Meta:
         model = FormacionDeportiva
         exclude = ('personal_apoyo',)
-        widgets = {
-            'fecha_comienzo': MyDateWidget(),
-            'fecha_fin': MyDateWidget(),
-        }
-
 
 class ExperienciaLaboralForm(ModelForm):
     def __init__(self, *args, **kwargs):

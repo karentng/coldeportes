@@ -13,11 +13,12 @@ $(document).ready(function() {
 
 document.getElementById("id_nivel").onchange=function(){
     var nivel = document.getElementById("id_nivel").value + "";
-    if(nivel == "Pregrado" || nivel == "Postgrado"){
-        profesion.disabled=false;
-    }else{
+    if(nivel == "Jardin" || nivel == "Primaria" || nivel=="Bachillerato"){
         profesion.disabled=true;
         profesion.value='';
+
+    }else{
+        profesion.disabled=false;
     }
 
 };
