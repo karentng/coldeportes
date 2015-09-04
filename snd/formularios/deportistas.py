@@ -42,6 +42,7 @@ class DeportistaForm(ModelForm):
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
         self.fields['tipo_id'].widget.attrs.update({'readonly': True})
         self.fields['identificacion'].widget.attrs.update({'readonly': True})
+        self.fields['lgtbi'] = adicionarClase(self.fields['lgtbi'], 'styled')
 
     def clean(self):
         fecha_nacimiento = self.cleaned_data['fecha_nacimiento']
@@ -54,6 +55,7 @@ class DeportistaForm(ModelForm):
         exclude = ('entidad','estado',)
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
+            'clases': forms.CheckboxInput(),
         }
 
 class ComposicionCorporalForm(ModelForm):
@@ -87,6 +89,9 @@ class ComposicionCorporalForm(ModelForm):
     class Meta:
         model = ComposicionCorporal
         exclude = ('deportista',)
+        widgets = {
+            'fecha_inicia_deporte': MyDateWidget(),
+        }
 
 
 class HistorialDeportivoForm(ModelForm):
