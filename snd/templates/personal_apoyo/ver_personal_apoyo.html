@@ -206,6 +206,9 @@
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>
+                                                {%if not formacion_deportiva%}
+                                                    <p align="center">No hay resultados disponibles</p>
+                                                {%endif%}
                                             </div>
                                         </address>
                                         <div align="right">
@@ -251,6 +254,9 @@
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>
+                                                {%if not experiencia_laboral%}
+                                                    <p align="center">No hay resultados disponibles</p>
+                                                {%endif%}
                                             </div>
                                         </address>
                                         <div align="right">

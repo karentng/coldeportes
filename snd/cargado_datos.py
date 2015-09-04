@@ -104,7 +104,7 @@ def evaluarCondiciones(objeto, condiciones):
     return False
 
 
-def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
+def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,request):
     datos = []
     for objeto in objetos:
         aux = []
@@ -147,7 +147,19 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
                 "url": reverse(i[1], args=parametros),
                 "imagen": i[3],
             }
-            urls.append(datosURL)
+
+            if request.tenant.tipo == 1 or request.tenant.tipo == 2:
+                if objeto.__class__.__name__ == 'Dirigente' or objeto.__class__.__name__ == 'PersonalApoyo':
+                    if objeto.entidad == request.tenant:
+                        urls.append(datosURL)
+                    else:
+                        if 'ver' in datosURL['url']:
+                            urls.append(datosURL)
+                else:
+                    urls.append(datosURL)
+            else:
+                urls.append(datosURL)
+
         acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls,"objeto":objeto})
         aux.append(acciones)
 
@@ -256,7 +268,7 @@ def obtenerDatos(request, modelo):
         multiples_tenant = False
 
     objetos = definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion, multiples_tenant)
-    datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones)
+    datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,request)
     
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
 
@@ -271,22 +283,33 @@ def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actua
         arregloAtributos = atributo.split(" ")
         for elementoAtributo in arregloAtributos:
             for palabra in busqueda:
-                try:
-                    instruccion = "%s__nombre__icontains" % elementoAtributo
-                    query = {instruccion : palabra}
-                    if mismo_tenant:
-                        objeto = modeloTipo.objects.filter(**query)
-                    else:
-                        objeto = modeloTipo.objects.filter(**query).filter(estado=0)
-                except Exception:
-                    instruccion = "%s__icontains" % elementoAtributo
-                    query = {instruccion : palabra}
-                    if mismo_tenant:
-                        objeto = modeloTipo.objects.filter(**query)
-                    else:
-                        objeto = modeloTipo.objects.filter(**query).filter(estado=0)
-                finally:
-                    objetos = objetos | objeto
+                choices = modeloTipo._meta.get_field(elementoAtributo).choices
+                if choices != []:
+                    import re
+
+                    for k, v in choices:
+                        if re.search(palabra, v, re.IGNORECASE):
+                            instruccion = "%s" % elementoAtributo
+                            query = {instruccion : k}
+                            objeto = modeloTipo.objects.filter(**query)
+                            objetos = objetos | objeto
+                else:
+                    try:
+                        instruccion = "%s__nombre__icontains" % elementoAtributo
+                        query = {instruccion : palabra}
+                        if mismo_tenant:
+                            objeto = modeloTipo.objects.filter(**query)
+                        else:
+                            objeto = modeloTipo.objects.filter(**query).filter(estado=0)
+                    except Exception:
+                        instruccion = "%s__icontains" % elementoAtributo
+                        query = {instruccion : palabra}
+                        if mismo_tenant:
+                            objeto = modeloTipo.objects.filter(**query)
+                        else:
+                            objeto = modeloTipo.objects.filter(**query).filter(estado=0)
+                    finally:
+                        objetos = objetos | objeto
     return objetos
 
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
