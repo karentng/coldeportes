@@ -21,6 +21,11 @@
 {% block js %}
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+           $(document).on('mouseenter','tr',function(e){
+               $('.add-tooltip').tooltip();
+           });
+        });
         idTabla = "tabla-escenarios";
         opciones = {% if perms.snd.change_escenario %} true {% else %} false {% endif %};
 

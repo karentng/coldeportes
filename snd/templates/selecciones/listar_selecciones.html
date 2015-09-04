@@ -27,6 +27,11 @@
 {% block js %}
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+           $(document).on('mouseenter','tr',function(e){
+               $('.add-tooltip').tooltip();
+           });
+        });
         idTabla = "tabla-selecciones";
         opciones = true;//false;
         url = "{% url 'cargar_columnas' 10 %}";
