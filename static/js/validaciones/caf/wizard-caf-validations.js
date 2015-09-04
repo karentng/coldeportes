@@ -90,7 +90,7 @@ fields = {
     web: {
         validators: {
             uri: {
-                message: 'La página web no es válida'
+                message: 'Ingrese una URL válida (Ej: http://google.com.co)'
             }
         }
     }
