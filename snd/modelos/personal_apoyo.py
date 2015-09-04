@@ -20,7 +20,6 @@ class PersonalApoyo(models.Model):
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
-        ('INDEFINIDO', 'INDEFINIDO'),
     )
 
     TIPO_IDENTIDAD = (
@@ -73,6 +72,7 @@ class PersonalApoyo(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad, blank=True, verbose_name='Ciudad de residencia')
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
+    lgtbi = models.BooleanField(blank=True,verbose_name='Hace parte de la comunidad LGTBI?')
     entidad = models.ForeignKey(Entidad)
 
     def __str__(self):

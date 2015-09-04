@@ -8,6 +8,9 @@
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
 	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/switchery/switchery.min.css" rel="stylesheet" />
+	<!--link href="{{STATIC_URL}}css/build.css" rel="stylesheet" /-->
+
 	{{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -92,8 +95,17 @@
 							<div class="col-md-6">
 								{% bootstrap_field form.direccion layout="vertical" %}
 							</div>
+						</div>
+						<hr>
+						<strong><h4>Información Personal <i class="fa fa-info-circle add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="El usuario es libre de responder o no esta información"></i></h4></strong>
+						<div class="row">
 							<div class="col-md-6">
 								{% bootstrap_field form.etnia layout="vertical" %}
+							</div>
+							<div class="col-md-6 p-t-10">
+                                <div class="checkbox checkbox-primary">
+                                    {% bootstrap_field form.lgtbi layout="vertical" %}
+                                </div>
 							</div>
 						</div>
 						<hr>
@@ -118,6 +130,7 @@
 
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
 	<script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-deportista-validations.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 	

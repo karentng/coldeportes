@@ -16,10 +16,9 @@
             <h5><strong>Club: {{ per.entidad }}</strong></h5>
             <p><strong>Identificación:</strong> {{ per.tipo_id }}. {{ per.identificacion }} <br/>
                 <strong>Genero:</strong> {{ per.genero }} <br/>
-                <strong>Actividad:</strong> {{ per.actividad }} <br/>
+                <strong>Actividad:</strong> {{ per.get_actividad_display }} <br/>
                 <strong>Edad:</strong> {{ per.edad }} <br/>
                 <strong>Nacionalidad:</strong> {{ per.nacionalidad_str }} <br/>
-                <strong>Ciudad de Residencia:</strong> {{per.ciudad}}
             </p>
         </div>
         </div>
