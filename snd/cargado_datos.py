@@ -261,7 +261,6 @@ def obtenerDatos(request, modelo):
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
 
 def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actual):
-    print (modeloTipo)
     objetos = modeloTipo.objects.none()
     mismo_tenant = False
     if tenant_conectar.id != tenant_actual.id:
@@ -272,10 +271,6 @@ def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actua
         arregloAtributos = atributo.split(" ")
         for elementoAtributo in arregloAtributos:
             for palabra in busqueda:
-                try:
-                    print ()
-                except Exception:
-                    pass
                 choices = modeloTipo._meta.get_field(elementoAtributo).choices
                 if choices != []:
                     import re
