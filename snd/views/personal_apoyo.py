@@ -48,8 +48,6 @@ def wizard_personal_apoyo_nuevo(request):
             personal_apoyo_form.save()
             return redirect('wizard_formacion_deportiva', personal_apoyo.id)
 
-
-
     return render(request, 'personal_apoyo/wizard/wizard_personal_apoyo.html', {
         'titulo': 'Información básica',
         'wizard_stage': 1,
@@ -122,8 +120,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
             personal_apoyo.save()
             personal_apoyo_form.save()
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)
-
-
+        print(personal_apoyo_form.errors)
     return render(request, 'personal_apoyo/wizard/wizard_personal_apoyo.html', {
         'titulo': 'Información básica',
         'wizard_stage': 1,
@@ -169,9 +166,6 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
             formacion_deportiva.personal_apoyo = personal_apoyo
-            formacion_deportiva.denominacion_diploma = formacion_deportiva.denominacion_diploma.upper()
-            formacion_deportiva.nivel = formacion_deportiva.nivel.upper()
-            formacion_deportiva.institucion_formacion = formacion_deportiva.institucion_formacion.upper()
             formacion_deportiva.save()
             formaciondep_form.save()
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)

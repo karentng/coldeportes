@@ -48,7 +48,7 @@ class Deportista(models.Model):
     email = models.EmailField(null=True,blank=True)
     telefono = models.CharField(max_length=100,verbose_name='Teléfono')
     direccion = models.CharField(max_length=100,verbose_name='Dirección')
-    lgtbi = models.BooleanField(blank=True,verbose_name='Hace parte de la comunidad LGTBI?')
+    lgtbi = models.BooleanField(verbose_name='Hace parte de la comunidad LGTBI?')
     entidad = models.ForeignKey(Entidad)
 
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")

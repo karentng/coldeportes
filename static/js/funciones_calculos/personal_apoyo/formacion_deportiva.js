@@ -1,5 +1,5 @@
 /**
- * Created by daniel on 30/07/15.
+ * Created by daniel on 4/09/15.
  */
 var grado_semestre = document.getElementById("id_grado_semestre");
 var profesion = document.getElementById("id_profesion");
