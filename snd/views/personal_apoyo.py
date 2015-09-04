@@ -48,8 +48,6 @@ def wizard_personal_apoyo_nuevo(request):
             personal_apoyo_form.save()
             return redirect('wizard_formacion_deportiva', personal_apoyo.id)
 
-
-
     return render(request, 'personal_apoyo/wizard/wizard_personal_apoyo.html', {
         'titulo': 'Información básica',
         'wizard_stage': 1,
@@ -122,8 +120,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
             personal_apoyo.save()
             personal_apoyo_form.save()
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)
-
-
+        print(personal_apoyo_form.errors)
     return render(request, 'personal_apoyo/wizard/wizard_personal_apoyo.html', {
         'titulo': 'Información básica',
         'wizard_stage': 1,
