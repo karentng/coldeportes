@@ -73,7 +73,7 @@ def desactivar_escenario(request, escenario_id):
         messages.warning(request, "El escenario que intenta acceder no existe.")
         return redirect('listar_escenarios')
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -194,7 +194,7 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -248,7 +248,7 @@ def wizard_caracterizacion(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -299,7 +299,7 @@ def wizard_horarios(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -351,7 +351,7 @@ def wizard_historicos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -403,7 +403,7 @@ def wizard_fotos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -454,7 +454,7 @@ def wizard_videos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -504,7 +504,7 @@ def wizard_contactos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 

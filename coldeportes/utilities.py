@@ -171,7 +171,7 @@ def calculate_age(born):
     else:
         return today.year - born.year
 
-def not_transferido_required(objeto):
+def not_transferido_required(request,objeto):
     """
     Agosto 17 / 2015
     Autor: Daniel Correa
@@ -181,7 +181,7 @@ def not_transferido_required(objeto):
     :param objeto: objeto transferible
     """
     if objeto.estado in (2,3):
-        return redirect('inicio_tenant')
+        return render(request,'403.html',{})
 
 '''
     Julio 15 / 2015
