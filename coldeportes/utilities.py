@@ -2,7 +2,7 @@
 from functools import wraps
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.shortcuts import redirect,render
 from datetime import date
 from django.contrib.auth.models import *
 from datetimewidget.widgets import DateWidget
@@ -103,10 +103,10 @@ def tenant_actor(actor):
                         return a_view(request, *args, **kwargs)
                     else:
                         print ("No tiene los permisos para el actor: %s"%(actor))
-                        return redirect('inicio')
+                        return render(request,'403.html',{})
                 else:
                     print ("Actor %s no existente"%(actor))
-                    return redirect('inicio')
+                    return render(request,'403.html',{})
             except Exception as e:
                 return a_view(request, *args, **kwargs)
             return a_view(request, *args, **kwargs)
