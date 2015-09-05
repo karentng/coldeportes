@@ -148,7 +148,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                 "imagen": i[3],
             }
 
-            if request.tenant.tipo == 1 or request.tenant.tipo == 2:
+            if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
                 if objeto.__class__.__name__ == 'Dirigente' or objeto.__class__.__name__ == 'PersonalApoyo':
                     if objeto.entidad == request.tenant:
                         urls.append(datosURL)
@@ -226,6 +226,48 @@ def obtener_objetos_por_tenant(request,modelo):
                         objetos.append(objeto)
             connection.set_tenant(tenant_actual)
         return objetos
+    #tenant de tipo Comite
+    elif request.tenant.tipo == 6:
+        if modelo.__name__ == 'Seleccion':
+            objetos = []
+            #Saco los objetos propios del comite
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios del comité
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+            #federaciones del comité
+            federaciones = Federacion.objects.filter(comite=request.tenant.id)
+            for federacion in federaciones:
+                #saco los objetos de cada una de las federaciones pertenecientes al comité
+                connection.set_tenant(federacion)
+                ContentType.objects.clear_cache()
+                qs = modelo.objects.filter(estado=0)
+                for objeto in qs:
+                    objetos.append(objeto)
+                #obtengo las ligas de cada federación y saco los objetos de cada uno
+                ligas = Liga.objects.filter(federacion=federacion.id)
+                for liga in ligas:
+                    connection.set_tenant(liga)
+                    ContentType.objects.clear_cache()
+                    qs = modelo.objects.filter(estado=0)
+                    for objeto in qs:
+                        objetos.append(objeto)
+                    #obtengo los clubes de cada liga y saco los objetos de cada uno
+                    clubes = Club.objects.filter(liga=liga.id)
+                    for club in clubes:
+                        connection.set_tenant(club)
+                        ContentType.objects.clear_cache()
+                        qs = modelo.objects.filter(estado=0)
+                        for objeto in qs:
+                            objetos.append(objeto)
+            connection.set_tenant(tenant_actual)
+        return objetos
     else:
         #Este es para el caso en que sea un club o el resto de entidades las cuales tienen acceso a los datos propios de su entidad solamente
         objetos = modelo.objects.all()
@@ -262,7 +304,7 @@ def obtenerDatos(request, modelo):
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
 
-    if request.tenant.tipo == 1 or request.tenant.tipo == 2:
+    if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
         multiples_tenant = True
     else:
         multiples_tenant = False
@@ -363,6 +405,39 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                     qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
                     for objeto in qs:
                         objetos.append(objeto)
+            return objetos
+    elif request.tenant.tipo == 6:
+        if modeloTipo.__name__ == 'Seleccion':
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios de la federacion
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+            #Buscar en cada una de las federaciones
+            federaciones = Federacion.objects.filter(comite=tenant_actual)
+            for federacion in federaciones:
+                qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,federacion,tenant_actual)
+                for objeto in qs:
+                    objetos.append(objeto)
+                #se busca en los ligas de cada una de las federaciones
+                ligas = Liga.objects.filter(federacion=federacion.id)
+                for liga in ligas:
+                    qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,liga,tenant_actual)
+                    for objeto in qs:
+                        objetos.append(objeto)
+                    #Buscar en los clubes de cada liga
+                    clubes = Club.objects.filter(liga=liga.id)
+                    for club in clubes:
+                        qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
+                        for objeto in qs:
+                            objetos.append(objeto)
             return objetos
     else:
         objetos = ejecutar_busqueda(modeloTipo,atributos,busqueda,request.tenant,request.tenant)

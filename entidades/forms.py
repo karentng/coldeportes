@@ -48,7 +48,7 @@ class FederacionForm(forms.ModelForm):
     class Meta:
         model = Federacion
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'disciplina', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web','disciplina', 'comite', 'direccion', 'telefono', 'descripcion',)
 
 class ClubForm(forms.ModelForm):
     pagina = forms.CharField(label="Entidad", required=True)
@@ -100,6 +100,23 @@ class EnteForm(forms.ModelForm):
     class Meta:
         model = Ente
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion', 'tipo_ente',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
+
+class ComiteForm(forms.ModelForm):
+    pagina = forms.CharField(label="Entidad", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(ComiteForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+
+    class Meta:
+        model = Comite
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'tipo_comite',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------

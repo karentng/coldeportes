@@ -50,6 +50,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         (3, 'Club'),
         (4, 'Cajas de Compensación'),
         (5, 'Ente'),
+        (6, 'Comité'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -72,6 +73,8 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = CajaDeCompensacion
         elif self.tipo == 5:
             modelo = Ente
+        elif self.tipo == 6:
+            modelo = Comite
         
         return modelo.objects.get(id=self.id)
 
@@ -86,11 +89,20 @@ class Ente(Entidad):
     ciudad = models.ForeignKey(Ciudad)
     tipo_ente = models.IntegerField(choices=TIPOS_ENTE)
 
+class Comite(Entidad):
+    TIPOS_COMITE = (
+        (1, 'Comité Olimpico Colombiano'),
+        (2, 'Comité Paralímpico Colombiano'),
+    )
+    ciudad = models.ForeignKey(Ciudad)
+    tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
+
 class CajaDeCompensacion(Entidad):
     ciudad = models.ForeignKey(Ciudad)
 
 class Federacion(Entidad):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+    comite = models.ForeignKey(Comite)
 
 class Liga(Entidad):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
