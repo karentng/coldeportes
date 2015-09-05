@@ -57,7 +57,7 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
     except:
         messages.error(request,'Error, no existe objeto transferible')
 
-    non_permission = not_transferido_required(objeto)
+    non_permission = not_transferido_required(request,objeto)
     if non_permission:
         return non_permission
 

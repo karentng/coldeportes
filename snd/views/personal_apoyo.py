@@ -102,7 +102,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
     except Exception:
         personal_apoyo = None
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 
@@ -155,7 +155,7 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
 
     personal_apoyo= PersonalApoyo.objects.get(id=id_personal_apoyo)
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 
@@ -230,7 +230,7 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
 
     personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 
@@ -308,7 +308,7 @@ def desactivar_personal_apoyo(request,id_personal_apoyo):
         messages.error(request, "Error: Personal de apoyo no existe .")
         return redirect('personal_apoyo_listar')
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 

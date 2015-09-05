@@ -80,7 +80,7 @@ def wizard_deportista(request,id_depor):
 
     deportista_form = DeportistaForm( instance=deportista)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -127,7 +127,7 @@ def wizard_corporal(request,id_depor):
 
     deportista = Deportista.objects.get(id=id_depor)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -179,7 +179,7 @@ def wizard_historia_deportiva(request,id_depor):
 
     deportista = Deportista.objects.get(id=id_depor)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -260,7 +260,7 @@ def wizard_historia_academica(request,id_depor):
 
     deportista = Deportista.objects.get(id=id_depor)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -333,7 +333,7 @@ def desactivar_deportista(request,id_depor):
     try:
         deportista = Deportista.objects.get(id=id_depor)
 
-        non_permission = not_transferido_required(deportista)
+        non_permission = not_transferido_required(request,deportista)
         if non_permission:
             return non_permission
 
@@ -523,7 +523,7 @@ def cambio_tipo_documento_deportista(request,id):
     except:
         messages.error(request,'Error: Deportista no encontrado')
 
-    non_permission = not_transferido_required(depor)
+    non_permission = not_transferido_required(request,depor)
     if non_permission:
         return non_permission
 
