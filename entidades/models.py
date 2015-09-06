@@ -116,6 +116,11 @@ class Federacion(Entidad):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
     comite = models.ForeignKey(Comite)
 
+    def save(self, *args, **kwargs):
+        comite = Comite.objects.get(tipo_comite=1)
+        self.comite=comite
+        super(Federacion, self).save(*args, **kwargs)
+
 class Liga(Entidad):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     departamento = models.ForeignKey(Departamento)
