@@ -148,7 +148,9 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                 "imagen": i[3],
             }
 
-            if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
+            #if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
+            if request.tenant.tipo != 3 or request.tenant.tipo != 5 or request.tenant.tipo != 4:
+                #Si no es Club, Ente o Caja, se trabaja en el siguiente esquema
                 if objeto.__class__.__name__ == 'Dirigente' or objeto.__class__.__name__ == 'PersonalApoyo':
                     if objeto.entidad == request.tenant:
                         urls.append(datosURL)

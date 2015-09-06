@@ -6,7 +6,7 @@
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_centroacondicionamiento%}
-            {% if request.tenant.tipo != 1 and request.tenant.tipo != 2 %}
+            {% if request.tenant.tipo == 3 or request.tenant.tipo == 5 %}
                 <li {% if "/caf/crear-editar" in request.path %} class="active" {% endif %}>
                     <a href="{% url 'crear_caf' 'Identificación' %}">Registro</a>
                 </li>

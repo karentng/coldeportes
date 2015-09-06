@@ -101,7 +101,14 @@ class Comite(Entidad):
     tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
 
 class FederacionParalimpica(Entidad):
-    discapacidad = models.CharField(max_length=100)
+    DISCAPASIDADES = (
+        (1,'Limitaciones Fisica'),
+        (2,'Limitación Auditiva'),
+        (3,'Limitación Visual'),
+        (4,'Parálisis Cerebral'),
+        (5,'Limitación Intelectual'),
+    )
+    discapacidad = models.CharField(max_length=100,choices=DISCAPASIDADES)
     comite = models.ForeignKey(Comite)
 
     def save(self, *args, **kwargs):
