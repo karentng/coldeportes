@@ -7,7 +7,7 @@ from datetimewidget.widgets import TimeWidget, DateWidget
 from coldeportes.utilities import adicionarClase
 
 
-class IdentificacionForm(ModelForm):
+class IdentificacionForm(forms.ModelForm):
     required_css_class = 'required'
 
     descripcion = forms.CharField(widget=forms.Textarea, required=False, label="Descripción")
