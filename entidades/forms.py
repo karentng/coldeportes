@@ -119,6 +119,9 @@ class ComiteForm(forms.ModelForm):
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'tipo_comite',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
+class FederacionParalimpicaForm(forms.ModelForm):
+    pass
+
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):

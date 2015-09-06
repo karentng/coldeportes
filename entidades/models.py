@@ -51,6 +51,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         (4, 'Cajas de Compensación'),
         (5, 'Ente'),
         (6, 'Comité'),
+        (7,'Federación Paralimpica'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -75,6 +76,8 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = Ente
         elif self.tipo == 6:
             modelo = Comite
+        elif self.tipo == 7:
+            modelo= FederacionParalimpica
         
         return modelo.objects.get(id=self.id)
 
