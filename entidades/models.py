@@ -97,6 +97,10 @@ class Comite(Entidad):
     ciudad = models.ForeignKey(Ciudad)
     tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
 
+class FederacionParalimpica(Entidad):
+    discapacidad = models.CharField(max_length=100)
+    comite = models.ForeignKey(Comite)
+
 class CajaDeCompensacion(Entidad):
     ciudad = models.ForeignKey(Ciudad)
 
