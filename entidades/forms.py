@@ -120,7 +120,22 @@ class ComiteForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class FederacionParalimpicaForm(forms.ModelForm):
-    pass
+    pagina = forms.CharField(label="Entidad", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(FederacionParalimpicaForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        #self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+
+    class Meta:
+        model = FederacionParalimpica
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion','comite',)
+        fields = ('nombre', 'pagina', 'pagina_web','discapacidad', 'comite', 'direccion', 'telefono', 'descripcion',)
+
 
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
@@ -153,6 +168,9 @@ class ActoresForm(forms.ModelForm):
         elif tipo == '5':
             #Ente
             pass
+        elif tipo =='7':
+            #FederacionParalimpica
+            del self.fields['cajas']
 
     class Meta:
         model = Actores

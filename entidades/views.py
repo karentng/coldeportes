@@ -40,6 +40,9 @@ def obtenerFormularioTenant(tipo, post=None, instance=None):
     elif tipo == '6':
         nombre = 'Comité'
         form = ComiteForm(post, instance=instance)
+    elif tipo == '7':
+        nombre = 'Federación Paralimpica'
+        form = FederacionParalimpicaForm(post,instance=instance)
 
     return [nombre, form]
 
@@ -57,6 +60,8 @@ def obtenerTenant(request, idEntidad, tipo):
         return Ente.objects.get(id=idEntidad)
     elif tipo == '6':
         return Comite.objects.get(id=idEntidad)
+    elif tipo == '7':
+        return FederacionParalimpica.objects.get(id=idEntidad)
     raise Exception
 
 @login_required

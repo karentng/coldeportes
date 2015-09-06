@@ -104,6 +104,11 @@ class FederacionParalimpica(Entidad):
     discapacidad = models.CharField(max_length=100)
     comite = models.ForeignKey(Comite)
 
+    def save(self, *args, **kwargs):
+        comite_para = Comite.objects.get(tipo_comite=2)
+        self.comite=comite_para
+        super(FederacionParalimpica, self).save(*args, **kwargs)
+
 class CajaDeCompensacion(Entidad):
     ciudad = models.ForeignKey(Ciudad)
 
