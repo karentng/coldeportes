@@ -22,7 +22,7 @@ class Escenario(models.Model):
     direccion = models.CharField(max_length=100)
     latitud = models.FloatField()
     longitud = models.FloatField()
-    altura = models.PositiveIntegerField()
+    altura = models.FloatField()
     ciudad = models.ForeignKey(Ciudad)
     comuna = models.CharField(max_length=10)
     barrio = models.CharField(max_length=20)
