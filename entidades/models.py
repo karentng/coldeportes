@@ -84,7 +84,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         return modelo.objects.get(id=self.id)
 
     def seleccionable(self):
-        if self.tipo == 1 or self.tipo == 2 or self.tipo == 6:
+        if self.tipo in [1, 2, 6]:
             return True
         return False
 
