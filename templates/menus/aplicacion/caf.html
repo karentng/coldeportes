@@ -15,5 +15,8 @@
         <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_cafs' %}">Listar CAF</a>
         </li>
+        <li {% if "/caf/georreferenciacion" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'georreferenciacion_caf' %}">Georreferenciación CAF</a>
+        </li>
     </ul>
 </li>

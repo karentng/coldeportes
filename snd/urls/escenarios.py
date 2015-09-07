@@ -10,6 +10,8 @@ urlpatterns = patterns('snd.views.escenarios',
     url(r'^ver/(\d+)/(\d+)$', 'ver_escenario', name='ver_escenario'),
     url(r'^finalizar/(?P<opcion>.+)$', 'finalizar_escenario', name='finalizar_escenario'),
 
+    url(r'^georreferenciacion$', 'georreferenciacion_escenario', name='georreferenciacion_escenario'),
+
 
     #urls wizard
     url(r'^wizard/identificacion$', 'wizard_nuevo_identificacion', name='wizard_nuevo_identificacion'), 

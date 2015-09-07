@@ -26,9 +26,9 @@ class CentroAcondicionamiento(models.Model):
     comuna = models.CharField(max_length=10)
     barrio = models.CharField(max_length=20)
     estrato = models.IntegerField(choices=ESTRATOS)
-    latitud = models.FloatField(max_length=10)
-    longitud = models.FloatField(max_length=10)
-    altura = models.FloatField(max_length=10)
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    altura = models.PositiveIntegerField()
     
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Centro de Acondicionamiento Físico")
     # Pestañas adicionales
@@ -44,6 +44,29 @@ class CentroAcondicionamiento(models.Model):
         self.barrio = self.barrio.upper()
         self.nombre_administrador = self.nombre_administrador.upper()
         super(CentroAcondicionamiento, self).save(*args, **kwargs)
+
+    def obtenerAtributos(self):
+        from django.conf import settings
+        imagen = None
+        fotos = CAFoto.objects.filter(centro=self)
+        if len(fotos) > 0:
+            imagen = ("%s%s")%(settings.MEDIA_URL, fotos[0].foto.__str__())
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/CAFView.PNG")
+
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Comuna", self.comuna],
+            ["Barrio", self.barrio],
+            ["Estrato", self.estrato],
+            ["Dirección", self.direccion],
+            ["Teléfono", self.telefono],
+            ["Latitud", self.latitud],
+            ["Longitud", self.longitud],
+        ]
+
+        return [imagen, atributos, self.latitud, self.longitud]
 
 class CAPlan(models.Model):
     centro = models.ForeignKey(CentroAcondicionamiento)
@@ -62,5 +85,5 @@ def ruta_fotos_cafs(instance, filename):
 class CAFoto(models.Model):
     centro = models.ForeignKey(CentroAcondicionamiento)
     titulo = models.CharField(max_length=255, verbose_name="título")
-    foto = models.ImageField(upload_to='ruta_fotos_cafs')
+    foto = models.ImageField(upload_to=ruta_fotos_cafs)
     descripcion = models.TextField(blank=True, null=True, verbose_name="descripción")

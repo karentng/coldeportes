@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Centros de Acondicionamiento - Georreferenciación
+{% endblock %}
+
+{% block titulo_contenido %}
+    Georreferenciación de los Centros de Acondicionamiento
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listar_escenarios' %}">Centros de Acondicionamiento</a></li>
+    <li class="active">Georreferenciación</li>
+{% endblock %}
+
+{% block css %}
+    <style>
+      #mapa {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        datosMostrar = "{{cafs}}";
+        mapa = "mapa";
+    </script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/creacion_google_maps.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+{% endblock %}
+
+{% block titulo_panel %}
+    Georreferenciación de los Centros de Acondicionamiento
+{% endblock titulo_panel %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="mapa"></div>
+        </div>
+    </div>
+{% endblock %}
