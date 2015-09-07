@@ -43,6 +43,9 @@ def obtenerFormularioTenant(tipo, post=None, instance=None):
     elif tipo == '7':
         nombre = 'Federación Paralimpica'
         form = FederacionParalimpicaForm(post,instance=instance)
+    elif tipo == '8':
+        nombre = 'Liga Paralimpica'
+        form = LigaParalimpicaForm(post,instance=instance)
 
     return [nombre, form]
 
@@ -93,7 +96,7 @@ def registro(request, tipo, tipoEnte=None):
             if tipo == '6':
                 obj.tipo_comite = tipoEnte
             obj.save()
-
+            
             try:
                 obj.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
@@ -101,7 +104,6 @@ def registro(request, tipo, tipoEnte=None):
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
                 actores.delete()
-
     return render(request, 'entidad_registro.html', {
         'nombre': nombre,
         'form': form,

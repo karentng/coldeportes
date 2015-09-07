@@ -78,8 +78,19 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = Comite
         elif self.tipo == 7:
             modelo= FederacionParalimpica
+        elif self.tipo == 8:
+            modelo = LigaParalimpica
         
         return modelo.objects.get(id=self.id)
+
+    def seleccionable(self):
+        if self.tipo in [1, 2]:
+            return True
+        elif self.tipo == 6:
+            m = self.obtenerTenant()
+            if m.tipo_comite == 1:
+                return True
+        return False
 
     def __str__(self):
         return self.nombre
@@ -101,13 +112,32 @@ class Comite(Entidad):
     tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
 
 class FederacionParalimpica(Entidad):
-    discapacidad = models.CharField(max_length=100)
+    DISCAPACIDADES = (
+        (1,'Limitaciones Fisica'),
+        (2,'Limitación Auditiva'),
+        (3,'Limitación Visual'),
+        (4,'Parálisis Cerebral'),
+        (5,'Limitación Intelectual'),
+    )
+    discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     comite = models.ForeignKey(Comite)
 
     def save(self, *args, **kwargs):
         comite_para = Comite.objects.get(tipo_comite=2)
         self.comite=comite_para
         super(FederacionParalimpica, self).save(*args, **kwargs)
+
+class LigaParalimpica(Entidad):
+    DISCAPACIDADES = (
+        (1,'Limitaciones Fisica'),
+        (2,'Limitación Auditiva'),
+        (3,'Limitación Visual'),
+        (4,'Parálisis Cerebral'),
+        (5,'Limitación Intelectual'),
+    )
+    discapacidad = models.IntegerField(choices=DISCAPACIDADES)
+    departamento = models.ForeignKey(Departamento)
+    federacion = models.ForeignKey(FederacionParalimpica)
 
 class CajaDeCompensacion(Entidad):
     ciudad = models.ForeignKey(Ciudad)

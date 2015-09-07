@@ -11,7 +11,7 @@ import json
 from operator import methodcaller
 from coldeportes.settings import STATIC_URL,MEDIA_URL
 from entidades.models import Club
-from entidades.models import Liga
+from entidades.models import Liga, LigaParalimpica
 
 
 def obtenerCantidadColumnas(request, modelo):
@@ -148,7 +148,9 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                 "imagen": i[3],
             }
 
-            if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
+            #if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
+            if request.tenant.tipo not in [3,5,4,8]:
+                #Si no es Club, Ente, Caja o Liga Paralimpica, se trabaja en el siguiente esquema
                 if objeto.__class__.__name__ == 'Dirigente' or objeto.__class__.__name__ == 'PersonalApoyo':
                     if objeto.entidad == request.tenant:
                         urls.append(datosURL)
@@ -268,6 +270,32 @@ def obtener_objetos_por_tenant(request,modelo):
                             objetos.append(objeto)
             connection.set_tenant(tenant_actual)
         return objetos
+    #Tenant de tipo Federación Paramilitar
+    elif request.tenant.tipo == 7:
+        if modelo.__name__ == 'Seleccion':
+            objetos = []
+            #Saco los objetos propios de la federacion paralimpica
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios de la federacion
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+            #Ligas de la federacion
+            ligas = LigaParalimpica.objects.filter(federacion=request.tenant.id)
+            for liga in ligas:
+                #saco los objetos de cada una de las ligas pertenecientes a la federación
+                connection.set_tenant(liga)
+                ContentType.objects.clear_cache()
+                qs = modelo.objects.filter(estado=0)
+                for objeto in qs:
+                    objetos.append(objeto)
+            connection.set_tenant(tenant_actual)
+        return objetos
     else:
         #Este es para el caso en que sea un club o el resto de entidades las cuales tienen acceso a los datos propios de su entidad solamente
         objetos = modelo.objects.all()
@@ -304,7 +332,7 @@ def obtenerDatos(request, modelo):
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
 
-    if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
+    if request.tenant.tipo in [1,2,6,7]:
         multiples_tenant = True
     else:
         multiples_tenant = False
@@ -410,7 +438,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
         if modeloTipo.__name__ == 'Seleccion':
             objetos = []
             tenant_actual = request.tenant
-            #Saco los objetos propios de la federacion
+            #Saco los objetos propios del comite
             qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
             for objeto in qs:
                 objetos.append(objeto)
@@ -438,6 +466,29 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                         qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
                         for objeto in qs:
                             objetos.append(objeto)
+            return objetos
+    #Cuando el tipo de tenant es una federación paralimpica
+    # hay que ejecutar las busquedas dentro de la federación, dentro de sus ligas
+    elif request.tenant.tipo == 7:
+        if modeloTipo.__name__ == 'Seleccion':
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios de la federacion paralimpica
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+            #Buscar en cada una de las ligas
+            ligas = LigaParalimpica.objects.filter(federacion=tenant_actual)
+            for liga in ligas:
+                qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,liga,tenant_actual)
+                for objeto in qs:
+                    objetos.append(objeto)
             return objetos
     else:
         objetos = ejecutar_busqueda(modeloTipo,atributos,busqueda,request.tenant,request.tenant)
