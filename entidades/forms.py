@@ -197,6 +197,9 @@ class ActoresForm(forms.ModelForm):
         elif tipo =='7':
             #FederacionParalimpica
             del self.fields['cajas']
+        elif tipo =='8':
+            #FederacionParalimpica
+            del self.fields['cajas']
 
     class Meta:
         model = Actores
