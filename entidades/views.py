@@ -43,6 +43,9 @@ def obtenerFormularioTenant(tipo, post=None, instance=None):
     elif tipo == '7':
         nombre = 'Federación Paralimpica'
         form = FederacionParalimpicaForm(post,instance=instance)
+    elif tipo == '8':
+        nombre = 'Liga Paralimpica'
+        form = LigaParalimpicaForm(post,instance=instance)
 
     return [nombre, form]
 
@@ -96,7 +99,8 @@ def registro(request, tipo, tipoEnte=None):
 
             messages.success(request, ("%s registrado correctamente.")%(nombre))
             return redirect('entidad_registro', tipo)
-
+        print(form.errors)
+        print(form2.errors)
     return render(request, 'entidad_registro.html', {
         'nombre': nombre,
         'form': form,

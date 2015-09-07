@@ -25,7 +25,7 @@ inicializarComponentes()
 def tenant_required(function):
     @wraps(function)
     def decorator(request, *args, **kwargs):
-        if request.tenant.tipo == 1 or request.tenant.tipo == 2:
+        if request.tenant.tipo in [1,2,6,7]:
             raise PermissionDenied
         else:
             return function(request, *args, **kwargs)

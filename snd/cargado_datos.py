@@ -412,7 +412,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
         if modeloTipo.__name__ == 'Seleccion':
             objetos = []
             tenant_actual = request.tenant
-            #Saco los objetos propios de la federacion
+            #Saco los objetos propios del comite
             qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
             for objeto in qs:
                 objetos.append(objeto)
