@@ -106,6 +106,18 @@ def registrar_deportistas(request,id_s):
                 ContentType.objects.clear_cache()
                 deportistas += Deportista.objects.filter(estado=0)
         connection.set_tenant(request.tenant)
+    elif request.tenant.tipo == 6:
+        #Comite
+        federaciones = Federacion.objects.filter(comite=request.tenant.id)
+        for f in federaciones:
+            ligas = Liga.objects.filter(federacion=f)
+            for l in ligas:
+                clubes = Club.objects.filter(liga=l)
+                for c in clubes:
+                    connection.set_tenant(c)
+                    ContentType.objects.clear_cache()
+                    deportistas += Deportista.objects.filter(estado=0)
+        connection.set_tenant(request.tenant)
     else:
         messages.error(request,'Usted esta en una sección que no le corresponde')
         return redirect('inicio_tenant')
@@ -166,6 +178,18 @@ def registrar_personal(request,id_s):
                 connection.set_tenant(c)
                 ContentType.objects.clear_cache()
                 personal += PersonalApoyo.objects.filter(estado=0)
+        connection.set_tenant(request.tenant)
+    elif request.tenant.tipo == 6:
+        #Comite
+        federaciones = Federacion.objects.filter(comite=request.tenant.id)
+        for f in federaciones:
+            ligas = Liga.objects.filter(federacion=f)
+            for l in ligas:
+                clubes = Club.objects.filter(liga=l)
+                for c in clubes:
+                    connection.set_tenant(c)
+                    ContentType.objects.clear_cache()
+                    personal += PersonalApoyo.objects.filter(estado=0)
         connection.set_tenant(request.tenant)
     else:
         messages.error(request,'Usted esta en una sección que no le corresponde')

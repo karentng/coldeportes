@@ -126,7 +126,7 @@ class FederacionParalimpicaForm(forms.ModelForm):
         instancia = kwargs.get('instance', None)
         super(FederacionParalimpicaForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
-        #self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
+        self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
 
         if instancia != None:
             del self.fields['pagina']

@@ -83,6 +83,11 @@ class Entidad(TenantMixin): # Entidad deportiva
         
         return modelo.objects.get(id=self.id)
 
+    def seleccionable(self):
+        if self.tipo == 1 or self.tipo == 2 or self.tipo == 6:
+            return True
+        return False
+
     def __str__(self):
         return self.nombre
 
@@ -110,7 +115,7 @@ class FederacionParalimpica(Entidad):
         (4,'Parálisis Cerebral'),
         (5,'Limitación Intelectual'),
     )
-    discapacidad = models.CharField(max_length=100,choices=DISCAPACIDADES)
+    discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     comite = models.ForeignKey(Comite)
 
     def save(self, *args, **kwargs):
