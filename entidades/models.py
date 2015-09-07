@@ -131,7 +131,7 @@ class LigaParalimpica(Entidad):
         (4,'Parálisis Cerebral'),
         (5,'Limitación Intelectual'),
     )
-    discapacidad = models.CharField(max_length=100,choices=DISCAPACIDADES)
+    discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     departamento = models.ForeignKey(Departamento)
     federacion = models.ForeignKey(FederacionParalimpica)
 
