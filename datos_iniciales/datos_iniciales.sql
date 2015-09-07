@@ -1478,4 +1478,14 @@ INSERT INTO "entidades_tipoescenario" ("id", "descripcion") VALUES
 (8,	'Centro Recreacional'),
 (9,	'Parque de Diversión'),
 (10,	'Unidad Deportiva'),
-(11,	'Cancha Comunal');
+(11,	'Poliderportivo Cubierto'),
+(12,	'Piscinas'),
+(13,	'Salas o Salones'),
+(14,	'Lagos'),
+(15,	'Montañas Aéreas'),
+(16,	'Campos de Juego (canchas)'),
+(17,	'Pistas'),
+(18,	'Parques'),
+(19,	'Gimnasios'),
+(20,	'Cancha Comunal'),
+(21,	'No Disponible');
