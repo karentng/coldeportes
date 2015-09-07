@@ -29,7 +29,7 @@
         idTabla = "tabla-escenarios";
         opciones = {% if perms.snd.change_escenario %} true {% else %} false {% endif %};
 
-        {% if tipo_tenant == 1 or tipo_tenant == 2 %}
+        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 %}
             url = "{% url 'cargar_columnas' 9 %}";
         {% else %}
             url = "{% url 'cargar_columnas' 8 %}";

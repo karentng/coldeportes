@@ -11,10 +11,11 @@ from snd.formularios.deportistas  import *
 from snd.models import *
 from entidades.models import *
 from django.contrib import messages
-from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required
+from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required,tenant_required
 
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_deportista_nuevo(request):
     """
@@ -55,6 +56,7 @@ def wizard_deportista_nuevo(request):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_deportista(request,id_depor):
     """
@@ -78,7 +80,7 @@ def wizard_deportista(request,id_depor):
 
     deportista_form = DeportistaForm( instance=deportista)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -99,6 +101,7 @@ def wizard_deportista(request,id_depor):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_corporal(request,id_depor):
     """
@@ -124,7 +127,7 @@ def wizard_corporal(request,id_depor):
 
     deportista = Deportista.objects.get(id=id_depor)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -153,6 +156,7 @@ def wizard_corporal(request,id_depor):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_historia_deportiva(request,id_depor):
     """
@@ -175,7 +179,7 @@ def wizard_historia_deportiva(request,id_depor):
 
     deportista = Deportista.objects.get(id=id_depor)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -203,6 +207,7 @@ def wizard_historia_deportiva(request,id_depor):
 
 #Eliminacion Historia Deportiva
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def eliminar_historia_deportiva(request,id_depor,id_historia):
     """
@@ -232,6 +237,7 @@ def eliminar_historia_deportiva(request,id_depor,id_historia):
 
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_historia_academica(request,id_depor):
     """
@@ -254,7 +260,7 @@ def wizard_historia_academica(request,id_depor):
 
     deportista = Deportista.objects.get(id=id_depor)
 
-    non_permission = not_transferido_required(deportista)
+    non_permission = not_transferido_required(request,deportista)
     if non_permission:
         return non_permission
 
@@ -280,6 +286,7 @@ def wizard_historia_academica(request,id_depor):
 
 #Eliminacion Historia Academica
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def eliminar_historia_academica(request,id_depor,id_historia):
     """
@@ -307,6 +314,7 @@ def eliminar_historia_academica(request,id_depor,id_historia):
 #Fin eliminacion historia academica
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def desactivar_deportista(request,id_depor):
     """
@@ -325,7 +333,7 @@ def desactivar_deportista(request,id_depor):
     try:
         deportista = Deportista.objects.get(id=id_depor)
 
-        non_permission = not_transferido_required(deportista)
+        non_permission = not_transferido_required(request,deportista)
         if non_permission:
             return non_permission
 
@@ -397,6 +405,7 @@ def ver_deportista(request,id_depor,id_entidad):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def finalizar_deportista(request,opcion):
     """
@@ -425,6 +434,7 @@ def finalizar_deportista(request,opcion):
 
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def verificar_deportista(request):
     """
@@ -494,6 +504,7 @@ def verificar_deportista(request):
                                                                    'existe':False})
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_deportista')
 def cambio_tipo_documento_deportista(request,id):
     """
@@ -512,7 +523,7 @@ def cambio_tipo_documento_deportista(request,id):
     except:
         messages.error(request,'Error: Deportista no encontrado')
 
-    non_permission = not_transferido_required(depor)
+    non_permission = not_transferido_required(request,depor)
     if non_permission:
         return non_permission
 

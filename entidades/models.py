@@ -50,6 +50,8 @@ class Entidad(TenantMixin): # Entidad deportiva
         (3, 'Club'),
         (4, 'Cajas de Compensación'),
         (5, 'Ente'),
+        (6, 'Comité'),
+        (7,'Federación Paralimpica'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -72,6 +74,10 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = CajaDeCompensacion
         elif self.tipo == 5:
             modelo = Ente
+        elif self.tipo == 6:
+            modelo = Comite
+        elif self.tipo == 7:
+            modelo= FederacionParalimpica
         
         return modelo.objects.get(id=self.id)
 
@@ -86,11 +92,34 @@ class Ente(Entidad):
     ciudad = models.ForeignKey(Ciudad)
     tipo_ente = models.IntegerField(choices=TIPOS_ENTE)
 
+class Comite(Entidad):
+    TIPOS_COMITE = (
+        (1, 'Comité Olimpico Colombiano'),
+        (2, 'Comité Paralímpico Colombiano'),
+    )
+    ciudad = models.ForeignKey(Ciudad)
+    tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
+
+class FederacionParalimpica(Entidad):
+    discapacidad = models.CharField(max_length=100)
+    comite = models.ForeignKey(Comite)
+
+    def save(self, *args, **kwargs):
+        comite_para = Comite.objects.get(tipo_comite=2)
+        self.comite=comite_para
+        super(FederacionParalimpica, self).save(*args, **kwargs)
+
 class CajaDeCompensacion(Entidad):
     ciudad = models.ForeignKey(Ciudad)
 
 class Federacion(Entidad):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+    comite = models.ForeignKey(Comite)
+
+    def save(self, *args, **kwargs):
+        comite = Comite.objects.get(tipo_comite=1)
+        self.comite=comite
+        super(Federacion, self).save(*args, **kwargs)
 
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario

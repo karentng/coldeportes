@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+	<title>Coldeportes | 404 Error Page</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+	<link href="{{ STATIC_URL }}plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}css/animate.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}css/style.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}css/style-responsive.min.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}css/theme/default.css" rel="stylesheet" id="theme" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="{{ STATIC_URL }}plugins/pace/pace.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+</head>
+<body class="pace-top">
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade in"><span class="spinner"></span></div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade">
+	    <!-- begin error -->
+        <div class="error">
+            <div class="error-code m-b-10">403 <i class="fa fa-warning"></i></div>
+            <div class="error-content">
+                <div class="error-message">¡PERMISO DENEGADO!</div>
+                <div class="error-desc m-b-20">
+                    No tienes acceso para usar esta funcionalidad <br />
+                </div>
+                <div>
+                    <a onclick="history.back()" class="btn btn-success">Regresar</a>
+                </div>
+            </div>
+        </div>
+        <!-- end error -->
+
+        
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+	
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="{{ STATIC_URL }}plugins/jquery/jquery-1.9.1.min.js"></script>
+	<script src="{{ STATIC_URL }}plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+	<script src="{{ STATIC_URL }}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+	<script src="{{ STATIC_URL }}plugins/bootstrap/js/bootstrap.min.js"></script>
+	<!--[if lt IE 9]>
+		<script src="{{ STATIC_URL }}crossbrowserjs/html5shiv.js"></script>
+		<script src="{{ STATIC_URL }}crossbrowserjs/respond.min.js"></script>
+		<script src="{{ STATIC_URL }}crossbrowserjs/excanvas.min.js"></script>
+	<![endif]-->
+	<script src="{{ STATIC_URL }}plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="{{ STATIC_URL }}plugins/jquery-cookie/jquery.cookie.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	
+	<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+	<script src="{{ STATIC_URL }}js/apps.min.js"></script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+	
+	<script>
+		$(document).ready(function() {
+			App.init();
+		});
+	</script>
+</body>
+</html>
