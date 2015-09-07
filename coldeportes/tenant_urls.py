@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^transferencias/',include('transferencias.urls')),#urls del modulo de transferencias
     url(r'^directorio/',include('directorio.entidad_urls')),#urls del modulo de directorio perfil entidad
     url(r'^directorio-publico/',include('directorio.publico_urls')),#urls del modulo de directorio publico
+    url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
     url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
     url(r'cargado-datos/', include('snd.urls.cargado_datos')),
     
