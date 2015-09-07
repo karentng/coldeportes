@@ -1477,5 +1477,5 @@ INSERT INTO "entidades_tipoescenario" ("id", "descripcion") VALUES
 (7,	'Centro Vacacional'),
 (8,	'Centro Recreacional'),
 (9,	'Parque de Diversión'),
-(10,	'Clubes Deportivos'),
+(10,	'Unidad Deportiva'),
 (11,	'Cancha Comunal');
