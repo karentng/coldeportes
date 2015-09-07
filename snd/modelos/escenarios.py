@@ -20,9 +20,9 @@ class Escenario(models.Model):
     )
     nombre =  models.CharField(max_length=100,unique=True)
     direccion = models.CharField(max_length=100)
-    latitud = models.FloatField(max_length=10)
-    longitud = models.FloatField(max_length=10)
-    altura = models.FloatField(max_length=10)
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    altura = models.PositiveIntegerField()
     ciudad = models.ForeignKey(Ciudad)
     comuna = models.CharField(max_length=10)
     barrio = models.CharField(max_length=20)
@@ -43,6 +43,28 @@ class Escenario(models.Model):
 
     def tipo_escenario(self):
         return self.caracteristicas().tipo_escenario
+
+    def obtenerAtributos(self):
+        from django.conf import settings
+        imagen = None
+        fotos = Foto.objects.filter(escenario=self)
+        if len(fotos) > 0:
+            imagen = ("%s%s")%(settings.MEDIA_URL, fotos[0].foto.__str__())
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/EscenarioView.PNG")
+
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Comuna", self.comuna],
+            ["Barrio", self.barrio],
+            ["Estrato", self.estrato],
+            ["Dirección", self.direccion],
+            ["Latitud", self.latitud],
+            ["Longitud", self.longitud],
+        ]
+
+        return [imagen, atributos, self.latitud, self.longitud]
 
 class CaracterizacionEscenario(models.Model):   
     accesos = (
@@ -68,12 +90,14 @@ class HorarioDisponibilidad(models.Model):
     dias = models.ManyToManyField(Dias)
     descripcion = models.CharField(max_length=1024)
 
+def ruta_fotos_escenarios(instance, filename):
+    return "snd/fotos/escenarios/%s"%(filename.encode('ascii','ignore').decode('ascii'))
+
 class Foto(models.Model):
     escenario = models.ForeignKey(Escenario)
     titulo = models.CharField(max_length=255, verbose_name="título")
-    foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
+    foto = models.ImageField(upload_to=ruta_fotos_escenarios, null=True, blank=True)
     descripcion = models.TextField(blank=True, null=True, max_length=1024)
-
 
 class Video(models.Model):
     escenario = models.ForeignKey(Escenario)

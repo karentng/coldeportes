@@ -7,7 +7,7 @@ from coldeportes.utilities import adicionarClase
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
-    pagina = forms.CharField(label="Entidad", required=True)
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
         instancia = kwargs.get('instance', None)
@@ -34,7 +34,7 @@ class LigaForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'departamento', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
 
 class FederacionForm(forms.ModelForm):
-    pagina = forms.CharField(label="Entidad", required=True)
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
         instancia = kwargs.get('instance', None)
@@ -51,7 +51,7 @@ class FederacionForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'disciplina', 'direccion', 'telefono', 'descripcion',)
 
 class ClubForm(forms.ModelForm):
-    pagina = forms.CharField(label="Entidad", required=True)
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
         instancia = kwargs.get('instance', None)
@@ -69,7 +69,7 @@ class ClubForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
 
 class CajaDeCompensacionForm(forms.ModelForm):
-    pagina = forms.CharField(label="Entidad", required=True)
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
         instancia = kwargs.get('instance', None)
@@ -86,7 +86,7 @@ class CajaDeCompensacionForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class EnteForm(forms.ModelForm):
-    pagina = forms.CharField(label="Entidad", required=True)
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
         instancia = kwargs.get('instance', None)

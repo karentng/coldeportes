@@ -649,3 +649,12 @@ def eliminar_contacto(request, escenario_id, contacto_id):
         return redirect('wizard_contactos', escenario_id)
 
 
+@login_required
+def georreferenciacion_escenario(request):
+    import json
+    tipoTenant = request.tenant.obtenerTenant()
+    escenarios = tipoTenant.atributosDeSusEscenarios()
+    
+    return render(request, 'escenarios/georreferenciacion.html', {
+        'escenarios': json.dumps(escenarios),
+    })
