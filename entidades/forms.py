@@ -47,8 +47,8 @@ class FederacionForm(forms.ModelForm):
     
     class Meta:
         model = Federacion
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion',)
-        fields = ('nombre', 'pagina', 'pagina_web','disciplina', 'comite', 'direccion', 'telefono', 'descripcion',)
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
+        fields = ('nombre', 'pagina', 'pagina_web','disciplina', 'direccion', 'telefono', 'descripcion',)
 
 class ClubForm(forms.ModelForm):
     pagina = forms.CharField(label="Entidad", required=True)
@@ -65,7 +65,7 @@ class ClubForm(forms.ModelForm):
     
     class Meta:
         model = Club
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion',)
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
 
 class CajaDeCompensacionForm(forms.ModelForm):
@@ -82,7 +82,7 @@ class CajaDeCompensacionForm(forms.ModelForm):
     
     class Meta:
         model = CajaDeCompensacion
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion',)
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class EnteForm(forms.ModelForm):
@@ -99,7 +99,7 @@ class EnteForm(forms.ModelForm):
 
     class Meta:
         model = Ente
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion', 'tipo_ente',)
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'tipo_ente',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class ComiteForm(forms.ModelForm):
@@ -133,10 +133,36 @@ class FederacionParalimpicaForm(forms.ModelForm):
 
     class Meta:
         model = FederacionParalimpica
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores', 'federacion','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web','discapacidad', 'comite', 'direccion', 'telefono', 'descripcion',)
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
+        fields = ('nombre', 'pagina', 'pagina_web','discapacidad', 'direccion', 'telefono', 'descripcion',)
 
 
+class LigaParalimpicaForm(forms.ModelForm):
+    pagina = forms.CharField(label="Entidad", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(LigaParalimpicaForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+        self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+
+    def clean(self):
+        federacion = self.cleaned_data['federacion']
+        discapacidad = self.cleaned_data['discapacidad']
+        if federacion != None:
+            if federacion.discapacidad != discapacidad:
+                raise forms.ValidationError('La discapacidad de la federación asociada no es la misma que la de la liga')
+
+        return self.cleaned_data
+
+    class Meta:
+        model = LigaParalimpica
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'departamento', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion',)
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):
