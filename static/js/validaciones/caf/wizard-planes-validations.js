@@ -11,6 +11,12 @@ fields = {
         validators: {
             notEmpty: {
                 message: 'El precio no puede ser vacío'
+            },
+            integer: {
+                message: 'Por favor ingrese valores enteros'
+            },
+            greaterThan:{
+                message: 'Por favor ingrese valores mayores o iguales a 0'
             }
         }
     },

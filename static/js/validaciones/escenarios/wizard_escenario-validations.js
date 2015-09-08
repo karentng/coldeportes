@@ -51,15 +51,24 @@ $(document).ready(function() {
                     notEmpty: {
                         message: 'La altura del escenario no puede ser vacía'
                     },
-                    numeric: {
-                        message: 'La altura del escenario sólo puede contener números'
+                    integer: {
+                        message: 'Por favor ingrese valores enteros'
                     },
+                    greaterThan:{
+                        message: 'Por favor ingrese valores mayores o iguales a 0'
+                    }
                 }
             },
             comuna: {
                 validators: {
                     notEmpty: {
                         message: 'La comuna del escenario no puede ser vacía'
+                    },
+                    integer: {
+                        message: 'Por favor ingrese valores enteros'
+                    },
+                    greaterThan:{
+                        message: 'Por favor ingrese valores enteros mayores o iguales a 0'
                     }
                 }
             },
