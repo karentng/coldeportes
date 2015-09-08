@@ -7,6 +7,7 @@ class Seleccion(models.Model):
     TIPO_SELECCION = (
         (1,'Departamental'),
         (2,'Nacional'),
+        (6,'Olimpica'),
     )
     TIPO_CAMPEONATO = (
         (1,'Amistoso'),

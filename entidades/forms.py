@@ -126,7 +126,7 @@ class FederacionParalimpicaForm(forms.ModelForm):
         instancia = kwargs.get('instance', None)
         super(FederacionParalimpicaForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
-        #self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
+        self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
@@ -137,6 +137,32 @@ class FederacionParalimpicaForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web','discapacidad', 'direccion', 'telefono', 'descripcion',)
 
 
+class LigaParalimpicaForm(forms.ModelForm):
+    pagina = forms.CharField(label="Entidad", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(LigaParalimpicaForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+        self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+
+    def clean(self):
+        federacion = self.cleaned_data['federacion']
+        discapacidad = self.cleaned_data['discapacidad']
+        if federacion != None:
+            if federacion.discapacidad != discapacidad:
+                raise forms.ValidationError('La discapacidad de la federación asociada no es la misma que la de la liga')
+
+        return self.cleaned_data
+
+    class Meta:
+        model = LigaParalimpica
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'departamento', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion',)
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):
@@ -169,6 +195,9 @@ class ActoresForm(forms.ModelForm):
             #Ente
             pass
         elif tipo =='7':
+            #FederacionParalimpica
+            del self.fields['cajas']
+        elif tipo =='8':
             #FederacionParalimpica
             del self.fields['cajas']
 

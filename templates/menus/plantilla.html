@@ -13,7 +13,7 @@
     {% if request.tenant.actores.deportistas %}
         {% include "menus/aplicacion/deportistas.html" %}
     {% endif %}
-    {%if request.tenant.tipo == 1 or request.tenant.tipo == 2%}
+    {%if request.tenant.seleccionable %}
         {% include "menus/aplicacion/selecciones.html" %}
     {%endif%}
     {% if request.tenant.actores.personal_apoyo %}

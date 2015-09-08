@@ -28,7 +28,7 @@
         });
         idTabla = "tabla-cafs";
         opciones = {% if perms.snd.change_centroacondicionamiento %} true {% else %} false {% endif %};
-        {% if tipo_tenant == 1 or tipo_tenant == 2 %}
+        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 %}
             url = "{% url 'cargar_columnas' 1 %}";
         {% else %}
             url = "{% url 'cargar_columnas' 0 %}";
