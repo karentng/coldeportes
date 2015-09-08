@@ -42,6 +42,12 @@ fields = {
         validators: {
             notEmpty: {
                 message: 'La comuna no puede ser vacía'
+            },
+            integer: {
+                message: 'Por favor ingrese valores enteros'
+            },
+            greaterThan:{
+                message: 'Por favor ingrese valores enteros mayores o iguales a 0'
             }
         }
     },
@@ -63,20 +69,32 @@ fields = {
         validators: {
             notEmpty: {
                 message: 'La latitud no puede ser vacía'
-            }
+            },
+            numeric: {
+                message: 'Por favor ingrese valores numéricos'
+            },
         }
     },
     longitud: {
         validators: {
             notEmpty: {
                 message: 'La longitud no puede ser vacía'
-            }
+            },
+            numeric: {
+                message: 'Por favor ingrese valores numéricos'
+            },
         }
     },
     altura: {
         validators: {
             notEmpty: {
                 message: 'La altura no puede ser vacía'
+            },
+            integer: {
+                message: 'Por favor ingrese valores enteros'
+            },
+            greaterThan:{
+                message: 'Por favor ingrese valores mayores o iguales a 0'
             }
         }
     },
