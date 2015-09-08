@@ -95,12 +95,14 @@ def registro(request, tipo, tipoEnte=None):
                 obj.tipo_ente = tipoEnte
             if tipo == '6':
                 obj.tipo_comite = tipoEnte
-            obj.save()
+            try:
+                obj.save()
+                messages.success(request, ("%s registrado correctamente.")%(nombre))
+                return redirect('entidad_registro', tipo)
+            except Exception as e:
+                form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
+                actores.delete()
 
-            messages.success(request, ("%s registrado correctamente.")%(nombre))
-            return redirect('entidad_registro', tipo)
-        print(form.errors)
-        print(form2.errors)
     return render(request, 'entidad_registro.html', {
         'nombre': nombre,
         'form': form,

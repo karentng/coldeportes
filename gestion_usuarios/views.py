@@ -87,16 +87,7 @@ def inicio(request):
             if request.user.is_superuser:
                 return redirect('usuarios_lista')
             else:
-                try:
-                    EscenarioView.objects.all().exists()
-                    CAFView.objects.all().exists()
-                    DeportistaView.objects.all().exists()
-                    PersonalApoyoView.objects.all().exists()
-                    DirigenteView.objects.all().exists()
-                    CajaCompensacionView.objects.all().exists()
-
-                except Exception:
-                    crear_vistas()
+                
                     
                 return redirect('inicio_tenant')
 

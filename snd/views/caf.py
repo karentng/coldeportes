@@ -348,3 +348,13 @@ def desactivarCAF(request, idCAF):
     
     return redirect('listar_cafs')
 '''
+
+@login_required
+def georreferenciacion_caf(request):
+    import json
+    tipoTenant = request.tenant.obtenerTenant()
+    cafs = tipoTenant.atributosDeSusCafs()
+    
+    return render(request, 'cafs/georreferenciacion.html', {
+        'cafs': json.dumps(cafs),
+    })

@@ -151,14 +151,102 @@ class Federacion(Entidad):
         self.comite=comite
         super(Federacion, self).save(*args, **kwargs)
 
+    def atributosDeSusEscenarios(self):
+        from snd.modelos.escenarios import Escenario
+        from django.db import connection
+        escenarios = []
+
+        todosEscenarios = Escenario.objects.filter(entidad=self)
+        
+        for i in todosEscenarios:
+            escenarios.append(i.obtenerAtributos())
+
+        ligas = Liga.objects.filter(federacion=self)
+        for i in ligas:
+            connection.set_tenant(i)
+            escenarios += i.atributosDeSusEscenarios()
+
+        return escenarios
+
+    def atributosDeSusCafs(self):
+        from snd.modelos.cafs import CentroAcondicionamiento
+        from django.db import connection
+
+        centros = []
+
+        todosEscenarios = CentroAcondicionamiento.objects.filter(entidad=self)
+        
+        for i in todosEscenarios:
+            centros.append(i.obtenerAtributos())
+
+        ligas = Liga.objects.filter(federacion=self)
+        for i in ligas:
+            connection.set_tenant(i)
+            centros += i.atributosDeSusCafs()
+        
+        return centros
+
 class Liga(Entidad):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     departamento = models.ForeignKey(Departamento)
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
+    def atributosDeSusEscenarios(self):
+        from snd.modelos.escenarios import Escenario
+        from django.db import connection
+        escenarios = []
+
+        todosEscenarios = Escenario.objects.filter(entidad=self)
+        
+        for i in todosEscenarios:
+            escenarios.append(i.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for i in clubes:
+            connection.set_tenant(i)
+            escenarios += i.atributosDeSusEscenarios()
+
+        return escenarios
+
+    def atributosDeSusCafs(self):
+        from snd.modelos.cafs import CentroAcondicionamiento
+        from django.db import connection
+
+        centros = []
+
+        todosEscenarios = CentroAcondicionamiento.objects.filter(entidad=self)
+        
+        for i in todosEscenarios:
+            centros.append(i.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for i in clubes:
+            connection.set_tenant(i)
+            centros += i.atributosDeSusCafs()
+        
+        return centros
+
 class Club(Entidad):
     liga = models.ForeignKey(Liga, null=True, blank=True)
     ciudad = models.ForeignKey(Ciudad)
+
+    def atributosDeSusEscenarios(self):
+        from snd.modelos.escenarios import Escenario
+        todosEscenarios = Escenario.objects.filter(entidad=self)
+        escenarios = []
+        for i in todosEscenarios:
+            escenarios.append(i.obtenerAtributos())
+        
+        return escenarios
+
+    def atributosDeSusCafs(self):
+        from snd.modelos.cafs import CentroAcondicionamiento
+        todosCentros = CentroAcondicionamiento.objects.filter(entidad=self)
+        centros = []
+        for i in todosCentros:
+            centros.append(i.obtenerAtributos())
+        
+        return centros
 
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')

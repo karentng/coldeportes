@@ -246,7 +246,7 @@ def obtener_objetos_por_tenant(request,modelo):
             #federaciones del comité
             if request.tenant.id == 2:
                 federaciones = Federacion.objects.filter(comite=request.tenant.id)
-            else if request.tenant.id == 3:
+            elif request.tenant.id == 3:
                 federaciones = FederacionParalimpica.objects.filter(comite=request.tenant.id)
             for federacion in federaciones:
                 #saco los objetos de cada una de las federaciones pertenecientes al comité
@@ -256,7 +256,10 @@ def obtener_objetos_por_tenant(request,modelo):
                 for objeto in qs:
                     objetos.append(objeto)
                 #obtengo las ligas de cada federación y saco los objetos de cada uno
-                ligas = Liga.objects.filter(federacion=federacion.id)
+                if tenant_actual.id == 2:
+                    ligas = Liga.objects.filter(federacion=federacion.id)
+                elif tenant_actual.id == 3:
+                    ligas = LigaParalimpica.objects.filter(federacion=federacion.id)
                 for liga in ligas:
                     connection.set_tenant(liga)
                     ContentType.objects.clear_cache()

@@ -6,3 +6,4 @@ from coldeportes.utilities import adicionarClase
 class NormaForm(forms.ModelForm):
 	class Meta:
 		model = Norma
+		fields = '__all__'
