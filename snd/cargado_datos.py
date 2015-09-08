@@ -244,7 +244,10 @@ def obtener_objetos_por_tenant(request,modelo):
             for objeto in qs:
                 objetos.append(objeto)
             #federaciones del comité
-            federaciones = Federacion.objects.filter(comite=request.tenant.id)
+            if request.tenant.id == 2:
+                federaciones = Federacion.objects.filter(comite=request.tenant.id)
+            elif request.tenant.id == 3:
+                federaciones = FederacionParalimpica.objects.filter(comite=request.tenant.id)
             for federacion in federaciones:
                 #saco los objetos de cada una de las federaciones pertenecientes al comité
                 connection.set_tenant(federacion)
@@ -253,21 +256,26 @@ def obtener_objetos_por_tenant(request,modelo):
                 for objeto in qs:
                     objetos.append(objeto)
                 #obtengo las ligas de cada federación y saco los objetos de cada uno
-                ligas = Liga.objects.filter(federacion=federacion.id)
+                if tenant_actual.id == 2:
+                    ligas = Liga.objects.filter(federacion=federacion.id)
+                elif tenant_actual.id == 3:
+                    ligas = LigaParalimpica.objects.filter(federacion=federacion.id)
                 for liga in ligas:
                     connection.set_tenant(liga)
                     ContentType.objects.clear_cache()
                     qs = modelo.objects.filter(estado=0)
                     for objeto in qs:
                         objetos.append(objeto)
-                    #obtengo los clubes de cada liga y saco los objetos de cada uno
-                    clubes = Club.objects.filter(liga=liga.id)
-                    for club in clubes:
-                        connection.set_tenant(club)
-                        ContentType.objects.clear_cache()
-                        qs = modelo.objects.filter(estado=0)
-                        for objeto in qs:
-                            objetos.append(objeto)
+                    #obtengo los clubes de cada liga y saco los objetos de cada uno.
+                    #aplica para ligas normales, las paralímpicas no tiene clubes
+                    if tenant_actual.id == 2:
+                        clubes = Club.objects.filter(liga=liga.id)
+                        for club in clubes:
+                            connection.set_tenant(club)
+                            ContentType.objects.clear_cache()
+                            qs = modelo.objects.filter(estado=0)
+                            for objeto in qs:
+                                objetos.append(objeto)
             connection.set_tenant(tenant_actual)
         return objetos
     #Tenant de tipo Federación Paramilitar
