@@ -28,7 +28,7 @@ class CentroAcondicionamiento(models.Model):
     estrato = models.IntegerField(choices=ESTRATOS)
     latitud = models.FloatField()
     longitud = models.FloatField()
-    altura = models.FloatField()
+    altura = models.PositiveIntegerField()
     
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Centro de Acondicionamiento Físico")
     # Pestañas adicionales

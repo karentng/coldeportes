@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Normograma</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Normograma
+{% endblock %}
+
+{% block titulo_panel %}
+    <i class="fa fa-phone-square"></i> Registro de Norma
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido %}
+
+
+
+{% endblock %}
+{% block css %}
+    
+{% endblock %}
+
+{% block js %}
+    
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+        });
+    </script>
+
+{% endblock %}

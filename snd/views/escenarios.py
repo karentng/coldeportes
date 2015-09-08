@@ -209,7 +209,6 @@ def wizard_identificacion(request, escenario_id):
             escenario.entidad =  request.tenant
             escenario.nombre = escenario.nombre.upper()
             escenario.direccion = escenario.direccion.upper()
-            escenario.comuna = escenario.comuna.upper()
             escenario.barrio = escenario.barrio.upper()
             escenario.nombre_administrador = escenario.nombre_administrador.upper()
             escenario.save()

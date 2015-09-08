@@ -92,6 +92,41 @@ class Entidad(TenantMixin): # Entidad deportiva
                 return True
         return False
 
+    def atributosDeSusEscenarios(self):
+        from snd.modelos.escenarios import Escenario
+        todosEscenarios = Escenario.objects.filter(entidad=self)
+        escenarios = []
+        for i in todosEscenarios:
+            escenarios.append(i.obtenerAtributos())
+        
+        return escenarios
+
+    def atributosDeSusCafs(self):
+        from snd.modelos.cafs import CentroAcondicionamiento
+        todosCentros = CentroAcondicionamiento.objects.filter(entidad=self)
+        centros = []
+        for i in todosCentros:
+            centros.append(i.obtenerAtributos())
+        
+        return centros
+
+    def cantidadActoresAsociados(self):
+        from snd.models import CentroAcondicionamiento, CajaCompensacion, Deportista, Dirigente, Escenario, PersonalApoyo
+        def obtenerTodos(booleano, modelo, nombre, datos, color, url):
+            if booleano:
+                return datos + [[nombre, color, modelo.objects.all().count(), url]]
+            return datos
+
+        datos = []
+        actores = self.actores
+        datos = obtenerTodos(actores.centros, CentroAcondicionamiento, "CAFs", datos, "red", "listar_cafs")
+        datos = obtenerTodos(actores.escenarios, Escenario, "Escenarios", datos, "blue", "listar_escenarios")
+        datos = obtenerTodos(actores.deportistas, Deportista, "Deportistas", datos, "orange", "deportista_listar")
+        datos = obtenerTodos(actores.personal_apoyo, PersonalApoyo, "Personales de Apoyo", datos, "green", "personal_apoyo_listar")
+        datos = obtenerTodos(actores.dirigentes, Dirigente, "Dirigentes", datos, "purple", "dirigentes_listar")
+        datos = obtenerTodos(actores.cajas, CajaCompensacion, "Cajas de Compensación", datos, "black", "listar_ccfs")
+        return datos
+
     def __str__(self):
         return self.nombre
 
@@ -229,24 +264,6 @@ class Liga(Entidad):
 class Club(Entidad):
     liga = models.ForeignKey(Liga, null=True, blank=True)
     ciudad = models.ForeignKey(Ciudad)
-
-    def atributosDeSusEscenarios(self):
-        from snd.modelos.escenarios import Escenario
-        todosEscenarios = Escenario.objects.filter(entidad=self)
-        escenarios = []
-        for i in todosEscenarios:
-            escenarios.append(i.obtenerAtributos())
-        
-        return escenarios
-
-    def atributosDeSusCafs(self):
-        from snd.modelos.cafs import CentroAcondicionamiento
-        todosCentros = CentroAcondicionamiento.objects.filter(entidad=self)
-        centros = []
-        for i in todosCentros:
-            centros.append(i.obtenerAtributos())
-        
-        return centros
 
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')

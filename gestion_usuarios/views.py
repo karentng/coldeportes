@@ -87,16 +87,7 @@ def inicio(request):
             if request.user.is_superuser:
                 return redirect('usuarios_lista')
             else:
-                try:
-                    EscenarioView.objects.all().exists()
-                    CAFView.objects.all().exists()
-                    DeportistaView.objects.all().exists()
-                    PersonalApoyoView.objects.all().exists()
-                    DirigenteView.objects.all().exists()
-                    CajaCompensacionView.objects.all().exists()
-
-                except Exception:
-                    crear_vistas()
+                
                     
                 return redirect('inicio_tenant')
 
@@ -104,6 +95,7 @@ def inicio(request):
 
 @login_required
 def inicio_tenant(request):
+    import json
     """
     Julio 14 / 2015
     Autor: Daniel Correa
@@ -153,10 +145,18 @@ def inicio_tenant(request):
     ContentType.objects.clear_cache()
     #Fin consulta de transferencias
 
+    actoresAsociados = request.tenant.cantidadActoresAsociados()
+
+    tipoTenant = request.tenant.obtenerTenant()
+    ubicaciones = tipoTenant.atributosDeSusCafs()
+    ubicaciones += tipoTenant.atributosDeSusEscenarios()
+
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
-        'transfer_escenario' : transfer_escenarios
-
+        'transfer_escenario' : transfer_escenarios,
+        'actoresAsociados': actoresAsociados,
+        'actoresAsociadosJSON': json.dumps(actoresAsociados),
+        'ubicaciones': json.dumps(ubicaciones),
     })
 
 
