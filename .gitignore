@@ -6,6 +6,7 @@ snd/pendiente/
 media/
 snd/migrations
 directorio/migrations
+normograma/migrations
 entidades/migrations
 transferencias/migrations
 gestion_usuarios/migrations
