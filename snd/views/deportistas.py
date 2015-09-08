@@ -277,7 +277,7 @@ def wizard_historia_academica(request,id_depor):
             return redirect('wizard_historia_academica', id_depor)
 
     return render(request, 'deportistas/wizard/wizard_historia_academica.html', {
-        'titulo': 'Información Académica del Deportista',
+        'titulo': 'Formación académica',
         'wizard_stage': 4,
         'form': inf_academ_form,
         'historicos': inf_academ,

@@ -171,7 +171,7 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)
 
     return render(request, 'personal_apoyo/wizard/wizard_formacion_deportiva.html', {
-        'titulo': 'Información sobre la formación académica',
+        'titulo': 'Formación académica',
         'wizard_stage': 2,
         'form': formaciondep_form,
         'historicos': formacion_deportiva,
