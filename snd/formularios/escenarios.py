@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
 from datetimewidget.widgets import TimeWidget, DateWidget
-from coldeportes.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase, MyDateWidget
 
 
 class IdentificacionForm(forms.ModelForm):
@@ -73,12 +73,14 @@ class DatoHistoricoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(DatoHistoricoForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
-        self.fields['fecha_inicio'] = adicionarClase(self.fields['fecha_inicio'], 'fecha')
-        self.fields['fecha_fin'] = adicionarClase(self.fields['fecha_fin'], 'fecha')
 
     class Meta:
         model = DatoHistorico
         exclude = ('escenario',)
+        widgets = {
+            'fecha_inicio': MyDateWidget(),
+            'fecha_fin': MyDateWidget(),
+        }
         
 
 class FotoEscenarioForm(ModelForm):
