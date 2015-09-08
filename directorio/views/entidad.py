@@ -76,6 +76,17 @@ def directorio_buscar(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
+
+    try:
+        EscenarioView.objects.all().exists()
+        CAFView.objects.all().exists()
+        DeportistaView.objects.all().exists()
+        PersonalApoyoView.objects.all().exists()
+        DirigenteView.objects.all().exists()
+        CajaCompensacionView.objects.all().exists()
+
+    except Exception:
+        crear_vistas()
     
 
     #inicializado formulario de búsqueda

@@ -22,14 +22,15 @@ class Escenario(models.Model):
     direccion = models.CharField(max_length=100)
     latitud = models.FloatField()
     longitud = models.FloatField()
-    altura = models.FloatField()
-    ciudad = models.ForeignKey(Ciudad)
-    comuna = models.CharField(max_length=10)
+    altura = models.PositiveIntegerField()
+    nombre_administrador = models.CharField(max_length=50, null=True)    
+    comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)
-    estrato = models.CharField(choices=estratos, max_length=1)
     nombre_administrador = models.CharField(max_length=50, null=True)
+    estrato = models.CharField(choices=estratos, max_length=1)
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Escenario")
+    ciudad = models.ForeignKey(Ciudad)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
     def fotos(self):
@@ -78,9 +79,9 @@ class CaracterizacionEscenario(models.Model):
     tipo_escenario = models.ForeignKey(TipoEscenario)
     tipo_disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
     tipo_superficie_juego = models.ManyToManyField(TipoSuperficie)
-    clase_acceso = models.CharField(choices=accesos, max_length=3, verbose_name='tipo de acceso')
     caracteristicas = models.ManyToManyField(CaracteristicaEscenario)
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
+    clase_acceso = models.CharField(choices=accesos, max_length=3, verbose_name='tipo de acceso')
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
 class HorarioDisponibilidad(models.Model):
