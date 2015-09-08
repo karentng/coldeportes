@@ -50,6 +50,8 @@ class Entidad(TenantMixin): # Entidad deportiva
         (3, 'Club'),
         (4, 'Cajas de Compensación'),
         (5, 'Ente'),
+        (6, 'Comité'),
+        (7,'Federación Paralimpica'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -72,8 +74,58 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = CajaDeCompensacion
         elif self.tipo == 5:
             modelo = Ente
+        elif self.tipo == 6:
+            modelo = Comite
+        elif self.tipo == 7:
+            modelo= FederacionParalimpica
+        elif self.tipo == 8:
+            modelo = LigaParalimpica
         
         return modelo.objects.get(id=self.id)
+
+    def seleccionable(self):
+        if self.tipo in [1, 2]:
+            return True
+        elif self.tipo == 6:
+            m = self.obtenerTenant()
+            if m.tipo_comite == 1:
+                return True
+        return False
+
+    def atributosDeSusEscenarios(self):
+        from snd.modelos.escenarios import Escenario
+        todosEscenarios = Escenario.objects.filter(entidad=self)
+        escenarios = []
+        for i in todosEscenarios:
+            escenarios.append(i.obtenerAtributos())
+        
+        return escenarios
+
+    def atributosDeSusCafs(self):
+        from snd.modelos.cafs import CentroAcondicionamiento
+        todosCentros = CentroAcondicionamiento.objects.filter(entidad=self)
+        centros = []
+        for i in todosCentros:
+            centros.append(i.obtenerAtributos())
+        
+        return centros
+
+    def cantidadActoresAsociados(self):
+        from snd.models import CentroAcondicionamiento, CajaCompensacion, Deportista, Dirigente, Escenario, PersonalApoyo
+        def obtenerTodos(booleano, modelo, nombre, datos, color, url):
+            if booleano:
+                return datos + [[nombre, color, modelo.objects.all().count(), url]]
+            return datos
+
+        datos = []
+        actores = self.actores
+        datos = obtenerTodos(actores.centros, CentroAcondicionamiento, "CAFs", datos, "red", "listar_cafs")
+        datos = obtenerTodos(actores.escenarios, Escenario, "Escenarios", datos, "blue", "listar_escenarios")
+        datos = obtenerTodos(actores.deportistas, Deportista, "Deportistas", datos, "orange", "deportista_listar")
+        datos = obtenerTodos(actores.personal_apoyo, PersonalApoyo, "Personales de Apoyo", datos, "green", "personal_apoyo_listar")
+        datos = obtenerTodos(actores.dirigentes, Dirigente, "Dirigentes", datos, "purple", "dirigentes_listar")
+        datos = obtenerTodos(actores.cajas, CajaCompensacion, "Cajas de Compensación", datos, "black", "listar_ccfs")
+        return datos
 
     def __str__(self):
         return self.nombre
@@ -86,11 +138,53 @@ class Ente(Entidad):
     ciudad = models.ForeignKey(Ciudad)
     tipo_ente = models.IntegerField(choices=TIPOS_ENTE)
 
+class Comite(Entidad):
+    TIPOS_COMITE = (
+        (1, 'Comité Olimpico Colombiano'),
+        (2, 'Comité Paralímpico Colombiano'),
+    )
+    ciudad = models.ForeignKey(Ciudad)
+    tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
+
+class FederacionParalimpica(Entidad):
+    DISCAPACIDADES = (
+        (1,'Limitaciones Fisica'),
+        (2,'Limitación Auditiva'),
+        (3,'Limitación Visual'),
+        (4,'Parálisis Cerebral'),
+        (5,'Limitación Intelectual'),
+    )
+    discapacidad = models.IntegerField(choices=DISCAPACIDADES)
+    comite = models.ForeignKey(Comite)
+
+    def save(self, *args, **kwargs):
+        comite_para = Comite.objects.get(tipo_comite=2)
+        self.comite=comite_para
+        super(FederacionParalimpica, self).save(*args, **kwargs)
+
+class LigaParalimpica(Entidad):
+    DISCAPACIDADES = (
+        (1,'Limitaciones Fisica'),
+        (2,'Limitación Auditiva'),
+        (3,'Limitación Visual'),
+        (4,'Parálisis Cerebral'),
+        (5,'Limitación Intelectual'),
+    )
+    discapacidad = models.IntegerField(choices=DISCAPACIDADES)
+    departamento = models.ForeignKey(Departamento)
+    federacion = models.ForeignKey(FederacionParalimpica)
+
 class CajaDeCompensacion(Entidad):
     ciudad = models.ForeignKey(Ciudad)
 
 class Federacion(Entidad):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+    comite = models.ForeignKey(Comite)
+
+    def save(self, *args, **kwargs):
+        comite = Comite.objects.get(tipo_comite=1)
+        self.comite=comite
+        super(Federacion, self).save(*args, **kwargs)
 
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario
@@ -170,24 +264,6 @@ class Liga(Entidad):
 class Club(Entidad):
     liga = models.ForeignKey(Liga, null=True, blank=True)
     ciudad = models.ForeignKey(Ciudad)
-
-    def atributosDeSusEscenarios(self):
-        from snd.modelos.escenarios import Escenario
-        todosEscenarios = Escenario.objects.filter(entidad=self)
-        escenarios = []
-        for i in todosEscenarios:
-            escenarios.append(i.obtenerAtributos())
-        
-        return escenarios
-
-    def atributosDeSusCafs(self):
-        from snd.modelos.cafs import CentroAcondicionamiento
-        todosCentros = CentroAcondicionamiento.objects.filter(entidad=self)
-        centros = []
-        for i in todosCentros:
-            centros.append(i.obtenerAtributos())
-        
-        return centros
 
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')

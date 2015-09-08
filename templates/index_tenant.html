@@ -13,320 +13,426 @@
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
 {% endblock %}
 
-{%block css%}
+{% block js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/arrayToJson.js"></script>
+    <script src="{{STATIC_URL}}amcharts/amcharts.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/serial.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/amexport.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/canvg.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var actoresAsociados = arrayToJson("{{actoresAsociadosJSON}}");
+        var chartData = [];
+        for (i in actoresAsociados){
+            var aux = actoresAsociados[i];
+            chartData.push(
+                {
+                    "actor": aux[0],
+                    "valor": aux[2],
+                    "color": colors[i%colors.length],
+                }
+            );
+        }
+        var chart;
+        AmCharts.ready(function () {
+            // SERIAL CHART
+            chart = new AmCharts.AmSerialChart();
+            chart.dataProvider = chartData;
+            chart.categoryField = "actor";
+            chart.startDuration = 1;
+            chart.rotate = true;
+
+            // AXES
+            // category
+            var categoryAxis = chart.categoryAxis;
+            categoryAxis.gridPosition = "start";
+            categoryAxis.axisColor = "#DADADA";
+            categoryAxis.dashLength = 3;
+
+            // value
+            var valueAxis = new AmCharts.ValueAxis();
+            valueAxis.dashLength = 3;
+            valueAxis.axisAlpha = 0.2;
+            valueAxis.position = "top";
+            valueAxis.title = "Actores en el Sistema";
+            valueAxis.minorGridEnabled = true;
+            valueAxis.minorGridAlpha = 0.08;
+            valueAxis.gridAlpha = 0.15;
+            chart.addValueAxis(valueAxis);
+
+            // GRAPHS
+            // column graph
+            var graph1 = new AmCharts.AmGraph();
+            graph1.type = "column";
+            graph1.title = "Actores";
+            graph1.valueField = "valor";
+            graph1.colorField = "color";
+            graph1.lineAlpha = 0;
+            graph1.fillColors = "#FF0000";
+            graph1.fillAlphas = 0.8;
+            graph1.balloonText = "<span style='font-size:13px;'>Número de [[category]]:<b>[[value]]</b></span>";
+            chart.addGraph(graph1);
+            chart.exportConfig = exportConfig();
+
+            // WRITE
+            chart.write("chartdiv");
+        });
+        
+    </script>
+    <script type="text/javascript">
+        datosMostrar = "{{ubicaciones}}";
+        mapa = "mapa";
+    </script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/creacion_google_maps.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+{% endblock %}
+
+{% block css %}
     <style>
         .profile-image {
             border: 0;
         }
+        #mapa {
+            height: 400px;
+            width: 100%;
+          }
     </style>
-{%endblock%}
+{% endblock %}
 
 {% block contenido %}
     <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
-
+    <div class="row" align="center">
+        {% for i in actoresAsociados %}
+            <div class="col-xs-6 col-sm-4 col-md-2">
+                <div class="widget widget-stats bg-{{i.1}}">
+                    <div class="stats-title">{{i.0}}</div>
+                    <div class="stats-number">{{i.2}}</div>
+                    <div class="stats-progress progress">
+                        <div class="progress-bar" style="width: 70.1%;"></div>
+                    </div>
+                    <div class="stats-desc">
+                        <a href="{% url i.3 %}" style="color:white">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     <div class="row">
-    {% for msg in messages %}
-        <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">
-            <span class="close" data-dismiss="alert">×</span>
-            {% if msg.tags == 'error' %}
-                <i class="fa fa-times fa-2x pull-left"></i>
-            {% else %}
-                <i class="fa fa-check fa-2x pull-left"></i>
-            {% endif %}
-            <p>{{msg}}</p>
+        <div class="col-sm-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="panel-title">
+                                Georreferenciación de Escenarios Deportivos y Centros de Acondicionamiento
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div id="mapa"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endfor %}
-    <!--Fila de notificaciones-->
-        <div class="row">
-            <div class="col-sm-12">
-                <!--Inicio transferencia de deportistas-->
-                <div class="col-md-8">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <div class="panel-heading-btn">
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
-                            </div>
-                            <h4 class="panel-title">
-                                Transferencias de Personas Pendientes
-                            </h4>
+
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="chartdiv" style="width: 100%; height: 200px;"></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="panel-heading-btn">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
                         </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    {% if transfer_persona %}
+                        <h4 class="panel-title">
+                            Transferencias de Personas Pendientes
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                {% if transfer_persona %}
 
-                                            <div class="height-sm" data-scrollbar="true">
-                                                <ul class="media-list media-list-with-divider">
-                                                {% for t in transfer_persona %}
-                                                    <li class="media media-sm">
-                                                        <a class="media-left">
-                                                            {%if t.foto%}
-                                                                <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{t.foto}}" alt="Foto de la persona"  />
-                                                            {%else%}
-                                                                <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto de la persona"/>
-                                                            {%endif%}
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading">{{ t.nombres }} {{ t.apellidos }}<small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small></h4>
-                                                            <p>Identificación: {{ t.tipo_id }}.{{ t.identificacion }}. <br/>
-                                                                Edad: {{ t.edad }} <br/>
-                                                                Genero: {{ t.genero }} <br/>
-                                                                Ciudad de Residencia: {{ t.ciudad }} <br/>
-                                                                <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
-                                                            </p>
-                                                            <p>
-                                                                <a href="#modal-desactivate-persona-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
-                                                                <a href="{%url 'procesar_transferencia' t.id_trans 0 %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
-                                                                <a href="{%url 'procesar_transferencia' t.id_trans 1 %}" class="btn btn-sm btn-success m-r-5">Aceptar</a>
-                                                            </p>
-                                                        </div>
-                                                    </li>
-                                                    <!--modal para ver detalle -->
-                                                    <div class="modal modal-message fade" id="modal-desactivate-persona-{{ t.id }}">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-body">
-                                                                    <div class="profile-container">
-                                                                        <!-- begin profile-section -->
-                                                                        <div class="profile-section">
-                                                                            <!-- begin profile-left -->
-                                                                            <div class="profile-left">
-                                                                                <!-- begin profile-image -->
-                                                                                <div class="profile-image">
-                                                                                    {%if t.foto%}
-                                                                                        <img  src="{{MEDIA_URL}}{{t.foto}}" alt=""  />
-                                                                                    {%elif t.genero == "Mujer" or t.genero == "MUJER" %}
-                                                                                        <img  src="{{STATIC_URL}}img/female.png" alt="" />
-                                                                                    {%else%}
-                                                                                        <img  src="{{STATIC_URL}}img/male.png" alt="" />
-                                                                                    {%endif%}
+                                        <div class="height-sm" data-scrollbar="true">
+                                            <ul class="media-list media-list-with-divider">
+                                            {% for t in transfer_persona %}
+                                                <li class="media media-sm">
+                                                    <a class="media-left">
+                                                        {%if t.foto%}
+                                                            <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{t.foto}}" alt="Foto de la persona"  />
+                                                        {%else%}
+                                                            <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto de la persona"/>
+                                                        {%endif%}
+                                                    </a>
+                                                    <div class="media-body">
+                                                        <h4 class="media-heading">{{ t.nombres }} {{ t.apellidos }}<small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small></h4>
+                                                        <p>Identificación: {{ t.tipo_id }}.{{ t.identificacion }}. <br/>
+                                                            Edad: {{ t.edad }} <br/>
+                                                            Genero: {{ t.genero }} <br/>
+                                                            Ciudad de Residencia: {{ t.ciudad }} <br/>
+                                                            <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
+                                                        </p>
+                                                        <p>
+                                                            <a href="#modal-desactivate-persona-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                            <a href="{%url 'procesar_transferencia' t.id_trans 0 %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
+                                                            <a href="{%url 'procesar_transferencia' t.id_trans 1 %}" class="btn btn-sm btn-success m-r-5">Aceptar</a>
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                                <!--modal para ver detalle -->
+                                                <div class="modal modal-message fade" id="modal-desactivate-persona-{{ t.id }}">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <div class="profile-container">
+                                                                    <!-- begin profile-section -->
+                                                                    <div class="profile-section">
+                                                                        <!-- begin profile-left -->
+                                                                        <div class="profile-left">
+                                                                            <!-- begin profile-image -->
+                                                                            <div class="profile-image">
+                                                                                {%if t.foto%}
+                                                                                    <img  src="{{MEDIA_URL}}{{t.foto}}" alt=""  />
+                                                                                {%elif t.genero == "Mujer" or t.genero == "MUJER" %}
+                                                                                    <img  src="{{STATIC_URL}}img/female.png" alt="" />
+                                                                                {%else%}
+                                                                                    <img  src="{{STATIC_URL}}img/male.png" alt="" />
+                                                                                {%endif%}
 
-                                                                                    <i class="fa fa-user hide"></i>
-                                                                                </div>
-                                                                                <!-- end profile-image -->
+                                                                                <i class="fa fa-user hide"></i>
                                                                             </div>
-                                                                            <!-- end profile-left -->
-                                                                            <!-- begin profile-right -->
-                                                                            <div class="profile-right">
-                                                                                <!-- begin profile-info -->
-                                                                                <div class="profile-info">
-                                                                                    <!-- begin table -->
-                                                                                    <div class="table-responsive">
-                                                                                        <table class="table table-profile">
-                                                                                            <thead>
-                                                                                                <tr>
-                                                                                                    <th></th>
-                                                                                                    <th>
-                                                                                                        <h4>{{ t.nombres }} {{ t.apellidos }} <small>{{ t.procedencia }}</small></h4>
-                                                                                                    </th>
-                                                                                                </tr>
-                                                                                            </thead>
-                                                                                            <tbody>
-                                                                                                <tr class="highlight">
-                                                                                                    <td class="field">Entidad de Procedencia</td>
-                                                                                                    <td>{{ t.procedencia }}</td>
-                                                                                                </tr>
-                                                                                                <tr class="divider">
-                                                                                                    <td colspan="2"></td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Identificación</td>
-                                                                                                    <td> {{ t.tipo_id }}. {{ t.identificacion }}</td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Nacionalidades:</td>
-                                                                                                    <td><i class="ion ion-earth fa-lg m-r-5"></i>{{t.nacionalidad_str}}</td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Edad</td>
-                                                                                                    <td>{{ t.edad }}</td>
-                                                                                                </tr>
-                                                                                                <tr class="divider">
-                                                                                                    <td colspan="2"></td>
-                                                                                                </tr>
-                                                                                                <tr class="highlight">
-                                                                                                    <td class="field">Ciudad de Residencia</td>
-                                                                                                    <td>{{ t.ciudad }}</td>
-                                                                                                </tr>
-                                                                                                <tr class="divider">
-                                                                                                    <td colspan="2"></td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Solicitud</td>
-                                                                                                    <td>Esta es una solicitud de transferencia de personal de una entidad a otra</td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Fecha Solicitud</td>
-                                                                                                    <td>{{ t.fecha_solicitud }}</td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </div>
-                                                                                    <!-- end table -->
-                                                                                </div>
-                                                                                <!-- end profile-info -->
-                                                                            </div>
-                                                                            <!-- end profile-right -->
+                                                                            <!-- end profile-image -->
                                                                         </div>
-                                                                        <!-- end profile-section -->
+                                                                        <!-- end profile-left -->
+                                                                        <!-- begin profile-right -->
+                                                                        <div class="profile-right">
+                                                                            <!-- begin profile-info -->
+                                                                            <div class="profile-info">
+                                                                                <!-- begin table -->
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table table-profile">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th></th>
+                                                                                                <th>
+                                                                                                    <h4>{{ t.nombres }} {{ t.apellidos }} <small>{{ t.procedencia }}</small></h4>
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr class="highlight">
+                                                                                                <td class="field">Entidad de Procedencia</td>
+                                                                                                <td>{{ t.procedencia }}</td>
+                                                                                            </tr>
+                                                                                            <tr class="divider">
+                                                                                                <td colspan="2"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Identificación</td>
+                                                                                                <td> {{ t.tipo_id }}. {{ t.identificacion }}</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Nacionalidades:</td>
+                                                                                                <td><i class="ion ion-earth fa-lg m-r-5"></i>{{t.nacionalidad_str}}</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Edad</td>
+                                                                                                <td>{{ t.edad }}</td>
+                                                                                            </tr>
+                                                                                            <tr class="divider">
+                                                                                                <td colspan="2"></td>
+                                                                                            </tr>
+                                                                                            <tr class="highlight">
+                                                                                                <td class="field">Ciudad de Residencia</td>
+                                                                                                <td>{{ t.ciudad }}</td>
+                                                                                            </tr>
+                                                                                            <tr class="divider">
+                                                                                                <td colspan="2"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Solicitud</td>
+                                                                                                <td>Esta es una solicitud de transferencia de personal de una entidad a otra</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Fecha Solicitud</td>
+                                                                                                <td>{{ t.fecha_solicitud }}</td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                                <!-- end table -->
+                                                                            </div>
+                                                                            <!-- end profile-info -->
+                                                                        </div>
+                                                                        <!-- end profile-right -->
                                                                     </div>
+                                                                    <!-- end profile-section -->
                                                                 </div>
-                                                                <div class="modal-footer">
-                                                                    <a href="javascript:;" class="btn btn-sm btn-warning" data-dismiss="modal">Regresar</a>
-                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a href="javascript:;" class="btn btn-sm btn-warning" data-dismiss="modal">Regresar</a>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- fin modal para ver detalle -->
-                                                {% endfor %}
-                                                </ul>
-                                            </div>
+                                                </div>
+                                                <!-- fin modal para ver detalle -->
+                                            {% endfor %}
+                                            </ul>
+                                        </div>
 
-                                    {% else %}
-                                       <strong>En el momento no se le ha solicitado ninguna transferencia</strong>
-                                    {% endif %}
-                                </div>
+                                {% else %}
+                                   <strong>En el momento no se le ha solicitado ninguna transferencia</strong>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--Fin transferencia de deportistas-->
-                <!--Inicio transferencia de escenarios-->
-                <div class="col-md-4">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <div class="panel-heading-btn">
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
-                            </div>
-                            <h4 class="panel-title">
-                                Transferencias de Escenarios Pendientes
-                            </h4>
+            </div>
+            <!--Fin transferencia de deportistas-->
+            <!--Inicio transferencia de escenarios-->
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="panel-heading-btn">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
                         </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    {% if transfer_escenario %}
+                        <h4 class="panel-title">
+                            Transferencias de Escenarios Pendientes
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                {% if transfer_escenario %}
 
-                                            <div class="height-sm" data-scrollbar="true">
-                                                <ul class="media-list media-list-with-divider">
-                                                {% for t in transfer_escenario %}
-                                                    <li class="media media-sm">
-                                                        <div class="media-body">
-                                                            <h4 class="media-heading">{{ t.nombre }}</h4> <small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small>
-                                                            <p>Dirección: {{ t.direccion }} <br/>
-                                                                Ciudad(Departamento): {{ t.ciudad }} <br/>
-                                                                Tipo: {{ t.tipo }}<br/>
-                                                                <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
-                                                            </p>
-                                                            <p>
-                                                                <a href="#modal-desactivate-escenario-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
-                                                                <a href="{%url 'procesar_transferencia' t.id_trans 0 %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
-                                                                <a href="{%url 'procesar_transferencia' t.id_trans 1 %}" class="btn btn-sm btn-success m-r-5">Aceptar</a>
-                                                            </p>
-                                                        </div>
-                                                    </li>
-                                                    <!--modal de ver detalle escenarios-->
-                                                    <div class="modal modal-message fade fade" id="modal-desactivate-escenario-{{ t.id }}">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-body">
-                                                                    <div class="profile-container">
-                                                                        <!-- begin profile-section -->
-                                                                        <div class="profile-section">
-                                                                            <!-- begin profile-left -->
-                                                                            <div class="profile-left">
-                                                                                <div class="profile-image">
-                                                                                    <i class="fa fa-trophy modal-icon"></i>
-                                                                                </div>
+                                        <div class="height-sm" data-scrollbar="true">
+                                            <ul class="media-list media-list-with-divider">
+                                            {% for t in transfer_escenario %}
+                                                <li class="media media-sm">
+                                                    <div class="media-body">
+                                                        <h4 class="media-heading">{{ t.nombre }}</h4> <small> <strong>Fecha Solicitud: {{ t.fecha_solicitud }}</strong></small>
+                                                        <p>Dirección: {{ t.direccion }} <br/>
+                                                            Ciudad(Departamento): {{ t.ciudad }} <br/>
+                                                            Tipo: {{ t.tipo }}<br/>
+                                                            <strong>Entidad de Procedencia: {{ t.procedencia }}</strong>
+                                                        </p>
+                                                        <p>
+                                                            <a href="#modal-desactivate-escenario-{{ t.id }}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                            <a href="{%url 'procesar_transferencia' t.id_trans 0 %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
+                                                            <a href="{%url 'procesar_transferencia' t.id_trans 1 %}" class="btn btn-sm btn-success m-r-5">Aceptar</a>
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                                <!--modal de ver detalle escenarios-->
+                                                <div class="modal modal-message fade fade" id="modal-desactivate-escenario-{{ t.id }}">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <div class="profile-container">
+                                                                    <!-- begin profile-section -->
+                                                                    <div class="profile-section">
+                                                                        <!-- begin profile-left -->
+                                                                        <div class="profile-left">
+                                                                            <div class="profile-image">
+                                                                                <i class="fa fa-trophy modal-icon"></i>
                                                                             </div>
-                                                                            <!-- end profile-left -->
-                                                                            <!-- begin profile-right -->
-                                                                            <div class="profile-right">
-                                                                                <!-- begin profile-info -->
-                                                                                <div class="profile-info">
-                                                                                    <!-- begin table -->
-                                                                                    <div class="table-responsive">
-                                                                                        <table class="table table-profile">
-                                                                                            <thead>
-                                                                                                <tr>
-                                                                                                    <th></th>
-                                                                                                    <th>
-                                                                                                        <h4>{{ t.nombre }}<small>{{ t.procedencia }}</small></h4>
-                                                                                                    </th>
-                                                                                                </tr>
-                                                                                            </thead>
-                                                                                            <tbody>
-                                                                                                <tr class="highlight">
-                                                                                                    <td class="field">Entidad de Procedencia</td>
-                                                                                                    <td>{{ t.procedencia }}</td>
-                                                                                                </tr>
-                                                                                                <tr class="divider">
-                                                                                                    <td colspan="2"></td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Direccion</td>
-                                                                                                    <td>{{ t.direccion }}</td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Ciudad</td>
-                                                                                                    <td>{{ t.ciudad }}</td>
-                                                                                                </tr>
-                                                                                                <tr class="divider">
-                                                                                                    <td colspan="2"></td>
-                                                                                                </tr>
-                                                                                                <tr class="highlight">
-                                                                                                    <td class="field">Tipo</td>
-                                                                                                    <td>{{ t.tipo }}</td>
-                                                                                                </tr>
-                                                                                                <tr class="divider">
-                                                                                                    <td colspan="2"></td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Solicitud</td>
-                                                                                                    <td>Esta es una solicitud de transferencia de escenario de una entidad a otra</td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="field">Fecha Solicitud</td>
-                                                                                                    <td>{{ t.fecha_solicitud }}</td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </div>
-                                                                                    <!-- end table -->
-                                                                                </div>
-                                                                                <!-- end profile-info -->
-                                                                            </div>
-                                                                            <!-- end profile-right -->
                                                                         </div>
-                                                                        <!-- end profile-section -->
+                                                                        <!-- end profile-left -->
+                                                                        <!-- begin profile-right -->
+                                                                        <div class="profile-right">
+                                                                            <!-- begin profile-info -->
+                                                                            <div class="profile-info">
+                                                                                <!-- begin table -->
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table table-profile">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th></th>
+                                                                                                <th>
+                                                                                                    <h4>{{ t.nombre }}<small>{{ t.procedencia }}</small></h4>
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr class="highlight">
+                                                                                                <td class="field">Entidad de Procedencia</td>
+                                                                                                <td>{{ t.procedencia }}</td>
+                                                                                            </tr>
+                                                                                            <tr class="divider">
+                                                                                                <td colspan="2"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Direccion</td>
+                                                                                                <td>{{ t.direccion }}</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Ciudad</td>
+                                                                                                <td>{{ t.ciudad }}</td>
+                                                                                            </tr>
+                                                                                            <tr class="divider">
+                                                                                                <td colspan="2"></td>
+                                                                                            </tr>
+                                                                                            <tr class="highlight">
+                                                                                                <td class="field">Tipo</td>
+                                                                                                <td>{{ t.tipo }}</td>
+                                                                                            </tr>
+                                                                                            <tr class="divider">
+                                                                                                <td colspan="2"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Solicitud</td>
+                                                                                                <td>Esta es una solicitud de transferencia de escenario de una entidad a otra</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="field">Fecha Solicitud</td>
+                                                                                                <td>{{ t.fecha_solicitud }}</td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                                <!-- end table -->
+                                                                            </div>
+                                                                            <!-- end profile-info -->
+                                                                        </div>
+                                                                        <!-- end profile-right -->
                                                                     </div>
+                                                                    <!-- end profile-section -->
                                                                 </div>
-                                                                <div class="modal-footer">
-                                                                    <a href="javascript:;" class="btn btn-sm btn-warning" data-dismiss="modal">Regresar</a>
-                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a href="javascript:;" class="btn btn-sm btn-warning" data-dismiss="modal">Regresar</a>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!--fin modal de ver detalle escenarios-->
-                                                {% endfor %}
-                                                </ul>
-                                            </div>
+                                                </div>
+                                                <!--fin modal de ver detalle escenarios-->
+                                            {% endfor %}
+                                            </ul>
+                                        </div>
 
-                                    {% else %}
-                                       <strong>En el momento no se le ha solicitado ninguna transferencia</strong>
-                                    {% endif %}
-                                </div>
+                                {% else %}
+                                   <strong>En el momento no se le ha solicitado ninguna transferencia</strong>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--Fin transferencia de escenarios-->
             </div>
         </div>
     </div>

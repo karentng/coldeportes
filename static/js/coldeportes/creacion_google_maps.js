@@ -1,13 +1,4 @@
-var colors = ['bg-green', 'bg-blue', 'bg-red', 'bg-orange', 'bg-inverse'];
-
-var datosMostrar = ((datosMostrar).replace(/&(l|g|quo)t;/g, function(a,b){
-    return {
-        l   : '<',
-        g   : '>',
-        quo : '"'
-    }[b];
-}));
-datosMostrar = JSON.parse( datosMostrar );
+var datosMostrar = arrayToJson(datosMostrar);
 
 function informacion(ventana ,marker, map){
     marker.addListener('click', function() {
