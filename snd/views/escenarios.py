@@ -652,7 +652,9 @@ def georreferenciacion_escenario(request):
     import json
     tipoTenant = request.tenant.obtenerTenant()
     escenarios = tipoTenant.atributosDeSusEscenarios()
+    posicionInicial = tipoTenant.posicionInicialMapa()
     
     return render(request, 'escenarios/georreferenciacion.html', {
         'escenarios': json.dumps(escenarios),
+        'posicionInicial': json.dumps(posicionInicial),
     })

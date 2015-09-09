@@ -354,7 +354,9 @@ def georreferenciacion_caf(request):
     import json
     tipoTenant = request.tenant.obtenerTenant()
     cafs = tipoTenant.atributosDeSusCafs()
-    
+    posicionInicial = tipoTenant.posicionInicialMapa()
+
     return render(request, 'cafs/georreferenciacion.html', {
         'cafs': json.dumps(cafs),
+        'posicionInicial': json.dumps(posicionInicial),
     })
