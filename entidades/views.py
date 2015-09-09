@@ -37,6 +37,15 @@ def obtenerFormularioTenant(tipo, post=None, instance=None):
     elif tipo == '5':
         nombre = 'Ente'
         form = EnteForm(post, instance=instance)
+    elif tipo == '6':
+        nombre = 'Comité'
+        form = ComiteForm(post, instance=instance)
+    elif tipo == '7':
+        nombre = 'Federación Paralimpica'
+        form = FederacionParalimpicaForm(post,instance=instance)
+    elif tipo == '8':
+        nombre = 'Liga Paralimpica'
+        form = LigaParalimpicaForm(post,instance=instance)
 
     return [nombre, form]
 
@@ -52,6 +61,10 @@ def obtenerTenant(request, idEntidad, tipo):
         return CajaDeCompensacion.objects.get(id=idEntidad)
     elif tipo == '5':
         return Ente.objects.get(id=idEntidad)
+    elif tipo == '6':
+        return Comite.objects.get(id=idEntidad)
+    elif tipo == '7':
+        return FederacionParalimpica.objects.get(id=idEntidad)
     raise Exception
 
 @login_required
@@ -80,6 +93,8 @@ def registro(request, tipo, tipoEnte=None):
             obj.tipo = tipo
             if tipo == '5':
                 obj.tipo_ente = tipoEnte
+            if tipo == '6':
+                obj.tipo_comite = tipoEnte
 
             try:
                 obj.save()

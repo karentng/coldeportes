@@ -27,6 +27,7 @@
     <link href="{{STATIC_URL}}css/style-responsive.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}css/theme/default.css" rel="stylesheet" id="theme" />
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/personal.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}plugins/toastr/toastr.css"/>
     <!-- ================== END BASE CSS STYLE ================== -->
     <!-- ================== BEGIN BASE JS ================== -->
     <script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script>
@@ -212,17 +213,6 @@
                         {% endblock %}
                     </h4>
                 </div>
-                {% for msg in messages %}
-                    <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">              
-                        <span class="close" data-dismiss="alert">×</span>
-                        {% if msg.tags == 'error' %}
-                            <i class="fa fa-times fa-2x pull-left"></i>
-                        {% else %}
-                            <i class="fa fa-check fa-2x pull-left"></i>
-                        {% endif %}
-                        <p>{{msg}}</p>
-                    </div>
-                {% endfor %}
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-12">
@@ -300,7 +290,27 @@
                 closeOnDateSelect: true,
                 readonly: true,
             });
+
+
+
         });
+    </script>
+    <script src="{{ STATIC_URL }}plugins/toastr/toastr.js"></script>
+    <script>
+        {% for msg in messages %}
+            $(document).ready(function(){
+                console.log('holis');
+                    setTimeout(function() {
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "showEasing": "swing"
+                    }
+                    toastr["{{ msg.tags }}"]("{{msg}}")
+                },500);
+
+            });
+        {% endfor %}
     </script>
     {% block js %}
     {% endblock %}

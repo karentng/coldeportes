@@ -32,13 +32,13 @@
 {% block contenido_panel %}
     {% include 'personal_apoyo/wizard/_wizard.html' %}
         <div class="row">
-            <fieldset class="col-md-5" >
+            <fieldset class="col-md-7" >
                 <form action="" id="form-formacion" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
                         {% for i in form %}
-						<div class="col-md-12">
+						<div class="col-md-6">
 							{% bootstrap_field i layout="vertical" %}
 						</div>
 					    {% endfor %}
@@ -47,35 +47,25 @@
                 </div>
                 </form>
             </fieldset>
-            <div class="col-md-7">
-                <h4>Formación académica actual:</h4>
+            <div class="col-md-5">
+                <h4>Formación académica registrar:</h4>
                 <div class="table-responsive">
-                    <table id="tabla-formacion-deportiva" class="table table-stripped table-bordered" cellspacing="0" width="100%">
+                    <table class="table">
                         <thead>
-                        <tr>
-                            <th align="center">Denominación diploma</th>
-                            <th class="min-tablet" align="center">Nivel</th>
-                            <th class="min-desktop" align="center">Institución formación</th>
-                            <th class="min-desktop" align="center">País</th>
-                            <th class="min-desktop" align="center">Fecha comienzo</th>
-                            <th class="min-desktop" align="center">Fecha fin</th>
-                        </tr>
+                            <tr>
+                                <th align="center">Nivel</th>
+                                <th align="center">Institución</th>
+                                <th align="center">Fecha Finalización</th>
+                                <th align="center">Estado</th>
+                            </tr>
                         </thead>
                         <tbody>
                         {% for historico in historicos %}
                             <tr>
-                                <td align="center">{{historico.denominacion_diploma}}</td>
                                 <td align="center">{{historico.nivel}}</td>
-                                <td align="center">{{historico.institucion_formacion}}</td>
-                                <td align="center">{{historico.pais_formacion}}</td>
-                                <td align="center">{{historico.fecha_comienzo}}</td>
-                                <td align="center">
-                                    {% if historico.fecha_fin == None %}
-                                        ACTUAL
-                                    {% else %}
-                                        {{historico.fecha_fin}}
-                                    {% endif %}
-                                </td>
+                                <td align="center">{{historico.institucion}}</td>
+                                <td align="center">{% if historico.fecha_finalizacion %} {{historico.fecha_finalizacion}} {%else%} Actual {%endif%}</td>
+                                <td align="center">{{historico.estado}}</td>
                                 <td align="center">
                                     <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                     <div class="modal fade" id="modal-desactivate">
@@ -116,6 +106,6 @@
     <!--DataTables [ OPTIONAL ]-->
     <script src="{{ STATIC_URL }}plugins/DataTables/js/jquery.dataTables.js"></script>
     <script src="{{ STATIC_URL }}js/validaciones/personal_apoyo/wizard-formacion-validations.js"></script>
-    <script src="{{ STATIC_URL }}js/funciones_calculos/personal_apoyo/experiencia_y_formacion.js"></script>
+    <script src="{{ STATIC_URL }}js/funciones_calculos/personal_apoyo/formacion_deportiva.js"></script>
 {% endblock %}
 

@@ -28,10 +28,16 @@
 {% endblock %}
 
 {% block js %}
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+           $(document).on('mouseenter','tr',function(e){
+               $('.add-tooltip').tooltip();
+           });
+        });
         var idTabla = "tabla-dirigentes";
         opciones = {% if perms.snd.change_dirigente %} true {% else %} false {% endif %};
-        {% if tipo_tenant == 1 or tipo_tenant == 2 %}
+        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 %}
             url = "{% url 'cargar_columnas' 7 %}";
         {% else %}
             url = "{% url 'cargar_columnas' 6 %}";

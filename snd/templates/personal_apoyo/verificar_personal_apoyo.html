@@ -46,7 +46,7 @@
                                     <div class="p-t-5 pull-right">
                                         <a href="{% url 'verificar_personal_apoyo' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a>
                                         <a href="{% url 'edicion_personal_apoyo' personal_apoyo.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este personal de apoyo</a>
-                                        <a href="{% url 'ver_personal_apoyo' personal_apoyo.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este personal de apoyo</a>
+                                        <a href="{% url 'ver_personal_apoyo' personal_apoyo.id request.tenant.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este personal de apoyo</a>
                                     </div>
                                 </p>
                         {% endif %}

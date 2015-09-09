@@ -20,7 +20,6 @@ class PersonalApoyo(models.Model):
     tipo_genero = (
         ('HOMBRE','HOMBRE'),
         ('MUJER','MUJER'),
-        ('INDEFINIDO', 'INDEFINIDO'),
     )
 
     TIPO_IDENTIDAD = (
@@ -73,6 +72,7 @@ class PersonalApoyo(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad, blank=True, verbose_name='Ciudad de residencia')
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
+    lgtbi = models.BooleanField(verbose_name='Hace parte de la comunidad LGTBI?')
     entidad = models.ForeignKey(Entidad)
 
     def __str__(self):
@@ -88,14 +88,30 @@ class PersonalApoyo(models.Model):
         return [self.foto]
 
 class FormacionDeportiva(models.Model):
-    denominacion_diploma = models.CharField(max_length=150, verbose_name='Denominación del diploma')
-    nivel = models.CharField(max_length=50, blank=True)
-    institucion_formacion = models.CharField(max_length=100, verbose_name='Institución de formación')
-    pais_formacion = models.ForeignKey(Nacionalidad)
-    fecha_comienzo = models.DateField()
-    actual = models.BooleanField(verbose_name='¿Aún en formación?',default=False)
-    fecha_fin = models.DateField(blank=True, null=True)
+    tipo_academica = (
+        ('Técnico','Técnico'),
+        ('Tecnólogo','Tecnólogo'),
+        ('Pregrado','Pregrado'),
+        ('Postgrado','Postgrado'),
+    )
+    tipo_estado = (
+        ('Actual','Actual'),
+        ('Finalizado','Finalizado'),
+        ('Incompleto','Incompleto'),
+    )
+    pais = models.ForeignKey(Nacionalidad,verbose_name='País')
+    institucion = models.CharField(max_length=100,verbose_name='Institución')
+    nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
+    estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
+    profesion =  models.CharField(max_length=100,blank=True,null=True)
+    grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     personal_apoyo = models.ForeignKey(PersonalApoyo)
+
+    def save(self, *args, **kwargs):
+        self.institucion = self.institucion.upper()
+        self.profesion = self.profesion.upper()
+        super(FormacionDeportiva, self).save(*args, **kwargs)
 
 
 class ExperienciaLaboral(models.Model):

@@ -1,11 +1,10 @@
 from django import forms
 from django.forms import ModelForm
 from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
-from coldeportes.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase,MyDateWidget
 
 
 class PersonalApoyoForm(ModelForm):
-    fecha_nacimiento = forms.DateField(widget=forms.DateInput(format = '%Y-%m-%d'), input_formats=('%Y-%m-%d',))
     def __init__(self, *args, **kwargs):
         super(PersonalApoyoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
@@ -14,11 +13,13 @@ class PersonalApoyoForm(ModelForm):
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
         self.fields['actividad'] = adicionarClase(self.fields['actividad'], 'one')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
-        self.fields['fecha_nacimiento'] = adicionarClase(self.fields['fecha_nacimiento'], 'fecha')
 
     class Meta:
         model = PersonalApoyo
         exclude = ('estado','entidad',)
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
 
 
 class VerificarExistenciaForm(forms.Form):
@@ -33,31 +34,22 @@ class VerificarExistenciaForm(forms.Form):
 
 
 class FormacionDeportivaForm(ModelForm):
+
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(FormacionDeportivaForm, self).__init__(*args, **kwargs)
-        self.fields['pais_formacion'] = adicionarClase(self.fields['pais_formacion'], 'one')
-        self.fields['fecha_comienzo'] = adicionarClase(self.fields['fecha_comienzo'], 'fecha')
-        self.fields['fecha_fin'] = adicionarClase(self.fields['fecha_fin'], 'fecha')
-
-    def clean(self):
-        fecha_comienzo = self.cleaned_data['fecha_comienzo']
-        fecha_fin = self.cleaned_data['fecha_fin']
-        if fecha_fin != None:
-            if fecha_fin < fecha_comienzo:
-                msg = "La fecha de finalización es menor a la fecha de comienzo"
-                self.add_error('fecha_comienzo', msg)
-                self.add_error('fecha_fin', msg)
+        self.fields['nivel'] = adicionarClase(self.fields['nivel'], 'one')
+        self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
+        self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
 
     class Meta:
         model = FormacionDeportiva
         exclude = ('personal_apoyo',)
 
-
 class ExperienciaLaboralForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ExperienciaLaboralForm, self).__init__(*args, **kwargs)
-        self.fields['fecha_comienzo'] = adicionarClase(self.fields['fecha_comienzo'], 'fecha')
-        self.fields['fecha_fin'] = adicionarClase(self.fields['fecha_fin'], 'fecha')
 
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_comienzo']
@@ -71,3 +63,7 @@ class ExperienciaLaboralForm(ModelForm):
     class Meta:
         model = ExperienciaLaboral
         exclude = ('personal_apoyo',)
+        widgets = {
+            'fecha_comienzo': MyDateWidget(),
+            'fecha_fin': MyDateWidget(),
+        }
