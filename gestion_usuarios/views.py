@@ -150,6 +150,7 @@ def inicio_tenant(request):
     tipoTenant = request.tenant.obtenerTenant()
     ubicaciones = tipoTenant.atributosDeSusCafs()
     ubicaciones += tipoTenant.atributosDeSusEscenarios()
+    posicionInicial = tipoTenant.posicionInicialMapa()
 
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
@@ -157,6 +158,7 @@ def inicio_tenant(request):
         'actoresAsociados': actoresAsociados,
         'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
+        'posicionInicial': json.dumps(posicionInicial),
     })
 
 

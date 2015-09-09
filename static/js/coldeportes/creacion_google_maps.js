@@ -1,4 +1,5 @@
 var datosMostrar = arrayToJson(datosMostrar);
+var posicionInicial = arrayToJson(posicionInicial);
 
 function informacion(ventana ,marker, map){
     marker.addListener('click', function() {
@@ -8,7 +9,7 @@ function informacion(ventana ,marker, map){
 
 var map;
 function initMap() {
-    var myLatLng = {lat: 3.4299548, lng: -76.5412366};
+    var myLatLng = {lat: posicionInicial[0], lng: posicionInicial[1]};
     map = new google.maps.Map(document.getElementById(mapa), {
         center: myLatLng,
         zoom: 12
@@ -18,6 +19,7 @@ function initMap() {
         var datos = datosMostrar[i];
 
         var imagen = datos[0];
+        var titulo = datos[4];
         var latitud = datos[2];
         var longitud = datos[3];
         var datos = datos[1];
@@ -48,7 +50,7 @@ function initMap() {
         var marker = new google.maps.Marker({
             position: posicion,
             map: map,
-            title: 'Escenario!'
+            title: titulo,
         });
         informacion(ventana, marker, map);
     }
