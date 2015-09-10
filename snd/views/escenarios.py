@@ -31,6 +31,7 @@ def listar_escenarios(request):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def finalizar_escenario(request, opcion):
     """
@@ -50,6 +51,7 @@ def finalizar_escenario(request, opcion):
         return redirect('listar_escenarios')
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def desactivar_escenario(request, escenario_id):
     """
@@ -71,7 +73,7 @@ def desactivar_escenario(request, escenario_id):
         messages.warning(request, "El escenario que intenta acceder no existe.")
         return redirect('listar_escenarios')
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -130,6 +132,7 @@ def ver_escenario(request, escenario_id, id_entidad):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_nuevo_identificacion(request):
     """
@@ -168,6 +171,7 @@ def wizard_nuevo_identificacion(request):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_identificacion(request, escenario_id):
     """
@@ -189,7 +193,7 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -217,6 +221,7 @@ def wizard_identificacion(request, escenario_id):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_caracterizacion(request, escenario_id):
     """
@@ -241,7 +246,7 @@ def wizard_caracterizacion(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -266,6 +271,7 @@ def wizard_caracterizacion(request, escenario_id):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_horarios(request, escenario_id):
     """
@@ -291,7 +297,7 @@ def wizard_horarios(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -317,6 +323,7 @@ def wizard_horarios(request, escenario_id):
     })
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_historicos(request, escenario_id):
     """
@@ -342,7 +349,7 @@ def wizard_historicos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -368,6 +375,7 @@ def wizard_historicos(request, escenario_id):
 
 
 @login_required
+@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_fotos(request, escenario_id):
     """
@@ -393,7 +401,7 @@ def wizard_fotos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -419,6 +427,7 @@ def wizard_fotos(request, escenario_id):
 
     
 @login_required
+@tenant_required
 def wizard_videos(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -443,7 +452,7 @@ def wizard_videos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -493,7 +502,7 @@ def wizard_contactos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(escenario)
+    non_permission = not_transferido_required(request,escenario)
     if non_permission:
         return non_permission
 
@@ -521,6 +530,7 @@ def wizard_contactos(request, escenario_id):
 
 
 @login_required
+@tenant_required
 def eliminar_horario(request, escenario_id, horario_id):
     """
     Mayo 30 / 2015
@@ -546,6 +556,7 @@ def eliminar_horario(request, escenario_id, horario_id):
 
 
 @login_required
+@tenant_required
 def eliminar_historico(request, escenario_id, historico_id):
     """
     Mayo 30 / 2015
@@ -572,6 +583,7 @@ def eliminar_historico(request, escenario_id, historico_id):
         return redirect('wizard_historicos', escenario_id)
 
 @login_required
+@tenant_required
 def eliminar_foto(request, escenario_id, foto_id):
     """
     Mayo 30 / 2015
@@ -597,6 +609,7 @@ def eliminar_foto(request, escenario_id, foto_id):
         return redirect('wizard_fotos', escenario_id)
 
 @login_required
+@tenant_required
 def eliminar_video(request, escenario_id, video_id):
     """
     Mayo 30 / 2015
@@ -622,6 +635,7 @@ def eliminar_video(request, escenario_id, video_id):
         return redirect('wizard_videos', escenario_id)
 
 @login_required
+@tenant_required
 def eliminar_contacto(request, escenario_id, contacto_id):
     """
     Mayo 30 / 2015
@@ -652,7 +666,9 @@ def georreferenciacion_escenario(request):
     import json
     tipoTenant = request.tenant.obtenerTenant()
     escenarios = tipoTenant.atributosDeSusEscenarios()
+    posicionInicial = tipoTenant.posicionInicialMapa()
     
     return render(request, 'escenarios/georreferenciacion.html', {
         'escenarios': json.dumps(escenarios),
+        'posicionInicial': json.dumps(posicionInicial),
     })

@@ -65,7 +65,7 @@ class CentroAcondicionamiento(models.Model):
             ["Longitud", self.longitud],
         ]
 
-        return [imagen, atributos, self.latitud, self.longitud]
+        return [imagen, atributos, self.latitud, self.longitud, "CAF!"]
 
 class CAPlan(models.Model):
     centro = models.ForeignKey(CentroAcondicionamiento)

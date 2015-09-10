@@ -68,8 +68,8 @@ MODELOS_DE_DATOS = (
     ),
     (
         Deportista,
-        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","disciplinas_deportivas","estado"],
-        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Disciplinas","Estado"],
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","estado"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Estado"],
         None,
         [
             [
@@ -155,8 +155,8 @@ MODELOS_DE_DATOS = (
     #MODELO DE DATOS PARA DEPORTISTAS PARA EL TENANT TIPO LIGA Y FEDERACIÓN
     (
         Deportista,
-        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","disciplinas_deportivas","entidad"],
-        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Disciplinas","Entidad"],
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","entidad"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Entidad"],
         None,
         [
             [

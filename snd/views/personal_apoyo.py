@@ -48,8 +48,6 @@ def wizard_personal_apoyo_nuevo(request):
             personal_apoyo_form.save()
             return redirect('wizard_formacion_deportiva', personal_apoyo.id)
 
-
-
     return render(request, 'personal_apoyo/wizard/wizard_personal_apoyo.html', {
         'titulo': 'Información básica',
         'wizard_stage': 1,
@@ -104,7 +102,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
     except Exception:
         personal_apoyo = None
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 
@@ -122,8 +120,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
             personal_apoyo.save()
             personal_apoyo_form.save()
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)
-
-
+        print(personal_apoyo_form.errors)
     return render(request, 'personal_apoyo/wizard/wizard_personal_apoyo.html', {
         'titulo': 'Información básica',
         'wizard_stage': 1,
@@ -158,7 +155,7 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
 
     personal_apoyo= PersonalApoyo.objects.get(id=id_personal_apoyo)
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 
@@ -169,15 +166,12 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
             formacion_deportiva.personal_apoyo = personal_apoyo
-            formacion_deportiva.denominacion_diploma = formacion_deportiva.denominacion_diploma.upper()
-            formacion_deportiva.nivel = formacion_deportiva.nivel.upper()
-            formacion_deportiva.institucion_formacion = formacion_deportiva.institucion_formacion.upper()
             formacion_deportiva.save()
             formaciondep_form.save()
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)
 
     return render(request, 'personal_apoyo/wizard/wizard_formacion_deportiva.html', {
-        'titulo': 'Información sobre la formación académica',
+        'titulo': 'Formación académica',
         'wizard_stage': 2,
         'form': formaciondep_form,
         'historicos': formacion_deportiva,
@@ -236,7 +230,7 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
 
     personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 
@@ -314,7 +308,7 @@ def desactivar_personal_apoyo(request,id_personal_apoyo):
         messages.error(request, "Error: Personal de apoyo no existe .")
         return redirect('personal_apoyo_listar')
 
-    non_permission = not_transferido_required(personal_apoyo)
+    non_permission = not_transferido_required(request,personal_apoyo)
     if non_permission:
         return non_permission
 

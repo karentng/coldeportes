@@ -12,7 +12,6 @@ class Deportista(models.Model):
     tipo_sexo = (
         ('Hombre','Hombre'),
         ('Mujer','Mujer'),
-        ('Indefinido', 'Indefinido'),
     )
     TIPO_IDENTIDAD = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
@@ -49,6 +48,7 @@ class Deportista(models.Model):
     email = models.EmailField(null=True,blank=True)
     telefono = models.CharField(max_length=100,verbose_name='Teléfono')
     direccion = models.CharField(max_length=100,verbose_name='Dirección')
+    lgtbi = models.BooleanField(verbose_name='Hace parte de la comunidad LGTBI?')
     entidad = models.ForeignKey(Entidad)
 
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Deportista")
@@ -118,6 +118,7 @@ class ComposicionCorporal(models.Model):
     porcentaje_grasa = models.FloatField(verbose_name='Porcentaje de Grasa Corporal (%)')
     masa_corporal_magra = models.FloatField(verbose_name='Masa Corporal Magra (kg)')
     eps = models.ForeignKey(EPS,verbose_name='EPS')
+    fecha_inicia_deporte = models.DateField(verbose_name='Fecha de iniciación en el deporte')
 
 
 #Hitorial deportivo

@@ -1,8 +1,9 @@
 from django import forms
 from django.forms import ModelForm
 from snd.models import *
-from datetimewidget.widgets import DateWidget
 from coldeportes.utilities import adicionarClase
+
+from coldeportes.utilities import MyDateWidget
 
 
 class DirigenteVerificarExistenciaForm(forms.Form):
@@ -37,14 +38,16 @@ class DirigenteCargosForm(ModelForm):
         dirigente_id = kwargs.pop('dirigente_id', False)
         super(DirigenteCargosForm, self).__init__(*args, **kwargs)
         self.fields['superior'] = adicionarClase(self.fields['superior'], 'one')
-        self.fields['fecha_retiro'] = adicionarClase(self.fields['fecha_retiro'], 'fecha')
-        self.fields['fecha_posesion'] = adicionarClase(self.fields['fecha_posesion'], 'fecha')
         if dirigente_id:
             self.fields['superior'].queryset = Dirigente.objects.exclude(id=dirigente_id)
 
     class Meta:
         model = DirigenteCargo
         exclude = ('dirigente',)
+        widgets = {
+            'fecha_posesion':MyDateWidget(),
+            'fecha_retiro':MyDateWidget(),
+        }
 
 class DirigenteFuncionesForm(ModelForm):
 

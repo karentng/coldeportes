@@ -60,6 +60,22 @@ def inicio(request):
         user.save()
         digitador.user_set.add(user)
 
+    entidades = Entidad.objects.all()
+    if len(entidades) == 1:#sólo debería de existir la entidad pública
+        actores1 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False)
+        actores1.save()
+        actores2 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False)
+        actores2.save()
+        ciudad = Ciudad.objects.get(id=109)#bogotá
+        comiteOlimpico = Comite(tipo=6,tipo_comite=1,nombre="Comité Olímpico Colombiano",direccion="Av. 68 # 55-65",pagina_web="http://www.coc.org.co/",telefono="571 6300093",actores=actores1,ciudad=ciudad)
+        comiteOlimpico.schema_name = 'coc'
+        comiteOlimpico.domain_url = 'coc' + settings.SUBDOMINIO_URL
+        comiteOlimpico.save()
+        comiteParalimpico = Comite(tipo=6,tipo_comite=2,nombre="Comité Paralímpico Colombiano",direccion="Calle 63 # 59a-06",pagina_web="http://comiteparalimpicocolombiano.org/",telefono="571 2319729",actores=actores2,ciudad=ciudad)
+        comiteParalimpico.schema_name = 'cpc'
+        comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
+        comiteParalimpico.save()
+
     if request.user.is_authenticated():
         # lectura y creación de vistas del directorio sql
         
@@ -133,6 +149,7 @@ def inicio_tenant(request):
     tipoTenant = request.tenant.obtenerTenant()
     ubicaciones = tipoTenant.atributosDeSusCafs()
     ubicaciones += tipoTenant.atributosDeSusEscenarios()
+    posicionInicial = tipoTenant.posicionInicialMapa()
 
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
@@ -140,6 +157,7 @@ def inicio_tenant(request):
         'actoresAsociados': actoresAsociados,
         'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
+        'posicionInicial': json.dumps(posicionInicial),
     })
 
 

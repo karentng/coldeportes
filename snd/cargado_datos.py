@@ -11,7 +11,7 @@ import json
 from operator import methodcaller
 from coldeportes.settings import STATIC_URL,MEDIA_URL
 from entidades.models import Club
-from entidades.models import Liga
+from entidades.models import Liga, LigaParalimpica
 
 
 def obtenerCantidadColumnas(request, modelo):
@@ -104,7 +104,7 @@ def evaluarCondiciones(objeto, condiciones):
     return False
 
 
-def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
+def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,request):
     datos = []
     for objeto in objetos:
         aux = []
@@ -147,7 +147,21 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
                 "url": reverse(i[1], args=parametros),
                 "imagen": i[3],
             }
-            urls.append(datosURL)
+
+            #if request.tenant.tipo == 1 or request.tenant.tipo == 2 or request.tenant.tipo == 6:
+            if request.tenant.tipo not in [3,5,4,8]:
+                #Si no es Club, Ente, Caja o Liga Paralimpica, se trabaja en el siguiente esquema
+                if objeto.__class__.__name__ == 'Dirigente' or objeto.__class__.__name__ == 'PersonalApoyo':
+                    if objeto.entidad == request.tenant:
+                        urls.append(datosURL)
+                    else:
+                        if 'ver' in datosURL['url']:
+                            urls.append(datosURL)
+                else:
+                    urls.append(datosURL)
+            else:
+                urls.append(datosURL)
+
         acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls,"objeto":objeto})
         aux.append(acciones)
 
@@ -214,6 +228,82 @@ def obtener_objetos_por_tenant(request,modelo):
                         objetos.append(objeto)
             connection.set_tenant(tenant_actual)
         return objetos
+    #tenant de tipo Comite
+    elif request.tenant.tipo == 6:
+        if modelo.__name__ == 'Seleccion':
+            objetos = []
+            #Saco los objetos propios del comite
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios del comité
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+            #federaciones del comité
+            if request.tenant.id == 2:
+                federaciones = Federacion.objects.filter(comite=request.tenant.id)
+            elif request.tenant.id == 3:
+                federaciones = FederacionParalimpica.objects.filter(comite=request.tenant.id)
+            for federacion in federaciones:
+                #saco los objetos de cada una de las federaciones pertenecientes al comité
+                connection.set_tenant(federacion)
+                ContentType.objects.clear_cache()
+                qs = modelo.objects.filter(estado=0)
+                for objeto in qs:
+                    objetos.append(objeto)
+                #obtengo las ligas de cada federación y saco los objetos de cada uno
+                if tenant_actual.id == 2:
+                    ligas = Liga.objects.filter(federacion=federacion.id)
+                elif tenant_actual.id == 3:
+                    ligas = LigaParalimpica.objects.filter(federacion=federacion.id)
+                for liga in ligas:
+                    connection.set_tenant(liga)
+                    ContentType.objects.clear_cache()
+                    qs = modelo.objects.filter(estado=0)
+                    for objeto in qs:
+                        objetos.append(objeto)
+                    #obtengo los clubes de cada liga y saco los objetos de cada uno.
+                    #aplica para ligas normales, las paralímpicas no tiene clubes
+                    if tenant_actual.id == 2:
+                        clubes = Club.objects.filter(liga=liga.id)
+                        for club in clubes:
+                            connection.set_tenant(club)
+                            ContentType.objects.clear_cache()
+                            qs = modelo.objects.filter(estado=0)
+                            for objeto in qs:
+                                objetos.append(objeto)
+            connection.set_tenant(tenant_actual)
+        return objetos
+    #Tenant de tipo Federación Paramilitar
+    elif request.tenant.tipo == 7:
+        if modelo.__name__ == 'Seleccion':
+            objetos = []
+            #Saco los objetos propios de la federacion paralimpica
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios de la federacion
+            qs = modelo.objects.all()
+            for objeto in qs:
+                objetos.append(objeto)
+            #Ligas de la federacion
+            ligas = LigaParalimpica.objects.filter(federacion=request.tenant.id)
+            for liga in ligas:
+                #saco los objetos de cada una de las ligas pertenecientes a la federación
+                connection.set_tenant(liga)
+                ContentType.objects.clear_cache()
+                qs = modelo.objects.filter(estado=0)
+                for objeto in qs:
+                    objetos.append(objeto)
+            connection.set_tenant(tenant_actual)
+        return objetos
     else:
         #Este es para el caso en que sea un club o el resto de entidades las cuales tienen acceso a los datos propios de su entidad solamente
         objetos = modelo.objects.all()
@@ -250,13 +340,13 @@ def obtenerDatos(request, modelo):
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
 
-    if request.tenant.tipo == 1 or request.tenant.tipo == 2:
+    if request.tenant.tipo in [1,2,6,7]:
         multiples_tenant = True
     else:
         multiples_tenant = False
 
     objetos = definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion, multiples_tenant)
-    datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones)
+    datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,request)
     
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
 
@@ -302,7 +392,6 @@ def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actua
 
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
     busqueda = busqueda.split(" ")
-
     #Cuando el tipo de tenant es una liga hay que ejecutar las busquedas dentro de la liga y dentro de sus clubes
     if request.tenant.tipo == 1:
         if modeloTipo.__name__ == 'Seleccion':
@@ -353,6 +442,62 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                     for objeto in qs:
                         objetos.append(objeto)
             return objetos
+    elif request.tenant.tipo == 6:
+        if modeloTipo.__name__ == 'Seleccion':
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios del comite
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+            #Buscar en cada una de las federaciones
+            federaciones = Federacion.objects.filter(comite=tenant_actual)
+            for federacion in federaciones:
+                qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,federacion,tenant_actual)
+                for objeto in qs:
+                    objetos.append(objeto)
+                #se busca en los ligas de cada una de las federaciones
+                ligas = Liga.objects.filter(federacion=federacion.id)
+                for liga in ligas:
+                    qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,liga,tenant_actual)
+                    for objeto in qs:
+                        objetos.append(objeto)
+                    #Buscar en los clubes de cada liga
+                    clubes = Club.objects.filter(liga=liga.id)
+                    for club in clubes:
+                        qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
+                        for objeto in qs:
+                            objetos.append(objeto)
+            return objetos
+    #Cuando el tipo de tenant es una federación paralimpica
+    # hay que ejecutar las busquedas dentro de la federación, dentro de sus ligas
+    elif request.tenant.tipo == 7:
+        if modeloTipo.__name__ == 'Seleccion':
+            objetos = []
+            tenant_actual = request.tenant
+            #Saco los objetos propios de la federacion paralimpica
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+        else:
+            objetos = []
+            tenant_actual = request.tenant
+            qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_actual,tenant_actual)
+            for objeto in qs:
+                objetos.append(objeto)
+            #Buscar en cada una de las ligas
+            ligas = LigaParalimpica.objects.filter(federacion=tenant_actual)
+            for liga in ligas:
+                qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,liga,tenant_actual)
+                for objeto in qs:
+                    objetos.append(objeto)
+            return objetos
     else:
         objetos = ejecutar_busqueda(modeloTipo,atributos,busqueda,request.tenant,request.tenant)
         return objetos
@@ -371,7 +516,6 @@ def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion,multiples_
                 llave = operator.attrgetter(columna)
             else:
                 llave = methodcaller('__str__')
-
         objetos_procesados = sorted(objetos, key=llave, reverse=orden)
         return objetos_procesados[inicio:fin]
     else:

@@ -44,7 +44,7 @@
                                 <div class="p-t-5 pull-right">
                                     <a href="{% url 'verificar_deportista' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a>
                                     <a href="{% url 'edicion_deportista' deportista.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este deportista</a>
-                                    <a href="{% url 'ver_deportista' deportista.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este deportista</a>
+                                    <a href="{% url 'ver_deportista' deportista.id request.tenant.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este deportista</a>
                                 </div>
                             </p>
                     {% endif %}

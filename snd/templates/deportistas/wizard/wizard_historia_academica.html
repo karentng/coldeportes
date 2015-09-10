@@ -47,14 +47,14 @@
                 </form>
             </fieldset> 
             <div class="col-md-5">
-                <h4>Historial Académico Registrado:</h4>
+                <h4>Formación académica registrada:</h4>
                 <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th align="center">Nivel</th>
-                            <th align="center">Institucion</th>
-                            <th align="center">Fecha Finalizacion</th>
+                            <th align="center">Institución</th>
+                            <th align="center">Fecha Finalización</th>
                             <th align="center">Estado</th>
                         </tr>
                     </thead>
@@ -95,7 +95,7 @@
         <br/>
         <hr/>
         {% if wizard_stage > 1 %}
-        <a href="{% url 'wizard_historia_deportiva' id_depor %}" class="btn btn-success pull-left" type="button">← Anterior</a>
+        <a href="{% url 'wizard_historia_deportiva' id_depor %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
         <!--input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" /-->
         {% endif %}     
         <a href="{% url 'finalizar_deportista' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>

@@ -30,37 +30,93 @@
 
 {% block contenido_panel %}
 	{% include 'personal_apoyo/wizard/_wizard.html' %}
-	<fieldset>
-		<form action="" id="form-wizard-personal-apoyo" enctype="multipart/form-data" method="post">
+    <form action="" id="form-wizard-personal-apoyo" enctype="multipart/form-data" method="post">
+        <fieldset>
 			{% csrf_token %}
-			<div class="well row">
-				<div class="col-lg-12">
-					<h3>{{titulo}}</h3>
-					{% for i in form %}
-                        {% if forloop.counter|divisibleby:"2" %}
-                                <div class="col-md-4 col-md-offset-1">
-                                {% bootstrap_field i layout="vertical" %}
-                                </div>
+            <div class="col-xs-12">
+                <h3>{{titulo}}</h3>
+                <div class="well row">
+                    <strong><h4>Identificación</h4></strong>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% bootstrap_field form.actividad layout="vertical" %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.nombres layout="vertical" %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% bootstrap_field form.apellidos layout="vertical" %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.tipo_id layout="vertical" %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% bootstrap_field form.identificacion layout="vertical" %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.fecha_nacimiento layout="vertical" %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% bootstrap_field form.foto layout="vertical" %}
+                        </div>
+                        <div class="col-md-6">
+                        {% bootstrap_field form.nacionalidad layout="vertical" %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {%  bootstrap_field form.genero layout='vertical' %}
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <strong><h4>Ubicación</h4></strong>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% bootstrap_field form.telefono_fijo layout="vertical" %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.telefono_celular layout="vertical" %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.correo_electronico layout="vertical" %}
+                        </div>
+                        <div class="col-md-6">
+                            {% bootstrap_field form.ciudad layout="vertical" %}
+                        </div>
+                    </div>
+                    <hr>
+                    <strong><h4>Información Personal <i class="fa fa-info-circle add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="El usuario es libre de responder o no esta información"></i></h4></strong>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% bootstrap_field form.etnia layout="vertical" %}
+                        </div>
+                        <div class="col-md-6 p-t-10">
+                            <div class="checkbox checkbox-primary">
+                                {% bootstrap_field form.lgtbi layout="vertical" %}
                             </div>
-                        {% else %}
-                            <div class="row">
-                                <div class="col-md-4 col-md-offset-1">
-                                    {% bootstrap_field i layout="vertical" %}
-                                </div>
-                            {% if forloop.last %}
-                                </div>
-                            {% endif %} 
-                        {% endif %}
-					{% endfor %}
-				</div>
-			</div>
-			<hr>
-			{% if wizard_stage > 1 %}
-			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-			{% endif %}
-			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
-		</form>
-	</fieldset>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            {% if wizard_stage > 1 %}
+                            <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+                            {% endif %}
+                            <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+                        </div>
+                    </div>
+			    </div>
+            </div>
+        </fieldset>
+    </form>
+
 
 
 {% endblock %}
