@@ -35,14 +35,16 @@ class Dirigente(models.Model):
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(choices=TIPO_GENERO,max_length=6, verbose_name='Género')
-    telefono = models.CharField(max_length=100, verbose_name="Teléfono")
-    email = models.EmailField(null=True,blank=True)
     nacionalidad = models.ManyToManyField(Nacionalidad)
+    telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
+    telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
+    email = models.EmailField(null=True,blank=True)
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
-    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="Estado del dirigente")
     foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
     perfil = models.TextField(max_length=500, verbose_name="Perfil profesional")
+
     entidad = models.ForeignKey(Entidad, null=True, blank=True)
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="Estado del dirigente")
 
     def __str__(self):
         return "{0} {1}".format(self.nombres, self.apellidos)
@@ -77,6 +79,6 @@ class DirigenteCargo(models.Model):
 class DirigenteFuncion(models.Model):
     dirigente = models.ForeignKey(Dirigente)
     cargo = models.ForeignKey(DirigenteCargo)
-    descripcion = models.TextField(max_length=200, verbose_name="Función")
+    descripcion = models.TextField(max_length=500, verbose_name="Función")
 
 
