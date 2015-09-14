@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from normograma.forms import NormaForm
 
 # Create your views here.
@@ -12,7 +12,7 @@ def registrar(request):
         if norma_form.is_valid():
             norma_form.save()
             
-            return redirect('listar_escenario')
+            return redirect('listar_escenarios')
 
 
     return render(request, 'normograma_registrar.html', {
