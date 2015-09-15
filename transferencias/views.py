@@ -222,32 +222,11 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
     depor.estado = 3
     depor.entidad = entidad_saliente
     depor.save()
-    new_obj = depor
-
-    #print(objeto)
-    #print(connection.tenant)
-    #print(objeto.identificacion)
-    #print(objeto.__dict__)
-    #print('new')
-    #print(depor)
-    """if tipo_objeto=='Deportista' or tipo_objeto=='PersonalApoyo':
-        new_obj, created = Deportista.objects.update_or_create(
-            identificacion = objeto.identificacion,
-            tipo_id = objeto.tipo_id,
-            defaults = objeto.__dict__
-        )
-        print(created)
-
-    else:
-        new_obj, created =  objeto.__class__.objects.update_or_create(
-            nombre=objeto.nombre,
-            defaults=objeto.__dict__
-        )"""
-    new_obj.tipo_objeto = new_obj.__class__.__name__
-    new_obj.fecha = datetime.date.today()
+    depor.tipo_objeto = depor.__class__.__name__
+    depor.fecha = datetime.date.today()
 
     return render(request,'transferencia_exitosa.html',{
-        'objeto': new_obj
+        'objeto': depor
     })
 
 def guardar_objeto(objeto,adicionales,tipo):
@@ -315,124 +294,6 @@ def guardar_objeto(objeto,adicionales,tipo):
                     defaults=diccionario
                 )
         return deportista
-    elif tipo == 'PersonalApoyo':
-
-        nacionalidades_obj = objeto.nacionalidades_obj
-
-        #Diccionario para defaults
-        obj_dict = objeto.__dict__
-        del obj_dict['id']
-        del obj_dict['nacionalidades_obj']
-        del obj_dict['_state']
-        del obj_dict['_entidad_cache']
-        #Fin diccionario
-
-        personal_apoyo, created = PersonalApoyo.objects.update_or_create(
-            identificacion=objeto.identificacion,
-            defaults= obj_dict,
-        )
-
-        for na in nacionalidades_obj:
-            personal_apoyo.nacionalidad.add(na)
-
-        for ad in adicionales:
-            diccionario = ad.__dict__
-            del diccionario['id']
-            del diccionario['_state']
-            del diccionario['personal_apoyo_id']
-            if type(ad) is FormacionDeportiva:
-                FormacionDeportiva.objects.update_or_create(
-                    personal_apoyo=personal_apoyo,
-                    denominacion_diploma=ad.denominacion_diploma,
-                    defaults=diccionario
-                )
-            else:
-                ExperienciaLaboral.objects.update_or_create(
-                    personal_apoyo=personal_apoyo,
-                    nombre_cargo=ad.nombre_cargo,
-                    defaults=diccionario
-                )
-        return personal_apoyo
-    elif tipo == 'Escenario':
-
-        #Diccionario para defaults
-        obj_dict = objeto.__dict__
-        del obj_dict['id']
-        del obj_dict['_entidad_cache']
-        del obj_dict['_state']
-        #Fin diccionario
-
-        escenario, created = Escenario.objects.update_or_create(
-            nombre=objeto.nombre,
-            defaults= obj_dict,
-        )
-        for ad in adicionales:
-            diccionario = ad.__dict__
-            del diccionario['id']
-            del diccionario['_state']
-            del diccionario['escenario_id']
-            if type(ad) is CaracterizacionEscenario:
-                tipo_disciplinas_obj = ad.tipo_disciplinas_obj
-                tipo_superficie_juego_obj= ad.tipo_superficie_juego_obj
-                caracteristicas_obj=ad.caracteristicas_obj
-                clase_uso_obj=ad.clase_uso_obj
-
-                del diccionario['tipo_disciplinas_obj']
-                del diccionario['tipo_superficie_juego_obj']
-                del diccionario['caracteristicas_obj']
-                del diccionario['clase_uso_obj']
-
-                caracterizacion, created = CaracterizacionEscenario.objects.update_or_create(
-                    escenario=escenario,
-                    defaults=diccionario
-                )
-                for tipo_d in tipo_disciplinas_obj:
-                    caracterizacion.tipo_disciplinas.add(tipo_d)
-                for tipo_super in tipo_superficie_juego_obj:
-                    caracterizacion.tipo_superficie_juego.add(tipo_super)
-                for carac in caracteristicas_obj:
-                    caracterizacion.caracteristicas.add(carac)
-                for clase_uso in clase_uso_obj:
-                    caracterizacion.clase_uso.add(clase_uso)
-
-            elif type(ad) is HorarioDisponibilidad:
-                dias_obj = ad.dias_obj
-
-                del diccionario['dias_obj']
-
-                horario, created = HorarioDisponibilidad.objects.update_or_create(
-                    escenario=escenario,
-                    descripcion=ad.descripcion,
-                    defaults=diccionario
-                )
-
-                for di in dias_obj:
-                    horario.dias.add(di)
-            elif type(ad) is Foto:
-                Foto.objects.update_or_create(
-                    escenario=escenario,
-                    foto=ad.foto,
-                    defaults=diccionario
-                )
-            elif type(ad) is Video:
-                Video.objects.update_or_create(
-                    escenario=escenario,
-                    url=ad.url,
-                    defaults=diccionario
-                )
-            elif type(ad) is DatoHistorico:
-                DatoHistorico.objects.update_or_create(
-                    escenario=escenario,
-                    descripcion=ad.descripcion,
-                    defaults=diccionario
-                )
-            elif type(ad) is Contacto:
-                Contacto.objects.update_or_create(
-                    escenario=escenario,
-                    nombre=ad.nombre,
-                    defaults=diccionario
-                )
-        return escenario
 
 def obtener_objeto(id_obj,tipo_objeto):
     """
@@ -463,44 +324,6 @@ def obtener_objeto(id_obj,tipo_objeto):
         adicionales += ComposicionCorporal.objects.filter(deportista=objeto)
         adicionales += HistorialDeportivo.objects.filter(deportista=objeto)
         adicionales += InformacionAcademica.objects.filter(deportista=objeto)
-
-    elif tipo_objeto == 'PersonalApoyo':
-
-        objeto = PersonalApoyo.objects.get(id=id_obj)
-
-        #Obtener muchos a muchos y guardarlos como attr apartes
-        objeto.nacionalidades_obj = [a for a in objeto.nacionalidad.all()]
-        #Fin obtener muchos a muchos y guardarlos como attr apartes
-
-        adicionales += FormacionDeportiva.objects.filter(personal_apoyo=objeto)
-        adicionales += ExperienciaLaboral.objects.filter(personal_apoyo=objeto)
-
-    elif tipo_objeto == 'Escenario':
-
-        objeto = Escenario.objects.get(id=id_obj)
-
-        #Sacar y asignar muchos a muchos caracterizacion
-        caracterizaciones = CaracterizacionEscenario.objects.filter(escenario=objeto)
-        for car in caracterizaciones:
-            car.tipo_disciplinas_obj = [x for x in car.tipo_disciplinas.all()]
-            car.tipo_superficie_juego_obj = [x for x in car.tipo_superficie_juego.all()]
-            car.caracteristicas_obj = [x for x in car.caracteristicas.all()]
-            car.clase_uso_obj = [x for x in car.clase_uso.all()]
-        #Fin sacar y asignar m2m caracteristicas
-
-        adicionales += caracterizaciones
-
-        #Sacar y asignar m2m a horarios
-        horarios = HorarioDisponibilidad.objects.filter(escenario=objeto)
-        for h in horarios:
-            h.dias_obj = [x for x in h.dias.all()]
-        #Fin sacar y asignar m2ma horarios
-
-        adicionales += horarios
-        adicionales += Foto.objects.filter(escenario=objeto)
-        adicionales += Video.objects.filter(escenario=objeto)
-        adicionales += DatoHistorico.objects.filter(escenario=objeto)
-        adicionales += Contacto.objects.filter(escenario=objeto)
 
     return objeto,adicionales
 
