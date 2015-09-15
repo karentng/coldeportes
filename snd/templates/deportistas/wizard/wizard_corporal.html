@@ -9,6 +9,11 @@
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
 	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__rendered{
+            font-size: 12px;
+        }
+    </style>
 {% endblock %}
 
 {% block miga_pan %}
