@@ -505,7 +505,7 @@ def obtener_objeto(id_obj,tipo_objeto):
     return objeto,adicionales
 
 @login_required
-def cancelar_transferencia(request,id_objeto,tipo_objeto):
+def cancelar_transferencia(request,id_objeto):
     """
     Julio 21, 2015
     Autor: Daniel Correa
@@ -521,22 +521,11 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
     :type tipo_objeto: string
     """
 
-    objeto = ''
-    if tipo_objeto=='1':
-        objeto = 'Deportista'
-        redir = 'deportista_listar'
-    elif tipo_objeto=='2':
-        objeto='PersonalApoyo'
-        redir='personal_apoyo_listar'
-    elif tipo_objeto=='3':
-        objeto='Escenario'
-        redir='listar_escenarios'
-
     try:
-        obj_trans = globals()[objeto].objects.get(id=id_objeto)
+        obj_trans = Deportista.objects.get(id=id_objeto)
     except:
-        messages.error(request,'Error: No se puede procesar la solicitud, '+objeto+' no existe')
-        return redirect(redir)
+        messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
+        return redirect('deportista_listar')
 
     obj_trans.estado = 0
     obj_trans.save()
@@ -546,11 +535,11 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
     for ent in entidades:
         connection.set_tenant(ent)
         ContentType.objects.clear_cache()
-        trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto=objeto)
+        trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
         if len(trans) != 0:
             trans.delete()
             messages.success(request,'Tranferencia cancelada exitosamente')
-            return redirect(redir)
+            return redirect('deportista_listar')
 
     messages.error(request,'Error: No existe la transferencia solicitada')
-    return redirect(redir)
+    return redirect('deportista_listar')

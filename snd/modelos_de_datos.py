@@ -138,7 +138,7 @@ MODELOS_DE_DATOS = (
             [
                 "Cancelar Transferencia",
                 'cancelar_transferencia',
-                ['id','1'],
+                ['id'],
                 'fa-times',
                 [
                     [
