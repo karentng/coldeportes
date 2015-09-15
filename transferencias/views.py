@@ -226,23 +226,25 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
     :param transferencia: objeto transferencia
     :return: render con la pagina de aprobación
     """
-    #transferencia.estado = 'Aprobada'
-    #transferencia.save()
+    transferencia.estado = 'Aprobada'
+    transferencia.save()
 
     connection.set_tenant(entidad_saliente)
     ContentType.objects.clear_cache()
 
-    objeto.estado = 3
-    objeto.entidad = entidad_saliente
+    depor = Deportista.objects.get(identificacion=objeto.identificacion,tipo_id = objeto.tipo_id)
+    depor.estado = 3
+    depor.entidad = entidad_saliente
+    depor.save()
+    new_obj = depor
 
-    print(objeto)
-    print(connection.tenant)
-    print(objeto.identificacion)
-    print(objeto.__dict__)
-    print('new')
-    depor = Deportista.objects.get(identificacion=objeto.identificacion)
-    print(depor)
-    if tipo_objeto=='Deportista' or tipo_objeto=='PersonalApoyo':
+    #print(objeto)
+    #print(connection.tenant)
+    #print(objeto.identificacion)
+    #print(objeto.__dict__)
+    #print('new')
+    #print(depor)
+    """if tipo_objeto=='Deportista' or tipo_objeto=='PersonalApoyo':
         new_obj, created = Deportista.objects.update_or_create(
             identificacion = objeto.identificacion,
             tipo_id = objeto.tipo_id,
@@ -254,7 +256,7 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
         new_obj, created =  objeto.__class__.objects.update_or_create(
             nombre=objeto.nombre,
             defaults=objeto.__dict__
-        )
+        )"""
     new_obj.tipo_objeto = new_obj.__class__.__name__
     new_obj.fecha = datetime.date.today()
 
@@ -291,7 +293,7 @@ def guardar_objeto(objeto,adicionales,tipo):
             defaults= obj_dict,
         )
 
-        """for na in nacionalidades_obj:
+        for na in nacionalidades_obj:
             deportista.nacionalidad.add(na)
 
         for di in disciplinas_obj:
@@ -325,7 +327,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                 ComposicionCorporal.objects.update_or_create(
                     deportista=deportista,
                     defaults=diccionario
-                )"""
+                )
         return deportista
     elif tipo == 'PersonalApoyo':
 
