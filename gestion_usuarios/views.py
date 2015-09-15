@@ -13,7 +13,6 @@ from django.contrib.contenttypes.models import ContentType
 from gestion_usuarios.models import PERMISOS_DIGITADOR
 from django.db.models import Q
 from coldeportes.utilities import permisosPermitidos
-from directorio.inicializacion_vistas_directorio import crear_vistas
 from directorio.models import * 
 
 

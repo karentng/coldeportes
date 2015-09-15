@@ -20,6 +20,6 @@ class Norma(models.Model):
     norma =  models.CharField(max_length=100,unique=True)
     sector = models.CharField(choices=sectores, max_length=1)
     año = models.IntegerField(default=0, verbose_name="año")
+    archivo = models.FileField(upload_to=foto_name, null=True, blank=True)
     descripcion = models.TextField(max_length=1024, verbose_name='descripción', null=True)
     palabras_clave = models.TextField(max_length=1024, verbose_name='palabras clave')
-    foto = models.FileField(upload_to=foto_name, null=True, blank=True)

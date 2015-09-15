@@ -23,6 +23,8 @@ class DirigenteForm(ModelForm):
         super(DirigenteForm, self).__init__(*args, **kwargs)
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
         self.fields['ciudad_residencia'] = adicionarClase(self.fields['ciudad_residencia'], 'one')
+        self.fields['tipo_identificacion'] = adicionarClase(self.fields['tipo_identificacion'], 'one')
+        self.fields['genero'] = adicionarClase(self.fields['genero'], 'one')
         self.fields['perfil'].widget.attrs['rows'] = 3
 
 
@@ -38,6 +40,7 @@ class DirigenteCargosForm(ModelForm):
         dirigente_id = kwargs.pop('dirigente_id', False)
         super(DirigenteCargosForm, self).__init__(*args, **kwargs)
         self.fields['superior'] = adicionarClase(self.fields['superior'], 'one')
+        self.fields['superior_cargo'] = adicionarClase(self.fields['superior_cargo'], 'one')
         if dirigente_id:
             self.fields['superior'].queryset = Dirigente.objects.exclude(id=dirigente_id)
 
@@ -62,6 +65,7 @@ class DirigenteFuncionesForm(ModelForm):
             self.fields['cargo'].queryset=DirigenteCargo.objects.filter(dirigente=dirigente_id)
             self.fields['dirigente'].widget = forms.HiddenInput()
             self.fields['dirigente'].initial = dirigente_id
+            self.fields['cargo'] = adicionarClase(self.fields['cargo'], 'one')
         if cargo_id:
             self.fields['cargo'].initial = cargo_id
 

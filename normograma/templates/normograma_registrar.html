@@ -11,15 +11,35 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    <i class="fa fa-phone-square"></i> Registro de Norma
+    <i class="fa fa-qrcode"></i> Registro de Norma
 {% endblock %}
 
 {% block panel_botones %}
 {% endblock %}
 
-{% block contenido %}
+{% block contenido_panel %}
 
-
+<fieldset>
+    <form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
+        <div class="well row">
+            <div class="col-xs-12">
+                <h3>Nueva Norma:</h3>
+                
+                {% for field in form %}
+                    <div class="col-md-6">
+                        
+                        {% bootstrap_field field layout="vertical" %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        {% if wizard_stage > 1 %}
+        <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back(); " />
+        {% endif %}     
+        <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+    </form>
+</fieldset>
 
 {% endblock %}
 {% block css %}

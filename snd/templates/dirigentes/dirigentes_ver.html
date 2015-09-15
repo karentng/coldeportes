@@ -20,10 +20,6 @@
         list-style: none;
         display: list-item;
         line-height: 20px;
-        font-size: 12px;
-    }
-    .funciones li:before {
-        margin-right: 10px;
     }
     </style>
 {% endblock %}
@@ -173,7 +169,7 @@
                                                         <strong>Funciones del Cargo</strong>
                                                         <ul class="funciones">
                                                             {% for funcion in cargo.funciones %}
-                                                                <li class="fa fa-lg fa-tag">{{funcion.descripcion}}</li>
+                                                                <li><span class="fa fa-lg fa-tag">&nbsp;&nbsp;</span>{{funcion.descripcion}}</li>
                                                             {% endfor %}
                                                         </ul>
                                                     </div>
