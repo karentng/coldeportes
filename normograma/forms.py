@@ -4,14 +4,14 @@ from normograma.models import *
 from coldeportes.utilities import adicionarClase
 from django.forms.extras.widgets import SelectDateWidget
 
-
-class NormaForm(forms.ModelForm):
-    sectores = (
+SECTORES = (
         ('D', 'Deporte'),
         ('E', 'Educación Física'),
         ('R', 'Recreación'),
     )
-    sector = forms.MultipleChoiceField(label="Sector", widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=sectores)
+class NormaForm(forms.ModelForm):
+    
+    sector = forms.MultipleChoiceField(label="Sector", widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=SECTORES)
 
     def __init__(self, *args, **kwargs):
         super(NormaForm, self).__init__(*args, **kwargs)
@@ -22,3 +22,12 @@ class NormaForm(forms.ModelForm):
     class Meta:
         model = Norma
         fields = '__all__'
+
+class NormogramaBusquedaForm(forms.Form):
+
+    texto_a_buscar = forms.CharField(required=False, label="Búsqueda", widget=forms.TextInput(attrs={'placeholder': 'Ingrese úna búsqueda'}))
+    sector = forms.MultipleChoiceField(label="Sector", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=SECTORES)
+
+    def __init__(self, *args, **kwargs):
+        super(NormogramaBusquedaForm, self).__init__(*args, **kwargs)
+        self.fields['sector'] = adicionarClase(self.fields['sector'], 'many')
