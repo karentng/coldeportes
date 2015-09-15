@@ -12,7 +12,7 @@ import datetime
 from coldeportes.utilities import calculate_age,not_transferido_required
 # Create your views here.
 @login_required
-def generar_transferencia(request,tipo_transfer,tipo_persona,id):
+def generar_transferencia(request,id):
     """
     Julio 15, 2015
     Autor: Daniel Correa
@@ -34,27 +34,12 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
 
     if entidad_solicitante.tipo == 3:
         entidades = Entidad.objects.filter(tipo=3).exclude(nombre__in=['publico',entidad_solicitante.nombre])
-    elif entidad_solicitante.tipo == 5:
-        entidades = Entidad.objects.filter(tipo=5).exclude(nombre__in=['publico',entidad_solicitante.nombre])
     else:
         messages.error(request,'Usted se encuentra en una seccion que no le corresponde')
         return redirect('inicio_tenant')
 
-    redir = ''
-    tipo_objeto = ''
-    if tipo_transfer=='1': #Transferencia de personas
-        if tipo_persona=='1': #Transferencia de deportistas
-            tipo_objeto='Deportista'
-            redir='deportista_listar'
-        elif tipo_persona=='2': #Transferencia de personal_apoyo
-            tipo_objeto='PersonalApoyo'
-            redir='personal_apoyo_listar'
-    elif tipo_transfer=='2': #Transferencia de escenarios
-        tipo_objeto='Escenario'
-        redir='listar_escenarios'
-
     try:
-        objeto = globals()[tipo_objeto].objects.get(id=id)
+        objeto = Deportista.objects.get(id=id)
     except:
         messages.error(request,'Error, no existe objeto transferible')
 
@@ -63,18 +48,19 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         return non_permission
 
     objeto.fecha = datetime.date.today()
-    objeto.tipo_objeto = tipo_objeto
+    objeto.tipo_objeto = objeto.__class__.__name__
 
     if request.method == 'POST':
         id_entidad_cambio = request.POST['entidad']
         entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
         connection.set_tenant(entidad_cambio)
         ContentType.objects.clear_cache()
-        transferencia = Transferencia()
-        transferencia.entidad = entidad_solicitante
-        transferencia.fecha_solicitud = objeto.fecha
-        transferencia.id_objeto = objeto.id
-        transferencia.tipo_objeto = objeto.tipo_objeto
+        transferencia = Transferencia(
+            entidad=entidad_solicitante,
+            fecha_solicitud = objeto.fecha,
+            id_objeto = objeto.id,
+            tipo_objeto = objeto.tipo_objeto
+        )
         transferencia.save()
         #Cambiar estado de objeto a "En Transferencia"
         connection.set_tenant(request.tenant)
@@ -83,7 +69,7 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         objeto.save()
         #
         messages.success(request,'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud')
-        return redirect(redir)
+        return redirect('deportista_listar')
 
     return render(request,'generar_transferencia.html',{
         'entidades' : entidades,
