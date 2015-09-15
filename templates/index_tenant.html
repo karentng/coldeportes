@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Inicio - SND COLDEPORTES
+    Inicio - SIND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -82,6 +82,7 @@
     </script>
     <script type="text/javascript">
         datosMostrar = "{{ubicaciones}}";
+        posicionInicial = "{{posicionInicial}}";
         mapa = "mapa";
     </script>
     <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/creacion_google_maps.js"></script>

@@ -65,7 +65,7 @@ class Escenario(models.Model):
             ["Longitud", self.longitud],
         ]
 
-        return [imagen, atributos, self.latitud, self.longitud]
+        return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
 
 class CaracterizacionEscenario(models.Model):   
     accesos = (

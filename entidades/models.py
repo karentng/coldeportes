@@ -80,8 +80,10 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo= FederacionParalimpica
         elif self.tipo == 8:
             modelo = LigaParalimpica
-        
-        return modelo.objects.get(id=self.id)
+        try:
+            return modelo.objects.get(id=self.id)
+        except Exception:
+            return self
 
     def seleccionable(self):
         if self.tipo in [1, 2]:
@@ -131,6 +133,21 @@ class Entidad(TenantMixin): # Entidad deportiva
         datos = obtenerTodos(actores.dirigentes, Dirigente, "Dirigentes", datos, "purple", "dirigentes_listar")
         datos = obtenerTodos(actores.cajas, CajaCompensacion, "Cajas de Compensación", datos, "black", "listar_ccfs")
         return datos
+
+    def posicionInicialMapa(self):
+        tenant = self.obtenerTenant()
+        try:
+            ciudad = tenant.ciudad
+            coordenadas = [ciudad.latitud, ciudad.longitud]
+        except Exception:
+            try:
+                departamento = tenant.departamento
+                coordenadas = [departamento.latitud, departamento.longitud]
+            except Exception:
+                ciudad = Ciudad.objects.get(nombre="Bogotá D.C.")
+                coordenadas = [ciudad.latitud, ciudad.longitud]
+
+        return coordenadas
 
     def __str__(self):
         return self.nombre
