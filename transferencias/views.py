@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
 from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
+from snd.formularios.deportistas import  DeportistaForm
 from .models import Transferencia
 import datetime
 from coldeportes.utilities import calculate_age,not_transferido_required
@@ -225,8 +226,8 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
     :param transferencia: objeto transferencia
     :return: render con la pagina de aprobación
     """
-    transferencia.estado = 'Aprobada'
-    transferencia.save()
+    #transferencia.estado = 'Aprobada'
+    #transferencia.save()
 
     connection.set_tenant(entidad_saliente)
     ContentType.objects.clear_cache()
@@ -234,11 +235,21 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
     objeto.estado = 3
     objeto.entidad = entidad_saliente
 
+    print(objeto)
+    print(connection.tenant)
+    print(objeto.identificacion)
+    print(objeto.__dict__)
+    print('new')
+    depor = Deportista.objects.get(identificacion=objeto.identificacion)
+    print(depor)
     if tipo_objeto=='Deportista' or tipo_objeto=='PersonalApoyo':
-        new_obj, created = objeto.__class__.objects.update_or_create(
+        new_obj, created = Deportista.objects.update_or_create(
             identificacion = objeto.identificacion,
-            defaults=objeto.__dict__
+            tipo_id = objeto.tipo_id,
+            defaults = objeto.__dict__
         )
+        print(created)
+
     else:
         new_obj, created =  objeto.__class__.objects.update_or_create(
             nombre=objeto.nombre,
@@ -280,7 +291,7 @@ def guardar_objeto(objeto,adicionales,tipo):
             defaults= obj_dict,
         )
 
-        for na in nacionalidades_obj:
+        """for na in nacionalidades_obj:
             deportista.nacionalidad.add(na)
 
         for di in disciplinas_obj:
@@ -314,7 +325,7 @@ def guardar_objeto(objeto,adicionales,tipo):
                 ComposicionCorporal.objects.update_or_create(
                     deportista=deportista,
                     defaults=diccionario
-                )
+                )"""
         return deportista
     elif tipo == 'PersonalApoyo':
 

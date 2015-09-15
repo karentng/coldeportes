@@ -116,9 +116,26 @@ fields = {
                         message:'Por favor seleccione una EPS, si no este en la lista seleccione Otra'
                     }
                 }
+            },
+            fecha_inicia_deporte: {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de iniciación en el deporte no puede ser vacía'
+                    },
+                    date: {
+					    message: 'El valor ingresado no es una fecha válida',
+                        format: 'YYYY-MM-DD'
+
+				    }
+                }
             }
 
 
         };
+
+//Revalidar campos al ser actualizados
+    $("#id_fecha_inicia_deporte").on('change',function(e){
+        $(form).bootstrapValidator('revalidateField', 'fecha_inicia_deporte');
+    });
 
 $.getScript(base+"js/validaciones/validations-base.js");
