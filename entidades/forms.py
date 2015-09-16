@@ -7,6 +7,7 @@ from coldeportes.utilities import adicionarClase
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
@@ -34,6 +35,7 @@ class LigaForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
 
 class FederacionForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
@@ -52,6 +54,7 @@ class FederacionForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion',)
 
 class ClubForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
@@ -70,6 +73,7 @@ class ClubForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
 
 class CajaDeCompensacionForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
@@ -87,6 +91,7 @@ class CajaDeCompensacionForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class EnteForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="URL dentro del SIND", required=True)
 
     def __init__(self, *args, **kwargs):
@@ -104,6 +109,7 @@ class EnteForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class ComiteForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="Entidad", required=True)
 
     def __init__(self, *args, **kwargs):
@@ -121,6 +127,7 @@ class ComiteForm(forms.ModelForm):
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class FederacionParalimpicaForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="Entidad", required=True)
 
     def __init__(self, *args, **kwargs):
@@ -140,6 +147,7 @@ class FederacionParalimpicaForm(forms.ModelForm):
 
 
 class LigaParalimpicaForm(forms.ModelForm):
+    required_css_class = 'required'
     pagina = forms.CharField(label="Entidad", required=True)
 
     def __init__(self, *args, **kwargs):

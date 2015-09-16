@@ -4,6 +4,7 @@ from snd.models import *
 from coldeportes.utilities import adicionarClase
 
 class CentroAcondicionamientoForm(forms.ModelForm):
+    required_css_class = 'required'
     def __init__(self, *args, **kwargs):
         super(CentroAcondicionamientoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
@@ -15,6 +16,7 @@ class CentroAcondicionamientoForm(forms.ModelForm):
         exclude = ('entidad', 'clases', 'servicios',)
 
 class CAPlanForm(forms.ModelForm):
+    required_css_class = 'required'
     def __init__(self, *args, **kwargs):
         super(CAPlanForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
@@ -47,6 +49,7 @@ class CAServiciosForm(forms.ModelForm):
         }
 
 class CAFotoForm(forms.ModelForm):
+    required_css_class = 'required'
     class Meta:
         model = CAFoto
         exclude = ('centro',)
