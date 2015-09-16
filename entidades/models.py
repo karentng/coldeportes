@@ -56,6 +56,7 @@ class Entidad(TenantMixin): # Entidad deportiva
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
     pagina_web = models.URLField(verbose_name="página web propia", blank=True, null=True)
+    ciudad = models.ForeignKey(Ciudad)
     telefono = models.CharField(max_length=255, verbose_name="teléfono", blank=True)
     descripcion = models.TextField(verbose_name="descripción", blank=True, null=True)
 
@@ -138,14 +139,10 @@ class Entidad(TenantMixin): # Entidad deportiva
         tenant = self.obtenerTenant()
         try:
             ciudad = tenant.ciudad
-            coordenadas = [ciudad.latitud, ciudad.longitud]
         except Exception:
-            try:
-                departamento = tenant.departamento
-                coordenadas = [departamento.latitud, departamento.longitud]
-            except Exception:
-                ciudad = Ciudad.objects.get(nombre="Bogotá D.C.")
-                coordenadas = [ciudad.latitud, ciudad.longitud]
+            ciudad = Ciudad.objects.get(nombre="Bogotá D.C.")
+        
+        coordenadas = [ciudad.latitud, ciudad.longitud]
 
         return coordenadas
 
@@ -157,7 +154,6 @@ class Ente(Entidad):
         (1, 'Ente Municipal'),
         (2, 'Ente Departamental'),
     )
-    ciudad = models.ForeignKey(Ciudad)
     tipo_ente = models.IntegerField(choices=TIPOS_ENTE)
 
 class Comite(Entidad):
@@ -165,7 +161,6 @@ class Comite(Entidad):
         (1, 'Comité Olimpico Colombiano'),
         (2, 'Comité Paralímpico Colombiano'),
     )
-    ciudad = models.ForeignKey(Ciudad)
     tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
 
 class FederacionParalimpica(Entidad):
@@ -193,11 +188,10 @@ class LigaParalimpica(Entidad):
         (5,'Limitación Intelectual'),
     )
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
-    departamento = models.ForeignKey(Departamento)
     federacion = models.ForeignKey(FederacionParalimpica)
 
 class CajaDeCompensacion(Entidad):
-    ciudad = models.ForeignKey(Ciudad)
+    pass
 
 class Federacion(Entidad):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -206,6 +200,12 @@ class Federacion(Entidad):
     def save(self, *args, **kwargs):
         comite = Comite.objects.get(tipo_comite=1)
         self.comite=comite
+
+        actores = self.actores
+        if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
+            actores.save()
         super(Federacion, self).save(*args, **kwargs)
 
     def atributosDeSusEscenarios(self):
@@ -245,8 +245,15 @@ class Federacion(Entidad):
 
 class Liga(Entidad):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
-    departamento = models.ForeignKey(Departamento)
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+
+    def save(self, *args, **kwargs):
+        actores = self.actores
+        if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
+            actores.save()
+        super(Liga, self).save(*args, **kwargs)
 
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario
@@ -285,7 +292,6 @@ class Liga(Entidad):
 
 class Club(Entidad):
     liga = models.ForeignKey(Liga, null=True, blank=True)
-    ciudad = models.ForeignKey(Ciudad)
 
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')

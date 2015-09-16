@@ -12,6 +12,7 @@
 	<meta content="" name="author" />
 	
 	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link rel="icon" type="image/png" href="{{STATIC_URL}}img/favicon.ico">
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 	<link href="{{STATIC_URL}}plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
 	<link href="{{STATIC_URL}}plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -33,8 +34,9 @@
 	<!-- end #page-loader -->
 	
 	<div class="login-cover">
-	    <div class="login-cover-image"><img src="{{STATIC_URL}}img/login-bg/bg-1.jpg" data-id="login-cover-image" alt="" /></div>
-	    <div class="login-cover-bg"></div>
+	    <div class="login-cover-image">
+	    	<img src="{{STATIC_URL}}img/fondo.jpg" data-id="login-cover-image" alt="" style="width:100%;height:100%" />
+	    </div>
 	</div>
 	<!-- begin #page-container -->
 	<div id="page-container" class="fade">
@@ -43,8 +45,8 @@
             <!-- begin brand -->
             <div class="login-header">
                 <div class="brand">
-                    <span class="logo"></span> Coldeportes
-                    <small>SND COLDEPORTES</small>
+                    <img src="{{STATIC_URL}}img/favicon.ico"> Coldeportes
+                    <small>SIND COLDEPORTES</small>
                 </div>
                 <div class="icon">
                     <i class="fa fa-sign-in"></i>
@@ -57,15 +59,6 @@
             </div>
         </div>
         <!-- end login -->
-        
-        <ul class="login-bg-list">
-            <li class="active"><a href="#" data-click="change-bg"><img src="{{STATIC_URL}}img/login-bg/bg-1.jpg" alt="" /></a></li>
-            <li><a href="#" data-click="change-bg"><img src="{{STATIC_URL}}img/login-bg/bg-2.jpg" alt="" /></a></li>
-            <li><a href="#" data-click="change-bg"><img src="{{STATIC_URL}}img/login-bg/bg-3.jpg" alt="" /></a></li>
-            <li><a href="#" data-click="change-bg"><img src="{{STATIC_URL}}img/login-bg/bg-4.jpg" alt="" /></a></li>
-            <li><a href="#" data-click="change-bg"><img src="{{STATIC_URL}}img/login-bg/bg-5.jpg" alt="" /></a></li>
-            <li><a href="#" data-click="change-bg"><img src="{{STATIC_URL}}img/login-bg/bg-6.jpg" alt="" /></a></li>
-        </ul>
 	</div>
 	<!-- end page container -->
 	
