@@ -38,16 +38,6 @@ fields = {
             }
         }
     },
-    telefono: {
-        validators: {
-            notEmpty: {
-                message: 'El teléfono del dirigente no puede ser vacío'
-            },
-            numeric: {
-                message: 'El teléfono solo puede contener números'
-            }
-        }
-    },
     email: {
         validators: {
             emailAddress: {
