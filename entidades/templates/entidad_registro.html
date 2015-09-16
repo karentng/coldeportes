@@ -35,7 +35,7 @@
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
-			<form id="entidad" class="form-vertical" action="" method="post">{% csrf_token %}
+			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
 
 				{% for key, value in form.errors.items %}
 					{% if key == '__all__' %}
