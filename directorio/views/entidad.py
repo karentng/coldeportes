@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from directorio.forms import *
 from directorio.models import *
 from snd.models import *
+from directorio.inicializacion_vistas_directorio import crear_vistas
 
     
 def buscar_contenido(texto, listado_resultados):
