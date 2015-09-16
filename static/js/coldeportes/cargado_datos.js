@@ -168,19 +168,6 @@ $.ajax( {
                     "sButtonText": "<i class='fa fa-copy bigger-110 pink'></i> Copiar",
                 },
                 {
-                    "sExtends": "csv",
-                    "mColumns": function(dtSettings){
-                        var api = new $.fn.dataTable.Api(dtSettings);
-                        if(opciones == true){
-                        	return api.columns(":not(:last)").indexes().toArray();
-                        }else{
-                        	return api.columns().indexes().toArray();
-                        }
-                    },
-                    "sButtonClass": "btn",
-                    "sButtonText": "<i class='fa fa-file-text-o bigger-110 green'></i> CSV"
-                },
-                {
                     "sExtends": "xls",
                     "mColumns": function(dtSettings){
                         var api = new $.fn.dataTable.Api(dtSettings);

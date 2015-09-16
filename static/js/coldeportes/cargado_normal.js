@@ -6,58 +6,27 @@ var table = $('#'+idTabla).DataTable({
         "aButtons": [
             {
                 "sExtends": "copy",
-                "mColumns": function(dtSettings){
-                    var api = new $.fn.dataTable.Api(dtSettings);
-                    if(opciones == true){
-                    	return api.columns(":not(:last)").indexes().toArray();
-                    }else{
-                    	return api.columns().indexes().toArray();
-                    }
-                }
-            },
-            {
-                "sExtends": "csv",
-                "mColumns": function(dtSettings){
-                    var api = new $.fn.dataTable.Api(dtSettings);
-                    if(opciones == true){
-                    	return api.columns(":not(:last)").indexes().toArray();
-                    }else{
-                    	return api.columns().indexes().toArray();
-                    }
-                }
+                "mColumns": [0, 1, 2, 3, 4],
+                "sButtonClass": "btn",
+                "sButtonText": "<i class='fa fa-copy bigger-110 pink'></i> Copiar",
             },
             {
                 "sExtends": "xls",
-                "mColumns": function(dtSettings){
-                    var api = new $.fn.dataTable.Api(dtSettings);
-                    if(opciones == true){
-                    	return api.columns(":not(:last)").indexes().toArray();
-                    }else{
-                    	return api.columns().indexes().toArray();
-                    }
-                }
+                "sButtonClass": "btn",
+                "mColumns": [0, 1, 2, 3, 4],
+                "sButtonText": "<i class='fa fa-file-excel-o bigger-110 green'></i> XLS"
             },
             {
                 "sExtends": "pdf",
-                "mColumns": function(dtSettings){
-                    var api = new $.fn.dataTable.Api(dtSettings);
-                    if(opciones == true){
-                    	return api.columns(":not(:last)").indexes().toArray();
-                    }else{
-                    	return api.columns().indexes().toArray();
-                    }
-                }
+                "sButtonClass": "btn",
+                "mColumns": [0, 1, 2, 3, 4],
+                "sButtonText": "<i class='fa fa-file-pdf-o bigger-110 red'></i> PDF"
             },
             {
                 "sExtends": "print",
-                "mColumns": function(dtSettings){
-                    var api = new $.fn.dataTable.Api(dtSettings);
-                    if(opciones == true){
-                    	return api.columns(":not(:last)").indexes().toArray();
-                    }else{
-                    	return api.columns().indexes().toArray();
-                    }
-                }
+                "sButtonClass": "btn",
+                "mColumns": [0, 1, 2, 3, 4],
+                "sButtonText": "<i class='fa fa-print bigger-110 grey'></i> Imprimir",
             },
         ]
     },
