@@ -293,6 +293,10 @@ class Liga(Entidad):
 class Club(Entidad):
     liga = models.ForeignKey(Liga, null=True, blank=True)
 
+    def historiales_para_avalar(self,tipo):
+        from snd.models import HistorialDeportivo
+        return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
+
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')
     nombre = models.CharField(max_length=255,verbose_name='pais')

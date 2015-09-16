@@ -280,7 +280,6 @@ def guardar_objeto(objeto,adicionales,tipo):
                     defaults=diccionario
                 )
             elif type(ad) is InformacionAcademica:
-                print()
                 InformacionAcademica.objects.update_or_create(
                     deportista=deportista,
                     institucion=ad.institucion,

@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core.serializers import json
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -563,9 +564,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo):
     historiales = []
     for c in clubes:
         connection.set_tenant(c)
-        ContentType.objects.clear_cache()
-        historiales += HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)
-        print(historiales) #No quitar, necesario para ejecucion de lazy queryset y obtencion de informacion desde la bd
+        historiales += c.historiales_para_avalar(tipo)
     connection.set_tenant(tenant_actual)
     return historiales
 
