@@ -13,7 +13,7 @@ class LigaForm(forms.ModelForm):
         instancia = kwargs.get('instance', None)
         super(LigaForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
-        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
 
         if instancia != None:
@@ -31,7 +31,7 @@ class LigaForm(forms.ModelForm):
     class Meta:
         model = Liga
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'departamento', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
 
 class FederacionForm(forms.ModelForm):
     pagina = forms.CharField(label="URL dentro del SIND", required=True)
@@ -40,6 +40,7 @@ class FederacionForm(forms.ModelForm):
         instancia = kwargs.get('instance', None)
         super(FederacionForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
 
         if instancia != None:
@@ -48,7 +49,7 @@ class FederacionForm(forms.ModelForm):
     class Meta:
         model = Federacion
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web','disciplina', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion',)
 
 class ClubForm(forms.ModelForm):
     pagina = forms.CharField(label="URL dentro del SIND", required=True)
@@ -127,6 +128,7 @@ class FederacionParalimpicaForm(forms.ModelForm):
         super(FederacionParalimpicaForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
         self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
@@ -134,7 +136,7 @@ class FederacionParalimpicaForm(forms.ModelForm):
     class Meta:
         model = FederacionParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web','discapacidad', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion',)
 
 
 class LigaParalimpicaForm(forms.ModelForm):
@@ -144,7 +146,7 @@ class LigaParalimpicaForm(forms.ModelForm):
         instancia = kwargs.get('instance', None)
         super(LigaParalimpicaForm, self).__init__(*args, **kwargs)
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
-        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['discapacidad'] = adicionarClase(self.fields['discapacidad'], 'one')
 
         if instancia != None:
@@ -162,7 +164,7 @@ class LigaParalimpicaForm(forms.ModelForm):
     class Meta:
         model = LigaParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'departamento', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion',)
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):
@@ -175,12 +177,16 @@ class ActoresForm(forms.ModelForm):
             #del self.fields['centros']
             #del self.fields['escenarios']
             #del self.fields['deportistas']
+            del self.fields['dirigentes']
+            del self.fields['personal_apoyo']
             del self.fields['cajas']
         elif tipo == '2':
             #Federacion
             #del self.fields['centros']
             #del self.fields['escenarios']
             #del self.fields['deportistas']
+            del self.fields['dirigentes']
+            del self.fields['personal_apoyo']
             del self.fields['cajas']
         elif tipo == '3':
             #Club
