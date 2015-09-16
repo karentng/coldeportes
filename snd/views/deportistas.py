@@ -633,12 +633,8 @@ def aceptar_logros_deportivos(request,id_tenant,id_hist):
         messages.error(request,'Error: No existe el historial deportivo')
         return redirect('inicio_tenant')
 
-    print('Historial')
-    print(hist)
     hist.estado = 'Aprobado'
-    print(hist.estado)
     hist.save()
-    print(hist.estado)
 
     messages.success(request,'Logro deportivo avalado correctamente')
     return redirect('deportista_listar')

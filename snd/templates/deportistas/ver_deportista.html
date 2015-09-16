@@ -97,6 +97,10 @@
                                                     {%endif%}
                                                     <i class="fa fa-user hide"></i>
                                                 </div>
+                                            {% comment %}
+                                            <b>Club Deportivo Actual:</b><br/>
+                                                {{ deportista.entidad }}
+                                            {% endcomment %}
                                             </div>
                                             <div class="profile-right">
                                                 <div class="col-lg-9">
@@ -119,6 +123,7 @@
                                                     </p>
                                                     <p><b>Nacionalidades:</b> {{deportista.nacionalidad_str}}</p>
                                                     <p><b>Ciudad (Departamento) de Residencia:</b> {{ deportista.ciudad_residencia}}</p>
+                                                    <p><b>Club Deportivo Actual:</b> {{ deportista.entidad }}</p>
                                                 </div>
                                             {% if perms.snd.change_deportista %}
                                                 <p><strong>Contacto:</strong></p>

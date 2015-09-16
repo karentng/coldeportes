@@ -95,6 +95,11 @@ class Entidad(TenantMixin): # Entidad deportiva
                 return True
         return False
 
+    def avalable(self):
+        if self.tipo in [1,2]:
+            return True
+        return False
+
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario
         todosEscenarios = Escenario.objects.filter(entidad=self)

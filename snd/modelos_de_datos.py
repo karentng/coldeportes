@@ -124,7 +124,7 @@ MODELOS_DE_DATOS = (
             [
                 "Transferir",
                 'generar_transferencia',
-                ['1','1','id'],
+                ['id'],
                 'fa-exchange',
                 [
                     [
@@ -138,7 +138,7 @@ MODELOS_DE_DATOS = (
             [
                 "Cancelar Transferencia",
                 'cancelar_transferencia',
-                ['id','1'],
+                ['id'],
                 'fa-times',
                 [
                     [
@@ -198,34 +198,6 @@ MODELOS_DE_DATOS = (
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
-                    ]
-                ]
-
-            ],
-            [
-                "Transferir",
-                'generar_transferencia',
-                ['1','2','id'],
-                'fa-exchange',
-                [
-                    [
-                        ['estado'],
-                        ['ACTIVO'],
-                        lambda x, y: operator.eq(x[0], y[0])
-                    ]
-                ]
-
-            ],
-            [
-                "Cancelar Transferencia",
-                'cancelar_transferencia',
-                ['id','2'],
-                'fa-times',
-                [
-                    [
-                        ['estado'],
-                        ['EN TRANSFERENCIA'],
-                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
 
