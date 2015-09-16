@@ -139,6 +139,7 @@ class HistorialDeportivo(models.Model):
     ESTADOS_AVAL = (
         ('Aprobado','Aprobado'),
         ('Pendiente','Pendiente'),
+        ('Rechazado','Rechazado'),
     )
 
     nombre = models.CharField(max_length=100,verbose_name='Nombre del campeonato')

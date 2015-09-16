@@ -670,7 +670,8 @@ def rechazar_logros_deportivos(request,id_tenant,id_hist):
         messages.error(request,'Error: No existe el historial deportivo')
         return redirect('inicio_tenant')
 
-    hist.delete()
+    hist.estado = 'Rechazado'
+    hist.save()
 
     messages.warning(request,'Se ha negado el aval al logro deportivo de '+hist.deportista.nombres + ' ' + hist.deportista.apellidos)
     return redirect('deportista_listar')

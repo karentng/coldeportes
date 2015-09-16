@@ -112,7 +112,7 @@
                     <tbody>
                     {% for historico in historicos %}
                         <tr>
-                            <td align="center"><span class="label label-{%if historico.estado == 'Pendiente' %}warning{%else%}success{%endif%}">{{historico.estado}}</span></td>
+                            <td align="center"><span class="label label-{%if historico.estado == 'Pendiente' %}warning{% elif historico.estado == 'Rechazado' %}danger{%else%}success{%endif%}">{{historico.estado}}</span></td>
                             <td align="center">{{historico.nombre}}</td>
                             <td align="center">{{historico.fecha_inicial}}</td>
                             <td align="center">{{historico.fecha_final}}</td>
