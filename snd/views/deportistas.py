@@ -54,6 +54,7 @@ def wizard_deportista_nuevo(request):
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
+        'edicion':False
     })
 
 @login_required
@@ -99,6 +100,7 @@ def wizard_deportista(request,id_depor):
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
+        'edicion':True
     })
 
 @login_required
@@ -123,8 +125,10 @@ def wizard_corporal(request,id_depor):
 
     try:
         corporal = ComposicionCorporal.objects.get(deportista=id_depor)
+        edicion = True
     except Exception:
         corporal = None
+        edicion=False
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -153,7 +157,8 @@ def wizard_corporal(request,id_depor):
         'wizard_stage': 2,
         'form': corporal_form,
         'mujer' : mujer,
-        'id_deportista' : deportista.id
+        'id_deportista' : deportista.id,
+        'edicion':edicion
     })
 
 @login_required
@@ -173,10 +178,7 @@ def wizard_historia_deportiva(request,id_depor):
     :type id_depor: String
     """
 
-    try:
-        hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
-    except Exception:
-        hist_depor = None
+    hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -203,7 +205,7 @@ def wizard_historia_deportiva(request,id_depor):
         'wizard_stage': 3,
         'form': hist_depor_form,
         'historicos': hist_depor,
-        'id_depor': id_depor
+        'id_depor': id_depor,
     })
 
 #Eliminacion Historia Deportiva
@@ -254,10 +256,7 @@ def wizard_historia_academica(request,id_depor):
     :type id_depor: String
     """
 
-    try:
-        inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
-    except Exception:
-        inf_academ = None
+    inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
 
     deportista = Deportista.objects.get(id=id_depor)
 
