@@ -43,9 +43,6 @@
             -o-background-size: cover;
             background-size: cover;
         }
-        select.one{
-            width:auto;
-        }
     </style>
     {% block css %}
     {% endblock %}
@@ -282,7 +279,7 @@
     <script src="{{STATIC_URL}}js/jquery.datetimepicker.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("select.one").select2();
+            $("select.one").select2({width: 'resolve',});
             $("select.many").select2({multiple:true});
             $('.fecha').datetimepicker({
                 timepicker:false,
