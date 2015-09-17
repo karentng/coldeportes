@@ -48,11 +48,11 @@
 				{% for i in form %}
 					{% if i.name == 'pagina' %}
 						<div class="form-group">
-							<label class="col-md-2 control-label">
+							<label class="col-md-3 control-label">
 								<p>{{i.label}} *</p>
 								<small>{{i.help_text}}</small>
 							</label>
-							<div class="col-md-4">
+							<div class="col-md-9">
 								<div class="input-group">
 							        {{i}}
 							        <span class="input-group-addon">{{dominio}}</span>
@@ -68,10 +68,7 @@
 					    {% endfor %}
 					    
 					{% else %}
-						
-		                {% bootstrap_field i layout="horizontal" %}
-		                    
-						
+						{% bootstrap_field i layout="horizontal" %}
 					{% endif %}
 				{% endfor %}
 
