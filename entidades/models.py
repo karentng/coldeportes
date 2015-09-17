@@ -34,6 +34,7 @@ class Actores(models.Model):
     personal_apoyo = models.BooleanField(verbose_name="Personal de apoyo")
     dirigentes = models.BooleanField(verbose_name="Dirigentes")
     cajas = models.BooleanField(verbose_name="Cajas de Compensación")
+    selecciones = models.BooleanField(verbose_name="Selecciones")
 
     def resumen(self):
         actores = []
@@ -52,6 +53,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         (5, 'Ente'),
         (6, 'Comité'),
         (7,'Federación Paralimpica'),
+        (8,'Liga Paralimpica'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -163,6 +165,13 @@ class Comite(Entidad):
     )
     tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
 
+    def save(self, *args, **kwargs):
+        actores = self.actores
+        if actores != None:
+            actores.selecciones = True
+            actores.save()
+        super(Comite, self).save(*args, **kwargs)
+
 class FederacionParalimpica(Entidad):
     DISCAPACIDADES = (
         (1,'Limitaciones Fisica'),
@@ -177,6 +186,11 @@ class FederacionParalimpica(Entidad):
     def save(self, *args, **kwargs):
         comite_para = Comite.objects.get(tipo_comite=2)
         self.comite=comite_para
+
+        actores = self.actores
+        if actores != None:
+            actores.selecciones = True
+            actores.save()
         super(FederacionParalimpica, self).save(*args, **kwargs)
 
 class LigaParalimpica(Entidad):
@@ -189,6 +203,13 @@ class LigaParalimpica(Entidad):
     )
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     federacion = models.ForeignKey(FederacionParalimpica)
+
+    def save(self, *args, **kwargs):
+        actores = self.actores
+        if actores != None:
+            actores.selecciones = True
+            actores.save()
+        super(LigaParalimpica, self).save(*args, **kwargs)
 
 class CajaDeCompensacion(Entidad):
     pass
@@ -205,6 +226,7 @@ class Federacion(Entidad):
         if actores != None:
             actores.dirigentes = True
             actores.personal_apoyo = True
+            actores.selecciones = True
             actores.save()
         super(Federacion, self).save(*args, **kwargs)
 
@@ -252,6 +274,7 @@ class Liga(Entidad):
         if actores != None:
             actores.dirigentes = True
             actores.personal_apoyo = True
+            actores.selecciones = True
             actores.save()
         super(Liga, self).save(*args, **kwargs)
 

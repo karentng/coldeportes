@@ -179,7 +179,6 @@ class ActoresForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         tipo = kwargs.pop('tipo', None)
         super(ActoresForm, self).__init__(*args, **kwargs)
-
         if tipo == '1':
             #Liga
             #del self.fields['centros']
@@ -188,6 +187,7 @@ class ActoresForm(forms.ModelForm):
             del self.fields['dirigentes']
             del self.fields['personal_apoyo']
             del self.fields['cajas']
+            del self.fields['selecciones']
         elif tipo == '2':
             #Federacion
             #del self.fields['centros']
@@ -196,24 +196,32 @@ class ActoresForm(forms.ModelForm):
             del self.fields['dirigentes']
             del self.fields['personal_apoyo']
             del self.fields['cajas']
+            del self.fields['selecciones']
         elif tipo == '3':
             #Club
             del self.fields['cajas']
+            del self.fields['selecciones']
         elif tipo == '4':
             #CajaDeCompensacion
             self.fields['cajas'].widget = forms.HiddenInput()
             del self.fields['centros']
             del self.fields['deportistas']
             del self.fields['dirigentes']
+            del self.fields['selecciones']
         elif tipo == '5':
             #Ente
-            pass
+            del self.fields['selecciones']
+        elif tipo == '6':
+            #Comite
+            del self.fields['selecciones']
         elif tipo =='7':
             #FederacionParalimpica
             del self.fields['cajas']
+            del self.fields['selecciones']
         elif tipo =='8':
-            #FederacionParalimpica
+            #LigaParalimpica
             del self.fields['cajas']
+            del self.fields['selecciones']
 
     class Meta:
         model = Actores
