@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core.serializers import json
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -53,6 +54,7 @@ def wizard_deportista_nuevo(request):
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
+        'edicion':False
     })
 
 @login_required
@@ -98,6 +100,7 @@ def wizard_deportista(request,id_depor):
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
+        'edicion':True
     })
 
 @login_required
@@ -122,8 +125,10 @@ def wizard_corporal(request,id_depor):
 
     try:
         corporal = ComposicionCorporal.objects.get(deportista=id_depor)
+        edicion = True
     except Exception:
         corporal = None
+        edicion=False
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -152,7 +157,8 @@ def wizard_corporal(request,id_depor):
         'wizard_stage': 2,
         'form': corporal_form,
         'mujer' : mujer,
-        'id_deportista' : deportista.id
+        'id_deportista' : deportista.id,
+        'edicion':edicion
     })
 
 @login_required
@@ -172,10 +178,7 @@ def wizard_historia_deportiva(request,id_depor):
     :type id_depor: String
     """
 
-    try:
-        hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
-    except Exception:
-        hist_depor = None
+    hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -202,7 +205,7 @@ def wizard_historia_deportiva(request,id_depor):
         'wizard_stage': 3,
         'form': hist_depor_form,
         'historicos': hist_depor,
-        'id_depor': id_depor
+        'id_depor': id_depor,
     })
 
 #Eliminacion Historia Deportiva
@@ -253,10 +256,7 @@ def wizard_historia_academica(request,id_depor):
     :type id_depor: String
     """
 
-    try:
-        inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
-    except Exception:
-        inf_academ = None
+    inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -563,9 +563,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo):
     historiales = []
     for c in clubes:
         connection.set_tenant(c)
-        ContentType.objects.clear_cache()
-        historiales += HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)
-        print(historiales) #No quitar, necesario para ejecucion de lazy queryset y obtencion de informacion desde la bd
+        historiales += c.historiales_para_avalar(tipo)
     connection.set_tenant(tenant_actual)
     return historiales
 
@@ -633,12 +631,8 @@ def aceptar_logros_deportivos(request,id_tenant,id_hist):
         messages.error(request,'Error: No existe el historial deportivo')
         return redirect('inicio_tenant')
 
-    print('Historial')
-    print(hist)
     hist.estado = 'Aprobado'
-    print(hist.estado)
     hist.save()
-    print(hist.estado)
 
     messages.success(request,'Logro deportivo avalado correctamente')
     return redirect('deportista_listar')
@@ -675,7 +669,8 @@ def rechazar_logros_deportivos(request,id_tenant,id_hist):
         messages.error(request,'Error: No existe el historial deportivo')
         return redirect('inicio_tenant')
 
-    hist.delete()
+    hist.estado = 'Rechazado'
+    hist.save()
 
     messages.warning(request,'Se ha negado el aval al logro deportivo de '+hist.deportista.nombres + ' ' + hist.deportista.apellidos)
     return redirect('deportista_listar')

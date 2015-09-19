@@ -6,12 +6,13 @@ from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
 from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
+from snd.formularios.deportistas import  DeportistaForm
 from .models import Transferencia
 import datetime
 from coldeportes.utilities import calculate_age,not_transferido_required
 # Create your views here.
 @login_required
-def generar_transferencia(request,tipo_transfer,tipo_persona,id):
+def generar_transferencia(request,id):
     """
     Julio 15, 2015
     Autor: Daniel Correa
@@ -33,27 +34,12 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
 
     if entidad_solicitante.tipo == 3:
         entidades = Entidad.objects.filter(tipo=3).exclude(nombre__in=['publico',entidad_solicitante.nombre])
-    elif entidad_solicitante.tipo == 5:
-        entidades = Entidad.objects.filter(tipo=5).exclude(nombre__in=['publico',entidad_solicitante.nombre])
     else:
         messages.error(request,'Usted se encuentra en una seccion que no le corresponde')
         return redirect('inicio_tenant')
 
-    redir = ''
-    tipo_objeto = ''
-    if tipo_transfer=='1': #Transferencia de personas
-        if tipo_persona=='1': #Transferencia de deportistas
-            tipo_objeto='Deportista'
-            redir='deportista_listar'
-        elif tipo_persona=='2': #Transferencia de personal_apoyo
-            tipo_objeto='PersonalApoyo'
-            redir='personal_apoyo_listar'
-    elif tipo_transfer=='2': #Transferencia de escenarios
-        tipo_objeto='Escenario'
-        redir='listar_escenarios'
-
     try:
-        objeto = globals()[tipo_objeto].objects.get(id=id)
+        objeto = Deportista.objects.get(id=id)
     except:
         messages.error(request,'Error, no existe objeto transferible')
 
@@ -62,18 +48,19 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         return non_permission
 
     objeto.fecha = datetime.date.today()
-    objeto.tipo_objeto = tipo_objeto
+    objeto.tipo_objeto = objeto.__class__.__name__
 
     if request.method == 'POST':
         id_entidad_cambio = request.POST['entidad']
         entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
         connection.set_tenant(entidad_cambio)
         ContentType.objects.clear_cache()
-        transferencia = Transferencia()
-        transferencia.entidad = entidad_solicitante
-        transferencia.fecha_solicitud = objeto.fecha
-        transferencia.id_objeto = objeto.id
-        transferencia.tipo_objeto = objeto.tipo_objeto
+        transferencia = Transferencia(
+            entidad=entidad_solicitante,
+            fecha_solicitud = objeto.fecha,
+            id_objeto = objeto.id,
+            tipo_objeto = objeto.tipo_objeto
+        )
         transferencia.save()
         #Cambiar estado de objeto a "En Transferencia"
         connection.set_tenant(request.tenant)
@@ -82,7 +69,7 @@ def generar_transferencia(request,tipo_transfer,tipo_persona,id):
         objeto.save()
         #
         messages.success(request,'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud')
-        return redirect(redir)
+        return redirect('deportista_listar')
 
     return render(request,'generar_transferencia.html',{
         'entidades' : entidades,
@@ -231,24 +218,15 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
     connection.set_tenant(entidad_saliente)
     ContentType.objects.clear_cache()
 
-    objeto.estado = 3
-    objeto.entidad = entidad_saliente
-
-    if tipo_objeto=='Deportista' or tipo_objeto=='PersonalApoyo':
-        new_obj, created = objeto.__class__.objects.update_or_create(
-            identificacion = objeto.identificacion,
-            defaults=objeto.__dict__
-        )
-    else:
-        new_obj, created =  objeto.__class__.objects.update_or_create(
-            nombre=objeto.nombre,
-            defaults=objeto.__dict__
-        )
-    new_obj.tipo_objeto = new_obj.__class__.__name__
-    new_obj.fecha = datetime.date.today()
+    depor = Deportista.objects.get(identificacion=objeto.identificacion,tipo_id = objeto.tipo_id)
+    depor.estado = 3
+    depor.entidad = entidad_saliente
+    depor.save()
+    depor.tipo_objeto = depor.__class__.__name__
+    depor.fecha = datetime.date.today()
 
     return render(request,'transferencia_exitosa.html',{
-        'objeto': new_obj
+        'objeto': depor
     })
 
 def guardar_objeto(objeto,adicionales,tipo):
@@ -302,7 +280,6 @@ def guardar_objeto(objeto,adicionales,tipo):
                     defaults=diccionario
                 )
             elif type(ad) is InformacionAcademica:
-                print()
                 InformacionAcademica.objects.update_or_create(
                     deportista=deportista,
                     institucion=ad.institucion,
@@ -316,124 +293,6 @@ def guardar_objeto(objeto,adicionales,tipo):
                     defaults=diccionario
                 )
         return deportista
-    elif tipo == 'PersonalApoyo':
-
-        nacionalidades_obj = objeto.nacionalidades_obj
-
-        #Diccionario para defaults
-        obj_dict = objeto.__dict__
-        del obj_dict['id']
-        del obj_dict['nacionalidades_obj']
-        del obj_dict['_state']
-        del obj_dict['_entidad_cache']
-        #Fin diccionario
-
-        personal_apoyo, created = PersonalApoyo.objects.update_or_create(
-            identificacion=objeto.identificacion,
-            defaults= obj_dict,
-        )
-
-        for na in nacionalidades_obj:
-            personal_apoyo.nacionalidad.add(na)
-
-        for ad in adicionales:
-            diccionario = ad.__dict__
-            del diccionario['id']
-            del diccionario['_state']
-            del diccionario['personal_apoyo_id']
-            if type(ad) is FormacionDeportiva:
-                FormacionDeportiva.objects.update_or_create(
-                    personal_apoyo=personal_apoyo,
-                    denominacion_diploma=ad.denominacion_diploma,
-                    defaults=diccionario
-                )
-            else:
-                ExperienciaLaboral.objects.update_or_create(
-                    personal_apoyo=personal_apoyo,
-                    nombre_cargo=ad.nombre_cargo,
-                    defaults=diccionario
-                )
-        return personal_apoyo
-    elif tipo == 'Escenario':
-
-        #Diccionario para defaults
-        obj_dict = objeto.__dict__
-        del obj_dict['id']
-        del obj_dict['_entidad_cache']
-        del obj_dict['_state']
-        #Fin diccionario
-
-        escenario, created = Escenario.objects.update_or_create(
-            nombre=objeto.nombre,
-            defaults= obj_dict,
-        )
-        for ad in adicionales:
-            diccionario = ad.__dict__
-            del diccionario['id']
-            del diccionario['_state']
-            del diccionario['escenario_id']
-            if type(ad) is CaracterizacionEscenario:
-                tipo_disciplinas_obj = ad.tipo_disciplinas_obj
-                tipo_superficie_juego_obj= ad.tipo_superficie_juego_obj
-                caracteristicas_obj=ad.caracteristicas_obj
-                clase_uso_obj=ad.clase_uso_obj
-
-                del diccionario['tipo_disciplinas_obj']
-                del diccionario['tipo_superficie_juego_obj']
-                del diccionario['caracteristicas_obj']
-                del diccionario['clase_uso_obj']
-
-                caracterizacion, created = CaracterizacionEscenario.objects.update_or_create(
-                    escenario=escenario,
-                    defaults=diccionario
-                )
-                for tipo_d in tipo_disciplinas_obj:
-                    caracterizacion.tipo_disciplinas.add(tipo_d)
-                for tipo_super in tipo_superficie_juego_obj:
-                    caracterizacion.tipo_superficie_juego.add(tipo_super)
-                for carac in caracteristicas_obj:
-                    caracterizacion.caracteristicas.add(carac)
-                for clase_uso in clase_uso_obj:
-                    caracterizacion.clase_uso.add(clase_uso)
-
-            elif type(ad) is HorarioDisponibilidad:
-                dias_obj = ad.dias_obj
-
-                del diccionario['dias_obj']
-
-                horario, created = HorarioDisponibilidad.objects.update_or_create(
-                    escenario=escenario,
-                    descripcion=ad.descripcion,
-                    defaults=diccionario
-                )
-
-                for di in dias_obj:
-                    horario.dias.add(di)
-            elif type(ad) is Foto:
-                Foto.objects.update_or_create(
-                    escenario=escenario,
-                    foto=ad.foto,
-                    defaults=diccionario
-                )
-            elif type(ad) is Video:
-                Video.objects.update_or_create(
-                    escenario=escenario,
-                    url=ad.url,
-                    defaults=diccionario
-                )
-            elif type(ad) is DatoHistorico:
-                DatoHistorico.objects.update_or_create(
-                    escenario=escenario,
-                    descripcion=ad.descripcion,
-                    defaults=diccionario
-                )
-            elif type(ad) is Contacto:
-                Contacto.objects.update_or_create(
-                    escenario=escenario,
-                    nombre=ad.nombre,
-                    defaults=diccionario
-                )
-        return escenario
 
 def obtener_objeto(id_obj,tipo_objeto):
     """
@@ -465,48 +324,10 @@ def obtener_objeto(id_obj,tipo_objeto):
         adicionales += HistorialDeportivo.objects.filter(deportista=objeto)
         adicionales += InformacionAcademica.objects.filter(deportista=objeto)
 
-    elif tipo_objeto == 'PersonalApoyo':
-
-        objeto = PersonalApoyo.objects.get(id=id_obj)
-
-        #Obtener muchos a muchos y guardarlos como attr apartes
-        objeto.nacionalidades_obj = [a for a in objeto.nacionalidad.all()]
-        #Fin obtener muchos a muchos y guardarlos como attr apartes
-
-        adicionales += FormacionDeportiva.objects.filter(personal_apoyo=objeto)
-        adicionales += ExperienciaLaboral.objects.filter(personal_apoyo=objeto)
-
-    elif tipo_objeto == 'Escenario':
-
-        objeto = Escenario.objects.get(id=id_obj)
-
-        #Sacar y asignar muchos a muchos caracterizacion
-        caracterizaciones = CaracterizacionEscenario.objects.filter(escenario=objeto)
-        for car in caracterizaciones:
-            car.tipo_disciplinas_obj = [x for x in car.tipo_disciplinas.all()]
-            car.tipo_superficie_juego_obj = [x for x in car.tipo_superficie_juego.all()]
-            car.caracteristicas_obj = [x for x in car.caracteristicas.all()]
-            car.clase_uso_obj = [x for x in car.clase_uso.all()]
-        #Fin sacar y asignar m2m caracteristicas
-
-        adicionales += caracterizaciones
-
-        #Sacar y asignar m2m a horarios
-        horarios = HorarioDisponibilidad.objects.filter(escenario=objeto)
-        for h in horarios:
-            h.dias_obj = [x for x in h.dias.all()]
-        #Fin sacar y asignar m2ma horarios
-
-        adicionales += horarios
-        adicionales += Foto.objects.filter(escenario=objeto)
-        adicionales += Video.objects.filter(escenario=objeto)
-        adicionales += DatoHistorico.objects.filter(escenario=objeto)
-        adicionales += Contacto.objects.filter(escenario=objeto)
-
     return objeto,adicionales
 
 @login_required
-def cancelar_transferencia(request,id_objeto,tipo_objeto):
+def cancelar_transferencia(request,id_objeto):
     """
     Julio 21, 2015
     Autor: Daniel Correa
@@ -522,22 +343,11 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
     :type tipo_objeto: string
     """
 
-    objeto = ''
-    if tipo_objeto=='1':
-        objeto = 'Deportista'
-        redir = 'deportista_listar'
-    elif tipo_objeto=='2':
-        objeto='PersonalApoyo'
-        redir='personal_apoyo_listar'
-    elif tipo_objeto=='3':
-        objeto='Escenario'
-        redir='listar_escenarios'
-
     try:
-        obj_trans = globals()[objeto].objects.get(id=id_objeto)
+        obj_trans = Deportista.objects.get(id=id_objeto)
     except:
-        messages.error(request,'Error: No se puede procesar la solicitud, '+objeto+' no existe')
-        return redirect(redir)
+        messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
+        return redirect('deportista_listar')
 
     obj_trans.estado = 0
     obj_trans.save()
@@ -547,11 +357,11 @@ def cancelar_transferencia(request,id_objeto,tipo_objeto):
     for ent in entidades:
         connection.set_tenant(ent)
         ContentType.objects.clear_cache()
-        trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto=objeto)
+        trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
         if len(trans) != 0:
             trans.delete()
             messages.success(request,'Tranferencia cancelada exitosamente')
-            return redirect(redir)
+            return redirect('deportista_listar')
 
     messages.error(request,'Error: No existe la transferencia solicitada')
-    return redirect(redir)
+    return redirect('deportista_listar')

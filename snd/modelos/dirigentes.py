@@ -17,8 +17,8 @@ class Dirigente(models.Model):
         return ruta
 
     TIPO_GENERO = (
-        ('Hombre','Hombre'),
-        ('Mujer','Mujer'),
+        ('HOMBRE','HOMBRE'),
+        ('MUJER','MUJER'),
     )
     TIPO_IDENTIFICACION = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
