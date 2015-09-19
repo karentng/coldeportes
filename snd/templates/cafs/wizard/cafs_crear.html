@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-	Registro Nuevo CAF
+	Datos de Identificación del CAF
 {% endblock %}
 
 {% block contenido_panel %}
@@ -63,14 +63,15 @@
 						{% bootstrap_field form.ciudad layout="vertical" %}
 					</div>
 					<div class="col-md-6">
+						{% bootstrap_field form.estrato layout="vertical" %}
+					</div>
+					<div class="col-md-6">
 						{% bootstrap_field form.comuna layout="vertical" %}
 					</div>
 					<div class="col-md-6">
 						{% bootstrap_field form.barrio layout="vertical" %}
 					</div>
-					<div class="col-md-6">
-						{% bootstrap_field form.estrato layout="vertical" %}
-					</div>
+					
 					<div class="col-md-6">
 						{% bootstrap_field form.latitud layout="vertical" %}
 					</div>

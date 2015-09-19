@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Escenarios Deportivos
+    Escenarios Deportivos
 {% endblock %}
 
 {% block panel_botones %}
@@ -62,7 +62,7 @@
                     {% if videos %}
                     {% for video in videos %}
                         <tr>
-                            <td align="center">{{video.url}}</td>
+                            <td align="center"><a target="_blank" href="{{video.url}}">{{video.url}}</a></td>
                             <td align="center">{% if video.descripcion %}{{video.descripcion}}{% endif %}</td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>

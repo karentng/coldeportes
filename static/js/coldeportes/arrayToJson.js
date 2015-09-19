@@ -32,7 +32,7 @@ function exportConfig(){
 	return {
 	    menuTop: "0px",
 	    menuBottom: "auto",
-	    menuRight: "0px",
+	    menuLeft: "0px",
 	    backgroundColor: "#efefef",
 	    menuItemStyle: {
 	        backgroundColor: '#EFEFEF',

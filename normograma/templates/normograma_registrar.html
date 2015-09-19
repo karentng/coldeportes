@@ -23,8 +23,7 @@
     <form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
         <div class="well row">
             <div class="col-xs-12">
-                <h3>Nueva Norma:</h3>
-                
+                <h3>Registro de Nueva Norma:</h3>                
                 {% for field in form %}
                     <div class="col-md-6">
                         
@@ -32,28 +31,36 @@
                     </div>
                 {% endfor %}
             </div>
-        </div>
-        <hr>
-        {% if wizard_stage > 1 %}
-        <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back(); " />
-        {% endif %}     
-        <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
-    </form>
+            <button class="btn btn-primary pull-right" type="submit">Guardar <i class="fa fa-save"></i></button>
+        </div>           
+    </form>    
 </fieldset>
 
 {% endblock %}
-{% block css %}
-    
+{% block css %}       
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block js %}
-    
+    <script src="{{STATIC_URL}}plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/masked-input/masked-input.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/password-indicator/js/password-indicator.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-combobox/js/bootstrap-combobox.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/moment.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="{{STATIC_URL}}js/form-plugins.demo.min.js"></script>
 {% endblock %}
 
 {% block script %}
     <script>
         $(document).ready(function() {
             App.init();
+            FormPlugins.init();
         });
     </script>
 

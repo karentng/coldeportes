@@ -11,7 +11,6 @@
     <meta content="Cedesoft" name="author" />
     
 
-
     <script src="{{STATIC_URL}}plugins/jquery/jquery-1.9.1.min.js"></script>
     <script src="{{STATIC_URL}}plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
     <script src="{{STATIC_URL}}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
@@ -280,7 +279,7 @@
     <script src="{{STATIC_URL}}js/jquery.datetimepicker.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("select.one").select2();
+            $("select.one").select2({width: 'resolve',});
             $("select.many").select2({multiple:true});
             $('.fecha').datetimepicker({
                 timepicker:false,

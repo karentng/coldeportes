@@ -98,13 +98,6 @@ fields = {
             }
         }
     },
-    nombre_administrador: {
-        validators: {
-            notEmpty: {
-                message: 'El nombre del administrador no puede ser vacío'
-            }
-        }
-    },
     web: {
         validators: {
             uri: {
