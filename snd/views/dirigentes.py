@@ -27,7 +27,7 @@ def wizard_identificacion_nuevo(request):
     :type request:    WSGIRequest
     """
 
-    print(request.session)
+    #print(request.session)
     try:
         datos = request.session['datos']
     except Exception:
@@ -45,11 +45,12 @@ def wizard_identificacion_nuevo(request):
             dirigente.save()
             identificacion_form.save_m2m()
             del request.session['datos']
-            return redirect('dirigentes_wizard_cargos', dirigente.id)
+            return redirect('dirigentes_wizard_cargos', dirigente_id=dirigente.id, edicion=0)
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
         'form': identificacion_form,
+        'edicion': 0
     })
 
 @login_required
@@ -85,113 +86,18 @@ def wizard_identificacion(request, dirigente_id):
             dirigente = identificacion_form.save(commit=False)
             dirigente.save()
             identificacion_form.save_m2m()
-            return redirect('dirigentes_wizard_cargos', dirigente_id)
+            return redirect('dirigentes_wizard_cargos', dirigente_id=dirigente_id, edicion=1)
 
     return render(request, 'dirigentes/wizard/wizard_identificacion.html', {
         'wizard_stage': 1,
         'form': identificacion_form,
+        'edicion': 1
     })
 
-@login_required
-@all_permission_required('snd.add_dirigente')
-def wizard_funciones(request, dirigente_id, cargo_id=None):
-    """
-    Junio 14 / 2015
-    Autor: Cristian Leonardo Ríos López
-    
-    Funciones del cargo de un dirigente
-
-    Se obtienen el formulario de las funciones del cargo y se muestran las funciones actualmente añadidas al dirigente según el cargo
-    y si hay modificaciones se guardan.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param cargo_id:   Identificador del cargo del dirigente
-    :type cargo_id:    String
-    :param dirigente_id:   Identificador del dirigente
-    :type dirigente_id:    String
-    """
-
-    funciones_form = DirigenteFuncionesForm(dirigente_id=dirigente_id, cargo_id=cargo_id)
-
-    if request.method == 'POST':
-        funciones_form = DirigenteFuncionesForm(request.POST)
-
-        if funciones_form.is_valid():
-            funcion_nueva = funciones_form.save(commit=False)
-            try:
-                funcion_nueva.dirigente = Dirigente.objects.get(id=dirigente_id)
-            except Dirigente.DoesNotExist:
-                messages.error(request, "Está tratando de adicionarle funciones a un dirigente inexistente.")
-                return redirect('dirigentes_listar')
-            funcion_nueva.save()
-            return redirect('dirigentes_wizard_funciones', dirigente_id, funcion_nueva.cargo.id)
-
-    return render(request, 'dirigentes/wizard/wizard_funciones.html', {
-        'wizard_stage': 3,
-        'form': funciones_form,
-        'dirigente_id': dirigente_id
-    })
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def funciones_ajax(request):
-    """
-    Agosto 09 / 2015
-    Autor: Cristian Leonardo Ríos López
-    
-    Funciones del cargo de un dirigente
-
-    Función Ajax. Se obtienen las funciones del cargo del dirigente.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param id_cargo:   Identificador del cargo del dirigente
-    :type id_cargo:    String
-    :param id_dirigente:   Identificador del dirigente
-    :type id_dirigente:    String
-    """
-    if request.is_ajax():
-        funciones = DirigenteFuncion.objects.filter(dirigente=request.GET['id_dirigente'], cargo=request.GET['id_cargo'])
-        funciones_ = []
-        for funcion in funciones:
-            funciones_.append({'id':funcion.id, 'descripcion':funcion.descripcion})
-        return HttpResponse(json.dumps({'funciones': funciones_}), content_type="application/json")
-    else:
-        raise Http404
-
-@login_required
-@all_permission_required('snd.add_dirigente')
-def eliminar_funcion(request, dirigente_id, cargo_id, funcion_id):
-    """
-    Junio 14 / 2015
-    Autor: Cristian Leonardo Ríos López
-
-    Eliminar función
-
-    Se obtienen la función de la base de datos y se elimina
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param cargo_id   Identificador del cargo del dirigente
-    :type cargo_id    String
-    :param funcion_id   Identificador de la función
-    :type funcion_id    String
-    """
-
-    try:
-        funcion = DirigenteFuncion.objects.get(id=funcion_id, cargo=cargo_id, dirigente=dirigente_id)
-        funcion.delete()
-        messages.success(request,'La función ha sido eliminada con éxito.')
-        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
-
-    except DirigenteFuncion.DoesNotExist:
-        messages.error(request,'Está tratando de eliminar un función inexistente.')
-        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
-
-@login_required
-@all_permission_required('snd.add_dirigente')
-def wizard_cargos(request, dirigente_id):
+def wizard_cargos(request, dirigente_id, edicion=0):
     """
     Agosto 05 / 2015
     Autor: Cristian Leonardo Ríos López
@@ -221,14 +127,15 @@ def wizard_cargos(request, dirigente_id):
                 messages.error(request, "Está tratando de adicionarle cargos a un dirigente inexistente.")
                 return redirect('dirigentes_listar')
             cargo_nuevo.save()
-            return redirect('dirigentes_wizard_cargos', dirigente_id)
+            return redirect('dirigentes_wizard_cargos', dirigente_id=dirigente_id, edicion=edicion)
                 
 
     return render(request, 'dirigentes/wizard/wizard_cargos.html', {
         'wizard_stage': 2,
         'form': cargos_form,
         'cargos': cargos,
-        'dirigente_id': dirigente_id
+        'dirigente_id': dirigente_id,
+        'edicion': edicion
         })
 
 @login_required
@@ -287,6 +194,105 @@ def eliminar_cargo(request, cargo_id, dirigente_id):
 
 
 @login_required
+@all_permission_required('snd.add_dirigente')
+def wizard_funciones(request, dirigente_id, cargo_id=None, edicion=0):
+    """
+    Junio 14 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    Funciones del cargo de un dirigente
+
+    Se obtienen el formulario de las funciones del cargo y se muestran las funciones actualmente añadidas al dirigente según el cargo
+    y si hay modificaciones se guardan.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param cargo_id:   Identificador del cargo del dirigente
+    :type cargo_id:    String
+    :param dirigente_id:   Identificador del dirigente
+    :type dirigente_id:    String
+    """
+
+    funciones_form = DirigenteFuncionesForm(dirigente_id=dirigente_id, cargo_id=cargo_id)
+
+    if request.method == 'POST':
+        funciones_form = DirigenteFuncionesForm(request.POST)
+
+        if funciones_form.is_valid():
+            funcion_nueva = funciones_form.save(commit=False)
+            try:
+                funcion_nueva.dirigente = Dirigente.objects.get(id=dirigente_id)
+            except Dirigente.DoesNotExist:
+                messages.error(request, "Está tratando de adicionarle funciones a un dirigente inexistente.")
+                return redirect('dirigentes_listar')
+            funcion_nueva.save()
+            return redirect('dirigentes_wizard_funciones', dirigente_id, funcion_nueva.cargo.id, edicion)
+
+    return render(request, 'dirigentes/wizard/wizard_funciones.html', {
+        'wizard_stage': 3,
+        'form': funciones_form,
+        'dirigente_id': dirigente_id,
+        'edicion': edicion
+    })
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def funciones_ajax(request):
+    """
+    Agosto 09 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    Funciones del cargo de un dirigente
+
+    Función Ajax. Se obtienen las funciones del cargo del dirigente.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param id_cargo:   Identificador del cargo del dirigente
+    :type id_cargo:    String
+    :param id_dirigente:   Identificador del dirigente
+    :type id_dirigente:    String
+    """
+    if request.is_ajax():
+        funciones = DirigenteFuncion.objects.filter(dirigente=request.GET['id_dirigente'], cargo=request.GET['id_cargo'])
+        funciones_ = []
+        for funcion in funciones:
+            funciones_.append({'id':funcion.id, 'descripcion':funcion.descripcion})
+        return HttpResponse(json.dumps({'funciones': funciones_}), content_type="application/json")
+    else:
+        raise Http404
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def eliminar_funcion(request, dirigente_id, cargo_id, funcion_id):
+    """
+    Junio 14 / 2015
+    Autor: Cristian Leonardo Ríos López
+
+    Eliminar función
+
+    Se obtienen la función de la base de datos y se elimina
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param cargo_id   Identificador del cargo del dirigente
+    :type cargo_id    String
+    :param funcion_id   Identificador de la función
+    :type funcion_id    String
+    """
+
+    try:
+        funcion = DirigenteFuncion.objects.get(id=funcion_id, cargo=cargo_id, dirigente=dirigente_id)
+        funcion.delete()
+        messages.success(request,'La función ha sido eliminada con éxito.')
+        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
+
+    except DirigenteFuncion.DoesNotExist:
+        messages.error(request,'Está tratando de eliminar un función inexistente.')
+        return redirect('dirigentes_wizard_funciones', dirigente_id, cargo_id)
+
+
+@login_required
 def listar(request):
     """
     Junio 14 / 2015
@@ -305,7 +311,7 @@ def listar(request):
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def finalizar(request, opcion):
+def finalizar(request, opcion, edicion):
     """
     Junio 14 / 2015
     Autor: Cristian Leonardo Ríos López
@@ -315,12 +321,22 @@ def finalizar(request, opcion):
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
+    :param opcion: indica si se quiere ir a listar o a registrar un dirigente nueno
+    :type opcion: String
+    :param edicion: indica si se está editando un dirigente existente o si se está registrando un dirigente nuevo
+    :type edicion: Integer
     """
-    messages.success(request, "Dirigente registrado correctamente.")
+
+    if edicion == 0 or edicion == '0':
+        messages.success(request, "Dirigente registrado correctamente.")
+    else:
+        messages.success(request, "Dirigente editado correctamente.")
+
     try:
         del request.session['datos']
     except:
         pass
+
     if opcion == "nuevo":
         return redirect('dirigentes_wizard_identificacion_nuevo')
     elif opcion == "listar":
@@ -430,7 +446,7 @@ def verificar(request):
             else:
                 #Si no se encuentra el dirigente entonces se redirecciona a registro de dirigente con los datos iniciales en una sesión
                 request.session['datos'] = datos
-                print(request.session)
+                #print(request.session)
                 return redirect('dirigentes_wizard_identificacion_nuevo')
 
     else:
