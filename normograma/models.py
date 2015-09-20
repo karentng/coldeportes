@@ -14,13 +14,15 @@ def foto_name(instance, filename):
 class Norma(models.Model):
 
     AÑOS = zip( range(1980,2017), range(1980,2017) )
+    JURISDICCIONES = (('D', 'Departamental'), ('M', 'Municipal'), ('N', 'Nacional'))
     
-    norma =  models.CharField(max_length=100,unique=True)
+    norma =  models.CharField(max_length=100,unique=True, verbose_name="título de la norma")
     palabras_clave = models.CharField(max_length=1024, verbose_name='palabras clave')
     año = models.IntegerField(default=0, choices=AÑOS, verbose_name="año")
     sector = models.CharField(max_length=150)
-    archivo = models.FileField(upload_to=foto_name, null=True, blank=True, verbose_name="subir archivo")
-    descripcion = models.TextField(max_length=1024, verbose_name='descripción', null=True)
+    jurisdiccion = models.CharField(max_length=2, choices=JURISDICCIONES, verbose_name="jurisdicción")
+    archivo = models.FileField(upload_to=foto_name, verbose_name="subir archivo")
+    descripcion = models.TextField(max_length=1024, verbose_name='descripción')
     contenido_busqueda = models.TextField(editable=False)
 
     def save(self, *args, **kwargs):
