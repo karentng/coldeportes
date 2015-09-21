@@ -32,7 +32,7 @@ class Norma(models.Model):
     anio = models.IntegerField(default=2015, verbose_name="año", choices=ANIOS)
     sectores = models.ManyToManyField(TipoSector)
     jurisdiccion = models.CharField(max_length=2,verbose_name="jurisdicción", choices=JURISDICCIONES)
-    archivo = models.FileField(upload_to=foto_name, null=True, blank=True, verbose_name="subir archivo")
+    archivo = models.FileField(upload_to=foto_name, verbose_name="subir archivo")
     descripcion = models.TextField(max_length=1024, verbose_name='descripción')
     contenido_busqueda = models.TextField(editable=False)
 
