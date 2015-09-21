@@ -50,7 +50,8 @@ def buscar(request):
     form = NormogramaBusquedaForm()
 
     #inicialización de variable resultados
-    listado_resultados =[]
+    listado_resultados = []
+    cantidad_resultados = 0
 
     if request.method == 'POST':
         
@@ -59,14 +60,17 @@ def buscar(request):
 
         if form.is_valid():
             sectores = request.POST.getlist('sector') or None
+            jurisdicciones = request.POST.getlist('jurisdiccion') or None
             texto = request.POST.get('texto_a_buscar') or ''
 
             normas = Norma.objects.filter(contenido_busqueda__icontains=texto)
 
                               
         listado_resultados.append(normas)
+        cantidad_resultados = len(listado_resultados[0])
 
     return render(request, 'normograma_buscar.html', {
         'form': form,
         'listado_resultados': listado_resultados,
+        'cantidad_resultados': cantidad_resultados,
     })
