@@ -2,24 +2,27 @@
 {% load bootstrap3 %}
 
 {% block head %}
-	Registro Deportistas
+	{% if edicion %}
+	    Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
 	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
-    <style>
-        .select2-container--default .select2-selection--single .select2-selection__rendered{
-            font-size: 12px;
-        }
-    </style>
 {% endblock %}
 
 {% block miga_pan %}
 	<li><a href="{% url 'inicio' %}">Inicio</a></li>
 	<li><a href="{% url 'deportista_listar' %}">Deportistas</a>
-	<li class="active">Editar</li>
+	{% if edicion %}
+	    <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -27,7 +30,11 @@
 {% endblock %}
 
 {% block titulo_panel %}
-	Registro de Deportistas
+	{% if edicion %}
+	    Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block panel_botones %}

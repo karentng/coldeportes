@@ -2,7 +2,11 @@
 {% load bootstrap3 %}
 
 {% block head %}
-	Registro Deportistas
+    {% if edicion %}
+	    Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block css %}
@@ -17,7 +21,11 @@
 {% block miga_pan %}
 	<li><a href="{% url 'inicio' %}">Inicio</a></li>
 	<li><a href="{% url 'deportista_listar' %}">Deportistas</a>
-	<li class="active">Editar</li>
+    {% if edicion %}
+	    <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -25,7 +33,11 @@
 {% endblock %}
 
 {% block titulo_panel %}
-	Registro de Deportistas
+	{% if edicion %}
+	    Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block panel_botones %}

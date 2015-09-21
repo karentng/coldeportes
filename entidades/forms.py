@@ -173,47 +173,63 @@ class LigaParalimpicaForm(forms.ModelForm):
         model = LigaParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion',)
+
+class ClubParalimpicoForm(forms.ModelForm):
+    required_css_class = 'required'
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(ClubParalimpicoForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+        self.fields['liga'] = adicionarClase(self.fields['liga'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+    
+    class Meta:
+        model = ClubParalimpico
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         tipo = kwargs.pop('tipo', None)
         super(ActoresForm, self).__init__(*args, **kwargs)
-
         if tipo == '1':
             #Liga
-            #del self.fields['centros']
-            #del self.fields['escenarios']
-            #del self.fields['deportistas']
-            del self.fields['dirigentes']
-            del self.fields['personal_apoyo']
-            del self.fields['cajas']
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones'])
         elif tipo == '2':
             #Federacion
-            #del self.fields['centros']
-            #del self.fields['escenarios']
-            #del self.fields['deportistas']
-            del self.fields['dirigentes']
-            del self.fields['personal_apoyo']
-            del self.fields['cajas']
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones'])
         elif tipo == '3':
             #Club
-            del self.fields['cajas']
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones'])
         elif tipo == '4':
             #CajaDeCompensacion
             self.fields['cajas'].widget = forms.HiddenInput()
-            del self.fields['centros']
-            del self.fields['deportistas']
-            del self.fields['dirigentes']
+            self.quitar_campos(['centros','deportistas','dirigentes','selecciones'])
         elif tipo == '5':
             #Ente
-            pass
+            self.quitar_campos(['cajas','selecciones'])
+        elif tipo == '6':
+            #Comite
+            self.quitar_campos(['cajas','selecciones'])
         elif tipo =='7':
             #FederacionParalimpica
-            del self.fields['cajas']
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones'])
         elif tipo =='8':
-            #FederacionParalimpica
-            del self.fields['cajas']
+            #LigaParalimpica
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones'])
+        elif tipo =='9':
+            #clubParalimpico
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones'])
+
+    def quitar_campos(self,campos):
+        for campo in campos:
+            del self.fields[campo]
 
     class Meta:
         model = Actores

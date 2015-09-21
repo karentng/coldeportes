@@ -10,8 +10,8 @@ class Deportista(models.Model):
     #Datos personales
         #Identificacion
     tipo_sexo = (
-        ('Hombre','Hombre'),
-        ('Mujer','Mujer'),
+        ('HOMBRE','HOMBRE'),
+        ('MUJER','MUJER'),
     )
     TIPO_IDENTIDAD = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
@@ -74,6 +74,12 @@ class Deportista(models.Model):
     def fotos(self):
         return [self.foto]
 
+    def full_name(self):
+        return str(self.nombres) + " " +str(self.apellidos)
+
+    def full_id(self):
+        return str(self.get_tipo_id_display())+":"+str(self.identificacion)
+
     def save(self, *args, **kwargs):
         self.nombres = self.nombres.upper()
         self.apellidos = self.apellidos.upper()
@@ -133,6 +139,7 @@ class HistorialDeportivo(models.Model):
     ESTADOS_AVAL = (
         ('Aprobado','Aprobado'),
         ('Pendiente','Pendiente'),
+        ('Rechazado','Rechazado'),
     )
 
     nombre = models.CharField(max_length=100,verbose_name='Nombre del campeonato')
@@ -149,6 +156,25 @@ class HistorialDeportivo(models.Model):
     categoria = models.CharField(max_length=100,verbose_name='Categoria en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
+
+    def obtener_info_aval(self):
+        informacion = [
+            self.deportista.foto,
+            self.deportista.full_name(),
+            self.deportista.entidad.nombre,
+            self.deportista.full_id(),
+            self.nombre,
+            self.tipo,
+            self.puesto,
+            self.pais.nombre,
+            self.institucion_equipo,
+            self.id,
+            self.deportista.entidad.id,
+            self.fecha_inicial,
+            self.fecha_final,
+            self.categoria
+        ]
+        return informacion
 
     def __str__(self):
         return self.deportista.nombres+':'+self.nombre
