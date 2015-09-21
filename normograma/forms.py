@@ -5,32 +5,34 @@ from normograma.models import *
 from coldeportes.utilities import adicionarClase
 from django.forms.extras.widgets import SelectDateWidget
 
-SECTORES = (
-        ('D', 'Deporte'),
-        ('E', 'Educación Física'),
-        ('R', 'Recreación'),
-    )
+
 class NormaForm(forms.ModelForm):
     required_css_class = 'required'
 
-    sector = forms.MultipleChoiceField(label="Sector", widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=SECTORES)
-
     def __init__(self, *args, **kwargs):
         super(NormaForm, self).__init__(*args, **kwargs)
-        self.fields['sector'] = adicionarClase(self.fields['sector'], 'many')
-        self.fields['año'] = adicionarClase(self.fields['año'], 'one')
+        self.fields['sectores'] = adicionarClase(self.fields['sectores'], 'many')
+        self.fields['anio'] = adicionarClase(self.fields['anio'], 'one')
         self.fields['jurisdiccion'] = adicionarClase(self.fields['jurisdiccion'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
         self.fields['palabras_clave'].widget.attrs['rows'] = 3
+
     class Meta:
         model = Norma
         fields = '__all__'
 
-class NormogramaBusquedaForm(forms.Form):
 
-    texto_a_buscar = forms.CharField(required=False, label="Búsqueda", widget=forms.TextInput(attrs={'placeholder': 'Ingrese úna búsqueda'}))
-    sector = forms.MultipleChoiceField(label="Sector", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=SECTORES)
+
+class NormogramaBusquedaForm(forms.Form):
+    JURISDICCIONES = (('D', 'Departamental'), ('M', 'Municipal'), ('N', 'Nacional'))
+
+    texto_a_buscar = forms.CharField(required=False, label="Título de Norma / Palabras Clave / Año", widget=forms.TextInput(attrs={'placeholder': 'Ingrese nombre de norma, año y/o palabras claves'}))
+    sector = forms.MultipleChoiceField(label="Sector", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}))
+    jurisdiccion = forms.MultipleChoiceField(label="Jurisdicción", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Jurisdicción'}), choices=JURISDICCIONES)
+    #anio = forms.MultipleChoiceField(label="Año", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Año'}), choices=ANIOS)
 
     def __init__(self, *args, **kwargs):
         super(NormogramaBusquedaForm, self).__init__(*args, **kwargs)
         self.fields['sector'] = adicionarClase(self.fields['sector'], 'many')
+        self.fields['jurisdiccion'] = adicionarClase(self.fields['jurisdiccion'], 'many')
+        #self.fields['anio'] = adicionarClase(self.fields['anio'], 'many')
