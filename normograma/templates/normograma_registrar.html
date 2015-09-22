@@ -20,7 +20,7 @@
 {% block contenido_panel %}
 
 <fieldset>
-    <form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
+    <form id="form-normograma" action="" method="post">{% csrf_token %}
         <div class="well row">
             <div class="col-xs-12">
                 <h3>Registro de Nueva Norma:</h3>                
@@ -37,12 +37,21 @@
 </fieldset>
 
 {% endblock %}
-{% block css %}       
+{% block css %}
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}       
     <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    
+    <script src="{{ STATIC_URL }}js/validaciones/normograma/normograma-validations.js"></script>
+
     <script src="{{STATIC_URL}}plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js"></script>
     <script src="{{STATIC_URL}}plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
     <script src="{{STATIC_URL}}plugins/masked-input/masked-input.min.js"></script>

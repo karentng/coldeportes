@@ -21,11 +21,19 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'dirigentes_listar' %}">Dirigentes</a>
-    <li class="active">Registro</li>
+    {% if edicion == '1' or edicion == 1 %}
+        <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro Nuevo Dirigente
+    {% if edicion == '1' or edicion == 1 %}
+        Edición Dirigente
+    {% else %}
+        Registro Nuevo Dirigente
+    {% endif %}
 {% endblock %}
 
 {% block contenido_panel %}

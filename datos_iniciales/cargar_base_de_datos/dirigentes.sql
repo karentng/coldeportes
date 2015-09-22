@@ -1,9 +1,9 @@
-﻿INSERT INTO indervalle.snd_dirigente (id, tipo_identificacion, identificacion, nombres, apellidos, genero, telefono, email, foto, perfil, entidad_id, estado, ciudad_residencia_id) VALUES
-  (1000, 'CC', '123456', 'PEDRO', 'BERMUDEZ CANO', 'Hombre', '3333333', 'pedro@example.com', '', 'Descripción de Pedro', 1, 0, 1),
-  (1001, 'CC', '123458', 'PATRICIA', 'ARANDA NUÑEZ', 'Mujer', '5555555', 'patricia@example.com', '', 'Descripción de Patricia', 1, 0, 2),
-  (1002, 'CE', '123457', 'MARIANA', 'PUERTA GUTIERREZ', 'Mujer', '4444444', 'mariana@example.com', '', 'Descripción de Mariana', 1, 0, 3),
-  (1003, 'CC', '123459', 'LEONARDO', 'PIDRAHITA CANO', 'Hombre', '6666666', 'leonardo@example.com', '', 'Descripción de Leonardo', 1, 0, 4),
-  (1004, 'PT', '123455', 'SEBASTIAN', 'SUAREZ RENGIFO', 'Hombre', '7777777', 'sebastian@example.com', '', 'Descripción de Sebastian', 1, 0, 5);
+﻿INSERT INTO indervalle.snd_dirigente (id, tipo_identificacion, identificacion, nombres, apellidos, genero, email, foto, perfil, entidad_id, estado, ciudad_residencia_id, telefono_fijo, telefono_celular) VALUES
+  (1000, 'CC', '123456', 'PEDRO', 'BERMUDEZ CANO', 'HOMBRE', 'pedro@example.com', '', 'Descripción de Pedro', 1, 0, 1, '2222222', '2222222'),
+  (1001, 'CC', '123458', 'PATRICIA', 'ARANDA NUÑEZ', 'MUJER', 'patricia@example.com', '', 'Descripción de Patricia', 1, 0, 2, '1111111', '1111111'),
+  (1002, 'CE', '123457', 'MARIANA', 'PUERTA GUTIERREZ', 'MUJER', 'mariana@example.com', '', 'Descripción de Mariana', 1, 0, 3, '3333333', '3333333'),
+  (1003, 'CC', '123459', 'LEONARDO', 'PIDRAHITA CANO', 'HOMBRE', 'leonardo@example.com', '', 'Descripción de Leonardo', 1, 0, 4, '5555555', '5555555'),
+  (1004, 'PS', '123455', 'SEBASTIAN', 'SUAREZ RENGIFO', 'HOMBRE', 'sebastian@example.com', '', 'Descripción de Sebastian', 1, 0, 5, '8888888', '8888888');
 
 INSERT INTO indervalle.snd_dirigente_nacionalidad (id, dirigente_id, nacionalidad_id) VALUES
   (1000, 1000, 52),

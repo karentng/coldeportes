@@ -54,6 +54,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         (6, 'Comité'),
         (7,'Federación Paralimpica'),
         (8,'Liga Paralimpica'),
+        (9,'Club Paralimpico'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -83,6 +84,8 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo= FederacionParalimpica
         elif self.tipo == 8:
             modelo = LigaParalimpica
+        elif self.tipo == 9:
+            modelo = ClubParalimpico
         try:
             return modelo.objects.get(id=self.id)
         except Exception:
@@ -189,6 +192,8 @@ class FederacionParalimpica(Entidad):
 
         actores = self.actores
         if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
             actores.selecciones = True
             actores.save()
         super(FederacionParalimpica, self).save(*args, **kwargs)
@@ -207,9 +212,23 @@ class LigaParalimpica(Entidad):
     def save(self, *args, **kwargs):
         actores = self.actores
         if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
             actores.selecciones = True
             actores.save()
         super(LigaParalimpica, self).save(*args, **kwargs)
+
+class ClubParalimpico(Entidad):
+    liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        actores = self.actores
+        if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
+            actores.save()
+        super(ClubParalimpico, self).save(*args, **kwargs)
+
 
 class CajaDeCompensacion(Entidad):
     pass
@@ -319,6 +338,15 @@ class Club(Entidad):
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
+
+    def save(self, *args, **kwargs):
+        actores = self.actores
+        if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
+            actores.save()
+        super(Club, self).save(*args, **kwargs)
+
 
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')
