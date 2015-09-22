@@ -166,6 +166,7 @@ def wizard_nuevo_identificacion(request):
 
     return render(request, 'escenarios/wizard/wizard_escenario.html', {
         'titulo': 'Identificación del Escenario',
+        'titulo_panel': 'Registro de Escenarios Deportivos',
         'wizard_stage': 1,
         'form': identificacion_form,
     })
@@ -216,6 +217,7 @@ def wizard_identificacion(request, escenario_id):
 
     return render(request, 'escenarios/wizard/wizard_escenario.html', {
         'titulo': 'Identificación del Escenario',
+        'titulo_panel': 'Edición de Escenarios Deportivos',
         'wizard_stage': 1,
         'form': identificacion_form,
     })
