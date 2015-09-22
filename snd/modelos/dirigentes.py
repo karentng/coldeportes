@@ -2,9 +2,8 @@
 
 from entidades.models import *
 from django.db import models
-import os
 from django.conf import settings
-
+import os
 
 class Dirigente(models.Model):
     def foto_name(instance, filename):
@@ -36,7 +35,7 @@ class Dirigente(models.Model):
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(choices=TIPO_GENERO,max_length=6, verbose_name='Género')
     nacionalidad = models.ManyToManyField(Nacionalidad)
-    telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
+    telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo')
     telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
     email = models.EmailField(null=True,blank=True)
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
@@ -64,17 +63,21 @@ class DirigenteCargo(models.Model):
 
     def __str__(self):
         if self.fecha_retiro != None:
-            fecha_retiro = self.fecha_retiro.strftime('%d de %B de %Y')
+            fecha_retiro = self.get_fecha_format(self.fecha_retiro)
         else:
             fecha_retiro = 'Actual'
-        return "{0} [{1} a {2}]".format(self.nombre, self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
+        return "{0} [{1} a {2}]".format(self.nombre, self.get_fecha_format(self.fecha_posesion), fecha_retiro)
 
     def periodo(self):
         if self.fecha_retiro != None:
-            fecha_retiro = self.fecha_retiro.strftime('%d de %B de %Y')
+            fecha_retiro = self.get_fecha_format(self.fecha_retiro)
         else:
             fecha_retiro = 'Actual'
-        return "{0} a {1}".format(self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
+        return "{0} a {1}".format(self.get_fecha_format(self.fecha_posesion), fecha_retiro)
+
+    def get_fecha_format(self,fecha):
+        meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+        return str(fecha.day) + " de " + meses[fecha.month-1] + " de " + str(fecha.year)
 
 class DirigenteFuncion(models.Model):
     dirigente = models.ForeignKey(Dirigente)
