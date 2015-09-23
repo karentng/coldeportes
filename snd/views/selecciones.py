@@ -78,6 +78,88 @@ def editar_base(request,id_s):
         'wizard_stage': 1
     })
 
+#Metodos abstractos para seleccion de personas
+def obtener_personas(clubes,tipo_persona,tenant_incial):
+    """
+    Septiembre 23 / 2015
+    Autor: Daniel Correa
+
+    Permite de manera asbtracta tarer el grupo de personas solicitado para un listado de clubes
+
+    :param clubes: listado de clubes a buscar
+    :param tipo_persona: tipo de persona: Deportista o PersonalApoyo
+    :param tenant_incial: tenant del cual se hace la solicitud
+    :return:
+    """
+    personas = []
+    for c in clubes:
+        connection.set_tenant(c)
+        ContentType.objects.clear_cache()
+        personas += globals()[tipo_persona].objects.filter(estado=0)
+    connection.set_tenant(tenant_incial)
+    return personas
+
+def personas_por_entidad(tipo_entidad,tipo_persona,tenant_incial):
+    """
+    Septiembre 23 / 2015
+    Autor: Daniel Correa
+
+    Permire de manera abstracta de acuerdo al tipo de entidad traer un conjunto de personas
+
+    :param tipo_entidad: tipo de entidad que solicita listado de personas
+    :param tipo_persona: Deportista o PersonalApoyo
+    :param tenant_incial: tenant del cual se hace la solicitud
+    """
+    if tipo_entidad == 1:
+        #Liga
+        clubes = Club.objects.filter(liga=tenant_incial.id)
+        return obtener_personas(clubes,tipo_persona,tenant_incial)
+
+    elif tipo_entidad == 2:
+        #Fede
+        ligas = Liga.objects.filter(federacion=tenant_incial.id)
+        personas = []
+        for l in ligas:
+            clubes = Club.objects.filter(liga=l)
+            personas += obtener_personas(clubes,tipo_persona,tenant_incial)
+        return personas
+
+    elif tipo_entidad == 6:
+        #Comite
+        personas = []
+        if tenant_incial.obtenerTenant().tipo_comite == 1:
+            #Comite olimpico
+            modelo_fed = Federacion
+            modelo_lig = Liga
+            modelo_club = Club
+        else:
+            #Comite paralimpico
+            modelo_fed = FederacionParalimpica
+            modelo_lig = LigaParalimpica
+            modelo_club = ClubParalimpico
+        federaciones = modelo_fed.objects.filter(comite=tenant_incial.id)
+        for f in federaciones:
+            ligas = modelo_lig.objects.filter(federacion=f)
+            for l in ligas:
+                clubes = modelo_club.objects.filter(liga=l)
+                personas += obtener_personas(clubes,tipo_persona,tenant_incial)
+        return personas
+
+    elif tipo_entidad == 8:
+        #liga paralimpica
+        clubes = ClubParalimpico.objects.filter(liga=tenant_incial.id)
+        return obtener_personas(clubes,tipo_persona,tenant_incial)
+
+    elif tipo_entidad == 7:
+        #federacion paralimpica
+        ligas = LigaParalimpica.objects.filter(federacion=tenant_incial.id)
+        personas = []
+        for l in ligas:
+            clubes = ClubParalimpico.objects.filter(liga=l)
+            personas += obtener_personas(clubes,tipo_persona,tenant_incial)
+        return personas
+#Fin metodos abstractos
+
 @login_required
 def registrar_deportistas(request,id_s):
     """
@@ -98,70 +180,7 @@ def registrar_deportistas(request,id_s):
         messages.error(request,'No existe la selección solicitada')
         return redirect('listar_seleccion')
 
-    deportistas = []
-    if request.tenant.tipo == 1:
-        #Liga
-        clubes = Club.objects.filter(liga=request.tenant.id)
-        for c in clubes:
-            connection.set_tenant(c)
-            ContentType.objects.clear_cache()
-            deportistas += Deportista.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 2:
-        #Fede
-        ligas = Liga.objects.filter(federacion=request.tenant.id)
-        for l in ligas:
-            clubes = Club.objects.filter(liga=l)
-            for c in clubes:
-                connection.set_tenant(c)
-                ContentType.objects.clear_cache()
-                deportistas += Deportista.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 6:
-        #Comite
-        if request.tenant.obtenerTenant().tipo_comite == 1:
-            federaciones = Federacion.objects.filter(comite=request.tenant.id)
-            for f in federaciones:
-                ligas = Liga.objects.filter(federacion=f)
-                for l in ligas:
-                    clubes = Club.objects.filter(liga=l)
-                    for c in clubes:
-                        connection.set_tenant(c)
-                        ContentType.objects.clear_cache()
-                        deportistas += Deportista.objects.filter(estado=0)
-            connection.set_tenant(request.tenant)
-        else:
-            federaciones = FederacionParalimpica.objects.filter(comite=request.tenant.id)
-            for f in federaciones:
-                ligas = Liga.objects.filter(federacion=f)
-                for l in ligas:
-                    clubes = Club.objects.filter(liga=l)
-                    for c in clubes:
-                        connection.set_tenant(c)
-                        ContentType.objects.clear_cache()
-                        deportistas += Deportista.objects.filter(estado=0)
-            connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 8:
-        #liga paralimpica
-        clubes = ClubParalimpico.objects.filter(liga=request.tenant.id)
-        for c in clubes:
-            connection.set_tenant(c)
-            ContentType.objects.clear_cache()
-            deportistas += Deportista.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 7:
-        #federacion paralimpica
-        ligas = LigaParalimpica.objects.filter(federacion=request.tenant.id)
-        for l in ligas:
-            clubes = ClubParalimpico.objects.filter(liga=l)
-            for c in clubes:
-                connection.set_tenant(c)
-                ContentType.objects.clear_cache()
-                deportistas += Deportista.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-    else:
-        messages.error(request,'Usted esta en una sección que no le corresponde')
-        return redirect('inicio_tenant')
+    deportistas = personas_por_entidad(request.tenant.tipo,'Deportista',request.tenant)
 
     depor_registrados = []
     for d in DeportistasSeleccion.objects.filter(seleccion=sele): #Obtener deportistas seleccionados al momento
@@ -201,71 +220,7 @@ def registrar_personal(request,id_s):
         messages.error(request,'No existe la selección solicitada')
         return redirect('listar_seleccion')
 
-    personal = []
-    if request.tenant.tipo == 1:
-        #Liga
-        clubes = Club.objects.filter(liga=request.tenant.id)
-        for c in clubes:
-            connection.set_tenant(c)
-            ContentType.objects.clear_cache()
-            personal += PersonalApoyo.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 2:
-        #Fede
-        ligas = Liga.objects.filter(federacion=request.tenant.id)
-        for l in ligas:
-            clubes = Club.objects.filter(liga=l)
-            for c in clubes:
-                connection.set_tenant(c)
-                ContentType.objects.clear_cache()
-                personal += PersonalApoyo.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 6:
-        #Comite
-        if request.tenant.obtenerTenant().tipo_comite == 1:
-            federaciones = Federacion.objects.filter(comite=request.tenant.id)
-            for f in federaciones:
-                ligas = Liga.objects.filter(federacion=f)
-                for l in ligas:
-                    clubes = Club.objects.filter(liga=l)
-                    for c in clubes:
-                        connection.set_tenant(c)
-                        ContentType.objects.clear_cache()
-                        personal += PersonalApoyo.objects.filter(estado=0)
-            connection.set_tenant(request.tenant)
-        else:
-            federaciones = FederacionParalimpica.objects.filter(comite=request.tenant.id)
-            for f in federaciones:
-                ligas = Liga.objects.filter(federacion=f)
-                for l in ligas:
-                    clubes = Club.objects.filter(liga=l)
-                    for c in clubes:
-                        connection.set_tenant(c)
-                        ContentType.objects.clear_cache()
-                        personal += PersonalApoyo.objects.filter(estado=0)
-            connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 8:
-        #liga paralimpica
-        clubes = ClubParalimpico.objects.filter(liga=request.tenant.id)
-        for c in clubes:
-            connection.set_tenant(c)
-            ContentType.objects.clear_cache()
-            personal += PersonalApoyo.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-    elif request.tenant.tipo == 7:
-        #federacion paralimpica
-        ligas = LigaParalimpica.objects.filter(federacion=request.tenant.id)
-        for l in ligas:
-            clubes = ClubParalimpico.objects.filter(liga=l)
-            for c in clubes:
-                connection.set_tenant(c)
-                ContentType.objects.clear_cache()
-                personal += PersonalApoyo.objects.filter(estado=0)
-        connection.set_tenant(request.tenant)
-
-    else:
-        messages.error(request,'Usted esta en una sección que no le corresponde')
-        return redirect('inicio_tenant')
+    personal = personas_por_entidad(request.tenant.tipo,'PersonalApoyo',request.tenant)
 
     personal_registrados = []
     for p in PersonalSeleccion.objects.filter(seleccion=sele): #Obtener personal seleccionado al momento
