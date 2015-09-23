@@ -453,7 +453,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                 qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
                 for objeto in qs:
                     objetos.append(objeto)
-            return objetos
+        return objetos
     #Cuando el tipo de tenant es una federación hay que ejecutar las busquedas dentro de la federación, dentro de sus ligas y dentro de los clubes de cada liga
     elif request.tenant.tipo == 2:
         if modeloTipo.__name__ == 'Seleccion':
@@ -481,7 +481,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                     qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
                     for objeto in qs:
                         objetos.append(objeto)
-            return objetos
+        return objetos
     #tipo de tenan comité, hay que realizar la búsqueda en el comite, en la federaciónes, en las ligas y en los clubes
     elif request.tenant.tipo == 6:
         if modeloTipo.__name__ == 'Seleccion':
@@ -524,7 +524,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                         qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
                         for objeto in qs:
                             objetos.append(objeto)
-            return objetos
+        return objetos
     #Cuando el tipo de tenant es una federación paralimpica
     # hay que ejecutar las busquedas dentro de la federación, dentro de sus ligas y dentro de sus clubes
     elif request.tenant.tipo == 7:
@@ -553,7 +553,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                     qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
                     for objeto in qs:
                         objetos.append(objeto)
-            return objetos
+        return objetos
     #cuando el tipo de tenan es una liga paralimpica
     elif request.tenant.tipo == 8:
         if modeloTipo.__name__ == 'Seleccion':
@@ -575,7 +575,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
                 qs = ejecutar_busqueda(modeloTipo,atributos,busqueda,club,tenant_actual)
                 for objeto in qs:
                     objetos.append(objeto)
-            return objetos
+        return objetos
     else:
         objetos = ejecutar_busqueda(modeloTipo,atributos,busqueda,request.tenant,request.tenant)
         return objetos
