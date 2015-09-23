@@ -388,4 +388,63 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #MODELO PARA CLUB PARALIMPICO
+    (
+        Deportista,
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","estado"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Estado"],
+        None,
+        [
+            [
+                "Ver Deportista",
+                'ver_deportista',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'edicion_deportista',
+                ['id'],
+                'fa-gear',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "CTD",
+                'cambio_documento_deportista',
+                ['id'],
+                'fa-archive',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "A/I",
+                'deportista_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+
+            ],
+
+        ],
+    ),
 )
