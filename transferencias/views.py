@@ -156,7 +156,7 @@ def procesar_transferencia(request,id_transfer,opcion):
             transferido = guardar_objeto(objeto,adicionales,tipo_objeto)
             messages.success(request,'Transferencia recibida exitosamente')
 
-    return finalizar_transferencia(request,entidad_cambio,transferido,tipo_objeto,transferencia)
+    return finalizar_transferencia(request,entidad_cambio,transferido,transferencia)
 
 def existencia_caso_cambio_tipo_id(request,objeto,tipo_objeto,entidad_saliente):
     """
@@ -198,7 +198,7 @@ def existencia_caso_cambio_tipo_id(request,objeto,tipo_objeto,entidad_saliente):
 
     return False,None
 
-def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transferencia):
+def finalizar_transferencia(request,entidad_saliente,objeto,transferencia):
     """
     Agosto 12, 2015
     Autor: Daniel Correa
@@ -220,7 +220,7 @@ def finalizar_transferencia(request,entidad_saliente,objeto,tipo_objeto,transfer
 
     depor = Deportista.objects.get(identificacion=objeto.identificacion,tipo_id = objeto.tipo_id)
     depor.estado = 3
-    depor.entidad = entidad_saliente
+    depor.entidad = request.tenant
     depor.save()
     depor.tipo_objeto = depor.__class__.__name__
     depor.fecha = datetime.date.today()
