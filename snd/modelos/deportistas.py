@@ -147,7 +147,7 @@ class HistorialDeportivo(models.Model):
     fecha_final = models.DateField(verbose_name='Fecha Finalización ')
     pais = models.ForeignKey(Nacionalidad)
     institucion_equipo = models.CharField(max_length=100, verbose_name='Club deportivo')
-    tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato',default='Campeonato Internacional')
+    tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato')
     puesto = models.IntegerField(verbose_name='Puesto obtenido')
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
     modalidad = models.CharField(max_length=100,blank=True,verbose_name='Modalidad de competencia')

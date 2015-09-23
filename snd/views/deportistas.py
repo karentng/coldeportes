@@ -547,7 +547,7 @@ def cambio_tipo_documento_deportista(request,id):
         'form': form
     })
 
-def obtener_historiales_por_liga(liga,tenant_actual,tipo):
+def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     """
     Agosto 28 /2015
     Autor: Daniel Correa
@@ -559,7 +559,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo):
     :param tipo: tipo de busqueda, DEPARTAMENTAL O MUNICIPAL
     :return: historiales deportivos de la liga
     """
-    clubes = Club.objects.filter(liga=liga)
+    clubes = globals()[tipo_club].objects.filter(liga=liga)
     historiales = []
     for c in clubes:
         connection.set_tenant(c)
@@ -583,14 +583,23 @@ def avalar_logros_deportivos(request):
     tenant_actual = connection.tenant
     if request.tenant.tipo == 1:
         #Traer todos los clubs asociados a su liga , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
-        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional')
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional','Club')
 
     elif request.tenant.tipo == 2:
         #Traer todos las ligas [traer todos los clubes] asociados a su fed , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
         ligas = Liga.objects.filter(federacion=tenant_actual.id)
         historiales = []
         for l in ligas:
-            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional')
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional','Club')
+    elif request.tenant.tipo == 8:
+        #Liga paralimpica
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional','ClubParalimpico')
+    elif request.tenant.tipo ==7:
+        #Fede paralimpica
+        ligas = LigaParalimpica.objects.filter(federacion=tenant_actual.id)
+        historiales = []
+        for l in ligas:
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional','ClubParalimpico')
     else:
         messages.warning(request,'Usted se encuentra en una seccion no permitida')
         return redirect('inicio_tenant')
