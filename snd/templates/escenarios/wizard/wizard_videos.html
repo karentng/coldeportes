@@ -32,7 +32,7 @@
 {% block contenido_panel %}
     {% include 'escenarios/wizard/_wizard.html' %}
         <div class="row">
-            <fieldset class="col-md-7" >
+            <fieldset class="col-md-6" >
                 <form id="form-wizard-videos" action="" method="post">{% csrf_token %}
                     <div class="well row">
                         <div class="col-xs-12">
@@ -48,13 +48,14 @@
                     </div>
                 </form>
             </fieldset> 
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <h4>Videos Actuales:</h4>
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Video</th>
+                            <th align="center" class="col-md-1">Video</th>
                             <th align="center">Descripción</th>
+                            <th align="center" class="col-md-3"></th>
                             <th align="center"></th>
                         </tr>
                     </thead>
@@ -62,8 +63,9 @@
                     {% if videos %}
                     {% for video in videos %}
                         <tr>
-                            <td align="center"><a target="_blank" href="{{video.url}}">{{video.url}}</a></td>
+                            <td align="center"><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
                             <td align="center">{% if video.descripcion %}{{video.descripcion}}{% endif %}</td>
+                            <td align="center"><iframe width="150" height="75" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
