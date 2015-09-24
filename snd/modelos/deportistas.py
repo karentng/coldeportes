@@ -40,7 +40,7 @@ class Deportista(models.Model):
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
     genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista')
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
-    identificacion = models.CharField(max_length=100,unique=True,verbose_name='Identificación')
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
     barrio = models.CharField(max_length=100,verbose_name='Barrio')
