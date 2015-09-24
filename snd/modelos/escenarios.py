@@ -23,7 +23,7 @@ class Escenario(models.Model):
     latitud = models.FloatField()
     longitud = models.FloatField()
     altura = models.PositiveIntegerField()
-    nombre_administrador = models.CharField(max_length=50, null=True)    
+    nombre_administrador = models.CharField(max_length=50, null=True)
     comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)
     nombre_administrador = models.CharField(max_length=50, null=True)

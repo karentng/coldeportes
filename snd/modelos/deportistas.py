@@ -59,6 +59,9 @@ class Deportista(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
+    class Meta:
+        unique_together = ('tipo_id','identificacion',)
+
     def __str__(self):
         return self.identificacion + "-" + self.nombres+" "+self.apellidos
 
@@ -153,7 +156,7 @@ class HistorialDeportivo(models.Model):
     modalidad = models.CharField(max_length=100,blank=True,verbose_name='Modalidad de competencia')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
-    categoria = models.CharField(max_length=100,verbose_name='Categoria en la que participó')
+    categoria = models.CharField(max_length=100,verbose_name='Categoría en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
 
