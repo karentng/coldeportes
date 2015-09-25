@@ -2,7 +2,7 @@
 
 from entidades.models import *
 from django.db import models
-from coldeportes.utilities import calculate_age
+from coldeportes.utilities import calculate_age,extraer_codigo_video
 from django.db.models.fields.files import ImageFieldFile, FileField
 from coldeportes.settings import STATIC_URL
 
@@ -40,7 +40,7 @@ class Deportista(models.Model):
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
     genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista')
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
-    identificacion = models.CharField(max_length=100,unique=True,verbose_name='Identificación')
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
     barrio = models.CharField(max_length=100,verbose_name='Barrio')
@@ -59,8 +59,14 @@ class Deportista(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
+    class Meta:
+        unique_together = ('tipo_id','identificacion',)
+
     def __str__(self):
         return self.identificacion + "-" + self.nombres+" "+self.apellidos
+
+    def short_video_url(self):
+        return extraer_codigo_video(self.video)
 
     def edad(self):
         return calculate_age(self.fecha_nacimiento)
@@ -153,7 +159,7 @@ class HistorialDeportivo(models.Model):
     modalidad = models.CharField(max_length=100,blank=True,verbose_name='Modalidad de competencia')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
-    categoria = models.CharField(max_length=100,verbose_name='Categoria en la que participó')
+    categoria = models.CharField(max_length=100,verbose_name='Categoría en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
 

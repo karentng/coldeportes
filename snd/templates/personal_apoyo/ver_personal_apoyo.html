@@ -179,29 +179,23 @@
                                                 <table class="table table-invoice">
                                                     <thead>
                                                         <tr>
-                                                            <th>DENOMINACIÓN DIPLOMA</th>
+                                                            <th>INSTITUCIÓN</th>
                                                             <th>NIVEL</th>
-                                                            <th>INSTITUCIÓN FORMACIÓN</th>
+                                                            <th>ESTADO</th>
+                                                            <th>PROFESIÓN</th>
                                                             <th>PAÍS</th>
-                                                            <th>FECHA COMIENZO</th>
-                                                            <th>FECHA FIN</th>
+                                                            <th>AÑO FINALIZACIÓN</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {% for formacion in formacion_deportiva %}
                                                         <tr>
-                                                            <td>{{formacion.denominacion_diploma}}</td>
+                                                            <td>{{formacion.institucion}}</td>
                                                             <td>{{formacion.nivel}}</td>
-                                                            <td>{{formacion.institucion_formacion}}</td>
-                                                            <td>{{formacion.pais_formacion}}</td>
-                                                            <td>{{formacion.fecha_comienzo}}</td>
-                                                            <td>
-                                                                {% if formacion.fecha_fin == None %}
-                                                                    ACTUAL
-                                                                {% else %}
-                                                                    {{ formacion.fecha_fin }}
-                                                                {% endif %}
-                                                            </td>
+                                                            <td>{{formacion.estado}}</td>
+                                                            <td>{% if formacion.profesion %}{{ formacion.profesion }}{% else %}N/A{% endif %}</td>
+                                                            <td>{{ formacion.pais }}</td>
+                                                            <td>{% if formacion.fecha_finalizacion %}{{ formacion.fecha_finalizacion }}{% else %}Actual{% endif %}</td>
                                                         </tr>
                                                         {% endfor %}
                                                     </tbody>

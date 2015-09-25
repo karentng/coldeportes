@@ -433,6 +433,43 @@ def finalizar_deportista(request,opcion):
         return redirect('deportista_listar')
 
 
+def existencia_deportista(datos):
+    #Verificación de existencia dentro del tenant actual
+            try:
+                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+            except Exception:
+                deportista = None
+
+            if deportista:
+                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
+                return deportista,None,True
+
+            if not deportista:
+                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
+                #Verificación de existencia en otros tenants
+                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+                existencia = False
+                tenant_existencia = None
+                tenant_actual = connection.tenant
+                entidades = Entidad.objects.all()
+                for entidad in entidades:
+                    connection.set_tenant(entidad)
+                    ContentType.objects.clear_cache()
+                    try:
+                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+                        existencia = True
+                        tenant_existencia = entidad
+                        break
+                    except Exception:
+                        pass
+
+                connection.set_tenant(tenant_actual)
+
+                if existencia:
+                    return deportista,tenant_existencia,True
+                else:
+                    return None,None,False
+
 @login_required
 @tenant_required
 @all_permission_required('snd.add_deportista')
@@ -457,46 +494,18 @@ def verificar_deportista(request):
                 'tipo_id': form.cleaned_data['tipo_id']
             }
 
-            #Verificación de existencia dentro del tenant actual
-            try:
-                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-            except Exception:
-                deportista = None
+            deportista,tenant_existencia,existe = existencia_deportista(datos)
 
-            if deportista:
-                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
-                return render(request,'deportistas/verificar_deportista.html',{'existe':True,
-                                                                               'deportista':deportista})
-
-            if not deportista:
-                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
-                #Verificación de existencia en otros tenants
-                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
-                existencia = False
-                tenant_existencia = None
-                tenant_actual = connection.tenant
-                entidades = Entidad.objects.all()
-                for entidad in entidades:
-                    connection.set_tenant(entidad)
-                    ContentType.objects.clear_cache()
-                    try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-                        existencia = True
-                        tenant_existencia = entidad
-                        break
-                    except Exception:
-                        pass
-
-                connection.set_tenant(tenant_actual)
-
-                if existencia:
-                    return render(request,'deportistas/verificar_deportista.html',{'existe':True,
-                                                                                   'deportista':deportista,
-                                                                                   'tenant_existencia':tenant_existencia})
-                else:
-                    #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
-                    request.session['datos'] = datos
-                    return redirect('deportista_nuevo')
+            if existe:
+                return render(request,'deportistas/verificar_deportista.html',{
+                    'existe':True,
+                    'deportista':deportista,
+                    'tenant_existencia':tenant_existencia
+                })
+            else:
+                #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
+                request.session['datos'] = datos
+                return redirect('deportista_nuevo')
 
     else:
         form = VerificarExistenciaForm()
@@ -534,14 +543,26 @@ def cambio_tipo_documento_deportista(request,id):
     if request.method == 'POST':
         form = CambioDocumentoForm(request.POST,initial={'tipo_documento_anterior':tipo_id_ant,'identificacion_anterior':id_ant})
         if form.is_valid():
-            depor.tipo_id = form.cleaned_data['tipo_documento_nuevo']
-            depor.identificacion = form.cleaned_data['identificacion_nuevo']
-            depor.save()
-            hist = form.save(commit=False)
-            hist.deportista = depor
-            hist.save()
-            messages.success(request,'Cambio de documento exitoso')
-            return redirect('deportista_listar')
+            datos = {
+                'identificacion': form.cleaned_data['identificacion_nuevo'],
+                'tipo_id': form.cleaned_data['tipo_documento_nuevo']
+            }
+            deportista,tenant_existencia,existe = existencia_deportista(datos)
+            if existe:
+                return render(request,'deportistas/existe_deportista.html',{
+                    'existe':True,
+                    'deportista':deportista,
+                    'tenant_existencia':tenant_existencia
+                })
+            else:
+                depor.tipo_id = form.cleaned_data['tipo_documento_nuevo']
+                depor.identificacion = form.cleaned_data['identificacion_nuevo']
+                depor.save()
+                hist = form.save(commit=False)
+                hist.deportista = depor
+                hist.save()
+                messages.success(request,'Cambio de documento exitoso')
+                return redirect('deportista_listar')
 
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form

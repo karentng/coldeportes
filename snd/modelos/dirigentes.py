@@ -45,6 +45,9 @@ class Dirigente(models.Model):
     entidad = models.ForeignKey(Entidad, null=True, blank=True)
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="Estado del dirigente")
 
+    class Meta:
+        unique_together = ('tipo_identificacion','identificacion',)
+
     def __str__(self):
         return "{0} {1}".format(self.nombres, self.apellidos)
 

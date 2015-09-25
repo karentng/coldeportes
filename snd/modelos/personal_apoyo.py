@@ -64,7 +64,7 @@ class PersonalApoyo(models.Model):
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
     foto = models.ImageField(upload_to='fotos_personal_apoyo', null=True, blank=True)
     tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD, default='CED')
-    identificacion = models.BigIntegerField(verbose_name='Número de identificación', unique=True)
+    identificacion = models.CharField(max_length='100',verbose_name='Número de identificación', unique=True)
     telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
     telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
     correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')
@@ -74,6 +74,9 @@ class PersonalApoyo(models.Model):
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
     lgtbi = models.BooleanField(verbose_name='Hace parte de la comunidad LGTBI?')
     entidad = models.ForeignKey(Entidad)
+
+    class Meta:
+        unique_together = ('tipo_id','identificacion',)
 
     def __str__(self):
         return "%s - %s %s"%(self.identificacion,self.nombres, self.apellidos)

@@ -13,7 +13,7 @@ class VerificarExistenciaForm(forms.Form):
         ('PS', 'PASAPORTE'),
     )
     tipo_id = forms.ChoiceField(label='Tipo de documento',choices=TIPO_IDENTIDAD)
-    identificacion = forms.IntegerField(label="Identificación del deportista")
+    identificacion = forms.CharField(label="Identificación del deportista")
 
 class CambioDocumentoForm(ModelForm):
     required_css_class = 'required'
