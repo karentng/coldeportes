@@ -2,7 +2,7 @@
 
 from entidades.models import *
 from django.db import models
-from coldeportes.utilities import calculate_age
+from coldeportes.utilities import calculate_age,extraer_codigo_video
 from django.db.models.fields.files import ImageFieldFile, FileField
 from coldeportes.settings import STATIC_URL
 
@@ -64,6 +64,9 @@ class Deportista(models.Model):
 
     def __str__(self):
         return self.identificacion + "-" + self.nombres+" "+self.apellidos
+
+    def short_video_url(self):
+        return extraer_codigo_video(self.video)
 
     def edad(self):
         return calculate_age(self.fecha_nacimiento)

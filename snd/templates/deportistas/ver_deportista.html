@@ -140,7 +140,25 @@
                                                 <div class="row">
                                                     <p><strong>Video:</strong></p>
                                                     {% if deportista.video %}
-                                                        <a href="{{deportista.video}}" target="_blank">{{deportista.video}}</a>
+                                                        <a class="btn btn-md btn-success" href="#modal-video" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
+                                                        <div class="modal fade" id="modal-video">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                        <h4 class="modal-title">Video de {{ deportista.full_name }}:</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div align="center">
+                                                                            <iframe  width="500" height="400" src="https://www.youtube.com/embed/{{deportista.short_video_url}}" frameborder="0" allowfullscreen></iframe>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     {% else %}
                                                         Ninguno
                                                     {% endif %}
