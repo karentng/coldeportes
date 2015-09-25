@@ -332,7 +332,13 @@ MODELOS_DE_DATOS = (
                 'wizard_identificacion',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
             ],
             [
                 "A/I",
