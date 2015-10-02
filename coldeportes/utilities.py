@@ -6,9 +6,18 @@ from django.shortcuts import redirect,render
 from datetime import date
 from django.contrib.auth.models import *
 from datetimewidget.widgets import DateWidget
+import urllib.parse
 
 def MyDateWidget():
     return DateWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd', 'startView':4, 'language':'es'})
+
+def extraer_codigo_video(url_video):
+
+    url_data = urllib.parse.urlparse(url_video)
+    query = urllib.parse.parse_qs(url_data.query)
+    video = query["v"][0]
+
+    return video
 
 def inicializarComponentes():
     """

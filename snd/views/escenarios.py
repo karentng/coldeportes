@@ -452,6 +452,8 @@ def wizard_videos(request, escenario_id):
     except Exception:
         videos = None
 
+
+
     escenario = Escenario.objects.get(id=escenario_id)
 
     non_permission = not_transferido_required(request,escenario)
@@ -463,8 +465,13 @@ def wizard_videos(request, escenario_id):
     if request.method == 'POST':
         videos_form = VideoEscenarioForm(request.POST)
 
+
         if videos_form.is_valid():
-            video_nuevo = videos_form.save(commit=False)
+            video_nuevo = videos_form.save(commit=False)            
+
+            video = extraer_codigo_video(video_nuevo.url)
+
+            video_nuevo.url = video
             video_nuevo.escenario = escenario
             video_nuevo.save()
             return redirect('wizard_videos', escenario_id)

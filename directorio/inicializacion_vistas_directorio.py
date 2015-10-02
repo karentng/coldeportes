@@ -91,7 +91,7 @@ def crear_vistas():
     select  DI.id, DI.nombres,
             DI.apellidos, DI.genero,
             DI.ciudad_residencia_id,
-            DI.email, DI.telefono as telefono_contacto, 
+            DI.email, DI.telefono_fijo as telefono_contacto, 
             DIN.nacionalidad_id,         
             DI.entidad_id, DI.estado,       
             DI.foto,     
