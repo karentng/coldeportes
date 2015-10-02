@@ -137,7 +137,7 @@ def wizard_corporal(request,id_depor):
         return non_permission
 
     mujer = False
-    if deportista.genero == 'Mujer':
+    if deportista.genero == 'MUJER':
         mujer=True
 
     corporal_form = ComposicionCorporalForm(mujer,instance=corporal)
