@@ -1,20 +1,28 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
-{% block head %}
-    Registro Personal de apoyo
-{% endblock %}
-
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
+{% block head %}
+	{% if edicion %}
+	    Edición personal de apoyo
+    {% else %}
+        Registro personal de apoyo
+    {% endif %}
+{% endblock %}
+
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'personal_apoyo_listar' %}">Personal de apoyo</a>
-    <li class="active">Editar</li>
+    {% if edicion %}
+	    <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -22,7 +30,11 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Personal de apoyo
+    {% if edicion %}
+	    Edición personal de apoyo
+    {% else %}
+        Registro personal de apoyo
+    {% endif %}
 {% endblock %}
 
 {% block panel_botones %}
@@ -36,11 +48,27 @@
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
-                        {% for i in form %}
-						<div class="col-md-6">
-							{% bootstrap_field i layout="vertical" %}
-						</div>
-					    {% endfor %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.nombre_cargo layout="vertical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.institucion layout="vertical" %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.fecha_comienzo layout="vertical" %}
+                            </div>
+                            <div class="col-md-6 p-t-10">
+                                {% bootstrap_field form.actual layout="vertical" %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.fecha_fin layout="vertical" %}
+                            </div>
+                        </div>
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Añadir</button>
                     </div>
                 </div>
@@ -96,7 +124,7 @@
                 </table>
             </div>
         </div>
-        <br/>
+        <hr>
         {% if wizard_stage > 1 %}
         <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}

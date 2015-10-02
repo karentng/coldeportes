@@ -2,7 +2,11 @@
 {% load bootstrap3 %}
 
 {% block head %}
-	Registro Personal de apoyo
+	{% if edicion %}
+	    Edición personal de apoyo
+    {% else %}
+        Registro personal de apoyo
+    {% endif %}
 {% endblock %}
 
 {% block css %}
@@ -14,7 +18,11 @@
 {% block miga_pan %}
 	<li><a href="{% url 'inicio' %}">Inicio</a></li>
 	<li><a href="{% url 'personal_apoyo_listar' %}">Personal de apoyo</a>
-	<li class="active">Editar</li>
+	{% if edicion %}
+	    <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -22,7 +30,11 @@
 {% endblock %}
 
 {% block titulo_panel %}
-	Registro de Personal de apoyo
+	{% if edicion %}
+	    Edición personal de apoyo
+    {% else %}
+        Registro personal de apoyo
+    {% endif %}
 {% endblock %}
 
 {% block panel_botones %}
@@ -103,18 +115,19 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            {% if wizard_stage > 1 %}
-                            <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-                            {% endif %}
-                            <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
-                        </div>
-                    </div>
+
 			    </div>
             </div>
         </fieldset>
+        <hr>
+        <div class="row">
+            <div class="col-xs-12">
+                {% if wizard_stage > 1 %}
+                <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+                {% endif %}
+                <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+            </div>
+        </div>
     </form>
 
 

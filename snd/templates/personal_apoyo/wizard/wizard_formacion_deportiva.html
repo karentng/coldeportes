@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
-{% block head %}
-    Registro Personal de apoyo
-{% endblock %}
-
 {% block css %}
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
@@ -12,10 +8,22 @@
     <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 {% endblock %}
 
+{% block head %}
+	{% if edicion %}
+	    Edición personal de apoyo
+    {% else %}
+        Registro personal de apoyo
+    {% endif %}
+{% endblock %}
+
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'personal_apoyo_listar' %}">Personal de apoyo</a>
-    <li class="active">Editar</li>
+    {% if edicion %}
+	    <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -23,7 +31,11 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Personal de apoyo
+    {% if edicion %}
+	    Edición personal de apoyo
+    {% else %}
+        Registro personal de apoyo
+    {% endif %}
 {% endblock %}
 
 {% block panel_botones %}
@@ -93,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <br/>
+        <hr/>
         <a href="{% url 'edicion_personal_apoyo' id_personal_apoyo %}" class="btn btn-success pull-left" type="button">← Anterior</a>
         <a href="{% url 'wizard_experiencia_laboral' id_personal_apoyo %}" class="btn btn-primary pull-right">Siguiente →</a>
 

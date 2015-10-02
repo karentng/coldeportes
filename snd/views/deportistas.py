@@ -433,6 +433,43 @@ def finalizar_deportista(request,opcion):
         return redirect('deportista_listar')
 
 
+def existencia_deportista(datos):
+    #Verificación de existencia dentro del tenant actual
+            try:
+                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+            except Exception:
+                deportista = None
+
+            if deportista:
+                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
+                return deportista,None,True
+
+            if not deportista:
+                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
+                #Verificación de existencia en otros tenants
+                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+                existencia = False
+                tenant_existencia = None
+                tenant_actual = connection.tenant
+                entidades = Entidad.objects.all()
+                for entidad in entidades:
+                    connection.set_tenant(entidad)
+                    ContentType.objects.clear_cache()
+                    try:
+                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+                        existencia = True
+                        tenant_existencia = entidad
+                        break
+                    except Exception:
+                        pass
+
+                connection.set_tenant(tenant_actual)
+
+                if existencia:
+                    return deportista,tenant_existencia,True
+                else:
+                    return None,None,False
+
 @login_required
 @tenant_required
 @all_permission_required('snd.add_deportista')
@@ -457,46 +494,18 @@ def verificar_deportista(request):
                 'tipo_id': form.cleaned_data['tipo_id']
             }
 
-            #Verificación de existencia dentro del tenant actual
-            try:
-                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-            except Exception:
-                deportista = None
+            deportista,tenant_existencia,existe = existencia_deportista(datos)
 
-            if deportista:
-                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
-                return render(request,'deportistas/verificar_deportista.html',{'existe':True,
-                                                                               'deportista':deportista})
-
-            if not deportista:
-                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
-                #Verificación de existencia en otros tenants
-                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
-                existencia = False
-                tenant_existencia = None
-                tenant_actual = connection.tenant
-                entidades = Entidad.objects.all()
-                for entidad in entidades:
-                    connection.set_tenant(entidad)
-                    ContentType.objects.clear_cache()
-                    try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-                        existencia = True
-                        tenant_existencia = entidad
-                        break
-                    except Exception:
-                        pass
-
-                connection.set_tenant(tenant_actual)
-
-                if existencia:
-                    return render(request,'deportistas/verificar_deportista.html',{'existe':True,
-                                                                                   'deportista':deportista,
-                                                                                   'tenant_existencia':tenant_existencia})
-                else:
-                    #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
-                    request.session['datos'] = datos
-                    return redirect('deportista_nuevo')
+            if existe:
+                return render(request,'deportistas/verificar_deportista.html',{
+                    'existe':True,
+                    'deportista':deportista,
+                    'tenant_existencia':tenant_existencia
+                })
+            else:
+                #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
+                request.session['datos'] = datos
+                return redirect('deportista_nuevo')
 
     else:
         form = VerificarExistenciaForm()
@@ -534,20 +543,32 @@ def cambio_tipo_documento_deportista(request,id):
     if request.method == 'POST':
         form = CambioDocumentoForm(request.POST,initial={'tipo_documento_anterior':tipo_id_ant,'identificacion_anterior':id_ant})
         if form.is_valid():
-            depor.tipo_id = form.cleaned_data['tipo_documento_nuevo']
-            depor.identificacion = form.cleaned_data['identificacion_nuevo']
-            depor.save()
-            hist = form.save(commit=False)
-            hist.deportista = depor
-            hist.save()
-            messages.success(request,'Cambio de documento exitoso')
-            return redirect('deportista_listar')
+            datos = {
+                'identificacion': form.cleaned_data['identificacion_nuevo'],
+                'tipo_id': form.cleaned_data['tipo_documento_nuevo']
+            }
+            deportista,tenant_existencia,existe = existencia_deportista(datos)
+            if existe:
+                return render(request,'deportistas/existe_deportista.html',{
+                    'existe':True,
+                    'deportista':deportista,
+                    'tenant_existencia':tenant_existencia
+                })
+            else:
+                depor.tipo_id = form.cleaned_data['tipo_documento_nuevo']
+                depor.identificacion = form.cleaned_data['identificacion_nuevo']
+                depor.save()
+                hist = form.save(commit=False)
+                hist.deportista = depor
+                hist.save()
+                messages.success(request,'Cambio de documento exitoso')
+                return redirect('deportista_listar')
 
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form
     })
 
-def obtener_historiales_por_liga(liga,tenant_actual,tipo):
+def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     """
     Agosto 28 /2015
     Autor: Daniel Correa
@@ -559,7 +580,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo):
     :param tipo: tipo de busqueda, DEPARTAMENTAL O MUNICIPAL
     :return: historiales deportivos de la liga
     """
-    clubes = Club.objects.filter(liga=liga)
+    clubes = globals()[tipo_club].objects.filter(liga=liga)
     historiales = []
     for c in clubes:
         connection.set_tenant(c)
@@ -583,14 +604,23 @@ def avalar_logros_deportivos(request):
     tenant_actual = connection.tenant
     if request.tenant.tipo == 1:
         #Traer todos los clubs asociados a su liga , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
-        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional')
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional','Club')
 
     elif request.tenant.tipo == 2:
         #Traer todos las ligas [traer todos los clubes] asociados a su fed , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
         ligas = Liga.objects.filter(federacion=tenant_actual.id)
         historiales = []
         for l in ligas:
-            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional')
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional','Club')
+    elif request.tenant.tipo == 8:
+        #Liga paralimpica
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional','ClubParalimpico')
+    elif request.tenant.tipo ==7:
+        #Fede paralimpica
+        ligas = LigaParalimpica.objects.filter(federacion=tenant_actual.id)
+        historiales = []
+        for l in ligas:
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional','ClubParalimpico')
     else:
         messages.warning(request,'Usted se encuentra en una seccion no permitida')
         return redirect('inicio_tenant')

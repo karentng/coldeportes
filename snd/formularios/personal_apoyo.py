@@ -5,6 +5,8 @@ from coldeportes.utilities import adicionarClase,MyDateWidget
 
 
 class PersonalApoyoForm(ModelForm):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(PersonalApoyoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
@@ -29,7 +31,8 @@ class VerificarExistenciaForm(forms.Form):
         ('PS', 'PASAPORTE'),
     )
     tipo_id = forms.ChoiceField(label='Tipo de documento',choices=TIPO_IDENTIDAD)
-    identificacion = forms.IntegerField(label="Identificación del personal de apoyo")
+    identificacion = forms.CharField(label="Identificación del personal de apoyo")
+
 
 
 
@@ -48,6 +51,8 @@ class FormacionDeportivaForm(ModelForm):
         exclude = ('personal_apoyo',)
 
 class ExperienciaLaboralForm(ModelForm):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(ExperienciaLaboralForm, self).__init__(*args, **kwargs)
 

@@ -33,7 +33,7 @@
                     {% if tenant_existencia %}
                             <h4 class="text-warning"><i class="fa fa-warning"></i>¡Deportista encontrado!</h4>
                             <p>
-                                Se ha encontrado al deportista {{ deportista.nombre }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
+                                Se ha encontrado al deportista {{ deportista.full_name }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
                                 con la entidad para solicitar una transferencia de este deportista o intente con otro número de identificación si así lo desea
                                 <p><a href="{% url 'verificar_deportista' %}" class="btn btn-primary btn-sm m-r-5">Intentar con otra identificación</a></p>
                             </p>
@@ -63,4 +63,8 @@
         </div>
     </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ STATIC_URL }}js/validaciones/verificar-persona-validations.js"></script>
 {% endblock %}
