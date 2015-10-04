@@ -171,7 +171,7 @@ MODELOS_DE_DATOS = (
     (
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'estado'],
-        ['foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
+        ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
         None,
         [
             [
