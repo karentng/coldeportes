@@ -50,6 +50,8 @@ class DirigenteCargosForm(ModelForm):
         widgets = {
             'fecha_posesion':MyDateWidget(),
             'fecha_retiro':MyDateWidget(),
+            'vigencia_inicio':MyDateWidget(),
+            'vigencia_fin':MyDateWidget(),
         }
 
 class DirigenteFuncionesForm(ModelForm):

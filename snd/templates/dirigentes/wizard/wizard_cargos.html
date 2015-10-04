@@ -31,6 +31,7 @@
                         <tr>
                             <th align="center">Nombre del cargo</th>
                             <th align="center">Periodo</th>
+                            <th align="center">Vigencia</th>
                             <th align="center">Superior</th>
                         </tr>
                     </thead>
@@ -39,6 +40,7 @@
                         <tr>
                             <td align="center">{{cargo.nombre}}</td>
                             <td align="center">{{cargo.periodo}}</td>
+                            <td align="center">{{cargo.vigencia}}</td>
                             <td align="center">{%if cargo.superior%} {{cargo.superior}} {%if cargo.superior_cargo%} - {{cargo.superior_cargo.nombre}} {%endif%} {%else%}Ninguno{%endif%}</td>
                             <td align="center">
                                 <a href="#modal-desactivate{{cargo.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
