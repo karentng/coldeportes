@@ -1,17 +1,12 @@
-from django.contrib.contenttypes.models import ContentType
-from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponseRedirect, Http404
 from snd.formularios.centro_biomedico  import *
 from snd.models import *
 from entidades.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from coldeportes.utilities import *
-from django.http import Http404
 
 #==================================================================
 # Crear / Modificar Centro Biomédico
@@ -138,7 +133,7 @@ def listar(request):
     
     listar los centros biomédicos de la respectiva entidad
 
-    Se obtienen los centros biomédicos que ha registrado la entidad que realiza la petición
+    Se pasa el tipo de tenant para que se haga la carga respectiva de datos
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
