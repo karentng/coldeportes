@@ -1,0 +1,17 @@
+<li class="has-sub {% if '/centro-biomedico/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-medkit"></i>
+        <span class="colorMenu">Centros Biomédicos</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.snd.add_centrobiomedico%}
+            <li {% if "/centro-biomedico/crear_editar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'centro_biomedico_crear_editar' paso='identificacion' edicion=0 %}">Registro</a>
+            </li>
+        {% endif %}
+        <li {% if "/centro-biomedico/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'centro_biomedico_listar' %}">Listar Centros Biomédicos</a>
+        </li>
+    </ul>
+</li>

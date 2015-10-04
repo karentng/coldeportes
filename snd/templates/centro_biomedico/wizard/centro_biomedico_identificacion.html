@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block titulo %}
-    Dirigentes - SND COLDEPORTES
+    Centros Biomédicos - SND COLDEPORTES
 {% endblock %}
 
 {% block css %}
@@ -13,14 +13,12 @@
 {% endblock %}
 
 {% block js %}
-    <!--<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>-->
-    <!--<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>-->
-    <script src="{{STATIC_URL}}js/validaciones/dirigentes/wizard_identificacion-validations.js"></script>
+    <script src="{{STATIC_URL}}js/validaciones/centro_biomedico/wizard_identificacion-validations.js"></script>
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'dirigentes_listar' %}">Dirigentes</a>
+    <li><a href="{% url 'centro_biomedico_listar' %}">Centros Biomédicos</a>
     {% if edicion == '1' or edicion == 1 %}
         <li class="active">Editar</li>
     {% else %}
@@ -30,67 +28,60 @@
 
 {% block titulo_panel %}
     {% if edicion == '1' or edicion == 1 %}
-        Edición Dirigente
+        Edición Centro Biomédico
     {% else %}
-        Registro Nuevo Dirigente
+        Registro Nuevo Centro Biomédico
     {% endif %}
 {% endblock %}
 
 {% block contenido_panel %}
-    {% include 'dirigentes/wizard/_wizard.html' %}
+    {% include 'centro_biomedico/wizard/_wizard.html' %}
     
-    <form id="form-wizard-identificacion" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <form id="form-wizard-identificacion" action="" method="post">{% csrf_token %}
         <fieldset>
             <div class="well row">
                 <legend class="pull-left width-full">
-                    {% include 'dirigentes/wizard/_mensajes.html' %}
+                    {% include 'centro_biomedico/wizard/_mensajes.html' %}
                 </legend>
-                <div class="row" >
+                <div class="row">
                     <div class="col-md-6">
-                        {% bootstrap_field form.tipo_identificacion layout="vertical" %}
+                        {% bootstrap_field form.nombre layout="vertical" %}
                     </div>
-                    <div class="col-md-6">
-                        {% bootstrap_field form.identificacion layout="vertical" %}
-                    </div>
-                </div>
-                <div class="row" >
-                    <div class="col-md-6">
-                        {% bootstrap_field form.nombres layout="vertical" %}
-                    </div>
-                    <div class="col-md-6">
-                        {% bootstrap_field form.apellidos layout="vertical" %}
-                    </div>
-                </div>
-                <div class="row" >
-                    <div class="col-md-6">
-                        {% bootstrap_field form.genero layout="vertical" %}
-                    </div>
-                    <div class="col-md-6">
-                        {% bootstrap_field form.nacionalidad layout="vertical" %}
-                    </div>
-                </div>
-                <div class="row" >
                     <div class="col-md-6">
                         {% bootstrap_field form.telefono_fijo layout="vertical" %}
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.email layout="vertical" %}
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.web layout="vertical" %}
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.nombre_administrador layout="vertical" %}
                     </div>
                     <div class="col-md-6">
                         {% bootstrap_field form.telefono_celular layout="vertical" %}
                     </div>
                 </div>
-                <div class="row" >
+                <hr>
+                <legend class="pull-left width-full">
+                    <h3>Ingrese los datos de ubicación del Centro Biomédico</h3>
+                </legend>
+                <div class="row">
                     <div class="col-md-6">
-                        {% bootstrap_field form.email layout="vertical" %}
+                        {% bootstrap_field form.direccion layout="vertical" %}
                     </div>
                     <div class="col-md-6">
-                        {% bootstrap_field form.ciudad_residencia layout="vertical" %}
-                    </div>
-                </div>
-                <div class="row" >
-                    <div class="col-md-6">
-                        {% bootstrap_field form.foto layout="vertical" %}
+                        {% bootstrap_field form.barrio layout="vertical" %}
                     </div>
                     <div class="col-md-6">
-                        {% bootstrap_field form.perfil layout="vertical" %}
+                        {% bootstrap_field form.ciudad layout="vertical" %}
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.comuna layout="vertical" %}
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.estrato layout="vertical" %}
                     </div>
                 </div>
                 <hr>

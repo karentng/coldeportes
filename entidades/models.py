@@ -35,6 +35,7 @@ class Actores(models.Model):
     dirigentes = models.BooleanField(verbose_name="Dirigentes")
     cajas = models.BooleanField(verbose_name="Cajas de Compensación")
     selecciones = models.BooleanField(verbose_name="Selecciones")
+    centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos")
 
     def resumen(self):
         actores = []
@@ -422,6 +423,12 @@ class CAServicio(models.Model):
 class EPS(models.Model):
     nombre = models.CharField(max_length=300)
     codigo = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
+
+class CentroBiomedicoServicio(models.Model):
+    nombre = models.CharField(max_length=255)
 
     def __str__(self):
         return self.nombre

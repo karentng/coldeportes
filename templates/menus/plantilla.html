@@ -28,6 +28,9 @@
     {% if request.tenant.actores.cajas %}
         {% include "menus/aplicacion/cajas_compensacion.html" %}
     {% endif %}
+    {% if request.tenant.actores.centros_biomedicos %}
+        {% include "menus/aplicacion/centro_biomedico.html" %}
+    {% endif %}
     {% include "menus/aplicacion/directorio.html" %}
 {% endif %}
 {% if request.tenant.schema_name == 'public' %}

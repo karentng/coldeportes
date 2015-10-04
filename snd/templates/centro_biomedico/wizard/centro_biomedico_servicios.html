@@ -1,0 +1,46 @@
+{% extends 'centro_biomedico/wizard/centro_biomedico_identificacion.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block js %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{{STATIC_URL}}css/build.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'centro_biomedico/wizard/_wizard.html' %}
+
+    <form action="" method="post">{% csrf_token %}
+        <fieldset>
+            <div class="well row">
+                <legend class="pull-left width-full">
+                    {% include 'centro_biomedico/wizard/_mensajes.html' %}
+                </legend>
+                {% for i in form.servicios %}
+                    <div class="col-sm-3">
+                        <div class="checkbox checkbox-primary">
+                            {{i.tag}}
+                            {{i}}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="col-xs-12">
+                    <hr>
+                    {% if anterior %}
+                        <a href="{% url 'centro_biomedico_crear_editar' paso=anterior edicion=edicion centro_biomedico_id=centro_biomedico_id %}">
+                            <button class="btn btn-primary pull-left" type="button">
+                                ← Anterior
+                            </button>
+                        </a>
+                    {% endif %}
+                    <button class="btn btn-primary pull-right" type="submit">
+                        Finalizar →
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}
