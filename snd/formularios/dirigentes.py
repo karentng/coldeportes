@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 from coldeportes.utilities import adicionarClase
-
+import datetime
 from coldeportes.utilities import MyDateWidget
 
 
@@ -44,12 +44,44 @@ class DirigenteCargosForm(ModelForm):
         if dirigente_id:
             self.fields['superior'].queryset = Dirigente.objects.exclude(id=dirigente_id)
 
+    def clean(self):
+        cleaned_data = super(DirigenteCargosForm, self).clean()
+        if not self._errors:
+            msg = []
+            fecha_posesion = cleaned_data.get("fecha_posesion")
+            fecha_retiro = cleaned_data.get("fecha_retiro")
+            vigencia_inicio = cleaned_data.get("vigencia_inicio")
+            vigencia_fin = cleaned_data.get("vigencia_fin")
+
+            if vigencia_fin < vigencia_inicio:
+                msg.append(("vigencia_inicio","La fecha de fin de vigencia del periodo debe de ser mayor que su fecha de inicio"))
+            if vigencia_inicio > datetime.date.today():
+                msg.append(("vigencia_inicio","La fecha de inicio de vigencia del periodo no puede ser mayor el día de hoy"))
+            if fecha_retiro != None:
+                if fecha_retiro < fecha_posesion:
+                    msg.append(("fecha_retiro","La fecha de retiro debe de ser mayor que la fecha de posesión"))
+                if fecha_retiro > datetime.date.today():
+                    msg.append(("fecha_retiro","La fecha de retiro no puede ser mayor que el día de hoy"))
+                if fecha_retiro < vigencia_inicio or fecha_retiro > vigencia_fin:
+                    msg.append(("fecha_retiro","La fecha de retiro debe de encontrarse dentro del periodo de vigencia"))
+            if fecha_posesion > datetime.date.today():
+                msg.append(("fecha_posesion","La fecha de posesión no puede ser mayor que el día de hoy"))
+            if fecha_posesion < vigencia_inicio or fecha_posesion > vigencia_fin:
+                msg.append(("fecha_posesion","La fecha de posesión debe de encontrarse dentro del periodo de vigencia"))
+
+            for campo,mensaje in msg:
+                self.add_error(campo,mensaje)
+
+        return cleaned_data
+
     class Meta:
         model = DirigenteCargo
         exclude = ('dirigente',)
         widgets = {
             'fecha_posesion':MyDateWidget(),
             'fecha_retiro':MyDateWidget(),
+            'vigencia_inicio':MyDateWidget(),
+            'vigencia_fin':MyDateWidget(),
         }
 
 class DirigenteFuncionesForm(ModelForm):

@@ -15,5 +15,6 @@ PERMISOS_DIGITADOR = [
     ['change_escenario', 'escenarios'],
     ['add_seleccion', 'selecciones'],
     ['change_seleccion', 'selecciones'],
-
+    ['add_centrobiomedico', 'centros_biomedicos'],
+    ['change_centrobiomedico', 'centros_biomedicos'],
 ]

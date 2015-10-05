@@ -12,16 +12,16 @@ INSERT INTO indervalle.snd_dirigente_nacionalidad (id, dirigente_id, nacionalida
   (1003, 1003, 52),
   (1004, 1004, 52);
 
-INSERT INTO indervalle.snd_dirigentecargo (id, nombre, fecha_posesion, fecha_retiro, superior_id, superior_cargo_id, dirigente_id) VALUES
- (1000,'Presidente','01-01-2010','31-12-2010',NULL,NULL,1000),
- (1001,'Presidente','01-01-2011','31-12-2012',NULL,NULL,1000),
- (1008,'Presidente','01-01-2013','28-12-2015',NULL,NULL,1003),
- (1002,'Vicepresidente','01-01-2013','31-12-2013',1003,1008,1000),
- (1003,'Vicepresidente','01-01-2014','28-12-2015',1003,1008,1001),
- (1004,'Gerente','01-01-2014','06-08-2014',1001,1003,1002),
- (1005,'Contador','29-12-2015','03-03-2016',1001,1003,1003),
- (1006,'Vocero','01-01-2014','06-08-2014',1002,1004,1004),
- (1007,'Asistente','01-01-2016','03-03-2016',1003,1005,1004);
+INSERT INTO indervalle.snd_dirigentecargo (id, nombre, fecha_posesion, fecha_retiro, superior_id, superior_cargo_id, dirigente_id, vigencia_inicio, vigencia_fin) VALUES
+ (1000,'Presidente','01-01-2010','31-12-2010',NULL,NULL,1000,'01-01-2010','31-12-2010'),
+ (1001,'Presidente','01-01-2011','31-12-2012',NULL,NULL,1000,'01-01-2011','31-12-2012'),
+ (1008,'Presidente','01-01-2013','28-12-2015',NULL,NULL,1003,'01-01-2013','28-12-2015'),
+ (1002,'Vicepresidente','01-01-2013','31-12-2013',1003,1008,1000,'01-01-2013','31-12-2013'),
+ (1003,'Vicepresidente','01-01-2014','28-12-2015',1003,1008,1001,'01-01-2014','28-12-2015'),
+ (1004,'Gerente','01-01-2014','06-08-2014',1001,1003,1002,'01-01-2014','06-08-2014'),
+ (1005,'Contador','29-12-2015','03-03-2016',1001,1003,1003,'29-12-2015','03-03-2016'),
+ (1006,'Vocero','01-01-2014','06-08-2014',1002,1004,1004,'01-01-2014','06-08-2014'),
+ (1007,'Asistente','01-01-2016','03-03-2016',1003,1005,1004,'01-01-2016','03-03-2016');
 
 INSERT INTO indervalle.snd_dirigentefuncion (descripcion, dirigente_id, cargo_id) VALUES
   ('Función uno', 1000,1000),

@@ -5,8 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.contrib import messages
 from formtools.wizard.views import *
-from snd.formularios.dirigentes  import *
-from django.conf import settings
+from snd.formularios.dirigentes import *
 from coldeportes.utilities import *
 import json
 from entidades.models import Entidad
@@ -343,6 +342,7 @@ def finalizar(request, opcion, edicion):
         return redirect('dirigentes_listar')
 
 @login_required
+@all_permission_required('snd.add_dirigente')
 def activar_desactivar(request, dirigente_id):
     """
     Junio 14 / 2015
