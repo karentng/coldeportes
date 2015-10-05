@@ -150,7 +150,7 @@ def wizard_corporal(request,id_depor):
             corporal.deportista = deportista
             corporal.save()
             corporal_form.save()
-            return redirect('wizard_historia_deportiva', id_depor)
+            return redirect('wizard_informacion_adicional', id_depor)
 
     return render(request, 'deportistas/wizard/wizard_corporal.html', {
         'titulo': 'Composición Corporal del Deportista',
@@ -202,7 +202,7 @@ def wizard_historia_deportiva(request,id_depor):
 
     return render(request, 'deportistas/wizard/wizard_historia_deportiva.html', {
         'titulo': 'Historia Deportiva del Deportista',
-        'wizard_stage': 3,
+        'wizard_stage': 4,
         'form': hist_depor_form,
         'historicos': hist_depor,
         'id_depor': id_depor,
@@ -278,7 +278,7 @@ def wizard_historia_academica(request,id_depor):
 
     return render(request, 'deportistas/wizard/wizard_historia_academica.html', {
         'titulo': 'Formación académica',
-        'wizard_stage': 4,
+        'wizard_stage': 5,
         'form': inf_academ_form,
         'historicos': inf_academ,
         'id_depor': id_depor
@@ -368,6 +368,8 @@ def ver_deportista(request,id_depor,id_entidad):
     Junio 22 /2015
     Autor: Daniel Correa
 
+    ##Editado por Milton Lenis el 05 de octubre de 2015
+
     Ver Deportista
 
     Se obtiene la informacion general del deportista desde la base de datos y se muestra
@@ -395,12 +397,20 @@ def ver_deportista(request,id_depor,id_entidad):
     composicion = ComposicionCorporal.objects.filter(deportista=deportista)
     if len(composicion) != 0:
         composicion = composicion[0]
+    info_adicional = InformacionAdicional.objects.filter(deportista=deportista)
+    if len(info_adicional) != 0:
+        info_adicional = info_adicional[0]
+    historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
+    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
             'composicion':composicion,
+            'info_adicional':info_adicional,
             'historial_deportivo':historial_deportivo,
+            'historial_lesiones':historial_lesiones,
+            'historial_doping':historial_doping,
             'informacion_academica':informacion_academica
     })
 
@@ -704,3 +714,203 @@ def rechazar_logros_deportivos(request,id_tenant,id_hist):
 
     messages.warning(request,'Se ha negado el aval al logro deportivo de '+hist.deportista.nombres + ' ' + hist.deportista.apellidos)
     return redirect('deportista_listar')
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def eliminar_historia_doping(request,id_depor,id_historia):
+    """
+    Octubre 5 / 2015
+    Autor: Milton Lenis
+
+    Eliminar Historial de Doping
+
+    Se obtiene el id del historial y el del deportista, se busca y se elimina de la base de datos
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    :param id_historia: Llave primaria del historial de doping
+    :type id_historia: String
+    """
+    try:
+        doping = HistorialDoping.objects.get(id=id_historia, deportista=id_depor)
+        doping.delete()
+        return redirect('wizard_historia_doping', id_depor)
+
+    except Exception:
+        return redirect('wizard_historia_doping', id_depor)
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def eliminar_historia_lesion(request,id_depor,id_historia):
+    """
+    Octubre 5 / 2015
+    Autor: Milton Lenis
+
+    Eliminar Historial de una lesión
+
+    Se obtiene el id del historial y el del deportista, se busca y se elimina de la base de datos
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    :param id_historia: Llave primaria del historial de lesion
+    :type id_historia: String
+    """
+    try:
+        doping = HistorialLesiones.objects.get(id=id_historia, deportista=id_depor)
+        doping.delete()
+        return redirect('wizard_historia_doping', id_depor)
+
+    except Exception:
+        return redirect('wizard_historia_doping', id_depor)
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def wizard_informacion_adicional(request,id_depor):
+    """
+
+    Octubre 5 / 2015
+    Autor: Milton Lenis
+
+    Paso 3: Datos de información adicional del deportista
+
+    Se obtiene la información de la peticion, se intenta buscar un objeto InformacionAdicional y en caso de haber modificaciones se guardan.
+    Si la informacion para la InformacionAdicional del deportista es nueva se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    try:
+        info_adicional = InformacionAdicional.objects.get(deportista=id_depor)
+        edicion = True
+    except Exception:
+        info_adicional = None
+        edicion=False
+
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(request,deportista)
+    if non_permission:
+        return non_permission
+
+    info_adicional_form = InformacionAdicionalForm(instance=info_adicional)
+
+    if request.method == 'POST':
+        info_adicional_form = InformacionAdicionalForm(request.POST, instance=info_adicional)
+
+        if info_adicional_form.is_valid():
+            info_adicional = info_adicional_form.save(commit=False)
+            info_adicional.deportista = deportista
+            info_adicional.save()
+            info_adicional_form.save()
+            return redirect('wizard_historia_deportiva', id_depor)
+
+    return render(request, 'deportistas/wizard/wizard_informacion_adicional.html', {
+        'titulo': 'Información adicional del deportista',
+        'wizard_stage': 3,
+        'form': info_adicional_form,
+        'id_deportista' : deportista.id,
+        'edicion':edicion
+    })
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def wizard_historia_doping(request,id_depor):
+    """
+    5 Octubre / 2015
+    Autor: Milton Lenis
+
+    Paso 6: Historial de doping, se obtiene un historial de doping, se almacena y asigna al deportista.
+    Si no hay historial se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    historial_doping = HistorialDoping.objects.filter(deportista=id_depor)
+
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(request,deportista)
+    if non_permission:
+        return non_permission
+
+    historial_doping_form = HistorialDopingForm()
+
+    if request.method == 'POST':
+        historial_doping_form = HistorialDopingForm(request.POST)
+
+        if historial_doping_form.is_valid():
+            historial_doping_nuevo = historial_doping_form.save(commit=False)
+            historial_doping_nuevo.deportista = deportista
+            historial_doping_nuevo.save()
+            historial_doping_form.save()
+            return redirect('wizard_historia_doping', id_depor)
+
+    return render(request, 'deportistas/wizard/wizard_historia_doping.html', {
+        'titulo': 'Historial de doping',
+        'wizard_stage': 7,
+        'form': historial_doping_form,
+        'historicos': historial_doping,
+        'id_depor': id_depor
+    })
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def wizard_historia_lesiones(request,id_depor):
+    """
+    5 Octubre / 2015
+    Autor: Milton Lenis
+
+    Paso 6: Historial de lesiones, se obtiene un historial de lesiones, se almacena y asigna al deportista.
+    Si no hay historial se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+    historial_lesiones = HistorialLesiones.objects.filter(deportista=id_depor)
+
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(request,deportista)
+    if non_permission:
+        return non_permission
+
+    historial_lesiones_form = HistorialLesionesForm()
+
+    if request.method == 'POST':
+        historial_lesiones_form = HistorialLesionesForm(request.POST)
+
+        if historial_lesiones_form.is_valid():
+            historial_lesiones_nuevo = historial_lesiones_form.save(commit=False)
+            historial_lesiones_nuevo.deportista = deportista
+            historial_lesiones_nuevo.save()
+            historial_lesiones_form.save()
+            return redirect('wizard_historia_lesiones', id_depor)
+
+    return render(request, 'deportistas/wizard/wizard_historia_lesiones.html', {
+        'titulo': 'Historial de lesiones',
+        'wizard_stage': 6,
+        'form': historial_lesiones_form,
+        'historicos': historial_lesiones,
+        'id_depor': id_depor
+    })

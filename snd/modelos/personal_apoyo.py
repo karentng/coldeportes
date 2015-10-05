@@ -70,7 +70,7 @@ class PersonalApoyo(models.Model):
     correo_electronico = models.EmailField(blank=True,verbose_name='Correo electrónico')
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     nacionalidad = models.ManyToManyField(Nacionalidad)
-    ciudad = models.ForeignKey(Ciudad, blank=True, verbose_name='Ciudad de residencia')
+    ciudad = models.ForeignKey(Ciudad, verbose_name='Ciudad de residencia')
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
     lgtbi = models.BooleanField(verbose_name='Hace parte de la comunidad LGTBI?')
     entidad = models.ForeignKey(Entidad)
@@ -106,9 +106,9 @@ class FormacionDeportiva(models.Model):
     institucion = models.CharField(max_length=100,verbose_name='Institución')
     nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
     estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
-    profesion =  models.CharField(max_length=100,blank=True,null=True)
-    grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
-    fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
+    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
+    grado_semestre = models.IntegerField(verbose_name='Grado, año o semestre', null=True, blank=True)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año finalización')
     personal_apoyo = models.ForeignKey(PersonalApoyo)
 
     def save(self, *args, **kwargs):

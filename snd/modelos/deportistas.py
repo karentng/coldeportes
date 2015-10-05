@@ -239,3 +239,45 @@ class CambioDocumentoDeportista(models.Model):
     identificacion_anterior = models.CharField(max_length=100,verbose_name='Identificación actual',help_text='Este es el número de documento actual o valor de documento en caso diferente a CC y TI')
     tipo_documento_nuevo = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Nuevo tipo de documento', help_text='Este es el tipo de documento que tendrá una vez de click en cambiar')
     identificacion_nuevo = models.CharField(max_length=100,verbose_name='Nueva identificación', help_text='Este es el número o valor de documento que tendrá una vez de click en cambiar')
+
+
+class InformacionAdicional(models.Model):
+    deportista = models.ForeignKey(Deportista)
+    usa_centros_biomedicos = models.BooleanField(verbose_name='¿Usa centros biomédicos?')
+    es_beneficiario_programa_apoyo = models.BooleanField(verbose_name='¿Es beneficiario de algún programa de apoyo?')
+
+
+class HistorialLesiones(models.Model):
+    TIPOS_LESION = (
+        (1,'FRACTURA'),
+        (2,'LUXACIÓN'),
+        (3,'RUPTURA'),
+        (4,'LESIÓN MENISCAL'),
+        (5,'ESGUINCE'),
+    )
+    PERIODOS_REHABILITACION = (
+        (1,'MENOR A 1 MES'),
+        (2,'ENTRE 1 y 3 MESES'),
+        (3,'ENTRE 3 y 6 MESES'),
+        (4,'MAYOR A 6 MESES'),
+    )
+    deportista = models.ForeignKey(Deportista)
+    fecha_lesion = models.DateField(verbose_name='Fecha de la lesión')
+    tipo_lesion = models.IntegerField(choices=TIPOS_LESION,verbose_name='Tipo de lesión')
+    periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')
+
+
+class HistorialDoping(models.Model):
+    TIPO_IDENTIDAD = (
+        ('TI', 'TARJETA DE IDENTIDAD'),
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
+    )
+    deportista = models.ForeignKey(Deportista)
+    nombre_delegado = models.CharField(max_length=100,verbose_name='Nombre del delegado')
+    tipo_identidad_delegado = models.CharField(max_length=2,choices=TIPO_IDENTIDAD,verbose_name='Tipo de identificación del delegado')
+    identificacion_delegado = models.CharField(max_length=30,verbose_name='Número de identificación del delegado')
+    evento = models.CharField(max_length=300,verbose_name='Evento en el que se detectó el doping')
+    fecha = models.DateField(verbose_name='Fecha en la que se detectó el doping')
+    observaciones = models.TextField(blank=True)

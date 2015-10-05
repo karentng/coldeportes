@@ -120,8 +120,48 @@ class HistorialDeportivoForm(ModelForm):
             'fecha_final': MyDateWidget(),
         }
 
-class InformacionAcademicaForm(ModelForm):
 
+class HistorialLesionesForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(HistorialLesionesForm, self).__init__(*args, **kwargs)
+        self.fields['tipo_lesion'] = adicionarClase(self.fields['tipo_lesion'], 'one')
+        self.fields['periodo_rehabilitacion'] = adicionarClase(self.fields['periodo_rehabilitacion'], 'one')
+
+    class Meta:
+        model = HistorialLesiones
+        exclude = ('deportista',)
+        widgets = {
+            'fecha_lesion': MyDateWidget(),
+        }
+
+
+class HistorialDopingForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(HistorialDopingForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = HistorialDoping
+        exclude = ('deportista',)
+        widgets = {
+            'fecha': MyDateWidget(),
+        }
+
+class InformacionAdicionalForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(InformacionAdicionalForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = InformacionAdicional
+        exclude = ('deportista',)
+
+
+class InformacionAcademicaForm(ModelForm):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
