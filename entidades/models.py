@@ -119,21 +119,60 @@ class Entidad(TenantMixin): # Entidad deportiva
         
         return centros
 
-    def cantidadActoresAsociados(self):
-        from snd.models import CentroAcondicionamiento, CajaCompensacion, Deportista, Dirigente, Escenario, PersonalApoyo
-        def obtenerTodos(booleano, modelo, nombre, datos, color, url):
+    def atributosDeSusActores(self):
+        def agregarActor(datos, booleano, identificador, metodo):
             if booleano:
-                return datos + [[nombre, color, modelo.objects.all().count(), url]]
+                datos[identificador] = metodo()
+            
             return datos
 
+        tenant = self.obtenerTenant()
+        actores = tenant.actores
+
+        datos = {}
+        datos = agregarActor(datos, actores.centros, "caf", tenant.atributosDeSusCafs)
+        datos = agregarActor(datos, actores.escenarios, "escenarios", tenant.atributosDeSusEscenarios)
+
+        #datos = agregarActor(datos, actores.deportistas, "deportistas", cambiar)
+        #datos = agregarActor(datos, actores.personal_apoyo, "personales", cambiar)
+        #datos = agregarActor(datos, actores.dirigentes, "dirigentes", cambiar)
+        #datos = agregarActor(datos, actores.cajas, "cajas", cambiar)
+
+        try:
+            datos['ligas'] = tenant.ligasAsociadas()
+        except Exception:
+            pass
+
+        try:
+            datos['clubes'] = tenant.clubesAsociados()
+        except Exception:
+            pass
+
+        return datos
+
+    def cantidadActoresAsociados(self):
+        atributosActores = self.atributosDeSusActores()
+
+        def definirElementosDashBoard(datos, identificador, nombre, color, url):
+            try:
+                cantidad = len(atributosActores[identificador])
+                datos += [[nombre, color, cantidad, url]]
+            except KeyError:
+                pass
+            return datos
+        
         datos = []
-        actores = self.actores
-        datos = obtenerTodos(actores.centros, CentroAcondicionamiento, "CAFs", datos, "red", "listar_cafs")
-        datos = obtenerTodos(actores.escenarios, Escenario, "Escenarios", datos, "blue", "listar_escenarios")
-        datos = obtenerTodos(actores.deportistas, Deportista, "Deportistas", datos, "orange", "deportista_listar")
-        datos = obtenerTodos(actores.personal_apoyo, PersonalApoyo, "Personales de Apoyo", datos, "green", "personal_apoyo_listar")
-        datos = obtenerTodos(actores.dirigentes, Dirigente, "Dirigentes", datos, "purple", "dirigentes_listar")
-        datos = obtenerTodos(actores.cajas, CajaCompensacion, "Cajas de Compensación", datos, "black", "listar_ccfs")
+        
+        definirElementosDashBoard(datos, "ligas", "Ligas", "black", "inicio_tenant")
+        definirElementosDashBoard(datos, "clubes", "Clubes", "black", "inicio_tenant")
+
+        definirElementosDashBoard(datos, "caf", "CAFs", "red", "listar_cafs")
+        definirElementosDashBoard(datos, "escenarios", "Escenarios", "blue", "listar_escenarios")
+        definirElementosDashBoard(datos, "deportistas", "Deportistas", "orange", "deportista_listar")
+        definirElementosDashBoard(datos, "personales", "Personales de Apoyo", "green", "personal_apoyo_listar")
+        definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar")
+        definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs")
+
         return datos
 
     def posicionInicialMapa(self):
@@ -250,6 +289,10 @@ class Federacion(Entidad):
             actores.save()
         super(Federacion, self).save(*args, **kwargs)
 
+    def ligasAsociadas(self):
+        ligas = Liga.objects.filter(federacion=self)
+        return ligas
+
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario
         from django.db import connection
@@ -297,6 +340,10 @@ class Liga(Entidad):
             actores.selecciones = True
             actores.save()
         super(Liga, self).save(*args, **kwargs)
+
+    def clubesAsociados(self):
+        clubes = Club.objects.filter(liga=self)
+        return clubes
 
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario
