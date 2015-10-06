@@ -54,7 +54,7 @@ def buscar_contenido_actor_ciudad(actor, ciudad, texto, listado_resultados):
     elif actor=='EN':
         listado_resultados.append(PersonalApoyoView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
     elif actor=='CF':
-        listado_resultados.append(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id')) 
+        listado_resultados.append(CajaCompensacionView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id')) 
 
     return listado_resultados
 
