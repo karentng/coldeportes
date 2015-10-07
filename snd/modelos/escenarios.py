@@ -29,7 +29,7 @@ class Escenario(models.Model):
     nombre_administrador = models.CharField(max_length=50, null=True)
     estrato = models.CharField(choices=estratos, max_length=1)
     entidad = models.ForeignKey(Entidad)    
-    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Escenario")
+    estado = models.IntegerField(choices=ESTADOS, verbose_name="estado del Escenario")
     ciudad = models.ForeignKey(Ciudad)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
