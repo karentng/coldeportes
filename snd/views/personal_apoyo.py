@@ -167,7 +167,7 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
 
     if request.method == 'POST':
         formaciondep_form = FormacionDeportivaForm(request.POST)
-        if formaciondep_form.is_valid() and formaciondep_form.custom_validations():
+        if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
             formacion_deportiva.personal_apoyo = personal_apoyo
             formacion_deportiva.save()

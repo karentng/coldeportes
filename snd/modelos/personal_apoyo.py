@@ -90,6 +90,20 @@ class PersonalApoyo(models.Model):
     def fotos(self):
         return [self.foto]
 
+    def obtenerAtributos(self):
+
+        atributos = [
+            ["Nombre", self.nombres+" "+self.apellidos],
+            ["Actividad", self.get_actividad_display()],
+            ["Ciudad Residencia", self.ciudad.nombre],
+            ["Género", self.genero],
+            ["Identificación", self.tipo_id+" "+self.identificacion],
+            ["Correo electrónico", self.correo_electronico],
+            ["Teléfono", self.telefono_fijo],
+        ]
+
+        return [self.foto, atributos, None, None, "Personal de apoyo!"]
+
 class FormacionDeportiva(models.Model):
     tipo_academica = (
         ('Técnico','Técnico'),

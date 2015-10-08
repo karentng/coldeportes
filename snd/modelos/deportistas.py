@@ -94,6 +94,20 @@ class Deportista(models.Model):
         self.direccion = self.direccion.upper()
         super(Deportista, self).save(*args, **kwargs)
 
+    def obtenerAtributos(self):
+
+        atributos = [
+            ["Nombre", self.nombres+" "+self.apellidos],
+            ["Ciudad Residencia", self.ciudad_residencia.nombre],
+            ["Género", self.genero],
+            ["Identificación", self.tipo_id+" "+self.identificacion],
+            ["E-mail", self.email],
+            ["Teléfono", self.telefono],
+            ["Dirección", self.direccion],
+        ]
+
+        return [self.foto, atributos, None, None, "Deportista!"]
+
 #Composicion corporal
 class ComposicionCorporal(models.Model):
     tipos_rh =(
@@ -216,7 +230,7 @@ class InformacionAcademica(models.Model):
     institucion = models.CharField(max_length=100,verbose_name='Institución')
     nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
     estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
-    profesion =  models.CharField(max_length=100,blank=True,null=True)
+    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
