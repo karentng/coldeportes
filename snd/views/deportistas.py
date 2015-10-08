@@ -99,6 +99,7 @@ def wizard_deportista(request,id_depor):
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,
+        'id_deportista': deportista.id,
         'form': deportista_form,
         'edicion':True
     })
@@ -156,8 +157,8 @@ def wizard_corporal(request,id_depor):
         'titulo': 'Composición Corporal del Deportista',
         'wizard_stage': 2,
         'form': corporal_form,
-        'mujer' : mujer,
-        'id_deportista' : deportista.id,
+        'mujer': mujer,
+        'id_deportista': deportista.id,
         'edicion':edicion
     })
 
@@ -205,7 +206,8 @@ def wizard_historia_deportiva(request,id_depor):
         'wizard_stage': 4,
         'form': hist_depor_form,
         'historicos': hist_depor,
-        'id_depor': id_depor,
+        'id_deportista': id_depor,
+        'edicion':True
     })
 
 #Eliminacion Historia Deportiva
@@ -281,7 +283,8 @@ def wizard_historia_academica(request,id_depor):
         'wizard_stage': 5,
         'form': inf_academ_form,
         'historicos': inf_academ,
-        'id_depor': id_depor
+        'id_deportista': id_depor,
+        'edicion':True
     })
 
 #Eliminacion Historia Academica
@@ -867,7 +870,8 @@ def wizard_historia_doping(request,id_depor):
         'wizard_stage': 7,
         'form': historial_doping_form,
         'historicos': historial_doping,
-        'id_depor': id_depor
+        'id_deportista': id_depor,
+        'edicion':True
     })
 
 
@@ -912,5 +916,6 @@ def wizard_historia_lesiones(request,id_depor):
         'wizard_stage': 6,
         'form': historial_lesiones_form,
         'historicos': historial_lesiones,
-        'id_depor': id_depor
+        'id_deportista': id_depor,
+        'edicion':True
     })

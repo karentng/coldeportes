@@ -89,9 +89,9 @@
         <br/>
         <hr/>
         {% if wizard_stage > 1 %}
-        <a href="{% url 'wizard_historia_academica' id_depor %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+        <a href="{% url 'wizard_historia_academica' id_deportista %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
         {% endif %}
-        <a href="{% url 'wizard_historia_doping' id_depor %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'wizard_historia_doping' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a>
 
 
 {% endblock %}

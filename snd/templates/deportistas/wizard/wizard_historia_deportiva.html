@@ -145,7 +145,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_historia_deportiva' id_depor historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_historia_deportiva' id_deportista historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -161,9 +161,9 @@
         <br/>
         <hr/>
         {% if wizard_stage > 1 %}
-            <a href="{% url 'wizard_informacion_adicional' id_depor %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+            <a href="{% url 'wizard_informacion_adicional' id_deportista %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
         {% endif %}     
-        <a href="{% url 'wizard_historia_academica' id_depor %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'wizard_historia_academica' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a><a href="{% url 'wizard_historia_academica' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 
 {% endblock %}

@@ -126,6 +126,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
         'titulo': 'Información básica',
         'wizard_stage': 1,
         'form': personal_apoyo_form,
+        'id_personal_apoyo':personal_apoyo.id,
         'edicion':True
     })
 

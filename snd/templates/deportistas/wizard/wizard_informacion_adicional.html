@@ -11,7 +11,6 @@
 
 {% block css %}
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -73,14 +72,11 @@
 {% block js %}
 	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
 	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
-{% endblock %}
-
-{% block script %}
-	<script>
+    <script>
 		$(document).ready(function() {
 			App.init();
 			FormWizard.init();
 		});
 	</script>
-	<script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-corporal-validations.js"></script>
 {% endblock %}
+
