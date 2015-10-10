@@ -133,6 +133,7 @@ class CajaCompensacionView(models.Model):
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)
     email = models.EmailField()
+    ciudad = models.ForeignKey(Ciudad, verbose_name="Ciudad")    
     #campo para búsqueda
     contenido = models.TextField()
 

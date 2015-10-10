@@ -1,22 +1,32 @@
 <ol class="bwizard-steps clearfix" role="tablist">
     <li role="tab" {% if paso_wizard >= 1 %} aria-selected="true" class="active" {% endif %} style="z-index: 7;"><span class="label badge-inverse">1</span><a class="hidden-phone">
-        Identificación <small>Datos de identificación, ubicación y contacto</small>
+            <a {% if idCAF %}href="{% url 'crear_caf' 'Identificación' idCAF %}" style="cursor:pointer"{% endif %}>
+                Identificación <small>Datos de identificación, ubicación y contacto</small>
+            </a>
         </a>
     </li>
     <li role="tab"  {% if paso_wizard >= 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 6;"><span class="label">2</span><a class="hidden-phone">
-        Planes ofrecidos <small>Diferentes tipos de planes que ofrece el Centro de Acondicionamiento Físico</small>
+            <a {% if idCAF %}href="{% url 'crear_caf' 'Planes' idCAF %}" style="cursor:pointer"{% endif %}>
+                Planes ofrecidos <small>Diferentes tipos de planes que ofrece el Centro de Acondicionamiento Físico</small>
+            </a>
         </a>
     </li>
     <li role="tab"  {% if paso_wizard >= 3 %} aria-selected="true" class="active" {% endif %} style="z-index: 5;"><span class="label">3</span><a class="hidden-phone">
-         Clases<small>Clases ofrecidas por el Centro de Acondicionamiento Físico</small>
+            <a {% if idCAF %}href="{% url 'crear_caf' 'Clases' idCAF %}" style="cursor:pointer"{% endif %}>
+                Clases<small>Clases ofrecidas por el Centro de Acondicionamiento Físico</small>
+            </a>
         </a>
     </li>
     <li role="tab"  {% if paso_wizard >= 4 %} aria-selected="true" class="active" {% endif %} style="z-index: 5;"><span class="label">4</span><a class="hidden-phone">
-         Servicios<small>Servicios provistos por el Centro de Acondicionamiento Físico</small>
+            <a {% if idCAF %}href="{% url 'crear_caf' 'Servicios' idCAF %}" style="cursor:pointer"{% endif %}>
+                Servicios<small>Servicios provistos por el Centro de Acondicionamiento Físico</small>
+            </a>
         </a>
     </li>
     <li role="tab"  {% if paso_wizard >= 5 %} aria-selected="true" class="active" {% endif %} style="z-index: 4;"><span class="label">5</span><a class="hidden-phone">
-        Fotos <small>Fotos del Centro de Acondicionamiento Físico</small>
+            <a {% if idCAF %}href="{% url 'crear_caf' 'Fotos' idCAF %}" style="cursor:pointer"{% endif %}>
+                Fotos <small>Fotos del Centro de Acondicionamiento Físico</small>
+            </a>
         </a>
     </li>
 </ol>
