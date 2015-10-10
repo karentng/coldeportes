@@ -18,80 +18,63 @@
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
 {% endblock %}
 
-{% block js %}
-    <script type="text/javascript">
-        idTabla = "tabla-ccfs";
-    </script>
-    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
-    </script>
-    
-
-{% endblock %}
-
 {% block titulo_panel %}
     Listar Cajas de Compensación
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $(document).on('mouseenter','tr',function(e){
+               $('.add-tooltip').tooltip();
+           });
+        });
+        idTabla = "tabla-ccf";
+        opciones = {% if perms.snd.change_cajacompensacion %} true {% else %} false {% endif %};
+        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7%}
+            url = "{% url 'cargar_columnas' 3 %}";
+        {% else %}
+            url = "{% url 'cargar_columnas' 2 %}";
+        {% endif %}
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script>
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        };
+    </script>
 {% endblock %}
 
 {% block contenido_panel %}
 
     <div class="row">
         <div class="col-sm-12">
-            <table id="tabla-ccfs" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Público</th>
-                        <th>Clasificación</th>
-                        <th>Region</th>
-                        <th>Estado</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ccf in ccfs %}
-                        <tr>
-                            <td>{{ccf.nombre}}</td>
-                            <td>{{ccf.get_publico_display}}</td>
-                            <td>{{ccf.get_clasificacion_display}}</td>
-                            <td>{{ccf.get_region_display}}</td>
-                            <td>{% if ccf.activo %} Activo {% else %} Inactivo {% endif %}</td>
-                            <td>
-                                <a href="{% url 'ver_ccf' ccf.id %}" data-toggle="modal">
-                                    <i class="fa fa-eye"></i> Ver CCF
-                                </a>
-                                <br/>
-                                {% if perms.snd.change_cajacompensacion %}
-                                <a href="{% url 'wizard_editar_caja' ccf.id %}" title="Editar">
-                                    <i class="fa fa-gear"></i> Editar
-                                </a>
-                                <br/>
-                                <a href="#modal-desactivate-{{ccf.id}}" data-toggle="modal">
-                                    <i class="fa fa-ban"></i> Activar / Desactivar
-                                </a>
-                                <div class="modal fade" id="modal-desactivate-{{ccf.id}}">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">Desactivar CCF:</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Está seguro que desea desactivar esta CCF?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'desactivar_ccf' ccf.id %}" class="btn btn-sm btn-warning">Aceptar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+            <div class="table-responsive">
+            <table id="tabla-ccf" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                
             </table>
+            </div>
         </div> 
+        <div class="modal fade" id="modal-desactivate">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Desactivar Deportista:</h4>
+                    </div>
+                    <div class="modal-body">
+                        ¿Está seguro que desea desactivar la caja de compensación?
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                        <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
 {% endblock %}
