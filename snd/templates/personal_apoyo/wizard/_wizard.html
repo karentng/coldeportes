@@ -1,14 +1,20 @@
 <ol class="bwizard-steps clearfix" role="tablist">
     <li role="tab" {% if wizard_stage >= 1 %} aria-selected="true" class="active" {% endif %} style="z-index: 7;"><span class="label badge-inverse">1</span><a class="hidden-phone">
-        Información básica <small>Datos básicos del personal de apoyo</small>
+            <a {% if edicion %} href="{% url 'edicion_personal_apoyo' id_personal_apoyo %}" style="cursor:pointer;"{% endif %}>
+                Información básica <small>Datos básicos del personal de apoyo</small>
+            </a>
         </a>
     </li>
     <li role="tab"  {% if wizard_stage >= 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 6;"><span class="label">2</span><a class="hidden-phone">
-        Formación Académica <small>Información sobre los estudios realizados</small>
+            <a {% if edicion %} href="{% url 'wizard_formacion_deportiva' id_personal_apoyo %}" style="cursor:pointer;"{% endif %}>
+                Formación Académica <small>Información sobre los estudios realizados</small>
+            </a>
         </a>
     </li>
     <li role="tab"  {% if wizard_stage >= 3 %} aria-selected="true" class="active" {% endif %} style="z-index: 3;"><span class="label">3</span><a class="hidden-phone">
-        Experiencia Laboral <small>Información sobre otros cargos deportivos del personal de apoyo</small>
+            <a {% if edicion %} href="{% url 'wizard_experiencia_laboral' id_personal_apoyo %}" style="cursor:pointer;"{% endif %}>
+                Experiencia Laboral <small>Información sobre otros cargos deportivos del personal de apoyo</small>
+            </a>
         </a>
     </li>
 

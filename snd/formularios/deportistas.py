@@ -120,8 +120,48 @@ class HistorialDeportivoForm(ModelForm):
             'fecha_final': MyDateWidget(),
         }
 
-class InformacionAcademicaForm(ModelForm):
 
+class HistorialLesionesForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(HistorialLesionesForm, self).__init__(*args, **kwargs)
+        self.fields['tipo_lesion'] = adicionarClase(self.fields['tipo_lesion'], 'one')
+        self.fields['periodo_rehabilitacion'] = adicionarClase(self.fields['periodo_rehabilitacion'], 'one')
+
+    class Meta:
+        model = HistorialLesiones
+        exclude = ('deportista',)
+        widgets = {
+            'fecha_lesion': MyDateWidget(),
+        }
+
+
+class HistorialDopingForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(HistorialDopingForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = HistorialDoping
+        exclude = ('deportista',)
+        widgets = {
+            'fecha': MyDateWidget(),
+        }
+
+class InformacionAdicionalForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(InformacionAdicionalForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = InformacionAdicional
+        exclude = ('deportista',)
+
+
+class InformacionAcademicaForm(ModelForm):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
@@ -133,6 +173,27 @@ class InformacionAcademicaForm(ModelForm):
     class Meta:
         model = InformacionAcademica
         exclude = ('deportista',)
+
+    def clean(self):
+        cleaned_data = super(InformacionAcademicaForm, self).clean()
+        if not self._errors:
+            estado = cleaned_data.get('estado')
+            try:
+                anio_finalizacion =cleaned_data.get('fecha_finalizacion')
+            except Exception:
+                anio_finalizacion = None
+
+            anio_actual = datetime.datetime.now().year
+            if anio_finalizacion:
+                if estado == 'Finalizado' and int(anio_finalizacion) > anio_actual:
+                    msg = 'Usted ha seleccionado el estado FINALIZADO con una fecha mayor a la actual'
+                    self.add_error('fecha_finalizacion',msg)
+                else:
+                    return True
+            else:
+                return True
+        return cleaned_data
+
 
 #Formularios para transferencias
 class DeportistaTransfer(ModelForm):
