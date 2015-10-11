@@ -4,12 +4,15 @@ from entidades.models import *
 from django.db import models
 
 class CajaCompensacion(models.Model):
-    def foto_name(instance, filename):
-        ruta = 'fotos_cajas/' + instance.id + filename[-4:]
+
+    def foto_caja(instance, filename):
+        ruta = 'fotos_cajas/' + instance.nombre + filename[-4:]
         ruta_delete = settings.MEDIA_ROOT + "/" + ruta
         if(os.path.exists(ruta_delete)):
             os.remove(ruta_delete)
         return ruta
+
+
     tipo_estado = ((0,'ACTIVO'), (1,'INACTIVO'),)
     clases = ( ('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
     tipo_region = ( ('U', 'Urbano'), ('R', 'Rural'), )
@@ -27,9 +30,8 @@ class CajaCompensacion(models.Model):
     email = models.EmailField()
     ciudad = models.ForeignKey(Ciudad)
     infraestructura = models.CharField(choices=tipo_infraesctructura, max_length=1)
-    foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
+    foto = models.ImageField(upload_to="foto_caja", null=True, blank=True)
     servicios = models.ManyToManyField(TipoServicioCajaCompensacion)
-    #tipo_escenario = models.ForeignKey(TipoEscenario)
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField(choices=tipo_estado)
     descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
