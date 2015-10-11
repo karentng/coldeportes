@@ -86,15 +86,18 @@
                                         <div class="form-group">
                                             <div class="checkbox">
                                                 <label for="id_conoce_grasa">
-                                                    <input class="styled" type="checkbox" id="id_conoce_grasa" name="conoce_grasa">
+                                                    <input class="styled" type="checkbox" id="id_conoce_informacion" name="conoce_grasa">
                                                     ¿Conoce el porcentaje de grasa corporal del deportista?
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
+
+
                                     <br/>
                                     <i class="ion ion-help-circled fa-2x add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="Si no conoce el porcentaje de grasa ingrese los datos que se le solicitan para calcularlo"></i>
                                     {% comment %}
+                                    {% bootstrap_field form.conoce_informacion layout="vertical" %}
 									<div class="note note-success">
 										<h5>Nota!</h5>
 										<p>
@@ -206,17 +209,42 @@
 			FormWizard.init();
 			$('#id_imc').css("pointer-events","none");
 			$('#id_masa_corporal_magra').css("pointer-events","none");
+            //Verificar la informacion
+            //Si ya lo tiene ingresado
+            //Se pone readonly info de calculo y se checkea la tawel
+            var porcentaje = $('#id_porcentaje_grasa').val();
+            if (porcentaje != ''){
+                $('#id_cuello').prop('readonly', true);
+                $('#id_cintura').prop('readonly', true);
+                if(mujer){
+                    $('#id_cadera').prop('readonly', true);
+                }
+                $("#id_conoce_informacion").prop("checked", true);
+            }else{
+                $('#id_porcentaje_grasa').prop('readonly', true);
+            }
+            //Si no readonly percent y todo bien
 		});
 		var mujer = {{mujer|yesno:"true,false" }};
 
-        $("#id_conoce_grasa").on('click',function(){
-            var point = $(this).checked;
-            console.log(point);
-            /*if ($(this)){
-                $('#id_porcentaje_grasa').css("pointer-events","none");
+        $("#id_conoce_informacion").on('click',function(){
+            var point = $(this).is(':checked');
+            if (!point){
+                $('#id_porcentaje_grasa').prop('readonly', true);
+                $('#id_cuello').prop('readonly', false);
+                $('#id_cintura').prop('readonly', false);
+                if(mujer){
+                    $('#id_cadera').prop('readonly', false);
+                }
             }else{
-                $('#id_porcentaje_grasa').css("pointer-events","block");
-            }*/
+                $('#id_porcentaje_grasa').prop('readonly', false);
+                $('#id_cuello').prop('readonly', true);
+                $('#id_cintura').prop('readonly', true);
+                if(mujer){
+                    $('#id_cadera').prop('readonly', true);
+                }
+
+            }
 
         })
 	</script>
