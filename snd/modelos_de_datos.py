@@ -419,8 +419,8 @@ MODELOS_DE_DATOS = (
     #MODELO DE DATOS PARA CAJAS DE COMPENSACIÓN 
     (   #Numero de modelo 11
         CajaCompensacion,
-        ['foto', 'nombre', 'publico', 'clasificacion', 'region'],
-        ['Logo', 'Nombre', 'Público', 'Clasificación', 'Región'],
+        ['foto', 'nombre', 'publico', 'clasificacion', 'region', 'estado'],
+        ['Logo', 'Nombre', 'Público', 'Clasificación', 'Región', 'Estado'],
         None,
         [
             [

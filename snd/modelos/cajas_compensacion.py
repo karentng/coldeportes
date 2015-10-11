@@ -7,9 +7,9 @@ class CajaCompensacion(models.Model):
 
     def foto_caja(instance, filename):
         ruta = 'fotos_cajas/' + instance.nombre + filename[-4:]
-        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
-        if(os.path.exists(ruta_delete)):
-            os.remove(ruta_delete)
+        #ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        #if(os.path.exists(ruta_delete)):
+        #    os.remove(ruta_delete)
         return ruta
 
 
@@ -30,7 +30,7 @@ class CajaCompensacion(models.Model):
     email = models.EmailField()
     ciudad = models.ForeignKey(Ciudad)
     infraestructura = models.CharField(choices=tipo_infraesctructura, max_length=1)
-    foto = models.ImageField(upload_to="foto_caja", null=True, blank=True)
+    foto = models.ImageField(upload_to=foto_caja, null=True, blank=True)
     servicios = models.ManyToManyField(TipoServicioCajaCompensacion)
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField(choices=tipo_estado)
