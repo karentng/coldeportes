@@ -73,12 +73,12 @@
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
-                                            <strong>Clasificación de CCF: {{ccf.get_clasificacion_display}}, Región: {{ccf.get_region_display}}</strong><br />
-                                            Público {{ccf.get_publico_display}}, Tipo de Infraestructura {{ccf.get_infraestructura_display}}<br />
-                                            Teléfono:{{ccf.telefono_contacto}}
-                                            Nombre de Contacto: {{ccf.nombre_contacto}}
-                                            Correo electrónico: {{ccf.email}}
-                                            Tipo de Institución {{ccf.get_tipo_institucion_display}}
+                                            <b>Clasificación de CCF: {{ccf.get_clasificacion_display}}<br/>
+                                            Región: {{ccf.get_region_display}}</b><br /><br/>
+                                            Público: {{ccf.get_publico_display}}, Tipo de Infraestructura: {{ccf.get_infraestructura_display}}<br />        
+                                            Nombre de Contacto: {{ccf.nombre_contacto}}, Teléfono: {{ccf.telefono_contacto}} <br />
+                                            Correo electrónico: {{ccf.email}}<br/>
+                                            Tipo de Institución: {{ccf.get_tipo_institucion_display}}
                                         </address>
                                         <div align="right">
                                             <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
