@@ -58,6 +58,8 @@ class Dirigente(models.Model):
 
 class DirigenteCargo(models.Model):
     nombre = models.CharField(max_length=100, verbose_name="Nombre del cargo")
+    vigencia_inicio = models.DateField(verbose_name="Fecha de inicio de vigencia del periodo")
+    vigencia_fin = models.DateField(verbose_name="Fecha de finalización de vigencia del periodo")
     fecha_posesion = models.DateField(verbose_name="Fecha de posesión")
     fecha_retiro = models.DateField(null=True,blank=True, verbose_name="Fecha de retiro")
     superior = models.ForeignKey(Dirigente, null=True, blank=True, related_name='superior')
@@ -77,6 +79,9 @@ class DirigenteCargo(models.Model):
         else:
             fecha_retiro = 'Actual'
         return "{0} a {1}".format(self.get_fecha_format(self.fecha_posesion), fecha_retiro)
+
+    def vigencia(self):
+        return "{0} a {1}".format(self.get_fecha_format(self.vigencia_inicio), self.get_fecha_format(self.vigencia_fin))
 
     def get_fecha_format(self,fecha):
         meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]

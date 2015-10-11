@@ -34,9 +34,10 @@ fields = {
                     notEmpty: {
                         message: 'El número de identificación no puede ser vacío'
                     },
-                    numeric: {
-                        message: 'El número de identificación solo puede contener números'
-                    },
+                    regexp: {
+                        regexp: "^[0-9a-zA-Z]+$",
+                        message: 'El número de identificación solo puede contener números ó letras'
+                    }
                 }
             },
             correo_electronico: {

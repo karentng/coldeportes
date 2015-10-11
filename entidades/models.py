@@ -35,6 +35,7 @@ class Actores(models.Model):
     dirigentes = models.BooleanField(verbose_name="Dirigentes")
     cajas = models.BooleanField(verbose_name="Cajas de Compensación")
     selecciones = models.BooleanField(verbose_name="Selecciones")
+    centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos")
 
     def resumen(self):
         actores = []
@@ -119,21 +120,76 @@ class Entidad(TenantMixin): # Entidad deportiva
         
         return centros
 
-    def cantidadActoresAsociados(self):
-        from snd.models import CentroAcondicionamiento, CajaCompensacion, Deportista, Dirigente, Escenario, PersonalApoyo
-        def obtenerTodos(booleano, modelo, nombre, datos, color, url):
+    def atributos_deportistas(self):
+        from snd.modelos.deportistas import Deportista
+        todos_deportistas = Deportista.objects.filter(entidad=self)
+        deportistas = []
+        for i in todos_deportistas:
+            deportistas.append(i.obtenerAtributos())
+
+        return deportistas
+
+    def atributos_personales_apoyo(self):
+        from snd.modelos.personal_apoyo import PersonalApoyo
+        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
+        personales_apoyo = []
+        for i in todos_personales_apoyo:
+            personales_apoyo.append(i.obtenerAtributos())
+
+        return personales_apoyo
+
+    def atributosDeSusActores(self):
+        def agregarActor(datos, booleano, identificador, metodo):
             if booleano:
-                return datos + [[nombre, color, modelo.objects.all().count(), url]]
+                datos[identificador] = metodo()
+            
             return datos
 
+        tenant = self.obtenerTenant()
+        actores = tenant.actores
+
+        datos = {}
+        datos = agregarActor(datos, actores.centros, "caf", tenant.atributosDeSusCafs)
+        datos = agregarActor(datos, actores.escenarios, "escenarios", tenant.atributosDeSusEscenarios)
+        datos = agregarActor(datos, actores.deportistas, "deportistas", tenant.atributos_deportistas)
+        datos = agregarActor(datos, actores.personal_apoyo, "personales", tenant.atributos_personales_apoyo)
+        #datos = agregarActor(datos, actores.dirigentes, "dirigentes", cambiar)
+        #datos = agregarActor(datos, actores.cajas, "cajas", cambiar)
+
+        try:
+            datos['ligas'] = tenant.ligasAsociadas()
+        except Exception:
+            pass
+
+        try:
+            datos['clubes'] = tenant.clubesAsociados()
+        except Exception:
+            pass
+
+        return datos
+
+    def cantidadActoresAsociados(self):
+        atributosActores = self.atributosDeSusActores()
+
+        def definirElementosDashBoard(datos, identificador, nombre, color, url):
+            try:
+                cantidad = len(atributosActores[identificador])
+                datos += [[nombre, color, cantidad, url]]
+            except KeyError:
+                pass
+            return datos
+        
         datos = []
-        actores = self.actores
-        datos = obtenerTodos(actores.centros, CentroAcondicionamiento, "CAFs", datos, "red", "listar_cafs")
-        datos = obtenerTodos(actores.escenarios, Escenario, "Escenarios", datos, "blue", "listar_escenarios")
-        datos = obtenerTodos(actores.deportistas, Deportista, "Deportistas", datos, "orange", "deportista_listar")
-        datos = obtenerTodos(actores.personal_apoyo, PersonalApoyo, "Personales de Apoyo", datos, "green", "personal_apoyo_listar")
-        datos = obtenerTodos(actores.dirigentes, Dirigente, "Dirigentes", datos, "purple", "dirigentes_listar")
-        datos = obtenerTodos(actores.cajas, CajaCompensacion, "Cajas de Compensación", datos, "black", "listar_ccfs")
+        
+        definirElementosDashBoard(datos, "ligas", "Ligas", "black", "inicio_tenant")
+        definirElementosDashBoard(datos, "clubes", "Clubes", "black", "inicio_tenant")
+        definirElementosDashBoard(datos, "caf", "CAFs", "red", "listar_cafs")
+        definirElementosDashBoard(datos, "escenarios", "Escenarios", "blue", "listar_escenarios")
+        definirElementosDashBoard(datos, "deportistas", "Deportistas", "orange", "deportista_listar")
+        definirElementosDashBoard(datos, "personales", "Personales de Apoyo", "green", "personal_apoyo_listar")
+        definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar")
+        definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs")
+
         return datos
 
     def posicionInicialMapa(self):
@@ -250,6 +306,10 @@ class Federacion(Entidad):
             actores.save()
         super(Federacion, self).save(*args, **kwargs)
 
+    def ligasAsociadas(self):
+        ligas = Liga.objects.filter(federacion=self)
+        return ligas
+
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario
         from django.db import connection
@@ -284,6 +344,42 @@ class Federacion(Entidad):
             centros += i.atributosDeSusCafs()
         
         return centros
+
+    def atributos_deportistas(self):
+        from snd.modelos.deportistas import Deportista
+        from django.db import connection
+
+        deportistas = []
+
+        todos_deportistas = Deportista.objects.filter(entidad=self)
+
+        for i in todos_deportistas:
+            deportistas.append(i.obtenerAtributos())
+
+        ligas = Liga.objects.filter(federacion=self)
+        for i in ligas:
+            connection.set_tenant(i)
+            deportistas += i.atributosDeSusCafs()
+
+        return deportistas
+
+    def atributos_personales_apoyo(self):
+        from snd.modelos.personal_apoyo import PersonalApoyo
+        from django.db import connection
+
+        personales_apoyo = []
+
+        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
+
+        for i in todos_personales_apoyo:
+            personales_apoyo.append(i.obtenerAtributos())
+
+        ligas = Liga.objects.filter(federacion=self)
+        for i in ligas:
+            connection.set_tenant(i)
+            personales_apoyo += i.atributosDeSusCafs()
+
+        return personales_apoyo
 
 class Liga(Entidad):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
@@ -298,6 +394,10 @@ class Liga(Entidad):
             actores.save()
         super(Liga, self).save(*args, **kwargs)
 
+    def clubesAsociados(self):
+        clubes = Club.objects.filter(liga=self)
+        return clubes
+
     def atributosDeSusEscenarios(self):
         from snd.modelos.escenarios import Escenario
         from django.db import connection
@@ -332,6 +432,42 @@ class Liga(Entidad):
             centros += i.atributosDeSusCafs()
         
         return centros
+
+    def atributos_deportistas(self):
+        from snd.modelos.deportistas import Deportista
+        from django.db import connection
+
+        deportistas = []
+
+        todos_deportistas = Deportista.objects.filter(entidad=self)
+
+        for i in todos_deportistas:
+            deportistas.append(i.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for i in clubes:
+            connection.set_tenant(i)
+            deportistas += i.atributosDeSusCafs()
+
+        return deportistas
+
+    def atributos_personales_apoyo(self):
+        from snd.modelos.personal_apoyo import PersonalApoyo
+        from django.db import connection
+
+        personales_apoyo = []
+
+        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
+
+        for i in todos_personales_apoyo:
+            personales_apoyo.append(i.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for i in clubes:
+            connection.set_tenant(i)
+            personales_apoyo += i.atributosDeSusCafs()
+
+        return personales_apoyo
 
 class Club(Entidad):
     liga = models.ForeignKey(Liga, null=True, blank=True)
@@ -422,6 +558,12 @@ class CAServicio(models.Model):
 class EPS(models.Model):
     nombre = models.CharField(max_length=300)
     codigo = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
+
+class CentroBiomedicoServicio(models.Model):
+    nombre = models.CharField(max_length=255)
 
     def __str__(self):
         return self.nombre

@@ -29,7 +29,7 @@
         idTabla = "tabla-escenarios";
         opciones = {% if perms.snd.change_escenario %} true {% else %} false {% endif %};
 
-        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
+        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 %}
             url = "{% url 'cargar_columnas' 9 %}";
         {% else %}
             url = "{% url 'cargar_columnas' 8 %}";
@@ -58,11 +58,13 @@
 
     <div class="row">
         <div class="col-sm-12">
+            <div class="table-responsive">
             <table id="tabla-escenarios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
 
             </table>
+            </div>
         </div>
-        <div class="modal fade" id="modal-desactivate-{{escenario.id}}">
+        <div class="modal fade" id="modal-desactivate">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

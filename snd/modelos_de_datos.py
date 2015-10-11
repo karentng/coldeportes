@@ -28,6 +28,7 @@ from snd.models import *
 '''
 
 MODELOS_DE_DATOS = (
+    #0
     (
         CentroAcondicionamiento,
         ['nombre','direccion', 'telefono', 'ciudad', 'email', 'web', 'estado'],
@@ -50,6 +51,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #1
     #MODELO DE DATOS CAF PARA LIGAS Y FEDERACIONES
     (
         CentroAcondicionamiento,
@@ -66,6 +68,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #2
     (
         Deportista,
         ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","estado"],
@@ -152,6 +155,7 @@ MODELOS_DE_DATOS = (
 
         ],
     ),
+    #3
     #MODELO DE DATOS PARA DEPORTISTAS PARA EL TENANT TIPO LIGA Y FEDERACIÓN
     (
         Deportista,
@@ -168,10 +172,11 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
+    #4
     (
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'estado'],
-        ['foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
+        ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
         None,
         [
             [
@@ -204,6 +209,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #5
     #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y LIGAS
     (
         PersonalApoyo,
@@ -241,6 +247,7 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
+    #6
     (
         Dirigente,
         ['foto','identificacion','nombres apellidos', 'estado'],
@@ -277,6 +284,7 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
+    #7
     #MODELO DE DATOS DIRIGENTE PARA LIGA Y FEDERACIÓN
     (
         Dirigente,
@@ -314,6 +322,7 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
+    #8
     (
         Escenario,
         ['nombre','ciudad','estrato', 'estado'],
@@ -356,6 +365,7 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
+    #9
     #MODELO DE DATOS PARA ESCENARIO LIGAS Y FEDERACIONES
     (
         Escenario,
@@ -372,6 +382,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #10
     (
         Seleccion,
         ["nombre", "tipo", "fecha_inicial", "fecha_final", "campeonato", "tipo_campeonato"],
@@ -394,6 +405,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #11
     #MODELO PARA CLUB PARALIMPICO
     (
         Deportista,
@@ -451,6 +463,29 @@ MODELOS_DE_DATOS = (
 
             ],
 
+        ],
+    ),
+    #12
+    (
+        CentroBiomedico,
+        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
+        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
+        None,
+        [
+            [
+                "Ver Centro Biomédico",
+                'centro_biomedico_ver',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'centro_biomedico_crear_editar',
+                ['identificacion', '1', 'id'],
+                'fa-gear',
+                None
+            ],
         ],
     ),
 )

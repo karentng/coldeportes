@@ -82,3 +82,11 @@ urlpatterns += required(
     )
     
 )
+
+urlpatterns += required(
+    tenant_actor('centros_biomedicos'),
+    patterns('',
+        url(r'^centro-biomedico/', include('snd.urls.centro_biomedico')), #urls de centro biomédico
+    )
+    
+)

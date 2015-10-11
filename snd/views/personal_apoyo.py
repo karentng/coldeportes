@@ -126,6 +126,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
         'titulo': 'Información básica',
         'wizard_stage': 1,
         'form': personal_apoyo_form,
+        'id_personal_apoyo':personal_apoyo.id,
         'edicion':True
     })
 
@@ -399,8 +400,7 @@ def verificar_personal_apoyo(request):
 
     if request.method=='POST':
         form = VerificarExistenciaForm(request.POST)
-
-        if form.is_valid():
+        if form.is_valid() and form.validar_id():
             datos = {
                 'identificacion': form.cleaned_data['identificacion'],
                 'tipo_id': form.cleaned_data['tipo_id']

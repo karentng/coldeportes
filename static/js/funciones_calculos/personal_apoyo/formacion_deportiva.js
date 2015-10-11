@@ -6,9 +6,14 @@ var profesion = document.getElementById("id_profesion");
 var fecha_finalizacion = document.getElementById("id_fecha_finalizacion");
 
 $(document).ready(function() {
-    grado_semestre.disabled=true;
+    if($('#id_estado').val()!='Actual'){
+        grado_semestre.disabled=true;
+    }
     profesion.disabled=true;
-    fecha_finalizacion.disabled=true;
+    if($('#id_estado').val()!='Finalizado' && $('#id_estado').val()!='Incompleto')
+    {
+        fecha_finalizacion.disabled = true;
+    }
 });
 
 document.getElementById("id_nivel").onchange=function(){
