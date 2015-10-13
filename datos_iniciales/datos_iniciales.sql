@@ -1160,7 +1160,10 @@ INSERT INTO "entidades_caracteristicaescenario" ("id", "descripcion") VALUES
 (20,	'Área de Camerinos'),
 (21,	'Área Complementaria'),
 (22,	'Área de Espectadores'),
-(23,	'Taquillas');
+(23,	'Taquillas'),
+(23,	'Señalización Discapacitados'),
+(23,	'Vestidores'),
+(23,	'Duchas');
 
 INSERT INTO "entidades_dias" ("id", "nombre") VALUES
 (2,	'Lunes'),
@@ -1465,7 +1468,8 @@ INSERT INTO "entidades_tipousoescenario" ("id", "descripcion") VALUES
 (2,	'Alto Rendimiento'),
 (3,	'Recreación'),
 (4,	'Descanso'),
-(5,	'Vacacional');
+(5,	'Vacacional'),
+(6,	'Práctica');
 
 INSERT INTO "entidades_tipoescenario" ("id", "descripcion") VALUES
 (1,	'Estadio'),

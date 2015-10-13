@@ -16,6 +16,7 @@ class IdentificacionForm(forms.ModelForm):
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
         self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
+        self.fields['division_territorial'] = adicionarClase(self.fields['division_territorial'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
@@ -31,6 +32,8 @@ class CaracterizacionForm(forms.ModelForm):
         super(CaracterizacionForm, self).__init__(*args, **kwargs)
         self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
         self.fields['clase_acceso'] = adicionarClase(self.fields['clase_acceso'], 'one')
+        self.fields['estado_fisico'] = adicionarClase(self.fields['estado_fisico'], 'one')
+        self.fields['tipo_propietario'] = adicionarClase(self.fields['tipo_propietario'], 'one')
         self.fields['tipo_escenario'].queryset = TipoEscenario.objects.all().order_by('descripcion')
         self.fields['tipo_disciplinas'] = adicionarClase(self.fields['tipo_disciplinas'], 'many')
         self.fields['tipo_disciplinas'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')

@@ -2,14 +2,17 @@
 
 from entidades.models import *
 from django.db import models
+from django.conf import settings
+import os
+
 
 class CajaCompensacion(models.Model):
 
     def foto_caja(instance, filename):
-        ruta = 'fotos_cajas/' + instance.nombre + filename[-4:]
-        #ruta_delete = settings.MEDIA_ROOT + "/" + ruta
-        #if(os.path.exists(ruta_delete)):
-        #    os.remove(ruta_delete)
+        ruta = 'fotos_cajas/' + str(instance.id) + filename[-4:]
+        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        if(os.path.exists(ruta_delete)):
+            os.remove(ruta_delete)
         return ruta
 
 
