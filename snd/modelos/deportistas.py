@@ -2,7 +2,7 @@
 
 from entidades.models import *
 from django.db import models
-from coldeportes.utilities import calculate_age
+from coldeportes.utilities import calculate_age,extraer_codigo_video
 from django.db.models.fields.files import ImageFieldFile, FileField
 from coldeportes.settings import STATIC_URL
 
@@ -10,8 +10,8 @@ class Deportista(models.Model):
     #Datos personales
         #Identificacion
     tipo_sexo = (
-        ('Hombre','Hombre'),
-        ('Mujer','Mujer'),
+        ('HOMBRE','HOMBRE'),
+        ('MUJER','MUJER'),
     )
     TIPO_IDENTIDAD = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
@@ -38,9 +38,9 @@ class Deportista(models.Model):
 
     nombres = models.CharField(max_length=100, verbose_name='Nombres')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
-    genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista',default='Hombre')
+    genero = models.CharField(choices=tipo_sexo,max_length=11, verbose_name='Genero del Deportista')
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
-    identificacion = models.CharField(max_length=100,unique=True,verbose_name='Identificación')
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
     barrio = models.CharField(max_length=100,verbose_name='Barrio')
@@ -59,8 +59,14 @@ class Deportista(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
 
+    class Meta:
+        unique_together = ('tipo_id','identificacion',)
+
     def __str__(self):
         return self.identificacion + "-" + self.nombres+" "+self.apellidos
+
+    def short_video_url(self):
+        return extraer_codigo_video(self.video)
 
     def edad(self):
         return calculate_age(self.fecha_nacimiento)
@@ -74,6 +80,12 @@ class Deportista(models.Model):
     def fotos(self):
         return [self.foto]
 
+    def full_name(self):
+        return str(self.nombres) + " " +str(self.apellidos)
+
+    def full_id(self):
+        return str(self.get_tipo_id_display())+":"+str(self.identificacion)
+
     def save(self, *args, **kwargs):
         self.nombres = self.nombres.upper()
         self.apellidos = self.apellidos.upper()
@@ -81,6 +93,20 @@ class Deportista(models.Model):
         self.comuna = self.comuna.upper()
         self.direccion = self.direccion.upper()
         super(Deportista, self).save(*args, **kwargs)
+
+    def obtenerAtributos(self):
+
+        atributos = [
+            ["Nombre", self.nombres+" "+self.apellidos],
+            ["Ciudad Residencia", self.ciudad_residencia.nombre],
+            ["Género", self.genero],
+            ["Identificación", self.tipo_id+" "+self.identificacion],
+            ["E-mail", self.email],
+            ["Teléfono", self.telefono],
+            ["Dirección", self.direccion],
+        ]
+
+        return [self.foto, atributos, None, None, "Deportista!"]
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):
@@ -109,8 +135,8 @@ class ComposicionCorporal(models.Model):
     deportista = models.ForeignKey(Deportista)
     peso = models.FloatField(help_text="En kg", verbose_name="Peso (kg)")
     estatura = models.IntegerField(help_text="En cm", verbose_name="Estatura (cm)")
-    RH = models.CharField(max_length=4,choices=tipos_rh,default='O+',verbose_name='Tipo de sangre')
-    tipo_talla = models.CharField(max_length=7,choices=tipos_talla_choices,default='Adulto',verbose_name='Talla para' )
+    RH = models.CharField(max_length=4,choices=tipos_rh,verbose_name='Tipo de sangre')
+    tipo_talla = models.CharField(max_length=7,choices=tipos_talla_choices,verbose_name='Talla para' )
     talla_camisa = models.CharField(max_length=3, choices=tallas_choices,verbose_name='Talla Camisa')
     talla_pantaloneta = models.CharField(max_length=3, choices=tallas_choices,verbose_name='Talla Pantaloneta')
     talla_zapato = models.CharField(max_length=2,verbose_name='Talla Zapato')
@@ -133,6 +159,7 @@ class HistorialDeportivo(models.Model):
     ESTADOS_AVAL = (
         ('Aprobado','Aprobado'),
         ('Pendiente','Pendiente'),
+        ('Rechazado','Rechazado'),
     )
 
     nombre = models.CharField(max_length=100,verbose_name='Nombre del campeonato')
@@ -140,15 +167,34 @@ class HistorialDeportivo(models.Model):
     fecha_final = models.DateField(verbose_name='Fecha Finalización ')
     pais = models.ForeignKey(Nacionalidad)
     institucion_equipo = models.CharField(max_length=100, verbose_name='Club deportivo')
-    tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato',default='Campeonato Internacional')
+    tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato')
     puesto = models.IntegerField(verbose_name='Puesto obtenido')
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
     modalidad = models.CharField(max_length=100,blank=True,verbose_name='Modalidad de competencia')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
-    categoria = models.CharField(max_length=100,verbose_name='Categoria en la que participó')
+    categoria = models.CharField(max_length=100,verbose_name='Categoría en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
+
+    def obtener_info_aval(self):
+        informacion = [
+            self.deportista.foto,
+            self.deportista.full_name(),
+            self.deportista.entidad.nombre,
+            self.deportista.full_id(),
+            self.nombre,
+            self.tipo,
+            self.puesto,
+            self.pais.nombre,
+            self.institucion_equipo,
+            self.id,
+            self.deportista.entidad.id,
+            self.fecha_inicial,
+            self.fecha_final,
+            self.categoria
+        ]
+        return informacion
 
     def __str__(self):
         return self.deportista.nombres+':'+self.nombre
@@ -184,7 +230,7 @@ class InformacionAcademica(models.Model):
     institucion = models.CharField(max_length=100,verbose_name='Institución')
     nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
     estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
-    profesion =  models.CharField(max_length=100,blank=True,null=True)
+    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
@@ -203,7 +249,49 @@ class CambioDocumentoDeportista(models.Model):
     )
 
     deportista = models.ForeignKey(Deportista)
-    tipo_documento_anterior = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Documento Acutual', help_text='Este es el tipo de documento que tiene el deportista actualmente')
-    identificacion_anterior = models.CharField(max_length=100,verbose_name='Identificación Actual',help_text='Este es el numero de documento actual o valor de documento en caso diferente a CC y TI')
-    tipo_documento_nuevo = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Nuevo Tipo de Documento', help_text='Este es el tipo de documento que tendrá una vez de click en cambiar')
-    identificacion_nuevo = models.CharField(max_length=100,verbose_name='Nueva Identificación', help_text='Este es el numero o valor de documento que tendrá una vez de click en cambiar')
+    tipo_documento_anterior = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de documento actual', help_text='Este es el tipo de documento que tiene el deportista actualmente')
+    identificacion_anterior = models.CharField(max_length=100,verbose_name='Identificación actual',help_text='Este es el número de documento actual o valor de documento en caso diferente a CC y TI')
+    tipo_documento_nuevo = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Nuevo tipo de documento', help_text='Este es el tipo de documento que tendrá una vez de click en cambiar')
+    identificacion_nuevo = models.CharField(max_length=100,verbose_name='Nueva identificación', help_text='Este es el número o valor de documento que tendrá una vez de click en cambiar')
+
+
+class InformacionAdicional(models.Model):
+    deportista = models.ForeignKey(Deportista)
+    usa_centros_biomedicos = models.BooleanField(verbose_name='¿Usa centros biomédicos?')
+    es_beneficiario_programa_apoyo = models.BooleanField(verbose_name='¿Es beneficiario de algún programa de apoyo?')
+
+
+class HistorialLesiones(models.Model):
+    TIPOS_LESION = (
+        (1,'FRACTURA'),
+        (2,'LUXACIÓN'),
+        (3,'RUPTURA'),
+        (4,'LESIÓN MENISCAL'),
+        (5,'ESGUINCE'),
+    )
+    PERIODOS_REHABILITACION = (
+        (1,'MENOR A 1 MES'),
+        (2,'ENTRE 1 y 3 MESES'),
+        (3,'ENTRE 3 y 6 MESES'),
+        (4,'MAYOR A 6 MESES'),
+    )
+    deportista = models.ForeignKey(Deportista)
+    fecha_lesion = models.DateField(verbose_name='Fecha de la lesión')
+    tipo_lesion = models.IntegerField(choices=TIPOS_LESION,verbose_name='Tipo de lesión')
+    periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')
+
+
+class HistorialDoping(models.Model):
+    TIPO_IDENTIDAD = (
+        ('TI', 'TARJETA DE IDENTIDAD'),
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
+    )
+    deportista = models.ForeignKey(Deportista)
+    nombre_delegado = models.CharField(max_length=100,verbose_name='Nombre del delegado')
+    tipo_identidad_delegado = models.CharField(max_length=2,choices=TIPO_IDENTIDAD,verbose_name='Tipo de identificación del delegado')
+    identificacion_delegado = models.CharField(max_length=30,verbose_name='Número de identificación del delegado')
+    evento = models.CharField(max_length=300,verbose_name='Evento en el que se detectó el doping')
+    fecha = models.DateField(verbose_name='Fecha en la que se detectó el doping')
+    observaciones = models.TextField(blank=True)

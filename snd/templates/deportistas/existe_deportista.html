@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Deportistas - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Verificar existencia de un deportista
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'deportista_listar' %}">CTD deportista</a></li>
+    <li class="active">Verificacíon existencia deportista</li>
+{% endblock %}
+
+
+
+{% block contenido %}
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title">
+                    Verificación de la existencia de un deportista
+                </h4>
+            </div>
+            <div class="panel-body">
+                <h4 class="text-warning"><i class="fa fa-warning"></i>¡Deportista encontrado!</h4>
+                <p>
+                    {% if tenant_existencia %}
+                        <b>NO SE PUEDE HACER EL CAMBIO DE DOCUMENTO!:</b> <br/>
+
+                        Ya existe el deportista {{ deportista.full_name }} registrado en la entidad {{ tenant_existencia.nombre }} con el documento ingresado, por favor pongase en contacto
+                        con la entidad para solicitar una transferencia de este deportista
+                    {% else %}
+                        <b>NO SE PUEDE HACER EL CAMBIO DE DOCUMENTO!:</b> <br/>
+                        Ya existe un deportista registrado en esta entidad con ese documento
+                    {% endif %}
+                    <p><a onclick="history.back();" class="btn btn-warning btn-md m-r-5">Regresar</a></p>
+                </p>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

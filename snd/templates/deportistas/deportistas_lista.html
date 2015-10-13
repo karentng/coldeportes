@@ -33,9 +33,12 @@
            });
         });
         idTabla = "tabla-deportistas";
-        opciones = {% if perms.snd.change_deportista %} true {% else %} false {% endif %};
-        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7%}
+        //opciones = {% if perms.snd.change_deportista %} true {% else %} false {% endif %};
+        opciones = true;
+        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8%}
             url = "{% url 'cargar_columnas' 3 %}";
+        {% elif tipo_tenant == 9 %}
+            url = "{% url 'cargar_columnas' 11 %}";
         {% else %}
             url = "{% url 'cargar_columnas' 2 %}";
         {% endif %}

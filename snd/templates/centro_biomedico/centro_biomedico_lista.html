@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Centro Biomédico - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista de Centros Biomédicos
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Centros Biomédicos</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <style type="text/css">
+    th{
+        text-align: center;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $(document).on('mouseenter','tr',function(e){
+               $('.add-tooltip').tooltip();
+           });
+        });
+        var idTabla = "tabla-centros-biomedicos";
+        opciones = {% if perms.snd.change_centrobiomedico %} true {% else %} false {% endif %};
+        /*{% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
+            url = "{% url 'cargar_columnas' 7 %}";
+        {% else %}
+            url = "{% url 'cargar_columnas' 6 %}";
+        {% endif %}*/
+        url = "{% url 'cargar_columnas' 12 %}";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script>
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        };
+    </script>
+{% endblock %}
+
+{% block titulo_panel %}
+    Listar Centros Biomédicos
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="table-responsive">
+        <table id="tabla-centros-biomedicos" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+
+        </table>
+    </div>
+    <div class="modal fade" id="modal-desactivate{{centro_biomedico.id}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">{% if centro_biomedico.estado %} Activar {% else %} Desactivar {% endif %} Centro Biomédico:</h4>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro que desea {% if centro_biomedico.estado %} activar {% else %} desactivar {% endif %} este centro biomédico?
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -26,17 +26,6 @@
     <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
 
     <div class="row">
-    {% for msg in messages %}
-        <div {% if msg.tags == 'error' %} class="alert alert-danger fade in" {% else %} class="alert alert-{{msg.tags}} fade in" {%     endif %} align="center">
-            <span class="close" data-dismiss="alert">×</span>
-            {% if msg.tags == 'error' %}
-                <i class="fa fa-times fa-2x pull-left"></i>
-            {% else %}
-                <i class="fa fa-check fa-2x pull-left"></i>
-            {% endif %}
-            <p>{{msg}}</p>
-        </div>
-    {% endfor %}
     <!--Fila de notificaciones-->
         <div class="row">
             <div class="col-sm-12">
@@ -64,32 +53,32 @@
                                                     <div class="col-sm-6">
                                                         <li class="media media-sm">
                                                             <a class="media-left">
-                                                                {%if h.deportista.foto%}
-                                                                    <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{h.deportista.foto}}" alt="Foto del Deportista"  />
+                                                                {%if h.0%}
+                                                                    <img class="media-object rounded-corner" src="{{MEDIA_URL}}{{h.0}}" alt="Foto del Deportista"  />
                                                                 {%else%}
                                                                     <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="60" height="60"/>
                                                                 {%endif%}
                                                             </a>
                                                             <div class="media-body">
-                                                                <h4 class="media-heading">{{ h.deportista.nombres }} {{ h.deportista.apellidos }}</h4>
-                                                                <h5><strong>Club: {{ h.deportista.entidad }}</strong></h5>
-                                                                <p><strong>Identificación:</strong> {{ h.deportista.tipo_id }}. {{ h.deportista.identificacion }} <br/>
-                                                                    <strong>Nombre Campeonato:</strong> {{ h.nombre }} <br/>
-                                                                    <strong>Tipo:</strong> {{ h.tipo }} <br/>
-                                                                    <strong>Puesto Obtenido:</strong> {{ h.puesto }} <br/>
-                                                                    <strong>País:</strong> {{ h.pais }} <br/>
-                                                                    <strong>Institución/Equipo que participó:</strong> {{h.institucion_equipo}}
+                                                                <h4 class="media-heading">{{ h.1}}</h4>
+                                                                <h5><strong>Club: {{ h.2 }}</strong></h5>
+                                                                <p><strong>Identificación:</strong> {{ h.3 }} <br/>
+                                                                    <strong>Nombre Campeonato:</strong> {{ h.4 }} <br/>
+                                                                    <strong>Tipo:</strong> {{ h.5 }} <br/>
+                                                                    <strong>Puesto Obtenido:</strong> {{ h.6 }} <br/>
+                                                                    <strong>País:</strong> {{ h.7 }} <br/>
+                                                                    <strong>Institución/Equipo que participó:</strong> {{h.8}}
                                                                 </p>
                                                                 <p>
-                                                                    <a href="#modal-vermas-depor-{{ h.id }}-{{h.deportista.entidad.id}}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
-                                                                    <a href="{% url 'rechazar_logros_deportivos' h.deportista.entidad.id h.id %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
-                                                                    <a href="{% url 'aceptar_logros_deportivos' h.deportista.entidad.id h.id %}" class="btn btn-sm btn-success m-r-5">Aprobar</a>
+                                                                    <a href="#modal-vermas-depor-{{ h.9 }}-{{h.10}}" data-toggle="modal" class="btn btn-sm btn-warning m-r-5">Ver Detalle</a>
+                                                                    <a href="{% url 'rechazar_logros_deportivos' h.10 h.9 %}" class="btn btn-sm btn-danger m-r-5">Rechazar</a>
+                                                                    <a href="{% url 'aceptar_logros_deportivos' h.10 h.9 %}" class="btn btn-sm btn-success m-r-5">Aprobar</a>
                                                                 </p>
                                                             </div>
                                                         </li>
                                                     </div>
                                                     <!--modal para ver detalle -->
-                                                    <div class="modal modal-message fade" id="modal-vermas-depor-{{ h.id }}-{{h.deportista.entidad.id}}">
+                                                    <div class="modal modal-message fade" id="modal-vermas-depor-{{ h.9 }}-{{h.10}}">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-body">
@@ -100,8 +89,8 @@
                                                                             <div class="profile-left">
                                                                                 <!-- begin profile-image -->
                                                                                 <div class="profile-image">
-                                                                                    {%if h.deportista.foto%}
-                                                                                        <img class="media-object" src="{{MEDIA_URL}}{{h.deportista.foto}}" alt="Foto del Deportista"  />
+                                                                                    {%if h.0 %}
+                                                                                        <img class="media-object" src="{{MEDIA_URL}}{{h.0}}" alt="Foto del Deportista"  />
                                                                                     {%else%}
                                                                                         <img class="media-object" src="{{STATIC_URL}}img/depor_default.png" alt="Foto del Deportista" width="100%" height="100%"/>
                                                                                     {%endif%}
@@ -120,55 +109,55 @@
                                                                                                 <tr>
                                                                                                     <th></th>
                                                                                                     <th>
-                                                                                                        <h4>{{ h.deportista.nombres }} {{ h.deportista.apellidos }} <small>{{ h.deportista.entidad }}</small></h4>
+                                                                                                        <h4>{{ h.1 }} <small>{{ h.2 }}</small></h4>
                                                                                                     </th>
                                                                                                 </tr>
                                                                                             </thead>
                                                                                             <tbody>
                                                                                                 <tr class="highlight">
                                                                                                     <td class="field">Club Deportivo</td>
-                                                                                                    <td>{{ h.deportista.entidad }}</td>
+                                                                                                    <td>{{ h.2 }}</td>
                                                                                                 </tr>
                                                                                                 <tr class="divider">
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Identificación</td>
-                                                                                                    <td> {{ h.deportista.tipo_id }}. {{ h.deportista.identificacion }}</td>
+                                                                                                    <td> {{ h.3 }}</td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Nombre Campeonato:</td>
-                                                                                                    <td><i class="ion ion-trophy fa-lg m-r-5"></i>{{h.nombre}}</td>
+                                                                                                    <td><i class="ion ion-trophy fa-lg m-r-5"></i>{{h.4}}</td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Fecha Inicial</td>
-                                                                                                    <td>{{ h.fecha_inicial }}</td>
+                                                                                                    <td>{{ h.11 }}</td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Fecha de Finalización</td>
-                                                                                                    <td>{%if not h.actual %}{{ h.fecha_final }}{%else%}Actual{%endif%}</td>
+                                                                                                    <td>{{ h.12 }}</td>
                                                                                                 </tr>
                                                                                                 <tr class="divider">
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr class="highlight">
                                                                                                     <td class="field">Puesto</td>
-                                                                                                    <td><i class="ion ion-bookmark fa-lg m-r-5"></i> {{ h.puesto }}</td>
+                                                                                                    <td><i class="ion ion-bookmark fa-lg m-r-5"></i> {{ h.6 }}</td>
                                                                                                 </tr>
                                                                                                 <tr class="divider">
                                                                                                     <td colspan="2"></td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">País</td>
-                                                                                                    <td>{{h.pais}}</td>
+                                                                                                    <td>{{h.7}}</td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field">Categoría</td>
-                                                                                                    <td>{{h.categoria}}</td>
+                                                                                                    <td>{{h.13}}</td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="field" >Tipo</td>
-                                                                                                    <td>{{ h.tipo }}</td>
+                                                                                                    <td>{{ h.5 }}</td>
                                                                                                 </tr>
                                                                                             </tbody>
                                                                                         </table>

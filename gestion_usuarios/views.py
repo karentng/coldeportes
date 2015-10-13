@@ -62,9 +62,9 @@ def inicio(request):
 
     entidades = Entidad.objects.all()
     if len(entidades) == 1:#sólo debería de existir la entidad pública
-        actores1 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False)
+        actores1 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False)
         actores1.save()
-        actores2 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False)
+        actores2 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False)
         actores2.save()
         ciudad = Ciudad.objects.get(id=109)#bogotá
         comiteOlimpico = Comite(tipo=6,tipo_comite=1,nombre="Comité Olímpico Colombiano",direccion="Av. 68 # 55-65",pagina_web="http://www.coc.org.co/",telefono="571 6300093",actores=actores1,ciudad=ciudad)
@@ -110,35 +110,14 @@ def inicio_tenant(request):
     #Inicio consulta de transferencias
     transferencias = Transferencia.objects.filter(estado='Pendiente')
     transfer_personas = []
-    transfer_escenarios = []
     for t in transferencias:
-        entidad_cambio = t.entidad
-        connection.set_tenant(entidad_cambio)
+        connection.set_tenant(t.entidad)
         ContentType.objects.clear_cache()
-        objeto_trans = None
-        #Si es persona
-        if t.tipo_objeto =='Deportista' or t.tipo_objeto=='PersonalApoyo':
-            #Si es deportista
-            if t.tipo_objeto =='Deportista':
-                objeto_trans = Deportista.objects.get(id=t.id_objeto)
-                objeto_trans.ciudad = objeto_trans.ciudad_residencia
-            #Si es personal de apoyo
-            elif t.tipo_objeto =='PersonalApoyo':
-                objeto_trans = PersonalApoyo.objects.get(id=t.id_objeto)
-            objeto_trans.edad = calculate_age(objeto_trans.fecha_nacimiento)
-            objeto_trans.procedencia = entidad_cambio
-            objeto_trans.fecha_solicitud = t.fecha_solicitud
-            objeto_trans.nacionalidad_str = ','.join(x.nombre for x in objeto_trans.nacionalidad.all())
-            objeto_trans.id_trans = t.id
-            transfer_personas.append(objeto_trans)
-        #Caso contrario es escenario
-        elif t.tipo_objeto=='Escenario':
-            objeto_trans = Escenario.objects.get(id=t.id_objeto)
-            objeto_trans.procedencia = entidad_cambio
-            objeto_trans.tipo = CaracterizacionEscenario.objects.get(escenario=objeto_trans).tipo_escenario
-            objeto_trans.fecha_solicitud = t.fecha_solicitud
-            objeto_trans.id_trans = t.id
-            transfer_escenarios.append(objeto_trans)
+        objeto_trans = Deportista.objects.get(id=t.id_objeto)
+        objeto_trans.procedencia = t.entidad
+        objeto_trans.fecha_solicitud = t.fecha_solicitud
+        objeto_trans.id_trans = t.id
+        transfer_personas.append(objeto_trans)
 
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
@@ -147,13 +126,12 @@ def inicio_tenant(request):
     actoresAsociados = request.tenant.cantidadActoresAsociados()
 
     tipoTenant = request.tenant.obtenerTenant()
-    ubicaciones = tipoTenant.atributosDeSusCafs()
-    ubicaciones += tipoTenant.atributosDeSusEscenarios()
+    ubicaciones = tipoTenant.atributos_cafs()
+    ubicaciones += tipoTenant.atributos_escenarios()
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
-        'transfer_escenario' : transfer_escenarios,
         'actoresAsociados': actoresAsociados,
         'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),

@@ -33,9 +33,9 @@
         idTabla = "tabla-ccf";
         opciones = {% if perms.snd.change_cajacompensacion %} true {% else %} false {% endif %};
         {% if tipo_tenant == 4 %}
-            url = "{% url 'cargar_columnas' 11 %}";
+            url = "{% url 'cargar_columnas' 13 %}";
         {% else %}
-            url = "{% url 'cargar_columnas' 11 %}";
+            url = "{% url 'cargar_columnas' 13 %}";
         {% endif %}
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>

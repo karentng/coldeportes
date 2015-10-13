@@ -2,7 +2,11 @@
 {% load bootstrap3 %}
 
 {% block head %}
-    Registro Deportistas
+    {% if historicos %}
+        Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block css %}
@@ -14,7 +18,11 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'deportista_listar' %}">Deportistas</a>
-    <li class="active">Editar</li>
+    {% if historicos %}
+        <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -22,7 +30,11 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Deportistas
+     {% if historicos %}
+        Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block panel_botones %}
@@ -79,7 +91,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_historia_academica' id_depor historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_historia_academica' id_deportista historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -95,15 +107,9 @@
         <br/>
         <hr/>
         {% if wizard_stage > 1 %}
-        <a href="{% url 'wizard_historia_deportiva' id_depor %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
-        <!--input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" /-->
+        <a href="{% url 'wizard_historia_deportiva' id_deportista %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
         {% endif %}     
-        <a href="{% url 'finalizar_deportista' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>
-        <a href="{% url 'finalizar_deportista' opcion='nuevo' %}">
-                <button class="btn btn-warning pull-right" type="submit" style="margin-right:10px">
-                    <i class="fa fa-circle-o-notch"></i> Guardar y registrar otro deportista
-                </button>
-        </a>
+        <a href="{% url 'wizard_historia_lesiones' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 
 {% endblock %}

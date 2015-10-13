@@ -52,6 +52,7 @@ def wizard_personal_apoyo_nuevo(request):
         'titulo': 'Información básica',
         'wizard_stage': 1,
         'form': personal_apoyo_form,
+        'edicion':False
     })
 
 @login_required
@@ -125,6 +126,8 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
         'titulo': 'Información básica',
         'wizard_stage': 1,
         'form': personal_apoyo_form,
+        'id_personal_apoyo':personal_apoyo.id,
+        'edicion':True
     })
 
 
@@ -150,8 +153,10 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
 
     try:
         formacion_deportiva = FormacionDeportiva.objects.filter(personal_apoyo=id_personal_apoyo)
+        edicion = True
     except Exception:
         formacion_deportiva = None
+        edicion = False
 
     personal_apoyo= PersonalApoyo.objects.get(id=id_personal_apoyo)
 
@@ -175,7 +180,8 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         'wizard_stage': 2,
         'form': formaciondep_form,
         'historicos': formacion_deportiva,
-        'id_personal_apoyo': id_personal_apoyo
+        'id_personal_apoyo': id_personal_apoyo,
+        'edicion':edicion
     })
 
 @login_required
@@ -225,8 +231,10 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
 
     try:
         experiencia_laboral = ExperienciaLaboral.objects.filter(personal_apoyo=id_personal_apoyo)
+        edicion = True
     except Exception:
         experiencia_laboral = None
+        edicion = False
 
     personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
 
@@ -254,7 +262,8 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
         'wizard_stage': 3,
         'form': experiencia_laboral_form,
         'historicos': experiencia_laboral,
-        'id_personal_apoyo': id_personal_apoyo
+        'id_personal_apoyo': id_personal_apoyo,
+        'edicion':edicion
     })
 
 @login_required
@@ -391,8 +400,7 @@ def verificar_personal_apoyo(request):
 
     if request.method=='POST':
         form = VerificarExistenciaForm(request.POST)
-
-        if form.is_valid():
+        if form.is_valid() and form.validar_id():
             datos = {
                 'identificacion': form.cleaned_data['identificacion'],
                 'tipo_id': form.cleaned_data['tipo_id']

@@ -1,3 +1,4 @@
+import datetime
 from django import forms
 from django.forms import ModelForm
 from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
@@ -5,6 +6,8 @@ from coldeportes.utilities import adicionarClase,MyDateWidget
 
 
 class PersonalApoyoForm(ModelForm):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(PersonalApoyoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
@@ -29,7 +32,17 @@ class VerificarExistenciaForm(forms.Form):
         ('PS', 'PASAPORTE'),
     )
     tipo_id = forms.ChoiceField(label='Tipo de documento',choices=TIPO_IDENTIDAD)
-    identificacion = forms.IntegerField(label="Identificación del personal de apoyo")
+    identificacion = forms.CharField(label="Identificación del personal de apoyo")
+
+    def validar_id(self):
+        tipo_id = self.data['tipo_id']
+        identificacion = self.data['identificacion']
+        if tipo_id == 'CC' and not identificacion.isdigit():
+            msg = 'El tipo de identificación CÉDULA DE CIUDADANÍA solo puede contener números'
+            self.add_error('identificacion',msg)
+            self.add_error('tipo_id',msg)
+        else:
+            return True
 
 
 
@@ -47,7 +60,30 @@ class FormacionDeportivaForm(ModelForm):
         model = FormacionDeportiva
         exclude = ('personal_apoyo',)
 
+    def clean(self):
+        cleaned_data = super(FormacionDeportivaForm, self).clean()
+        if not self._errors:
+            estado = cleaned_data.get('estado')
+            try:
+                anio_finalizacion =cleaned_data.get('fecha_finalizacion')
+            except Exception:
+                anio_finalizacion = None
+
+            anio_actual = datetime.datetime.now().year
+            if anio_finalizacion:
+                if estado == 'Finalizado' and int(anio_finalizacion) > anio_actual:
+                    msg = 'Usted ha seleccionado el estado FINALIZADO con una fecha mayor a la actual'
+                    self.add_error('fecha_finalizacion',msg)
+                else:
+                    return True
+            else:
+                return True
+        return cleaned_data
+
+
 class ExperienciaLaboralForm(ModelForm):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(ExperienciaLaboralForm, self).__init__(*args, **kwargs)
 

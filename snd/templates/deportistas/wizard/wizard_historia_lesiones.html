@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+    {% if historicos %}
+        Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'deportista_listar' %}">Deportistas</a>
+    {% if historicos %}
+        <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
+{% endblock %}
+
+{% block titulo_contenido %}
+    Deportistas
+{% endblock %}
+
+{% block titulo_panel %}
+     {% if historicos %}
+        Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'deportistas/wizard/_wizard.html' %}
+        <div class="row">
+            <fieldset class="col-md-7" >
+                <form id="form-wizard-lesiones" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>{{titulo}}</h3>
+                        <div class="col-lg-6">
+                            {% bootstrap_field form.tipo_lesion layout="vertical" %}
+                        </div>
+                        <div class="col-lg-6">
+                            {% bootstrap_field form.fecha_lesion layout="vertical" %}
+                        </div>
+                        <div class="col-lg-6">
+                            {% bootstrap_field form.periodo_rehabilitacion layout="vertical" %}
+                        </div>
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
+                    </div>
+                </div>
+                </form>
+            </fieldset>
+            <div class="col-md-5">
+                    <h4>Lesiones registradas:</h4>
+                    <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tipo lesión</th>
+                                <th>Fecha lesión</th>
+                                <th>Periodo rehabilitación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for historico in historicos%}
+                            <tr>
+                                <td>{{historico.get_tipo_lesion_display}}</td>
+                                <td>{{historico.fecha_lesion}}</td>
+                                <td>{{historico.get_periodo_rehabilitacion_display}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        {% if wizard_stage > 1 %}
+        <a href="{% url 'wizard_historia_academica' id_deportista %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+        {% endif %}
+        <a href="{% url 'wizard_historia_doping' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a>
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-lesiones-validations.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+
+{% endblock %}
+

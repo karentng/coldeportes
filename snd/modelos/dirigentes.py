@@ -2,9 +2,8 @@
 
 from entidades.models import *
 from django.db import models
-import os
 from django.conf import settings
-
+import os
 
 class Dirigente(models.Model):
     def foto_name(instance, filename):
@@ -17,8 +16,8 @@ class Dirigente(models.Model):
         return ruta
 
     TIPO_GENERO = (
-        ('Hombre','Hombre'),
-        ('Mujer','Mujer'),
+        ('HOMBRE','HOMBRE'),
+        ('MUJER','MUJER'),
     )
     TIPO_IDENTIFICACION = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
@@ -35,14 +34,19 @@ class Dirigente(models.Model):
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(choices=TIPO_GENERO,max_length=6, verbose_name='Género')
-    telefono = models.CharField(max_length=100, verbose_name="Teléfono")
-    email = models.EmailField(null=True,blank=True)
     nacionalidad = models.ManyToManyField(Nacionalidad)
+    telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo')
+    telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
+    email = models.EmailField(null=True,blank=True)
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
-    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="Estado del dirigente")
     foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
     perfil = models.TextField(max_length=500, verbose_name="Perfil profesional")
+
     entidad = models.ForeignKey(Entidad, null=True, blank=True)
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="Estado del dirigente")
+
+    class Meta:
+        unique_together = ('tipo_identificacion','identificacion',)
 
     def __str__(self):
         return "{0} {1}".format(self.nombres, self.apellidos)
@@ -52,8 +56,28 @@ class Dirigente(models.Model):
         self.apellidos = self.apellidos.upper()
         super(Dirigente, self).save(*args, **kwargs)
 
+    def obtenerAtributos(self):
+
+        imagen = None
+        if self.foto:
+            imagen = ("%s%s")%(settings.MEDIA_URL, self.foto)
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/DirigenteView.PNG")
+        atributos = [
+            ["Identificación", self.tipo_identificacion+" "+self.identificacion],
+            ["Nombre", self.nombres+" "+self.apellidos],
+            ["Género", self.genero],
+            ["Ciudad Residencia", self.ciudad.nombre],
+            ["Correo electrónico", self.email],
+            ["Teléfono", self.telefono_fijo],
+        ]
+
+        return [imagen, atributos, None, None, "Dirigentes!"]
+
 class DirigenteCargo(models.Model):
     nombre = models.CharField(max_length=100, verbose_name="Nombre del cargo")
+    vigencia_inicio = models.DateField(verbose_name="Fecha de inicio de vigencia del periodo")
+    vigencia_fin = models.DateField(verbose_name="Fecha de finalización de vigencia del periodo")
     fecha_posesion = models.DateField(verbose_name="Fecha de posesión")
     fecha_retiro = models.DateField(null=True,blank=True, verbose_name="Fecha de retiro")
     superior = models.ForeignKey(Dirigente, null=True, blank=True, related_name='superior')
@@ -62,21 +86,28 @@ class DirigenteCargo(models.Model):
 
     def __str__(self):
         if self.fecha_retiro != None:
-            fecha_retiro = self.fecha_retiro.strftime('%d de %B de %Y')
+            fecha_retiro = self.get_fecha_format(self.fecha_retiro)
         else:
             fecha_retiro = 'Actual'
-        return "{0} [{1} a {2}]".format(self.nombre, self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
+        return "{0} [{1} a {2}]".format(self.nombre, self.get_fecha_format(self.fecha_posesion), fecha_retiro)
 
     def periodo(self):
         if self.fecha_retiro != None:
-            fecha_retiro = self.fecha_retiro.strftime('%d de %B de %Y')
+            fecha_retiro = self.get_fecha_format(self.fecha_retiro)
         else:
             fecha_retiro = 'Actual'
-        return "{0} a {1}".format(self.fecha_posesion.strftime('%d de %B de %Y'), fecha_retiro)
+        return "{0} a {1}".format(self.get_fecha_format(self.fecha_posesion), fecha_retiro)
+
+    def vigencia(self):
+        return "{0} a {1}".format(self.get_fecha_format(self.vigencia_inicio), self.get_fecha_format(self.vigencia_fin))
+
+    def get_fecha_format(self,fecha):
+        meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+        return str(fecha.day) + " de " + meses[fecha.month-1] + " de " + str(fecha.year)
 
 class DirigenteFuncion(models.Model):
     dirigente = models.ForeignKey(Dirigente)
     cargo = models.ForeignKey(DirigenteCargo)
-    descripcion = models.TextField(max_length=200, verbose_name="Función")
+    descripcion = models.TextField(max_length=500, verbose_name="Función")
 
 

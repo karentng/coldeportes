@@ -8,6 +8,9 @@ class Seleccion(models.Model):
         (1,'Departamental'),
         (2,'Nacional'),
         (6,'Olimpica'),
+        (8,'Departamental Paralimpica'), #Pendiente implementacion
+        (7,'Nacional Paralimpica'), #Pendiente implementacion
+        (10,'Paralimpica'), #Pendiente implementacion
     )
     TIPO_CAMPEONATO = (
         (1,'Amistoso'),

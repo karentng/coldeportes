@@ -71,9 +71,15 @@
 
                                 <li class=""><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-stethoscope"></i> Composición Corporal</a></li>
 
-                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="ion fa-md ion-trophy"></i> Historial Deportivo</a></li>
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-info-circle"></i> Información Adicional</a></li>
 
-                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-graduation-cap"></i> Información Academica</a></li>
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="ion fa-md ion-trophy"></i> Historial Deportivo</a></li>
+
+                                <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-md fa-graduation-cap"></i> Información Academica</a></li>
+
+                                <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-md fa-medkit"></i> Historial Lesiones</a></li>
+
+                                <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-md fa-heartbeat"></i> Historial Doping</a></li>
 
                                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                             </ul>
@@ -97,6 +103,10 @@
                                                     {%endif%}
                                                     <i class="fa fa-user hide"></i>
                                                 </div>
+                                            {% comment %}
+                                            <b>Club Deportivo Actual:</b><br/>
+                                                {{ deportista.entidad }}
+                                            {% endcomment %}
                                             </div>
                                             <div class="profile-right">
                                                 <div class="col-lg-9">
@@ -106,7 +116,6 @@
                                                         <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
                                                     {% endif %}</p>
                                                     <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
-                                                    <p><b>Actividad:</b> {{deportista.get_actividad_display}}</p>
                                                     <p><b>Género:</b> {{deportista.genero}}</p>
                                                     <p><b>Edad:</b> {{ deportista.edad }}</p>
                                                     <p><b>Disciplinas:</b> {{ deportista.disciplinas_deportivas }}</p>
@@ -119,6 +128,7 @@
                                                     </p>
                                                     <p><b>Nacionalidades:</b> {{deportista.nacionalidad_str}}</p>
                                                     <p><b>Ciudad (Departamento) de Residencia:</b> {{ deportista.ciudad_residencia}}</p>
+                                                    <p><b>Club Deportivo Actual:</b> {{ deportista.entidad }}</p>
                                                 </div>
                                             {% if perms.snd.change_deportista %}
                                                 <p><strong>Contacto:</strong></p>
@@ -136,7 +146,25 @@
                                                 <div class="row">
                                                     <p><strong>Video:</strong></p>
                                                     {% if deportista.video %}
-                                                        <a href="{{deportista.video}}" target="_blank">{{deportista.video}}</a>
+                                                        <a class="btn btn-md btn-info" href="#modal-video" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
+                                                        <div class="modal fade" id="modal-video">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                        <h4 class="modal-title">Video de {{ deportista.full_name }}:</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div align="center">
+                                                                            <iframe  width="500" height="400" src="https://www.youtube.com/embed/{{deportista.short_video_url}}" frameborder="0" allowfullscreen></iframe>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     {% else %}
                                                         Ninguno
                                                     {% endif %}
@@ -170,13 +198,47 @@
                                                     <p><b>Porcentaje Grasa:</b> {{ composicion.porcentaje_grasa }}% </p>
                                                     <p><b>Masa Muscular Magra:</b> {{ composicion.masa_corporal_magra }} kg </p>
                                                     <p><b>EPS:</b> {{composicion.eps}}</p>
+                                                    <p><b>RH:</b> {{composicion.RH}}</p>
+                                                    <p><b>Estatura:</b> {{composicion.estatura}}</p>
+                                                    <p><b>Peso:</b> {{composicion.peso}}</p>
                                                 </div>
+                                            </address>
+                                        </div>
+                                        <div class="row">
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--INFORMACIÓN ADICIONAL-->
+                        <div class="tab-pane fade" id="nav-tab2-13">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <div class="row">
+                                            <address class="m-t-5 m-b-5">
                                                 <div class="col-lg-6">
-                                                    <br/>
-                                                    <strong> {{ composicion.RH }} </strong><br/>
-                                                    <strong> {{ composicion.estatura }} cm</strong><br/>
-                                                    <strong> {{ composicion.peso }} kg</strong><br/>
+                                                    <p><strong>Información Adicional:</strong></p>
+                                                    <ul>
+                                                        {% if info_adicional.usa_centros_biomedicos %}
+                                                            <li>El deportista usa centros biomédicos</li>
+                                                        {% else %}
+                                                            <li>El deportista NO usa centros biomédicos</li>
+                                                        {% endif %}
 
+                                                        {% if info_adicional.es_beneficiario_programa_apoyo %}
+                                                            <li>El deportista es beneficiario de un programa de apoyo</li>
+                                                        {% else %}
+                                                            <li>El deportista NO es beneficiario de un programa de apoyo</li>
+                                                        {% endif %}
+
+                                                    </ul>
                                                 </div>
                                             </address>
                                         </div>
@@ -190,7 +252,7 @@
                             </div>
                         </div>
                         <!--HISTORIAL DEPORTIVO-->
-                        <div class="tab-pane fade" id="nav-tab2-13">
+                        <div class="tab-pane fade" id="nav-tab2-14">
                             <div class="invoice">
                                 <div class="invoice-company">
                                     <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
@@ -246,7 +308,7 @@
                             </div>
                         </div>
                         <!--INFORMACION ACADEMICA-->
-                        <div class="tab-pane fade" id="nav-tab2-14">
+                        <div class="tab-pane fade" id="nav-tab2-15">
                             <div class="invoice">
                                 <div class="invoice-company">
                                     <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
@@ -291,6 +353,88 @@
                                 </div>
                             </div>
                         </div>
+                        <!--HISTORIAL LESIONES-->
+                        <div class="tab-pane fade" id="nav-tab2-16">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>TIPO LESIÓN</th>
+                                                            <th>FECHA LESIÓN</th>
+                                                            <th>PERIODO REHABILITACIÓN</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for historial in historial_lesiones %}
+                                                            <tr>
+                                                                <td>{{historial.get_tipo_lesion_display}}</td>
+                                                                <td>{{historial.fecha_lesion}}</td>
+                                                                <td>{{historial.get_periodo_rehabilitacion_display}}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                                {%if not historial_lesiones%}
+                                                    <p align="center">No hay resultados disponibles</p>
+                                                {%endif%}
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--HISTORIAL DOPING-->
+                        <div class="tab-pane fade" id="nav-tab2-17">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>FECHA</th>
+                                                            <th>EVENTO</th>
+                                                            <th>DELEGADO</th>
+                                                            <th>OBSERVACIONES</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for historial in historial_doping %}
+                                                            <tr>
+                                                                <td>{{historial.fecha}}</td>
+                                                                <td>{{historial.evento}}</td>
+                                                                <td>{{historial.tipo_identidad_delegado}}:{{historial.identificacion_delegado}}, {{ historial.nombre_delegado }}</td>
+                                                                <td>{{historial.observaciones}}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                                {%if not historial_doping%}
+                                                    <p align="center">No hay resultados disponibles</p>
+                                                {%endif%}
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -310,6 +454,13 @@
     <script>
         $(document).ready(function() {
             App.init();
+            console.log("Re holis");
+            $('#modal-video').on('hidden.bs.modal', function () {
+                console.log("Holis");
+                $iframe = $(this).find( "iframe" );
+                $iframe.attr("src", $iframe.attr("src"));
+            });
+
         });
     </script>
 {% endblock %}

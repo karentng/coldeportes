@@ -416,8 +416,89 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #11
+    #MODELO PARA CLUB PARALIMPICO
+    (
+        Deportista,
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","estado"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Estado"],
+        None,
+        [
+            [
+                "Ver Deportista",
+                'ver_deportista',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'edicion_deportista',
+                ['id'],
+                'fa-gear',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "CTD",
+                'cambio_documento_deportista',
+                ['id'],
+                'fa-archive',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "A/I",
+                'deportista_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+            ],
+        ],
+    ),
+    #12
+    (
+        CentroBiomedico,
+        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
+        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
+        None,
+        [
+            [
+                "Ver Centro Biomédico",
+                'centro_biomedico_ver',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'centro_biomedico_crear_editar',
+                ['identificacion', '1', 'id'],
+                'fa-gear',
+                None
+            ],
+        ],
+    ),
     #MODELO DE DATOS PARA CAJAS DE COMPENSACIÓN 
-    (   #Numero de modelo 11
+    (   #Numero de modelo 13
         CajaCompensacion,
         ['foto', 'nombre', 'publico', 'clasificacion', 'region', 'estado'],
         ['Logo', 'Nombre', 'Público', 'Clasificación', 'Región', 'Estado'],
@@ -449,9 +530,7 @@ MODELOS_DE_DATOS = (
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
-
-            ]
+            ],
         ],
     ),
-    
 )

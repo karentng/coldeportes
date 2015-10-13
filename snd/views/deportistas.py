@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core.serializers import json
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -53,6 +54,7 @@ def wizard_deportista_nuevo(request):
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,
         'form': deportista_form,
+        'edicion':False
     })
 
 @login_required
@@ -97,7 +99,9 @@ def wizard_deportista(request,id_depor):
     return render(request, 'deportistas/wizard/wizard_deportista.html', {
         'titulo': 'Información del Deportista',
         'wizard_stage': 1,
+        'id_deportista': deportista.id,
         'form': deportista_form,
+        'edicion':True
     })
 
 @login_required
@@ -122,8 +126,10 @@ def wizard_corporal(request,id_depor):
 
     try:
         corporal = ComposicionCorporal.objects.get(deportista=id_depor)
+        edicion = True
     except Exception:
         corporal = None
+        edicion=False
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -132,7 +138,7 @@ def wizard_corporal(request,id_depor):
         return non_permission
 
     mujer = False
-    if deportista.genero == 'Mujer':
+    if deportista.genero == 'MUJER':
         mujer=True
 
     corporal_form = ComposicionCorporalForm(mujer,instance=corporal)
@@ -145,14 +151,15 @@ def wizard_corporal(request,id_depor):
             corporal.deportista = deportista
             corporal.save()
             corporal_form.save()
-            return redirect('wizard_historia_deportiva', id_depor)
+            return redirect('wizard_informacion_adicional', id_depor)
 
     return render(request, 'deportistas/wizard/wizard_corporal.html', {
         'titulo': 'Composición Corporal del Deportista',
         'wizard_stage': 2,
         'form': corporal_form,
-        'mujer' : mujer,
-        'id_deportista' : deportista.id
+        'mujer': mujer,
+        'id_deportista': deportista.id,
+        'edicion':edicion
     })
 
 @login_required
@@ -172,10 +179,7 @@ def wizard_historia_deportiva(request,id_depor):
     :type id_depor: String
     """
 
-    try:
-        hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
-    except Exception:
-        hist_depor = None
+    hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -199,10 +203,11 @@ def wizard_historia_deportiva(request,id_depor):
 
     return render(request, 'deportistas/wizard/wizard_historia_deportiva.html', {
         'titulo': 'Historia Deportiva del Deportista',
-        'wizard_stage': 3,
+        'wizard_stage': 4,
         'form': hist_depor_form,
         'historicos': hist_depor,
-        'id_depor': id_depor
+        'id_deportista': id_depor,
+        'edicion':True
     })
 
 #Eliminacion Historia Deportiva
@@ -253,10 +258,7 @@ def wizard_historia_academica(request,id_depor):
     :type id_depor: String
     """
 
-    try:
-        inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
-    except Exception:
-        inf_academ = None
+    inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
 
     deportista = Deportista.objects.get(id=id_depor)
 
@@ -278,10 +280,11 @@ def wizard_historia_academica(request,id_depor):
 
     return render(request, 'deportistas/wizard/wizard_historia_academica.html', {
         'titulo': 'Formación académica',
-        'wizard_stage': 4,
+        'wizard_stage': 5,
         'form': inf_academ_form,
         'historicos': inf_academ,
-        'id_depor': id_depor
+        'id_deportista': id_depor,
+        'edicion':True
     })
 
 #Eliminacion Historia Academica
@@ -368,6 +371,8 @@ def ver_deportista(request,id_depor,id_entidad):
     Junio 22 /2015
     Autor: Daniel Correa
 
+    ##Editado por Milton Lenis el 05 de octubre de 2015
+
     Ver Deportista
 
     Se obtiene la informacion general del deportista desde la base de datos y se muestra
@@ -395,12 +400,20 @@ def ver_deportista(request,id_depor,id_entidad):
     composicion = ComposicionCorporal.objects.filter(deportista=deportista)
     if len(composicion) != 0:
         composicion = composicion[0]
+    info_adicional = InformacionAdicional.objects.filter(deportista=deportista)
+    if len(info_adicional) != 0:
+        info_adicional = info_adicional[0]
+    historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
+    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
             'deportista':deportista,
             'composicion':composicion,
+            'info_adicional':info_adicional,
             'historial_deportivo':historial_deportivo,
+            'historial_lesiones':historial_lesiones,
+            'historial_doping':historial_doping,
             'informacion_academica':informacion_academica
     })
 
@@ -433,6 +446,43 @@ def finalizar_deportista(request,opcion):
         return redirect('deportista_listar')
 
 
+def existencia_deportista(datos):
+    #Verificación de existencia dentro del tenant actual
+            try:
+                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+            except Exception:
+                deportista = None
+
+            if deportista:
+                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
+                return deportista,None,True
+
+            if not deportista:
+                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
+                #Verificación de existencia en otros tenants
+                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+                existencia = False
+                tenant_existencia = None
+                tenant_actual = connection.tenant
+                entidades = Entidad.objects.all()
+                for entidad in entidades:
+                    connection.set_tenant(entidad)
+                    ContentType.objects.clear_cache()
+                    try:
+                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+                        existencia = True
+                        tenant_existencia = entidad
+                        break
+                    except Exception:
+                        pass
+
+                connection.set_tenant(tenant_actual)
+
+                if existencia:
+                    return deportista,tenant_existencia,True
+                else:
+                    return None,None,False
+
 @login_required
 @tenant_required
 @all_permission_required('snd.add_deportista')
@@ -457,46 +507,18 @@ def verificar_deportista(request):
                 'tipo_id': form.cleaned_data['tipo_id']
             }
 
-            #Verificación de existencia dentro del tenant actual
-            try:
-                deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-            except Exception:
-                deportista = None
+            deportista,tenant_existencia,existe = existencia_deportista(datos)
 
-            if deportista:
-                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
-                return render(request,'deportistas/verificar_deportista.html',{'existe':True,
-                                                                               'deportista':deportista})
-
-            if not deportista:
-                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
-                #Verificación de existencia en otros tenants
-                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
-                existencia = False
-                tenant_existencia = None
-                tenant_actual = connection.tenant
-                entidades = Entidad.objects.all()
-                for entidad in entidades:
-                    connection.set_tenant(entidad)
-                    ContentType.objects.clear_cache()
-                    try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-                        existencia = True
-                        tenant_existencia = entidad
-                        break
-                    except Exception:
-                        pass
-
-                connection.set_tenant(tenant_actual)
-
-                if existencia:
-                    return render(request,'deportistas/verificar_deportista.html',{'existe':True,
-                                                                                   'deportista':deportista,
-                                                                                   'tenant_existencia':tenant_existencia})
-                else:
-                    #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
-                    request.session['datos'] = datos
-                    return redirect('deportista_nuevo')
+            if existe:
+                return render(request,'deportistas/verificar_deportista.html',{
+                    'existe':True,
+                    'deportista':deportista,
+                    'tenant_existencia':tenant_existencia
+                })
+            else:
+                #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
+                request.session['datos'] = datos
+                return redirect('deportista_nuevo')
 
     else:
         form = VerificarExistenciaForm()
@@ -534,20 +556,32 @@ def cambio_tipo_documento_deportista(request,id):
     if request.method == 'POST':
         form = CambioDocumentoForm(request.POST,initial={'tipo_documento_anterior':tipo_id_ant,'identificacion_anterior':id_ant})
         if form.is_valid():
-            depor.tipo_id = form.cleaned_data['tipo_documento_nuevo']
-            depor.identificacion = form.cleaned_data['identificacion_nuevo']
-            depor.save()
-            hist = form.save(commit=False)
-            hist.deportista = depor
-            hist.save()
-            messages.success(request,'Cambio de documento exitoso')
-            return redirect('deportista_listar')
+            datos = {
+                'identificacion': form.cleaned_data['identificacion_nuevo'],
+                'tipo_id': form.cleaned_data['tipo_documento_nuevo']
+            }
+            deportista,tenant_existencia,existe = existencia_deportista(datos)
+            if existe:
+                return render(request,'deportistas/existe_deportista.html',{
+                    'existe':True,
+                    'deportista':deportista,
+                    'tenant_existencia':tenant_existencia
+                })
+            else:
+                depor.tipo_id = form.cleaned_data['tipo_documento_nuevo']
+                depor.identificacion = form.cleaned_data['identificacion_nuevo']
+                depor.save()
+                hist = form.save(commit=False)
+                hist.deportista = depor
+                hist.save()
+                messages.success(request,'Cambio de documento exitoso')
+                return redirect('deportista_listar')
 
     return render(request,'deportistas/cambio_documento_deportista.html',{
         'form': form
     })
 
-def obtener_historiales_por_liga(liga,tenant_actual,tipo):
+def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     """
     Agosto 28 /2015
     Autor: Daniel Correa
@@ -559,13 +593,11 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo):
     :param tipo: tipo de busqueda, DEPARTAMENTAL O MUNICIPAL
     :return: historiales deportivos de la liga
     """
-    clubes = Club.objects.filter(liga=liga)
+    clubes = globals()[tipo_club].objects.filter(liga=liga)
     historiales = []
     for c in clubes:
         connection.set_tenant(c)
-        ContentType.objects.clear_cache()
-        historiales += HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)
-        print(historiales) #No quitar, necesario para ejecucion de lazy queryset y obtencion de informacion desde la bd
+        historiales += c.historiales_para_avalar(tipo)
     connection.set_tenant(tenant_actual)
     return historiales
 
@@ -585,14 +617,23 @@ def avalar_logros_deportivos(request):
     tenant_actual = connection.tenant
     if request.tenant.tipo == 1:
         #Traer todos los clubs asociados a su liga , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
-        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional')
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional','Club')
 
     elif request.tenant.tipo == 2:
         #Traer todos las ligas [traer todos los clubes] asociados a su fed , luego traer todos los historiales pendientes de campeonatos nacionales y deportistas activos
         ligas = Liga.objects.filter(federacion=tenant_actual.id)
         historiales = []
         for l in ligas:
-            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional')
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional','Club')
+    elif request.tenant.tipo == 8:
+        #Liga paralimpica
+        historiales = obtener_historiales_por_liga(tenant_actual.id,tenant_actual,'Campeonato Nacional','ClubParalimpico')
+    elif request.tenant.tipo ==7:
+        #Fede paralimpica
+        ligas = LigaParalimpica.objects.filter(federacion=tenant_actual.id)
+        historiales = []
+        for l in ligas:
+            historiales += obtener_historiales_por_liga(l,tenant_actual,'Campeonato Internacional','ClubParalimpico')
     else:
         messages.warning(request,'Usted se encuentra en una seccion no permitida')
         return redirect('inicio_tenant')
@@ -633,12 +674,8 @@ def aceptar_logros_deportivos(request,id_tenant,id_hist):
         messages.error(request,'Error: No existe el historial deportivo')
         return redirect('inicio_tenant')
 
-    print('Historial')
-    print(hist)
     hist.estado = 'Aprobado'
-    print(hist.estado)
     hist.save()
-    print(hist.estado)
 
     messages.success(request,'Logro deportivo avalado correctamente')
     return redirect('deportista_listar')
@@ -675,7 +712,210 @@ def rechazar_logros_deportivos(request,id_tenant,id_hist):
         messages.error(request,'Error: No existe el historial deportivo')
         return redirect('inicio_tenant')
 
-    hist.delete()
+    hist.estado = 'Rechazado'
+    hist.save()
 
     messages.warning(request,'Se ha negado el aval al logro deportivo de '+hist.deportista.nombres + ' ' + hist.deportista.apellidos)
     return redirect('deportista_listar')
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def eliminar_historia_doping(request,id_depor,id_historia):
+    """
+    Octubre 5 / 2015
+    Autor: Milton Lenis
+
+    Eliminar Historial de Doping
+
+    Se obtiene el id del historial y el del deportista, se busca y se elimina de la base de datos
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    :param id_historia: Llave primaria del historial de doping
+    :type id_historia: String
+    """
+    try:
+        doping = HistorialDoping.objects.get(id=id_historia, deportista=id_depor)
+        doping.delete()
+        return redirect('wizard_historia_doping', id_depor)
+
+    except Exception:
+        return redirect('wizard_historia_doping', id_depor)
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def eliminar_historia_lesion(request,id_depor,id_historia):
+    """
+    Octubre 5 / 2015
+    Autor: Milton Lenis
+
+    Eliminar Historial de una lesión
+
+    Se obtiene el id del historial y el del deportista, se busca y se elimina de la base de datos
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    :param id_historia: Llave primaria del historial de lesion
+    :type id_historia: String
+    """
+    try:
+        doping = HistorialLesiones.objects.get(id=id_historia, deportista=id_depor)
+        doping.delete()
+        return redirect('wizard_historia_doping', id_depor)
+
+    except Exception:
+        return redirect('wizard_historia_doping', id_depor)
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def wizard_informacion_adicional(request,id_depor):
+    """
+
+    Octubre 5 / 2015
+    Autor: Milton Lenis
+
+    Paso 3: Datos de información adicional del deportista
+
+    Se obtiene la información de la peticion, se intenta buscar un objeto InformacionAdicional y en caso de haber modificaciones se guardan.
+    Si la informacion para la InformacionAdicional del deportista es nueva se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    try:
+        info_adicional = InformacionAdicional.objects.get(deportista=id_depor)
+        edicion = True
+    except Exception:
+        info_adicional = None
+        edicion=False
+
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(request,deportista)
+    if non_permission:
+        return non_permission
+
+    info_adicional_form = InformacionAdicionalForm(instance=info_adicional)
+
+    if request.method == 'POST':
+        info_adicional_form = InformacionAdicionalForm(request.POST, instance=info_adicional)
+
+        if info_adicional_form.is_valid():
+            info_adicional = info_adicional_form.save(commit=False)
+            info_adicional.deportista = deportista
+            info_adicional.save()
+            info_adicional_form.save()
+            return redirect('wizard_historia_deportiva', id_depor)
+
+    return render(request, 'deportistas/wizard/wizard_informacion_adicional.html', {
+        'titulo': 'Información adicional del deportista',
+        'wizard_stage': 3,
+        'form': info_adicional_form,
+        'id_deportista' : deportista.id,
+        'edicion':edicion
+    })
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def wizard_historia_doping(request,id_depor):
+    """
+    5 Octubre / 2015
+    Autor: Milton Lenis
+
+    Paso 6: Historial de doping, se obtiene un historial de doping, se almacena y asigna al deportista.
+    Si no hay historial se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+
+    historial_doping = HistorialDoping.objects.filter(deportista=id_depor)
+
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(request,deportista)
+    if non_permission:
+        return non_permission
+
+    historial_doping_form = HistorialDopingForm()
+
+    if request.method == 'POST':
+        historial_doping_form = HistorialDopingForm(request.POST)
+
+        if historial_doping_form.is_valid():
+            historial_doping_nuevo = historial_doping_form.save(commit=False)
+            historial_doping_nuevo.deportista = deportista
+            historial_doping_nuevo.save()
+            historial_doping_form.save()
+            return redirect('wizard_historia_doping', id_depor)
+
+    return render(request, 'deportistas/wizard/wizard_historia_doping.html', {
+        'titulo': 'Historial de doping',
+        'wizard_stage': 7,
+        'form': historial_doping_form,
+        'historicos': historial_doping,
+        'id_deportista': id_depor,
+        'edicion':True
+    })
+
+
+@login_required
+@tenant_required
+@all_permission_required('snd.add_deportista')
+def wizard_historia_lesiones(request,id_depor):
+    """
+    5 Octubre / 2015
+    Autor: Milton Lenis
+
+    Paso 6: Historial de lesiones, se obtiene un historial de lesiones, se almacena y asigna al deportista.
+    Si no hay historial se inicializa en nulo
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    """
+    historial_lesiones = HistorialLesiones.objects.filter(deportista=id_depor)
+
+    deportista = Deportista.objects.get(id=id_depor)
+
+    non_permission = not_transferido_required(request,deportista)
+    if non_permission:
+        return non_permission
+
+    historial_lesiones_form = HistorialLesionesForm()
+
+    if request.method == 'POST':
+        historial_lesiones_form = HistorialLesionesForm(request.POST)
+
+        if historial_lesiones_form.is_valid():
+            historial_lesiones_nuevo = historial_lesiones_form.save(commit=False)
+            historial_lesiones_nuevo.deportista = deportista
+            historial_lesiones_nuevo.save()
+            historial_lesiones_form.save()
+            return redirect('wizard_historia_lesiones', id_depor)
+
+    return render(request, 'deportistas/wizard/wizard_historia_lesiones.html', {
+        'titulo': 'Historial de lesiones',
+        'wizard_stage': 6,
+        'form': historial_lesiones_form,
+        'historicos': historial_lesiones,
+        'id_deportista': id_depor,
+        'edicion':True
+    })

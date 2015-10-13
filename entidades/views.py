@@ -42,13 +42,16 @@ def obtenerFormularioTenant(tipo, post=None, files=None, instance=None):
         form = ComiteForm(post, files, instance=instance)
     elif tipo == '7':
         nombre = 'Federación Paralimpica'
-        form = FederacionParalimpicaForm(post, files,instance=instance)
+        form = FederacionParalimpicaForm(post, files, instance=instance)
     elif tipo == '8':
         nombre = 'Liga Paralimpica'
-        form = LigaParalimpicaForm(post, files,instance=instance)
+        form = LigaParalimpicaForm(post, files, instance=instance)
     elif tipo == '9':
+        nombre = 'Club Paralimpico'
+        form = ClubParalimpicoForm(post, files, instance=instance)
+    elif tipo == '10':
         nombre = 'Centro de Acondicionamiento Físico'
-        form = CafForm(post, files,instance=instance)
+        form = CafForm(post, files, instance=instance)
 
     return [nombre, form]
 
@@ -71,6 +74,8 @@ def obtenerTenant(request, idEntidad, tipo):
     elif tipo == '8':
         return LigaParalimpica.objects.get(id=idEntidad)
     elif tipo == '9':
+        return ClubParalimpico.objects.get(id=idEntidad)
+    elif tipo == '10':
         return Caf.objects.get(id=idEntidad)
     raise Exception
 
@@ -78,7 +83,7 @@ def obtenerTenant(request, idEntidad, tipo):
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
 
-    form2 = ActoresForm(tipo=tipo)
+    form2 = ActoresForm(tipo=tipo,tipoEnte=tipoEnte)
 
     dominio = settings.SUBDOMINIO_URL
 

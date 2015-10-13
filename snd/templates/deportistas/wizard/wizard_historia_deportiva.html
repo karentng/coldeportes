@@ -2,7 +2,11 @@
 {% load bootstrap3 %}
 
 {% block head %}
-    Registro Deportistas
+    {% if historicos %}
+        Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block css %}
@@ -15,7 +19,11 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'deportista_listar' %}">Deportistas</a>
-    <li class="active">Editar</li>
+    {% if historicos %}
+        <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -23,7 +31,11 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Deportistas
+     {% if historicos %}
+        Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
 {% endblock %}
 
 {% block panel_botones %}
@@ -112,7 +124,7 @@
                     <tbody>
                     {% for historico in historicos %}
                         <tr>
-                            <td align="center"><span class="label label-{%if historico.estado == 'Pendiente' %}warning{%else%}success{%endif%}">{{historico.estado}}</span></td>
+                            <td align="center"><span class="label label-{%if historico.estado == 'Pendiente' %}warning{% elif historico.estado == 'Rechazado' %}danger{%else%}success{%endif%}">{{historico.estado}}</span></td>
                             <td align="center">{{historico.nombre}}</td>
                             <td align="center">{{historico.fecha_inicial}}</td>
                             <td align="center">{{historico.fecha_final}}</td>
@@ -133,7 +145,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                                <a href="{% url 'eliminar_historia_deportiva' id_depor historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                <a href="{% url 'eliminar_historia_deportiva' id_deportista historico.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -149,10 +161,9 @@
         <br/>
         <hr/>
         {% if wizard_stage > 1 %}
-        <a href="{% url 'wizard_corporal' id_depor %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
-        <!--input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" /-->
+            <a href="{% url 'wizard_informacion_adicional' id_deportista %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
         {% endif %}     
-        <a href="{% url 'wizard_historia_academica' id_depor %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'wizard_historia_academica' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a><a href="{% url 'wizard_historia_academica' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 
 {% endblock %}
