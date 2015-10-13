@@ -18,6 +18,11 @@ class Escenario(models.Model):
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
     )
+    DIVISIONES = (
+        ('CP','Centro Poblado'),
+        ('ZR','Zona Rural'),
+        ('ZU','Zona Urbana'),
+    )
     nombre =  models.CharField(max_length=100,unique=True)
     direccion = models.CharField(max_length=100)
     latitud = models.FloatField()
@@ -31,6 +36,7 @@ class Escenario(models.Model):
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField(choices=ESTADOS, verbose_name="estado del Escenario")
     ciudad = models.ForeignKey(Ciudad)
+    division_territorial = models.CharField(choices=DIVISIONES, max_length=2, verbose_name="división territorial")    
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
     def fotos(self):
@@ -68,20 +74,32 @@ class Escenario(models.Model):
         return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
 
 class CaracterizacionEscenario(models.Model):   
-    accesos = (
+    ACCESOS = (
         ('pr', 'Privado'),
         ('dul', 'De Uso Libre'),
         ('pcp', 'Público Con Pago'),
     )
+    ESTADOS_FISICOS = (
+        ('bu', 'Bueno'),
+        ('re', 'Regular'),
+        ('ma', 'Malo'),
+    )
+    PROPIETARIOS = (
+        ('of', 'Oficial'),
+        ('pr', 'Privado'),
+    )
     escenario = models.ForeignKey(Escenario)
-    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
     metros_construidos = models.CharField(max_length=50, verbose_name='metros cuadrados construídos')
-    tipo_escenario = models.ForeignKey(TipoEscenario)
-    tipo_disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
-    tipo_superficie_juego = models.ManyToManyField(TipoSuperficie)
     caracteristicas = models.ManyToManyField(CaracteristicaEscenario)
+    tipo_escenario = models.ForeignKey(TipoEscenario)
+    tipo_superficie_juego = models.ManyToManyField(TipoSuperficie)
+    clase_acceso = models.CharField(choices=ACCESOS, max_length=3, verbose_name='tipo de acceso') 
+    tipo_disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
+    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
+    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
+    espectadores_habituales = models.PositiveIntegerField(verbose_name='cantidad de espectadores habituales')
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
-    clase_acceso = models.CharField(choices=accesos, max_length=3, verbose_name='tipo de acceso')
+    tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
 class HorarioDisponibilidad(models.Model):

@@ -28,8 +28,7 @@ from snd.models import *
 '''
 
 MODELOS_DE_DATOS = (
-    #0
-    (
+    (  #Numero de modelo 0
         CentroAcondicionamiento,
         ['nombre','direccion', 'telefono', 'ciudad', 'email', 'web', 'estado'],
         ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
@@ -53,7 +52,7 @@ MODELOS_DE_DATOS = (
     ),
     #1
     #MODELO DE DATOS CAF PARA LIGAS Y FEDERACIONES
-    (
+    (   #Numero de modelo 1
         CentroAcondicionamiento,
         ['nombre','direccion', 'telefono', 'ciudad', 'email', 'web', 'entidad'],
         ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Entidad'],
@@ -68,8 +67,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #2
-    (
+    (   #Numero de modelo 2
         Deportista,
         ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","estado"],
         ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Estado"],
@@ -157,7 +155,7 @@ MODELOS_DE_DATOS = (
     ),
     #3
     #MODELO DE DATOS PARA DEPORTISTAS PARA EL TENANT TIPO LIGA Y FEDERACIÓN
-    (
+    (   #Numero de modelo 3
         Deportista,
         ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","entidad"],
         ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Entidad"],
@@ -172,8 +170,7 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #4
-    (
+    (   #Numero de modelo 4
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'estado'],
         ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
@@ -211,7 +208,7 @@ MODELOS_DE_DATOS = (
     ),
     #5
     #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y LIGAS
-    (
+    (   #Numero de modelo 5
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'entidad'],
         ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Entidad'],
@@ -247,8 +244,7 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #6
-    (
+    (   #Numero de modelo 6
         Dirigente,
         ['foto','identificacion','nombres apellidos', 'estado'],
         ['Foto','Identificación','Nombre', 'Estado'],
@@ -286,7 +282,7 @@ MODELOS_DE_DATOS = (
     ),
     #7
     #MODELO DE DATOS DIRIGENTE PARA LIGA Y FEDERACIÓN
-    (
+    (   #Numero de modelo 7
         Dirigente,
         ['foto','identificacion','nombres apellidos', 'entidad'],
         ['Foto','Identificación','Nombre', 'Entidad'],
@@ -322,11 +318,10 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #8
-    (
+    (   #Numero de modelo 8
         Escenario,
         ['nombre','ciudad','estrato', 'estado'],
-        ['Nombre','Ciudad(Departamento)','Estrato', 'Estado'],
+        ['Nombre','Ciudad (Departamento)','Estrato', 'Estado'],
         None,
         [
             [
@@ -367,10 +362,10 @@ MODELOS_DE_DATOS = (
     ),
     #9
     #MODELO DE DATOS PARA ESCENARIO LIGAS Y FEDERACIONES
-    (
+    (   #Numero de modelo 9
         Escenario,
         ['nombre','ciudad','estrato', 'entidad'],
-        ['Nombre','Ciudad(Departamento)','Estrato', 'Entidad'],
+        ['Nombre','Ciudad (Departamento)','Estrato', 'Entidad'],
         None,
         [
             [
@@ -382,8 +377,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #10
-    (
+    (   #Numero de modelo 10
         Seleccion,
         ["nombre", "tipo", "fecha_inicial", "fecha_final", "campeonato", "tipo_campeonato"],
         ["Nombre", "Tipo de Selección", "Fecha Convocatoria", "Fecha Finaliza Convocatoria", "Nombre Campeonato", "Tipo Campeonato"],
@@ -405,6 +399,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+<<<<<<< HEAD
     #11
     #MODELO PARA CLUB PARALIMPICO
     (
@@ -460,7 +455,50 @@ MODELOS_DE_DATOS = (
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
+            ],
+        ],
+    ),
 
+
+
+
+
+
+
+
+    #MODELO DE DATOS PARA CAJAS DE COMPENSACIÓN 
+    (   #Numero de modelo 11
+        CajaCompensacion,
+        ['foto', 'nombre', 'publico', 'clasificacion', 'region', 'estado'],
+        ['Logo', 'Nombre', 'Público', 'Clasificación', 'Región', 'Estado'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_ccf',
+                ['id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'wizard_editar_caja',
+                ['id'],
+                'fa-gear',
+                None
+            ],
+            [
+                "A/I",
+                'desactivar_ccf',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
             ],
 
         ],

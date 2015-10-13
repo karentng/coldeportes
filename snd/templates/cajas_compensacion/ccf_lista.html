@@ -32,10 +32,10 @@
         });
         idTabla = "tabla-ccf";
         opciones = {% if perms.snd.change_cajacompensacion %} true {% else %} false {% endif %};
-        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7%}
-            url = "{% url 'cargar_columnas' 3 %}";
+        {% if tipo_tenant == 4 %}
+            url = "{% url 'cargar_columnas' 11 %}";
         {% else %}
-            url = "{% url 'cargar_columnas' 2 %}";
+            url = "{% url 'cargar_columnas' 11 %}";
         {% endif %}
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
@@ -63,7 +63,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Desactivar Deportista:</h4>
+                        <h4 class="modal-title">Activar / Desactivar Caja de Compensación:</h4>
                     </div>
                     <div class="modal-body">
                         ¿Está seguro que desea desactivar la caja de compensación?
