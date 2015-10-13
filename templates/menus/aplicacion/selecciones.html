@@ -5,9 +5,9 @@
         <span span class="colorMenu">Selecciones</span>
     </a>
     <ul class="sub-menu">
-    {% if perms.snd.add_seleccion%}
+    {% if perms.snd.add_seleccion %}
         <li {% if "/selecciones/base" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'registrar_seleccion' %}">Registro</a>
+            <a href="{gi% url 'registrar_seleccion' %}">Registro</a>
         </li>
     {% endif %}
         <li {% if "/selecciones/listar" in request.path %} class="active" {% endif %}>
