@@ -27,6 +27,22 @@ class TipoDisciplinaDeportiva(models.Model):
     def __str__(self):
         return self.descripcion
 
+class ModalidadDisciplinaDeportiva(models.Model):
+    tipo = models.ForeignKey(TipoDisciplinaDeportiva)
+    nombre = models.CharField(max_length=255)
+    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+class CategoriaDisciplinaDeportiva(models.Model):
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva)
+    nombre = models.CharField(max_length=255)
+    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+
+    def __str__(self):
+        return self.nombre
+
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico")
     escenarios = models.BooleanField(verbose_name="Escenarios")
@@ -87,6 +103,8 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = LigaParalimpica
         elif self.tipo == 9:
             modelo = ClubParalimpico
+        elif self.tipo == 10:
+            modelo = Caf
         try:
             return modelo.objects.get(id=self.id)
         except Exception:
@@ -190,6 +208,17 @@ class Entidad(TenantMixin): # Entidad deportiva
     def __str__(self):
         return self.nombre
 
+class Caf(Entidad):
+
+    def save(self, *args, **kwargs):
+        actores = self.actores
+        if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
+            actores.centros = True
+            actores.save()
+        super(Caf, self).save(*args, **kwargs)
+
 class Ente(Entidad):
     TIPOS_ENTE = (
         (1, 'Ente Municipal'),
@@ -211,7 +240,22 @@ class Comite(Entidad):
             actores.save()
         super(Comite, self).save(*args, **kwargs)
 
-class FederacionParalimpica(Entidad):
+class CajaDeCompensacion(Entidad):
+    pass
+
+def ruta_resoluciones_reconocimiento(instance, filename):
+    return "tenants/resoluciones/%s"%(filename.encode('ascii','ignore').decode('ascii'))
+
+class ResolucionReconocimiento(Entidad):
+    resolucion = models.CharField(max_length=255, blank=True, verbose_name="resolución de reconocimiento deportivo")
+    fecha_resolucion = models.DateField(blank=True, null=True, verbose_name="fecha de resolución de reconocimiento deportivo")
+    fecha_vencimiento = models.DateField(blank=True, null=True, verbose_name="fecha vencimiento de resolución de reconocimiento deportivo")
+    archivo = models.FileField(upload_to=ruta_resoluciones_reconocimiento, blank=True, null=True, verbose_name="archivo de resolución de reconocimiento deportivo")
+
+    class Meta:
+        abstract = True
+
+class FederacionParalimpica(ResolucionReconocimiento):
     DISCAPACIDADES = (
         (1,'Limitaciones Fisica'),
         (2,'Limitación Auditiva'),
@@ -234,7 +278,42 @@ class FederacionParalimpica(Entidad):
             actores.save()
         super(FederacionParalimpica, self).save(*args, **kwargs)
 
-class LigaParalimpica(Entidad):
+    def atributosDeSusEscenarios(self):
+        from snd.modelos.escenarios import Escenario
+        from django.db import connection
+        escenarios = []
+
+        todosEscenarios = Escenario.objects.filter(entidad=self)
+        
+        for i in todosEscenarios:
+            escenarios.append(i.obtenerAtributos())
+
+        ligas = LigaParalimpica.objects.filter(federacion=self)
+        for i in ligas:
+            connection.set_tenant(i)
+            escenarios += i.atributosDeSusEscenarios()
+
+        return escenarios
+
+    def atributosDeSusCafs(self):
+        from snd.modelos.cafs import CentroAcondicionamiento
+        from django.db import connection
+
+        centros = []
+
+        todosEscenarios = CentroAcondicionamiento.objects.filter(entidad=self)
+        
+        for i in todosEscenarios:
+            centros.append(i.obtenerAtributos())
+
+        ligas = LigaParalimpica.objects.filter(federacion=self)
+        for i in ligas:
+            connection.set_tenant(i)
+            centros += i.atributosDeSusCafs()
+        
+        return centros
+
+class LigaParalimpica(ResolucionReconocimiento):
     DISCAPACIDADES = (
         (1,'Limitaciones Fisica'),
         (2,'Limitación Auditiva'),
@@ -254,7 +333,7 @@ class LigaParalimpica(Entidad):
             actores.save()
         super(LigaParalimpica, self).save(*args, **kwargs)
 
-class ClubParalimpico(Entidad):
+class ClubParalimpico(ResolucionReconocimiento):
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
 
     def historiales_para_avalar(self,tipo):
@@ -271,10 +350,7 @@ class ClubParalimpico(Entidad):
         super(ClubParalimpico, self).save(*args, **kwargs)
 
 
-class CajaDeCompensacion(Entidad):
-    pass
-
-class Federacion(Entidad):
+class Federacion(ResolucionReconocimiento):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
     comite = models.ForeignKey(Comite)
 
@@ -329,7 +405,7 @@ class Federacion(Entidad):
         
         return centros
 
-class Liga(Entidad):
+class Liga(ResolucionReconocimiento):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
@@ -381,8 +457,16 @@ class Liga(Entidad):
         
         return centros
 
-class Club(Entidad):
+class Club(ResolucionReconocimiento):
+    TIPOS_CLUBES = (
+        (1, "Deportivo"),
+        (2, "Promotor"),
+        (3, "Profesional"),
+    )
     liga = models.ForeignKey(Liga, null=True, blank=True)
+    tipo_club = models.IntegerField(choices=TIPOS_CLUBES)
+
+# ---------------------------------------------------------------------------------
 
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo

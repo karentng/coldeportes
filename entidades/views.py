@@ -21,34 +21,37 @@ def tipo(request):
     return render(request, 'entidad_tipo.html', {
     })
 
-def obtenerFormularioTenant(tipo, post=None, instance=None):
+def obtenerFormularioTenant(tipo, post=None, files=None, instance=None):
     if tipo == '1':
         nombre = 'Liga'
-        form = LigaForm(post, instance=instance)
+        form = LigaForm(post, files, instance=instance)
     elif tipo == '2':
         nombre = 'Federación'
-        form = FederacionForm(post, instance=instance)
+        form = FederacionForm(post, files, instance=instance)
     elif tipo == '3':
         nombre = 'Club'
-        form = ClubForm(post, instance=instance)
+        form = ClubForm(post, files, instance=instance)
     elif tipo == '4':
         nombre = 'Caja de Compensación'
-        form = CajaDeCompensacionForm(post, instance=instance)
+        form = CajaDeCompensacionForm(post, files, instance=instance)
     elif tipo == '5':
         nombre = 'Ente'
-        form = EnteForm(post, instance=instance)
+        form = EnteForm(post, files, instance=instance)
     elif tipo == '6':
         nombre = 'Comité'
-        form = ComiteForm(post, instance=instance)
+        form = ComiteForm(post, files, instance=instance)
     elif tipo == '7':
         nombre = 'Federación Paralimpica'
-        form = FederacionParalimpicaForm(post,instance=instance)
+        form = FederacionParalimpicaForm(post, files, instance=instance)
     elif tipo == '8':
         nombre = 'Liga Paralimpica'
-        form = LigaParalimpicaForm(post,instance=instance)
+        form = LigaParalimpicaForm(post, files, instance=instance)
     elif tipo == '9':
         nombre = 'Club Paralimpico'
-        form = ClubParalimpicoForm(post,instance=instance)
+        form = ClubParalimpicoForm(post, files, instance=instance)
+    elif tipo == '10':
+        nombre = 'Centro de Acondicionamiento Físico'
+        form = CafForm(post, files, instance=instance)
 
     return [nombre, form]
 
@@ -72,6 +75,8 @@ def obtenerTenant(request, idEntidad, tipo):
         return LigaParalimpica.objects.get(id=idEntidad)
     elif tipo == '9':
         return ClubParalimpico.objects.get(id=idEntidad)
+    elif tipo == '10':
+        return Caf.objects.get(id=idEntidad)
     raise Exception
 
 @login_required
@@ -83,7 +88,7 @@ def registro(request, tipo, tipoEnte=None):
     dominio = settings.SUBDOMINIO_URL
 
     if request.method == 'POST':
-        nombre, form = obtenerFormularioTenant(tipo, request.POST)
+        nombre, form = obtenerFormularioTenant(tipo, post=request.POST, files=request.FILES)
         #form = EntidadForm(request.POST)
         form2 = ActoresForm(request.POST)
         if form.is_valid() and form2.is_valid():
@@ -129,7 +134,7 @@ def editar(request, idEntidad, tipo):
     form2 = ActoresForm(instance=instance.actores, tipo=tipo)
 
     if request.method == 'POST':
-        nombre, form = obtenerFormularioTenant(tipo, post=request.POST, instance=instance)
+        nombre, form = obtenerFormularioTenant(tipo, post=request.POST, files=request.FILES, instance=instance)
         form2 = ActoresForm(request.POST, instance=instance.actores)
         if form.is_valid() and form2.is_valid():
             actores = form2.save()
