@@ -2,8 +2,8 @@
 from django.forms import *
 from django import forms
 from entidades.models import *
-from coldeportes.utilities import adicionarClase
-
+from coldeportes.utilities import adicionarClase, MyDateWidget
+from datetimewidget.widgets import DateTimeWidget, DateWidget, TimeWidget
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
@@ -32,7 +32,11 @@ class LigaForm(forms.ModelForm):
     class Meta:
         model = Liga
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        widgets = {
+            'fecha_resolucion': DateWidget(usel10n=True, bootstrap_version=3),
+            'fecha_vencimiento': DateWidget(usel10n=True, bootstrap_version=3),
+        }
 
 class FederacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -51,7 +55,11 @@ class FederacionForm(forms.ModelForm):
     class Meta:
         model = Federacion
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 
 class ClubForm(forms.ModelForm):
     required_css_class = 'required'
@@ -70,7 +78,29 @@ class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'tipo_club', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
+
+class CafForm(forms.ModelForm):
+    required_css_class = 'required'
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(CafForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+    
+    class Meta:
+        model = Caf
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
 class CajaDeCompensacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -143,8 +173,11 @@ class FederacionParalimpicaForm(forms.ModelForm):
     class Meta:
         model = FederacionParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion',)
-
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 
 class LigaParalimpicaForm(forms.ModelForm):
     required_css_class = 'required'
@@ -172,64 +205,59 @@ class LigaParalimpicaForm(forms.ModelForm):
     class Meta:
         model = LigaParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion',)
-
-class ClubParalimpicoForm(forms.ModelForm):
-    required_css_class = 'required'
-    pagina = forms.CharField(label="URL dentro del SIND", required=True)
-
-    def __init__(self, *args, **kwargs):
-        instancia = kwargs.get('instance', None)
-        super(ClubParalimpicoForm, self).__init__(*args, **kwargs)
-        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
-        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
-        self.fields['liga'] = adicionarClase(self.fields['liga'], 'one')
-
-        if instancia != None:
-            del self.fields['pagina']
-    
-    class Meta:
-        model = ClubParalimpico
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         tipo = kwargs.pop('tipo', None)
         super(ActoresForm, self).__init__(*args, **kwargs)
+
         if tipo == '1':
             #Liga
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            #del self.fields['centros']
+            #del self.fields['escenarios']
+            #del self.fields['deportistas']
+            del self.fields['dirigentes']
+            del self.fields['personal_apoyo']
+            del self.fields['cajas']
         elif tipo == '2':
             #Federacion
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            #del self.fields['centros']
+            #del self.fields['escenarios']
+            #del self.fields['deportistas']
+            del self.fields['dirigentes']
+            del self.fields['personal_apoyo']
+            del self.fields['cajas']
         elif tipo == '3':
             #Club
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            del self.fields['cajas']
         elif tipo == '4':
             #CajaDeCompensacion
             self.fields['cajas'].widget = forms.HiddenInput()
-            self.quitar_campos(['centros','deportistas','dirigentes','selecciones','centros_biomedicos'])
+            del self.fields['centros']
+            del self.fields['deportistas']
+            del self.fields['dirigentes']
         elif tipo == '5':
             #Ente
-            self.quitar_campos(['cajas','selecciones'])
-        elif tipo == '6':
-            #Comite
-            self.quitar_campos(['cajas','selecciones','centros_biomedicos'])
+            pass
         elif tipo =='7':
             #FederacionParalimpica
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            del self.fields['cajas']
         elif tipo =='8':
-            #LigaParalimpica
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
-        elif tipo =='9':
-            #clubParalimpico
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
-
-    def quitar_campos(self,campos):
-        for campo in campos:
-            del self.fields[campo]
+            #FederacionParalimpica
+            del self.fields['cajas']
+        elif tipo == '9':
+            del self.fields['centros']
+            del self.fields['escenarios']
+            del self.fields['deportistas']
+            del self.fields['dirigentes']
+            del self.fields['personal_apoyo']
+            del self.fields['cajas']
 
     class Meta:
         model = Actores

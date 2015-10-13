@@ -11,6 +11,10 @@
 	<script type="text/javascript" src="{{STATIC_URL}}js/validaciones/entidad/editar_entidad.js"></script>
 {% endblock %}
 
+{% block css %}
+	{{form.media}}
+{% endblock %}
+
 {% block titulo_panel %}
 	Editar {{nombre}}
 {% endblock %}

@@ -2,14 +2,20 @@
 
 from entidades.models import *
 from django.db import models
+from django.conf import settings
+import os
+
 
 class CajaCompensacion(models.Model):
-    def foto_name(instance, filename):
-        ruta = 'fotos_cajas/' + instance.id + filename[-4:]
+
+    def foto_caja(instance, filename):
+        ruta = 'fotos_cajas/' + str(instance.id) + filename[-4:]
         ruta_delete = settings.MEDIA_ROOT + "/" + ruta
         if(os.path.exists(ruta_delete)):
             os.remove(ruta_delete)
         return ruta
+
+
     tipo_estado = ((0,'ACTIVO'), (1,'INACTIVO'),)
     clases = ( ('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
     tipo_region = ( ('U', 'Urbano'), ('R', 'Rural'), )
@@ -18,21 +24,20 @@ class CajaCompensacion(models.Model):
     tipo_instituciones = ( ('Pr', 'Privada'), ('Pu', 'Pública'), )
 
     nombre =  models.CharField(max_length=100)    
+    nombre_contacto =  models.CharField(max_length=50)
     clasificacion = models.CharField(choices=clases, max_length=1)
     region = models.CharField(choices=tipo_region, max_length=1)
-    publico = models.CharField(choices=tipo_publicos, max_length=1)
-    infraestructura = models.CharField(choices=tipo_infraesctructura, max_length=1)
     tipo_institucion = models.CharField(choices=tipo_instituciones, max_length=2)
-    #tipo_escenario = models.ForeignKey(TipoEscenario)
-    servicios = models.ManyToManyField(TipoServicioCajaCompensacion)
-    foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
-    entidad = models.ForeignKey(Entidad)    
-    estado = models.IntegerField(choices=tipo_estado, default=0, verbose_name="estado del Escenario")
-    descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
-    ciudad = models.ForeignKey(Ciudad)
-    nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)
+    publico = models.CharField(choices=tipo_publicos, max_length=1)
     email = models.EmailField()
+    ciudad = models.ForeignKey(Ciudad)
+    infraestructura = models.CharField(choices=tipo_infraesctructura, max_length=1)
+    foto = models.ImageField(upload_to=foto_caja, null=True, blank=True)
+    servicios = models.ManyToManyField(TipoServicioCajaCompensacion)
+    entidad = models.ForeignKey(Entidad)    
+    estado = models.IntegerField(choices=tipo_estado)
+    descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
 
 class HorarioDisponibilidadCajas(models.Model):
     caja_compensacion = models.ForeignKey(CajaCompensacion)

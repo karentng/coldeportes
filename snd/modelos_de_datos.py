@@ -28,8 +28,7 @@ from snd.models import *
 '''
 
 MODELOS_DE_DATOS = (
-    #0
-    (
+    (  #Numero de modelo 0
         CentroAcondicionamiento,
         ['nombre','direccion', 'telefono', 'ciudad', 'email', 'web', 'estado'],
         ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
@@ -51,9 +50,8 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #1
     #MODELO DE DATOS CAF PARA LIGAS Y FEDERACIONES
-    (
+    (   #Numero de modelo 1
         CentroAcondicionamiento,
         ['nombre','direccion', 'telefono', 'ciudad', 'email', 'web', 'entidad'],
         ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Entidad'],
@@ -68,11 +66,10 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #2
-    (
+    (   #Numero de modelo 2
         Deportista,
-        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","estado"],
-        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Estado"],
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","estado"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Estado"],
         None,
         [
             [
@@ -127,7 +124,7 @@ MODELOS_DE_DATOS = (
             [
                 "Transferir",
                 'generar_transferencia',
-                ['id'],
+                ['1','1','id'],
                 'fa-exchange',
                 [
                     [
@@ -141,7 +138,7 @@ MODELOS_DE_DATOS = (
             [
                 "Cancelar Transferencia",
                 'cancelar_transferencia',
-                ['id'],
+                ['id','1'],
                 'fa-times',
                 [
                     [
@@ -155,12 +152,11 @@ MODELOS_DE_DATOS = (
 
         ],
     ),
-    #3
     #MODELO DE DATOS PARA DEPORTISTAS PARA EL TENANT TIPO LIGA Y FEDERACIÓN
-    (
+    (   #Numero de modelo 3
         Deportista,
-        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","entidad"],
-        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Entidad"],
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","entidad"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Entidad"],
         None,
         [
             [
@@ -172,11 +168,10 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #4
-    (
+    (   #Numero de modelo 4
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'estado'],
-        ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
+        ['foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
         None,
         [
             [
@@ -207,11 +202,38 @@ MODELOS_DE_DATOS = (
                 ]
 
             ],
+            [
+                "Transferir",
+                'generar_transferencia',
+                ['1','2','id'],
+                'fa-exchange',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "Cancelar Transferencia",
+                'cancelar_transferencia',
+                ['id','2'],
+                'fa-times',
+                [
+                    [
+                        ['estado'],
+                        ['EN TRANSFERENCIA'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
         ],
     ),
-    #5
     #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y LIGAS
-    (
+    (   #Numero de modelo 5
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'entidad'],
         ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Entidad'],
@@ -247,8 +269,7 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #6
-    (
+    (   #Numero de modelo 6
         Dirigente,
         ['foto','identificacion','nombres apellidos', 'estado'],
         ['Foto','Identificación','Nombre', 'Estado'],
@@ -284,9 +305,8 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #7
     #MODELO DE DATOS DIRIGENTE PARA LIGA Y FEDERACIÓN
-    (
+    (   #Numero de modelo 7
         Dirigente,
         ['foto','identificacion','nombres apellidos', 'entidad'],
         ['Foto','Identificación','Nombre', 'Entidad'],
@@ -322,11 +342,10 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #8
-    (
+    (   #Numero de modelo 8
         Escenario,
         ['nombre','ciudad','estrato', 'estado'],
-        ['Nombre','Ciudad(Departamento)','Estrato', 'Estado'],
+        ['Nombre','Ciudad (Departamento)','Estrato', 'Estado'],
         None,
         [
             [
@@ -341,13 +360,7 @@ MODELOS_DE_DATOS = (
                 'wizard_identificacion',
                 ['id'],
                 'fa-gear',
-                [
-                    [
-                        ['estado'],
-                        ['ACTIVO'],
-                        lambda x, y: operator.eq(x[0], y[0])
-                    ]
-                ]
+                None
             ],
             [
                 "A/I",
@@ -365,12 +378,11 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #9
     #MODELO DE DATOS PARA ESCENARIO LIGAS Y FEDERACIONES
-    (
+    (   #Numero de modelo 9
         Escenario,
         ['nombre','ciudad','estrato', 'entidad'],
-        ['Nombre','Ciudad(Departamento)','Estrato', 'Entidad'],
+        ['Nombre','Ciudad (Departamento)','Estrato', 'Entidad'],
         None,
         [
             [
@@ -382,8 +394,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #10
-    (
+    (   #Numero de modelo 10
         Seleccion,
         ["nombre", "tipo", "fecha_inicial", "fecha_final", "campeonato", "tipo_campeonato"],
         ["Nombre", "Tipo de Selección", "Fecha Convocatoria", "Fecha Finaliza Convocatoria", "Nombre Campeonato", "Tipo Campeonato"],
@@ -405,52 +416,30 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #11
-    #MODELO PARA CLUB PARALIMPICO
-    (
-        Deportista,
-        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","estado"],
-        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Estado"],
+    #MODELO DE DATOS PARA CAJAS DE COMPENSACIÓN 
+    (   #Numero de modelo 11
+        CajaCompensacion,
+        ['foto', 'nombre', 'publico', 'clasificacion', 'region', 'estado'],
+        ['Logo', 'Nombre', 'Público', 'Clasificación', 'Región', 'Estado'],
         None,
         [
             [
-                "Ver Deportista",
-                'ver_deportista',
-                ['id','entidad.id'],
+                "Ver más",
+                'ver_ccf',
+                ['id'],
                 'fa-eye',
                 None
             ],
             [
                 "Editar",
-                'edicion_deportista',
+                'wizard_editar_caja',
                 ['id'],
                 'fa-gear',
-                [
-                    [
-                        ['estado'],
-                        ['ACTIVO'],
-                        lambda x, y: operator.eq(x[0], y[0])
-                    ]
-                ]
-
-            ],
-            [
-                "CTD",
-                'cambio_documento_deportista',
-                ['id'],
-                'fa-archive',
-                [
-                    [
-                        ['estado'],
-                        ['ACTIVO'],
-                        lambda x, y: operator.eq(x[0], y[0])
-                    ]
-                ]
-
+                None
             ],
             [
                 "A/I",
-                'deportista_desactivar',
+                'desactivar_ccf',
                 ['id'],
                 'fa-ban',
                 [
@@ -461,31 +450,8 @@ MODELOS_DE_DATOS = (
                     ]
                 ]
 
-            ],
-
+            ]
         ],
     ),
-    #12
-    (
-        CentroBiomedico,
-        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
-        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
-        None,
-        [
-            [
-                "Ver Centro Biomédico",
-                'centro_biomedico_ver',
-                ['id','entidad.id'],
-                'fa-eye',
-                None
-            ],
-            [
-                "Editar",
-                'centro_biomedico_crear_editar',
-                ['identificacion', '1', 'id'],
-                'fa-gear',
-                None
-            ],
-        ],
-    ),
+    
 )
