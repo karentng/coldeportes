@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+	{% if edicion %}
+	    Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+	{{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'deportista_listar' %}">Deportistas</a>
+	{% if edicion %}
+	    <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
+{% endblock %}
+
+{% block titulo_contenido %}
+	Deportistas
+{% endblock %}
+
+{% block titulo_panel %}
+	{% if edicion %}
+	    Edición Deportistas
+    {% else %}
+        Registro Deportistas
+    {% endif %}
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include 'deportistas/wizard/_wizard.html' %}
+	<fieldset>
+		<form id="form-wizard-info-adicional" action="" method="post">{% csrf_token %}
+			<fieldset>
+				<div class="col-xs-12">
+					<h3>{{titulo}}</h3>
+					<div class="well row">
+						<strong><h4>Información adicional</h4></strong>
+                        {% for campo in form  %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {% bootstrap_field campo layout="vertical" %}
+                                </div>
+                            </div>
+                        {% endfor %}
+					</div>
+				</div>
+			</fieldset>
+			<hr>
+			{% if wizard_stage > 1 %}
+			<a href="{% url 'wizard_corporal' id_deportista %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+			{% endif %}
+			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+		</form>
+	</fieldset>
+
+
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script>
+		$(document).ready(function() {
+			App.init();
+			FormWizard.init();
+		});
+	</script>
+{% endblock %}
+

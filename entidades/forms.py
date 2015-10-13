@@ -234,6 +234,7 @@ class ClubParalimpicoForm(forms.ModelForm):
 class ActoresForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         tipo = kwargs.pop('tipo', None)
+        tipoEnte = kwargs.pop('tipoEnte', None)
         super(ActoresForm, self).__init__(*args, **kwargs)
         if tipo == '1':
             #Liga
@@ -251,6 +252,8 @@ class ActoresForm(forms.ModelForm):
         elif tipo == '5':
             #Ente
             self.quitar_campos(['cajas','selecciones'])
+            if tipoEnte == '1':#Ente municipal
+                self.quitar_campos(['centros_biomedicos'])
         elif tipo == '6':
             #Comite
             self.quitar_campos(['cajas','selecciones','centros_biomedicos'])
