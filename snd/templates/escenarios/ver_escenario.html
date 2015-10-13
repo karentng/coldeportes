@@ -62,6 +62,7 @@
                                     <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>
                                     <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
                                     <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>
+                                    <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li>
                                     <li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>
                                     <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                                 </ul>
@@ -165,7 +166,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>FECHA INICIO</th>
-                                                        <th>FECHA FIN</th>
+                                                        <th>DURACIÓN</th>
                                                         <th>DESCRIPCIÓN</th>
                                                     </tr>
                                                 </thead>
@@ -239,6 +240,38 @@
                                 </div>
                             </div>
                             
+                            <div class="tab-pane fade" id="nav-tab2-19">
+                                <div class="invoice">
+                                {% if not mantenimientos %}  
+                                    
+                                    <h1 class="page-header">{{escenario.nombre}}</h1>
+                                    <!-- end page-header -->
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>FECHA ÚLTIMO MANTENIMIENTO</th>
+                                                    <th>DESCRIPCIÓN ÚLTIMO MANTENIMIENTO</th>
+                                                    <th>PERIODICIDAD</th>
+                                                    <th>RAZONES NO MANTENIMIENTO</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for matenimiento in matenimientos %}
+                                                <tr>                        
+                                                    <td>{{matenimiento.nombre}}</td>
+                                                    <td>{{matenimiento.telefono}}</td>
+                                                    <td>{{matenimiento.email}}</td>
+                                                </tr> 
+                                                {% endfor %}                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p>No hay último mantenimiento registrado</p>
+                                {% endif %}
+                                </div>
+                            </div>
                             <div class="tab-pane fade" id="nav-tab2-18">
                                 <div class="invoice">
                                 {% if contactos %}  

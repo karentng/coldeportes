@@ -118,15 +118,34 @@ class Foto(models.Model):
     foto = models.ImageField(upload_to=ruta_fotos_escenarios, null=True, blank=True)
     descripcion = models.TextField(blank=True, null=True, max_length=1024)
 
+
 class Video(models.Model):
     escenario = models.ForeignKey(Escenario)
     url = models.CharField(max_length=1024, verbose_name='url', null=True)
     descripcion = models.CharField(max_length=1024, null=True)
 
+class Mantenimiento(models.Model):
+
+    PERIODICIDADES = (
+        ('di', 'Diaria'),
+        ('se', 'Semanal'),
+        ('qu', 'Quincenal'),
+        ('me', 'Mensual'),
+        ('bm', 'Bimestral'),
+        ('tm', 'Trimestral'),
+        ('sm', 'Semestral'),
+        ('an', 'Anual'),
+    )
+    escenario = models.ForeignKey(Escenario)
+    fecha_ultimo_mantenimiento = models.DateField( verbose_name="fecha del último mantenimiento", null=True, blank=True)
+    descripcion_ultimo_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name='descripción del último mantenimiento')
+    periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)    
+    razones_no_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name="Si no se realiza mantenimiento, mencione las razones")
+
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
+    duracion = models.PositiveIntegerField(verbose_name="duración en días")
     descripcion = models.CharField(max_length=1024)
 
 class Contacto(models.Model):

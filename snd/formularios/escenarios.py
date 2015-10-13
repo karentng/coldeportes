@@ -89,9 +89,30 @@ class DatoHistoricoForm(ModelForm):
 class FotoEscenarioForm(ModelForm):
     required_css_class = 'required'
 
+    def __init__(self, *args, **kwargs):
+        super(FotoEscenarioForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
     class Meta:
         model = Foto
         exclude = ('escenario',)
+
+class MantenimientoEscenarioForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(MantenimientoEscenarioForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion_ultimo_mantenimiento'].widget.attrs['rows'] = 3
+        self.fields['razones_no_mantenimiento'].widget.attrs['rows'] = 3
+        self.fields['periodicidad'] = adicionarClase(self.fields['periodicidad'], 'one')
+
+
+    class Meta:
+        model = Mantenimiento
+        exclude = ('escenario',)
+        widgets = {
+            'fecha_ultimo_mantenimiento': MyDateWidget(),
+        }
 
 class VideoEscenarioForm(ModelForm):
     required_css_class = 'required'

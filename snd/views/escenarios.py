@@ -119,6 +119,7 @@ def ver_escenario(request, escenario_id, id_entidad):
     fotos = Foto.objects.filter(escenario=escenario)
     videos =  Video.objects.filter(escenario=escenario)
     historicos =  DatoHistorico.objects.filter(escenario=escenario)
+    mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
     contactos = Contacto.objects.filter(escenario=escenario)
 
     return render(request, 'escenarios/ver_escenario.html', {
@@ -128,6 +129,7 @@ def ver_escenario(request, escenario_id, id_entidad):
         'historicos': historicos,
         'fotos': fotos,
         'videos': videos,
+        'mantenimientos': mantenimientos,
         'contactos': contactos
     })
 
@@ -401,6 +403,11 @@ def wizard_fotos(request, escenario_id):
     except Exception:
         fotos = None
 
+    try:
+        videos = Video.objects.filter(escenario=escenario_id)
+    except Exception:
+        videos = None
+
     escenario = Escenario.objects.get(id=escenario_id)
 
     non_permission = not_transferido_required(request,escenario)
@@ -408,9 +415,11 @@ def wizard_fotos(request, escenario_id):
         return non_permission
 
     fotos_form = FotoEscenarioForm()
+    videos_form = VideoEscenarioForm()
 
     if request.method == 'POST':
         fotos_form = FotoEscenarioForm(request.POST, request.FILES)
+        videos_form = VideoEscenarioForm(request.POST)
 
         if fotos_form.is_valid():
             foto_nueva = fotos_form.save(commit=False)
@@ -419,11 +428,14 @@ def wizard_fotos(request, escenario_id):
             return redirect('wizard_fotos', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/wizard_fotos.html', {
+    return render(request, 'escenarios/wizard/wizard_multimedia.html', {
         'titulo': 'Fotos del Escenario',
+        'titulo_videos': 'Videos del Escenario',
         'wizard_stage': 5,
         'form': fotos_form,
+        'form_videos': videos_form,
         'fotos': fotos,
+        'videos': videos,
         'escenario_id': escenario_id
     })
 
@@ -446,6 +458,10 @@ def wizard_videos(request, escenario_id):
     :param escenario_id:   Identificador del escenario
     :type escenario_id:    String
     """
+    try:
+        fotos = Foto.objects.filter(escenario=escenario_id)
+    except Exception:
+        fotos = None
 
     try:
         videos = Video.objects.filter(escenario=escenario_id)
@@ -460,9 +476,11 @@ def wizard_videos(request, escenario_id):
     if non_permission:
         return non_permission
 
+    fotos_form = FotoEscenarioForm()
     videos_form = VideoEscenarioForm()
 
     if request.method == 'POST':
+        fotos_form = FotoEscenarioForm(request.POST, request.FILES)
         videos_form = VideoEscenarioForm(request.POST)
 
 
@@ -477,11 +495,58 @@ def wizard_videos(request, escenario_id):
             return redirect('wizard_videos', escenario_id)
 
 
-    return render(request, 'escenarios/wizard/wizard_videos.html', {
-        'titulo': 'Videos del Escenario',
-        'wizard_stage': 6,
-        'form': videos_form,
+    return render(request, 'escenarios/wizard/wizard_multimedia.html', {
+        'titulo': 'Fotos del Escenario',
+        'titulo_videos': 'Videos del Escenario',
+        'wizard_stage': 5,
+        'form': fotos_form,
+        'form_videos': videos_form,
+        'fotos': fotos,
         'videos': videos,
+        'escenario_id': escenario_id
+    })
+
+@login_required
+@tenant_required
+def wizard_mantenimiento(request, escenario_id):
+    """
+    Octubre 13 / 2015
+    Autor: Karent Narvaez Grisales
+    
+    Mantenimiento de un escenario
+
+    Se obtienen el formulario para ingresar la información del último mantenimiento del escenario.
+    Si el escenario es nuevo se inicializa en nulo la información.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del escenario
+    :type escenario_id:    String
+    """
+    
+    escenario = Escenario.objects.get(id=escenario_id)
+
+    non_permission = not_transferido_required(request,escenario)
+    if non_permission:
+        return non_permission
+
+    mantenimiento_form = MantenimientoEscenarioForm()
+
+    if request.method == 'POST':
+        mantenimiento_form = MantenimientoEscenarioForm(request.POST)
+
+        if mantenimiento_form.is_valid():
+            ultimo_mantenimiento = mantenimiento_form.save(commit=False) 
+
+            ultimo_mantenimiento.escenario = escenario
+            ultimo_mantenimiento.save()
+            return redirect('wizard_contactos', escenario_id)
+
+
+    return render(request, 'escenarios/wizard/wizard_mantenimiento.html', {
+        'titulo': 'Fotos del Escenario',
+        'wizard_stage': 6,
+        'form': mantenimiento_form,
         'escenario_id': escenario_id
     })
 

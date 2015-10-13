@@ -32,8 +32,8 @@
 {% block contenido_panel %}
     {% include 'escenarios/wizard/_wizard.html' %}
         <div class="row">
-            <fieldset class="col-md-7" >
-                <form id="form-wizard-fotos" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <fieldset class="col-md-6" >
+                <form id="form-wizard-fotos" action="{% url 'wizard_fotos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>{{titulo}}</h3>
@@ -42,13 +42,15 @@
                     </div>
                 </div>
                 </form>
-            </fieldset> 
-            <div class="col-md-5">
-                <h4>Fotos Actuales:</h4>
+            </fieldset>             
+            <div class="col-md-6">
+                <h4>Contenido Actual:</h4>
                 <table class="table table-responsive">
                     <thead>
                         <tr>
                             <th align="center">Foto</th>
+                            <th align="center">Título</th>
+                            <th align="center">Descripción</th>
                             <th align="center"></th>
                         </tr>
                     </thead>
@@ -57,6 +59,8 @@
                     {% for foto in fotos %}
                         <tr>
                             <td align="center"><img src="{{MEDIA_URL}}{{foto.foto}}" width="100" /></td>
+                            <td align="center">{{foto.titulo}}</td>
+                            <td align="center">{{foto.descripcion}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate">
@@ -83,14 +87,69 @@
                         <tr><td>No hay fotos actualmente</td></tr>
                     {% endif %}
                     </tbody>
-                </table>            
+                </table>
+                <h4>Videos Actuales:</h4>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th align="center" class="col-md-1">Video</th>
+                            <th align="center">Descripción</th>
+                            <th align="center" class="col-md-3"></th>
+                            <th align="center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if videos %}
+                    {% for video in videos %}
+                        <tr>
+                            <td align="center" ><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
+                            <td align="center">{% if video.descripcion %}{{video.descripcion}}{% endif %}</td>
+                            <td align="center" class="col-md-3"><iframe width="150" height="75" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
+                            <td align="center">
+                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Eliminar video:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar esta video?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                <a href="{% url 'eliminar_video' escenario_id video.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                        <tr><td>No hay videos actualmente</td></tr>
+                    {% endif %}
+                    </tbody>
+                </table>      
             </div>
+            <fieldset class="col-md-6">
+                <form id="form-wizard-videos" action="{% url 'wizard_videos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>{{titulo_videos}}</h3>
+                        {% bootstrap_form form_videos layout="vertical" %}
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
+                    </div>
+                </div>
+                </form>
+            </fieldset>
         </div>
         <hr>
         {% if wizard_stage > 1 %}
         <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
         {% endif %}     
-        <a href="{% url 'wizard_videos' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'wizard_mantenimiento' escenario_id %}" class="btn btn-primary pull-right">Siguiente →</a>
     
 
 {% endblock %}

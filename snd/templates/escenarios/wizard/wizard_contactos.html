@@ -97,7 +97,7 @@
         </div>
         <hr>
         {% if wizard_stage > 1 %}
-        <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+        <a href="{% url 'wizard_mantenimiento' escenario_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
         {% endif %}     
         <a href="{% url 'finalizar_escenario'  opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar </a>
         <a href="{% url 'finalizar_escenario' opcion='nuevo' %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i> Finalizar y Registrar Escenario Nuevo</a>

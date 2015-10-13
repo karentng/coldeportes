@@ -20,6 +20,7 @@ urlpatterns = patterns('snd.views.escenarios',
     url(r'^wizard/horarios/(\d+)$', 'wizard_horarios', name='wizard_horarios'), 
     url(r'^wizard/fotos/(\d+)$', 'wizard_fotos', name='wizard_fotos'), 
     url(r'^wizard/videos/(\d+)$', 'wizard_videos', name='wizard_videos'), 
+    url(r'^wizard/mantenimiento/(\d+)$', 'wizard_mantenimiento', name='wizard_mantenimiento'), 
     url(r'^wizard/historicos/(\d+)$', 'wizard_historicos', name='wizard_historicos'), 
     url(r'^wizard/contactos/(\d+)$', 'wizard_contactos', name='wizard_contactos'), 
     
