@@ -39,6 +39,16 @@ class CajaCompensacion(models.Model):
     estado = models.IntegerField(choices=tipo_estado)
     descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
 
+    def obtenerAtributos(self):
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Región", self.tipo_region],
+            ["E-mail", self.email],
+        ]
+
+        return [self.foto, atributos, None, None, "Cajas!"]
+
 class HorarioDisponibilidadCajas(models.Model):
     caja_compensacion = models.ForeignKey(CajaCompensacion)
     hora_inicio = models.TimeField()

@@ -2,8 +2,7 @@
 from django.forms import *
 from django import forms
 from entidades.models import *
-from coldeportes.utilities import adicionarClase
-
+from coldeportes.utilities import adicionarClase, MyDateWidget
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
@@ -196,6 +195,25 @@ class ClubParalimpicoForm(forms.ModelForm):
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),
         }
+
+class CafForm(forms.ModelForm):
+    required_css_class = 'required'
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(CafForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+    
+    class Meta:
+        model = Caf
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
+
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):

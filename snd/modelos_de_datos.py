@@ -416,8 +416,6 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-<<<<<<< HEAD
-<<<<<<< HEAD
     #11
     #MODELO PARA CLUB PARALIMPICO
     (
@@ -476,8 +474,31 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    #12
+    (
+        CentroBiomedico,
+        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
+        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
+        None,
+        [
+            [
+                "Ver Centro Biomédico",
+                'centro_biomedico_ver',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'centro_biomedico_crear_editar',
+                ['identificacion', '1', 'id'],
+                'fa-gear',
+                None
+            ],
+        ],
+    ),
     #MODELO DE DATOS PARA CAJAS DE COMPENSACIÓN 
-    (   #Numero de modelo 11
+    (   #Numero de modelo 13
         CajaCompensacion,
         ['foto', 'nombre', 'publico', 'clasificacion', 'region', 'estado'],
         ['Logo', 'Nombre', 'Público', 'Clasificación', 'Región', 'Estado'],
@@ -509,29 +530,6 @@ MODELOS_DE_DATOS = (
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
-            ],
-        ],
-    ),
-    #12
-    (
-        CentroBiomedico,
-        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
-        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
-        None,
-        [
-            [
-                "Ver Centro Biomédico",
-                'centro_biomedico_ver',
-                ['id','entidad.id'],
-                'fa-eye',
-                None
-            ],
-            [
-                "Editar",
-                'centro_biomedico_crear_editar',
-                ['identificacion', '1', 'id'],
-                'fa-gear',
-                None
             ],
         ],
     ),

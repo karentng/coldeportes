@@ -27,6 +27,22 @@ class TipoDisciplinaDeportiva(models.Model):
     def __str__(self):
         return self.descripcion
 
+class ModalidadDisciplinaDeportiva(models.Model):
+    tipo = models.ForeignKey(TipoDisciplinaDeportiva)
+    nombre = models.CharField(max_length=255)
+    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+class CategoriaDisciplinaDeportiva(models.Model):
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva)
+    nombre = models.CharField(max_length=255)
+    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+
+    def __str__(self):
+        return self.nombre
+
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico")
     escenarios = models.BooleanField(verbose_name="Escenarios")
@@ -56,6 +72,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         (7,'Federación Paralimpica'),
         (8,'Liga Paralimpica'),
         (9,'Club Paralimpico'),
+        (10,'Centro De Acondicionamiento'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -105,7 +122,7 @@ class Entidad(TenantMixin): # Entidad deportiva
             return True
         return False
 
-    def atributosDeSusEscenarios(self):
+    def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
         todosEscenarios = Escenario.objects.filter(entidad=self)
         escenarios = []
@@ -114,7 +131,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         
         return escenarios
 
-    def atributosDeSusCafs(self):
+    def atributos_cafs(self):
         from snd.modelos.cafs import CentroAcondicionamiento
         todosCentros = CentroAcondicionamiento.objects.filter(entidad=self)
         centros = []
@@ -141,14 +158,23 @@ class Entidad(TenantMixin): # Entidad deportiva
 
         return personales_apoyo
 
-    def atributosDirigentes(self):
+    def atributos_dirigentes(self):
         from snd.modelos.dirigentes import Dirigente
-        todosDirigentes = Dirigente.objects.filter(entidad=self)
+        todos_dirigentes = Dirigente.objects.filter(entidad=self)
         dirigentes = []
-        for dirigente in todosDirigentes:
+        for dirigente in todos_dirigentes:
             dirigentes.append(dirigente.obtenerAtributos())
 
         return dirigentes
+
+    def atributos_cajas(self):
+        from snd.modelos.cajas_compensacion import CajaCompensacion
+        todas_cajas = CajaCompensacion.objects.filter(entidad=self)
+        cajas = []
+        for caja in todas_cajas:
+            cajas.append(caja.obtenerAtributos())
+
+        return cajas
 
     def atributosDeSusActores(self):
         def agregarActor(datos, booleano, identificador, metodo):
@@ -161,20 +187,20 @@ class Entidad(TenantMixin): # Entidad deportiva
         actores = tenant.actores
 
         datos = {}
-        datos = agregarActor(datos, actores.centros, "caf", tenant.atributosDeSusCafs)
-        datos = agregarActor(datos, actores.escenarios, "escenarios", tenant.atributosDeSusEscenarios)
+        datos = agregarActor(datos, actores.centros, "caf", tenant.atributos_cafs)
+        datos = agregarActor(datos, actores.escenarios, "escenarios", tenant.atributos_escenarios)
         datos = agregarActor(datos, actores.deportistas, "deportistas", tenant.atributos_deportistas)
         datos = agregarActor(datos, actores.personal_apoyo, "personales", tenant.atributos_personales_apoyo)
-        datos = agregarActor(datos, actores.dirigentes, "dirigentes", tenant.atributosDirigentes)
-        #datos = agregarActor(datos, actores.cajas, "cajas", cambiar)
+        datos = agregarActor(datos, actores.dirigentes, "dirigentes", tenant.atributos_dirigentes)
+        datos = agregarActor(datos, actores.cajas, "cajas", tenant.atributos_cajas)
 
         try:
-            datos['ligas'] = tenant.ligasAsociadas()
+            datos['ligas'] = tenant.ligas_asociadas()
         except Exception:
             pass
 
         try:
-            datos['clubes'] = tenant.clubesAsociados()
+            datos['clubes'] = tenant.clubes_asociados()
         except Exception:
             pass
 
@@ -277,7 +303,7 @@ class FederacionParalimpica(ResolucionReconocimiento):
             actores.save()
         super(FederacionParalimpica, self).save(*args, **kwargs)
 
-class LigaParalimpica(Entidad):
+class LigaParalimpica(ResolucionReconocimiento):
     DISCAPACIDADES = (
         (1,'Limitaciones Fisica'),
         (2,'Limitación Auditiva'),
@@ -328,11 +354,11 @@ class Federacion(ResolucionReconocimiento):
             actores.save()
         super(Federacion, self).save(*args, **kwargs)
 
-    def ligasAsociadas(self):
+    def ligas_asociadas(self):
         ligas = Liga.objects.filter(federacion=self)
         return ligas
 
-    def atributosDeSusEscenarios(self):
+    def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
         from django.db import connection
         escenarios = []
@@ -345,29 +371,28 @@ class Federacion(ResolucionReconocimiento):
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
             connection.set_tenant(i)
-            escenarios += i.atributosDeSusEscenarios()
+            escenarios += i.atributos_escenarios()
 
         return escenarios
 
-    def atributosDeSusCafs(self):
+    def atributos_cafs(self):
         from snd.modelos.cafs import CentroAcondicionamiento
         from django.db import connection
 
         centros = []
 
-        todosEscenarios = CentroAcondicionamiento.objects.filter(entidad=self)
+        todos_cafs = CentroAcondicionamiento.objects.filter(entidad=self)
         
-        for i in todosEscenarios:
+        for i in todos_cafs:
             centros.append(i.obtenerAtributos())
 
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
             connection.set_tenant(i)
-            centros += i.atributosDeSusCafs()
+            centros += i.atributos_cafs()
         
         return centros
 
-class Liga(ResolucionReconocimiento):
     def atributos_deportistas(self):
         from snd.modelos.deportistas import Deportista
         from django.db import connection
@@ -382,7 +407,7 @@ class Liga(ResolucionReconocimiento):
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
             connection.set_tenant(i)
-            deportistas += i.atributosDeSusCafs()
+            deportistas += i.atributos_deportistas()
 
         return deportistas
 
@@ -400,11 +425,11 @@ class Liga(ResolucionReconocimiento):
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
             connection.set_tenant(i)
-            personales_apoyo += i.atributosDeSusCafs()
+            personales_apoyo += i.atributos_personales_apoyo()
 
         return personales_apoyo
 
-    def atributosDirigentes(self):
+    def atributos_dirigentes(self):
         from snd.modelos.dirigentes import Dirigente
         from django.db import connection
 
@@ -418,48 +443,108 @@ class Liga(ResolucionReconocimiento):
         ligas = Liga.objects.filter(federacion=self)
         for liga in ligas:
             connection.set_tenant(liga)
-            dirigentes += liga.atributosDirigentes()
+            dirigentes += liga.atributos_dirigentes()
 
         return dirigentes
 
-    def clubesAsociados(self):
+class Liga(ResolucionReconocimiento):
+
+    def atributos_deportistas(self):
+        from snd.modelos.deportistas import Deportista
+        from django.db import connection
+
+        deportistas = []
+
+        todos_deportistas = Deportista.objects.filter(entidad=self)
+
+        for i in todos_deportistas:
+            deportistas.append(i.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for i in clubes:
+            connection.set_tenant(i)
+            deportistas += i.atributos_deportistas()
+
+        return deportistas
+
+    def clubes_asociados(self):
         clubes = Club.objects.filter(liga=self)
         return clubes
 
-    def atributosDeSusEscenarios(self):
+    def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
         from django.db import connection
         escenarios = []
 
-        todosEscenarios = Escenario.objects.filter(entidad=self)
+        todos_escenarios = Escenario.objects.filter(entidad=self)
         
-        for i in todosEscenarios:
+        for i in todos_escenarios:
             escenarios.append(i.obtenerAtributos())
 
         clubes = Club.objects.filter(liga=self)
         for i in clubes:
             connection.set_tenant(i)
-            escenarios += i.atributosDeSusEscenarios()
+            escenarios += i.atributos_escenarios()
 
         return escenarios
 
-    def atributosDeSusCafs(self):
+    def atributos_cafs(self):
         from snd.modelos.cafs import CentroAcondicionamiento
         from django.db import connection
 
         centros = []
 
-        todosEscenarios = CentroAcondicionamiento.objects.filter(entidad=self)
+        todos_cafs = CentroAcondicionamiento.objects.filter(entidad=self)
         
-        for i in todosEscenarios:
+        for i in todos_cafs:
             centros.append(i.obtenerAtributos())
 
         clubes = Club.objects.filter(liga=self)
         for i in clubes:
             connection.set_tenant(i)
-            centros += i.atributosDeSusCafs()
+            centros += i.atributos_cafs()
         
         return centros
+
+    def atributos_personales_apoyo(self):
+        from snd.modelos.personal_apoyo import PersonalApoyo
+        from django.db import connection
+
+        personales_apoyo = []
+
+        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
+
+        for i in todos_personales_apoyo:
+            personales_apoyo.append(i.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for i in clubes:
+            connection.set_tenant(i)
+            personales_apoyo += i.atributos_personales_apoyo()
+
+        return personales_apoyo
+
+    def atributos_dirigentes(self):
+        from snd.modelos.dirigentes import Dirigente
+        from django.db import connection
+
+        dirigentes = []
+
+        todosDirigentes = Dirigente.objects.filter(entidad=self)
+
+        for dirigente in todosDirigentes:
+            dirigentes.append(dirigente.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for club in clubes:
+            connection.set_tenant(club)
+            dirigentes += club.atributos_dirigentes()
+
+        return dirigentes
+
+    def historiales_para_avalar(self,tipo):
+        from snd.models import HistorialDeportivo
+        return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -479,63 +564,6 @@ class Club(ResolucionReconocimiento):
         (2, "Promotor"),
         (3, "Profesional"),
     )
-    def atributos_deportistas(self):
-        from snd.modelos.deportistas import Deportista
-        from django.db import connection
-
-        deportistas = []
-
-        todos_deportistas = Deportista.objects.filter(entidad=self)
-
-        for i in todos_deportistas:
-            deportistas.append(i.obtenerAtributos())
-
-        clubes = Club.objects.filter(liga=self)
-        for i in clubes:
-            connection.set_tenant(i)
-            deportistas += i.atributosDeSusCafs()
-
-        return deportistas
-
-    def atributos_personales_apoyo(self):
-        from snd.modelos.personal_apoyo import PersonalApoyo
-        from django.db import connection
-
-        personales_apoyo = []
-
-        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
-
-        for i in todos_personales_apoyo:
-            personales_apoyo.append(i.obtenerAtributos())
-
-        clubes = Club.objects.filter(liga=self)
-        for i in clubes:
-            connection.set_tenant(i)
-            personales_apoyo += i.atributosDeSusCafs()
-
-        return personales_apoyo
-
-    def atributosDirigentes(self):
-        from snd.modelos.dirigentes import Dirigente
-        from django.db import connection
-
-        dirigentes = []
-
-        todosDirigentes = Dirigente.objects.filter(entidad=self)
-
-        for dirigente in todosDirigentes:
-            dirigentes.append(dirigente.obtenerAtributos())
-
-        clubes = Club.objects.filter(liga=self)
-        for club in clubes:
-            connection.set_tenant(club)
-            dirigentes += club.atributosDirigentes()
-
-        return dirigentes
-
-    def historiales_para_avalar(self,tipo):
-        from snd.models import HistorialDeportivo
-        return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
 
@@ -547,6 +575,15 @@ class Club(ResolucionReconocimiento):
             actores.save()
         super(Club, self).save(*args, **kwargs)
 
+class Caf(Entidad):
+    def save(self, *args, **kwargs):
+        actores = self.actores
+        if actores != None:
+            actores.dirigentes = True
+            actores.personal_apoyo = True
+            actores.centros = True
+            actores.save()
+        super(Caf, self).save(*args, **kwargs)
 
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')
