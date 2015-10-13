@@ -138,6 +138,15 @@ class Entidad(TenantMixin): # Entidad deportiva
 
         return personales_apoyo
 
+    def atributosDirigentes(self):
+        from snd.modelos.dirigentes import Dirigente
+        todosDirigentes = Dirigente.objects.filter(entidad=self)
+        dirigentes = []
+        for dirigente in todosDirigentes:
+            dirigentes.append(dirigente.obtenerAtributos())
+
+        return dirigentes
+
     def atributosDeSusActores(self):
         def agregarActor(datos, booleano, identificador, metodo):
             if booleano:
@@ -153,7 +162,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         datos = agregarActor(datos, actores.escenarios, "escenarios", tenant.atributosDeSusEscenarios)
         datos = agregarActor(datos, actores.deportistas, "deportistas", tenant.atributos_deportistas)
         datos = agregarActor(datos, actores.personal_apoyo, "personales", tenant.atributos_personales_apoyo)
-        #datos = agregarActor(datos, actores.dirigentes, "dirigentes", cambiar)
+        datos = agregarActor(datos, actores.dirigentes, "dirigentes", tenant.atributosDirigentes)
         #datos = agregarActor(datos, actores.cajas, "cajas", cambiar)
 
         try:
@@ -277,7 +286,6 @@ class ClubParalimpico(Entidad):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
-
     def save(self, *args, **kwargs):
         actores = self.actores
         if actores != None:
@@ -381,6 +389,24 @@ class Federacion(Entidad):
 
         return personales_apoyo
 
+    def atributosDirigentes(self):
+        from snd.modelos.dirigentes import Dirigente
+        from django.db import connection
+
+        dirigentes = []
+
+        todosDirigentes = Dirigente.objects.filter(entidad=self)
+
+        for dirigente in todosDirigentes:
+            dirigentes.append(dirigente.obtenerAtributos())
+
+        ligas = Liga.objects.filter(federacion=self)
+        for liga in ligas:
+            connection.set_tenant(liga)
+            dirigentes += liga.atributosDirigentes()
+
+        return dirigentes
+
 class Liga(Entidad):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -468,6 +494,24 @@ class Liga(Entidad):
             personales_apoyo += i.atributosDeSusCafs()
 
         return personales_apoyo
+
+    def atributosDirigentes(self):
+        from snd.modelos.dirigentes import Dirigente
+        from django.db import connection
+
+        dirigentes = []
+
+        todosDirigentes = Dirigente.objects.filter(entidad=self)
+
+        for dirigente in todosDirigentes:
+            dirigentes.append(dirigente.obtenerAtributos())
+
+        clubes = Club.objects.filter(liga=self)
+        for club in clubes:
+            connection.set_tenant(club)
+            dirigentes += club.atributosDirigentes()
+
+        return dirigentes
 
 class Club(Entidad):
     liga = models.ForeignKey(Liga, null=True, blank=True)

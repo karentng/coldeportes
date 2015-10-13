@@ -30,12 +30,13 @@
 	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
 	<link href="{{STATIC_URL}}plugins/switchery/switchery.min.css" rel="stylesheet" />
 	<link href="{{STATIC_URL}}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+	{{form.media}}
 {% endblock %}
 
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
-			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
+			<form id="entidad" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
 
 				{% for key, value in form.errors.items %}
 					{% if key == '__all__' %}
@@ -72,7 +73,9 @@
 					{% endif %}
 				{% endfor %}
 
-			    <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
+				{% if nombre != 'Centro de Acondicionamiento Físico' %}
+			    	<b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
+			    {% endif %}
 			    {% bootstrap_form form2 layout="horizontal" %}
 
 

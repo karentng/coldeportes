@@ -70,8 +70,8 @@ def desactivar_ccf(request, ccf_id):
         messages.warning(request, "La Caja de compensación que intenta acceder no existe.")
         return redirect('listar_ccfs')
 
-    estado_actual = ccf.activo
-    ccf.activo = not(estado_actual)
+    estado_actual = ccf.estado
+    ccf.estado = not(estado_actual)
     ccf.save()
     messages.warning(request, "CCF cambiada de estado correctamente.")
     return redirect('listar_ccfs')
@@ -121,7 +121,7 @@ def wizard_caja(request):
     caja_form = CajaCompensacionForm( )
     if request.method == 'POST':
 
-        caja_form = CajaCompensacionForm(request.POST)
+        caja_form = CajaCompensacionForm(request.POST, request.FILES)
 
         if caja_form.is_valid():
             caja = caja_form.save(commit=False)
@@ -163,7 +163,7 @@ def wizard_editar_caja(request, caja_id):
 
     if request.method == 'POST':
 
-        caja_form = CajaCompensacionForm(request.POST, instance=caja)
+        caja_form = CajaCompensacionForm(request.POST, request.FILES, instance=caja)
 
         if caja_form.is_valid():
             caja = caja_form.save(commit=False)
