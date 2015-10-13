@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
+from django.db import connection
 from snd.formularios.centro_biomedico  import *
 from snd.models import *
 from entidades.models import *
@@ -123,7 +124,36 @@ def finalizar(request, opcion, edicion):
 
 @login_required
 def ver(request,centro_biomedico_id,id_entidad):
-    raise Http404
+    """
+    Octubre 10 / 2015
+    Autor: Cristian Leonardo Ríos López
+    
+    ver centro biomédico
+
+    Se obtienen toda la información registrada del centro biomédico dado y se muestra.
+
+    Se pide la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde otro ente cuando sea necesario.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param centro_biomedico_id:   Identificador del centro biomedico
+    :type centro_biomedico_id:    String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el centro biomedico
+    :type id_entidad: String
+    """
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
+    try:
+        centro_biomedico = CentroBiomedico.objects.get(id=centro_biomedico_id)
+    except CentroBiomedico.DoesNotExist:
+        messages.error(request, 'El centro biomédico que desea ver no existe')
+        return redirect('centro_biomedico_listar')
+
+    return render(request, 'centro_biomedico/centro_biomedico_ver.html', {
+        'centro': centro_biomedico
+    })
 
 @login_required
 def listar(request):

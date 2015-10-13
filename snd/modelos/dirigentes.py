@@ -56,6 +56,24 @@ class Dirigente(models.Model):
         self.apellidos = self.apellidos.upper()
         super(Dirigente, self).save(*args, **kwargs)
 
+    def obtenerAtributos(self):
+
+        imagen = None
+        if self.foto:
+            imagen = ("%s%s")%(settings.MEDIA_URL, self.foto)
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/DirigenteView.PNG")
+        atributos = [
+            ["Identificación", self.tipo_identificacion+" "+self.identificacion],
+            ["Nombre", self.nombres+" "+self.apellidos],
+            ["Género", self.genero],
+            ["Ciudad Residencia", self.ciudad.nombre],
+            ["Correo electrónico", self.email],
+            ["Teléfono", self.telefono_fijo],
+        ]
+
+        return [imagen, atributos, None, None, "Dirigentes!"]
+
 class DirigenteCargo(models.Model):
     nombre = models.CharField(max_length=100, verbose_name="Nombre del cargo")
     vigencia_inicio = models.DateField(verbose_name="Fecha de inicio de vigencia del periodo")

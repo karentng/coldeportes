@@ -78,7 +78,7 @@ def obtenerTenant(request, idEntidad, tipo):
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
 
-    form2 = ActoresForm(tipo=tipo)
+    form2 = ActoresForm(tipo=tipo,tipoEnte=tipoEnte)
 
     dominio = settings.SUBDOMINIO_URL
 
