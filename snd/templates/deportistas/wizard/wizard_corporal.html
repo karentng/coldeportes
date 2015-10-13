@@ -81,19 +81,51 @@
 						<strong><h4>Composición Muscular</h4></strong>
 						<div class="row">
 							<div class="well row">
-								<div class="col-md-4">
+                                <div class="col-md-3">
+                                    <div class="checkbox checkbox-primary">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label for="id_conoce_grasa">
+                                                    <input class="styled" type="checkbox" id="id_conoce_informacion" name="conoce_grasa">
+                                                    ¿Conoce el porcentaje de grasa corporal del deportista?
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <br/>
+                                    <i class="ion ion-help-circled fa-2x add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="Si no conoce el porcentaje de grasa ingrese los datos que se le solicitan para calcularlo"></i>
+                                    {% comment %}
+                                    {% bootstrap_field form.conoce_informacion layout="vertical" %}
 									<div class="note note-success">
 										<h5>Nota!</h5>
 										<p>
-											Si conoce el porcentaje de grasa del deportista ingreselo, en caso contrario presione calcular
-											e ingrese los datos para realizar el cálculo
+											Si conoce el porcentaje de grasa del deportista ingreselo de click y ingreselo
 										</p>
 									</div>
+									{% endcomment %}
 								</div>
-								<div class="col-md-4">
+                                <div class="col-md-4">
+                                    <label class="control-label">Medida en centímetros de cuello</label>
+                                    <br/>
+                                    <input id='id_cuello' class='form-control' type='number' onchange='calculo_cuello()'/>
+                                    <br/>
+                                    <label class="control-label">Medida en centímetros de cintura</label>
+                                    <br/>
+                                    <input id='id_cintura' class='form-control' type='number' onchange='calculo_cintura()' />
+                                    {% if mujer %}
+                                    <br/>
+                                    <label class="control-label">Medida en centímetros de cadera</label>
+                                    <br/>
+                                    <input id='id_cadera' class='form-control' type='number' onchange='calculo_cadera()' />
+                                    {% endif %}
+								</div>
+								<div class="col-md-4 col-md-offset-1">
 									{% bootstrap_field form.porcentaje_grasa layout="vertical" %}
 									{% bootstrap_field form.masa_corporal_magra layout="vertical" %}
 								</div>
+                                {% comment %}
 								<div class="col-md-4">
 									<br/>
 
@@ -118,7 +150,9 @@
 									<span id="bt-calcular-porcentaje" class="btn btn-warning  btn-active-success" >Calcular →</span></a><br/><br/><br/>
 									<i class="ion ion-help-circled fa-2x add-tooltip" data-placement="right" data-toggle="tooltip" data-original-title="Masa Magra = peso × (100 - grasa)"></i>
 								</div>
+                            {% endcomment %}
 							</div><br/>
+
 							<div class="well row">
 								<div class="col-md-4">
 									<div class="note note-info">
@@ -175,8 +209,44 @@
 			FormWizard.init();
 			$('#id_imc').css("pointer-events","none");
 			$('#id_masa_corporal_magra').css("pointer-events","none");
+            //Verificar la informacion
+            //Si ya lo tiene ingresado
+            //Se pone readonly info de calculo y se checkea la tawel
+            var porcentaje = $('#id_porcentaje_grasa').val();
+            if (porcentaje != ''){
+                $('#id_cuello').prop('readonly', true);
+                $('#id_cintura').prop('readonly', true);
+                if(mujer){
+                    $('#id_cadera').prop('readonly', true);
+                }
+                $("#id_conoce_informacion").prop("checked", true);
+            }else{
+                $('#id_porcentaje_grasa').prop('readonly', true);
+            }
+            //Si no readonly percent y todo bien
 		});
 		var mujer = {{mujer|yesno:"true,false" }};
+
+        $("#id_conoce_informacion").on('click',function(){
+            var point = $(this).is(':checked');
+            if (!point){
+                $('#id_porcentaje_grasa').prop('readonly', true);
+                $('#id_cuello').prop('readonly', false);
+                $('#id_cintura').prop('readonly', false);
+                if(mujer){
+                    $('#id_cadera').prop('readonly', false);
+                }
+            }else{
+                $('#id_porcentaje_grasa').prop('readonly', false);
+                $('#id_cuello').prop('readonly', true);
+                $('#id_cintura').prop('readonly', true);
+                if(mujer){
+                    $('#id_cadera').prop('readonly', true);
+                }
+
+            }
+
+        })
 	</script>
 	<script src="{{ STATIC_URL }}js/validaciones/deportistas/wizard-corporal-validations.js"></script>
 {% endblock %}

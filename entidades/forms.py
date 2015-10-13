@@ -2,8 +2,8 @@
 from django.forms import *
 from django import forms
 from entidades.models import *
-from coldeportes.utilities import adicionarClase, MyDateWidget
-from datetimewidget.widgets import DateTimeWidget, DateWidget, TimeWidget
+from coldeportes.utilities import adicionarClase
+
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
@@ -32,11 +32,7 @@ class LigaForm(forms.ModelForm):
     class Meta:
         model = Liga
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
-        widgets = {
-            'fecha_resolucion': DateWidget(usel10n=True, bootstrap_version=3),
-            'fecha_vencimiento': DateWidget(usel10n=True, bootstrap_version=3),
-        }
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
 
 class FederacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -55,11 +51,7 @@ class FederacionForm(forms.ModelForm):
     class Meta:
         model = Federacion
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
-        widgets = {
-            'fecha_resolucion': MyDateWidget(),
-            'fecha_vencimiento': MyDateWidget(),
-        }
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion',)
 
 class ClubForm(forms.ModelForm):
     required_css_class = 'required'
@@ -78,29 +70,7 @@ class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'tipo_club', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
-        widgets = {
-            'fecha_resolucion': MyDateWidget(),
-            'fecha_vencimiento': MyDateWidget(),
-        }
-
-class CafForm(forms.ModelForm):
-    required_css_class = 'required'
-    pagina = forms.CharField(label="URL dentro del SIND", required=True)
-
-    def __init__(self, *args, **kwargs):
-        instancia = kwargs.get('instance', None)
-        super(CafForm, self).__init__(*args, **kwargs)
-        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
-        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
-
-        if instancia != None:
-            del self.fields['pagina']
-    
-    class Meta:
-        model = Caf
-        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
 
 class CajaDeCompensacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -173,11 +143,8 @@ class FederacionParalimpicaForm(forms.ModelForm):
     class Meta:
         model = FederacionParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
-        widgets = {
-            'fecha_resolucion': MyDateWidget(),
-            'fecha_vencimiento': MyDateWidget(),
-        }
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion',)
+
 
 class LigaParalimpicaForm(forms.ModelForm):
     required_css_class = 'required'

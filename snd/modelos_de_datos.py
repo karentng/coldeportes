@@ -50,7 +50,6 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #1
     #MODELO DE DATOS CAF PARA LIGAS Y FEDERACIONES
     (   #Numero de modelo 1
         CentroAcondicionamiento,
@@ -69,8 +68,8 @@ MODELOS_DE_DATOS = (
     ),
     (   #Numero de modelo 2
         Deportista,
-        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","estado"],
-        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Estado"],
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","estado"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Estado"],
         None,
         [
             [
@@ -125,7 +124,7 @@ MODELOS_DE_DATOS = (
             [
                 "Transferir",
                 'generar_transferencia',
-                ['id'],
+                ['1','1','id'],
                 'fa-exchange',
                 [
                     [
@@ -139,7 +138,7 @@ MODELOS_DE_DATOS = (
             [
                 "Cancelar Transferencia",
                 'cancelar_transferencia',
-                ['id'],
+                ['id','1'],
                 'fa-times',
                 [
                     [
@@ -153,12 +152,11 @@ MODELOS_DE_DATOS = (
 
         ],
     ),
-    #3
     #MODELO DE DATOS PARA DEPORTISTAS PARA EL TENANT TIPO LIGA Y FEDERACIÓN
     (   #Numero de modelo 3
         Deportista,
-        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","entidad"],
-        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Entidad"],
+        ["foto","nombres apellidos","ciudad_residencia","tipo_id","identificacion","edad","entidad"],
+        ["Foto","Nombre","Ciudad de residencia","Tipo Identificación","Identificación","Edad","Entidad"],
         None,
         [
             [
@@ -173,7 +171,7 @@ MODELOS_DE_DATOS = (
     (   #Numero de modelo 4
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'estado'],
-        ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
+        ['foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
         None,
         [
             [
@@ -204,9 +202,36 @@ MODELOS_DE_DATOS = (
                 ]
 
             ],
+            [
+                "Transferir",
+                'generar_transferencia',
+                ['1','2','id'],
+                'fa-exchange',
+                [
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
+            [
+                "Cancelar Transferencia",
+                'cancelar_transferencia',
+                ['id','2'],
+                'fa-times',
+                [
+                    [
+                        ['estado'],
+                        ['EN TRANSFERENCIA'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+
+            ],
         ],
     ),
-    #5
     #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y LIGAS
     (   #Numero de modelo 5
         PersonalApoyo,
@@ -280,7 +305,6 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #7
     #MODELO DE DATOS DIRIGENTE PARA LIGA Y FEDERACIÓN
     (   #Numero de modelo 7
         Dirigente,
@@ -336,13 +360,7 @@ MODELOS_DE_DATOS = (
                 'wizard_identificacion',
                 ['id'],
                 'fa-gear',
-                [
-                    [
-                        ['estado'],
-                        ['ACTIVO'],
-                        lambda x, y: operator.eq(x[0], y[0])
-                    ]
-                ]
+                None
             ],
             [
                 "A/I",
@@ -360,7 +378,6 @@ MODELOS_DE_DATOS = (
             ]
         ],
     ),
-    #9
     #MODELO DE DATOS PARA ESCENARIO LIGAS Y FEDERACIONES
     (   #Numero de modelo 9
         Escenario,
@@ -399,6 +416,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+<<<<<<< HEAD
 <<<<<<< HEAD
     #11
     #MODELO PARA CLUB PARALIMPICO
@@ -458,14 +476,6 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-
-
-
-
-
-
-
-
     #MODELO DE DATOS PARA CAJAS DE COMPENSACIÓN 
     (   #Numero de modelo 11
         CajaCompensacion,
@@ -500,7 +510,6 @@ MODELOS_DE_DATOS = (
                     ]
                 ]
             ],
-
         ],
     ),
     #12

@@ -27,22 +27,6 @@ class TipoDisciplinaDeportiva(models.Model):
     def __str__(self):
         return self.descripcion
 
-class ModalidadDisciplinaDeportiva(models.Model):
-    tipo = models.ForeignKey(TipoDisciplinaDeportiva)
-    nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
-
-    def __str__(self):
-        return self.nombre
-
-class CategoriaDisciplinaDeportiva(models.Model):
-    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva)
-    nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
-
-    def __str__(self):
-        return self.nombre
-
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico")
     escenarios = models.BooleanField(verbose_name="Escenarios")
@@ -105,6 +89,7 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = ClubParalimpico
         elif self.tipo == 10:
             modelo = Caf
+
         try:
             return modelo.objects.get(id=self.id)
         except Exception:
@@ -233,17 +218,6 @@ class Entidad(TenantMixin): # Entidad deportiva
     def __str__(self):
         return self.nombre
 
-class Caf(Entidad):
-
-    def save(self, *args, **kwargs):
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.centros = True
-            actores.save()
-        super(Caf, self).save(*args, **kwargs)
-
 class Ente(Entidad):
     TIPOS_ENTE = (
         (1, 'Ente Municipal'),
@@ -303,42 +277,7 @@ class FederacionParalimpica(ResolucionReconocimiento):
             actores.save()
         super(FederacionParalimpica, self).save(*args, **kwargs)
 
-    def atributosDeSusEscenarios(self):
-        from snd.modelos.escenarios import Escenario
-        from django.db import connection
-        escenarios = []
-
-        todosEscenarios = Escenario.objects.filter(entidad=self)
-        
-        for i in todosEscenarios:
-            escenarios.append(i.obtenerAtributos())
-
-        ligas = LigaParalimpica.objects.filter(federacion=self)
-        for i in ligas:
-            connection.set_tenant(i)
-            escenarios += i.atributosDeSusEscenarios()
-
-        return escenarios
-
-    def atributosDeSusCafs(self):
-        from snd.modelos.cafs import CentroAcondicionamiento
-        from django.db import connection
-
-        centros = []
-
-        todosEscenarios = CentroAcondicionamiento.objects.filter(entidad=self)
-        
-        for i in todosEscenarios:
-            centros.append(i.obtenerAtributos())
-
-        ligas = LigaParalimpica.objects.filter(federacion=self)
-        for i in ligas:
-            connection.set_tenant(i)
-            centros += i.atributosDeSusCafs()
-        
-        return centros
-
-class LigaParalimpica(ResolucionReconocimiento):
+class LigaParalimpica(Entidad):
     DISCAPACIDADES = (
         (1,'Limitaciones Fisica'),
         (2,'Limitación Auditiva'),
@@ -372,7 +311,6 @@ class ClubParalimpico(ResolucionReconocimiento):
             actores.personal_apoyo = True
             actores.save()
         super(ClubParalimpico, self).save(*args, **kwargs)
-
 
 class Federacion(ResolucionReconocimiento):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -595,14 +533,11 @@ class Club(ResolucionReconocimiento):
 
         return dirigentes
 
-    liga = models.ForeignKey(Liga, null=True, blank=True)
-    tipo_club = models.IntegerField(choices=TIPOS_CLUBES)
-
-# ---------------------------------------------------------------------------------
-
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
+
+    liga = models.ForeignKey(Liga, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         actores = self.actores
