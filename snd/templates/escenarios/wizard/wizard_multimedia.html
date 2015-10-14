@@ -92,9 +92,9 @@
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center" class="col-md-1">Video</th>
+                            <th align="center">Video</th>
                             <th align="center">Descripción</th>
-                            <th align="center" class="col-md-3"></th>
+                            <th align="center"></th>
                             <th align="center"></th>
                         </tr>
                     </thead>
@@ -133,6 +133,8 @@
                     </tbody>
                 </table>      
             </div>
+        </div>
+        <div class="row">
             <fieldset class="col-md-6">
                 <form id="form-wizard-videos" action="{% url 'wizard_videos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
@@ -145,6 +147,7 @@
                 </form>
             </fieldset>
         </div>
+        
         <hr>
         {% if wizard_stage > 1 %}
         <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
