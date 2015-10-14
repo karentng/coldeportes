@@ -124,7 +124,6 @@ MODELOS_DE_DATOS = (
             [
                 "Transferir",
                 'generar_transferencia',
-                #['1','1','id'],
                 ['id'],
                 'fa-exchange',
                 [
@@ -139,7 +138,7 @@ MODELOS_DE_DATOS = (
             [
                 "Cancelar Transferencia",
                 'cancelar_transferencia',
-                ['id','1'],
+                ['id'],
                 'fa-times',
                 [
                     [
@@ -206,7 +205,6 @@ MODELOS_DE_DATOS = (
             [
                 "Transferir",
                 'generar_transferencia',
-                #['1','2','id'],
                 ['id'],
                 'fa-exchange',
                 [
@@ -221,7 +219,7 @@ MODELOS_DE_DATOS = (
             [
                 "Cancelar Transferencia",
                 'cancelar_transferencia',
-                ['id','2'],
+                ['id'],
                 'fa-times',
                 [
                     [
