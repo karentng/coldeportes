@@ -157,6 +157,12 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                     else:
                         if 'ver' in datosURL['url']:
                             urls.append(datosURL)
+                elif objeto.__class__.__name__ == 'Seleccion':
+                    if "add_seleccion" in [x.codename for x in request.user.groups.all()[0].permissions.all()]:
+                        urls.append(datosURL)
+                    else:
+                        if 'ver' in datosURL['url']:
+                            urls.append(datosURL)
                 else:
                     urls.append(datosURL)
             else:
