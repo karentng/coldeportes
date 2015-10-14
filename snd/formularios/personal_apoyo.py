@@ -75,9 +75,9 @@ class FormacionDeportivaForm(ModelForm):
                     msg = 'Usted ha seleccionado el estado FINALIZADO con una fecha mayor a la actual'
                     self.add_error('fecha_finalizacion',msg)
                 else:
-                    return True
+                    return cleaned_data
             else:
-                return True
+                return cleaned_data
         return cleaned_data
 
 
