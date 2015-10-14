@@ -15,6 +15,7 @@ class LigaForm(forms.ModelForm):
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
+        self.fields['federacion'] = adicionarClase(self.fields['federacion'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
