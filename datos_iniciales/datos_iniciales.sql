@@ -1161,9 +1161,9 @@ INSERT INTO "entidades_caracteristicaescenario" ("id", "descripcion") VALUES
 (21,	'Área Complementaria'),
 (22,	'Área de Espectadores'),
 (23,	'Taquillas'),
-(23,	'Señalización Discapacitados'),
-(23,	'Vestidores'),
-(23,	'Duchas');
+(24,	'Señalización Discapacitados'),
+(25,	'Vestidores'),
+(26,	'Duchas');
 
 INSERT INTO "entidades_dias" ("id", "nombre") VALUES
 (2,	'Lunes'),
