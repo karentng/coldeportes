@@ -67,7 +67,7 @@ class Dirigente(models.Model):
             ["Identificación", self.tipo_identificacion+" "+self.identificacion],
             ["Nombre", self.nombres+" "+self.apellidos],
             ["Género", self.genero],
-            ["Ciudad Residencia", self.ciudad.nombre],
+            ["Ciudad Residencia", self.ciudad_residencia.nombre],
             ["Correo electrónico", self.email],
             ["Teléfono", self.telefono_fijo],
         ]
