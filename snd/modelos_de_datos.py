@@ -124,7 +124,8 @@ MODELOS_DE_DATOS = (
             [
                 "Transferir",
                 'generar_transferencia',
-                ['1','1','id'],
+                #['1','1','id'],
+                ['id'],
                 'fa-exchange',
                 [
                     [
@@ -205,7 +206,8 @@ MODELOS_DE_DATOS = (
             [
                 "Transferir",
                 'generar_transferencia',
-                ['1','2','id'],
+                #['1','2','id'],
+                ['id'],
                 'fa-exchange',
                 [
                     [
