@@ -26,7 +26,7 @@ $(document).ready(function() {
                     }
                 }
             },
-            latitud: {
+            /*latitud: {
                 validators: {
                     notEmpty: {
                         message: 'La latitud del escenario no puede ser vacía'
@@ -58,7 +58,7 @@ $(document).ready(function() {
                         message: 'Por favor ingrese valores mayores o iguales a 0'
                     }
                 }
-            },
+            },*/
             comuna: {
                 validators: {
                     notEmpty: {

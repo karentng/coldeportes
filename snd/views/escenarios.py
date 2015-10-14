@@ -739,7 +739,7 @@ def eliminar_contacto(request, escenario_id, contacto_id):
 def georreferenciacion_escenario(request):
     import json
     tipoTenant = request.tenant.obtenerTenant()
-    escenarios = tipoTenant.atributosDeSusEscenarios()
+    escenarios = tipoTenant.atributos_escenarios()
     posicionInicial = tipoTenant.posicionInicialMapa()
     
     return render(request, 'escenarios/georreferenciacion.html', {
