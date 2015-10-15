@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
-from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
+from snd.models import InformacionAdicional,HistorialLesiones,HistorialDoping,Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
 from snd.formularios.deportistas import  DeportistaForm
 from .models import Transferencia
 import datetime
@@ -279,6 +279,21 @@ def guardar_objeto(objeto,adicionales,tipo):
                     categoria=ad.categoria,
                     defaults=diccionario
                 )
+            elif type(ad) is InformacionAdicional:
+                InformacionAdicional.objects.update_or_create(
+                    deportista=deportista,
+                    defaults=diccionario
+                )
+            elif type(ad) is HistorialLesiones:
+                HistorialLesiones.objects.update_or_create(
+                    deportista=deportista,
+                    defaults=diccionario
+                )
+            elif type(ad) is HistorialDoping:
+                HistorialDoping.objects.update_or_create(
+                    deportista=deportista,
+                    defaults=diccionario
+                )
             elif type(ad) is InformacionAcademica:
                 InformacionAcademica.objects.update_or_create(
                     deportista=deportista,
@@ -323,6 +338,9 @@ def obtener_objeto(id_obj,tipo_objeto):
         adicionales += ComposicionCorporal.objects.filter(deportista=objeto)
         adicionales += HistorialDeportivo.objects.filter(deportista=objeto)
         adicionales += InformacionAcademica.objects.filter(deportista=objeto)
+        adicionales += InformacionAdicional.objects.filter(deportista=objeto)
+        adicionales += HistorialLesiones.objects.filter(deportista=objeto)
+        adicionales += HistorialDoping.objects.filter(deportista=objeto)
 
     return objeto,adicionales
 
