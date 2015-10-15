@@ -100,6 +100,7 @@ class CaracterizacionEscenario(models.Model):
     espectadores_habituales = models.PositiveIntegerField(verbose_name='cantidad de espectadores habituales')
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
+    ligas = models.ManyToManyField(Liga)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
 class HorarioDisponibilidad(models.Model):

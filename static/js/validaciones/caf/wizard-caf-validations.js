@@ -65,7 +65,7 @@ fields = {
             }
         }
     },
-    latitud: {
+    /*latitud: {
         validators: {
             notEmpty: {
                 message: 'La latitud no puede ser vacía'
@@ -97,7 +97,7 @@ fields = {
                 message: 'Por favor ingrese valores mayores o iguales a 0'
             }
         }
-    },
+    },*/
     web: {
         validators: {
             uri: {
