@@ -376,6 +376,7 @@ def cancelar_transferencia(request,id_objeto):
         trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
         if len(trans) != 0:
             trans.delete()
+            connection.set_tenant(entidad_solicitante)
             obj_trans.estado = 0
             obj_trans.save()
             messages.success(request,'Tranferencia cancelada exitosamente')
