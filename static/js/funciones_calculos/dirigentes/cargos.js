@@ -5,7 +5,7 @@ $('#id_superior').change(function(){
         url : '/dirigentes/cargos',
         type: 'GET',
         dataType: 'json',
-        data: {'id_dirigente': id},
+        data: {'dirigente_id': id},
         success: function(data){
             var select = clear_superior_cargo();
             var cargos = data['cargos'];

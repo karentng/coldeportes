@@ -284,7 +284,7 @@ MODELOS_DE_DATOS = (
             ],
             [
                 "Editar",
-                'dirigentes_wizard_identificacion',
+                'dirigentes_edicion',
                 ['id'],
                 'fa-gear',
                 None
@@ -321,7 +321,7 @@ MODELOS_DE_DATOS = (
             ],
             [
                 "Editar",
-                'dirigentes_wizard_identificacion',
+                'dirigentes_edicion',
                 ['id'],
                 'fa-gear',
                 None
