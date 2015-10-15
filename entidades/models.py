@@ -43,6 +43,8 @@ class CategoriaDisciplinaDeportiva(models.Model):
     def __str__(self):
         return self.nombre
 
+
+
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico")
     escenarios = models.BooleanField(verbose_name="Escenarios")
@@ -52,6 +54,7 @@ class Actores(models.Model):
     cajas = models.BooleanField(verbose_name="Cajas de Compensación")
     selecciones = models.BooleanField(verbose_name="Selecciones")
     centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos")
+    normas = models.BooleanField(verbose_name="Normograma")
 
     def resumen(self):
         actores = []

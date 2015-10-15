@@ -24,10 +24,10 @@ class Escenario(models.Model):
         ('ZU','Zona Urbana'),
     )
     nombre =  models.CharField(max_length=100,unique=True)
-    direccion = models.CharField(max_length=100)
-    latitud = models.FloatField()
-    longitud = models.FloatField()
-    altura = models.PositiveIntegerField()
+    direccion = models.CharField(max_length=100, verbose_name='dirección')
+    latitud = models.FloatField(null=True, blank=True)
+    longitud = models.FloatField(null=True, blank=True)
+    altura = models.PositiveIntegerField(null=True, blank=True)
     nombre_administrador = models.CharField(max_length=50, null=True)
     comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)
@@ -100,14 +100,15 @@ class CaracterizacionEscenario(models.Model):
     espectadores_habituales = models.PositiveIntegerField(verbose_name='cantidad de espectadores habituales')
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
+    ligas = models.ManyToManyField(Liga)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
 
 class HorarioDisponibilidad(models.Model):
     escenario = models.ForeignKey(Escenario)
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
-    dias = models.ManyToManyField(Dias)
-    descripcion = models.CharField(max_length=1024)
+    dias = models.ManyToManyField(Dias, verbose_name='días')
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción')
 
 def ruta_fotos_escenarios(instance, filename):
     return "snd/fotos/escenarios/%s"%(filename.encode('ascii','ignore').decode('ascii'))
@@ -116,7 +117,7 @@ class Foto(models.Model):
     escenario = models.ForeignKey(Escenario)
     titulo = models.CharField(max_length=255, verbose_name="título")
     foto = models.ImageField(upload_to=ruta_fotos_escenarios, null=True, blank=True)
-    descripcion = models.TextField(blank=True, null=True, max_length=1024)
+    descripcion = models.TextField(blank=True, null=True, max_length=1024, verbose_name='descripción')
 
 
 class Video(models.Model):
@@ -151,6 +152,6 @@ class DatoHistorico(models.Model):
 class Contacto(models.Model):
     escenario = models.ForeignKey(Escenario)
     nombre =  models.CharField(max_length=50)
-    telefono = models.CharField(max_length=20)
+    telefono = models.CharField(max_length=20, verbose_name='teléfono')
     email = models.EmailField()
-    descripcion = models.CharField(max_length=1024, null=True)
+    descripcion = models.CharField(max_length=1024, null=True, verbose_name='descripción')

@@ -25,11 +25,11 @@ class CajaCompensacion(models.Model):
 
     nombre =  models.CharField(max_length=100)    
     nombre_contacto =  models.CharField(max_length=50)
-    clasificacion = models.CharField(choices=clases, max_length=1)
-    region = models.CharField(choices=tipo_region, max_length=1)
-    tipo_institucion = models.CharField(choices=tipo_instituciones, max_length=2)
-    telefono_contacto = models.CharField(max_length=20)
-    publico = models.CharField(choices=tipo_publicos, max_length=1)
+    clasificacion = models.CharField(choices=clases, max_length=1, verbose_name='clasificación')
+    region = models.CharField(choices=tipo_region, max_length=1, verbose_name='región')
+    tipo_institucion = models.CharField(choices=tipo_instituciones, max_length=2, verbose_name='tipo de institución')
+    telefono_contacto = models.CharField(max_length=20, verbose_name='teléfono de contacto')
+    publico = models.CharField(choices=tipo_publicos, max_length=1, verbose_name='público')
     email = models.EmailField()
     ciudad = models.ForeignKey(Ciudad)
     infraestructura = models.CharField(choices=tipo_infraesctructura, max_length=1)
@@ -54,7 +54,7 @@ class HorarioDisponibilidadCajas(models.Model):
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
     dias = models.ManyToManyField(Dias)
-    descripcion = models.CharField(max_length=1024)
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción')
 
 class Tarifa(models.Model):
     caja_compensacion = models.ForeignKey(CajaCompensacion)

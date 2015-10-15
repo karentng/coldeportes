@@ -26,9 +26,9 @@ class CentroAcondicionamiento(models.Model):
     comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)
     estrato = models.IntegerField(choices=ESTRATOS)
-    latitud = models.FloatField()
-    longitud = models.FloatField()
-    altura = models.PositiveIntegerField()
+    latitud = models.FloatField(null=True, blank=True)
+    longitud = models.FloatField(null=True, blank=True)
+    altura = models.PositiveIntegerField(null=True, blank=True)
     
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Centro de Acondicionamiento Físico")
     # Pestañas adicionales

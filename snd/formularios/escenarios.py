@@ -46,6 +46,33 @@ class CaracterizacionForm(forms.ModelForm):
         self.fields['descripcion'].widget.attrs['rows'] = 3
     class Meta:
         model = CaracterizacionEscenario
+        exclude = ('escenario', 'ligas') 
+
+
+class CaracterizacionSecretariaForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    descripcion = forms.CharField(widget=forms.Textarea, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(CaracterizacionSecretariaForm, self).__init__(*args, **kwargs)
+        self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
+        self.fields['clase_acceso'] = adicionarClase(self.fields['clase_acceso'], 'one')
+        self.fields['estado_fisico'] = adicionarClase(self.fields['estado_fisico'], 'one')
+        self.fields['tipo_propietario'] = adicionarClase(self.fields['tipo_propietario'], 'one')
+        self.fields['tipo_escenario'].queryset = TipoEscenario.objects.all().order_by('descripcion')
+        self.fields['tipo_disciplinas'] = adicionarClase(self.fields['tipo_disciplinas'], 'many')
+        self.fields['tipo_disciplinas'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+        self.fields['tipo_superficie_juego'] = adicionarClase(self.fields['tipo_superficie_juego'], 'many')
+        self.fields['tipo_superficie_juego'].queryset = TipoSuperficie.objects.all().order_by('descripcion')
+        self.fields['caracteristicas'] = adicionarClase(self.fields['caracteristicas'], 'many')
+        self.fields['caracteristicas'].queryset = CaracteristicaEscenario.objects.all().order_by('descripcion')
+        self.fields['clase_uso'] = adicionarClase(self.fields['clase_uso'], 'many')
+        self.fields['ligas'] = adicionarClase(self.fields['ligas'], 'many')
+        self.fields['clase_uso'].queryset = TipoUsoEscenario.objects.all().order_by('descripcion')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+    class Meta:
+        model = CaracterizacionEscenario
         exclude = ('escenario',)        
         
 
