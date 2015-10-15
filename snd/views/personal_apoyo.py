@@ -249,6 +249,8 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
 
         if experiencia_laboral_form.is_valid():
             experiencia_laboral_nuevo = experiencia_laboral_form.save(commit=False)
+            if experiencia_laboral_nuevo.actual:
+                experiencia_laboral_nuevo.fecha_fin = None
             experiencia_laboral_nuevo.personal_apoyo = personal_apoyo
             experiencia_laboral_nuevo.nombre_cargo = experiencia_laboral_nuevo.nombre_cargo.upper()
             experiencia_laboral_nuevo.institucion = experiencia_laboral_nuevo.institucion.upper()
