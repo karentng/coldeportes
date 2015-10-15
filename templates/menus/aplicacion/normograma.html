@@ -1,0 +1,19 @@
+<li class="has-sub {% if '/normograma/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-gavel"></i>
+        <span class="colorMenu">Normograma</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.normograma.add_norma %}
+            {% if request.tenant.tipo == 5 %}
+                <li {% if "/normograma/registrar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'normograma_registrar' %}">Registro</a>
+                </li>
+            {% endif %}
+        {% endif %} 
+        <li {% if "/normograma/buscar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'normograma_buscar' %}">Buscar</a>
+        </li>
+    </ul>
+</li>

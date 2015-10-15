@@ -7,6 +7,7 @@ from coldeportes.utilities import superuser_only,calculate_age
 from snd.models import PersonalApoyo
 from snd.modelos.deportistas import Deportista
 from snd.modelos.escenarios import Escenario,CaracterizacionEscenario
+from normograma.models import Norma
 from transferencias.models import Transferencia
 from django.db import connection
 from django.contrib.contenttypes.models import ContentType
@@ -62,9 +63,9 @@ def inicio(request):
 
     entidades = Entidad.objects.all()
     if len(entidades) == 1:#sólo debería de existir la entidad pública
-        actores1 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False)
+        actores1 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False, normas=True)
         actores1.save()
-        actores2 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False)
+        actores2 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False, normas=True)
         actores2.save()
         ciudad = Ciudad.objects.get(id=109)#bogotá
         comiteOlimpico = Comite(tipo=6,tipo_comite=1,nombre="Comité Olímpico Colombiano",direccion="Av. 68 # 55-65",pagina_web="http://www.coc.org.co/",telefono="571 6300093",actores=actores1,ciudad=ciudad)
