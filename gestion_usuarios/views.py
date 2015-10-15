@@ -130,6 +130,9 @@ def inicio_tenant(request):
     ubicaciones += tipoTenant.atributos_escenarios()
     posicionInicial = tipoTenant.posicionInicialMapa()
 
+    connection.set_tenant(request.tenant)
+    ContentType.objects.clear_cache()
+
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
         'actoresAsociados': actoresAsociados,
