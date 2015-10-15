@@ -75,7 +75,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id','entidad.id'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ],
@@ -162,7 +162,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id','entidad.id'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ]
@@ -398,7 +398,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id','entidad.id'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ],
