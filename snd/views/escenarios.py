@@ -254,10 +254,16 @@ def wizard_caracterizacion(request, escenario_id):
     if non_permission:
         return non_permission
 
-    caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
+    if request.tenant.tipo == 5:
+        caracterizacion_form = CaracterizacionSecretariaForm(instance=caracteristicas)        
+    else:
+        caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
 
     if request.method == 'POST':
-        caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
+        if request.tenant.tipo == 5:
+            caracterizacion_form = CaracterizacionSecretariaForm(request.POST, instance=caracteristicas)
+        else:
+            caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
 
         if caracterizacion_form.is_valid():
             caracteristicas = caracterizacion_form.save(commit=False)
@@ -739,7 +745,7 @@ def eliminar_contacto(request, escenario_id, contacto_id):
 def georreferenciacion_escenario(request):
     import json
     tipoTenant = request.tenant.obtenerTenant()
-    escenarios = tipoTenant.atributosDeSusEscenarios()
+    escenarios = tipoTenant.atributos_escenarios()
     posicionInicial = tipoTenant.posicionInicialMapa()
     
     return render(request, 'escenarios/georreferenciacion.html', {

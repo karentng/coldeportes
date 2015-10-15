@@ -13,6 +13,8 @@ class UserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].required = True
+        self.fields['grupo'] = adicionarClase(self.fields['grupo'], 'one')
+
 
     class Meta:
         model = User

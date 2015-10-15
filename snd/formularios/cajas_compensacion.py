@@ -7,6 +7,8 @@ from datetimewidget.widgets import TimeWidget, DateWidget
 from coldeportes.utilities import *
 
 class CajaCompensacionForm(ModelForm):
+    required_css_class = 'required'
+
     descripcion = forms.CharField(widget=forms.Textarea, required=False)
     def __init__(self, *args, **kwargs):
         super(CajaCompensacionForm, self).__init__(*args, **kwargs)
@@ -26,6 +28,8 @@ class CajaCompensacionForm(ModelForm):
 
 
 class HorariosDisponibleCajasForm(ModelForm):
+    required_css_class = 'required'
+
     descripcion = forms.CharField(widget=forms.Textarea, required=True)
 
     def __init__(self, *args, **kwargs):
@@ -43,9 +47,12 @@ class HorariosDisponibleCajasForm(ModelForm):
         }
 
 class TarifaCajasForm(ModelForm):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(TarifaCajasForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
+        
     class Meta:
         model = Tarifa
         exclude = ('caja_compensacion',)

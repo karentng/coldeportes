@@ -19,12 +19,12 @@ def registrar(request):
 
     if request.method == 'POST':
 
-        norma_form = NormaForm(request.POST)
+        norma_form = NormaForm(request.POST, request.FILES)
 
         if norma_form.is_valid():
             norma_form.save()
             
-            return redirect('listar_escenarios')
+            return redirect('normograma_buscar')
 
 
     return render(request, 'normograma_registrar.html', {
@@ -44,8 +44,7 @@ def buscar(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
-      
-
+    
     #inicializado formulario de búsqueda
     form = NormogramaBusquedaForm()
 
@@ -64,7 +63,8 @@ def buscar(request):
             texto = request.POST.get('texto_a_buscar') or ''
 
             normas = Norma.objects.filter(contenido_busqueda__icontains=texto)
-
+            #Buscar por sectores
+            #Buscar por jurisdicción
                               
         listado_resultados.append(normas)
         cantidad_resultados = len(listado_resultados[0])

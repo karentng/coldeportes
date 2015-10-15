@@ -25,9 +25,10 @@ class NormaForm(forms.ModelForm):
 
 class NormogramaBusquedaForm(forms.Form):
     JURISDICCIONES = (('D', 'Departamental'), ('M', 'Municipal'), ('N', 'Nacional'))
+    SECTORES = (('E', 'Educación Física'), ('D', 'Deporte'), ('R', 'Recreación'))
 
     texto_a_buscar = forms.CharField(required=False, label="Título de Norma / Palabras Clave / Año", widget=forms.TextInput(attrs={'placeholder': 'Ingrese nombre de norma, año y/o palabras claves'}))
-    sector = forms.MultipleChoiceField(label="Sector", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}))
+    sector = forms.MultipleChoiceField(label="Sector", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=SECTORES)
     jurisdiccion = forms.MultipleChoiceField(label="Jurisdicción", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Jurisdicción'}), choices=JURISDICCIONES)
     #anio = forms.MultipleChoiceField(label="Año", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Año'}), choices=ANIOS)
 

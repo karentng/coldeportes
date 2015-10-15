@@ -1,7 +1,7 @@
 #encoding:utf-8
 from django.db import models
-from django.db import models
-
+from django.conf import settings
+import os
 
 
 class TipoSector(models.Model):
@@ -15,7 +15,7 @@ class TipoSector(models.Model):
 def foto_name(instance, filename):
     #el nombre de la imagen es el id de la norma junto con el año de la misma
     #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
-    ruta = 'normas/' + instance.id +"_"+ instance.anio 
+    ruta = 'normas/' + instance.norma +"_"+ str(instance.anio) 
     ruta_delete = settings.MEDIA_ROOT + "/" + ruta
     if(os.path.exists(ruta_delete)):
         os.remove(ruta_delete)
@@ -32,11 +32,22 @@ class Norma(models.Model):
     anio = models.IntegerField(default=2015, verbose_name="año", choices=ANIOS)
     sectores = models.ManyToManyField(TipoSector)
     jurisdiccion = models.CharField(max_length=2,verbose_name="jurisdicción", choices=JURISDICCIONES)
-    archivo = models.FileField(upload_to=foto_name, verbose_name="subir archivo")
+    archivo = models.FileField(upload_to=foto_name, verbose_name="subir archivo", null=True, blank=True)
     descripcion = models.TextField(max_length=1024, verbose_name='descripción')
     contenido_busqueda = models.TextField(editable=False)
 
     def save(self, *args, **kwargs):
         self.contenido_busqueda = self.norma+" "+self.palabras_clave+" "+str(self.anio)
         super(Norma,self).save(*args, **kwargs)
+
+
+    def obtenerAtributos(self):
+        atributos = [
+            ["Título", self.norma],
+            ["Año", self.anio],
+            ["Jurisdicción", self.jurisdiccion],
+            ["Archivo", self.archivo],
+        ]
+
+        return [self.norma, atributos, None, None, "Normas!"]
 

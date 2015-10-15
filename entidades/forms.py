@@ -224,17 +224,17 @@ class ActoresForm(forms.ModelForm):
         super(ActoresForm, self).__init__(*args, **kwargs)
         if tipo == '1':
             #Liga
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos', 'normas'])
         elif tipo == '2':
             #Federacion
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
         elif tipo == '3':
             #Club
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
         elif tipo == '4':
             #CajaDeCompensacion
             self.fields['cajas'].widget = forms.HiddenInput()
-            self.quitar_campos(['centros','deportistas','dirigentes','selecciones','centros_biomedicos'])
+            self.quitar_campos(['centros','deportistas','dirigentes','selecciones','centros_biomedicos','normas'])
         elif tipo == '5':
             #Ente
             self.quitar_campos(['cajas','selecciones'])
@@ -242,19 +242,19 @@ class ActoresForm(forms.ModelForm):
                 self.quitar_campos(['centros_biomedicos'])
         elif tipo == '6':
             #Comite
-            self.quitar_campos(['cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['cajas','selecciones','centros_biomedicos','normas'])
         elif tipo =='7':
             #FederacionParalimpica
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
         elif tipo =='8':
             #LigaParalimpica
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
         elif tipo =='9':
             #clubParalimpico
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
         elif tipo == '10':
             #caf
-            self.quitar_campos(['centros', 'escenarios', 'deportistas', 'dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos'])
+            self.quitar_campos(['centros', 'escenarios', 'deportistas', 'dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
 
     def quitar_campos(self,campos):
         for campo in campos:
