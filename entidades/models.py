@@ -542,10 +542,6 @@ class Liga(ResolucionReconocimiento):
 
         return dirigentes
 
-    def historiales_para_avalar(self,tipo):
-        from snd.models import HistorialDeportivo
-        return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
-
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
@@ -566,6 +562,10 @@ class Club(ResolucionReconocimiento):
     )
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
+
+    def historiales_para_avalar(self,tipo):
+        from snd.models import HistorialDeportivo
+        return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
     def save(self, *args, **kwargs):
         actores = self.actores
