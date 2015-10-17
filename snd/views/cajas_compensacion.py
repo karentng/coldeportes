@@ -177,6 +177,7 @@ def wizard_editar_caja(request, caja_id):
         'titulo': 'Identificación de la Caja de Compensación',
         'wizard_stage': 1,
         'form': caja_form,
+        'ccf_id': caja_id
     })
 
 
