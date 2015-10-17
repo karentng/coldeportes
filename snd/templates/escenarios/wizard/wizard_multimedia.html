@@ -62,8 +62,8 @@
                             <td align="center">{{foto.titulo}}</td>
                             <td align="center">{{foto.descripcion}}</td>
                             <td align="center">
-                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
-                                <div class="modal fade" id="modal-desactivate">
+                                <a href="#modal-desactivate{{foto.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate{{foto.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -106,8 +106,8 @@
                             <td align="center">{% if video.descripcion %}{{video.descripcion}}{% endif %}</td>
                             <td align="center" class="col-md-3"><iframe width="150" height="75" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
                             <td align="center">
-                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
-                                <div class="modal fade" id="modal-desactivate">
+                                <a href="#modal-desactivate{{video.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate{{video.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
