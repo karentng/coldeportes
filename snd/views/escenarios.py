@@ -550,7 +550,7 @@ def wizard_mantenimiento(request, escenario_id):
 
 
     return render(request, 'escenarios/wizard/wizard_mantenimiento.html', {
-        'titulo': 'Fotos del Escenario',
+        'titulo': 'Mantenimiento del Escenario',
         'wizard_stage': 6,
         'form': mantenimiento_form,
         'escenario_id': escenario_id
