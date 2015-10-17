@@ -130,6 +130,7 @@ def ver_escenario(request, escenario_id, id_entidad):
         'fotos': fotos,
         'videos': videos,
         'mantenimientos': mantenimientos,
+        'escenario_id': escenario_id,
         'contactos': contactos
     })
 
@@ -222,6 +223,7 @@ def wizard_identificacion(request, escenario_id):
         'titulo_panel': 'Edición de Escenarios Deportivos',
         'wizard_stage': 1,
         'form': identificacion_form,
+        'escenario_id': escenario_id,
     })
 
 @login_required
@@ -272,7 +274,7 @@ def wizard_caracterizacion(request, escenario_id):
             caracterizacion_form.save()
             return redirect('wizard_horarios', escenario_id)
 
-
+    
     return render(request, 'escenarios/wizard/wizard_caracteristicas.html', {
         'titulo': 'Caracterización del Escenario',
         'wizard_stage': 2,
@@ -329,7 +331,7 @@ def wizard_horarios(request, escenario_id):
         'wizard_stage': 3,
         'form': horarios_form,
         'horarios': horarios,
-        'escenario_id': escenario_id
+        'escenario_id': escenario_id,
     })
 
 @login_required
@@ -380,7 +382,7 @@ def wizard_historicos(request, escenario_id):
         'wizard_stage': 4,
         'form': historico_form,
         'historicos': historicos,
-        'escenario_id': escenario_id
+        'escenario_id': escenario_id,
     })
 
 
@@ -442,7 +444,7 @@ def wizard_fotos(request, escenario_id):
         'form_videos': videos_form,
         'fotos': fotos,
         'videos': videos,
-        'escenario_id': escenario_id
+        'escenario_id': escenario_id,
     })
 
     
@@ -509,7 +511,7 @@ def wizard_videos(request, escenario_id):
         'form_videos': videos_form,
         'fotos': fotos,
         'videos': videos,
-        'escenario_id': escenario_id
+        'escenario_id': escenario_id,
     })
 
 @login_required
@@ -536,10 +538,16 @@ def wizard_mantenimiento(request, escenario_id):
     if non_permission:
         return non_permission
 
-    mantenimiento_form = MantenimientoEscenarioForm()
+
+    try:
+        mantenimiento = Mantenimiento.objects.get(escenario=escenario_id)
+    except Exception:
+        mantenimiento = None
+
+    mantenimiento_form = MantenimientoEscenarioForm(instance=mantenimiento)
 
     if request.method == 'POST':
-        mantenimiento_form = MantenimientoEscenarioForm(request.POST)
+        mantenimiento_form = MantenimientoEscenarioForm(request.POST, instance=mantenimiento)
 
         if mantenimiento_form.is_valid():
             ultimo_mantenimiento = mantenimiento_form.save(commit=False) 
@@ -553,7 +561,7 @@ def wizard_mantenimiento(request, escenario_id):
         'titulo': 'Mantenimiento del Escenario',
         'wizard_stage': 6,
         'form': mantenimiento_form,
-        'escenario_id': escenario_id
+        'escenario_id': escenario_id,
     })
 
 
@@ -605,7 +613,7 @@ def wizard_contactos(request, escenario_id):
         'wizard_stage': 7,
         'form': contactos_form,
         'contactos': contactos,
-        'escenario_id': escenario_id
+        'escenario_id': escenario_id,
     })
 
 
