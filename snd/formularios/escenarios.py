@@ -79,8 +79,6 @@ class CaracterizacionSecretariaForm(forms.ModelForm):
 class HorariosDisponibleForm(ModelForm):
     required_css_class = 'required'
 
-    descripcion = forms.CharField(widget=forms.Textarea, required=True)
-
     def __init__(self, *args, **kwargs):
         super(HorariosDisponibleForm, self).__init__(*args, **kwargs)
         self.fields['dias'] = adicionarClase(self.fields['dias'], 'many')
@@ -97,8 +95,6 @@ class HorariosDisponibleForm(ModelForm):
 
 class DatoHistoricoForm(ModelForm):
     required_css_class = 'required'
-
-    descripcion = forms.CharField(widget=forms.Textarea, required=True)
     
     def __init__(self, *args, **kwargs):
         super(DatoHistoricoForm, self).__init__(*args, **kwargs)
@@ -150,8 +146,6 @@ class VideoEscenarioForm(ModelForm):
 
 class ContactoForm(ModelForm):
     required_css_class = 'required'
-    
-    descripcion = forms.CharField(widget=forms.Textarea, required=True)
 
     def __init__(self, *args, **kwargs):
         super(ContactoForm, self).__init__(*args, **kwargs)

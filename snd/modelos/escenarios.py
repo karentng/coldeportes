@@ -108,7 +108,7 @@ class HorarioDisponibilidad(models.Model):
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
     dias = models.ManyToManyField(Dias, verbose_name='días')
-    descripcion = models.CharField(max_length=1024, verbose_name='descripción')
+    descripcion = models.TextField(max_length=1024, verbose_name='descripción')
 
 def ruta_fotos_escenarios(instance, filename):
     return "snd/fotos/escenarios/%s"%(filename.encode('ascii','ignore').decode('ascii'))
@@ -123,7 +123,7 @@ class Foto(models.Model):
 class Video(models.Model):
     escenario = models.ForeignKey(Escenario)
     url = models.CharField(max_length=1024, verbose_name='url', null=True)
-    descripcion = models.CharField(max_length=1024, null=True)
+    descripcion = models.CharField(max_length=1024, null=True, verbose_name="descripción")
 
 class Mantenimiento(models.Model):
 
@@ -147,11 +147,11 @@ class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField()
     duracion = models.PositiveIntegerField(verbose_name="duración en días")
-    descripcion = models.CharField(max_length=1024)
+    descripcion = models.TextField(max_length=1024, verbose_name="descripción")
 
 class Contacto(models.Model):
     escenario = models.ForeignKey(Escenario)
     nombre =  models.CharField(max_length=50)
     telefono = models.CharField(max_length=20, verbose_name='teléfono')
     email = models.EmailField()
-    descripcion = models.CharField(max_length=1024, null=True, verbose_name='descripción')
+    descripcion = models.TextField(max_length=1024, null=True, verbose_name='descripción')
