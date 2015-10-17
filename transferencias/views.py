@@ -222,11 +222,11 @@ def finalizar_transferencia(request,entidad_saliente,objeto,transferencia):
     depor.estado = 3
     depor.entidad = request.tenant
     depor.save()
-    depor.tipo_objeto = depor.__class__.__name__
+    depor.tipo_objeto = "Deportista"
     depor.fecha = datetime.date.today()
 
     return render(request,'transferencia_exitosa.html',{
-        'objeto': depor
+        'objeto': objeto
     })
 
 def guardar_objeto(objeto,adicionales,tipo):
