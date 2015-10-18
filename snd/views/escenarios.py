@@ -369,6 +369,7 @@ def wizard_historicos(request, escenario_id):
 
     if request.method == 'POST':
         historico_form = DatoHistoricoForm(request.POST)
+        print('algoooooooooo')  
 
         if historico_form.is_valid():
             historico_nuevo = historico_form.save(commit=False)

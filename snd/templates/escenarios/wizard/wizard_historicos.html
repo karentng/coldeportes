@@ -58,7 +58,7 @@
                     <thead>
                         <tr>
                             <th align="center">Fecha Inicio</th>
-                            <th align="center">Duración días</th>
+                            <th align="center">Fecha Fin</th>
                             <th align="center">Descripción</th>
                         </tr>
                     </thead>
@@ -66,7 +66,7 @@
                     {% for historico in historicos %}
                         <tr>
                             <td align="center">{{historico.fecha_inicio}}</td>
-                            <td align="center">{{historico.duracion}}</td>
+                            <td align="center">{% if historico.fecha_fin %}{{historico.fecha_fin}}{% endif %}</td>
                             <td align="center">{{historico.descripcion}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate{{historico.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>

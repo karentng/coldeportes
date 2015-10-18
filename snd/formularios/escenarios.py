@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 from django import forms
+import datetime
 from django.forms import ModelForm
 from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
@@ -96,6 +97,7 @@ class HorariosDisponibleForm(ModelForm):
 class DatoHistoricoForm(ModelForm):
     required_css_class = 'required'
     
+    fecha_fin = forms.DateField(widget=MyDateWidget(), required=False)
     def __init__(self, *args, **kwargs):
         super(DatoHistoricoForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
@@ -107,6 +109,36 @@ class DatoHistoricoForm(ModelForm):
             'fecha_inicio': MyDateWidget(),
             'fecha_fin': MyDateWidget(),
         }
+        
+    def clean(self):
+        cleaned_data = super(DatoHistoricoForm, self).clean()
+
+        if not self._errors:
+            try:
+                fecha_inicio = cleaned_data.get('fecha_inicio')
+            except Exception:
+                fecha_inicio = None
+
+            try:
+                fecha_fin = cleaned_data.get('fecha_fin')
+            except Exception:
+                fecha_fin = None
+
+           
+            #Fecha de inicio no sea mayor a la fecha actual
+            if fecha_inicio>datetime.date.today():                
+                msg = 'Usted ha seleccionado una fecha de inicio mayor que la fecha actual'
+                self.add_error('fecha_inicio',msg)                
+            
+            #Fecha de inicio no sea mayor que fecha fin
+            if fecha_fin:
+                if fecha_fin<fecha_inicio:
+                    
+                    msg = 'Usted ha seleccionado una fecha de menor que la fecha de inicio'
+                    self.add_error('fecha_fin',msg)
+                
+            
+        return cleaned_data
         
 
 class FotoEscenarioForm(ModelForm):

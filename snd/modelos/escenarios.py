@@ -146,7 +146,7 @@ class Mantenimiento(models.Model):
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField()
-    duracion = models.PositiveIntegerField(verbose_name="duración en días")
+    fecha_fin = models.DateField(null=True, blank=True)
     descripcion = models.TextField(max_length=1024, verbose_name="descripción")
 
 class Contacto(models.Model):

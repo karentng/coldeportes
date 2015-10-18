@@ -15,14 +15,7 @@ $(document).ready(function() {
                         message: 'La fecha de inicio no puede ser vacío'
                     }
                 }
-            },
-            fecha_fin: {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha final no puede ser vacía'
-                    }
-                }
-            },
+            }
             descripcion: {
                 validators: {
                     notEmpty: {
@@ -48,7 +41,5 @@ $(document).ready(function() {
     $("#id_fecha_inicio").on('change',function(e){
         $("#form-wizard-historicos").bootstrapValidator('revalidateField', 'fecha_inicio');
     });
-    $("#id_fecha_fin").on('change',function(e){
-        $("#form-wizard-historicos").bootstrapValidator('revalidateField', 'fecha_fin');
-    });
+    
 });
