@@ -79,6 +79,9 @@ class CaracterizacionSecretariaForm(forms.ModelForm):
 class HorariosDisponibleForm(ModelForm):
     required_css_class = 'required'
 
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
+
     def __init__(self, *args, **kwargs):
         super(HorariosDisponibleForm, self).__init__(*args, **kwargs)
         self.fields['dias'] = adicionarClase(self.fields['dias'], 'many')
@@ -88,10 +91,7 @@ class HorariosDisponibleForm(ModelForm):
 
         model = HorarioDisponibilidad
         exclude = ('escenario',)
-        widgets = {
-            'hora_inicio': TimeWidget(attrs={'id':"id_hora_inicio"}, usel10n = True, bootstrap_version=3),
-            'hora_fin': TimeWidget(attrs={'id':"id_hora_fin"}, usel10n = True, bootstrap_version=3)
-        }
+        
 
 class DatoHistoricoForm(ModelForm):
     required_css_class = 'required'
