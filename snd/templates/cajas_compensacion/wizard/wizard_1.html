@@ -15,7 +15,11 @@
 {% block miga_pan %}
 	<li><a href="{% url 'inicio' %}">Inicio</a></li>
 	<li><a href="{% url 'listar_ccfs' %}">Escenarios CCF</a>
+	{% if ccf_id %}
 	<li class="active">Editar</li>
+	{% else %}
+	<li class="active">Registrar</li>
+	{% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}

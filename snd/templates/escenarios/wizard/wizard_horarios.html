@@ -15,7 +15,11 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+    {% if escenario_id %}
     <li class="active">Editar</li>
+    {% else %}
+    <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -68,8 +72,8 @@
                             <td align="center">{% for dia in horario.dias.all %}{{dia.nombre}} {% endfor %}</td>
                             <td align="center">{{horario.descripcion}}</td>
                             <td align="center">
-                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
-                                <div class="modal fade" id="modal-desactivate">
+                                <a href="#modal-desactivate{{horario.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate{{horario.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

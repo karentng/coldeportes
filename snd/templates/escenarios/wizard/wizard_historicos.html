@@ -15,7 +15,11 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'listar_escenarios' %}">Escenarios</a>
+    {% if escenario_id %}
     <li class="active">Editar</li>
+    {% else %}
+    <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -54,7 +58,7 @@
                     <thead>
                         <tr>
                             <th align="center">Fecha Inicio</th>
-                            <th align="center">Duración</th>
+                            <th align="center">Fecha Fin</th>
                             <th align="center">Descripción</th>
                         </tr>
                     </thead>
@@ -62,11 +66,11 @@
                     {% for historico in historicos %}
                         <tr>
                             <td align="center">{{historico.fecha_inicio}}</td>
-                            <td align="center">{{historico.fecha_fin}}</td>
+                            <td align="center">{% if historico.fecha_fin %}{{historico.fecha_fin}}{% endif %}</td>
                             <td align="center">{{historico.descripcion}}</td>
                             <td align="center">
-                                <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
-                                <div class="modal fade" id="modal-desactivate">
+                                <a href="#modal-desactivate{{historico.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate{{historico.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

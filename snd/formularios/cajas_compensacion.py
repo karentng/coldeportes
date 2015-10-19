@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
-from datetimewidget.widgets import TimeWidget, DateWidget
+from datetimewidget.widgets import TimeWidget, DateWidget, DateTimeWidget
 from coldeportes.utilities import *
 
 class CajaCompensacionForm(ModelForm):
@@ -30,6 +30,8 @@ class CajaCompensacionForm(ModelForm):
 class HorariosDisponibleCajasForm(ModelForm):
     required_css_class = 'required'
 
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
     descripcion = forms.CharField(widget=forms.Textarea, required=True)
 
     def __init__(self, *args, **kwargs):
@@ -41,10 +43,7 @@ class HorariosDisponibleCajasForm(ModelForm):
 
         model = HorarioDisponibilidadCajas
         exclude = ('caja_compensacion',)
-        widgets = {
-            'hora_inicio': TimeWidget(attrs={'id':"id_hora_inicio"}, usel10n = True, bootstrap_version=3),
-            'hora_fin': TimeWidget(attrs={'id':"id_hora_fin"}, usel10n = True, bootstrap_version=3)
-        }
+        
 
 class TarifaCajasForm(ModelForm):
     required_css_class = 'required'
