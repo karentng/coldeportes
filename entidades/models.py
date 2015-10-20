@@ -212,24 +212,24 @@ class Entidad(TenantMixin): # Entidad deportiva
     def cantidadActoresAsociados(self):
         atributosActores = self.atributosDeSusActores()
 
-        def definirElementosDashBoard(datos, identificador, nombre, color, url):
+        def definirElementosDashBoard(datos, identificador, nombre, color, url,icono):
             try:
                 cantidad = len(atributosActores[identificador])
-                datos += [[nombre, color, cantidad, url]]
+                datos += [[nombre, color, cantidad, url,icono]]
             except KeyError:
                 pass
             return datos
         
         datos = []
         
-        definirElementosDashBoard(datos, "ligas", "Ligas", "black", "inicio_tenant")
-        definirElementosDashBoard(datos, "clubes", "Clubes", "black", "inicio_tenant")
-        definirElementosDashBoard(datos, "caf", "CAFs", "red", "listar_cafs")
-        definirElementosDashBoard(datos, "escenarios", "Escenarios", "blue", "listar_escenarios")
-        definirElementosDashBoard(datos, "deportistas", "Deportistas", "orange", "deportista_listar")
-        definirElementosDashBoard(datos, "personales", "Personales de Apoyo", "green", "personal_apoyo_listar")
-        definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar")
-        definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs")
+        definirElementosDashBoard(datos, "ligas", "Ligas", "black", "inicio_tenant","fa-building-o")
+        definirElementosDashBoard(datos, "clubes", "Clubes", "black", "inicio_tenant","fa-building-o")
+        definirElementosDashBoard(datos, "caf", "CAFs", "red", "listar_cafs","fa-bicycle")
+        definirElementosDashBoard(datos, "escenarios", "Escenarios", "blue", "listar_escenarios","ion-ios-americanfootball")
+        definirElementosDashBoard(datos, "deportistas", "Deportistas", "orange", "deportista_listar","ion-ribbon-a")
+        definirElementosDashBoard(datos, "personales", "Personales de Apoyo", "green", "personal_apoyo_listar","ion-ios-baseball")
+        definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar","fa-futbol-o")
+        definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs","fa-building-o")
 
         return datos
 
