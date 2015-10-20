@@ -2,7 +2,7 @@
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="ion-trophy fa-2x"></i>
-        <span span class="colorMenu">Selecciones</span>
+        <span span class="colorMenu">SELECCIONES</span>
     </a>
     <ul class="sub-menu">
     {% if perms.snd.add_seleccion %}
@@ -11,7 +11,7 @@
         </li>
     {% endif %}
         <li {% if "/selecciones/listar" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'listar_seleccion' %}">Listar Selecciones</a>
+            <a href="{% url 'listar_seleccion' %}">Listar selecciones</a>
         </li>
     </ul>
 </li>

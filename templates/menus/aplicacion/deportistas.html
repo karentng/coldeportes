@@ -1,7 +1,6 @@
 <li class="has-sub {% if '/deportistas/' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        <i class="ion-ribbon-a fa-2x"></i>
         <span span class="colorMenu">Deportistas</span>
     </a>
     <ul class="sub-menu">
@@ -13,11 +12,11 @@
             {% endif %}
         {% endif %}
         <li {% if "/deportistas/listar" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'deportista_listar' %}">Listar Deportistas</a>
+            <a href="{% url 'deportista_listar' %}">Listar deportistas</a>
         </li>
         {%if request.tenant.avalable %}
             <li {% if "/deportistas/avalar-record" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'avalar_logros_deportivos' %}">Avalar Historial Deportivo</a>
+                <a href="{% url 'avalar_logros_deportivos' %}">Avalar historial deportivo</a>
             </li>
         {% endif %}
     </ul>
