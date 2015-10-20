@@ -75,7 +75,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id','entidad.id'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ],
@@ -162,7 +162,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id','entidad.id'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ]
@@ -171,7 +171,7 @@ MODELOS_DE_DATOS = (
     (   #Numero de modelo 4
         PersonalApoyo,
         ['foto','nombres apellidos', 'actividad', 'identificacion', 'estado'],
-        ['foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
+        ['Foto','Nombre', 'Actividad desempeñada', 'Identificación', 'Estado'],
         None,
         [
             [
@@ -200,36 +200,7 @@ MODELOS_DE_DATOS = (
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
-
-            ],
-            [
-                "Transferir",
-                'generar_transferencia',
-                ['id'],
-                'fa-exchange',
-                [
-                    [
-                        ['estado'],
-                        ['ACTIVO'],
-                        lambda x, y: operator.eq(x[0], y[0])
-                    ]
-                ]
-
-            ],
-            [
-                "Cancelar Transferencia",
-                'cancelar_transferencia',
-                ['id'],
-                'fa-times',
-                [
-                    [
-                        ['estado'],
-                        ['EN TRANSFERENCIA'],
-                        lambda x, y: operator.eq(x[0], y[0])
-                    ]
-                ]
-
-            ],
+            ]
         ],
     ),
     #MODELO DE DATOS PARA PERSONAL DE APOYO PARA FEDERACIONES Y LIGAS
@@ -284,7 +255,7 @@ MODELOS_DE_DATOS = (
             ],
             [
                 "Editar",
-                'dirigentes_wizard_identificacion',
+                'dirigentes_edicion',
                 ['id'],
                 'fa-gear',
                 None
@@ -321,7 +292,7 @@ MODELOS_DE_DATOS = (
             ],
             [
                 "Editar",
-                'dirigentes_wizard_identificacion',
+                'dirigentes_edicion',
                 ['id'],
                 'fa-gear',
                 None
@@ -427,7 +398,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver Deportista",
                 'ver_deportista',
-                ['id','entidad.id'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ],

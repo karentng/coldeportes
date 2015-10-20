@@ -1,9 +1,9 @@
 <li class="has-sub {% if '/directorio/' in request.path %} active {% endif %}">
-    <a href="{% url 'directorio_buscar' %}"><i class="fa fa-phone-square"></i> <span class="colorMenu">Directorio de Contactos</span></a>
+    <a href="{% url 'directorio_buscar' %}"><span class="colorMenu">Directorio de contactos</span></a>
 </li>
 {% comment %}
 <li class="has-sub {% if '/directorio-publico/' in request.path %} active {% endif %}">
-    <a href="{% url 'directorio_publico_buscar' %}"><i class="fa fa-phone"></i> <span class="colorMenu">Directorio Público </span></a>
+    <a href="{% url 'directorio_publico_buscar' %}"><span class="colorMenu">Directorio público </span></a>
 </li>
 {% endcomment %}
 

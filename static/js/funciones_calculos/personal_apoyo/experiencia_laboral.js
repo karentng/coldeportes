@@ -5,7 +5,6 @@ $(document).ready(function() {
     $('#id_fecha_fin').prop('required',true);
     $("#id_actual").change(function(){
        if($(this).is(":checked")){
-           $("#id_fecha_fin").val("");
            $("#id_fecha_fin").parent().css('display','none');
            $('#id_fecha_fin').prop('required',false);
            $(form).bootstrapValidator('removeField','fecha_fin');

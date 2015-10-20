@@ -70,8 +70,8 @@
         </div>
         <hr>
         <ul class="pager bwizard-buttons">
-            <a href="{% url 'dirigentes_wizard_identificacion' dirigente_id %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
-            <a href="{% url 'dirigentes_wizard_funciones' dirigente_id=dirigente_id edicion=edicion %}" class="btn btn-primary pull-right">{% trans 'Siguiente →' %}</a>
+            <a href="{% url 'dirigentes_edicion' dirigente_id=dirigente_id %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
+            <a href="{% url 'dirigentes_funciones' dirigente_id=dirigente_id edicion=edicion %}" class="btn btn-primary pull-right">{% trans 'Siguiente →' %}</a>
         </ul>
 
 {% endblock %}

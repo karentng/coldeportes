@@ -4,34 +4,55 @@
     <li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
         <a href="{% url 'inicio_tenant' %}">
             <i class="fa fa-desktop"></i>
-            <span class="colorMenu">Inicio</span>
+            <span class="colorMenu">INICIO</span>
         </a>
     </li>
-    {% if request.tenant.actores.dirigentes %}
-        {% include "menus/aplicacion/dirigentes.html" %}
-    {% endif %}
-    {% if request.tenant.actores.escenarios %}
-    	{% include "menus/aplicacion/escenarios.html" %}
-    {% endif %}
-    {% if request.tenant.actores.centros %}
-        {% include "menus/aplicacion/caf.html" %}
-    {% endif %}
-    {% if request.tenant.actores.deportistas %}
-        {% include "menus/aplicacion/deportistas.html" %}
-    {% endif %}
+    <li class="has-sub
+        {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path%}
+            active
+        {% endif %}">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <i class="fa fa-users"></i>
+            <span class="colorMenu">ACTORES</span>
+        </a>
+        <ul class="sub-menu">
+            {% if request.tenant.actores.dirigentes %}
+                {% include "menus/aplicacion/dirigentes.html" %}
+            {% endif %}
+            {% if request.tenant.actores.escenarios %}
+                {% include "menus/aplicacion/escenarios.html" %}
+            {% endif %}
+            {% if request.tenant.actores.centros %}
+                {% include "menus/aplicacion/caf.html" %}
+            {% endif %}
+            {% if request.tenant.actores.deportistas %}
+                {% include "menus/aplicacion/deportistas.html" %}
+            {% endif %}
+            {% if request.tenant.actores.personal_apoyo %}
+                {% include "menus/aplicacion/personal_apoyo.html" %}
+            {% endif %}
+            {% if request.tenant.actores.cajas %}
+                {% include "menus/aplicacion/cajas_compensacion.html" %}
+            {% endif %}
+            {% if request.tenant.actores.centros_biomedicos %}
+                {% include "menus/aplicacion/centro_biomedico.html" %}
+            {% endif %}
+        </ul>
+    </li>
     {%if request.tenant.seleccionable %}
         {% include "menus/aplicacion/selecciones.html" %}
     {%endif%}
-    {% if request.tenant.actores.personal_apoyo %}
-        {% include "menus/aplicacion/personal_apoyo.html" %}
-    {% endif %}
-    {% if request.tenant.actores.cajas %}
-        {% include "menus/aplicacion/cajas_compensacion.html" %}
-    {% endif %}
-    {% if request.tenant.actores.centros_biomedicos %}
-        {% include "menus/aplicacion/centro_biomedico.html" %}
-    {% endif %}
-    {% include "menus/aplicacion/directorio.html" %}
+    <li class="has-sub {% if 'directorio' in request.path %} active {% endif %}">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <i class="fa fa-phone-square"></i>
+            <span class="colorMenu">DIRECTORIOS</span>
+        </a>
+        <ul class="sub-menu">
+            {% include "menus/aplicacion/directorio.html" %}
+        </ul>
+    </li>
     {% include "menus/aplicacion/normograma.html" %}
 {% endif %}
 {% if request.tenant.schema_name == 'public' %}

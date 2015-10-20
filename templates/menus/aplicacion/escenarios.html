@@ -1,7 +1,6 @@
 <li class="has-sub {% if '/escenarios/' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        <i class="ion-ios-americanfootball fa-2x"></i>
         <span class="colorMenu">Escenarios</span>
     </a>
     <ul class="sub-menu">
@@ -13,10 +12,10 @@
             {% endif %}
         {% endif %} 
         <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'listar_escenarios' %}">Listar Escenarios</a>
+            <a href="{% url 'listar_escenarios' %}">Listar escenarios</a>
         </li>
         <li {% if "/escenarios/georreferenciacion" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'georreferenciacion_escenario' %}">Georreferenciación Escenarios</a>
+            <a href="{% url 'georreferenciacion_escenario' %}">Georreferenciación escenarios</a>
         </li>
     </ul>
 </li>

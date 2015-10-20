@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from entidades.models import Entidad
-from snd.models import Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
+from snd.models import InformacionAdicional,HistorialLesiones,HistorialDoping,Deportista,Escenario,PersonalApoyo,Foto,CaracterizacionEscenario,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,FormacionDeportiva,ExperienciaLaboral,HorarioDisponibilidad,Video,DatoHistorico,Contacto,CambioDocumentoDeportista
 from snd.formularios.deportistas import  DeportistaForm
 from .models import Transferencia
 import datetime
@@ -222,11 +222,11 @@ def finalizar_transferencia(request,entidad_saliente,objeto,transferencia):
     depor.estado = 3
     depor.entidad = request.tenant
     depor.save()
-    depor.tipo_objeto = depor.__class__.__name__
+    depor.tipo_objeto = "Deportista"
     depor.fecha = datetime.date.today()
 
     return render(request,'transferencia_exitosa.html',{
-        'objeto': depor
+        'objeto': objeto
     })
 
 def guardar_objeto(objeto,adicionales,tipo):
@@ -279,6 +279,21 @@ def guardar_objeto(objeto,adicionales,tipo):
                     categoria=ad.categoria,
                     defaults=diccionario
                 )
+            elif type(ad) is InformacionAdicional:
+                InformacionAdicional.objects.update_or_create(
+                    deportista=deportista,
+                    defaults=diccionario
+                )
+            elif type(ad) is HistorialLesiones:
+                HistorialLesiones.objects.update_or_create(
+                    deportista=deportista,
+                    defaults=diccionario
+                )
+            elif type(ad) is HistorialDoping:
+                HistorialDoping.objects.update_or_create(
+                    deportista=deportista,
+                    defaults=diccionario
+                )
             elif type(ad) is InformacionAcademica:
                 InformacionAcademica.objects.update_or_create(
                     deportista=deportista,
@@ -323,6 +338,9 @@ def obtener_objeto(id_obj,tipo_objeto):
         adicionales += ComposicionCorporal.objects.filter(deportista=objeto)
         adicionales += HistorialDeportivo.objects.filter(deportista=objeto)
         adicionales += InformacionAcademica.objects.filter(deportista=objeto)
+        adicionales += InformacionAdicional.objects.filter(deportista=objeto)
+        adicionales += HistorialLesiones.objects.filter(deportista=objeto)
+        adicionales += HistorialDoping.objects.filter(deportista=objeto)
 
     return objeto,adicionales
 
@@ -358,6 +376,7 @@ def cancelar_transferencia(request,id_objeto):
         trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
         if len(trans) != 0:
             trans.delete()
+            connection.set_tenant(entidad_solicitante)
             obj_trans.estado = 0
             obj_trans.save()
             messages.success(request,'Tranferencia cancelada exitosamente')
