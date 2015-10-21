@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Noticias</a>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de noticias
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de noticias
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-noticias";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-noticias" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Fecha de publicación</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for noticia in noticias %}
+                            <tr>
+                                <td>{{noticia.titulo}}</td>
+                                <td>{{noticia.fecha_publicacion}}</td>
+                                <td>
+                                    <a href="javascript:;" data-target='#modal-noticia-{{ noticia.id }}' data-toggle="modal">
+                                        <i class="fa fa-eye"></i> Vista previa
+                                    </a>
+                                    <br/>
+                                    <a href='{% url 'editar_noticia' noticia.id %}'>
+                                        <i class="fa fa-edit"></i> Editar
+                                    </a>
+                                    <br/>
+                                    <a href='{% url 'eliminar_noticia' noticia.id %}'>
+                                        <i class="fa fa-trash-o"></i> Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% include 'modal_noticia.html' %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -14,7 +14,8 @@ from django.contrib.contenttypes.models import ContentType
 from gestion_usuarios.models import PERMISOS_DIGITADOR
 from django.db.models import Q
 from coldeportes.utilities import permisosPermitidos
-from directorio.models import * 
+from directorio.models import *
+from noticias.models import Noticia
 
 
 def asignarPermisosGrupo(request, grupo, permisos):
@@ -134,12 +135,22 @@ def inicio_tenant(request):
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
 
+    try:
+        noticias_todas = Noticia.objects.order_by('fecha_publicacion')
+        if len(noticias_todas)>5:
+            noticias = noticias_todas[5]
+        else:
+            noticias = noticias_todas
+    except Exception:
+        noticias = []
+
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
         'actoresAsociados': actoresAsociados,
         'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
+        'noticias':noticias
     })
 
 

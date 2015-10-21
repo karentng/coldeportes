@@ -98,6 +98,15 @@
             height: 400px;
             width: 100%;
           }
+        .item:before {
+            content: '';
+            background: url('{{ STATIC_URL }}/img/content-bg-cover.png');
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
     </style>
 {% endblock %}
 
@@ -146,6 +155,45 @@
         </div>
 
         <div class="col-md-4">
+            {% if noticias %}
+                <div class="row p-b-20">
+                    <h4><strong>NOTICIAS</strong></h4>
+                    <div id="carrusel-noticias" class="carousel slide" data-ride="carousel">
+                          <!-- Indicators -->
+                          <ol class="carousel-indicators">
+                              {% for noticia in noticias %}
+                                <li data-target="#carrusel-noticias" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                              {% endfor %}
+                          </ol>
+
+                          <!-- Wrapper for slides -->
+                          <div class="carousel-inner" role="listbox">
+                            {% for noticia in noticias %}
+                                <div class="item {% if forloop.first %}active{% endif %}">
+                                  <img style="height:300px" src="{{ noticia.foto.url }}" alt="imagen-noticia">
+                                    <div class="carousel-caption">
+                                      <h3 style="color:lightslategray;">{{ noticia.titulo }}</h3>
+                                      <p>{{ noticia.cuerpo_noticia|truncatewords:10 }}... <a href="javascript:;" data-target="#modal-noticia-{{ noticia.id }}" data-toggle="modal">Leer más <i class="fa fa-search"></i></a></p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                          </div>
+
+                          <!-- Left and right controls -->
+                          <a class="left carousel-control" href="#carrusel-noticias" role="button" data-slide="prev">
+                            <span class="fa fa-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Anterior</span>
+                          </a>
+                          <a class="right carousel-control" href="#carrusel-noticias" role="button" data-slide="next">
+                            <span class="fa fa-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Siguiente</span>
+                          </a>
+                        </div>
+                </div>
+                {% for noticia in noticias %}
+                    {% include 'modal_noticia.html' %}
+                {% endfor %}
+            {% endif %}
             <div class="row">
                 <div class="col-md-12">
                     <div id="chartdiv" style="width: 100%; height: 200px;"></div>

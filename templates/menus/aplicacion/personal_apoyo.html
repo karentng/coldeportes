@@ -1,16 +1,16 @@
 <li class="has-sub {% if '/personal-apoyo/' in request.path %} active {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <span class="colorMenu">Personal de Apoyo</span>
-        </a>
-        <ul class="sub-menu">
-            {% if perms.snd.add_personalapoyo %}
-            <li {% if "/personal-apoyo/wizard" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'verificar_personal_apoyo' %}">Registro</a>
-            </li>
-            {% endif %}
-            <li {% if "/personal-apoyo/listar" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'personal_apoyo_listar' %}">Listar personal de apoyo</a>
-            </li>
-        </ul>
-    </li>
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <span class="colorMenu">Personal de Apoyo</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.snd.add_personalapoyo %}
+        <li {% if "/personal-apoyo/wizard" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'verificar_personal_apoyo' %}">Registro</a>
+        </li>
+        {% endif %}
+        <li {% if "/personal-apoyo/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'personal_apoyo_listar' %}">Listar personal de apoyo</a>
+        </li>
+    </ul>
+</li>
