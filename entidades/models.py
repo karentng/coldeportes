@@ -225,9 +225,9 @@ class Entidad(TenantMixin): # Entidad deportiva
         definirElementosDashBoard(datos, "ligas", "Ligas", "black", "inicio_tenant","fa-building-o")
         definirElementosDashBoard(datos, "clubes", "Clubes", "black", "inicio_tenant","fa-building-o")
         definirElementosDashBoard(datos, "caf", "CAFs", "red", "listar_cafs","fa-bicycle")
-        definirElementosDashBoard(datos, "escenarios", "Escenarios", "blue", "listar_escenarios","ion-ios-americanfootball")
+        definirElementosDashBoard(datos, "escenarios", "Escenarios", "blue", "listar_escenarios","fa-bank")
         definirElementosDashBoard(datos, "deportistas", "Deportistas", "orange", "deportista_listar","ion-ribbon-a")
-        definirElementosDashBoard(datos, "personales", "Personales de Apoyo", "green", "personal_apoyo_listar","ion-ios-baseball")
+        definirElementosDashBoard(datos, "personales", "Personales de Apoyo", "green", "personal_apoyo_listar","fa-users")
         definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar","fa-futbol-o")
         definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs","fa-building-o")
 
