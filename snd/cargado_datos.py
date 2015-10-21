@@ -91,16 +91,22 @@ def evaluarAtributos(objeto, atributos):
         valores.append(obtenerDato(objeto, i))
     return valores
 
-def evaluarCondiciones(objeto, condiciones):
+def evaluarCondiciones(objeto, condiciones, request):
     if condiciones == None:
         return True
     # Aplica el operador OR
-    for i in condiciones:
-        valoresDeAtributos = evaluarAtributos(objeto, i[0])
-        atributosDefinidos = i[1]
-        ok = i[2](valoresDeAtributos, atributosDefinidos)
-        if ok == True:
-            return ok
+    if type(condiciones[0][0]) is str:
+        cumple = True
+        for i in condiciones[0]:
+            cumple = cumple and request.user.has_perm(i)
+        return cumple
+    else:
+        for i in condiciones:
+            valoresDeAtributos = evaluarAtributos(objeto, i[0])
+            atributosDefinidos = i[1]
+            ok = i[2](valoresDeAtributos, atributosDefinidos)
+            if ok == True:
+                return ok
     return False
 
 

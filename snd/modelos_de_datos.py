@@ -331,7 +331,9 @@ MODELOS_DE_DATOS = (
                 'wizard_identificacion',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    ['snd.add_escenario',]
+                ]
             ],
             [
                 "A/I",
@@ -339,6 +341,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.add_escenario',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
