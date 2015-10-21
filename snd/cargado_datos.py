@@ -142,7 +142,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
         urls = []
 
         for i in urlsOpciones:
-            bien = evaluarCondiciones(objeto, i[4])
+            bien = evaluarCondiciones(objeto, i[4], request)
             if not(bien):
                 continue
 
