@@ -136,14 +136,13 @@ def inicio_tenant(request):
     ContentType.objects.clear_cache()
 
     try:
-        noticias_todas = Noticia.objects.order_by('fecha_publicacion')
+        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
         if len(noticias_todas)>5:
-            noticias = noticias_todas[5]
+            noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
     except Exception:
         noticias = []
-
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
         'actoresAsociados': actoresAsociados,
