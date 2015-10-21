@@ -156,7 +156,8 @@
 
         <div class="col-md-4">
             {% if noticias %}
-                <div class="row">
+                <div class="row p-b-20">
+                    <h4><strong>NOTICIAS</strong></h4>
                     <div id="carrusel-noticias" class="carousel slide" data-ride="carousel">
                           <!-- Indicators -->
                           <ol class="carousel-indicators">
@@ -172,7 +173,7 @@
                                   <img style="height:300px" src="{{ noticia.foto.url }}" alt="imagen-noticia">
                                     <div class="carousel-caption">
                                       <h3 style="color:lightslategray;">{{ noticia.titulo }}</h3>
-                                      <p>{{ noticia.cuerpo_noticia|truncatewords:10 }} <a href="#">Leer más <i class="fa fa-search"></i></a></p>
+                                      <p>{{ noticia.cuerpo_noticia|truncatewords:10 }}... <a href="javascript:;" data-target="#modal-noticia-{{ noticia.id }}" data-toggle="modal">Leer más <i class="fa fa-search"></i></a></p>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -189,6 +190,9 @@
                           </a>
                         </div>
                 </div>
+                {% for noticia in noticias %}
+                    {% include 'modal_noticia.html' %}
+                {% endfor %}
             {% endif %}
             <div class="row">
                 <div class="col-md-12">
