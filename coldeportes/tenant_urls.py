@@ -23,6 +23,8 @@ urlpatterns = patterns('',
     url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
     #url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
     url(r'cargado-datos/', include('snd.urls.cargado_datos')),
+
+    url(r'reportes/', include('reportes.urls.publico')),
     
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
