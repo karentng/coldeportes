@@ -5,9 +5,11 @@
         <span class="colorMenu">NOTICIAS</span>
     </a>
     <ul class="sub-menu">
-        <li {% if "/noticias/registrar" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'registrar_noticia' %}">Registrar noticia</a>
-        </li>
+        {% if 'noticias.add_noticia' in perms %}
+            <li {% if "/noticias/registrar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'registrar_noticia' %}">Registrar noticia</a>
+            </li>
+        {% endif %}
         <li {% if "/noticias/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_noticias' %}">Listar noticias</a>
         </li>

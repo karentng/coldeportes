@@ -1,9 +1,12 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
 from .forms import NoticiaForm
 from .models import Noticia
 
 # Create your views here.
+@login_required
+@permission_required('noticias.add_noticia')
 def registrar_noticia(request):
     if request.method == 'POST':
         form = NoticiaForm(request.POST,request.FILES)
@@ -16,12 +19,15 @@ def registrar_noticia(request):
     return render(request,'registrar_noticia.html',{'form':form})
 
 
+@login_required
 def listar_noticias(request):
     noticias = Noticia.objects.all()
 
     return render(request,'listar_noticias.html',{'noticias':noticias})
 
 
+@login_required
+@permission_required('noticias.change_noticia')
 def editar_noticia(request,id_noticia):
     try:
         noticia = Noticia.objects.get(id=id_noticia)
@@ -42,6 +48,8 @@ def editar_noticia(request,id_noticia):
                                                'edicion':True})
 
 
+@login_required
+@permission_required('noticias.delete_noticia')
 def eliminar_noticia(request,id_noticia):
     try:
         Noticia.objects.get(id=id_noticia).delete()
