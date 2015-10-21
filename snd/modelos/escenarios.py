@@ -95,7 +95,7 @@ class CaracterizacionEscenario(models.Model):
     tipo_superficie_juego = models.ManyToManyField(TipoSuperficie)
     clase_acceso = models.CharField(choices=ACCESOS, max_length=3, verbose_name='tipo de acceso') 
     tipo_disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
-    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
+    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2, verbose_name='estado físico')
     capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
     espectadores_habituales = models.PositiveIntegerField(verbose_name='cantidad de espectadores habituales')
     clase_uso = models.ManyToManyField(TipoUsoEscenario)

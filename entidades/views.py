@@ -434,7 +434,7 @@ def ver_deportista_tenantnacional(request, id_depor, tenant):
             'tenant_nacional':True
         })
 
-def ver_dirigente_tenantnacional(request, id_dirigente, tenant):
+def ver_dirigente_tenantnacional(request, dirigente_id, tenant):
     """
     Agosto 11 /2015
     Autor: Milton Lenis
@@ -445,8 +445,8 @@ def ver_dirigente_tenantnacional(request, id_dirigente, tenant):
 
     :param request: Petición Realizada
     :type request: WSGIRequest
-    :param id_dirigente: Llave primaria del dirigente
-    :type id_dirigente: String
+    :param dirigente_id: Llave primaria del dirigente
+    :type dirigente_id: String
     :param tenant: Nombre del esquema del tenant
     :type tenant: String
     """
@@ -459,7 +459,7 @@ def ver_dirigente_tenantnacional(request, id_dirigente, tenant):
     connection.set_tenant(entidad)
     ContentType.objects.clear_cache()
     try:
-        dirigente = Dirigente.objects.get(id=id_dirigente)
+        dirigente = Dirigente.objects.get(id=dirigente_id)
     except Dirigente.DoesNotExist:
         messages.error(request, 'El dirigente que desea ver no existe')
         return redirect('listar_dirigentes_nacionales')

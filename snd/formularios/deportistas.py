@@ -178,20 +178,20 @@ class InformacionAcademicaForm(ModelForm):
         cleaned_data = super(InformacionAcademicaForm, self).clean()
         if not self._errors:
             estado = cleaned_data.get('estado')
+
             try:
                 anio_finalizacion =cleaned_data.get('fecha_finalizacion')
             except Exception:
                 anio_finalizacion = None
-
             anio_actual = datetime.datetime.now().year
             if anio_finalizacion:
                 if estado == 'Finalizado' and int(anio_finalizacion) > anio_actual:
                     msg = 'Usted ha seleccionado el estado FINALIZADO con una fecha mayor a la actual'
                     self.add_error('fecha_finalizacion',msg)
                 else:
-                    return True
+                    return cleaned_data
             else:
-                return True
+                return cleaned_data
         return cleaned_data
 
 

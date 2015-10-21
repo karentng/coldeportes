@@ -256,6 +256,8 @@ def wizard_caracterizacion(request, escenario_id):
     if non_permission:
         return non_permission
 
+
+    #print(request.tenant.tipo)
     if request.tenant.tipo == 5:
         caracterizacion_form = CaracterizacionSecretariaForm(instance=caracteristicas)        
     else:

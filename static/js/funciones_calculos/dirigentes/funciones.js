@@ -8,14 +8,14 @@ function clear_funciones(){
 }
 
 function get_funciones(value){
-    var id_cargo = value;
-    var id_dirigente = $('#id_dirigente').val();
+    var cargo_id = value;
+    var dirigente_id = $('#id_dirigente').val();
 
     $.ajax({
         url : '/dirigentes/funciones',
         type: 'GET',
         dataType: 'json',
-        data: {'id_cargo': id_cargo, 'id_dirigente': id_dirigente},
+        data: {'cargo_id': cargo_id, 'dirigente_id': dirigente_id},
         success: function(data){
             var funciones = data['funciones'];
             var tabla = clear_funciones();
@@ -23,7 +23,7 @@ function get_funciones(value){
             for(var i=0;i<funciones.length;i++){
                 var funcion = funciones[i];
                 var lm = link_modal.replace('{funcion_id}',funcion.id);
-                var m = modal.replace(/{funcion.id}/g,funcion.id).replace('{dirigente_id}',id_dirigente).replace('{cargo_id}',id_cargo);
+                var m = modal.replace(/{funcion.id}/g,funcion.id).replace('{dirigente_id}',dirigente_id).replace('{cargo_id}',cargo_id);
                 var fila = "<tr><td align='center'>"+funcion.descripcion+"</td>";
                 fila += "<td align='center'>" + lm + m + "</td></tr>";
                 tabla.append(fila);

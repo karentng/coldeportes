@@ -366,7 +366,7 @@ def listar_deportista(request):
     return render(request, 'deportistas/deportistas_lista.html', {'tipo_tenant':request.tenant.tipo})
 
 @login_required
-def ver_deportista(request,id_depor,id_entidad):
+def ver_deportista(request,id_depor,id_entidad,estado):
     """
     Junio 22 /2015
     Autor: Daniel Correa
@@ -389,9 +389,10 @@ def ver_deportista(request,id_depor,id_entidad):
     :type id_entidad: String
     """
 
-    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
-    connection.set_tenant(tenant)
-    ContentType.objects.clear_cache()
+    if estado != 'TRANSFERIDO':
+        tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+        connection.set_tenant(tenant)
+        ContentType.objects.clear_cache()
     try:
         deportista = Deportista.objects.get(id=id_depor)
     except:

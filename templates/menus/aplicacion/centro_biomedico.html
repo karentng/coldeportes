@@ -1,7 +1,6 @@
 <li class="has-sub {% if '/centro-biomedico/' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        <i class="fa fa-medkit"></i>
         <span class="colorMenu">Centros Biomédicos</span>
     </a>
     <ul class="sub-menu">
@@ -11,7 +10,7 @@
             </li>
         {% endif %}
         <li {% if "/centro-biomedico/listar" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'centro_biomedico_listar' %}">Listar Centros Biomédicos</a>
+            <a href="{% url 'centro_biomedico_listar' %}">Listar centros biomédicos</a>
         </li>
     </ul>
 </li>
