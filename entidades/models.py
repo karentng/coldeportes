@@ -227,7 +227,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         definirElementosDashBoard(datos, "caf", "CAFs", "red", "listar_cafs","ion-android-bicycle")
         definirElementosDashBoard(datos, "escenarios", "Escenarios", "blue", "listar_escenarios","fa-bank")
         definirElementosDashBoard(datos, "deportistas", "Deportistas", "orange", "deportista_listar","ion-ribbon-a")
-        definirElementosDashBoard(datos, "personales", "Personales de Apoyo", "green", "personal_apoyo_listar","ion-ios-body")
+        definirElementosDashBoard(datos, "personales", "Personal de Apoyo", "green", "personal_apoyo_listar","ion-ios-body")
         definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar","ion-ios-people")
         definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs","fa-building-o")
 
