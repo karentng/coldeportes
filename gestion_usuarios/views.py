@@ -81,19 +81,15 @@ def inicio(request):
 
     if request.user.is_authenticated():
         # lectura y creación de vistas del directorio sql
-        
-
         if request.tenant.schema_name == "public":
-            return redirect('entidad_tipo')
+            return redirect('inicio_tenant')
         else:
             if request.user.is_superuser:
-                return redirect('usuarios_lista')
+                return redirect('inicio_tenant')
             else:
-                
-                    
                 return redirect('inicio_tenant')
 
-    return redirect('login')
+    return redirect('inicio_tenant')
 
 
 def inicio_tenant(request):
