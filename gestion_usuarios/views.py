@@ -56,7 +56,7 @@ def inicio(request):
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
         schema_name = request.tenant.schema_name
-        if  == 'public':
+        if schema_name == 'public':
             password = "cedesoft"
         else:
             password = ("%s-%s")%("root", request.tenant.schema_name)
