@@ -64,7 +64,7 @@ def agregar_grupo(resultados):
             objeto.grupo=objeto.__class__.__name__
 
 
-@login_required
+
 def directorio_buscar(request):
     """
     Julio 22 / 2015

@@ -31,7 +31,7 @@ def registrar(request):
         'form': norma_form,
     })
 
-@login_required
+
 def buscar(request):
     """
     Septiembre 14 / 2015
