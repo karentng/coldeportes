@@ -115,7 +115,11 @@
                                                     {% else %}
                                                         <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
                                                     {% endif %}</p>
+                                                {% ifequal deportista.estado 3 %}
+                                                    <p><b>Estado:</b> {{deportista.get_estado_display}} A {{ deportista.entidad | upper  }}</p>
+                                                {% else %}
                                                     <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
+                                                {% endifequal %}
                                                     <p><b>Género:</b> {{deportista.genero}}</p>
                                                     <p><b>Edad:</b> {{ deportista.edad }}</p>
                                                     <p><b>Disciplinas:</b> {{ deportista.disciplinas_deportivas }}</p>
