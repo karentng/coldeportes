@@ -88,7 +88,7 @@ def buscar_resultados(ciudades, categoria, texto):
        
     return listado_resultados
 
-@login_required
+
 def directorio_publico_buscar(request):
     """
     Agosto 5 / 2015
