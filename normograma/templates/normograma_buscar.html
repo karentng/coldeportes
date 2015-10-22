@@ -23,18 +23,18 @@
     <div class="row">
         <form  method="POST">{% csrf_token %}
             <div class="col-md-10">       
-                <div class="col-md-6">
+                <div class="col-md-6 add-tooltip"  data-placement="bottom" data-toggle="tooltip" data-original-title="Ingrese las palabras claves o año para buscar una norma">
                     {% bootstrap_field form.texto_a_buscar layout="vertical" %}
                 </div>
                 {% comment %}
-                <div class="col-md-2">
+                <div class="col-md-2 add-tooltip">
                     {% bootstrap_field form.anio layout="vertical" %}
                 </div>
                 {% endcomment %}
-                <div class="col-md-3">
+                <div class="col-md-3 add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Seleccione uno o más sectores de la norma a buscar">
                     {% bootstrap_field form.sector layout="vertical" %}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Seleccione una o más jurisdicciones de la norma a buscar">
                     {% bootstrap_field form.jurisdiccion layout="vertical" %}
                 </div>
             </div>
@@ -92,6 +92,8 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/moment.js"></script>
     <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="{{STATIC_URL}}js/form-plugins.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+
 {% endblock %}
 
 {% block script %}
