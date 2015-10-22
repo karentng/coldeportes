@@ -290,3 +290,29 @@ def grupos_modificar(request, idGrupo):
     return render(request, 'grupos_modificar.html', {
         'form': form,
     })
+
+@login_required
+@superuser_only
+def datos_basicos_entidad(request):
+    from entidades.views import obtenerTenant, obtenerFormularioTenant
+    from entidades.forms import ActoresForm
+
+    entidad = request.tenant
+    try:
+        instance = obtenerTenant(request, entidad.id, str(entidad.tipo))
+    except Exception as e:
+        return redirect('usuarios_lista')
+
+    nombre, form = obtenerFormularioTenant(str(entidad.tipo), instance=instance)
+
+    if request.method == 'POST':
+        nombre, form = obtenerFormularioTenant(str(entidad.tipo), post=request.POST, files=request.FILES, instance=instance)
+        if form.is_valid():
+            obj = form.save()
+            messages.success(request, "Datos básicos editados correctamente")
+            return redirect('datos_basicos_entidad')
+
+    return render(request, 'datos_basicos_entidad.html', {
+        'nombre': nombre,
+        'form': form,
+    })

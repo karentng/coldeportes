@@ -11,6 +11,20 @@ import urllib.parse
 def MyDateWidget():
     return DateWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd', 'startView':4, 'language':'es'})
 
+def verificar_tamano_archivo(self, datos, campo):
+    from django.forms import ValidationError
+
+    MAX_UPLOAD_SIZE_MB = 5
+    MAX_UPLOAD_SIZE = 1048576 * MAX_UPLOAD_SIZE_MB # 5MB: http://www.beesky.com/newsite/bit_byte.htm
+
+    archivo = datos[campo]
+    if archivo._size > MAX_UPLOAD_SIZE:
+        from django.forms.util import ErrorList
+        if not campo in self._errors:
+            self._errors[campo] = ErrorList()
+        self._errors[campo].append("El tamaño de la foto no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
+    return self
+
 def extraer_codigo_video(url_video):
 
     url_data = urllib.parse.urlparse(url_video)

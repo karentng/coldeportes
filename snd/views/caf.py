@@ -80,13 +80,21 @@ def crear(request, paso, idCAF=None):
             return redirect('listar_cafs')
 
     if request.method == 'POST':
-        form = form(request.POST, instance=centro)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.entidad = request.tenant
-            obj.save()
-            form.save_m2m()
-            return redirect('crear_caf', paso=siguiente, idCAF=obj.id)
+        if paso != "Fotos":
+            form = form(request.POST, request.FILES, instance=centro)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.entidad = request.tenant
+                obj.save()
+                form.save_m2m()
+                return redirect('crear_caf', paso=siguiente, idCAF=obj.id)
+        else:
+            form = form(request.POST, request.FILES)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.centro = centro
+                form.save()
+                return redirect('crear_caf', paso="Fotos", idCAF=idCAF)
     else:
         if paso != "Planes":
             form = form(instance=centro)

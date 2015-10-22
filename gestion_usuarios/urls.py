@@ -10,4 +10,6 @@ urlpatterns = patterns('gestion_usuarios.views',
 	url(r'^grupo/crear$', 'grupos_crear', name="grupos_crear"),
 	url(r'^grupo/modificar/(\d+)$', 'grupos_modificar', name="grupos_modificar"),
 	url(r'^grupo/listar$', 'grupos_listar', name="grupos_listar"),
+
+	url(r'^datos-basicos-entidad$', 'datos_basicos_entidad', name="datos_basicos_entidad"),
 )
