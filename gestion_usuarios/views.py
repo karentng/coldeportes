@@ -56,7 +56,12 @@ def inicio(request):
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
-        user = User.objects.create_user('root', 'root@gmail.com', 'root')
+        schema_name = request.tenant.schema_name
+        if  == 'public':
+            password = "cedesoft"
+        else:
+            password = ("%s-%s")%("root", request.tenant.schema_name)
+        user = User.objects.create_user('root', 'root@gmail.com', password)
         user.first_name = 'Administrador'
         user.is_superuser = True
         user.is_staff = True
