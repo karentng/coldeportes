@@ -16,6 +16,7 @@ from django.db.models import Q
 from coldeportes.utilities import permisosPermitidos
 from directorio.models import *
 from noticias.models import Noticia
+from entidades.models import Entidad
 
 
 def asignarPermisosGrupo(request, grupo, permisos):
@@ -94,7 +95,7 @@ def inicio(request):
 
     return redirect('login')
 
-@login_required
+
 def inicio_tenant(request):
     import json
     """
@@ -135,6 +136,36 @@ def inicio_tenant(request):
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
 
+    entidad_actual = request.tenant
+    tipo_entidad = type(entidad_actual.obtenerTenant()).__name__
+
+    if tipo_entidad == 'Club':
+        entidad = {
+            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
+            'mostrar_info':True,
+            'nombre':entidad_actual.nombre,
+            'disciplina': entidad_actual.obtenerTenant().liga.disciplina,
+            'descripcion': entidad_actual.descripcion,
+            'ciudad': entidad_actual.ciudad,
+            'direccion': entidad_actual.direccion,
+            'telefono': entidad_actual.telefono,
+        }
+    elif tipo_entidad == 'Liga':
+        entidad = {
+            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
+            'mostrar_info':True,
+            'nombre':entidad_actual.nombre,
+            'disciplina': entidad_actual.obtenerTenant().disciplina,
+            'descripcion': entidad_actual.descripcion,
+            'ciudad': entidad_actual.ciudad,
+            'direccion': entidad_actual.direccion,
+            'telefono': entidad_actual.telefono,
+        }
+    else:
+        entidad = {
+            'mostrar_info':False
+        }
+
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
         if len(noticias_todas)>5:
@@ -149,7 +180,9 @@ def inicio_tenant(request):
         'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias
+        'noticias':noticias,
+        'entidad':entidad
+
     })
 
 
