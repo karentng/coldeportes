@@ -84,16 +84,6 @@ def inicio(request):
         comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
         comiteParalimpico.save()
 
-    if request.user.is_authenticated():
-        # lectura y creación de vistas del directorio sql
-        if request.tenant.schema_name == "public":
-            return redirect('inicio_tenant')
-        else:
-            if request.user.is_superuser:
-                return redirect('inicio_tenant')
-            else:
-                return redirect('inicio_tenant')
-
     return redirect('inicio_tenant')
 
 
