@@ -176,7 +176,9 @@
                     <div class="stats-number">{{ i.2 }}</div>
                     <hr style="margin-bottom:10px;margin-top:10px;"/>
                     <div class="stats-desc" >
-                        <a href="{% url i.3 %}" style="color:white"><i class="fa fa-list"></i> Ver listado detallado</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url i.3 %}" style="color:white"><i class="fa fa-list"></i> Ver listado detallado</a>
+                        {% endif %}
                         <br/>
                         <a href="{% url i.3 %}" style="color:white"><i class="fa fa-bar-chart"></i> Ver reportes</a>
                     </div>
