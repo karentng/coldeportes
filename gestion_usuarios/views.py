@@ -61,6 +61,7 @@ def inicio(request):
             password = "cedesoft"
         else:
             password = ("%s-%s")%("root", request.tenant.schema_name)
+        
         user = User.objects.create_user('root', 'root@gmail.com', password)
         user.first_name = 'Administrador'
         user.is_superuser = True
@@ -84,8 +85,22 @@ def inicio(request):
         comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
         comiteParalimpico.save()
 
-    return redirect('inicio_tenant')
+    schema = request.tenant.schema_name
 
+    if request.user.is_authenticated():
+        # lectura y creación de vistas del directorio sql
+        if request.tenant.schema_name == "public":
+            return redirect('entidad_tipo')
+        else:
+            if request.user.is_superuser:
+                return redirect('usuarios_lista')
+            else:
+                return redirect('inicio_tenant')
+
+    if schema == 'public':
+        return redirect('login')
+    else:
+        return redirect('inicio_tenant')
 
 def inicio_tenant(request):
     import json
@@ -130,12 +145,16 @@ def inicio_tenant(request):
     entidad_actual = request.tenant
     tipo_entidad = type(entidad_actual.obtenerTenant()).__name__
 
+    try:
+        disciplina  = entidad_actual.obtenerTenant().liga.disciplina
+    except Exception:
+        disciplina = None
     if tipo_entidad == 'Club':
         entidad = {
             'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
             'mostrar_info':True,
             'nombre':entidad_actual.nombre,
-            'disciplina': entidad_actual.obtenerTenant().liga.disciplina,
+            'disciplina': disciplina,
             'descripcion': entidad_actual.descripcion,
             'ciudad': entidad_actual.ciudad,
             'direccion': entidad_actual.direccion,
