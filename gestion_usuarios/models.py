@@ -19,7 +19,7 @@ PERMISOS_DIGITADOR = [
     ['change_centrobiomedico', 'centros_biomedicos'],
     ['add_norma', 'normas'],
     ['change_norma', 'normas'],
-    ['add_noticia', 'noticias'],
-    ['change_noticia', 'noticias'],
-    ['delete_noticia', 'noticias'],
+    ['add_noticia', True],
+    ['change_noticia', True],
+    ['delete_noticia', True],
 ]

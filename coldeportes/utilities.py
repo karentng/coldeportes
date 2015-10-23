@@ -97,7 +97,10 @@ def permisosPermitidos(request, permisos):
     permitidos = []
     for i in permisos:
         try:
-            valor = getattr(request.tenant.actores, i[1])
+            if type(i[1]) == str:
+                valor = getattr(request.tenant.actores, i[1])
+            else: # Booleano
+                valor = i[1]
             if valor == True:
                 permitidos.append(i[0])
         except Exception as e:

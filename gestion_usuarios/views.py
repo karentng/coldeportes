@@ -18,7 +18,6 @@ from directorio.models import *
 from noticias.models import Noticia
 from entidades.models import Entidad
 
-
 def asignarPermisosGrupo(request, grupo, permisos):
     permisos = permisosPermitidos(request, permisos)
     permisos = Permission.objects.filter(codename__in=permisos)
@@ -45,7 +44,6 @@ def cambiarNombreDePermisos():
 def inicio(request):
     digitador = None
 
-
     grupos = Group.objects.all()
     cambiarNombreDePermisos()
     if len(grupos) == 0:
@@ -53,6 +51,12 @@ def inicio(request):
         digitador.save()
         Group(name='Solo lectura').save()
         asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+    else:
+        try:
+            grupo = Group.objects.get(name="Digitador")
+            asignarPermisosGrupo(request, grupo, PERMISOS_DIGITADOR)
+        except Exception as e:
+            pass
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
