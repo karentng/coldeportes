@@ -38,6 +38,7 @@ class Escenario(models.Model):
     ciudad = models.ForeignKey(Ciudad)
     division_territorial = models.CharField(choices=DIVISIONES, max_length=2, verbose_name="división territorial")    
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def fotos(self):
         return [x.foto for x in Foto.objects.filter(escenario=self)]
@@ -101,6 +102,7 @@ class CaracterizacionEscenario(models.Model):
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HorarioDisponibilidad(models.Model):
     escenario = models.ForeignKey(Escenario)
@@ -108,6 +110,7 @@ class HorarioDisponibilidad(models.Model):
     hora_fin = models.TimeField()
     dias = models.ManyToManyField(Dias, verbose_name='días')
     descripcion = models.TextField(max_length=1024, verbose_name='descripción')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 def ruta_fotos_escenarios(instance, filename):
     return "snd/fotos/escenarios/%s"%(filename.encode('ascii','ignore').decode('ascii'))
@@ -117,12 +120,14 @@ class Foto(models.Model):
     titulo = models.CharField(max_length=255, verbose_name="título")
     foto = models.ImageField(upload_to=ruta_fotos_escenarios, null=True, blank=True)
     descripcion = models.TextField(blank=True, null=True, max_length=1024, verbose_name='descripción')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 
 class Video(models.Model):
     escenario = models.ForeignKey(Escenario)
     url = models.CharField(max_length=1024, verbose_name='url', null=True)
     descripcion = models.CharField(max_length=1024, null=True, verbose_name="descripción")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class Mantenimiento(models.Model):
 
@@ -141,12 +146,15 @@ class Mantenimiento(models.Model):
     descripcion_ultimo_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name='descripción del último mantenimiento')
     periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)    
     razones_no_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name="Si no se realiza mantenimiento, mencione las razones")
+    tiene_planos = models.BooleanField(verbose_name='¿se cuenta con los planos del escenario?')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField(null=True, blank=True)
     descripcion = models.TextField(max_length=1024, verbose_name="descripción")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class Contacto(models.Model):
     escenario = models.ForeignKey(Escenario)
@@ -154,3 +162,4 @@ class Contacto(models.Model):
     telefono = models.CharField(max_length=20, verbose_name='teléfono')
     email = models.EmailField()
     descripcion = models.TextField(max_length=1024, null=True, verbose_name='descripción')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
