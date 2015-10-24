@@ -13,6 +13,7 @@ class NormaForm(forms.ModelForm):
         super(NormaForm, self).__init__(*args, **kwargs)
         self.fields['sectores'] = adicionarClase(self.fields['sectores'], 'many')
         self.fields['anio'] = adicionarClase(self.fields['anio'], 'one')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['jurisdiccion'] = adicionarClase(self.fields['jurisdiccion'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
         self.fields['palabras_clave'].widget.attrs['rows'] = 3

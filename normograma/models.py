@@ -1,6 +1,7 @@
 #encoding:utf-8
 from django.db import models
 from django.conf import settings
+from entidades.models import Ciudad
 import os
 
 
@@ -32,6 +33,7 @@ class Norma(models.Model):
     anio = models.IntegerField(default=2015, verbose_name="año", choices=ANIOS)
     sectores = models.ManyToManyField(TipoSector)
     jurisdiccion = models.CharField(max_length=2,verbose_name="jurisdicción", choices=JURISDICCIONES)
+    ciudad = models.ForeignKey(Ciudad, verbose_name="ciudad de donde se hace el registro")
     archivo = models.FileField(upload_to=foto_name, verbose_name="subir archivo", null=True, blank=True)
     descripcion = models.TextField(max_length=1024, verbose_name='descripción')
     contenido_busqueda = models.TextField(editable=False)

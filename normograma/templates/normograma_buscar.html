@@ -54,12 +54,12 @@
                 
                 <div class="result-info col-md-9">
                     <h4 class="title">Título de Norma: {{resultado.norma}}</h4>
-                    <p class="location">{% if resultado.sectores.all %}Sector:{% for sector in resultado.sectores.all %} {{sector.nombre}}, {% endfor %}{% endif %} Año: {{resultado.anio}}</p>
+                    <p class="location"><b>{% if resultado.sectores.all %}Sector:{% for sector in resultado.sectores.all %} {{sector.nombre}}, {% endfor %}{% endif %} Año: {{resultado.anio}}</b></p>
                     <p class="desc">
                         {{resultado.descripcion}}
                     </p>
                     Palabras Clave: <b>{{resultado.palabras_clave}}</b> <br/>
-                    Archivo Soporte Norma: <a href="{{resultado.archivo}}"><b>{{MEDIA_URL}}{{resultado.archivo}}</b></a>
+                    Archivo Soporte Norma: <a href="{{MEDIA_URL}}{{resultado.archivo}}"><b>{{resultado.archivo}}</b></a>
                 </div>
                 <div class="result-price col-md-1">
                     <small>JURISDICCIÓN:</small> {{resultado.get_jurisdiccion_display}}
@@ -70,7 +70,7 @@
         {% endfor %}
         </ul>
         {% else %}
-        <div class="col-md-5"><h5>No hay resultados para la búsqueda.</h5></div>
+        <div class="col-md-5"><h5>No hay resultados para la búsqueda.</h5></div><br/><br/><br/><br/><br/>
     {% endif %}
 
 {% endblock %}
