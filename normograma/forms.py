@@ -26,15 +26,14 @@ class NormaForm(forms.ModelForm):
 
 class NormogramaBusquedaForm(forms.Form):
     JURISDICCIONES = (('D', 'Departamental'), ('M', 'Municipal'), ('N', 'Nacional'))
-    SECTORES = (('E', 'Educación Física'), ('D', 'Deporte'), ('R', 'Recreación'))
+    SECTORES = ((1, 'Educación Física'), (2, 'Deporte'), (3, 'Recreación'))
 
     texto_a_buscar = forms.CharField(required=False, label="Título de Norma / Palabras Clave / Año", widget=forms.TextInput(attrs={'placeholder': 'Ingrese nombre de norma, año y/o palabras claves'}))
     sector = forms.MultipleChoiceField(label="Sector", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=SECTORES)
     jurisdiccion = forms.MultipleChoiceField(label="Jurisdicción", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Jurisdicción'}), choices=JURISDICCIONES)
-    #anio = forms.MultipleChoiceField(label="Año", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Año'}), choices=ANIOS)
-
+    
     def __init__(self, *args, **kwargs):
         super(NormogramaBusquedaForm, self).__init__(*args, **kwargs)
         self.fields['sector'] = adicionarClase(self.fields['sector'], 'many')
         self.fields['jurisdiccion'] = adicionarClase(self.fields['jurisdiccion'], 'many')
-        #self.fields['anio'] = adicionarClase(self.fields['anio'], 'many')
+        
