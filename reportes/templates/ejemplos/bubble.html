@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    ejemplo bubble
+{% endblock %}
+
+{% block titulo_contenido %}
+    bubble
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="{{STATIC_URL}}js/visualizaciones/bubble.js"></script>
+    <script type="text/javascript">
+        bubble({{columnas|safe}},{{datos|safe}},'{{titulo}}','{{div}}');
+        //bubble(columnas:array, datos:matriz, titulo:string, div:string)
+        //no olvide usar el filtro safe para evitar que se escapen los caracteres
+    </script>
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'inicio' %}">Burbujas</a></li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Bubble Chart
+{% endblock %}
+
+{% block contenido_panel %}
+    <div id="{{div}}" style="width: 900px; height: 500px;"></div>
+{% endblock %}
+
