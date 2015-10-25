@@ -22,7 +22,7 @@
     <link href="{{STATIC_URL}}plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}css/animate.min.css" rel="stylesheet" />
-    <link href="{{STATIC_URL}}css/style.min.css?v=1.1" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/style.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}css/style-responsive.min.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}css/theme/default.css" rel="stylesheet" id="theme" />
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/personal.css">
@@ -135,6 +135,12 @@
                             <li><a href="{% url 'logout' %}">Salir</a></li>
                         </ul>
                     </li>
+                    {% else %}
+                        <div class="p-t-10 p-r-20">
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-key"></i> Iniciar sesión
+                        </a>
+                        </div>
                     {% endif %}
                 </ul>
                 <!-- end header navigation right -->
@@ -282,6 +288,7 @@
     <script src="{{STATIC_URL}}js/jquery.datetimepicker.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            $('[data-toggle=tooltip]').tooltip();
             $("select.one").select2({width: 'resolve',});
             $("select.many").select2({multiple:true});
             $('.fecha').datetimepicker({

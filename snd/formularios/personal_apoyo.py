@@ -2,7 +2,7 @@ import datetime
 from django import forms
 from django.forms import ModelForm
 from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
-from coldeportes.utilities import adicionarClase,MyDateWidget
+from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo
 
 
 class PersonalApoyoForm(ModelForm):
@@ -16,6 +16,11 @@ class PersonalApoyoForm(ModelForm):
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
         self.fields['actividad'] = adicionarClase(self.fields['actividad'], 'one')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
+
+    def clean(self):
+        cleaned_data = super(PersonalApoyoForm, self).clean()
+        self = verificar_tamano_archivo(self, cleaned_data, "foto")
+        return self.cleaned_data
 
     class Meta:
         model = PersonalApoyo

@@ -86,6 +86,9 @@ MODELOS_DE_DATOS = (
                 'fa-gear',
                 [
                     [
+                        'snd.change_deportista',
+                    ],
+                    [
                         ['estado'],
                         ['ACTIVO'],
                         lambda x, y: operator.eq(x[0], y[0])
@@ -99,6 +102,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-archive',
                 [
+                    [
+                        'snd.change_deportista',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO'],
@@ -114,6 +120,9 @@ MODELOS_DE_DATOS = (
                 'fa-ban',
                 [
                     [
+                        'snd.change_deportista',
+                    ],
+                    [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
@@ -128,6 +137,9 @@ MODELOS_DE_DATOS = (
                 'fa-exchange',
                 [
                     [
+                        'snd.change_deportista',
+                    ],
+                    [
                         ['estado'],
                         ['ACTIVO'],
                         lambda x, y: operator.eq(x[0], y[0])
@@ -141,6 +153,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-times',
                 [
+                    [
+                        'snd.change_deportista',
+                    ],
                     [
                         ['estado'],
                         ['EN TRANSFERENCIA'],
@@ -186,7 +201,9 @@ MODELOS_DE_DATOS = (
                 'edicion_personal_apoyo',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    ['snd.add_personalapoyo',]
+                ]
             ],
             [
                 "A/I",
@@ -194,6 +211,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.change_personalapoyo',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
@@ -222,7 +242,9 @@ MODELOS_DE_DATOS = (
                 'edicion_personal_apoyo',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    ['snd.add_personalapoyo',]
+                ]
             ],
             [
                 "A/I",
@@ -230,6 +252,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.change_personalapoyo',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],

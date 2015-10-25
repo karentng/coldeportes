@@ -31,6 +31,7 @@ def registrar(request):
         'form': norma_form,
     })
 
+<<<<<<< HEAD
     
 def buscarPorSectores(sectores, texto):
     normas = []
@@ -58,6 +59,9 @@ def buscarPorSectoresYJurisdicciones(sectores,jurisdicciones, texto):
     return normas
 
 @login_required
+=======
+
+>>>>>>> b6162ab9869687a0676b5c3e9deb691b79d54ebd
 def buscar(request):
     """
     Septiembre 14 / 2015

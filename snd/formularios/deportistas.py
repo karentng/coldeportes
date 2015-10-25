@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 import datetime
-from coldeportes.utilities import adicionarClase,MyDateWidget
+from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo
 
 class VerificarExistenciaForm(forms.Form):
     TIPO_IDENTIDAD = (
@@ -45,10 +45,13 @@ class DeportistaForm(ModelForm):
         self.fields['lgtbi'] = adicionarClase(self.fields['lgtbi'], 'styled')
 
     def clean(self):
+        cleaned_data = super(DeportistaForm, self).clean()
+        self = verificar_tamano_archivo(self, cleaned_data, "foto")
         fecha_nacimiento = self.cleaned_data['fecha_nacimiento']
         if fecha_nacimiento > datetime.date.today():
                 msg = "La fecha de nacimiento no puede ser mayor al día de hoy"
                 self.add_error('fecha_nacimiento', msg)
+        return self.cleaned_data
 
     class Meta:
         model = Deportista

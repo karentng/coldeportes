@@ -22,7 +22,7 @@
     <script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
     <script type="text/javascript">
-        var actoresAsociados = arrayToJson("{{actoresAsociadosJSON}}");
+       /* var actoresAsociados = arrayToJson("{{actoresAsociadosJSON}}");
         var chartData = [];
         for (i in actoresAsociados){
             var aux = actoresAsociados[i];
@@ -78,7 +78,7 @@
             // WRITE
             chart.write("chartdiv");
         });
-        
+        */
     </script>
     <script type="text/javascript">
         datosMostrar = "{{ubicaciones}}";
@@ -87,6 +87,27 @@
     </script>
     <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/creacion_google_maps.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+
+    <script>
+        // EFECTOS DE ANIMACIÓN DASHBOARD
+        $(document).ready(function(){
+            $("#info-tenant").css("display","block");
+            $("#georreferenciacion").css("display","block");
+            $("#noticias").css("display","block");
+            var actores = {{ actoresAsociados |safe}};
+            var cantidadActores = actores.length;
+            var tiempo = 0;
+            for(i=0;i<cantidadActores;i++){
+                if(tiempo==0){
+                    $("#info-actores-"+i).css("display","block");
+                }else{
+                    setTimeout(function(i){$("#info-actores-"+i).css("display","block");},tiempo,i);
+                }
+                tiempo+=150;
+            }
+
+        });
+    </script>
 {% endblock %}
 
 {% block css %}
@@ -111,18 +132,53 @@
 {% endblock %}
 
 {% block contenido %}
+    {% if entidad.mostrar_info %}
+        <div class="row p-b-30">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="result-container">
+                    <ul class="result-list">
+                        <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">
+                            <div class="result-image">
+                                <img src="{{ STATIC_URL }}/img/info-tenant-imagen.png" alt=""/>
+                            </div>
+                            <div class="result-info">
+                                <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>
+                                <p class="location">{{ entidad.tipo_tenant }} de {{ entidad.disciplina }}</p>
+                                <p class="desc">
+                                    {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
+                                </p>
+                                <div class="btn-row">
+                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Ciudad(Departamento)">
+                                        <i class="fa fa-fw fa-globe"></i>
+                                    </a><span>{% if entidad.ciudad %} {{entidad.ciudad }} {% else %} No especificada{% endif %}</span>
+                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Dirección">
+                                        <i class="fa fa-fw fa-home"></i>
+                                    </a><span>{% if entidad.direccion %} {{entidad.direccion }} {% else %} No especificada{% endif %}</span>
+                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Teléfono">
+                                        <i class="fa fa-fw fa-phone"></i>
+                                    </a><span>{% if entidad.telefono %} {{entidad.telefono }} {% else %} No especificado{% endif %}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
     <div class="row">
         {% for i in actoresAsociados %}
             <div class="col-md-2 col-sm-6">
-                <div class="widget widget-stats bg-{{i.1}}">
+                <div id="info-actores-{{ forloop.counter0 }}" class="widget widget-stats bg-{{i.1}} animated fadeInRight" style="display:none;">
                     <div class="stats-icon stats-icon-lg"><i class="fa {{ i.4 }} fa-fw"></i></div>
                     <div class="stats-title">{{ i.0 |upper }}</div>
                     <div class="stats-number">{{ i.2 }}</div>
                     <hr style="margin-bottom:10px;margin-top:10px;"/>
                     <div class="stats-desc" >
-                        <a href="{% url i.3 %}" style="color:white"><i class="fa fa-list"></i> Ver listado detallado</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url i.3 %}" style="color:white"><i class="fa fa-list"></i> Ver listado detallado</a>
+                        {% endif %}
                         <br/>
                         <a href="{% url i.3 %}" style="color:white"><i class="fa fa-bar-chart"></i> Ver reportes</a>
                     </div>
@@ -134,7 +190,7 @@
         <div class="col-md-7">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="panel panel-success">
+                    <div id="georreferenciacion" class="panel panel-success animated fadeInLeftBig" style="display:none;">
                         <div class="panel-heading">
                             <div class="panel-heading-btn">
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
@@ -157,7 +213,7 @@
         <div class="col-md-5">
             {% if noticias %}
                 <div class="row">
-                    <div class="panel panel-success" >
+                    <div id="noticias" class="panel panel-success animated fadeInRightBig" style="display:none;">
                         <div class="panel-heading">
                             <div class="panel-heading-btn">
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
@@ -182,7 +238,7 @@
                           <div class="carousel-inner" role="listbox">
                             {% for noticia in noticias %}
                                 <div class="item {% if forloop.first %}active{% endif %}">
-                                  <img style="height:300px" src="{{ noticia.foto.url }}" alt="imagen-noticia">
+                                  <img style="height:300px;margin:0 auto;" src="{{ noticia.foto.url }}" alt="imagen-noticia">
                                     <div class="carousel-caption">
                                       <h3 style="color:lightslategray;">{{ noticia.titulo }}</h3>
                                       <p>{{ noticia.cuerpo_noticia|truncatewords:10 }}... <a href="javascript:;" data-target="#modal-noticia-{{ noticia.id }}" data-toggle="modal">Leer más <i class="fa fa-search"></i></a></p>
