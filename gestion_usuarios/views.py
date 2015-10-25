@@ -55,7 +55,12 @@ def inicio(request):
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
-        user = User.objects.create_user('root', 'root@gmail.com', 'root')
+        schema_name = request.tenant.schema_name
+        if schema_name == 'public':
+            password = "cedesoft"
+        else:
+            password = ("%s-%s")%("root", request.tenant.schema_name)
+        user = User.objects.create_user('root', 'root@gmail.com', password)
         user.first_name = 'Administrador'
         user.is_superuser = True
         user.is_staff = True
@@ -288,5 +293,31 @@ def grupos_modificar(request, idGrupo):
             return redirect('grupos_listar')
 
     return render(request, 'grupos_modificar.html', {
+        'form': form,
+    })
+
+@login_required
+@superuser_only
+def datos_basicos_entidad(request):
+    from entidades.views import obtenerTenant, obtenerFormularioTenant
+    from entidades.forms import ActoresForm
+
+    entidad = request.tenant
+    try:
+        instance = obtenerTenant(request, entidad.id, str(entidad.tipo))
+    except Exception as e:
+        return redirect('usuarios_lista')
+
+    nombre, form = obtenerFormularioTenant(str(entidad.tipo), instance=instance)
+
+    if request.method == 'POST':
+        nombre, form = obtenerFormularioTenant(str(entidad.tipo), post=request.POST, files=request.FILES, instance=instance)
+        if form.is_valid():
+            obj = form.save()
+            messages.success(request, "Datos básicos editados correctamente")
+            return redirect('datos_basicos_entidad')
+
+    return render(request, 'datos_basicos_entidad.html', {
+        'nombre': nombre,
         'form': form,
     })

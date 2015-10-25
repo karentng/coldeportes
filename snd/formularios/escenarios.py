@@ -22,7 +22,7 @@ class IdentificacionForm(forms.ModelForm):
 
     class Meta:
         model = Escenario
-        exclude = ('entidad',)
+        exclude = ('entidad', 'fecha_creacion')
 
 class CaracterizacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -47,34 +47,9 @@ class CaracterizacionForm(forms.ModelForm):
         self.fields['descripcion'].widget.attrs['rows'] = 3
     class Meta:
         model = CaracterizacionEscenario
-        exclude = ('escenario', 'ligas') 
+        exclude = ('escenario', 'fecha_creacion') 
 
 
-class CaracterizacionSecretariaForm(forms.ModelForm):
-    required_css_class = 'required'
-
-    descripcion = forms.CharField(widget=forms.Textarea, required=False)
-
-    def __init__(self, *args, **kwargs):
-        super(CaracterizacionSecretariaForm, self).__init__(*args, **kwargs)
-        self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
-        self.fields['clase_acceso'] = adicionarClase(self.fields['clase_acceso'], 'one')
-        self.fields['estado_fisico'] = adicionarClase(self.fields['estado_fisico'], 'one')
-        self.fields['tipo_propietario'] = adicionarClase(self.fields['tipo_propietario'], 'one')
-        self.fields['tipo_escenario'].queryset = TipoEscenario.objects.all().order_by('descripcion')
-        self.fields['tipo_disciplinas'] = adicionarClase(self.fields['tipo_disciplinas'], 'many')
-        self.fields['tipo_disciplinas'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
-        self.fields['tipo_superficie_juego'] = adicionarClase(self.fields['tipo_superficie_juego'], 'many')
-        self.fields['tipo_superficie_juego'].queryset = TipoSuperficie.objects.all().order_by('descripcion')
-        self.fields['caracteristicas'] = adicionarClase(self.fields['caracteristicas'], 'many')
-        self.fields['caracteristicas'].queryset = CaracteristicaEscenario.objects.all().order_by('descripcion')
-        self.fields['clase_uso'] = adicionarClase(self.fields['clase_uso'], 'many')
-        self.fields['ligas'] = adicionarClase(self.fields['ligas'], 'many')
-        self.fields['clase_uso'].queryset = TipoUsoEscenario.objects.all().order_by('descripcion')
-        self.fields['descripcion'].widget.attrs['rows'] = 3
-    class Meta:
-        model = CaracterizacionEscenario
-        exclude = ('escenario',)        
         
 
 class HorariosDisponibleForm(ModelForm):
@@ -91,7 +66,7 @@ class HorariosDisponibleForm(ModelForm):
     class Meta:
 
         model = HorarioDisponibilidad
-        exclude = ('escenario',)
+        exclude = ('escenario', 'fecha_creacion')
         
 
 class DatoHistoricoForm(ModelForm):
@@ -104,7 +79,7 @@ class DatoHistoricoForm(ModelForm):
 
     class Meta:
         model = DatoHistorico
-        exclude = ('escenario',)
+        exclude = ('escenario', 'fecha_creacion')
         widgets = {
             'fecha_inicio': MyDateWidget(),
             'fecha_fin': MyDateWidget(),
@@ -150,7 +125,7 @@ class FotoEscenarioForm(ModelForm):
 
     class Meta:
         model = Foto
-        exclude = ('escenario',)
+        exclude = ('escenario','fecha_creacion')
 
 class MantenimientoEscenarioForm(ModelForm):
     required_css_class = 'required'
@@ -164,7 +139,7 @@ class MantenimientoEscenarioForm(ModelForm):
 
     class Meta:
         model = Mantenimiento
-        exclude = ('escenario',)
+        exclude = ('escenario', 'fecha_creacion')
         widgets = {
             'fecha_ultimo_mantenimiento': MyDateWidget(),
         }
@@ -174,7 +149,7 @@ class VideoEscenarioForm(ModelForm):
 
     class Meta:
         model = Video
-        exclude = ('escenario',)
+        exclude = ('escenario', 'fecha_creacion')
 
 class ContactoForm(ModelForm):
     required_css_class = 'required'
@@ -185,4 +160,4 @@ class ContactoForm(ModelForm):
 
     class Meta:
         model = Contacto
-        exclude = ('escenario',)
+        exclude = ('escenario', 'fecha_creacion')

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Modificar Datos de la Entidad
+{% endblock %}
+
+{% block css %}
+	{{form.media}}
+{% endblock %}
+
+{% block titulo_contenido %}
+    Modificar Datos de la Entidad
+{% endblock %}
+
+{% block miga_pan %}
+    <li class="active">Datos Entidad</li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Modificar Datos de la Entidad
+{% endblock %}
+
+{% block contenido_panel %}
+    
+<div class="row">
+		<div class="col-sm-12">
+			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
+				{% bootstrap_form form layout="horizontal" %}
+
+				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Guardar</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}

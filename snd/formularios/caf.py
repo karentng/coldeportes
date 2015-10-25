@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django import forms
 from snd.models import *
-from coldeportes.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase, verificar_tamano_archivo
 
 class CentroAcondicionamientoForm(forms.ModelForm):
     required_css_class = 'required'
@@ -50,6 +50,12 @@ class CAServiciosForm(forms.ModelForm):
 
 class CAFotoForm(forms.ModelForm):
     required_css_class = 'required'
+
+    def clean(self):
+        cleaned_data = super(CAFotoForm, self).clean()
+        self = verificar_tamano_archivo(self, cleaned_data, "foto")
+        return self.cleaned_data
+
     class Meta:
         model = CAFoto
         exclude = ('centro',)

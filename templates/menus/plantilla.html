@@ -1,5 +1,13 @@
 {% if request.user.is_superuser %}
     {% include "menus/aplicacion/usuarios.html" %}
+    {% if request.tenant.schema_name != 'public' %}
+        <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
+            <a href="{% url 'datos_basicos_entidad' %}">
+                <i class="fa fa-desktop"></i>
+                <span class="colorMenu">MODIFICAR DATOS BÁSICOS DE LA ENTIDAD</span>
+            </a>
+        </li>
+    {% endif %}
 {% else %}
     <li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
         <a href="{% url 'inicio_tenant' %}">

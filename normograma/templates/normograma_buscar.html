@@ -23,18 +23,13 @@
     <div class="row">
         <form  method="POST">{% csrf_token %}
             <div class="col-md-10">       
-                <div class="col-md-6">
+                <div class="col-md-6 add-tooltip"  data-placement="top" data-toggle="tooltip" data-original-title="Ingrese las palabras claves o año para buscar una norma">
                     {% bootstrap_field form.texto_a_buscar layout="vertical" %}
                 </div>
-                {% comment %}
-                <div class="col-md-2">
-                    {% bootstrap_field form.anio layout="vertical" %}
-                </div>
-                {% endcomment %}
-                <div class="col-md-3">
+                <div class="col-md-3 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione uno o más sectores de la norma a buscar">
                     {% bootstrap_field form.sector layout="vertical" %}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione una o más jurisdicciones de la norma a buscar">
                     {% bootstrap_field form.jurisdiccion layout="vertical" %}
                 </div>
             </div>
@@ -46,7 +41,7 @@
             </div>
         </form>
     </div>
-    {% if listado_resultados %}
+    {% if primer_resultado %}
         <ul class="result-list">    
         {% for listado in listado_resultados %}
             {% for resultado in listado %}
@@ -54,23 +49,23 @@
                 
                 <div class="result-info col-md-9">
                     <h4 class="title">Título de Norma: {{resultado.norma}}</h4>
-                    <p class="location">{% if resultado.sectores.all %}Sector:{% for sector in resultado.sectores.all %} {{sector.nombre}}, {% endfor %}{% endif %} Año: {{resultado.anio}}</p>
+                    <p class="location"><b>{% if resultado.sectores.all %}Sector:{% for sector in resultado.sectores.all %} {{sector.nombre}}, {% endfor %}{% endif %} Año: {{resultado.anio}}</b></p>
                     <p class="desc">
                         {{resultado.descripcion}}
                     </p>
                     Palabras Clave: <b>{{resultado.palabras_clave}}</b> <br/>
-                    Archivo Soporte Norma: <a href="{{resultado.archivo}}"><b>{{MEDIA_URL}}{{resultado.archivo}}</b></a>
+                    Archivo Soporte Norma: <a href="{{MEDIA_URL}}{{resultado.archivo}}"><b>{{resultado.archivo}}</b></a>
                 </div>
                 <div class="result-price col-md-1">
                     <small>JURISDICCIÓN:</small> {{resultado.get_jurisdiccion_display}}
-                    <a href="javascript:;" class="btn btn-inverse btn-block">Ver Detalles</a>
+                    <a href="javascript:;" class="btn btn-inverse btn-block add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Esta función está en construcción">Ver Detalles</a>
                 </div>
             </li>
             {% endfor %}
         {% endfor %}
         </ul>
         {% else %}
-        <div class="col-md-5"><h5>No hay resultados para la búsqueda.</h5></div>
+        <div class="col-md-5"><h5>No hay resultados para la búsqueda.</h5></div><br/><br/><br/><br/><br/>
     {% endif %}
 
 {% endblock %}
@@ -92,6 +87,8 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/moment.js"></script>
     <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="{{STATIC_URL}}js/form-plugins.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+
 {% endblock %}
 
 {% block script %}

@@ -1,4 +1,4 @@
-<li class="has-sub {% if "/gestion-usuarios/" in request.path %} active {% endif %}">
+<li class="has-sub {% if "/gestion-usuarios/" in request.path and not 'datos-basicos-entidad' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="fa fa-users"></i>

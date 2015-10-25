@@ -33,15 +33,11 @@
 	{% include 'cafs/wizard/_wizard.html' %}
 	<div class="row">
         <fieldset class="col-md-6" >
-            <form id="wizard-fotos-validations" action="{% url 'crear_foto' idCAF %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <form id="wizard-fotos-validations" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
                         <h3>Subir Foto</h3>
-                        {% for i in form %}
-                            <div class="col-lg-12">
-                                {% bootstrap_field i layout="vertical" %}
-                            </div>
-                        {% endfor %}
+                        {% bootstrap_form form layout="vertical" %}
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-upload"></i> Cargar</button>              
                     </div>
                 </div>
