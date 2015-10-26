@@ -517,7 +517,9 @@ MODELOS_DE_DATOS = (
                 'wizard_editar_caja',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    ['snd.add_cajacompensacion',]
+                ]
             ],
             [
                 "A/I",
@@ -525,6 +527,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.add_cajacompensacion',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],

@@ -257,17 +257,11 @@ def wizard_caracterizacion(request, escenario_id):
         return non_permission
 
 
-    #print(request.tenant.tipo)
-    if request.tenant.tipo == 5:
-        caracterizacion_form = CaracterizacionSecretariaForm(instance=caracteristicas)        
-    else:
-        caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
+    caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
 
     if request.method == 'POST':
-        if request.tenant.tipo == 5:
-            caracterizacion_form = CaracterizacionSecretariaForm(request.POST, instance=caracteristicas)
-        else:
-            caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
+        
+        caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
 
         if caracterizacion_form.is_valid():
             caracteristicas = caracterizacion_form.save(commit=False)
