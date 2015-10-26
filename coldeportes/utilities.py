@@ -13,16 +13,28 @@ def MyDateWidget():
 
 def verificar_tamano_archivo(self, datos, campo):
     from django.forms import ValidationError
+    from django.core.files.uploadedfile import InMemoryUploadedFile
 
     MAX_UPLOAD_SIZE_MB = 5
     MAX_UPLOAD_SIZE = 1048576 * MAX_UPLOAD_SIZE_MB # 5MB: http://www.beesky.com/newsite/bit_byte.htm
 
     archivo = datos[campo]
-    if archivo._size > MAX_UPLOAD_SIZE:
-        from django.forms.util import ErrorList
-        if not campo in self._errors:
-            self._errors[campo] = ErrorList()
-        self._errors[campo].append("El tamaño de la foto no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
+
+    tipo = type(archivo)
+    if not tipo is bool:
+        if tipo is InMemoryUploadedFile:
+            try:
+                if archivo._size > MAX_UPLOAD_SIZE:
+                    from django.forms.util import ErrorList
+                    if not campo in self._errors:
+                        self._errors[campo] = ErrorList()
+                    self._errors[campo].append("El tamaño de la foto no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
+            except Exception:
+                pass
+        else:
+            print ("No esta en memoria")
+    else:
+        print ("Es bool")
     return self
 
 def extraer_codigo_video(url_video):

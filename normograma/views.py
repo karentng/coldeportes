@@ -31,7 +31,32 @@ def registrar(request):
         'form': norma_form,
     })
 
+def buscarPorSectores(sectores, texto):
+    normas = []
 
+    for sector in sectores:
+        normas += list(Norma.objects.filter(contenido_busqueda__icontains=texto, sectores=sector).distinct('id'))
+
+    return normas  
+      
+def buscarPorJurisdicciones(jurisdicciones, texto):
+    normas = []
+
+    for jurisdiccion in jurisdicciones:
+        normas += list(Norma.objects.filter(contenido_busqueda__icontains=texto, jurisdiccion=jurisdiccion).distinct('id'))
+
+    return normas
+
+def buscarPorSectoresYJurisdicciones(sectores,jurisdicciones, texto):
+    normas = []
+
+    for jurisdiccion in jurisdicciones:
+        for sector in sectores:
+            normas += list(Norma.objects.filter(contenido_busqueda__icontains=texto, sectores=sector, jurisdiccion=jurisdiccion).distinct('id'))
+
+    return normas
+
+@login_required
 def buscar(request):
     """
     Septiembre 14 / 2015
@@ -51,6 +76,7 @@ def buscar(request):
     #inicialización de variable resultados
     listado_resultados = []
     cantidad_resultados = 0
+    primer_resultado = None
 
     if request.method == 'POST':
         
@@ -62,15 +88,22 @@ def buscar(request):
             jurisdicciones = request.POST.getlist('jurisdiccion') or None
             texto = request.POST.get('texto_a_buscar') or ''
 
-            normas = Norma.objects.filter(contenido_busqueda__icontains=texto)
-            #Buscar por sectores
-            #Buscar por jurisdicción
+            if sectores and not jurisdicciones:
+                normas = buscarPorSectores(sectores, texto)
+            elif jurisdicciones and not sectores:
+                normas = buscarPorJurisdicciones(jurisdicciones, texto)
+            elif sectores and jurisdicciones:
+                normas = buscarPorSectoresYJurisdicciones(sectores, jurisdicciones, texto)
+            else:
+                normas = Norma.objects.filter(contenido_busqueda__icontains=texto)
                               
         listado_resultados.append(normas)
         cantidad_resultados = len(listado_resultados[0])
+        primer_resultado = listado_resultados[0]
 
     return render(request, 'normograma_buscar.html', {
         'form': form,
         'listado_resultados': listado_resultados,
         'cantidad_resultados': cantidad_resultados,
+        'primer_resultado': primer_resultado
     })
