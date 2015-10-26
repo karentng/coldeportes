@@ -199,7 +199,7 @@
                                     <div class="superbox" data-offset="54">
                                         {% for foto in fotos %}
                                         <div class="superbox-list">
-                                            <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" alt="" class="superbox-img" />
+                                            <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" data-titulo="{{foto.titulo}}" alt="" data-descripcion="{{foto.descripcion}}" class="superbox-img" />
                                         </div>
                                         {% endfor %}
                                     </div>
