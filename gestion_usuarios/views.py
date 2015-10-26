@@ -18,7 +18,6 @@ from directorio.models import *
 from noticias.models import Noticia
 from entidades.models import Entidad
 
-
 def asignarPermisosGrupo(request, grupo, permisos):
     permisos = permisosPermitidos(request, permisos)
     permisos = Permission.objects.filter(codename__in=permisos)
@@ -45,7 +44,6 @@ def cambiarNombreDePermisos():
 def inicio(request):
     digitador = None
 
-
     grupos = Group.objects.all()
     cambiarNombreDePermisos()
     if len(grupos) == 0:
@@ -53,10 +51,22 @@ def inicio(request):
         digitador.save()
         Group(name='Solo lectura').save()
         asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+    else:
+        try:
+            grupo = Group.objects.get(name="Digitador")
+            asignarPermisosGrupo(request, grupo, PERMISOS_DIGITADOR)
+        except Exception as e:
+            pass
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
-        user = User.objects.create_user('root', 'root@gmail.com', 'root')
+        schema_name = request.tenant.schema_name
+        if schema_name == 'public':
+            password = "cedesoft"
+        else:
+            password = ("%s-%s")%("root", request.tenant.schema_name)
+        
+        user = User.objects.create_user('root', 'root@gmail.com', password)
         user.first_name = 'Administrador'
         user.is_superuser = True
         user.is_staff = True
@@ -79,18 +89,22 @@ def inicio(request):
         comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
         comiteParalimpico.save()
 
+    schema = request.tenant.schema_name
+
     if request.user.is_authenticated():
         # lectura y creación de vistas del directorio sql
         if request.tenant.schema_name == "public":
-            return redirect('inicio_tenant')
+            return redirect('entidad_tipo')
         else:
             if request.user.is_superuser:
-                return redirect('inicio_tenant')
+                return redirect('usuarios_lista')
             else:
                 return redirect('inicio_tenant')
 
-    return redirect('inicio_tenant')
-
+    if schema == 'public':
+        return redirect('login')
+    else:
+        return redirect('inicio_tenant')
 
 def inicio_tenant(request):
     import json
@@ -135,12 +149,16 @@ def inicio_tenant(request):
     entidad_actual = request.tenant
     tipo_entidad = type(entidad_actual.obtenerTenant()).__name__
 
+    try:
+        disciplina  = entidad_actual.obtenerTenant().liga.disciplina
+    except Exception:
+        disciplina = None
     if tipo_entidad == 'Club':
         entidad = {
             'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
             'mostrar_info':True,
             'nombre':entidad_actual.nombre,
-            'disciplina': entidad_actual.obtenerTenant().liga.disciplina,
+            'disciplina': disciplina,
             'descripcion': entidad_actual.descripcion,
             'ciudad': entidad_actual.ciudad,
             'direccion': entidad_actual.direccion,
