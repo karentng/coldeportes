@@ -102,11 +102,11 @@
                                             <address class="m-t-5 m-b-5">
                                                 <strong>{{caracteristica.tipo_escenario.descripcion}}</strong><br />
                                                 Capacidad de zona espectadores: {{caracteristica.capacidad_espectadores}}, Metros construídos: {{caracteristica.metros_construidos}}<br />
-                                                Disciplinas: {% for disciplina in caracteristica.tipo_disciplinas.all %} {{disciplina.descripcion}} {% endfor %}<br />
-                                                Tipo de Superficie: {{caracteristica.tipo_superficie_juego}}<br/>
+                                                Disciplinas: {% for disciplina in caracteristica.tipo_disciplinas.all %} {{disciplina.descripcion}}, {% endfor %}<br />
+                                                Tipo de Superficie: {% for superficie in caracteristica.tipo_superficie_juego.all %} {{superficie.descripcion}}, {% endfor %}<br/>
                                                 Clase de Acceso: {{caracteristica.get_clase_acceso_display}} <br/>
-                                                Características del escenario: {% for caracteristica in caracteristica.caracteristica.all %} {{caracteristica.descripcion}} {% endfor %} <br/>
-                                                Clases de uso: {% for uso in caracteristica.clase_uso.all %} {{uso.descripcion}} {% endfor %}                    
+                                                Características del escenario: {% for caracteristica in caracteristica.caracteristicas.all %} {{caracteristica.descripcion}}, {% endfor %} <br/>
+                                                Clases de uso: {% for uso in caracteristica.clase_uso.all %} {{uso.descripcion}}, {% endfor %}                    
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
@@ -199,7 +199,7 @@
                                     <div class="superbox" data-offset="54">
                                         {% for foto in fotos %}
                                         <div class="superbox-list">
-                                            <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" alt="" class="superbox-img" />
+                                            <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" data-titulo="{{foto.titulo}}" alt="" data-descripcion="{{foto.descripcion}}" class="superbox-img" />
                                         </div>
                                         {% endfor %}
                                     </div>
@@ -220,7 +220,6 @@
                                                 <tr>
                                                     <th>VISUALIZACION</th>
                                                     <th>URL</th>
-                                                    <th>DIRECCIÓN</th>
                                                     <th>DESCRIPCIÓN</th>
                                                 </tr>
                                             </thead>
