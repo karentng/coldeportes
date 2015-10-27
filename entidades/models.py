@@ -115,6 +115,11 @@ class Entidad(TenantMixin): # Entidad deportiva
         except Exception:
             return self
 
+    def disponible_para_transferencias(self):
+        if self.tipo == 3:
+            return True
+        return False
+
     def seleccionable(self):
         if self.tipo in [1,2,6,7,8]:
             return True

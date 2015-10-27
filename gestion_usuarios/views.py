@@ -163,6 +163,7 @@ def inicio_tenant(request):
             'ciudad': entidad_actual.ciudad,
             'direccion': entidad_actual.direccion,
             'telefono': entidad_actual.telefono,
+            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
         }
     elif tipo_entidad == 'Liga':
         entidad = {
@@ -174,10 +175,12 @@ def inicio_tenant(request):
             'ciudad': entidad_actual.ciudad,
             'direccion': entidad_actual.direccion,
             'telefono': entidad_actual.telefono,
+            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
         }
     else:
         entidad = {
-            'mostrar_info':False
+            'mostrar_info':False,
+            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
         }
 
     try:
