@@ -13,7 +13,7 @@ from snd.modelos.deportistas import *
 from snd.modelos.cafs import *
 from snd.modelos.cajas_compensacion import *
 from snd.modelos.dirigentes import *
-from coldeportes.utilities import calculate_age
+from coldeportes.utilities import calculate_age, add_actores
 
 
 @login_required
@@ -92,10 +92,9 @@ def registro(request, tipo, tipoEnte=None):
         #form = EntidadForm(request.POST)
         form2 = ActoresForm(request.POST)
         if form.is_valid() and form2.is_valid():
+            actores = form2.save(commit=False)
+            add_actores(actores,tipo)
             actores = form2.save()
-            if tipo == '4':
-                actores.cajas = True
-                actores.save()
 
             pagina = form.cleaned_data['pagina']
             obj = form.save(commit=False)

@@ -249,3 +249,23 @@ def _wrap_instance__resolve(wrapping_functions,instance):
     
     setattr(instance,'resolve',_wrap_func_in_returned_resolver_match)
     return instance
+
+'''
+    Octubre 26/2015
+    Autor: Cristian Leonardo Ríos López
+    Descripción: Permite agregar los actores obligatorios a una entidad
+'''
+def add_actores(actores,tipo):
+    actores.personal_apoyo = True
+    actores.dirigentes = True
+    if tipo == '9': #club paralímpico
+        actores.deportistas = True
+    if tipo == '4': #cajas
+        actores.cajas = True
+    #federaciones, ligas, comite, federaciones paralímpicas, ligas paralímpicas
+    if (tipo == '1') or (tipo == '2') or (tipo == '6') or (tipo == '7') or (tipo == '8'):
+        actores.selecciones = True
+    if tipo == '5': #Ente
+        actores.normas = True
+    if tipo == '10': #CAF
+        actores.centros = True

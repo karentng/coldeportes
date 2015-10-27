@@ -261,13 +261,6 @@ class Comite(Entidad):
     )
     tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
 
-    def save(self, *args, **kwargs):
-        actores = self.actores
-        if actores != None:
-            actores.selecciones = True
-            actores.save()
-        super(Comite, self).save(*args, **kwargs)
-
 class CajaDeCompensacion(Entidad):
     pass
 
@@ -297,13 +290,6 @@ class FederacionParalimpica(ResolucionReconocimiento):
     def save(self, *args, **kwargs):
         comite_para = Comite.objects.get(tipo_comite=2)
         self.comite=comite_para
-
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.selecciones = True
-            actores.save()
         super(FederacionParalimpica, self).save(*args, **kwargs)
 
 class LigaParalimpica(ResolucionReconocimiento):
@@ -317,14 +303,6 @@ class LigaParalimpica(ResolucionReconocimiento):
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     federacion = models.ForeignKey(FederacionParalimpica)
 
-    def save(self, *args, **kwargs):
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.selecciones = True
-            actores.save()
-        super(LigaParalimpica, self).save(*args, **kwargs)
 
 class ClubParalimpico(ResolucionReconocimiento):
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
@@ -333,13 +311,6 @@ class ClubParalimpico(ResolucionReconocimiento):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
-    def save(self, *args, **kwargs):
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.save()
-        super(ClubParalimpico, self).save(*args, **kwargs)
 
 class Federacion(ResolucionReconocimiento):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -348,13 +319,6 @@ class Federacion(ResolucionReconocimiento):
     def save(self, *args, **kwargs):
         comite = Comite.objects.get(tipo_comite=1)
         self.comite=comite
-
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.selecciones = True
-            actores.save()
         super(Federacion, self).save(*args, **kwargs)
 
     def ligas_asociadas(self):
@@ -548,14 +512,6 @@ class Liga(ResolucionReconocimiento):
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
-    def save(self, *args, **kwargs):
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.selecciones = True
-            actores.save()
-        super(Liga, self).save(*args, **kwargs)
 
 class Club(ResolucionReconocimiento):
     TIPOS_CLUBES = (
@@ -570,23 +526,9 @@ class Club(ResolucionReconocimiento):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
-    def save(self, *args, **kwargs):
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.save()
-        super(Club, self).save(*args, **kwargs)
 
 class Caf(Entidad):
-    def save(self, *args, **kwargs):
-        actores = self.actores
-        if actores != None:
-            actores.dirigentes = True
-            actores.personal_apoyo = True
-            actores.centros = True
-            actores.save()
-        super(Caf, self).save(*args, **kwargs)
+    pass
 
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')
