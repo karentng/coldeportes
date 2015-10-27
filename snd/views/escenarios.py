@@ -73,10 +73,6 @@ def desactivar_escenario(request, escenario_id):
         messages.warning(request, "El escenario que intenta acceder no existe.")
         return redirect('listar_escenarios')
 
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
-
     estado_actual = escenario.estado
     escenario.estado = not(estado_actual)
     escenario.save()
@@ -197,10 +193,6 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
-
     identificacion_form = IdentificacionForm( instance=escenario)
 
     if request.method == 'POST':
@@ -252,13 +244,8 @@ def wizard_caracterizacion(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
-
-
     caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
-
+    
     if request.method == 'POST':
         
         caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
@@ -304,10 +291,6 @@ def wizard_horarios(request, escenario_id):
         horarios = None
 
     escenario = Escenario.objects.get(id=escenario_id)
-
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
 
     horarios_form = HorariosDisponibleForm()
 
@@ -356,10 +339,6 @@ def wizard_historicos(request, escenario_id):
         historicos = None
 
     escenario = Escenario.objects.get(id=escenario_id)
-
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
 
     historico_form = DatoHistoricoForm()
 
@@ -414,10 +393,6 @@ def wizard_fotos(request, escenario_id):
         videos = None
 
     escenario = Escenario.objects.get(id=escenario_id)
-
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
 
     fotos_form = FotoEscenarioForm()
     videos_form = VideoEscenarioForm()
@@ -477,10 +452,6 @@ def wizard_videos(request, escenario_id):
 
     escenario = Escenario.objects.get(id=escenario_id)
 
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
-
     fotos_form = FotoEscenarioForm()
     videos_form = VideoEscenarioForm()
 
@@ -530,11 +501,6 @@ def wizard_mantenimiento(request, escenario_id):
     """
     
     escenario = Escenario.objects.get(id=escenario_id)
-
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
-
 
     try:
         mantenimiento = Mantenimiento.objects.get(escenario=escenario_id)
@@ -586,10 +552,6 @@ def wizard_contactos(request, escenario_id):
         contactos = None
 
     escenario = Escenario.objects.get(id=escenario_id)
-
-    non_permission = not_transferido_required(request,escenario)
-    if non_permission:
-        return non_permission
 
     contactos_form = ContactoForm()
 
