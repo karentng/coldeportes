@@ -32,7 +32,7 @@ class LigaForm(forms.ModelForm):
     class Meta:
         model = Liga
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 class FederacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -51,7 +51,7 @@ class FederacionForm(forms.ModelForm):
     class Meta:
         model = Federacion
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 class ClubForm(forms.ModelForm):
     required_css_class = 'required'
@@ -70,7 +70,7 @@ class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 class CajaDeCompensacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -143,7 +143,7 @@ class FederacionParalimpicaForm(forms.ModelForm):
     class Meta:
         model = FederacionParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 
 class LigaParalimpicaForm(forms.ModelForm):
