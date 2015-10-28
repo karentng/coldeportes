@@ -49,6 +49,11 @@ def obtenerDato(modelo, campos):
         campo = campos[0]
         if hasattr(modelo, 'get_%s_display' % campo):
             valor = (getattr(modelo, 'get_%s_display' % campo)())
+        elif '.' in campo:
+            atributos = campo.split('.')
+            valor = modelo
+            for atributo in atributos:
+                valor = getattr(valor,atributo)
         else:
             try:
                 valor = getattr(modelo, campo)
@@ -123,6 +128,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
                 valor = obtenerDato(objeto, atributo)
                 aux.append(valor)
 
+
         urls = []
 
         for i in urlsOpciones:
@@ -141,7 +147,8 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
 
         acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls})
         aux.append(acciones)
-
+        
+        
         datos.append(aux)
     return datos
 
@@ -169,6 +176,7 @@ def obtenerDatos(request, modelo):
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
     else:
+
         objetos = []
         entidades = Entidad.objects.exclude(schema_name='public')
         for entidad in entidades:
@@ -183,6 +191,7 @@ def obtenerDatos(request, modelo):
         datos['recordsFiltered'] = cantidadObjetos
     objetos = definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion)
     datos['data'] = generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones)
+
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
 
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):

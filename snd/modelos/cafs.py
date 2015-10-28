@@ -35,6 +35,7 @@ class CentroAcondicionamiento(models.Model):
     servicios = models.ManyToManyField(CAServicio, blank=True)
     clases = models.ManyToManyField(CAClase, blank=True)
     entidad = models.ForeignKey(Entidad)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
@@ -72,6 +73,7 @@ class CAPlan(models.Model):
     nombre = models.CharField(max_length=255)
     precio = models.PositiveIntegerField()
     descripcion = models.TextField(verbose_name="descripción")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
@@ -86,3 +88,4 @@ class CAFoto(models.Model):
     titulo = models.CharField(max_length=255, verbose_name="título")
     foto = models.ImageField(upload_to=ruta_fotos_cafs)
     descripcion = models.TextField(blank=True, null=True, verbose_name="descripción")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
