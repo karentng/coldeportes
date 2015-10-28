@@ -31,6 +31,7 @@ class CentroBiomedico(models.Model):
     # Pestañas adicionales
     servicios = models.ManyToManyField(CentroBiomedicoServicio, blank=True)
     entidad = models.ForeignKey(Entidad)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
@@ -39,3 +40,20 @@ class CentroBiomedico(models.Model):
         self.barrio = self.barrio.upper()
         self.nombre_administrador = self.nombre_administrador.upper()
         super(CentroBiomedico, self).save(*args, **kwargs)
+
+    def obtenerAtributos(self):
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Teléfono", self.telefono_fijo],
+            ["Correo electrónico", self.email],
+            ["Página Web", self.web],
+            ["Ciudad", self.ciudad],
+            ["Dirección", self.direccion],
+            ["Barrio", self.barrio],
+            ["Comuna", self.comuna],
+            ["Estrato", self.estrato],
+            ["Administrador", self.nombre_administrador],
+            ["Teléfono Administrador", self.telefono_celular],
+        ]
+
+        return [None, atributos, None, None, "Centros Biomédicos!"]

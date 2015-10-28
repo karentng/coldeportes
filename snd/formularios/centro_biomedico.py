@@ -12,7 +12,7 @@ class CentroBiomedicoForm(forms.ModelForm):
 
     class Meta:
         model = CentroBiomedico
-        exclude = ('entidad','servicios','estado',)
+        exclude = ('entidad','servicios','estado','fecha_creacion')
 
 class CentroBiomedicoServiciosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

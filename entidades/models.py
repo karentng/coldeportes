@@ -179,6 +179,15 @@ class Entidad(TenantMixin): # Entidad deportiva
 
         return cajas
 
+    def atributos_centros_biomedicos(self):
+        from snd.modelos.centro_biomedico import CentroBiomedico
+        todos_centros = CentroBiomedico.objects.filter(entidad=self)
+        centros = []
+        for centro in todos_centros:
+            centros.append(centro.obtenerAtributos())
+
+        return centros
+
     def atributosDeSusActores(self):
         def agregarActor(datos, booleano, identificador, metodo):
             if booleano:
@@ -196,6 +205,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         datos = agregarActor(datos, actores.personal_apoyo, "personales", tenant.atributos_personales_apoyo)
         datos = agregarActor(datos, actores.dirigentes, "dirigentes", tenant.atributos_dirigentes)
         datos = agregarActor(datos, actores.cajas, "cajas", tenant.atributos_cajas)
+        datos = agregarActor(datos, actores.centros_biomedicos, "centros_biomedicos", tenant.atributos_centros_biomedicos)
 
         try:
             datos['ligas'] = tenant.ligas_asociadas()
@@ -230,6 +240,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         definirElementosDashBoard(datos, "personales", "Personal de Apoyo", "green", "personal_apoyo_listar","ion-ios-body")
         definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar","ion-ios-people")
         definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs","fa-building-o")
+        definirElementosDashBoard(datos, "centros_biomedicos", "Centros Biomédicos ", "blue", "centro_biomedico_listar","ion-ios-body")
 
         return datos
 
