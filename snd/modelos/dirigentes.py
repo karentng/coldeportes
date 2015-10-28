@@ -44,6 +44,7 @@ class Dirigente(models.Model):
 
     entidad = models.ForeignKey(Entidad, null=True, blank=True)
     estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="Estado del dirigente")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('tipo_identificacion','identificacion',)
@@ -83,6 +84,7 @@ class DirigenteCargo(models.Model):
     superior = models.ForeignKey(Dirigente, null=True, blank=True, related_name='superior')
     superior_cargo = models.ForeignKey('self', null=True, blank=True, verbose_name="Cargo del superior")
     dirigente = models.ForeignKey(Dirigente, related_name='dirigente')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         if self.fecha_retiro != None:
@@ -109,5 +111,6 @@ class DirigenteFuncion(models.Model):
     dirigente = models.ForeignKey(Dirigente)
     cargo = models.ForeignKey(DirigenteCargo)
     descripcion = models.TextField(max_length=500, verbose_name="Función")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 
