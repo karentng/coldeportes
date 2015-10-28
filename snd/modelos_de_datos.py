@@ -368,6 +368,17 @@ MODELOS_DE_DATOS = (
                 'fa-eye',
                 None
             ],
+            [
+                "Editar",
+                'wizard_identificacion',
+                ['id'],
+                'fa-gear',
+                [
+                    [
+                        ['entidad'],
+                    ]
+                ]
+            ],
         ],
     ),
     (   #Numero de modelo 10
