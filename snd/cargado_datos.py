@@ -147,7 +147,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                 continue
 
             parametros = evaluarAtributos(objeto, i[2])
-
+            print(parametros)
             datosURL = {
                 "nombre": i[0],
                 "url": reverse(i[1], args=parametros),

@@ -269,6 +269,7 @@ def appMovilSincronizar(request):
 def cargar_datos_tenantnacional(request, modelo):
     from entidades.cargado_datos_tenantnacional import obtenerDatos
     from django.http import JsonResponse
+
     try:
         datos = obtenerDatos(request, int(modelo))
     except Exception as e:
@@ -360,7 +361,7 @@ def ver_escenario_tenantnacional(request, id_escenario, tenant):
     :type tenant: String
     """
     try:
-        entidad = Entidad.objects.get(nombre=tenant)
+        entidad = Entidad.objects.get(id=tenant)
     except Exception:
         messages.error(request, "Error: La entidad solicitada no existe")
         return redirect('listar_escenarios_nacionales')
@@ -464,11 +465,11 @@ def ver_dirigente_tenantnacional(request, dirigente_id, tenant):
         messages.error(request, 'El dirigente que desea ver no existe')
         return redirect('listar_dirigentes_nacionales')
 
-    funciones = Funcion.objects.filter(dirigente=dirigente)
+    #funciones = Funcion.objects.filter(dirigente=dirigente)
 
     return render(request, 'dirigentes/dirigentes_ver.html', {
         'dirigente': dirigente,
-        'funciones': funciones,
+        #'funciones': funciones,
         'tenant_nacional':True
     })
 
@@ -527,7 +528,7 @@ def ver_caja_tenantnacional(request, id_ccf, tenant):
     :type tenant: String
     """
     try:
-        entidad = Entidad.objects.get(nombre=tenant)
+        entidad = Entidad.objects.get(id=tenant)
     except Exception:
         messages.error(request, "Error: La entidad solicitada no existe")
         return redirect('listar_cajas_nacionales')
@@ -541,13 +542,11 @@ def ver_caja_tenantnacional(request, id_ccf, tenant):
         return redirect('listar_cajas_nacionales')
     horarios = HorarioDisponibilidadCajas.objects.filter(caja_compensacion=id_ccf)
     tarifas = Tarifa.objects.filter(caja_compensacion=id_ccf)
-    contactos = ContactoCajas.objects.filter(caja_compensacion=id_ccf)
 
     return render(request, 'cajas_compensacion/ver_ccf.html', {
         'ccf': ccf,
         'horarios': horarios,
         'tarifas': tarifas,
-        'contactos': contactos,
         'tenant_nacional': True
     })
 
