@@ -272,7 +272,9 @@
                     </div>
                 </div>
             -->
+        {% if entidad.disponible_para_transferencias %}
             {% include 'panel_solicitudes.html' %}
+        {% endif %}
         </div>
     </div>
 {% endblock %}
