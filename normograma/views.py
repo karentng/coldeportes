@@ -57,7 +57,6 @@ def buscarPorSectoresYJurisdicciones(sectores,jurisdicciones, texto):
 
     return normas
 
-@login_required
 def buscar(request):
     """
     Septiembre 14 / 2015
