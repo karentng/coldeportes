@@ -58,6 +58,7 @@ class Deportista(models.Model):
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,verbose_name='Disciplinas Deportivas')
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('tipo_id','identificacion',)
@@ -145,6 +146,7 @@ class ComposicionCorporal(models.Model):
     masa_corporal_magra = models.FloatField(verbose_name='Masa Corporal Magra (kg)')
     eps = models.ForeignKey(EPS,verbose_name='EPS')
     fecha_inicia_deporte = models.DateField(verbose_name='Fecha de iniciación en el deporte')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 
 #Hitorial deportivo
@@ -176,6 +178,7 @@ class HistorialDeportivo(models.Model):
     categoria = models.CharField(max_length=100,verbose_name='Categoría en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def obtener_info_aval(self):
         informacion = [
@@ -234,6 +237,7 @@ class InformacionAcademica(models.Model):
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.institucion = self.institucion.upper()
@@ -259,7 +263,7 @@ class InformacionAdicional(models.Model):
     deportista = models.ForeignKey(Deportista)
     usa_centros_biomedicos = models.BooleanField(verbose_name='¿Usa centros biomédicos?')
     es_beneficiario_programa_apoyo = models.BooleanField(verbose_name='¿Es beneficiario de algún programa de apoyo?')
-
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HistorialLesiones(models.Model):
     TIPOS_LESION = (
@@ -279,7 +283,7 @@ class HistorialLesiones(models.Model):
     fecha_lesion = models.DateField(verbose_name='Fecha de la lesión')
     tipo_lesion = models.IntegerField(choices=TIPOS_LESION,verbose_name='Tipo de lesión')
     periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')
-
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HistorialDoping(models.Model):
     TIPO_IDENTIDAD = (
@@ -295,3 +299,4 @@ class HistorialDoping(models.Model):
     evento = models.CharField(max_length=300,verbose_name='Evento en el que se detectó el doping')
     fecha = models.DateField(verbose_name='Fecha en la que se detectó el doping')
     observaciones = models.TextField(blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
