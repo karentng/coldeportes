@@ -34,6 +34,8 @@ def generar_transferencia(request,id):
 
     if entidad_solicitante.tipo == 3:
         entidades = Entidad.objects.filter(tipo=3).exclude(nombre__in=['publico',entidad_solicitante.nombre])
+    elif entidad_solicitante.tipo == 9:
+        entidades = Entidad.objects.filter(tipo=9).exclude(nombre__in=['publico',entidad_solicitante.nombre])
     else:
         messages.error(request,'Usted se encuentra en una seccion que no le corresponde')
         return redirect('inicio_tenant')

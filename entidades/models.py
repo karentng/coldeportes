@@ -116,7 +116,7 @@ class Entidad(TenantMixin): # Entidad deportiva
             return self
 
     def disponible_para_transferencias(self):
-        if self.tipo == 3:
+        if self.tipo in [3,9]:
             return True
         return False
 
