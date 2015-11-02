@@ -14,5 +14,4 @@ urlpatterns = patterns('snd.views.centro_biomedico',
     #urls wizard
     url(r'^crear_editar/(?P<paso>\w+)/(?P<edicion>\d+)$', 'crear_editar', name='centro_biomedico_crear_editar'),
     url(r'^crear_editar/(?P<paso>\w+)/(?P<edicion>\d+)/(?P<centro_biomedico_id>\d+)$', 'crear_editar', name='centro_biomedico_crear_editar'), 
-    #url(r'^nuevo/wizard/servicios/(?P<paso>\w+)/(?P<centro_biomedico_id>\d+)/(?P<edicion>\d+)$', 'wizard_servicios', name='centro_biomedico_servicios'),
 )

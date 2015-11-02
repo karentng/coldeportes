@@ -52,6 +52,9 @@ def obtenerFormularioTenant(tipo, post=None, files=None, instance=None):
     elif tipo == '10':
         nombre = 'Centro de Acondicionamiento Físico'
         form = CafForm(post, files, instance=instance)
+    elif tipo == '11':
+        nombre = 'Escuela de Formación deportiva'
+        form = EscuelaDeportivaForm(post, files, instance=instance)
 
     return [nombre, form]
 
@@ -77,6 +80,8 @@ def obtenerTenant(request, idEntidad, tipo):
         return ClubParalimpico.objects.get(id=idEntidad)
     elif tipo == '10':
         return Caf.objects.get(id=idEntidad)
+    elif tipo == '11':
+        return EscuelaDeportiva.objects.get(id=idEntidad)
     raise Exception
 
 @login_required

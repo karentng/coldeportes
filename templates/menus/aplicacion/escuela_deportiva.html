@@ -1,0 +1,16 @@
+<li class="has-sub {% if '/escuela-deportiva/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <span class="colorMenu">Escuelas de Formación Deportiva</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.snd.add_escueladeportiva%}
+            <li {% if "/escuela-deportiva/crear_editar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'escuela_deportiva_crear_editar' paso='identificacion' edicion=0 %}">Registro</a>
+            </li>
+        {% endif %}
+        <li {% if "/escuela-deportiva/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'escuela_deportiva_listar' %}">Listar EFD</a>
+        </li>
+    </ul>
+</li>

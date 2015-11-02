@@ -55,6 +55,7 @@ class Actores(models.Model):
     selecciones = models.BooleanField(verbose_name="Selecciones")
     centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos")
     normas = models.BooleanField(verbose_name="Normograma")
+    escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva")
 
     def resumen(self):
         actores = []
@@ -76,6 +77,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         (8,'Liga Paralimpica'),
         (9,'Club Paralimpico'),
         (10,'Centro De Acondicionamiento'),
+        (11, 'Escuela de Formación Deportiva'),
     )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
@@ -109,6 +111,8 @@ class Entidad(TenantMixin): # Entidad deportiva
             modelo = ClubParalimpico
         elif self.tipo == 10:
             modelo = Caf
+        elif self.tipo == 11:
+            modelo = EscuelaDeportiva_
 
         try:
             return modelo.objects.get(id=self.id)
@@ -541,6 +545,10 @@ class Club(ResolucionReconocimiento):
 class Caf(Entidad):
     pass
 
+class EscuelaDeportiva_(Entidad):
+    disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+
+
 class Nacionalidad(models.Model):
     iso = models.CharField(max_length=5,verbose_name='Abreviacion')
     nombre = models.CharField(max_length=255,verbose_name='pais')
@@ -619,6 +627,12 @@ class EPS(models.Model):
         return self.nombre
 
 class CentroBiomedicoServicio(models.Model):
+    nombre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre
+
+class EscuelaDeportivaServicio(models.Model):
     nombre = models.CharField(max_length=255)
 
     def __str__(self):

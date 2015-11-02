@@ -269,3 +269,6 @@ def add_actores(actores,tipo):
         actores.normas = True
     if tipo == '10': #CAF
         actores.centros = True
+    if tipo == '11': #Escuelas de formación deportiva
+        actores.deportistas = True
+        actores.escuelas_deportivas = True
