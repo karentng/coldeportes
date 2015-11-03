@@ -1221,6 +1221,44 @@ INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
 (53,'Tenis de mesa'),
 (54,'Tiro deportivo');
 
+
+
+INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
+(55, 'Actividades Subacuaticas'),
+(56, 'Arqueros De Colombia'),
+(57, 'Automovilismo'),
+(58, 'Badminton'),
+(59, 'Baile Deportivo'),
+(60, 'Balonmano'),
+(61, 'Bridge'),
+(62, 'Coleo'),
+(63, 'Deportes Aereos'),
+(64, 'Fuerzas Armadas'),
+(65, 'Ecuestre'),
+(66, 'Escalada Deportiva'),
+(67, 'Esqui Nautico'),
+(68, 'Fisicoculturismo'),
+(69, 'Futbol De Salon'),
+(70, 'Golf'),
+(71, 'Hapkido'),
+(72, 'Jiujitsu'),
+(73, 'Karts'),
+(74, 'Motociclismo'),
+(75, 'Motonautica'),
+(76, 'Orientacion'),
+(77, 'Racquetball'),
+(78, 'Rugby'),
+(79, 'Sambo'),
+(80, 'Tenis De Campo'),
+(81, 'Tiro Y Caza'),
+(82, 'Triathlon'),
+(83, 'Wushu'),
+(84, 'Deporte Especial'),
+(85, 'Discapacidad Fisica'),
+(86, 'Limitados Visuales'),
+(87, 'Paralisis Cerebral'),
+(88, 'Sordos');
+
 INSERT INTO "entidades_nacionalidad" ("id","iso","nombre") VALUES
 (1, 'AF', 'Afganistán'),
 (2, 'AX', 'Islas Gland'),
