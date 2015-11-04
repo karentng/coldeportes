@@ -12,6 +12,16 @@ def MyDateWidget():
     return DateWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd', 'startView':4, 'language':'es'})
 
 def permisos_de_tipo(entidad,perms):
+    """
+    Noviembre 4,2015
+    Autor: Daniel Correa
+
+    Funcion que permite validar los permisos de una entidad segun su tipo
+
+    :param entidad: entidad a evaluar
+    :param perms: arreglo de tipos
+    :return: valor de aceptacion, paso o no la prueba
+    """
     if entidad.tipo in perms:
         return True
     return False
