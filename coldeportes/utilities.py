@@ -11,6 +11,11 @@ import urllib.parse
 def MyDateWidget():
     return DateWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd', 'startView':4, 'language':'es'})
 
+def permisos_de_tipo(entidad,perms):
+    if entidad.tipo in perms:
+        return True
+    return False
+
 def verificar_tamano_archivo(self, datos, campo):
     from django.forms import ValidationError
 
