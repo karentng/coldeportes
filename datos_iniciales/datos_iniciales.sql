@@ -1165,6 +1165,26 @@ INSERT INTO "entidades_caracteristicaescenario" ("id", "descripcion") VALUES
 (25,	'Vestidores'),
 (26,	'Duchas');
 
+INSERT INTO "entidades_caracteristicaescenario" ("id", "descripcion") VALUES
+(27, 'Cancha Múltiple'),
+(28, 'Juegos Infantiles'),
+(29, 'Cancha Fútbol 11'),
+(30, 'Cancha Fútbol 8'),
+(31, 'Cancha Fútbol 5'),
+(32, 'Cancha Sintética'),
+(33, 'Cancha Basquetbol'),
+(34, 'Cancha Voleybol'),
+(35, 'Cancha Tenis'),
+(36, 'Piscina Niños'),
+(37, 'Piscina Adultos'),
+(38, 'Pista Trote'),
+(39, 'Pista Patinaje'),
+(40, 'Cancha Hockey'),
+(41, 'Pista Bicicros'),
+(42, 'Cancha Tejo'),
+(43, 'Gimnasio'),
+(44, 'Sauna');
+
 INSERT INTO "entidades_dias" ("id", "nombre") VALUES
 (2,	'Lunes'),
 (3,	'Martes'),

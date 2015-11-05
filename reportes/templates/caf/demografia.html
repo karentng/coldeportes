@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load bootstrap3 %}
 
 {% block titulo %}
     Demografía - CAF
@@ -9,7 +10,39 @@
 {% endblock %}
 
 {% block js %}
+	<script src="{{STATIC_URL}}amcharts/amcharts.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/pie.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/serial.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/amexport.js" type="text/javascript"></script>
+	<script src="{{STATIC_URL}}amcharts/exporting/canvg.js" type="text/javascript"></script>
+	<script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
+	<script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
+	<script src="{{STATIC_URL}}amcharts/estadisticas.js" type="text/javascript"></script>
 
+	<script type="text/javascript">
+		var centros = {{centros|safe}};
+		var visualizaciones = {{visualizaciones|safe}};
+		var Reportes = Reportes();
+
+
+		function graficar(nombreGrafica){
+    		for(i in visualizaciones){
+    			var aux = parseInt(visualizaciones[i]);
+    			$("#chartdiv"+aux).css("width", "100%");
+    			$("#chartdiv"+aux).css("height", "500px");
+    			Reportes.crearGrafico(centros, parseInt(visualizaciones[i]), "chartdiv"+aux, nombreGrafica);
+    		}
+    	}
+
+        graficar("Reporte");
+
+	</script>
+
+	<script type="text/javascript">
+		$("#id_visualizacion").on("change", function(){
+			console.log($(this).val());
+		});
+	</script>
 {% endblock %}
 
 {% block miga_pan %}
@@ -24,5 +57,17 @@
 {% endblock %}
 
 {% block contenido_panel %}
-    
+	<div class="row">
+		<div class="col-sm-12">
+            <div class="row">
+            {% for i in form %}
+                <div class="col-sm-3">
+                    {% bootstrap_field i layout="vertical" %}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+	</div>
+    <div id="chartdiv1"></div>
+    <div id="chartdiv3"></div>
 {% endblock %}
