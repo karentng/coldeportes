@@ -1,7 +1,18 @@
-from entidades.models import *
+from entidades.models import Ciudad, Entidad,EscuelaDeportivaServicio
 from django.db import models
+from django.conf import settings
+import os
 
-class CentroBiomedico(models.Model):
+class EscuelaDeportiva(models.Model):
+
+    def file_name(instance, filename):
+    
+        ruta = 'aval_escuelas/' + instance.nombre.strip().replace(" ","") + filename[-4:]
+        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        if(os.path.exists(ruta_delete)):
+            os.remove(ruta_delete)
+        return ruta
+
     ESTADOS = (
         (0, "ACTIVO"),
         (1, "INACTIVO"),
@@ -26,10 +37,11 @@ class CentroBiomedico(models.Model):
     comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)
     estrato = models.IntegerField(choices=ESTRATOS)
+    aval = models.FileField(upload_to=file_name, null=True, blank=True, verbose_name="resolución aval de funcionamiento")
     
-    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado del Centro Biomédico")
+    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado de la EFD")
     # Pestañas adicionales
-    servicios = models.ManyToManyField(CentroBiomedicoServicio, blank=True)
+    servicios = models.ManyToManyField(EscuelaDeportivaServicio, blank=True)
     entidad = models.ForeignKey(Entidad)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -39,7 +51,7 @@ class CentroBiomedico(models.Model):
         self.email = self.email.upper()
         self.barrio = self.barrio.upper()
         self.nombre_administrador = self.nombre_administrador.upper()
-        super(CentroBiomedico, self).save(*args, **kwargs)
+        super(EscuelaDeportiva, self).save(*args, **kwargs)
 
     def obtenerAtributos(self):
         atributos = [
@@ -56,4 +68,4 @@ class CentroBiomedico(models.Model):
             ["Teléfono Administrador", self.telefono_celular],
         ]
 
-        return [None, atributos, None, None, "Centros Biomédicos!"]
+        return [None, atributos, None, None, "EFD!"]

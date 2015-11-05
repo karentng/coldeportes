@@ -93,3 +93,11 @@ urlpatterns += required(
     )
     
 )
+
+urlpatterns += required(
+    tenant_actor('escuelas_deportivas'),
+    patterns('',
+        url(r'^escuela-deportiva/', include('snd.urls.escuela_deportiva')), #urls de centro biomédico
+    )
+    
+)

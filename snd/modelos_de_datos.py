@@ -486,7 +486,8 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #12
+    #MODELO DE DATOS PARA CENTROS BIOMÉDICOS
+    #Numero de modelo 12
     (
         CentroBiomedico,
         ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
@@ -547,6 +548,30 @@ MODELOS_DE_DATOS = (
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
+            ],
+        ],
+    ),
+    #MODELO DE DATOS PARA ESCUELAS DE FORMACIÓN DEPORTIVA
+    #Numero de modelo 14
+    (
+        EscuelaDeportiva,
+        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
+        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
+        None,
+        [
+            [
+                "Ver EFD",
+                'escuela_deportiva_ver',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'escuela_deportiva_crear_editar',
+                ['identificacion', '1', 'id'],
+                'fa-gear',
+                None
             ],
         ],
     ),

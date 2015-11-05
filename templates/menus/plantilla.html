@@ -49,6 +49,9 @@
                 {% if request.tenant.actores.centros_biomedicos %}
                     {% include "menus/aplicacion/centro_biomedico.html" %}
                 {% endif %}
+                {% if request.tenant.actores.escuelas_deportivas %}
+                    {% include "menus/aplicacion/escuela_deportiva.html" %}
+                {% endif %}
             </ul>
         </li>
     {% endif %}
