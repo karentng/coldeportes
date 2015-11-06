@@ -117,7 +117,7 @@ class Entidad(TenantMixin): # Entidad deportiva
             return self
 
     def deportistas_registrables(self):
-        return permisos_de_tipo(self,[3,5,9])
+        return permisos_de_tipo(self,[3,9])
 
     def disponible_para_transferencias(self):
         return permisos_de_tipo(self,[3,9])
