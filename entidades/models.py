@@ -91,6 +91,24 @@ class Entidad(TenantMixin): # Entidad deportiva
     actores = models.OneToOneField(Actores, null=True)
     auto_create_schema = True
 
+    #def ajustar_resultado(self, resultado, resultado_consulta):
+    def ajustar_resultado(self, resultado):
+        datos = {}
+        for i in resultado:
+            descripcion = i['descripcion']
+            if descripcion in datos:
+                datos[descripcion] += i['cantidad']
+            else:
+                datos[descripcion] = i['cantidad']
+        return datos
+
+    def ejecutar_consulta(self, consulta):
+        from django.db.models import Count, F
+        from snd.modelos.cafs import CentroAcondicionamiento
+        resultado = eval(consulta)
+
+        return resultado
+
     def obtenerTenant(self):
         if self.tipo == 1:
             modelo = Liga
@@ -433,6 +451,25 @@ class Federacion(ResolucionReconocimiento):
         return dirigentes
 
 class Liga(ResolucionReconocimiento):
+
+    def ejecutar_consulta(self, ajustar, consulta):
+        from django.db.models import Count, F
+        from django.db import connection
+        from datetime import date
+
+        from collections import Counter
+
+        from snd.modelos.cafs import CentroAcondicionamiento
+
+        resultado = list()
+        clubes = Club.objects.filter(liga=self)
+        for i in clubes:
+            connection.set_tenant(i)
+            resultado = eval(consulta)
+
+        if ajustar:
+            resultado = self.ajustar_resultado(resultado)
+        return resultado
 
     def atributos_deportistas(self):
         from snd.modelos.deportistas import Deportista

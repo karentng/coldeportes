@@ -85,10 +85,12 @@
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
                                             <p><b>Estado: {{centro.get_estado_display}}</b></p>
-                                            <p>{{centro.direccion}}, Barrio {{centro.barrio}}</p>
-                                            <p>{{centro.ciudad}}</p>
-                                            <p>Latitud: {{centro.latitud}} Longitud: {{centro.longitud}} Altura: {{centro.altura}}</p>
-                                            <p>Estrato {{centro.estrato}}, Comuna {{centro.comuna}}</p>
+                                            <p><b>Dirección</b>: {{centro.direccion}}</p>
+                                            <p><b>Barrio</b>: {{centro.barrio}}</p>
+                                            <p><b>Ciudad</b>: {{centro.ciudad}}</p>
+                                            <p><b>Latitud</b>: {{centro.latitud}} <b>Longitud</b>: {{centro.longitud}} <b>Altura</b>: {{centro.altura}}</p>
+                                            <p><b>Estrato</b>: {{centro.estrato}}</p>
+                                            <p><b>Comuna</b>: {{centro.comuna}}</p>
                                         </address>
 
                                         <div align="right">
@@ -97,9 +99,22 @@
                                     </div>                    
                                 </div>
                                 <h5 class="m-t-10">Información de contacto:</h5>
-                                <p>Teléfono: {{centro.telefono}}</p>
-                                <p>Email: {{centro.email}}</p>
-                                <p>Nombre del Administrador: {{centro.nombre_administrador}}</p>
+                                <p><b>Teléfono</b>: {{centro.telefono}}</p>
+                                <p><b>Email</b>: {{centro.email}}</p>
+                                <p><b>Nombre del Administrador</b>: 
+                                    {% if centro.nombre_administrador %}
+                                        {{centro.nombre_administrador}}
+                                    {% else %}
+                                        No definido
+                                    {% endif %}
+                                </p>
+                                <p><b>Página Web</b>: 
+                                    {% if centro.web %}
+                                        {{centro.web}}
+                                    {% else %}
+                                        No definida
+                                    {% endif %}
+                                </p>
                             </div>
                         </div>
                         
