@@ -28,13 +28,140 @@ $(".nav a").on("shown.bs.tab", function () {
 });
 
 function Reportes(){
+    /* Generar las gráficas */
+    function generarComparativa(datos, nombreDiv){
+        chart = new AmCharts.AmSerialChart();
+        chart.dataProvider = datos;
+        chart.categoryField = "descripcion";
+        chart.startDuration = 0.5;
+        chart.balloon.color = "#000000";
+    
+        // AXES
+        // category
+        var categoryAxis = chart.categoryAxis;
+        categoryAxis.fillAlpha = 1;
+        categoryAxis.fillColor = "#FAFAFA";
+        categoryAxis.gridAlpha = 0;
+        categoryAxis.axisAlpha = 0;
+        categoryAxis.gridPosition = "start";
+        categoryAxis.position = "bottom";
+    
+        // value
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.title = "Cantidad";
+        valueAxis.dashLength = 5;
+        valueAxis.axisAlpha = 0;
+        valueAxis.minimum = 0;
+        valueAxis.integersOnly = true;
+        valueAxis.gridCount = 10;
+        valueAxis.reversed = false; // this line makes the value axis reversed
 
+        chart.addValueAxis(valueAxis);
+    
+        // Germany graph
+        var graph = new AmCharts.AmGraph();
+        graph.valueField = "valor";
+        graph.balloonText = "[[category]] ([[value]])";
+        graph.bullet = "round";
+        chart.addGraph(graph);
+        
+        // CURSOR
+        var chartCursor = new AmCharts.ChartCursor();
+        chartCursor.cursorPosition = "mouse";
+        chartCursor.zoomable = false;
+        chartCursor.cursorAlpha = 0;
+        chart.addChartCursor(chartCursor);                
+    
+        // LEGEND
+        var legend = new AmCharts.AmLegend();
+        legend.useGraphSettings = true;
+        chart.addLegend(legend);
+
+        chart.exportConfig = exportConfig();
+    
+        // WRITE
+        chart.write(nombreDiv);
+        charts.push([chart, nombreDiv]);
+    }
+    function generarTorta(datos, nombreDiv){
+        chart = new AmCharts.AmPieChart();
+        chart.dataProvider = datos;
+        chart.titleField = "descripcion";
+        chart.valueField = "valor";
+        chart.outlineColor = "#FFFFFF";
+        chart.innerRadius = "60%";
+        chart.outlineAlpha = 0.8;
+        chart.outlineThickness = 2;
+        chart.balloonText = "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>";
+        // this makes the chart 3D
+        chart.depth3D = 15;
+        chart.angle = 30;
+        chart.exportConfig = exportConfig();
+
+        // WRITE
+        chart.write(nombreDiv);
+        charts.push([chart, nombreDiv]);
+    }
+
+    function generarComparativaVertical(datos, nombreDiv){
+        chart = new AmCharts.AmSerialChart();
+        chart.dataProvider = datos;
+        
+        chart.depth3D = 20;
+        chart.angle = 30;
+        chart.rotate = true;
+
+        chart.categoryField = "descripcion";
+        chart.startDuration = 1;
+        chart.plotAreaBorderColor = "#DADADA";
+        chart.plotAreaBorderAlpha = 1;
+        // this single line makes the chart a bar chart
+        chart.rotate = true;
+
+        // AXES
+        // Category
+        var categoryAxis = chart.categoryAxis;
+        categoryAxis.gridPosition = "start";
+        categoryAxis.gridAlpha = 0.1;
+        categoryAxis.axisAlpha = 0;
+
+        // Value
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.axisAlpha = 0;
+        valueAxis.gridAlpha = 0.1;
+        valueAxis.position = "top";
+        chart.addValueAxis(valueAxis);
+
+        // GRAPHS
+        // first graph
+        var graph1 = new AmCharts.AmGraph();
+        graph1.type = "column";
+        graph1.title = "Descripción";
+        graph1.valueField = "valor";
+        graph1.balloonText = "[[category]] ([[value]])";
+        graph1.lineAlpha = 0;
+        graph1.fillAlphas = 1;
+        graph1.colorField = "color";
+        chart.addGraph(graph1);
+
+        // LEGEND
+        var legend = new AmCharts.AmLegend();
+        chart.addLegend(legend);
+
+        chart.creditsPosition = "top-right";
+
+        chart.exportConfig = exportConfig();
+
+        // WRITE
+        chart.write(nombreDiv);
+        charts.push([chart, nombreDiv]);
+    }
 
     /* Tree Map */
     function ZoomableTreeMap(datos, nombreDiv, agregar) {
         var $container = $('#'+nombreDiv),
             w = $("#contenido").width(),
-            h = $("#contenido").height(),
+            h = 500, //$("#contenido").height(),
             x = d3.scale.linear().range([0, w]),
             y = d3.scale.linear().range([0, h]),
             root,
@@ -69,8 +196,8 @@ function Reportes(){
                 data['children'].push({
                     "name": aux[0],
                     "children": [{
-                        "name": aux[0],
-                        "size": aux[1],    
+                        "name": i,
+                        "size": aux,
                     }]
                     
                 });
@@ -96,13 +223,6 @@ function Reportes(){
                 })
                 .on("click", function (d) {
                     return zoom(node === d.parent ? root : d.parent);
-                })
-                .on('mouseover', function(d) {
-                    d3.select("#tooltip")
-                        .style("visibility", "visible")
-                        .html(codname(d)+": "+d.value)
-                        .style("top", function () { return (d3.event.pageY - 40)+"px"})
-                        .style("left", function () { return (d3.event.pageX - 65)+"px";})
                 });
 
 
@@ -244,183 +364,65 @@ function Reportes(){
     // Gráficas
     function torta(resultado, nombreDiv){
         var datos = [];
-
-        console.log(nombreDiv);
         for (i in resultado){
             var aux = resultado[i];
             datos.push(
                 {
-                    'descripcion': aux.descripcion,
-                    'valor': aux.cantidad
+                    'descripcion': i,
+                    'valor': aux,
                 }
             );
         }
-
+        
         var chart;
         var legend;
 
-        AmCharts.ready(function () {
-            // PIE CHART
-            chart = new AmCharts.AmPieChart();
-            chart.dataProvider = datos;
-            chart.titleField = "descripcion";
-            chart.valueField = "valor";
-            chart.outlineColor = "#FFFFFF";
-            chart.innerRadius = "60%";
-            chart.outlineAlpha = 0.8;
-            chart.outlineThickness = 2;
-            chart.balloonText = "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>";
-            // this makes the chart 3D
-            chart.depth3D = 15;
-            chart.angle = 30;
-            chart.exportConfig = exportConfig();
-
-            // WRITE
-            chart.write(nombreDiv);
-            charts.push([chart, nombreDiv]);
-        });
+        if (AmCharts.isReady){
+            generarTorta(datos, nombreDiv);
+        }else{
+            AmCharts.ready(generarTorta(datos, nombreDiv));
+        }
     }
 
     function comparativa(resultado, nombreDiv, nombreGrafica){
         var chart2;
-        var datos2 = [];
+        var datos = [];
         for (i in resultado){
-            datos2.push(
+            var aux = resultado[i];
+            datos.push(
                 {
-                    'descripcion': resultado[i][0],
-                    'valor': resultado[i][1],
+                    'descripcion': i,
+                    'valor': aux,
                 }
             );
         }
             
-        AmCharts.ready(function () {
-            // SERIAL CHART
-            chart = new AmCharts.AmSerialChart();
-            chart.dataProvider = datos2;
-            chart.categoryField = "descripcion";
-            chart.startDuration = 0.5;
-            chart.balloon.color = "#000000";
-        
-            // AXES
-            // category
-            var categoryAxis = chart.categoryAxis;
-            categoryAxis.fillAlpha = 1;
-            categoryAxis.fillColor = "#FAFAFA";
-            categoryAxis.gridAlpha = 0;
-            categoryAxis.axisAlpha = 0;
-            categoryAxis.gridPosition = "start";
-            categoryAxis.position = "bottom";
-        
-            // value
-            var valueAxis = new AmCharts.ValueAxis();
-            valueAxis.title = "Cantidad";
-            valueAxis.dashLength = 5;
-            valueAxis.axisAlpha = 0;
-            valueAxis.minimum = 0;
-            valueAxis.integersOnly = true;
-            valueAxis.gridCount = 10;
-            valueAxis.reversed = false; // this line makes the value axis reversed
-
-            chart.addValueAxis(valueAxis);
-        
-            // Germany graph
-            var graph = new AmCharts.AmGraph();
-            graph.valueField = "valor";
-            graph.balloonText = "[[category]] ([[value]])";
-            graph.bullet = "round";
-            chart.addGraph(graph);
-            
-            // CURSOR
-            var chartCursor = new AmCharts.ChartCursor();
-            chartCursor.cursorPosition = "mouse";
-            chartCursor.zoomable = false;
-            chartCursor.cursorAlpha = 0;
-            chart.addChartCursor(chartCursor);                
-        
-            // LEGEND
-            var legend = new AmCharts.AmLegend();
-            legend.useGraphSettings = true;
-            chart.addLegend(legend);
-
-            chart.exportConfig = exportConfig();
-        
-            // WRITE
-            chart.write(nombreDiv);
-            charts.push([chart, nombreDiv]);
-        });
+        if (AmCharts.isReady){
+            generarComparativa(datos, nombreDiv);
+        }else{
+            AmCharts.ready(generarComparativa(datos, nombreDiv));
+        }
     }
 
     function comparativaVertical(resultado, nombreDiv){
         var chart2;
-        var datos3 = [];
+        var datos = [];
         for (i in resultado){
             var aux = resultado[i];
-            datos3.push(
+            datos.push(
                 {
-                    'descripcion': aux.descripcion,
-                    'valor': aux.cantidad,
-                    'color': colores[i%colores.length],
+                    'descripcion': i,
+                    'valor': aux,
+                    'color': colores[aux%colores.length],
                 }
             );
-            console.log(aux.descripcion);
         }
 
-        console.log(datos3.length);
-
-        AmCharts.ready(function () {
-            // SERIAL CHART
-            chart = new AmCharts.AmSerialChart();
-            chart.dataProvider = datos3;
-            
-            chart.depth3D = 20;
-            chart.angle = 30;
-            chart.rotate = true;
-
-            chart.categoryField = "descripcion";
-            chart.startDuration = 1;
-            chart.plotAreaBorderColor = "#DADADA";
-            chart.plotAreaBorderAlpha = 1;
-            // this single line makes the chart a bar chart
-            chart.rotate = true;
-
-            // AXES
-            // Category
-            var categoryAxis = chart.categoryAxis;
-            categoryAxis.gridPosition = "start";
-            categoryAxis.gridAlpha = 0.1;
-            categoryAxis.axisAlpha = 0;
-
-            // Value
-            var valueAxis = new AmCharts.ValueAxis();
-            valueAxis.axisAlpha = 0;
-            valueAxis.gridAlpha = 0.1;
-            valueAxis.position = "top";
-            chart.addValueAxis(valueAxis);
-
-            // GRAPHS
-            // first graph
-            var graph1 = new AmCharts.AmGraph();
-            graph1.type = "column";
-            graph1.title = "Descripción";
-            graph1.valueField = "valor";
-            graph1.balloonText = "[[category]] ([[value]])";
-            graph1.lineAlpha = 0;
-            graph1.fillAlphas = 1;
-            graph1.colorField = "color";
-            chart.addGraph(graph1);
-
-            // LEGEND
-            var legend = new AmCharts.AmLegend();
-            chart.addLegend(legend);
-
-            chart.creditsPosition = "top-right";
-
-            chart.exportConfig = exportConfig();
-
-            // WRITE
-            chart.write(nombreDiv);
-            charts.push([chart, nombreDiv]);
-        });
+        if (AmCharts.isReady){
+            generarComparativaVertical(datos, nombreDiv);
+        }else{
+            AmCharts.ready(generarComparativaVertical(datos, nombreDiv));
+        }
     }
 
     function treeMap(resultado, nombreDiv, agregar) {
@@ -428,8 +430,8 @@ function Reportes(){
         for (i in resultado) {
             var aux = resultado[i];
             datos.push({
-                "name": aux[0],
-                "value": aux[1],
+                "name": i,
+                "value": aux,
             });
         }
 
@@ -472,15 +474,16 @@ function Reportes(){
         modificarDatos: function(datos){
             var nuevosDatos = [];
             for (i in datos){
+                var aux = datos[i];
                 nuevosDatos.push(
                     {
-                        'descripcion': datos[i][0],
-                        'valor': datos[i][1],
-                        'color': colores[i%colores.length],
+                        'descripcion': i,
+                        'valor': aux,
+                        'color': colores[aux%colores.length],
                     }
                 );
             }
-
+            
             for(i in charts){
                 var chartSeleccionado = charts[i][0];
                 var div = charts[i][1];
@@ -502,7 +505,6 @@ function Reportes(){
         },
 
         obtenerResultadoDeJson: function(r){
-            console.log(r);
             return obtenerResultado(r);
         }
     }
