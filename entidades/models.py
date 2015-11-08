@@ -102,10 +102,14 @@ class Entidad(TenantMixin): # Entidad deportiva
                 datos[descripcion] = i['cantidad']
         return datos
 
-    def ejecutar_consulta(self, consulta):
+    def ejecutar_consulta(self, ajustar, consulta):
         from django.db.models import Count, F
         from snd.modelos.cafs import CentroAcondicionamiento
+        from datetime import date
+
         resultado = eval(consulta)
+        if ajustar:
+            resultado = self.ajustar_resultado(resultado)
 
         return resultado
 
@@ -465,7 +469,7 @@ class Liga(ResolucionReconocimiento):
         clubes = Club.objects.filter(liga=self)
         for i in clubes:
             connection.set_tenant(i)
-            resultado = eval(consulta)
+            resultado += eval(consulta)
 
         if ajustar:
             resultado = self.ajustar_resultado(resultado)

@@ -33,6 +33,7 @@ def demografia(request):
                 centros = list()
                 for anno in annos:
                     centros += tipoTenant.ejecutar_consulta(False, "list(CentroAcondicionamiento.objects.filter(fecha_creacion__gte=date(%s, 1, 1), fecha_creacion__lte=date(%s, 12, 31)).annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))"%(anno, anno))
+                    print (centros)
                 centros = tipoTenant.ajustar_resultado(centros)
             else:
                 centros = tipoTenant.ejecutar_consulta(True, "list(CentroAcondicionamiento.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))")
