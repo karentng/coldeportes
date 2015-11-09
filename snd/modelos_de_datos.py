@@ -160,6 +160,11 @@ MODELOS_DE_DATOS = (
                         ['estado'],
                         ['EN TRANSFERENCIA'],
                         lambda x, y: operator.eq(x[0], y[0])
+                    ],
+                    [
+                        ['estado'],
+                        ['EN TRANSFERENCIA'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
 

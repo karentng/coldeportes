@@ -74,6 +74,7 @@ class PersonalApoyo(models.Model):
     etnia = models.CharField(max_length=20, choices=ETNIAS,blank=True)
     lgtbi = models.BooleanField(verbose_name='Hace parte de la comunidad LGTBI?')
     entidad = models.ForeignKey(Entidad)
+    fecha_creacion = models.DateField(auto_now_add=True)
 
     class Meta:
         unique_together = ('tipo_id','identificacion',)
@@ -123,6 +124,7 @@ class FormacionDeportiva(models.Model):
     profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
     grado_semestre = models.IntegerField(verbose_name='Grado, año o semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año finalización')
+    fecha_creacion = models.DateField(auto_now_add=True)
     personal_apoyo = models.ForeignKey(PersonalApoyo)
 
     def save(self, *args, **kwargs):
@@ -137,4 +139,5 @@ class ExperienciaLaboral(models.Model):
     fecha_comienzo = models.DateField()
     actual = models.BooleanField(verbose_name='¿Aún en el cargo?',default=False)
     fecha_fin = models.DateField(blank=True, null=True)
+    fecha_creacion = models.DateField(auto_now_add=True)
     personal_apoyo = models.ForeignKey(PersonalApoyo)
