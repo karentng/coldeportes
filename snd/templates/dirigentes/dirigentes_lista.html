@@ -36,7 +36,7 @@
            });
         });
         var idTabla = "tabla-dirigentes";
-        opciones = {% if perms.snd.change_dirigente %} true {% else %} false {% endif %};
+        opciones = true;
         {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
             url = "{% url 'cargar_columnas' 7 %}";
         {% else %}
