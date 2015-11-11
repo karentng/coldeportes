@@ -202,10 +202,11 @@ class Entidad(TenantMixin): # Entidad deportiva
         return cajas
 
     def atributosDeSusActores(self):
+        from django.db import connection
         def agregarActor(datos, booleano, identificador, metodo):
             if booleano:
                 datos[identificador] = metodo()
-            
+            connection.set_tenant(self)
             return datos
 
         tenant = self.obtenerTenant()

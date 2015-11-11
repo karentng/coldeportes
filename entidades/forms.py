@@ -33,6 +33,10 @@ class LigaForm(forms.ModelForm):
         model = Liga
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 
 class FederacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -52,6 +56,10 @@ class FederacionForm(forms.ModelForm):
         model = Federacion
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 
 class ClubForm(forms.ModelForm):
     required_css_class = 'required'
@@ -71,6 +79,10 @@ class ClubForm(forms.ModelForm):
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 
 class CajaDeCompensacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -144,6 +156,10 @@ class FederacionParalimpicaForm(forms.ModelForm):
         model = FederacionParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 
 
 class LigaParalimpicaForm(forms.ModelForm):
@@ -173,6 +189,10 @@ class LigaParalimpicaForm(forms.ModelForm):
         model = LigaParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'federacion', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        widgets = {
+            'fecha_resolucion': MyDateWidget(),
+            'fecha_vencimiento': MyDateWidget(),
+        }
 
 class ClubParalimpicoForm(forms.ModelForm):
     required_css_class = 'required'

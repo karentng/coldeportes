@@ -46,7 +46,11 @@ MODELOS_DE_DATOS = (
                 'crear_caf',
                 ['Identificación', 'id'],
                 'fa-gear',
-                None
+                [
+                    [
+                        'snd.add_centroacondicionamiento',
+                    ],
+                ]
             ],
         ],
     ),
