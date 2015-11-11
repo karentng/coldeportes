@@ -24,8 +24,9 @@
 		<div class="col-sm-12">
 			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
 				{% bootstrap_form form layout="horizontal" %}
-
-			    <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
+				{% if nombre != 'Centro de Acondicionamiento Físico' %}
+                    <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
+                {% endif %}
 			    {% bootstrap_form form2 layout="horizontal" %}
 
 				<button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">Guardar</button>

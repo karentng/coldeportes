@@ -22,4 +22,6 @@ PERMISOS_DIGITADOR = [
     ['add_noticia', True],
     ['change_noticia', True],
     ['delete_noticia', True],
+    ['add_escueladeportiva', 'escuelas_deportivas'],
+    ['change_escueladeportiva', 'escuelas_deportivas'],
 ]

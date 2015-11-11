@@ -1,0 +1,17 @@
+<ol class="bwizard-steps clearfix" role="tablist">
+    <li role="tab" {% if wizard_stage >= 1 %} aria-selected="true" class="active" {% endif %} style="z-index: 2;"><span class="label badge-inverse">1</span>
+    	<a class="hidden-phone">
+    		<a {% if edicion == 1 or edicion == '1' %} href="{% url 'escuela_deportiva_crear_editar' escuela_deportiva_id=escuela_deportiva_id paso='identificacion' edicion=edicion%}" style="cursor:pointer;"{% endif %}>
+        		Identificación <small>Datos de identificación, ubicación y contacto</small>
+    		</a>
+        </a>
+    </li>
+    <li role="tab"  {% if wizard_stage >= 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 1;"><span class="label">2</span>
+    	<a class="hidden-phone">
+    		<a {% if edicion == 1 or edicion == '1' %} href="{% url 'escuela_deportiva_crear_editar' escuela_deportiva_id=escuela_deportiva_id paso='servicios' edicion=edicion%}" style="cursor:pointer;"{% endif %}>
+        		Servicios <small>Servicios ofrecidos por la Escuela de Formación Deportiva</small>
+        	</a>
+        </a>
+    </li>
+</ol>
+<br/>

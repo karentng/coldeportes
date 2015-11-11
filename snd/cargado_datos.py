@@ -92,14 +92,48 @@ def evaluarAtributos(objeto, atributos):
     return valores
 
 def evaluarCondiciones(objeto, condiciones, request):
+    try:
+        condicion_es_actor_propio = type(condiciones[0][0] is list) and condiciones[0][0][0] == 'entidad'
+    except Exception:
+        condicion_es_actor_propio = False
+
+
     if condiciones == None:
         return True
-    # Aplica el operador OR
+    # Aplica el operador AND (Editado por Milton)
+    cumple = True
     if type(condiciones[0][0]) is str:
-        cumple = True
-        for i in condiciones[0]:
-            cumple = cumple and request.user.has_perm(i)
-        return cumple
+        for permiso in condiciones[0]:
+            cumple = cumple and request.user.has_perm(permiso)
+        #En el caso de que se cumplan todos los permisos anteriores, debemos verificar las condiciones siguientes
+        #que pueden o no existir
+        if cumple:
+            #Verificamos si hay más condiciones por verificar
+            try:
+                condiciones[1]
+                hay_mas_condiciones = True
+            except Exception as e:
+                hay_mas_condiciones = False
+            #Si hay más condiciones verificamos cada una de ellas.
+            if hay_mas_condiciones:
+                condiciones_array = condiciones[1:len(condiciones)]
+                for i in condiciones_array:
+                    valoresDeAtributos = evaluarAtributos(objeto, i[0])
+                    atributosDefinidos = i[1]
+                    ok = i[2](valoresDeAtributos, atributosDefinidos)
+
+                    if ok == True:
+                        return ok
+            else:
+                return cumple
+        else:
+            return False
+    elif condicion_es_actor_propio:
+        try:
+            if objeto.entidad == request.tenant:
+                return True
+        except Exception: # No tiene entidad
+            return False
     else:
         for i in condiciones:
             valoresDeAtributos = evaluarAtributos(objeto, i[0])
@@ -147,7 +181,6 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                 continue
 
             parametros = evaluarAtributos(objeto, i[2])
-
             datosURL = {
                 "nombre": i[0],
                 "url": reverse(i[1], args=parametros),

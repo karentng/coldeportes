@@ -13,7 +13,7 @@ from snd.modelos.deportistas import *
 from snd.modelos.cafs import *
 from snd.modelos.cajas_compensacion import *
 from snd.modelos.dirigentes import *
-from coldeportes.utilities import calculate_age
+from coldeportes.utilities import calculate_age, add_actores
 
 
 @login_required
@@ -52,6 +52,9 @@ def obtenerFormularioTenant(tipo, post=None, files=None, instance=None):
     elif tipo == '10':
         nombre = 'Centro de Acondicionamiento Físico'
         form = CafForm(post, files, instance=instance)
+    elif tipo == '11':
+        nombre = 'Escuela de Formación deportiva'
+        form = EscuelaDeportivaForm(post, files, instance=instance)
 
     return [nombre, form]
 
@@ -77,6 +80,8 @@ def obtenerTenant(request, idEntidad, tipo):
         return ClubParalimpico.objects.get(id=idEntidad)
     elif tipo == '10':
         return Caf.objects.get(id=idEntidad)
+    elif tipo == '11':
+        return EscuelaDeportiva.objects.get(id=idEntidad)
     raise Exception
 
 @login_required
@@ -92,10 +97,9 @@ def registro(request, tipo, tipoEnte=None):
         #form = EntidadForm(request.POST)
         form2 = ActoresForm(request.POST)
         if form.is_valid() and form2.is_valid():
+            actores = form2.save(commit=False)
+            add_actores(actores,tipo)
             actores = form2.save()
-            if tipo == '4':
-                actores.cajas = True
-                actores.save()
 
             pagina = form.cleaned_data['pagina']
             obj = form.save(commit=False)
@@ -269,6 +273,7 @@ def appMovilSincronizar(request):
 def cargar_datos_tenantnacional(request, modelo):
     from entidades.cargado_datos_tenantnacional import obtenerDatos
     from django.http import JsonResponse
+
     try:
         datos = obtenerDatos(request, int(modelo))
     except Exception as e:
@@ -360,7 +365,7 @@ def ver_escenario_tenantnacional(request, id_escenario, tenant):
     :type tenant: String
     """
     try:
-        entidad = Entidad.objects.get(nombre=tenant)
+        entidad = Entidad.objects.get(id=tenant)
     except Exception:
         messages.error(request, "Error: La entidad solicitada no existe")
         return redirect('listar_escenarios_nacionales')
@@ -464,11 +469,11 @@ def ver_dirigente_tenantnacional(request, dirigente_id, tenant):
         messages.error(request, 'El dirigente que desea ver no existe')
         return redirect('listar_dirigentes_nacionales')
 
-    funciones = Funcion.objects.filter(dirigente=dirigente)
+    #funciones = Funcion.objects.filter(dirigente=dirigente)
 
     return render(request, 'dirigentes/dirigentes_ver.html', {
         'dirigente': dirigente,
-        'funciones': funciones,
+        #'funciones': funciones,
         'tenant_nacional':True
     })
 
@@ -527,7 +532,7 @@ def ver_caja_tenantnacional(request, id_ccf, tenant):
     :type tenant: String
     """
     try:
-        entidad = Entidad.objects.get(nombre=tenant)
+        entidad = Entidad.objects.get(id=tenant)
     except Exception:
         messages.error(request, "Error: La entidad solicitada no existe")
         return redirect('listar_cajas_nacionales')
@@ -541,13 +546,11 @@ def ver_caja_tenantnacional(request, id_ccf, tenant):
         return redirect('listar_cajas_nacionales')
     horarios = HorarioDisponibilidadCajas.objects.filter(caja_compensacion=id_ccf)
     tarifas = Tarifa.objects.filter(caja_compensacion=id_ccf)
-    contactos = ContactoCajas.objects.filter(caja_compensacion=id_ccf)
 
     return render(request, 'cajas_compensacion/ver_ccf.html', {
         'ccf': ccf,
         'horarios': horarios,
         'tarifas': tarifas,
-        'contactos': contactos,
         'tenant_nacional': True
     })
 

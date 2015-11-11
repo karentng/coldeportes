@@ -28,16 +28,28 @@ def permisos_de_tipo(entidad,perms):
 
 def verificar_tamano_archivo(self, datos, campo):
     from django.forms import ValidationError
+    from django.core.files.uploadedfile import InMemoryUploadedFile
 
     MAX_UPLOAD_SIZE_MB = 5
     MAX_UPLOAD_SIZE = 1048576 * MAX_UPLOAD_SIZE_MB # 5MB: http://www.beesky.com/newsite/bit_byte.htm
 
     archivo = datos[campo]
-    if archivo._size > MAX_UPLOAD_SIZE:
-        from django.forms.util import ErrorList
-        if not campo in self._errors:
-            self._errors[campo] = ErrorList()
-        self._errors[campo].append("El tamaño de la foto no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
+
+    tipo = type(archivo)
+    if not tipo is bool:
+        if tipo is InMemoryUploadedFile:
+            try:
+                if archivo._size > MAX_UPLOAD_SIZE:
+                    from django.forms.util import ErrorList
+                    if not campo in self._errors:
+                        self._errors[campo] = ErrorList()
+                    self._errors[campo].append("El tamaño de la foto no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
+            except Exception:
+                pass
+        else:
+            print ("No esta en memoria")
+    else:
+        print ("Es bool")
     return self
 
 def extraer_codigo_video(url_video):
@@ -252,3 +264,26 @@ def _wrap_instance__resolve(wrapping_functions,instance):
     
     setattr(instance,'resolve',_wrap_func_in_returned_resolver_match)
     return instance
+
+'''
+    Octubre 26/2015
+    Autor: Cristian Leonardo Ríos López
+    Descripción: Permite agregar los actores obligatorios a una entidad
+'''
+def add_actores(actores,tipo):
+    actores.personal_apoyo = True
+    actores.dirigentes = True
+    if tipo == '9': #club paralímpico
+        actores.deportistas = True
+    if tipo == '4': #cajas
+        actores.cajas = True
+    #federaciones, ligas, comite, federaciones paralímpicas, ligas paralímpicas
+    if (tipo == '1') or (tipo == '2') or (tipo == '6') or (tipo == '7') or (tipo == '8'):
+        actores.selecciones = True
+    if tipo == '5': #Ente
+        actores.normas = True
+    if tipo == '10': #CAF
+        actores.centros = True
+    if tipo == '11': #Escuelas de formación deportiva
+        actores.deportistas = True
+        actores.escuelas_deportivas = True

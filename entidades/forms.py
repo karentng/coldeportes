@@ -32,7 +32,7 @@ class LigaForm(forms.ModelForm):
     class Meta:
         model = Liga
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'federacion', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 class FederacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -51,7 +51,7 @@ class FederacionForm(forms.ModelForm):
     class Meta:
         model = Federacion
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 class ClubForm(forms.ModelForm):
     required_css_class = 'required'
@@ -70,7 +70,7 @@ class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 class CajaDeCompensacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -143,7 +143,7 @@ class FederacionParalimpicaForm(forms.ModelForm):
     class Meta:
         model = FederacionParalimpica
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores','comite',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
 
 
 class LigaParalimpicaForm(forms.ModelForm):
@@ -215,6 +215,27 @@ class CafForm(forms.ModelForm):
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
         fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'direccion', 'telefono', 'descripcion',)
 
+
+class EscuelaDeportivaForm(forms.ModelForm):
+    required_css_class = 'required'
+    pagina = forms.CharField(label="URL dentro del SIND", required=True)
+
+    def __init__(self, *args, **kwargs):
+        instancia = kwargs.get('instance', None)
+        super(EscuelaDeportivaForm, self).__init__(*args, **kwargs)
+        self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+        self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
+
+        if instancia != None:
+            del self.fields['pagina']
+    
+    class Meta:
+        model = EscuelaDeportiva_
+        exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'disciplina', 'ciudad', 'direccion', 'telefono', 'descripcion',)
+
+
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):
@@ -224,37 +245,40 @@ class ActoresForm(forms.ModelForm):
         super(ActoresForm, self).__init__(*args, **kwargs)
         if tipo == '1':
             #Liga
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos', 'normas'])
+            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
         elif tipo == '2':
             #Federacion
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
+            self.quitar_campos(['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
         elif tipo == '3':
             #Club
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
+            self.quitar_campos(['personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
         elif tipo == '4':
             #CajaDeCompensacion
-            self.fields['cajas'].widget = forms.HiddenInput()
-            self.quitar_campos(['centros','deportistas','dirigentes','selecciones','centros_biomedicos','normas'])
+            #self.fields['cajas'].widget = forms.HiddenInput()
+            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
         elif tipo == '5':
             #Ente
-            self.quitar_campos(['cajas','selecciones'])
-            if tipoEnte == '1':#Ente municipal
-                self.quitar_campos(['centros_biomedicos'])
+            self.quitar_campos(['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','normas','escuelas_deportivas'])
         elif tipo == '6':
             #Comite
-            self.quitar_campos(['cajas','selecciones','centros_biomedicos','normas'])
+            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
+            if tipoEnte == '2':#Comité Paralímpico Colombiano
+                self.quitar_campos(['escenarios'])
         elif tipo =='7':
             #FederacionParalimpica
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
+            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
         elif tipo =='8':
             #LigaParalimpica
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
+            self.quitar_campos(['centros','escenarios','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
         elif tipo =='9':
             #clubParalimpico
-            self.quitar_campos(['dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
+            self.quitar_campos(['escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
         elif tipo == '10':
             #caf
-            self.quitar_campos(['centros', 'escenarios', 'deportistas', 'dirigentes','personal_apoyo','cajas','selecciones','centros_biomedicos','normas'])
+            self.quitar_campos(['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
+        elif tipo == '11':
+            #escuela de formación deportiva
+            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
 
     def quitar_campos(self,campos):
         for campo in campos:

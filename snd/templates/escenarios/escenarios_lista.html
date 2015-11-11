@@ -30,7 +30,7 @@
         //opciones = {% if perms.snd.change_escenario %} true {% else %} false {% endif %};
         opciones = true;
         //liga; federacion; comité; federación paralímpica; liga paralímpica
-        {% if tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
+        {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
             url = "{% url 'cargar_columnas' 9 %}";
         {% else %}
             url = "{% url 'cargar_columnas' 8 %}";
