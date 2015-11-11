@@ -272,7 +272,7 @@
                     </div>
                 </div>
             -->
-        {% if entidad.disponible_para_transferencias %}
+        {% if entidad.disponible_para_transferencias and user.is_authenticated %}
             {% include 'panel_solicitudes.html' %}
         {% endif %}
         </div>
