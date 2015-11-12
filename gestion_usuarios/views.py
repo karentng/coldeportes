@@ -16,7 +16,7 @@ from django.db.models import Q
 from coldeportes.utilities import permisosPermitidos
 from directorio.models import *
 from noticias.models import Noticia
-
+from entidades.models import Entidad
 
 def asignarPermisosGrupo(request, grupo, permisos):
     permisos = permisosPermitidos(request, permisos)
@@ -44,7 +44,6 @@ def cambiarNombreDePermisos():
 def inicio(request):
     digitador = None
 
-
     grupos = Group.objects.all()
     cambiarNombreDePermisos()
     if len(grupos) == 0:
@@ -52,6 +51,12 @@ def inicio(request):
         digitador.save()
         Group(name='Solo lectura').save()
         asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+    else:
+        try:
+            grupo = Group.objects.get(name="Digitador")
+            asignarPermisosGrupo(request, grupo, PERMISOS_DIGITADOR)
+        except Exception as e:
+            pass
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
@@ -60,6 +65,7 @@ def inicio(request):
             password = "cedesoft"
         else:
             password = ("%s-%s")%("root", request.tenant.schema_name)
+        
         user = User.objects.create_user('root', 'root@gmail.com', password)
         user.first_name = 'Administrador'
         user.is_superuser = True
@@ -83,23 +89,23 @@ def inicio(request):
         comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
         comiteParalimpico.save()
 
+    schema = request.tenant.schema_name
+
     if request.user.is_authenticated():
         # lectura y creación de vistas del directorio sql
-        
-
         if request.tenant.schema_name == "public":
             return redirect('entidad_tipo')
         else:
             if request.user.is_superuser:
                 return redirect('usuarios_lista')
             else:
-                
-                    
                 return redirect('inicio_tenant')
 
-    return redirect('login')
+    if schema == 'public':
+        return redirect('login')
+    else:
+        return redirect('inicio_tenant')
 
-@login_required
 def inicio_tenant(request):
     import json
     """
@@ -140,6 +146,43 @@ def inicio_tenant(request):
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
 
+    entidad_actual = request.tenant
+    tipo_entidad = type(entidad_actual.obtenerTenant()).__name__
+
+    try:
+        disciplina  = entidad_actual.obtenerTenant().liga.disciplina
+    except Exception:
+        disciplina = None
+    if tipo_entidad == 'Club':
+        entidad = {
+            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
+            'mostrar_info':True,
+            'nombre':entidad_actual.nombre,
+            'disciplina': disciplina,
+            'descripcion': entidad_actual.descripcion,
+            'ciudad': entidad_actual.ciudad,
+            'direccion': entidad_actual.direccion,
+            'telefono': entidad_actual.telefono,
+            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
+        }
+    elif tipo_entidad == 'Liga':
+        entidad = {
+            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
+            'mostrar_info':True,
+            'nombre':entidad_actual.nombre,
+            'disciplina': entidad_actual.obtenerTenant().disciplina,
+            'descripcion': entidad_actual.descripcion,
+            'ciudad': entidad_actual.ciudad,
+            'direccion': entidad_actual.direccion,
+            'telefono': entidad_actual.telefono,
+            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
+        }
+    else:
+        entidad = {
+            'mostrar_info':False,
+            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
+        }
+
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
         if len(noticias_todas)>5:
@@ -154,7 +197,9 @@ def inicio_tenant(request):
         'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias
+        'noticias':noticias,
+        'entidad':entidad
+
     })
 
 

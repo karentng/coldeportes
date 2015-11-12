@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django import forms
-from snd.models import *
+from snd.models import CentroBiomedico
 from coldeportes.utilities import adicionarClase
 
 class CentroBiomedicoForm(forms.ModelForm):
@@ -12,7 +12,7 @@ class CentroBiomedicoForm(forms.ModelForm):
 
     class Meta:
         model = CentroBiomedico
-        exclude = ('entidad','servicios','estado',)
+        exclude = ('entidad','servicios','estado','fecha_creacion')
 
 class CentroBiomedicoServiciosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

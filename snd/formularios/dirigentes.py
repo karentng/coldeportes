@@ -1,9 +1,8 @@
 from django import forms
 from django.forms import ModelForm
 from snd.models import *
-from coldeportes.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
 import datetime
-from coldeportes.utilities import MyDateWidget
 
 
 class DirigenteVerificarExistenciaForm(forms.Form):
@@ -27,11 +26,15 @@ class DirigenteForm(ModelForm):
         self.fields['genero'] = adicionarClase(self.fields['genero'], 'one')
         self.fields['perfil'].widget.attrs['rows'] = 3
 
+    def clean(self):
+        cleaned_data = super(DirigenteForm, self).clean()
+        self = verificar_tamano_archivo(self, cleaned_data, "foto")
+        return self.cleaned_data
 
     class Meta:
         model = Dirigente
         #fields = '__all__'
-        exclude = ('entidad', 'estado',)
+        exclude = ('entidad', 'estado','fecha_creacion')
 
 class DirigenteCargosForm(ModelForm):
     required_css_class = 'required'
@@ -76,7 +79,7 @@ class DirigenteCargosForm(ModelForm):
 
     class Meta:
         model = DirigenteCargo
-        exclude = ('dirigente',)
+        exclude = ('dirigente','fecha_creacion')
         widgets = {
             'fecha_posesion':MyDateWidget(),
             'fecha_retiro':MyDateWidget(),
@@ -103,4 +106,4 @@ class DirigenteFuncionesForm(ModelForm):
 
     class Meta:
         model = DirigenteFuncion
-        exclude = ('dirigente',)
+        exclude = ('dirigente','fecha_creacion')

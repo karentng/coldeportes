@@ -11,6 +11,21 @@ import urllib.parse
 def MyDateWidget():
     return DateWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd', 'startView':4, 'language':'es'})
 
+def permisos_de_tipo(entidad,perms):
+    """
+    Noviembre 4,2015
+    Autor: Daniel Correa
+
+    Funcion que permite validar los permisos de una entidad segun su tipo
+
+    :param entidad: entidad a evaluar
+    :param perms: arreglo de tipos
+    :return: valor de aceptacion, paso o no la prueba
+    """
+    if entidad.tipo in perms:
+        return True
+    return False
+
 def verificar_tamano_archivo(self, datos, campo):
     from django.forms import ValidationError
     from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -109,7 +124,10 @@ def permisosPermitidos(request, permisos):
     permitidos = []
     for i in permisos:
         try:
-            valor = getattr(request.tenant.actores, i[1])
+            if type(i[1]) == str:
+                valor = getattr(request.tenant.actores, i[1])
+            else: # Booleano
+                valor = i[1]
             if valor == True:
                 permitidos.append(i[0])
         except Exception as e:
@@ -246,3 +264,26 @@ def _wrap_instance__resolve(wrapping_functions,instance):
     
     setattr(instance,'resolve',_wrap_func_in_returned_resolver_match)
     return instance
+
+'''
+    Octubre 26/2015
+    Autor: Cristian Leonardo Ríos López
+    Descripción: Permite agregar los actores obligatorios a una entidad
+'''
+def add_actores(actores,tipo):
+    actores.personal_apoyo = True
+    actores.dirigentes = True
+    if tipo == '9': #club paralímpico
+        actores.deportistas = True
+    if tipo == '4': #cajas
+        actores.cajas = True
+    #federaciones, ligas, comite, federaciones paralímpicas, ligas paralímpicas
+    if (tipo == '1') or (tipo == '2') or (tipo == '6') or (tipo == '7') or (tipo == '8'):
+        actores.selecciones = True
+    if tipo == '5': #Ente
+        actores.normas = True
+    if tipo == '10': #CAF
+        actores.centros = True
+    if tipo == '11': #Escuelas de formación deportiva
+        actores.deportistas = True
+        actores.escuelas_deportivas = True

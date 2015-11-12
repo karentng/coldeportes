@@ -31,7 +31,6 @@ def registrar(request):
         'form': norma_form,
     })
 
-    
 def buscarPorSectores(sectores, texto):
     normas = []
 

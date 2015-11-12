@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    EFD - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista de Escuelas de Formación Deportiva
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">EFD</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <style type="text/css">
+    {
+        text-align: center;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $(document).on('mouseenter','tr',function(e){
+               $('.add-tooltip').tooltip();
+           });
+        });
+        var idTabla = "tabla-escuelas-deportivas";
+        opciones = true;
+        /*{% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
+            url = "{% url 'cargar_columnas' 7 %}";
+        {% else %}
+            url = "{% url 'cargar_columnas' 6 %}";
+        {% endif %}*/
+        url = "{% url 'cargar_columnas' 14 %}";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script>
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        };
+    </script>
+{% endblock %}
+
+{% block titulo_panel %}
+    Listar Escuelas de Formación Deportiva
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="table-responsive">
+        <table id="tabla-escuelas-deportivas" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+
+        </table>
+    </div>
+    <div class="modal fade" id="modal-desactivate{{escuela_deportiva.id}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">{% if escuela_deportiva.estado %} Activar {% else %} Desactivar {% endif %} EFD:</h4>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro que desea {% if escuela_deportiva.estado %} activar {% else %} desactivar {% endif %} esta EFD?
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

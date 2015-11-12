@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 import datetime
-from coldeportes.utilities import adicionarClase,MyDateWidget
+from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo
 
 class VerificarExistenciaForm(forms.Form):
     TIPO_IDENTIDAD = (
@@ -45,14 +45,17 @@ class DeportistaForm(ModelForm):
         self.fields['lgtbi'] = adicionarClase(self.fields['lgtbi'], 'styled')
 
     def clean(self):
+        cleaned_data = super(DeportistaForm, self).clean()
+        self = verificar_tamano_archivo(self, cleaned_data, "foto")
         fecha_nacimiento = self.cleaned_data['fecha_nacimiento']
         if fecha_nacimiento > datetime.date.today():
                 msg = "La fecha de nacimiento no puede ser mayor al día de hoy"
                 self.add_error('fecha_nacimiento', msg)
+        return self.cleaned_data
 
     class Meta:
         model = Deportista
-        exclude = ('entidad','estado',)
+        exclude = ('entidad','estado','fecha_creacion',)
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
             'clases': forms.CheckboxInput(),
@@ -88,7 +91,7 @@ class ComposicionCorporalForm(ModelForm):
 
     class Meta:
         model = ComposicionCorporal
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
         widgets = {
             'fecha_inicia_deporte': MyDateWidget(),
         }
@@ -114,7 +117,7 @@ class HistorialDeportivoForm(ModelForm):
 
     class Meta:
         model = HistorialDeportivo
-        exclude = ('deportista','estado')
+        exclude = ('deportista','estado','fecha_creacion',)
         widgets = {
             'fecha_inicial': MyDateWidget(),
             'fecha_final': MyDateWidget(),
@@ -131,7 +134,7 @@ class HistorialLesionesForm(ModelForm):
 
     class Meta:
         model = HistorialLesiones
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
         widgets = {
             'fecha_lesion': MyDateWidget(),
         }
@@ -145,7 +148,7 @@ class HistorialDopingForm(ModelForm):
 
     class Meta:
         model = HistorialDoping
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
         widgets = {
             'fecha': MyDateWidget(),
         }
@@ -158,7 +161,7 @@ class InformacionAdicionalForm(ModelForm):
 
     class Meta:
         model = InformacionAdicional
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
 
 
 class InformacionAcademicaForm(ModelForm):
@@ -172,7 +175,7 @@ class InformacionAcademicaForm(ModelForm):
 
     class Meta:
         model = InformacionAcademica
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
 
     def clean(self):
         cleaned_data = super(InformacionAcademicaForm, self).clean()
@@ -199,4 +202,4 @@ class InformacionAcademicaForm(ModelForm):
 class DeportistaTransfer(ModelForm):
     class Meta:
         model = Deportista
-        exclude = ('entidad','estado',)
+        exclude = ('entidad','estado','fecha_creacion')

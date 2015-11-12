@@ -90,6 +90,9 @@ MODELOS_DE_DATOS = (
                 'fa-gear',
                 [
                     [
+                        'snd.change_deportista',
+                    ],
+                    [
                         ['estado'],
                         ['ACTIVO'],
                         lambda x, y: operator.eq(x[0], y[0])
@@ -103,6 +106,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-archive',
                 [
+                    [
+                        'snd.change_deportista',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO'],
@@ -118,6 +124,9 @@ MODELOS_DE_DATOS = (
                 'fa-ban',
                 [
                     [
+                        'snd.change_deportista',
+                    ],
+                    [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
@@ -132,6 +141,9 @@ MODELOS_DE_DATOS = (
                 'fa-exchange',
                 [
                     [
+                        'snd.change_deportista',
+                    ],
+                    [
                         ['estado'],
                         ['ACTIVO'],
                         lambda x, y: operator.eq(x[0], y[0])
@@ -145,6 +157,14 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-times',
                 [
+                    [
+                        'snd.change_deportista',
+                    ],
+                    [
+                        ['estado'],
+                        ['EN TRANSFERENCIA'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ],
                     [
                         ['estado'],
                         ['EN TRANSFERENCIA'],
@@ -190,7 +210,9 @@ MODELOS_DE_DATOS = (
                 'edicion_personal_apoyo',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    ['snd.add_personalapoyo',]
+                ]
             ],
             [
                 "A/I",
@@ -198,6 +220,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.change_personalapoyo',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
@@ -226,7 +251,9 @@ MODELOS_DE_DATOS = (
                 'edicion_personal_apoyo',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    ['snd.add_personalapoyo',]
+                ]
             ],
             [
                 "A/I",
@@ -234,6 +261,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.change_personalapoyo',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
@@ -465,7 +495,8 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    #12
+    #MODELO DE DATOS PARA CENTROS BIOMÉDICOS
+    #Numero de modelo 12
     (
         CentroBiomedico,
         ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
@@ -526,6 +557,30 @@ MODELOS_DE_DATOS = (
                         lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
+            ],
+        ],
+    ),
+    #MODELO DE DATOS PARA ESCUELAS DE FORMACIÓN DEPORTIVA
+    #Numero de modelo 14
+    (
+        EscuelaDeportiva,
+        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
+        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
+        None,
+        [
+            [
+                "Ver EFD",
+                'escuela_deportiva_ver',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+            [
+                "Editar",
+                'escuela_deportiva_crear_editar',
+                ['identificacion', '1', 'id'],
+                'fa-gear',
+                None
             ],
         ],
     ),
