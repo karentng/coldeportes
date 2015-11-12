@@ -30,3 +30,9 @@ class DemografiaForm(forms.Form):
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     anno = forms.MultipleChoiceField(choices=((2013, 2013),(2014, 2014),(2015, 2015),),required=False, label="Año")
     visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+
+class FiltrosDeportistasForm(forms.Form):
+    """
+    Formulario para filtros de deportistas
+    """
+    pass
