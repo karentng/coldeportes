@@ -1,0 +1,99 @@
+.btn-large-dim {
+  width: 90px;
+  height: 90px;
+  font-size: 42px;
+}
+a.dim {
+  display: inline-block;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  padding-top: 6px;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 600;
+  margin-bottom: 20px !important;
+}
+a.dim:active {
+  top: 3px;
+}
+a.btn-primary.dim {
+  box-shadow: inset 0px 0px 0px #336cba, 0px 5px 0px 0px #336cba, 0px 10px 5px #999999;
+}
+a.btn-primary.dim:active {
+  box-shadow: inset 0px 0px 0px #336cba, 0px 2px 0px 0px #336cba, 0px 5px 3px #999999;
+}
+a.btn-default.dim {
+  box-shadow: inset 0px 0px 0px #a2a2a2, 0px 5px 0px 0px #a2a2a2, 0px 10px 5px #999999;
+}
+a.btn-default.dim:active {
+  box-shadow: inset 0px 0px 0px #a2a2a2, 0px 2px 0px 0px #a2a2a2, 0px 5px 3px #999999;
+}
+a.btn-warning.dim {
+  box-shadow: inset 0px 0px 0px #cb7e32, 0px 5px 0px 0px #cb7e32, 0px 10px 5px #999999;
+}
+a.btn-warning.dim:active {
+  box-shadow: inset 0px 0px 0px #cb7e32, 0px 2px 0px 0px #cb7e32, 0px 5px 3px #999999;
+}
+a.btn-info.dim {
+  box-shadow: inset 0px 0px 0px #439cba, 0px 5px 0px 0px #439cba, 0px 10px 5px #999999;
+}
+a.btn-info.dim:active {
+  box-shadow: inset 0px 0px 0px #439cba, 0px 2px 0px 0px #439cba, 0px 5px 3px #999999;
+}
+a.btn-success.dim {
+  box-shadow: inset 0px 0px 0px #006e6e, 0px 5px 0px 0px #006e6e, 0px 10px 5px #999999;
+}
+a.btn-success.dim:active {
+  box-shadow: inset 0px 0px 0px #006e6e, 0px 2px 0px 0px #006e6e, 0px 5px 3px #999999;
+}
+a.btn-danger.dim {
+  box-shadow: inset 0px 0px 0px #ea394c, 0px 5px 0px 0px #ea394c, 0px 10px 5px #999999;
+}
+a.btn-danger.dim:active {
+  box-shadow: inset 0px 0px 0px #ea394c, 0px 2px 0px 0px #ea394c, 0px 5px 3px #999999;
+}
+a.dim:before {
+  font-size: 50px;
+  line-height: 1em;
+  font-weight: normal;
+  color: #fff;
+  display: block;
+  padding-top: 10px;
+}
+a.dim:active:before {
+  top: 7px;
+  font-size: 50px;
+}
+
+.btn-outline {
+  color: inherit;
+  background-color: transparent;
+  transition: all .5s;
+}
+
+.btn-primary.btn-outline {
+  color: #1ab394;
+}
+.btn-success.btn-outline {
+  color: #1c84c6;
+}
+.btn-info.btn-outline {
+  color: #23c6c8;
+}
+.btn-warning.btn-outline {
+  color: #f8ac59;
+}
+.btn-danger.btn-outline {
+  color: #ed5565;
+}
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+  color: #fff;
+}
