@@ -46,7 +46,11 @@ MODELOS_DE_DATOS = (
                 'crear_caf',
                 ['Identificación', 'id'],
                 'fa-gear',
-                None
+                [
+                    [
+                        'snd.add_centroacondicionamiento',
+                    ],
+                ]
             ],
         ],
     ),
@@ -392,6 +396,17 @@ MODELOS_DE_DATOS = (
                 ['id','entidad.id'],
                 'fa-eye',
                 None
+            ],
+            [
+                "Editar",
+                'wizard_identificacion',
+                ['id'],
+                'fa-gear',
+                [
+                    [
+                        ['entidad'],
+                    ]
+                ]
             ],
         ],
     ),

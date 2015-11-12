@@ -92,6 +92,11 @@ def evaluarAtributos(objeto, atributos):
     return valores
 
 def evaluarCondiciones(objeto, condiciones, request):
+    try:
+        condicion_es_actor_propio = type(condiciones[0][0] is list) and condiciones[0][0][0] == 'entidad'
+    except Exception:
+        condicion_es_actor_propio = False
+
     if condiciones == None:
         return True
     # Aplica el operador OR
@@ -100,6 +105,12 @@ def evaluarCondiciones(objeto, condiciones, request):
         for i in condiciones[0]:
             cumple = cumple and request.user.has_perm(i)
         return cumple
+    elif condicion_es_actor_propio:
+        try:
+            if objeto.entidad == request.tenant:
+                return True
+        except Exception: # No tiene entidad
+            return False
     else:
         for i in condiciones:
             valoresDeAtributos = evaluarAtributos(objeto, i[0])
@@ -147,7 +158,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                 continue
 
             parametros = evaluarAtributos(objeto, i[2])
-
+            print(parametros)
             datosURL = {
                 "nombre": i[0],
                 "url": reverse(i[1], args=parametros),

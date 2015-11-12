@@ -1165,6 +1165,26 @@ INSERT INTO "entidades_caracteristicaescenario" ("id", "descripcion") VALUES
 (25,	'Vestidores'),
 (26,	'Duchas');
 
+INSERT INTO "entidades_caracteristicaescenario" ("id", "descripcion") VALUES
+(27, 'Cancha Múltiple'),
+(28, 'Juegos Infantiles'),
+(29, 'Cancha Fútbol 11'),
+(30, 'Cancha Fútbol 8'),
+(31, 'Cancha Fútbol 5'),
+(32, 'Cancha Sintética'),
+(33, 'Cancha Basquetbol'),
+(34, 'Cancha Voleybol'),
+(35, 'Cancha Tenis'),
+(36, 'Piscina Niños'),
+(37, 'Piscina Adultos'),
+(38, 'Pista Trote'),
+(39, 'Pista Patinaje'),
+(40, 'Cancha Hockey'),
+(41, 'Pista Bicicros'),
+(42, 'Cancha Tejo'),
+(43, 'Gimnasio'),
+(44, 'Sauna');
+
 INSERT INTO "entidades_dias" ("id", "nombre") VALUES
 (2,	'Lunes'),
 (3,	'Martes'),
@@ -1220,6 +1240,44 @@ INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
 (52,'Tenis'),
 (53,'Tenis de mesa'),
 (54,'Tiro deportivo');
+
+
+
+INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
+(55, 'Actividades Subacuaticas'),
+(56, 'Arqueros De Colombia'),
+(57, 'Automovilismo'),
+(58, 'Badminton'),
+(59, 'Baile Deportivo'),
+(60, 'Balonmano'),
+(61, 'Bridge'),
+(62, 'Coleo'),
+(63, 'Deportes Aereos'),
+(64, 'Fuerzas Armadas'),
+(65, 'Ecuestre'),
+(66, 'Escalada Deportiva'),
+(67, 'Esqui Nautico'),
+(68, 'Fisicoculturismo'),
+(69, 'Futbol De Salon'),
+(70, 'Golf'),
+(71, 'Hapkido'),
+(72, 'Jiujitsu'),
+(73, 'Karts'),
+(74, 'Motociclismo'),
+(75, 'Motonautica'),
+(76, 'Orientacion'),
+(77, 'Racquetball'),
+(78, 'Rugby'),
+(79, 'Sambo'),
+(80, 'Tenis De Campo'),
+(81, 'Tiro Y Caza'),
+(82, 'Triathlon'),
+(83, 'Wushu'),
+(84, 'Deporte Especial'),
+(85, 'Discapacidad Fisica'),
+(86, 'Limitados Visuales'),
+(87, 'Paralisis Cerebral'),
+(88, 'Sordos');
 
 INSERT INTO "entidades_nacionalidad" ("id","iso","nombre") VALUES
 (1, 'AF', 'Afganistán'),

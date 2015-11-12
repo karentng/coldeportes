@@ -28,7 +28,7 @@ from snd.models import *
 '''
 
 MODELOS_DE_DATOS = (
-    (
+    (   #Numero de modelo 0
         PersonalApoyo,
         ['nombres','apellidos','actividad', 'entidad', 'correo_electronico'],
         ['Nombres','Apellidos','Actividad Desempeñada', 'Entidad', 'Correo electrónico'],
@@ -43,7 +43,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    (
+    (   #Numero de modelo 1
         Dirigente,
         ['nombres','apellidos', 'entidad', 'cargo', 'email'],
         ['Nombres','Apellidos', 'Entidad', 'Cargo', 'Correo Electrónico'],
@@ -58,7 +58,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    (
+    (   #Numero de modelo 2
         Escenario,
         ['nombre','ciudad', 'entidad', 'estrato'],
         ['Nombre','Ciudad(Departamento)', 'Entidad', 'Estrato'],
@@ -67,13 +67,14 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_escenario_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
         ],
     ),
-    (
+    
+    (   #Numero de modelo 3
         Deportista,
         ['nombres','apellidos', 'entidad', 'ciudad_residencia','disciplinas'],
         ['Nombres','Apellidos', 'Entidad', 'Ciudad(Departamento) Residencia', 'Disciplinas'],
@@ -88,7 +89,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    (
+    (   #Numero de modelo 4
         CentroAcondicionamiento,
         ['nombre', 'ciudad', 'entidad', 'telefono', 'email', 'web'],
         ['Nombre', 'Ciudad', 'Entidad', 'Teléfono', 'Email', 'Página Web'],
@@ -103,7 +104,7 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
-    (
+    (   #Numero de modelo 5
         CajaCompensacion,
         ['nombre', 'publico', 'clasificacion', 'region'],
         ['Nombre', 'Público', 'Clasificación', 'Región'],
@@ -112,7 +113,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_caja_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
