@@ -55,7 +55,7 @@ class DeportistaForm(ModelForm):
 
     class Meta:
         model = Deportista
-        exclude = ('entidad','estado',)
+        exclude = ('entidad','estado','fecha_creacion',)
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
             'clases': forms.CheckboxInput(),
@@ -91,7 +91,7 @@ class ComposicionCorporalForm(ModelForm):
 
     class Meta:
         model = ComposicionCorporal
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
         widgets = {
             'fecha_inicia_deporte': MyDateWidget(),
         }
@@ -117,7 +117,7 @@ class HistorialDeportivoForm(ModelForm):
 
     class Meta:
         model = HistorialDeportivo
-        exclude = ('deportista','estado')
+        exclude = ('deportista','estado','fecha_creacion',)
         widgets = {
             'fecha_inicial': MyDateWidget(),
             'fecha_final': MyDateWidget(),
@@ -134,7 +134,7 @@ class HistorialLesionesForm(ModelForm):
 
     class Meta:
         model = HistorialLesiones
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
         widgets = {
             'fecha_lesion': MyDateWidget(),
         }
@@ -148,7 +148,7 @@ class HistorialDopingForm(ModelForm):
 
     class Meta:
         model = HistorialDoping
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
         widgets = {
             'fecha': MyDateWidget(),
         }
@@ -161,7 +161,7 @@ class InformacionAdicionalForm(ModelForm):
 
     class Meta:
         model = InformacionAdicional
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
 
 
 class InformacionAcademicaForm(ModelForm):
@@ -175,7 +175,7 @@ class InformacionAcademicaForm(ModelForm):
 
     class Meta:
         model = InformacionAcademica
-        exclude = ('deportista',)
+        exclude = ('deportista','fecha_creacion',)
 
     def clean(self):
         cleaned_data = super(InformacionAcademicaForm, self).clean()
@@ -202,4 +202,4 @@ class InformacionAcademicaForm(ModelForm):
 class DeportistaTransfer(ModelForm):
     class Meta:
         model = Deportista
-        exclude = ('entidad','estado',)
+        exclude = ('entidad','estado','fecha_creacion')

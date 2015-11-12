@@ -17,7 +17,7 @@
 {% block css %}
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
     <style type="text/css">
-    th{
+    {
         text-align: center;
     }
     </style>
@@ -32,7 +32,7 @@
            });
         });
         var idTabla = "tabla-escuelas-deportivas";
-        opciones = {% if perms.snd.change_escueladeportiva %} true {% else %} false {% endif %};
+        opciones = true;
         /*{% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
             url = "{% url 'cargar_columnas' 7 %}";
         {% else %}

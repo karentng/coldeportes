@@ -141,12 +141,6 @@
                                                 {% else %}
                                                     Ninguno
                                                 {% endif %}</p>
-                                                <p><b>Dirección:</b>
-                                                {% if personal_apoyo.direccion %}
-                                                    {{personal_apoyo.direccion}}
-                                                {% else %}
-                                                    Ninguno
-                                                {% endif %}</p>
                                                 <p><b>Correo electrónico:</b>
                                                 {% if personal_apoyo.correo_electronico %}
                                                     {{personal_apoyo.correo_electronico}}
@@ -155,7 +149,11 @@
                                                 {% endif %}</p>
                                             {% endif %}
                                             <p><b>Etnia:</b>
-                                            {{ personal_apoyo.etnia}}</p>
+                                            {% if personal_apoyo.etnia %}
+                                                {{personal_apoyo.etnia}}
+                                            {% else %}
+                                                No registrada
+                                            {% endif %}</p>
                                             </div>
                                         </address>
 

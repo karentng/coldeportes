@@ -1,5 +1,6 @@
 from django.db import models
 from tenant_schemas.models import TenantMixin
+from coldeportes.utilities import permisos_de_tipo
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
@@ -141,15 +142,17 @@ class Entidad(TenantMixin): # Entidad deportiva
         except Exception:
             return self
 
+    def deportistas_registrables(self):
+        return permisos_de_tipo(self,[3,9])
+
+    def disponible_para_transferencias(self):
+        return permisos_de_tipo(self,[3,9])
+
     def seleccionable(self):
-        if self.tipo in [1,2,6,7,8]:
-            return True
-        return False
+        return permisos_de_tipo(self,[1,2,6,7,8])
 
     def avalable(self):
-        if self.tipo in [1,2,7,8]:
-            return True
-        return False
+        return permisos_de_tipo(self,[1,2,7,8])
 
     def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
