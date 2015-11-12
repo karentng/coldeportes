@@ -18,6 +18,7 @@
     <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
     <link href="{{STATIC_URL}}plugins/isotope/isotope.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}plugins/lightbox/css/lightbox.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/dim-buttons.css" rel="stylesheet" />
     <!-- ================== END PAGE LEVEL STYLE ================== -->
     
 {% endblock %}
@@ -41,22 +42,27 @@
 {% block contenido %}
     <div id="options" class="m-b-10">
         <span class="gallery-option-set" id="filter" data-option-key="filter">
-            <a href="#show-all" class="btn btn-default btn-xs active" data-option-value="*">
+            <a href="#show-all" class="btn btn-default dim active btn-sm btn-outline" data-option-value="*">
                 Todos
             </a>
-            <a href="#gallery-group-1" class="btn btn-default btn-xs" data-option-value=".gallery-group-1">
+            <a href="#gallery-group-1" class="btn btn-info dim btn-sm" data-option-value=".gallery-group-1">
+                <i class="fa fa-bicycle"></i>
                 Centros de Acondicionamiento
             </a>
-            <a href="#gallery-group-2" class="btn btn-default btn-xs" data-option-value=".gallery-group-2">
+            <a href="#gallery-group-2" class="btn btn-warning dim btn-sm" data-option-value=".gallery-group-2">
+                <i class="fa fa-globe"></i>
                 Escenarios
             </a>
-            <a href="#gallery-group-3" class="btn btn-default btn-xs" data-option-value=".gallery-group-3">
+            <a href="#gallery-group-3" class="btn btn-primary dim btn-sm" data-option-value=".gallery-group-3">
+                <i class="fa fa-futbol-o"></i>
                 Deportistas
             </a>
-            <a href="#gallery-group-4" class="btn btn-default btn-xs" data-option-value=".gallery-group-4">
+            <a href="#gallery-group-4" class="btn btn-success dim btn-sm" data-option-value=".gallery-group-4">
+                <i class="ion-person-stalker"></i>
                 Dirigentes
             </a>
-            <a href="#gallery-group-5" class="btn btn-default btn-xs" data-option-value=".gallery-group-5">
+            <a href="#gallery-group-5" class="btn btn-danger dim btn-sm" data-option-value=".gallery-group-5">
+                <i class="ion-ios-basketball-outline"></i>
                 Personal de Apoyo
             </a>
         </span>

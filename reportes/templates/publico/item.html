@@ -8,22 +8,15 @@
         </p>
     </div>
     <div class="image-info">
-        <h5 class="title">{{titulo}}</h5>
-        {% comment %}
-        <div class="pull-right">
-            <small>by</small> <a href="javascript:;">Sean Ngu</a>
-        </div>
-        <div class="rating">
-            <span class="star active"></span>
-            <span class="star active"></span>
-            <span class="star active"></span>
-            <span class="star"></span>
-            <span class="star"></span>
-        </div>
-        {% endcomment %}
+        <h5 class="title"><strong>{{titulo}}</strong></h5>
         <div class="desc">
             {{descripcion}}
-            <p><a href="{% url url_reporte %}">Ingresar al reporte</a></p>
         </div>
+        <p class="m-b-0">
+            <a href="{% url url_reporte %}">
+                <i class="fa fa-arrow-right"></i>
+                Ingresar al reporte
+            </a>
+        </p>
     </div>
 </div>
