@@ -16,7 +16,7 @@ class TipoSector(models.Model):
 def foto_name(instance, filename):
     #el nombre de la imagen es el id de la norma junto con el año de la misma
     #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
-    ruta = 'normas/' + instance.norma +"_"+ str(instance.anio) 
+    ruta = 'normas/' + instance.norma +"_"+ str(instance.anio) + filename[-4:]
     ruta_delete = settings.MEDIA_ROOT + "/" + ruta
     if(os.path.exists(ruta_delete)):
         os.remove(ruta_delete)
