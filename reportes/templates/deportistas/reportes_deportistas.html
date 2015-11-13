@@ -2,11 +2,11 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Participaciones Deportivas - Deportistas
+    {{ nombre_reporte }} - Deportistas
 {% endblock %}
 
 {% block titulo_contenido %}
-    Participaciones Deportivas - Deportistas
+    {{ nombre_reporte }} - Deportistas
 {% endblock %}
 
 {% block css %}
@@ -16,14 +16,14 @@
 {% block js %}
 	<script type="text/javascript">
         $(document).ready(function(){
-            url = "{% url 'reporte_participaciones_deportivas' %}";
+            url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamento").val());
-                var annos = JSON.stringify($("#id_anno").val());
+                var genero = JSON.stringify($("#id_genero").val());
 
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos, 'annos':annos},
+                    data: {'departamentos': departamentos, 'genero':genero},
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data);
@@ -31,7 +31,7 @@
                 });
 
             }
-            $("#id_anno").on("change", function(){
+            $("#id_genero").on("change", function(){
                 realizarConsulta();
             });
             $("#id_departamento").on("change", function(){
@@ -39,7 +39,7 @@
             });
         });
         visualizaciones = {{visualizaciones|safe}};
-        datos = {{centros|safe}};
+        datos = {{datos|safe}};
 
 	</script>
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
@@ -49,11 +49,11 @@
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'inicio' %}">Reportes</a></li>
     <li><a href="{% url 'inicio' %}">Deportistas</a></li>
-    <li><a href="{% url 'inicio' %}">Participaciones Deportivas</a></li>
+    <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
 {% endblock %}
 
 {% block titulo_panel %}
-    Participaciones Deportivas
+    {{ nombre_reporte }}
 {% endblock %}
 
 {% block contenido_panel %}
