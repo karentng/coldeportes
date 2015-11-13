@@ -90,11 +90,21 @@ def beneficiario_programa_apoyo(request):
         ]
 
         beneficiados = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+        if True in beneficiados:
+            beneficiados['Deportistas beneficiados'] = beneficiados[True]
+            del beneficiados[True]
+        if False in beneficiados:
+            beneficiados['Deportistas no beneficiados'] = beneficiados[False]
+            del beneficiados[False]
 
         return JsonResponse(beneficiados)
 
     else:
         beneficiados = tipoTenant.ejecutar_consulta(True, "list(InformacionAdicional.objects.filter(deportista__estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))")
+        beneficiados['Deportistas beneficiados'] = beneficiados[True]
+        beneficiados['Deportistas no beneficiados'] = beneficiados[False]
+        del beneficiados[True]
+        del beneficiados[False]
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
@@ -128,10 +138,18 @@ def etinias_deportistas(request):
 
         etnias = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
 
+        if '' in etnias:
+            etnias['Ninguna'] = etnias['']
+            del etnias['']
+
         return JsonResponse(etnias)
 
     else:
         etnias = tipoTenant.ejecutar_consulta(True, "list(Deportista.objects.filter(estado=0).annotate(descripcion=F('etnia')).values('descripcion').annotate(cantidad=Count('etnia')))")
+
+        if '' in etnias:
+            etnias['NO APLICA'] = etnias['']
+            del etnias['']
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
