@@ -9,4 +9,5 @@ urlpatterns = patterns('reportes.views.publico',
     url(r'^motion$', 'ejemploMotion', name="ejemplo_motion"),
 
     url(r'centros-acondicionamiento/', include('reportes.urls.caf')),
+    url(r'escenarios/', include('reportes.urls.escenarios')),
 )

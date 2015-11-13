@@ -1,4 +1,3 @@
-from django.forms import *
 from django import forms
 from entidades.models import Departamento
 from coldeportes.utilities import adicionarClase
@@ -30,3 +29,11 @@ class DemografiaForm(forms.Form):
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     anno = forms.MultipleChoiceField(choices=((2013, 2013),(2014, 2014),(2015, 2015),),required=False, label="Año")
     visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+
+def add_visualizacion(field, visualizaciones_definidas):
+    visualizaciones = tuple()
+    if visualizaciones_definidas:
+        for i in VISUALIZACIONES:
+            if i[0] in visualizaciones_definidas:
+                visualizaciones += (i,)
+        field.choices = visualizaciones
