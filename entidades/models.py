@@ -105,7 +105,7 @@ class Entidad(TenantMixin): # Entidad deportiva
     def ejecutar_consulta(self, ajustar, consulta):
         from django.db.models import Count, F
         from snd.modelos.cafs import CentroAcondicionamiento
-        from snd.modelos.deportistas import HistorialDeportivo
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista
         from datetime import date
 
         resultado = eval(consulta)
