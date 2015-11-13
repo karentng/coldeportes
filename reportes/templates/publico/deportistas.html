@@ -1,1 +1,9 @@
 {# El identificador del grupo de la galeria es: 3 #}
+
+{% with 3 as id %}
+
+    {% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="IMG1" titulo="Participaciones Deportivas" descripcion="Cantidad de participaciones deportivas categorizadas por tipo de participación" url_reporte="reporte_participaciones_deportivas" %}
+    {% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="IMG1" titulo="Beneficiario Programa Apoyo" descripcion="Cantidad de deportistas beneficiados por programas de apoyo" url_reporte="reporte_beneficiario_programa_apoyo" %}
+    {% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="IMG1" titulo="Etinas de los deportistas" descripcion="Cantidad de deportistas categorizados segun etnias" url_reporte="reporte_etinias_deportistas" %}
+
+{% endwith %}

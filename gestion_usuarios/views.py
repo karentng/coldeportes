@@ -146,42 +146,7 @@ def inicio_tenant(request):
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
 
-    entidad_actual = request.tenant
-    tipo_entidad = type(entidad_actual.obtenerTenant()).__name__
-
-    try:
-        disciplina  = entidad_actual.obtenerTenant().liga.disciplina
-    except Exception:
-        disciplina = None
-    if tipo_entidad == 'Club':
-        entidad = {
-            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
-            'mostrar_info':True,
-            'nombre':entidad_actual.nombre,
-            'disciplina': disciplina,
-            'descripcion': entidad_actual.descripcion,
-            'ciudad': entidad_actual.ciudad,
-            'direccion': entidad_actual.direccion,
-            'telefono': entidad_actual.telefono,
-            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
-        }
-    elif tipo_entidad == 'Liga':
-        entidad = {
-            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
-            'mostrar_info':True,
-            'nombre':entidad_actual.nombre,
-            'disciplina': entidad_actual.obtenerTenant().disciplina,
-            'descripcion': entidad_actual.descripcion,
-            'ciudad': entidad_actual.ciudad,
-            'direccion': entidad_actual.direccion,
-            'telefono': entidad_actual.telefono,
-            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
-        }
-    else:
-        entidad = {
-            'mostrar_info':False,
-            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
-        }
+    entidad = tipoTenant.obtener_datos_entidad()
 
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
