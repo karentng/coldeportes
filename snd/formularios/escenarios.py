@@ -27,8 +27,6 @@ class IdentificacionForm(forms.ModelForm):
 class CaracterizacionForm(forms.ModelForm):
     required_css_class = 'required'
 
-    descripcion = forms.CharField(widget=forms.Textarea, required=False)
-
     def __init__(self, *args, **kwargs):
         super(CaracterizacionForm, self).__init__(*args, **kwargs)
         self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
