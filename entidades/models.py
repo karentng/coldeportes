@@ -568,6 +568,7 @@ class Liga(ResolucionReconocimiento):
         from collections import Counter
 
         from snd.modelos.cafs import CentroAcondicionamiento
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista
 
         resultado = list()
         clubes = Club.objects.filter(liga=self)

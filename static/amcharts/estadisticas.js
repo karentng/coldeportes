@@ -29,12 +29,16 @@ $(".nav a").on("shown.bs.tab", function () {
 
 function Reportes(){
     /* Generar las gráficas */
-    function generarComparativa(datos, nombreDiv){
+    function generarComparativa(datos, nombreDiv, nombreGrafica){
         chart = new AmCharts.AmSerialChart();
         chart.dataProvider = datos;
         chart.categoryField = "descripcion";
         chart.startDuration = 0.5;
         chart.balloon.color = "#000000";
+        chart.titles = [{
+            "text": nombreGrafica,
+            "size": 16
+        }];
     
         // AXES
         // category
@@ -83,13 +87,19 @@ function Reportes(){
         chart.write(nombreDiv);
         charts.push([chart, nombreDiv]);
     }
-    function generarTorta(datos, nombreDiv){
+    function generarTorta(datos, nombreDiv, nombreGrafica){
         chart = new AmCharts.AmPieChart();
+        chart.theme = AmCharts.themes.light;
+        chart.titles = [{
+            "text": nombreGrafica,
+            "size": 16
+        }];
         chart.dataProvider = datos;
         chart.titleField = "descripcion";
         chart.valueField = "valor";
         chart.outlineColor = "#FFFFFF";
         chart.innerRadius = "60%";
+        chart.labelRadius = 15;
         chart.outlineAlpha = 0.8;
         chart.outlineThickness = 2;
         chart.balloonText = "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>";
@@ -103,10 +113,13 @@ function Reportes(){
         charts.push([chart, nombreDiv]);
     }
 
-    function generarComparativaVertical(datos, nombreDiv){
+    function generarComparativaVertical(datos, nombreDiv, nombreGrafica){
         chart = new AmCharts.AmSerialChart();
         chart.dataProvider = datos;
-        
+        chart.titles = [{
+            "text": nombreGrafica,
+            "size": 16
+        }];
         chart.depth3D = 20;
         chart.angle = 30;
         chart.rotate = true;
@@ -362,7 +375,7 @@ function Reportes(){
     }
 
     // Gráficas
-    function torta(resultado, nombreDiv){
+    function torta(resultado, nombreDiv, nombreGrafica){
         var datos = [];
         for (i in resultado){
             var aux = resultado[i];
@@ -378,9 +391,9 @@ function Reportes(){
         var legend;
 
         if (AmCharts.isReady){
-            generarTorta(datos, nombreDiv);
+            generarTorta(datos, nombreDiv, nombreGrafica);
         }else{
-            AmCharts.ready(generarTorta(datos, nombreDiv));
+            AmCharts.ready(generarTorta(datos, nombreDiv, nombreGrafica));
         }
     }
 
@@ -398,13 +411,13 @@ function Reportes(){
         }
             
         if (AmCharts.isReady){
-            generarComparativa(datos, nombreDiv);
+            generarComparativa(datos, nombreDiv, nombreGrafica);
         }else{
-            AmCharts.ready(generarComparativa(datos, nombreDiv));
+            AmCharts.ready(generarComparativa(datos, nombreDiv, nombreGrafica));
         }
     }
 
-    function comparativaVertical(resultado, nombreDiv){
+    function comparativaVertical(resultado, nombreDiv, nombreGrafica){
         var chart2;
         var datos = [];
         for (i in resultado){
@@ -419,9 +432,9 @@ function Reportes(){
         }
 
         if (AmCharts.isReady){
-            generarComparativaVertical(datos, nombreDiv);
+            generarComparativaVertical(datos, nombreDiv, nombreGrafica);
         }else{
-            AmCharts.ready(generarComparativaVertical(datos, nombreDiv));
+            AmCharts.ready(generarComparativaVertical(datos, nombreDiv, nombreGrafica));
         }
     }
 
@@ -456,13 +469,13 @@ function Reportes(){
             //resultado = obtenerResultado(resultado);
             switch(grafico){
                 case 1:
-                    torta(resultado, nombreDiv);
+                    torta(resultado, nombreDiv, nombreGrafica);
                     break;
                 case 2:
                     comparativa(resultado, nombreDiv, nombreGrafica);
                     break;
                 case 3:
-                    comparativaVertical(resultado, nombreDiv);
+                    comparativaVertical(resultado, nombreDiv, nombreGrafica);
                     break;
                 case 4:
                     //treeMap(resultado, nombreDiv, true);

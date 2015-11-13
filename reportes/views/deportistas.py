@@ -1,6 +1,6 @@
 #encoding:utf-8
 from django.shortcuts import render, redirect
-from snd.models import HistorialDeportivo,Deportista,InformacionAdicional,Deportista
+from snd.modelos.deportistas import HistorialDeportivo,Deportista,InformacionAdicional,Deportista
 from entidades.models import Departamento
 from django.db.models import Count
 from reportes.forms import FiltrosDeportistasForm
@@ -60,12 +60,13 @@ def participaciones_deportivas(request):
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/reportes_deportistas.html', {
+    return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Participaciones Deportivas',
         'url_data' : 'reporte_participaciones_deportivas',
         'datos': participaciones,
         'visualizaciones': visualizaciones,
         'form': form,
+        'actor': 'Deportistas'
     })
 
 
@@ -97,12 +98,13 @@ def beneficiario_programa_apoyo(request):
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/reportes_deportistas.html', {
+    return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Beneficiario Programa de Apoyo',
         'url_data' : 'reporte_beneficiario_programa_apoyo',
         'datos': beneficiados,
         'visualizaciones': visualizaciones,
         'form': form,
+        'actor': 'Deportistas'
     })
 
 def etinias_deportistas(request):
@@ -133,10 +135,11 @@ def etinias_deportistas(request):
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/reportes_deportistas.html', {
+    return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Etnias de los deportistas',
         'url_data' : 'reporte_etinias_deportistas',
         'datos': etnias,
         'visualizaciones': visualizaciones,
         'form': form,
+        'actor': 'Deportistas'
     })
