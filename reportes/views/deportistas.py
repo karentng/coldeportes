@@ -1,6 +1,6 @@
 #encoding:utf-8
 from django.shortcuts import render, redirect
-from snd.modelos.deportistas import HistorialDeportivo,Deportista,InformacionAdicional,Deportista
+from snd.modelos.deportistas import HistorialDeportivo,Deportista,InformacionAdicional,Deportista,InformacionAcademica
 from entidades.models import Departamento
 from django.db.models import Count
 from reportes.forms import FiltrosDeportistasForm
@@ -157,6 +157,43 @@ def etinias_deportistas(request):
         'nombre_reporte' : 'Etnias de los deportistas',
         'url_data' : 'reporte_etinias_deportistas',
         'datos': etnias,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Deportistas'
+    })
+
+def formacion_academica(request):
+    """
+    Noviembre 14, 2015
+    Autor: Daniel Correa
+
+    Permite conocer la formacion academica de los deportistas caracterizadas por niveles de formacion
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__ciudad_residencia__departamento__id__in=%s,deportista__genero__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__ciudad_residencia__departamento__id__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__genero__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))"
+        ]
+
+        formaciones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+
+        return JsonResponse(formaciones)
+
+    else:
+        formaciones = tipoTenant.ejecutar_consulta(True, "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))")
+
+    visualizaciones = [1, 2, 3]
+    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    return render(request, 'base_reportes.html', {
+        'nombre_reporte' : 'Formación Academica de los deportistas',
+        'url_data' : 'reporte_formacion_academica',
+        'datos': formaciones,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas'
