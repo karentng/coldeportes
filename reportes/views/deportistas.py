@@ -198,3 +198,40 @@ def formacion_academica(request):
         'form': form,
         'actor': 'Deportistas'
     })
+
+def nacionalidad(request):
+    """
+    Noviembre 14, 2015
+    Autor: Daniel Correa
+
+    Permite conocer el numero de deportistas colombianos y extranjeros
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list(Deportista.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))",
+            "list(Deportista.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))",
+            "list(Deportista.objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))",
+            "list(Deportista.objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))"
+        ]
+
+        nacionalidades = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+
+        return JsonResponse(nacionalidades)
+
+    else:
+        nacionalidades = tipoTenant.ejecutar_consulta(True, "list(Deportista.objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))")
+
+    visualizaciones = [1, 2, 3]
+    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    return render(request, 'base_reportes.html', {
+        'nombre_reporte' : 'Nacionalidad de los deportistas',
+        'url_data' : 'reporte_nacionalidad',
+        'datos': nacionalidades,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Deportistas'
+    })
