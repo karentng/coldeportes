@@ -18,6 +18,8 @@ from directorio.models import *
 from noticias.models import Noticia
 from entidades.models import Entidad
 
+from django.http import HttpResponse
+
 def asignarPermisosGrupo(request, grupo, permisos):
     permisos = permisosPermitidos(request, permisos)
     permisos = Permission.objects.filter(codename__in=permisos)
@@ -146,42 +148,7 @@ def inicio_tenant(request):
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
 
-    entidad_actual = request.tenant
-    tipo_entidad = type(entidad_actual.obtenerTenant()).__name__
-
-    try:
-        disciplina  = entidad_actual.obtenerTenant().liga.disciplina
-    except Exception:
-        disciplina = None
-    if tipo_entidad == 'Club':
-        entidad = {
-            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
-            'mostrar_info':True,
-            'nombre':entidad_actual.nombre,
-            'disciplina': disciplina,
-            'descripcion': entidad_actual.descripcion,
-            'ciudad': entidad_actual.ciudad,
-            'direccion': entidad_actual.direccion,
-            'telefono': entidad_actual.telefono,
-            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
-        }
-    elif tipo_entidad == 'Liga':
-        entidad = {
-            'tipo_tenant': type(entidad_actual.obtenerTenant()).__name__,
-            'mostrar_info':True,
-            'nombre':entidad_actual.nombre,
-            'disciplina': entidad_actual.obtenerTenant().disciplina,
-            'descripcion': entidad_actual.descripcion,
-            'ciudad': entidad_actual.ciudad,
-            'direccion': entidad_actual.direccion,
-            'telefono': entidad_actual.telefono,
-            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
-        }
-    else:
-        entidad = {
-            'mostrar_info':False,
-            'disponible_para_transferencias' : entidad_actual.disponible_para_transferencias()
-        }
+    entidad = tipoTenant.obtener_datos_entidad()
 
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
@@ -191,6 +158,7 @@ def inicio_tenant(request):
             noticias = noticias_todas
     except Exception:
         noticias = []
+
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
         'actoresAsociados': actoresAsociados,
@@ -201,7 +169,6 @@ def inicio_tenant(request):
         'entidad':entidad
 
     })
-
 
 @login_required
 @superuser_only

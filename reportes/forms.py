@@ -1,5 +1,5 @@
 from django import forms
-from entidades.models import Departamento
+from entidades.models import Departamento,TipoDisciplinaDeportiva
 from coldeportes.utilities import adicionarClase
 
 VISUALIZACIONES = (
@@ -17,7 +17,6 @@ class DemografiaForm(forms.Form):
         self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
         self.fields['anno'] = adicionarClase(self.fields['anno'], 'many')
 
-
         visualizaciones = tuple()
         if visualizaciones_definidas:
             for i in self.fields['visualizacion'].choices:
@@ -25,10 +24,10 @@ class DemografiaForm(forms.Form):
                     visualizaciones += (i,)
             self.fields['visualizacion'].choices = visualizaciones
 
-
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     anno = forms.MultipleChoiceField(choices=((2013, 2013),(2014, 2014),(2015, 2015),),required=False, label="Año")
     visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+
 
 def add_visualizacion(field, visualizaciones_definidas):
     visualizaciones = tuple()
@@ -37,3 +36,28 @@ def add_visualizacion(field, visualizaciones_definidas):
             if i[0] in visualizaciones_definidas:
                 visualizaciones += (i,)
         field.choices = visualizaciones
+
+class FiltrosDeportistasForm(forms.Form):
+    """
+    Formulario para filtros de deportistas
+    """
+    def __init__(self, *args, **kwargs):
+        visualizaciones_definidas = kwargs.pop('visualizaciones', None)
+        super(FiltrosDeportistasForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'many')
+        self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
+        self.fields['genero'] = adicionarClase(self.fields['genero'], 'many')
+        #self.fields['disciplina'] = adicionarClase(self.fields['disciplina'],'many')
+
+        visualizaciones = tuple()
+        if visualizaciones_definidas:
+            for i in self.fields['visualizacion'].choices:
+                if i[0] in visualizaciones_definidas:
+                    visualizaciones += (i,)
+            self.fields['visualizacion'].choices = visualizaciones
+
+    departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
+    genero = forms.MultipleChoiceField(choices=(('HOMBRE','HOMBRE'),('MUJER','MUJER'),),required=False, label="Genero")
+    #disciplina = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all(), required=False)
+    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+
