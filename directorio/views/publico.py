@@ -67,8 +67,12 @@ def agregar_grupo(resultados):
 def buscar_resultados(ciudades, categoria, texto):
     listado_resultados = []
 
+
+    #Si busca sin filtros
+    if categoria == None and ciudades == None and texto == '':
+        listado_resultados += list('N')#Se retorna un string como primer elemento si se intetna realizar búsquda sin filtros
     #Si busca solo con texto
-    if categoria == None and ciudades == None:
+    elif categoria == None and ciudades == None:
         listado_resultados = buscar_contenido(texto, listado_resultados)
     # Si busca solo con ciudades
     elif categoria == None and ciudades != None:
@@ -110,6 +114,7 @@ def directorio_publico_buscar(request):
 
     #inicialización de variable resultados
     listado_resultados =[]
+    mensaje = 'No hay resultados para la búsqueda.'
 
     if request.method == 'POST':
         
@@ -128,9 +133,16 @@ def directorio_publico_buscar(request):
 
                 checkear_inicializacion_directorio()
                 listado_resultados.append(buscar_resultados(ciudades, categoria, texto))
-
             # a cada objeto se agrega de que grupo es para dividirlos en el template
-            agregar_grupo(listado_resultados)
+            try:
+                if isinstance(listado_resultados[0][0], str):# se verifica si el primer elemento de los resultados es un string según la validación solo se da cuando se intentó hacer búsqueda sin filtros
+                    mensaje = 'Por favor ingrese un criterio de búsqueda.'
+                    listado_resultados =[]
+                else:
+                    agregar_grupo(listado_resultados)
+            except:
+                agregar_grupo(listado_resultados)
+
                 
     #se configura de nuevo el tenant inicial
     connection.set_tenant(tenant_actual)
@@ -138,4 +150,5 @@ def directorio_publico_buscar(request):
     return render(request, 'directorio_buscar.html', {
         'form': form,
         'listado_resultados': listado_resultados,
+        'mensaje': mensaje,
     })

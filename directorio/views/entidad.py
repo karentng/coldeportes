@@ -94,7 +94,8 @@ def directorio_buscar(request):
     form = DirectorioBusquedaForm()
 
     #inicialización de variable resultados
-    listado_resultados =[]
+    listado_resultados = []
+    mensaje = 'No hay resultados para la búsqueda.'
 
     if request.method == 'POST':
         
@@ -106,15 +107,18 @@ def directorio_buscar(request):
             categoria = request.POST.getlist('actor') or None
             texto = request.POST.get('texto_a_buscar') or ''
 
+            #Si intenta búscar sin filtros
+            if categoria == None and texto == '' and ciudades == None:
+                mensaje = 'Por favor ingrese un criterio de búsqueda.'
             #Si busca solo con texto
-            if categoria ==None and ciudades==None:
+            elif categoria == None and ciudades == None:
                 listado_resultados = buscar_contenido(texto, listado_resultados)
             # Si busca solo con ciudades
-            elif categoria ==None and ciudades!=None:
+            elif categoria == None and ciudades != None:
                 for ciudad in ciudades:
-                    listado_resultados=buscar_contenido_ciudad(texto, ciudad, listado_resultados)
+                    listado_resultados = buscar_contenido_ciudad(texto, ciudad, listado_resultados)
             #Si busca sólo con categoría
-            elif categoria !=None and ciudades==None:
+            elif categoria != None and ciudades == None:
                 for actor in categoria :                    
                     listado_resultados = buscar_contenido_actor(texto, actor, listado_resultados)
             #Si busca por categorías y con ciudades
@@ -129,6 +133,7 @@ def directorio_buscar(request):
     return render(request, 'directorio_buscar.html', {
         'form': form,
         'listado_resultados': listado_resultados,
+        'mensaje': mensaje,
     })
 
 #@login_required
