@@ -16,10 +16,8 @@
         </a>
     </li>
     {% if user.is_authenticated %}
-
-
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path%}
+            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path%}
                 active
             {% endif %}">
             <a href="javascript:;">
@@ -28,36 +26,39 @@
                 <span class="colorMenu">ACTORES</span>
             </a>
             <ul class="sub-menu">
-                {% if request.tenant.actores.dirigentes %}
+                {% if perms.snd.view_dirigente %}
                     {% include "menus/aplicacion/dirigentes.html" %}
                 {% endif %}
-                {% if request.tenant.actores.escenarios %}
+                {% if perms.snd.view_escenario %}
                     {% include "menus/aplicacion/escenarios.html" %}
                 {% endif %}
-                {% if request.tenant.actores.centros %}
+                {% if perms.snd.view_centroacondicionamiento %}
                     {% include "menus/aplicacion/caf.html" %}
                 {% endif %}
-                {% if request.tenant.actores.deportistas %}
+                {% if perms.snd.view_deportista %}
                     {% include "menus/aplicacion/deportistas.html" %}
                 {% endif %}
-                {% if request.tenant.actores.personal_apoyo %}
+                {% if perms.snd.view_personalapoyo %}
                     {% include "menus/aplicacion/personal_apoyo.html" %}
                 {% endif %}
-                {% if request.tenant.actores.cajas %}
+                {% if perms.snd.view_cajacompensacion %}
                     {% include "menus/aplicacion/cajas_compensacion.html" %}
                 {% endif %}
-                {% if request.tenant.actores.centros_biomedicos %}
+                {% if perms.snd.view_centrobiomedico %}
                     {% include "menus/aplicacion/centro_biomedico.html" %}
                 {% endif %}
-                {% if request.tenant.actores.escuelas_deportivas %}
+                {% if perms.snd.view_escueladeportiva %}
                     {% include "menus/aplicacion/escuela_deportiva.html" %}
                 {% endif %}
             </ul>
         </li>
+        {%if perms.snd.view_seleccion %}
+            {% include "menus/aplicacion/selecciones.html" %}
+        {%endif%}
+        {% if perms.noticias.view_noticia %}
+            {% include "menus/aplicacion/noticias.html" %}
+        {% endif %}
     {% endif %}
-    {%if request.tenant.seleccionable %}
-        {% include "menus/aplicacion/selecciones.html" %}
-    {%endif%}
     <li class="has-sub {% if 'directorio' in request.path %} active {% endif %}">
         <a href="javascript:;">
             <b class="caret pull-right"></b>
@@ -69,9 +70,6 @@
         </ul>
     </li>
     {% include "menus/aplicacion/normograma.html" %}
-    {% if user.is_authenticated %}
-        {% include "menus/aplicacion/noticias.html" %}
-    {% endif %}
 {% endif %}
 {% if request.tenant.schema_name == 'public' %}
     {% include "menus/aplicacion/entidades.html" %}

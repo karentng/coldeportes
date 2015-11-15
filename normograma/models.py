@@ -38,6 +38,11 @@ class Norma(models.Model):
     descripcion = models.TextField(max_length=1024, verbose_name='descripción')
     contenido_busqueda = models.TextField(editable=False)
 
+    class Meta:
+        permissions = (
+            ("view_norma", "Permite ver norma"),
+        )
+
     def save(self, *args, **kwargs):
         self.contenido_busqueda = self.norma+" "+self.palabras_clave+" "+str(self.anio)
         super(Norma,self).save(*args, **kwargs)

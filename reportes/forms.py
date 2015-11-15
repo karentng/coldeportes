@@ -4,8 +4,8 @@ from coldeportes.utilities import adicionarClase
 
 VISUALIZACIONES = (
     (1, "Dona"),
-    (2, "Comparativa Horizontal"),
-    (3, "Comparativa Vertical"),
+    (2, "Gráfica de líneas"),
+    (3, "Gráfica de barras"),
     (4, "Tree Map"), 
 )
 

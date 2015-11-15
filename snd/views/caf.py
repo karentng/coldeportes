@@ -275,6 +275,7 @@ def eliminar_foto_caf(request, idCAF, idFoto):
 #==================================================================
 
 @login_required
+@all_permission_required('snd.view_centroacondicionamiento')
 def listarCAFS(request):
     """
     Mayo 26 / 2015
@@ -292,6 +293,7 @@ def listarCAFS(request):
     })
 
 @login_required
+@all_permission_required('snd.view_centroacondicionamiento')
 def ver_caf(request, idCAF,id_entidad):
     """
     Junio 23 / 2015

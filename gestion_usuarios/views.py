@@ -11,7 +11,7 @@ from normograma.models import Norma
 from transferencias.models import Transferencia
 from django.db import connection
 from django.contrib.contenttypes.models import ContentType
-from gestion_usuarios.models import PERMISOS_DIGITADOR
+from gestion_usuarios.models import PERMISOS_DIGITADOR, PERMISOS_LECTURA
 from django.db.models import Q
 from coldeportes.utilities import permisosPermitidos
 from directorio.models import *
@@ -19,12 +19,6 @@ from noticias.models import Noticia
 from entidades.models import Entidad
 
 from django.http import HttpResponse
-
-def asignarPermisosGrupo(request, grupo, permisos):
-    permisos = permisosPermitidos(request, permisos)
-    permisos = Permission.objects.filter(codename__in=permisos)
-    for permiso in permisos:
-        grupo.permissions.add(permiso)
 
 def cambiarNombreDePermisos():
     permisos = Permission.objects.filter(
@@ -43,31 +37,66 @@ def cambiarNombreDePermisos():
         i.name = nombre_permiso
         i.save()
 
-def inicio(request):
-    digitador = None
+def asignarPermisosGrupo(request, grupo, permisos):
+    permisos = permisosPermitidos(request, permisos)
+    permisos = Permission.objects.filter(codename__in=permisos)
+    #si se ha quitado un actor a la entidad se quita de sus permisos
+    actual = grupo.permissions.all()
+    for permiso in actual:#la cantidad de permisos son pocos, no creo que el for impacte mucho
+        if permiso not in permisos:
+            grupo.permissions.remove(permiso)
+    for permiso in permisos:
+        grupo.permissions.add(permiso)
 
+def asignarPermisosGrupoLectura(request, grupo):
+    #agrega los permisos de lectura que son obligatorios, tenga o no el actor
+    normas = Permission.objects.get(codename='view_norma')
+    escenarios = Permission.objects.get(codename='view_escenario')
+    deportistas = Permission.objects.get(codename='view_deportista')
+
+    tipo = request.tenant.tipo
+    #1:#liga:
+    #2:#federacion
+    #6:#comite
+    #7:#federacion paralimpica
+    #8:#liga paralimpica
+
+    if tipo == 1 or tipo == 2 or tipo == 6 or tipo == 7 or tipo == 8:
+        grupo.permissions.add(escenarios)
+        grupo.permissions.add(deportistas)
+    grupo.permissions.add(normas)#todos ven las normas
+
+def inicio(request):
+    schema_name = request.tenant.schema_name
+
+    digitador = None
+    lectura = None
     grupos = Group.objects.all()
     cambiarNombreDePermisos()
     if len(grupos) == 0:
         digitador = Group(name='Digitador')
         digitador.save()
-        Group(name='Solo lectura').save()
-        asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+        lectura = Group(name='Solo lectura')
+        lectura.save()
     else:
         try:
-            grupo = Group.objects.get(name="Digitador")
-            asignarPermisosGrupo(request, grupo, PERMISOS_DIGITADOR)
-        except Exception as e:
+            #si llegan a editar el nombre del grupo, tendremos un error
+            digitador = Group.objects.get(name="Digitador")
+            lectura = Group.objects.get(name='Solo lectura')
+        except Group.DoesNotExist:
             pass
+    if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
+        asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+        asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
+        asignarPermisosGrupoLectura(request,digitador)
+        asignarPermisosGrupoLectura(request,lectura)
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
-        schema_name = request.tenant.schema_name
         if schema_name == 'public':
             password = "cedesoft"
         else:
-            password = ("%s-%s")%("root", request.tenant.schema_name)
-        
+            password = ("%s-%s")%("root", schema_name)
         user = User.objects.create_user('root', 'root@gmail.com', password)
         user.first_name = 'Administrador'
         user.is_superuser = True
@@ -77,9 +106,9 @@ def inicio(request):
 
     entidades = Entidad.objects.all()
     if len(entidades) == 1:#sólo debería de existir la entidad pública
-        actores1 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False, normas=True, escuelas_deportivas=False)
+        actores1 = Actores(centros=False,escenarios=False,deportistas=False,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False, normas=False, escuelas_deportivas=False, noticias=True)
         actores1.save()
-        actores2 = Actores(centros=True,escenarios=True,deportistas=True,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False, normas=True, escuelas_deportivas=False)
+        actores2 = Actores(centros=False,escenarios=False,deportistas=False,personal_apoyo=True,dirigentes=True,cajas=False,selecciones=True, centros_biomedicos=False, normas=False, escuelas_deportivas=False, noticias=True)
         actores2.save()
         ciudad = Ciudad.objects.get(id=109)#bogotá
         comiteOlimpico = Comite(tipo=6,tipo_comite=1,nombre="Comité Olímpico Colombiano",direccion="Av. 68 # 55-65",pagina_web="http://www.coc.org.co/",telefono="571 6300093",actores=actores1,ciudad=ciudad)
@@ -91,11 +120,9 @@ def inicio(request):
         comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
         comiteParalimpico.save()
 
-    schema = request.tenant.schema_name
-
     if request.user.is_authenticated():
         # lectura y creación de vistas del directorio sql
-        if request.tenant.schema_name == "public":
+        if schema_name == "public":
             return redirect('entidad_tipo')
         else:
             if request.user.is_superuser:
@@ -103,7 +130,7 @@ def inicio(request):
             else:
                 return redirect('inicio_tenant')
 
-    if schema == 'public':
+    if schema_name == 'public':
         return redirect('login')
     else:
         return redirect('inicio_tenant')

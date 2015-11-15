@@ -57,6 +57,7 @@ class Actores(models.Model):
     centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos")
     normas = models.BooleanField(verbose_name="Normograma")
     escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva")
+    noticias = models.BooleanField(verbose_name="Noticias")
 
     def resumen(self):
         actores = []
@@ -106,7 +107,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         from django.db.models import Count, F
         from snd.modelos.cafs import CentroAcondicionamiento
         from snd.modelos.escenarios import Escenario
-        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista,InformacionAcademica
         from datetime import date
 
         resultado = eval(consulta)
@@ -144,14 +145,14 @@ class Entidad(TenantMixin): # Entidad deportiva
         except Exception:
             return self
 
-    def deportistas_registrables(self):
-        return permisos_de_tipo(self,[3,9])
+    #def deportistas_registrables(self):#Revisar
+    #    return permisos_de_tipo(self,[3,9])
 
     def disponible_para_transferencias(self):
         return permisos_de_tipo(self,[3,9])
 
-    def seleccionable(self):
-        return permisos_de_tipo(self,[1,2,6,7,8])
+    #def seleccionable(self):#Revisar
+    #    return permisos_de_tipo(self,[1,2,6,7,8])
 
     def avalable(self):
         return permisos_de_tipo(self,[1,2,7,8])
@@ -569,6 +570,7 @@ class Liga(ResolucionReconocimiento):
         from collections import Counter
 
         from snd.modelos.cafs import CentroAcondicionamiento
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista,InformacionAcademica
 
         resultado = list()
         clubes = Club.objects.filter(liga=self)

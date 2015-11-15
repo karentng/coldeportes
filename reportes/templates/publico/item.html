@@ -1,9 +1,9 @@
 <div class="image gallery-group-{{id}}">
     <div class="image-inner">
-        <a href="{{imagen}}" data-lightbox="gallery-group-{{id}}">
+        <a href="{% url url_reporte %}">
             <img src="{{imagen}}" alt="" />
         </a>
-        <p class="image-caption">
+        <p class="image-caption" style="background:{{ color }}">
             {{nombre_imagen}}
         </p>
     </div>

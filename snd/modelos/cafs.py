@@ -37,6 +37,11 @@ class CentroAcondicionamiento(models.Model):
     entidad = models.ForeignKey(Entidad)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = (
+                ("view_centroacondicionamiento", "Permite ver centro acondicionamiento"),
+            )
+
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
         self.direccion = self.direccion.upper()
