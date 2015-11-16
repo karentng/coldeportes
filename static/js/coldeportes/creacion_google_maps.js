@@ -23,6 +23,10 @@ function initMap() {
         var latitud = datos[2];
         var longitud = datos[3];
         var datos = datos[1];
+
+        if(latitud == null || longitud == null){
+            continue;
+        }
         
         var contenido = "";
         for(j in datos){
@@ -46,7 +50,9 @@ function initMap() {
                         '+contenido+'\
                     </div>'
         });
+
         var posicion = {lat: latitud, lng: longitud};
+        
         var marker = new google.maps.Marker({
             position: posicion,
             map: map,
