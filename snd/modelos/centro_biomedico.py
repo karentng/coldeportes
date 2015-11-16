@@ -33,6 +33,11 @@ class CentroBiomedico(models.Model):
     entidad = models.ForeignKey(Entidad)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = (
+            ("view_centrobiomedico", "Permite ver centro biomedico"),
+        )
+
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
         self.direccion = self.direccion.upper()

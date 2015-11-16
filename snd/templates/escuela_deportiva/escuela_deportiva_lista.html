@@ -33,11 +33,6 @@
         });
         var idTabla = "tabla-escuelas-deportivas";
         opciones = true;
-        /*{% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8 %}
-            url = "{% url 'cargar_columnas' 7 %}";
-        {% else %}
-            url = "{% url 'cargar_columnas' 6 %}";
-        {% endif %}*/
         url = "{% url 'cargar_columnas' 14 %}";
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>

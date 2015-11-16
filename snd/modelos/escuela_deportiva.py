@@ -45,6 +45,11 @@ class EscuelaDeportiva(models.Model):
     entidad = models.ForeignKey(Entidad)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = (
+            ("view_escueladeportiva", "Permite ver escuela deportiva"),
+        )
+
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
         self.direccion = self.direccion.upper()

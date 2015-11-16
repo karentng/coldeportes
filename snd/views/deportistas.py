@@ -16,7 +16,7 @@ from coldeportes.utilities import calculate_age,all_permission_required,not_tran
 
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_deportista_nuevo(request):
     """
@@ -58,7 +58,7 @@ def wizard_deportista_nuevo(request):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_deportista(request,id_depor):
     """
@@ -105,7 +105,7 @@ def wizard_deportista(request,id_depor):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_corporal(request,id_depor):
     """
@@ -163,7 +163,7 @@ def wizard_corporal(request,id_depor):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_historia_deportiva(request,id_depor):
     """
@@ -212,7 +212,7 @@ def wizard_historia_deportiva(request,id_depor):
 
 #Eliminacion Historia Deportiva
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def eliminar_historia_deportiva(request,id_depor,id_historia):
     """
@@ -242,7 +242,7 @@ def eliminar_historia_deportiva(request,id_depor,id_historia):
 
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_historia_academica(request,id_depor):
     """
@@ -289,7 +289,7 @@ def wizard_historia_academica(request,id_depor):
 
 #Eliminacion Historia Academica
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def eliminar_historia_academica(request,id_depor,id_historia):
     """
@@ -317,7 +317,7 @@ def eliminar_historia_academica(request,id_depor,id_historia):
 #Fin eliminacion historia academica
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def desactivar_deportista(request,id_depor):
     """
@@ -350,6 +350,7 @@ def desactivar_deportista(request,id_depor):
         return redirect('deportista_listar')
 
 @login_required
+@all_permission_required('snd.view_deportista')
 def listar_deportista(request):
     """
     Junio 8 / 2015
@@ -366,6 +367,7 @@ def listar_deportista(request):
     return render(request, 'deportistas/deportistas_lista.html', {'tipo_tenant':request.tenant.tipo})
 
 @login_required
+@all_permission_required('snd.view_deportista')
 def ver_deportista(request,id_depor,id_entidad,estado):
     """
     Junio 22 /2015
@@ -419,7 +421,7 @@ def ver_deportista(request,id_depor,id_entidad,estado):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def finalizar_deportista(request,opcion):
     """
@@ -446,7 +448,8 @@ def finalizar_deportista(request,opcion):
     elif opcion =='listar':
         return redirect('deportista_listar')
 
-
+@login_required
+@all_permission_required('snd.add_deportista')
 def existencia_deportista(datos):
     #Verificación de existencia dentro del tenant actual
             try:
@@ -485,7 +488,7 @@ def existencia_deportista(datos):
                     return None,None,False
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def verificar_deportista(request):
     """
@@ -527,7 +530,7 @@ def verificar_deportista(request):
                                                                    'existe':False})
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def cambio_tipo_documento_deportista(request,id):
     """
@@ -582,6 +585,7 @@ def cambio_tipo_documento_deportista(request,id):
         'form': form
     })
 
+#qué permisos tiene esto??
 def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     """
     Agosto 28 /2015
@@ -603,6 +607,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     return historiales
 
 @login_required
+#permiso de aval deportivo
 def avalar_logros_deportivos(request):
     """
     Agosto 27 / 2015
@@ -644,6 +649,7 @@ def avalar_logros_deportivos(request):
     })
 
 @login_required
+#permiso de aval
 def aceptar_logros_deportivos(request,id_tenant,id_hist):
     """
     Agosto 27 / 2015
@@ -682,6 +688,7 @@ def aceptar_logros_deportivos(request,id_tenant,id_hist):
     return redirect('deportista_listar')
 
 @login_required
+#permiso de aval deportivo
 def rechazar_logros_deportivos(request,id_tenant,id_hist):
     """
     Agosto 27 / 2015
@@ -721,7 +728,7 @@ def rechazar_logros_deportivos(request,id_tenant,id_hist):
 
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def eliminar_historia_doping(request,id_depor,id_historia):
     """
@@ -749,7 +756,7 @@ def eliminar_historia_doping(request,id_depor,id_historia):
 
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def eliminar_historia_lesion(request,id_depor,id_historia):
     """
@@ -776,7 +783,7 @@ def eliminar_historia_lesion(request,id_depor,id_historia):
         return redirect('wizard_historia_doping', id_depor)
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_informacion_adicional(request,id_depor):
     """
@@ -830,7 +837,7 @@ def wizard_informacion_adicional(request,id_depor):
 
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_historia_doping(request,id_depor):
     """
@@ -877,7 +884,7 @@ def wizard_historia_doping(request,id_depor):
 
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_deportista')
 def wizard_historia_lesiones(request,id_depor):
     """

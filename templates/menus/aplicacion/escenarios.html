@@ -5,11 +5,9 @@
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_escenario %}
-            {% if request.tenant.tipo == 1 or request.tenant.tipo == 3 or request.tenant.tipo == 4 or request.tenant.tipo == 5 or request.tenant.tipo == 8 %}
-                <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
-                    <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
-                </li>
-            {% endif %}
+            <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
+            </li>
         {% endif %} 
         <li {% if "/escenarios/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_escenarios' %}">Listar escenarios</a>

@@ -81,7 +81,7 @@ def obtenerTenant(request, idEntidad, tipo):
     elif tipo == '10':
         return Caf.objects.get(id=idEntidad)
     elif tipo == '11':
-        return EscuelaDeportiva.objects.get(id=idEntidad)
+        return EscuelaDeportiva_.objects.get(id=idEntidad)
     raise Exception
 
 @login_required
@@ -128,23 +128,23 @@ def registro(request, tipo, tipoEnte=None):
     })
 
 @login_required
-def editar(request, idEntidad, tipo):
+def editar(request, idEntidad, tipo, tipoEnte=None):
     try:
         instance = obtenerTenant(request, idEntidad, tipo)
     except Exception:
+        print("Escepcion")
         return redirect('entidad_listar')
 
     nombre, form = obtenerFormularioTenant(tipo, instance=instance)
-    form2 = ActoresForm(instance=instance.actores, tipo=tipo)
+    form2 = ActoresForm(instance=instance.actores, tipo=tipo, tipoEnte=tipoEnte)
 
     if request.method == 'POST':
         nombre, form = obtenerFormularioTenant(tipo, post=request.POST, files=request.FILES, instance=instance)
         form2 = ActoresForm(request.POST, instance=instance.actores)
         if form.is_valid() and form2.is_valid():
-            actores = form2.save()
-            if tipo == '4':
-                actores.cajas = True
-                actores.save()
+            actores = form2.save(commit=False)
+            add_actores(actores,tipo)
+            actores.save()
             obj = form.save()
             messages.success(request, ("%s editado correctamente.")%(nombre))
             return redirect('entidad_listar')
