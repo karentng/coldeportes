@@ -88,7 +88,26 @@
                                             <p><b>Dirección</b>: {{centro.direccion}}</p>
                                             <p><b>Barrio</b>: {{centro.barrio}}</p>
                                             <p><b>Ciudad</b>: {{centro.ciudad}}</p>
-                                            <p><b>Latitud</b>: {{centro.latitud}} <b>Longitud</b>: {{centro.longitud}} <b>Altura</b>: {{centro.altura}}</p>
+                                            <p>
+                                                <b>Latitud</b>: 
+                                                    {% if centro.latitud %}
+                                                        {{centro.latitud}}
+                                                    {% else %}
+                                                        No Definida
+                                                    {% endif %}
+                                                <b>Longitud</b>: 
+                                                    {% if centro.longitud %}
+                                                        {{centro.longitud}}
+                                                    {% else %}
+                                                        No Definida
+                                                    {% endif %}
+                                                <b>Altura</b>: 
+                                                    {% if centro.altura %}
+                                                        {{centro.altura}}
+                                                    {% else %}
+                                                        No Definida
+                                                    {% endif %}
+                                            </p>
                                             <p><b>Estrato</b>: {{centro.estrato}}</p>
                                             <p><b>Comuna</b>: {{centro.comuna}}</p>
                                         </address>

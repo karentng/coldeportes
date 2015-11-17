@@ -2,6 +2,20 @@ from django.db import models
 from tenant_schemas.models import TenantMixin
 from coldeportes.utilities import permisos_de_tipo
 
+TIPOS = (
+    (1, 'Liga'),
+    (2, 'Federación'),
+    (3, 'Club'),
+    (4, 'Cajas de Compensación'),
+    (5, 'Ente'),
+    (6, 'Comité'),
+    (7,'Federación Paralimpica'),
+    (8,'Liga Paralimpica'),
+    (9,'Club Paralimpico'),
+    (10,'Centro De Acondicionamiento'),
+    (11, 'Escuela de Formación Deportiva'),
+)
+
 class Departamento(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     codigo = models.CharField(max_length=10, null=True, verbose_name='código')
@@ -68,19 +82,6 @@ class Actores(models.Model):
         return actores
 
 class Entidad(TenantMixin): # Entidad deportiva
-    TIPOS = (
-        (1, 'Liga'),
-        (2, 'Federación'),
-        (3, 'Club'),
-        (4, 'Cajas de Compensación'),
-        (5, 'Ente'),
-        (6, 'Comité'),
-        (7,'Federación Paralimpica'),
-        (8,'Liga Paralimpica'),
-        (9,'Club Paralimpico'),
-        (10,'Centro De Acondicionamiento'),
-        (11, 'Escuela de Formación Deportiva'),
-    )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
     pagina_web = models.URLField(verbose_name="página web propia", blank=True, null=True)
