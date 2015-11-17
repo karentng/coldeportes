@@ -2,6 +2,20 @@ from django.db import models
 from tenant_schemas.models import TenantMixin
 from coldeportes.utilities import permisos_de_tipo
 
+TIPOS = (
+    (1, 'Liga'),
+    (2, 'Federación'),
+    (3, 'Club'),
+    (4, 'Cajas de Compensación'),
+    (5, 'Ente'),
+    (6, 'Comité'),
+    (7,'Federación Paralimpica'),
+    (8,'Liga Paralimpica'),
+    (9,'Club Paralimpico'),
+    (10,'Centro De Acondicionamiento'),
+    (11, 'Escuela de Formación Deportiva'),
+)
+
 class Departamento(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     codigo = models.CharField(max_length=10, null=True, verbose_name='código')
@@ -57,6 +71,7 @@ class Actores(models.Model):
     centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos")
     normas = models.BooleanField(verbose_name="Normograma")
     escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva")
+    noticias = models.BooleanField(verbose_name="Noticias")
 
     def resumen(self):
         actores = []
@@ -67,19 +82,6 @@ class Actores(models.Model):
         return actores
 
 class Entidad(TenantMixin): # Entidad deportiva
-    TIPOS = (
-        (1, 'Liga'),
-        (2, 'Federación'),
-        (3, 'Club'),
-        (4, 'Cajas de Compensación'),
-        (5, 'Ente'),
-        (6, 'Comité'),
-        (7,'Federación Paralimpica'),
-        (8,'Liga Paralimpica'),
-        (9,'Club Paralimpico'),
-        (10,'Centro De Acondicionamiento'),
-        (11, 'Escuela de Formación Deportiva'),
-    )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
     pagina_web = models.URLField(verbose_name="página web propia", blank=True, null=True)
@@ -105,7 +107,8 @@ class Entidad(TenantMixin): # Entidad deportiva
     def ejecutar_consulta(self, ajustar, consulta):
         from django.db.models import Count, F
         from snd.modelos.cafs import CentroAcondicionamiento
-        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista
+        from snd.modelos.escenarios import Escenario
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista,InformacionAcademica
         from datetime import date
 
         resultado = eval(consulta)
@@ -143,14 +146,14 @@ class Entidad(TenantMixin): # Entidad deportiva
         except Exception:
             return self
 
-    def deportistas_registrables(self):
-        return permisos_de_tipo(self,[3,9])
+    #def deportistas_registrables(self):#Revisar
+    #    return permisos_de_tipo(self,[3,9])
 
     def disponible_para_transferencias(self):
         return permisos_de_tipo(self,[3,9])
 
-    def seleccionable(self):
-        return permisos_de_tipo(self,[1,2,6,7,8])
+    #def seleccionable(self):#Revisar
+    #    return permisos_de_tipo(self,[1,2,6,7,8])
 
     def avalable(self):
         return permisos_de_tipo(self,[1,2,7,8])
@@ -568,6 +571,7 @@ class Liga(ResolucionReconocimiento):
         from collections import Counter
 
         from snd.modelos.cafs import CentroAcondicionamiento
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista,InformacionAcademica
 
         resultado = list()
         clubes = Club.objects.filter(liga=self)

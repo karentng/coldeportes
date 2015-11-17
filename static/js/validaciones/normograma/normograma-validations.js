@@ -43,13 +43,6 @@ $(document).ready(function() {
                     }
                 }
             },
-            archivo: {
-                validators: {
-                    notEmpty: {
-                        message: 'Debe subir un archivo adjunto al registro de la norma'
-                    }
-                }
-            },
             descripcion: {
                 validators: {
                     notEmpty: {

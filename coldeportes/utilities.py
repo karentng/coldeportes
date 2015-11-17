@@ -124,18 +124,15 @@ def permisosPermitidos(request, permisos):
     permitidos = []
     for i in permisos:
         try:
-            if type(i[1]) == str:
-                valor = getattr(request.tenant.actores, i[1])
-            else: # Booleano
-                valor = i[1]
-            if valor == True:
+            valor = getattr(request.tenant.actores, i[1])
+            if valor:
                 permitidos.append(i[0])
         except Exception as e:
             print (e)
             pass
     return permitidos
 
-def tenant_actor(actor):
+'''def tenant_actor(actor):
     """
     Agosto 05 / 2015
     Autor: Andrés Serna
@@ -163,6 +160,33 @@ def tenant_actor(actor):
             except Exception as e:
                 return a_view(request, *args, **kwargs)
             return a_view(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
+'''
+def tenant_actor(actor):
+    """
+    Noviembre 14 / 2015
+    Autor: Cristian Leonardo Ríos López
+
+    Función que verifica si el tenant tiene tiene acceso al actor especificado
+    :param actor:  Actor que se verificará
+    :type actor:   String
+    :returns:      Redirección a la página 403 (No tenía permisos) o a la página deseada (Si tenía permisos)
+    :rtype:        HttpResponseRedirect
+    """
+    def decorator(a_view):
+        def _wrapped_view(request, *args, **kwargs):
+            try:
+                permisos = Group.objects.get(name="Solo lectura").permissions.all()
+                permisos_text = []
+                for permiso in permisos:
+                    permisos_text.append(permiso.codename)
+                if 'view_'+actor in permisos_text:
+                    return a_view(request, *args, **kwargs)
+                else:
+                    return render(request,'403.html',{})
+            except Group.DoesNotExist:
+                return render(request,'403.html',{})
         return _wrapped_view
     return decorator
 
@@ -271,19 +295,26 @@ def _wrap_instance__resolve(wrapping_functions,instance):
     Descripción: Permite agregar los actores obligatorios a una entidad
 '''
 def add_actores(actores,tipo):
+
+    #estos son los actores que se tienen por obligación
+    ACTORES = {
+        '1': ['selecciones'],#Liga
+        '2': ['selecciones'],#Federacion
+        '3': [],#Club
+        '4': ['cajas'],#CajaDeCompensacion
+        '5': ['normas'],#Ente
+        '6': ['selecciones'],#Comite
+        '7': ['selecciones'],#FederacionParalimpica
+        '8': ['selecciones'],#LigaParalimpica
+        '9': ['deportistas'],#clubParalimpico
+        '10': ['centros'],#Caf
+        '11': ['deportistas','escuelas_deportivas']#EscuelaDeportiva_
+    }
+    #Todos tienen
     actores.personal_apoyo = True
     actores.dirigentes = True
-    if tipo == '9': #club paralímpico
-        actores.deportistas = True
-    if tipo == '4': #cajas
-        actores.cajas = True
-    #federaciones, ligas, comite, federaciones paralímpicas, ligas paralímpicas
-    if (tipo == '1') or (tipo == '2') or (tipo == '6') or (tipo == '7') or (tipo == '8'):
-        actores.selecciones = True
-    if tipo == '5': #Ente
-        actores.normas = True
-    if tipo == '10': #CAF
-        actores.centros = True
-    if tipo == '11': #Escuelas de formación deportiva
-        actores.deportistas = True
-        actores.escuelas_deportivas = True
+    actores.noticias = True
+
+    actores_agregar = ACTORES[tipo]
+    for actor in actores_agregar:
+        setattr(actores, actor, True)

@@ -123,6 +123,7 @@ def finalizar(request, opcion, edicion):
         return redirect('centro_biomedico_listar')
 
 @login_required
+@all_permission_required('snd.view_centrobiomedico')
 def ver(request,centro_biomedico_id,id_entidad):
     """
     Octubre 10 / 2015
@@ -156,6 +157,7 @@ def ver(request,centro_biomedico_id,id_entidad):
     })
 
 @login_required
+@all_permission_required('snd.view_centrobiomedico')
 def listar(request):
     """
     Octubre 04 / 2015

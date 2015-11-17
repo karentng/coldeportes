@@ -2,28 +2,29 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    {{ nombre_reporte }} - Deportistas
+    Escenario - Estrato
 {% endblock %}
 
 {% block titulo_contenido %}
-    {{ nombre_reporte }} - Deportistas
+    Escenario - Estrato
 {% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
 {% endblock %}
 
-{% block js %}
+{% block js %}	
 	<script type="text/javascript">
         $(document).ready(function(){
-            url = "{% url url_data %}";
+            url = "{% url 'reportes_escenarios_estrato' %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamento").val());
-                var genero = JSON.stringify($("#id_genero").val());
+                var annos = JSON.stringify($("#id_anno").val());
+                var disciplinas = JSON.stringify($("#id_disciplina").val());
 
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos, 'genero':genero},
+                    data: {'departamentos': departamentos, 'annos':annos, 'disciplinas':disciplinas},
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data);
@@ -31,16 +32,20 @@
                 });
 
             }
-            $("#id_genero").on("change", function(){
+            $("#id_anno").on("change", function(){
                 realizarConsulta();
             });
             $("#id_departamento").on("change", function(){
                 realizarConsulta();
             });
+            $("#id_disciplina").on("change", function(){
+                realizarConsulta();
+            });
         });
         visualizaciones = {{visualizaciones|safe}};
-        datos = {{datos|safe}};
-
+        datos = {{escenarios|safe}};
+        console.log(datos);
+        
 	</script>
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
 {% endblock %}
@@ -48,12 +53,12 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'inicio' %}">Reportes</a></li>
-    <li><a href="{% url 'inicio' %}">Deportistas</a></li>
-    <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
+    <li><a href="{% url 'inicio' %}">CAF</a></li>
+    <li><a href="{% url 'inicio' %}">Demografía</a></li>
 {% endblock %}
 
 {% block titulo_panel %}
-    {{ nombre_reporte }}
+    Estratos de escenarios por Departamentos, Municipios, y disciplina deportiva
 {% endblock %}
 
 {% block contenido_panel %}

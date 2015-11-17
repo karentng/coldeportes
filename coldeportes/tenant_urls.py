@@ -30,7 +30,7 @@ urlpatterns = patterns('',
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += required(
-    tenant_actor('selecciones'),
+    tenant_actor('seleccion'),
     patterns('',
         url(r'^selecciones/', include('snd.urls.selecciones')), #urls de cafs
     ),
@@ -38,7 +38,7 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('centros'),
+    tenant_actor('centroacondicionamiento'),
     patterns('',
         url(r'^caf/', include('snd.urls.caf')), #urls de cafs
     ),
@@ -46,7 +46,7 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('escenarios'),
+    tenant_actor('escenario'),
     patterns('',
         url(r'^escenarios/', include('snd.urls.escenarios')), #urls de escenarios
     ),
@@ -55,7 +55,7 @@ urlpatterns += required(
     
 
 urlpatterns += required(
-    tenant_actor('cajas'),
+    tenant_actor('cajacompensacion'),
     patterns('',
         url(r'^ccf/', include('snd.urls.cajas_compensacion')), #urls de cajas
     )
@@ -63,7 +63,7 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('dirigentes'),
+    tenant_actor('dirigente'),
     patterns('',
         url(r'^dirigentes/', include('snd.urls.dirigentes')), #urls de dirigentes
     )
@@ -71,7 +71,7 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('deportistas'),
+    tenant_actor('deportista'),
     patterns('',
         url(r'^deportistas/', include('snd.urls.deportistas')), #urls de deportistas
     )
@@ -79,7 +79,7 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('personal_apoyo'),
+    tenant_actor('personalapoyo'),
     patterns('',
         url(r'^personal-apoyo/', include('snd.urls.personal_apoyo')), #urls de personal de apoyo
     )
@@ -87,7 +87,7 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('centros_biomedicos'),
+    tenant_actor('centrobiomedico'),
     patterns('',
         url(r'^centro-biomedico/', include('snd.urls.centro_biomedico')), #urls de centro biomédico
     )
@@ -95,7 +95,7 @@ urlpatterns += required(
 )
 
 urlpatterns += required(
-    tenant_actor('escuelas_deportivas'),
+    tenant_actor('escueladeportiva'),
     patterns('',
         url(r'^escuela-deportiva/', include('snd.urls.escuela_deportiva')), #urls de centro biomédico
     )

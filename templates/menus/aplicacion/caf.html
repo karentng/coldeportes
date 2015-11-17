@@ -5,11 +5,9 @@
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_centroacondicionamiento%}
-            {% if request.tenant.tipo == 3 or request.tenant.tipo == 5 or request.tenant.tipo == 8 or request.tenant.tipo == 10 %}
-                <li {% if "/caf/crear-editar" in request.path %} class="active" {% endif %}>
-                    <a href="{% url 'crear_caf' 'Identificación' %}">Registro</a>
-                </li>
-            {% endif %}
+            <li {% if "/caf/crear-editar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'crear_caf' 'Identificación' %}">Registro</a>
+            </li>
         {% endif %}
         <li {% if "/caf/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_cafs' %}">Listar CAF</a>

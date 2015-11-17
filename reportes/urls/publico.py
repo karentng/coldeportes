@@ -9,4 +9,5 @@ urlpatterns = patterns('reportes.views.publico',
     url(r'deportistas/', include('reportes.urls.deportistas')),
     url(r'^bubble$', 'ejemploBubble', name="ejemplo_bubble"),
     url(r'^motion$', 'ejemploMotion', name="ejemplo_motion"),
+    url(r'escenarios/', include('reportes.urls.escenarios')),
 )

@@ -28,6 +28,11 @@ class Seleccion(models.Model):
     tipo_campeonato = models.IntegerField(choices=TIPO_CAMPEONATO)
     estado = models.IntegerField(choices=ESTADOS_SELE,default=0)
 
+    class Meta:
+        permissions = (
+            ("view_seleccion", "Permite ver seleccion"),
+        )
+
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
         self.campeonato = self.campeonato.upper()

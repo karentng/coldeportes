@@ -78,6 +78,9 @@ class PersonalApoyo(models.Model):
 
     class Meta:
         unique_together = ('tipo_id','identificacion',)
+        permissions = (
+            ("view_personalapoyo", "Permite ver personal apoyo"),
+        )
 
     def __str__(self):
         return "%s - %s %s"%(self.identificacion,self.nombres, self.apellidos)

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from normograma.forms import NormaForm, NormogramaBusquedaForm
 from django.contrib.auth.decorators import login_required
 from normograma.models import Norma
+from django.contrib import messages
 
 
 @login_required
@@ -24,6 +25,41 @@ def registrar(request):
         if norma_form.is_valid():
             norma_form.save()
             
+            return redirect('normograma_buscar')
+
+
+    return render(request, 'normograma_registrar.html', {
+        'form': norma_form,
+    })
+
+@login_required
+def editar(request, norma_id):
+    """
+    Septiembre 14 / 2015
+    Autor: Karent Narvaez Grisales
+    
+    editar de la información de una norma en el módulo de normograma.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param norma_id:  norma_id
+    :type norma_id:   
+    """
+
+    try:
+        norma = Norma.objects.get(id = norma_id)
+    except Exception:
+        norma = None
+
+    norma_form = NormaForm(instance = norma)
+
+    if request.method == 'POST':
+
+        norma_form = NormaForm(request.POST, request.FILES, instance = norma)
+
+        if norma_form.is_valid():
+            norma_form.save()
+            messages.success(request, "Norma modificada correctamente.")
             return redirect('normograma_buscar')
 
 

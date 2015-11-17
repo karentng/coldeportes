@@ -1,6 +1,6 @@
 #encoding:utf-8
 from django.shortcuts import render, redirect
-from snd.models import HistorialDeportivo,Deportista,InformacionAdicional,Deportista
+from snd.modelos.deportistas import HistorialDeportivo,Deportista,InformacionAdicional,Deportista,InformacionAcademica
 from entidades.models import Departamento
 from django.db.models import Count
 from reportes.forms import FiltrosDeportistasForm
@@ -60,12 +60,13 @@ def participaciones_deportivas(request):
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/reportes_deportistas.html', {
+    return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Participaciones Deportivas',
         'url_data' : 'reporte_participaciones_deportivas',
         'datos': participaciones,
         'visualizaciones': visualizaciones,
         'form': form,
+        'actor': 'Deportistas'
     })
 
 
@@ -107,12 +108,13 @@ def beneficiario_programa_apoyo(request):
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/reportes_deportistas.html', {
+    return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Beneficiario Programa de Apoyo',
         'url_data' : 'reporte_beneficiario_programa_apoyo',
         'datos': beneficiados,
         'visualizaciones': visualizaciones,
         'form': form,
+        'actor': 'Deportistas'
     })
 
 def etinias_deportistas(request):
@@ -151,10 +153,85 @@ def etinias_deportistas(request):
 
     visualizaciones = [1, 2, 3]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/reportes_deportistas.html', {
+    return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Etnias de los deportistas',
         'url_data' : 'reporte_etinias_deportistas',
         'datos': etnias,
         'visualizaciones': visualizaciones,
         'form': form,
+        'actor': 'Deportistas'
+    })
+
+def formacion_academica(request):
+    """
+    Noviembre 14, 2015
+    Autor: Daniel Correa
+
+    Permite conocer la formacion academica de los deportistas caracterizadas por niveles de formacion
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__ciudad_residencia__departamento__id__in=%s,deportista__genero__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__ciudad_residencia__departamento__id__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__genero__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
+            "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))"
+        ]
+
+        formaciones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+
+        return JsonResponse(formaciones)
+
+    else:
+        formaciones = tipoTenant.ejecutar_consulta(True, "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))")
+
+    visualizaciones = [1, 2, 3]
+    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    return render(request, 'base_reportes.html', {
+        'nombre_reporte' : 'Formación Academica de los deportistas',
+        'url_data' : 'reporte_formacion_academica',
+        'datos': formaciones,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Deportistas'
+    })
+
+def nacionalidad(request):
+    """
+    Noviembre 14, 2015
+    Autor: Daniel Correa
+
+    Permite conocer el numero de deportistas colombianos y extranjeros
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list(Deportista.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))",
+            "list(Deportista.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))",
+            "list(Deportista.objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))",
+            "list(Deportista.objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))"
+        ]
+
+        nacionalidades = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+
+        return JsonResponse(nacionalidades)
+
+    else:
+        nacionalidades = tipoTenant.ejecutar_consulta(True, "list(Deportista.objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('nacionalidad')))")
+
+    visualizaciones = [1, 2, 3]
+    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    return render(request, 'base_reportes.html', {
+        'nombre_reporte' : 'Nacionalidad de los deportistas',
+        'url_data' : 'reporte_nacionalidad',
+        'datos': nacionalidades,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Deportistas'
     })

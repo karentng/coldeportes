@@ -48,6 +48,9 @@ class Dirigente(models.Model):
 
     class Meta:
         unique_together = ('tipo_identificacion','identificacion',)
+        permissions = (
+            ("view_dirigente", "Permite ver dirigente"),
+        )
 
     def __str__(self):
         return "{0} {1}".format(self.nombres, self.apellidos)
