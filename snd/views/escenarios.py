@@ -195,7 +195,7 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
-    identificacion_form = IdentificacionForm( instance=escenario)
+    identificacion_form = IdentificacionForm(instance=escenario)
 
     if request.method == 'POST':
 
