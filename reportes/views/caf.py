@@ -1,10 +1,9 @@
 #encoding:utf-8
 from django.shortcuts import render, redirect
-from django.db import models
 from django.http import JsonResponse
 import ast
-
 from reportes.forms import DemografiaForm
+
 '''
 Reportes:
     1. Dona

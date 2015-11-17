@@ -39,6 +39,11 @@ class CajaCompensacion(models.Model):
     estado = models.IntegerField(choices=tipo_estado)
     descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
 
+    class Meta:
+        permissions = (
+                ("view_cajacompensacion", "Permite ver caja compensacion"),
+            )
+
     def obtenerAtributos(self):
         atributos = [
             ["Nombre", self.nombre],

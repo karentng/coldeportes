@@ -14,6 +14,7 @@ from coldeportes.utilities import *
 
 
 @login_required
+@all_permission_required('snd.view_escenario')
 def listar_escenarios(request):
     """
     Mayo 30 / 2015
@@ -31,7 +32,7 @@ def listar_escenarios(request):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def finalizar_escenario(request, opcion):
     """
@@ -51,7 +52,7 @@ def finalizar_escenario(request, opcion):
         return redirect('listar_escenarios')
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def desactivar_escenario(request, escenario_id):
     """
@@ -80,6 +81,7 @@ def desactivar_escenario(request, escenario_id):
     return redirect('listar_escenarios')
 
 @login_required
+@all_permission_required('snd.view_escenario')
 def ver_escenario(request, escenario_id, id_entidad):
     """
     Mayo 30 / 2015
@@ -131,7 +133,7 @@ def ver_escenario(request, escenario_id, id_entidad):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_nuevo_identificacion(request):
     """
@@ -171,7 +173,7 @@ def wizard_nuevo_identificacion(request):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_identificacion(request, escenario_id):
     """
@@ -193,7 +195,7 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
-    identificacion_form = IdentificacionForm( instance=escenario)
+    identificacion_form = IdentificacionForm(instance=escenario)
 
     if request.method == 'POST':
 
@@ -219,7 +221,7 @@ def wizard_identificacion(request, escenario_id):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_caracterizacion(request, escenario_id):
     """
@@ -266,7 +268,7 @@ def wizard_caracterizacion(request, escenario_id):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_horarios(request, escenario_id):
     """
@@ -314,7 +316,7 @@ def wizard_horarios(request, escenario_id):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_historicos(request, escenario_id):
     """
@@ -344,7 +346,6 @@ def wizard_historicos(request, escenario_id):
 
     if request.method == 'POST':
         historico_form = DatoHistoricoForm(request.POST)
-        print('algoooooooooo')  
 
         if historico_form.is_valid():
             historico_nuevo = historico_form.save(commit=False)
@@ -363,7 +364,7 @@ def wizard_historicos(request, escenario_id):
 
 
 @login_required
-@tenant_required
+#@tenant_required
 @all_permission_required('snd.add_escenario')
 def wizard_fotos(request, escenario_id):
     """
@@ -421,7 +422,8 @@ def wizard_fotos(request, escenario_id):
 
     
 @login_required
-@tenant_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
 def wizard_videos(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -483,7 +485,8 @@ def wizard_videos(request, escenario_id):
     })
 
 @login_required
-@tenant_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
 def wizard_mantenimiento(request, escenario_id):
     """
     Octubre 13 / 2015
@@ -529,6 +532,7 @@ def wizard_mantenimiento(request, escenario_id):
 
 
 @login_required
+@all_permission_required('snd.add_escenario')
 def wizard_contactos(request, escenario_id):
     """
     Mayo 30 / 2015
@@ -577,7 +581,8 @@ def wizard_contactos(request, escenario_id):
 
 
 @login_required
-@tenant_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
 def eliminar_horario(request, escenario_id, horario_id):
     """
     Mayo 30 / 2015
@@ -603,7 +608,8 @@ def eliminar_horario(request, escenario_id, horario_id):
 
 
 @login_required
-@tenant_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
 def eliminar_historico(request, escenario_id, historico_id):
     """
     Mayo 30 / 2015
@@ -630,7 +636,8 @@ def eliminar_historico(request, escenario_id, historico_id):
         return redirect('wizard_historicos', escenario_id)
 
 @login_required
-@tenant_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
 def eliminar_foto(request, escenario_id, foto_id):
     """
     Mayo 30 / 2015
@@ -656,7 +663,8 @@ def eliminar_foto(request, escenario_id, foto_id):
         return redirect('wizard_fotos', escenario_id)
 
 @login_required
-@tenant_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
 def eliminar_video(request, escenario_id, video_id):
     """
     Mayo 30 / 2015
@@ -682,7 +690,8 @@ def eliminar_video(request, escenario_id, video_id):
         return redirect('wizard_videos', escenario_id)
 
 @login_required
-@tenant_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
 def eliminar_contacto(request, escenario_id, contacto_id):
     """
     Mayo 30 / 2015

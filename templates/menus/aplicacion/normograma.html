@@ -6,11 +6,9 @@
     </a>
     <ul class="sub-menu">
         {% if perms.normograma.add_norma %}
-            {% if request.tenant.tipo == 5 %}
-                <li {% if "/normograma/registrar" in request.path %} class="active" {% endif %}>
-                    <a href="{% url 'normograma_registrar' %}">Registro</a>
-                </li>
-            {% endif %}
+            <li {% if "/normograma/registrar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'normograma_registrar' %}">Registro</a>
+            </li>
         {% endif %} 
         <li {% if "/normograma/buscar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'normograma_buscar' %}">Buscar</a>

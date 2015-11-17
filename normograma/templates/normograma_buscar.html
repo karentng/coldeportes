@@ -58,7 +58,9 @@
                 </div>
                 <div class="result-price col-md-1">
                     <small>JURISDICCIÓN:</small> {{resultado.get_jurisdiccion_display}}
-                    <a href="javascript:;" class="btn btn-inverse btn-block add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Esta función está en construcción">Ver Detalles</a>
+                    {% if perms.normograma.add_norma %}
+                    <a href="{% url 'editar_norma' resultado.id %}" class="btn btn-inverse btn-block" >Editar Norma</a>
+                    {% endif %}
                 </div>
             </li>
             {% endfor %}

@@ -123,6 +123,7 @@ def finalizar(request, opcion, edicion):
         return redirect('escuela_deportiva_listar')
 
 @login_required
+@all_permission_required('snd.view_escueladeportiva')
 def ver(request,escuela_deportiva_id,id_entidad):
     """
     Noviembre 02 / 2015
@@ -156,6 +157,7 @@ def ver(request,escuela_deportiva_id,id_entidad):
     })
 
 @login_required
+@all_permission_required('snd.view_escueladeportiva')
 def listar(request):
     """
     Noviembre 02 / 2015

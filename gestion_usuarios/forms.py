@@ -42,9 +42,15 @@ class GroupForm(forms.ModelForm):
     required_css_class = 'required'
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request', None)
+        instancia = kwargs.get('instance', None)
         super(GroupForm, self).__init__(*args, **kwargs)
         self.fields['permissions'].queryset = self.fields['permissions'].queryset.filter(codename__in=permisosPermitidos(request, PERMISOS_DIGITADOR))
         self.fields['permissions'] = adicionarClase(self.fields['permissions'], 'many')
+
+        if instancia != None:
+            #evitar que editen los nombres de los grupos por defecto, podrian dejar de funcionar algunas cosas
+            if instancia.name == 'Solo lectura' or instancia.name == 'Digitador':
+                self.fields['name'].widget.attrs['readonly'] = True
 
     class Meta:
         model = Group

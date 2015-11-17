@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 @login_required
+@all_permission_required('snd.view_cajacompensacion')
 def listar_ccfs(request):
     """
     Julio 5 / 2015
@@ -32,6 +33,7 @@ def listar_ccfs(request):
     })
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def finalizar_ccf(request, opcion):
     """
     Julio 5 / 2015
@@ -50,6 +52,7 @@ def finalizar_ccf(request, opcion):
         return redirect('listar_ccfs')
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def desactivar_ccf(request, ccf_id):
     """
     Julio 5 / 2015
@@ -77,6 +80,7 @@ def desactivar_ccf(request, ccf_id):
     return redirect('listar_ccfs')
 
 @login_required
+@all_permission_required('snd.view_cajacompensacion')
 def ver_ccf(request, ccf_id):
     """
     Julio 5 / 2015
@@ -106,6 +110,7 @@ def ver_ccf(request, ccf_id):
     })
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def wizard_caja(request):
     """
     Julio 4 / 2015
@@ -139,6 +144,7 @@ def wizard_caja(request):
     })
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def wizard_editar_caja(request, caja_id):
     """
     Julio 4 / 2015
@@ -182,6 +188,7 @@ def wizard_editar_caja(request, caja_id):
 
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def wizard_horarios_ccf(request, ccf_id):
     """
     Julio 5 / 2015
@@ -226,6 +233,7 @@ def wizard_horarios_ccf(request, ccf_id):
     })
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def wizard_tarifas_ccf(request, ccf_id):
     """
     Julio 5 / 2015
@@ -271,6 +279,7 @@ def wizard_tarifas_ccf(request, ccf_id):
 
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def eliminar_horario_ccf(request, ccf_id, horario_id):
     """
     Julio 5 / 2015
@@ -296,6 +305,7 @@ def eliminar_horario_ccf(request, ccf_id, horario_id):
 
 
 @login_required
+@all_permission_required('snd.add_cajacompensacion')
 def eliminar_tarifa_ccf(request, ccf_id, tarifa_id):
     """
     Julio 5 / 2015

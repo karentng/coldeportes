@@ -1,9 +1,9 @@
 <div class="image gallery-group-{{id}}">
     <div class="image-inner">
-        <a href="{{imagen}}" data-lightbox="gallery-group-{{id}}">
+        <a href="{% url url_reporte %}">
             <img src="{{imagen}}" alt="" />
         </a>
-        <p class="image-caption">
+        <p class="image-caption" style="background:{{ color }}">
             {{nombre_imagen}}
         </p>
     </div>
@@ -11,7 +11,6 @@
         <h5 class="title"><strong>{{titulo}}</strong></h5>
         <div class="desc">
             {{descripcion}}
-            <p><a href="{% url url_reporte %}">Ingresar al reporte</a></p>
         </div>
         <p class="m-b-0">
             <a href="{% url url_reporte %}">
