@@ -137,7 +137,7 @@ def directorio_publico_buscar(request):
             try:
                 if isinstance(listado_resultados[0][0], str):# se verifica si el primer elemento de los resultados es un string según la validación solo se da cuando se intentó hacer búsqueda sin filtros
                     mensaje = 'Por favor ingrese un criterio de búsqueda.'
-                    listado_resultados =[]
+                    listado_resultados = []
                 else:
                     agregar_grupo(listado_resultados)
             except:
