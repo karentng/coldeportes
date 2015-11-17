@@ -211,7 +211,7 @@
 			$('#id_masa_corporal_magra').css("pointer-events","none");
             //Verificar la informacion
             //Si ya lo tiene ingresado
-            //Se pone readonly info de calculo y se checkea la tawel
+            //Se pone readonly info de calculo y se checkea
             var porcentaje = $('#id_porcentaje_grasa').val();
             if (porcentaje != ''){
                 $('#id_cuello').prop('readonly', true);
@@ -223,7 +223,7 @@
             }else{
                 $('#id_porcentaje_grasa').prop('readonly', true);
             }
-            //Si no readonly percent y todo bien
+
 		});
 		var mujer = {{mujer|yesno:"true,false" }};
 
@@ -240,8 +240,13 @@
                 $('#id_porcentaje_grasa').prop('readonly', false);
                 $('#id_cuello').prop('readonly', true);
                 $('#id_cintura').prop('readonly', true);
+                $('#id_porcentaje_grasa').val("");
+                $('#id_cuello').val("");
+                $('#id_cintura').val("");
+
                 if(mujer){
                     $('#id_cadera').prop('readonly', true);
+                    $('#id_cadera').val("");
                 }
 
             }

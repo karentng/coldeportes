@@ -106,7 +106,7 @@ class Entidad(TenantMixin): # Entidad deportiva
     def ejecutar_consulta(self, ajustar, consulta):
         from django.db.models import Count, F
         from snd.modelos.cafs import CentroAcondicionamiento
-        from snd.modelos.deportistas import HistorialDeportivo
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista,InformacionAcademica
         from datetime import date
 
         resultado = eval(consulta)
@@ -297,6 +297,21 @@ class Ente(Entidad):
     )
     tipo_ente = models.IntegerField(choices=TIPOS_ENTE)
 
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': None,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
+
 class Comite(Entidad):
     TIPOS_COMITE = (
         (1, 'Comité Olimpico Colombiano'),
@@ -304,8 +319,37 @@ class Comite(Entidad):
     )
     tipo_comite = models.IntegerField(choices=TIPOS_COMITE)
 
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': None,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
+
 class CajaDeCompensacion(Entidad):
     pass
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': None,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
 def ruta_resoluciones_reconocimiento(instance, filename):
     return "tenants/resoluciones/%s"%(filename.encode('ascii','ignore').decode('ascii'))
@@ -334,10 +378,24 @@ class FederacionParalimpica(ResolucionReconocimiento):
         comite_para = Comite.objects.get(tipo_comite=2)
         self.comite=comite_para
         super(FederacionParalimpica, self).save(*args, **kwargs)
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': self.discapacidad,
+            'descripcion': self.descripcion,
+            'ciudad': 'Colombia(Nacional)',
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
 class LigaParalimpica(ResolucionReconocimiento):
     DISCAPACIDADES = (
-        (1,'Limitaciones Fisica'),
+        (1,'Limitaciones Fisicas'),
         (2,'Limitación Auditiva'),
         (3,'Limitación Visual'),
         (4,'Parálisis Cerebral'),
@@ -345,6 +403,21 @@ class LigaParalimpica(ResolucionReconocimiento):
     )
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     federacion = models.ForeignKey(FederacionParalimpica)
+
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': self.discapacidad,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
 
 class ClubParalimpico(ResolucionReconocimiento):
@@ -354,10 +427,39 @@ class ClubParalimpico(ResolucionReconocimiento):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': self.liga.discapacidad,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
 class Federacion(ResolucionReconocimiento):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
     comite = models.ForeignKey(Comite)
+
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': self.disciplina,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
     def save(self, *args, **kwargs):
         comite = Comite.objects.get(tipo_comite=1)
@@ -467,6 +569,7 @@ class Liga(ResolucionReconocimiento):
         from collections import Counter
 
         from snd.modelos.cafs import CentroAcondicionamiento
+        from snd.modelos.deportistas import HistorialDeportivo,InformacionAdicional,Deportista,InformacionAcademica
 
         resultado = list()
         clubes = Club.objects.filter(liga=self)
@@ -571,6 +674,21 @@ class Liga(ResolucionReconocimiento):
 
         return dirigentes
 
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': self.disciplina,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
+
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
@@ -588,12 +706,55 @@ class Club(ResolucionReconocimiento):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
 
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': self.liga.disciplina,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
 class Caf(Entidad):
     pass
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': None,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
 class EscuelaDeportiva_(Entidad):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+
+    def obtener_datos_entidad(self):
+        entidad = {
+            'tipo_tenant': type(self).__name__,
+            'mostrar_info':True,
+            'nombre':self.nombre,
+            'disciplina': None,
+            'descripcion': self.descripcion,
+            'ciudad': self.ciudad,
+            'direccion': self.direccion,
+            'telefono': self.telefono,
+            'pagina_web': self.pagina_web,
+            'disponible_para_transferencias' : self.disponible_para_transferencias()
+        }
+        return entidad
 
 
 class Nacionalidad(models.Model):
