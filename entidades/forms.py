@@ -259,51 +259,44 @@ class EscuelaDeportivaForm(forms.ModelForm):
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
 class ActoresForm(forms.ModelForm):
+
+
+    #estos son los actores que se pueden o no tener por tanto son seleccionables
+    ACTORES = {
+        '1': [],#Liga
+        '2': ['escenarios'],#Federacion
+        '3': ['centros','escenarios','deportistas'],#Club
+        '4': ['escenarios'],#CajaDeCompensacion
+        '5': ['escenarios','centros_biomedicos'],#Ente
+        '6': [],#Comite
+        '7': [],#FederacionParalimpica
+        '8': ['deportistas'],#LigaParalimpica
+        '9': ['centros','escenarios'],#clubParalimpico
+        '10': ['escenarios'],#Caf
+        '11': ['escenarios']#EscuelaDeportiva_
+    }
+
     def __init__(self, *args, **kwargs):
         tipo = kwargs.pop('tipo', None)
-        tipoEnte = kwargs.pop('tipoEnte', None)
+        tipoEnte = kwargs.pop('tipoEnte', None)#no se está usando
         super(ActoresForm, self).__init__(*args, **kwargs)
-        if tipo == '1':
-            #Liga
-            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo == '2':
-            #Federacion
-            self.quitar_campos(['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo == '3':
-            #Club
-            self.quitar_campos(['personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo == '4':
-            #CajaDeCompensacion
-            #self.fields['cajas'].widget = forms.HiddenInput()
-            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo == '5':
-            #Ente
-            self.quitar_campos(['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','normas','escuelas_deportivas'])
-        elif tipo == '6':
-            #Comite
-            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-            if tipoEnte == '2':#Comité Paralímpico Colombiano
-                self.quitar_campos(['escenarios'])
-        elif tipo =='7':
-            #FederacionParalimpica
-            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo =='8':
-            #LigaParalimpica
-            self.quitar_campos(['centros','escenarios','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo =='9':
-            #clubParalimpico
-            self.quitar_campos(['escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo == '10':
-            #caf
-            self.quitar_campos(['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
-        elif tipo == '11':
-            #escuela de formación deportiva
-            self.quitar_campos(['centros','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas'])
+        if tipo:
+            self.quitar_campos(self.get_campos_quitar(self.ACTORES[tipo]))
 
     def quitar_campos(self,campos):
         for campo in campos:
             del self.fields[campo]
 
+    def get_campos_quitar(self,campos):
+        all_campos = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']
+        for campo in campos:
+            try:
+                del all_campos[all_campos.index(campo)]
+            except ValueError:
+                pass
+        return (all_campos)
+
     class Meta:
         model = Actores
-        exclude = ()
+        #exclude = ()
+        fields = '__all__'

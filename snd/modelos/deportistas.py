@@ -62,6 +62,9 @@ class Deportista(models.Model):
 
     class Meta:
         unique_together = ('tipo_id','identificacion',)
+        permissions = (
+            ("view_deportista", "Permite ver deportista"),
+        )
 
     def __str__(self):
         return self.identificacion + "-" + self.nombres+" "+self.apellidos

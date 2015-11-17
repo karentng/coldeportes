@@ -314,6 +314,7 @@ def desactivar_personal_apoyo(request,id_personal_apoyo):
     return redirect('personal_apoyo_listar')
 
 @login_required
+@permission_required('snd.view_personalapoyo')
 def listar_personal_apoyo(request):
     """
     Junio 9 / 2015
@@ -332,6 +333,7 @@ def listar_personal_apoyo(request):
     })
 
 @login_required
+@permission_required('snd.view_personalapoyo')
 def ver_personal_apoyo(request,id_personal_apoyo,id_entidad):
     """
     Junio 23 /2015

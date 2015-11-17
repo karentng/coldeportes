@@ -1,4 +1,3 @@
-from django.forms import *
 from django import forms
 from entidades.models import Departamento,TipoDisciplinaDeportiva
 from coldeportes.utilities import adicionarClase
@@ -29,6 +28,15 @@ class DemografiaForm(forms.Form):
     anno = forms.MultipleChoiceField(choices=((2013, 2013),(2014, 2014),(2015, 2015),),required=False, label="Año")
     visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
 
+
+def add_visualizacion(field, visualizaciones_definidas):
+    visualizaciones = tuple()
+    if visualizaciones_definidas:
+        for i in VISUALIZACIONES:
+            if i[0] in visualizaciones_definidas:
+                visualizaciones += (i,)
+        field.choices = visualizaciones
+
 class FiltrosDeportistasForm(forms.Form):
     """
     Formulario para filtros de deportistas
@@ -52,3 +60,4 @@ class FiltrosDeportistasForm(forms.Form):
     genero = forms.MultipleChoiceField(choices=(('HOMBRE','HOMBRE'),('MUJER','MUJER'),),required=False, label="Genero")
     #disciplina = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all(), required=False)
     visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+

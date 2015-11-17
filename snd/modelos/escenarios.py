@@ -40,6 +40,11 @@ class Escenario(models.Model):
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = (
+            ("view_escenario", "Permite ver escenario"),
+        )
+
     def fotos(self):
         return [x.foto for x in Foto.objects.filter(escenario=self)]
 
