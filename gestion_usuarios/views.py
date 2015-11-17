@@ -129,7 +129,7 @@ def inicio_public(request):
         for escenario in escenarios:
             ubicaciones.append(escenario.obtenerAtributos())
 
-        cantidad_deportistas = Deportista.objects.filter(entidad=i).count()
+        cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
         
         centros = CentroAcondicionamiento.objects.filter(entidad=i)
         for centro in centros:

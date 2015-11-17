@@ -16,6 +16,6 @@ urlpatterns = patterns('',
     url(r'^cambiar-pass/$', 'django.contrib.auth.views.password_change', {'template_name':'cambiar-pass.html', 'post_change_redirect':'inicio'}, name='cambiar_pass'),
     url(r'^entidades/', include('entidades.urls')),
     url(r'^noticias/',include('noticias.urls')),
+    url(r'^directorio-publico/',include('directorio.publico_urls')),
+    url(r'^normograma/',include('normograma.urls')),
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
