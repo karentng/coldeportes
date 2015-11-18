@@ -13,8 +13,9 @@ from snd.modelos.deportistas import *
 from snd.modelos.cafs import *
 from snd.modelos.cajas_compensacion import *
 from snd.modelos.dirigentes import *
-from coldeportes.utilities import calculate_age, add_actores
+from coldeportes.utilities import calculate_age, add_actores, superuser_only
 from reportes.creacion_vista_escenarios import *
+from django.forms import modelformset_factory
 
 
 @login_required
@@ -557,3 +558,27 @@ def ver_caja_tenantnacional(request, id_ccf, tenant):
         'tenant_nacional': True
     })
 
+
+@login_required
+@superuser_only
+def permisos(request):
+    PermisosFormSet = modelformset_factory(Permisos, fields='__all__')
+
+    if request.method == 'POST':
+        formset = PermisosFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, ("Permisos editados correctamente."))
+            return redirect('permisos')
+        else:
+            form_errors = formset.errors
+            messages.error(request, ("El formulario no es válido."))
+            return render(request, 'entidad_permisos.html',{
+                'forms': formset,
+                'form_errors': form_errors
+                })
+    else:
+        formset = PermisosFormSet(queryset=Permisos.objects.all())
+        return render(request, 'entidad_permisos.html',{
+            'forms': formset
+            })

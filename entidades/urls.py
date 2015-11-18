@@ -29,4 +29,6 @@ urlpatterns = patterns('entidades.views',
 	url(r'^cajas-compensacion/ver/(\d+)/(\d+)$', 'ver_caja_tenantnacional', name='ver_caja_tenantnacional'),
     url(r'^cargar-columnas/(\d+)$', 'cargar_columnas_tenantnacional', name='cargar_columnas_tenantnacional'),
     url(r'^cargar-datos/(\d+)$', 'cargar_datos_tenantnacional', name='cargar_datos_tenantnacional'),
+
+    url(r'^permisos/$', 'permisos', name='permisos'),
 )
