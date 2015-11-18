@@ -117,7 +117,7 @@ def registro(request, tipo, tipoEnte=None):
             try:
                 obj.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
-                
+                generar_vista_escenario()
                 return redirect('entidad_registro', tipo)
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
@@ -161,7 +161,7 @@ def editar(request, idEntidad, tipo, tipoEnte=None):
 @login_required
 def listar(request):
     entidades = Entidad.objects.exclude(schema_name="public")
-    generar_vista_escenario()
+    
     return render(request, 'entidad_listar.html', {
         'entidades': entidades,
     })

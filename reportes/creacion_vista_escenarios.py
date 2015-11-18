@@ -1,8 +1,9 @@
 from django.db import connection
 
-def crear_vista_reportes_tenant_escenario(entidad):
-    sql_tenant = ("""create or replace view reportes_escenarioview as 
-    select  E.id, E.nombre,
+def crear_vista_reportes_tenant_escenario():
+    sql_tenant = """
+    CREATE OR REPLACE view reportes_escenarioview AS 
+    SELECT  E.id, E.nombre,
             E.direccion, E.latitud,         
             E.longitud, E.altura,       
             E.ciudad_id, E.comuna,      
@@ -62,20 +63,20 @@ def crear_vista_reportes_tenant_escenario(entidad):
             DH.fecha_fin,
             DH.descripcion as descripcion_dato_historico,
             DH.fecha_creacion as fecha_creacion_dato_historico
-    from %s.snd_escenario E 
-    LEFT join %s.snd_caracterizacionescenario CE on CE.escenario_id=E.id 
-    LEFT join %s.snd_caracterizacionescenario_caracteristicas CEC on CEC.caracterizacionescenario_id=E.id 
-    LEFT join %s.snd_caracterizacionescenario_tipo_superficie_juego CTJ on CTJ.caracterizacionescenario_id=E.id 
-    LEFT join %s.snd_caracterizacionescenario_tipo_disciplinas CTD on CTD.caracterizacionescenario_id=E.id 
-    LEFT join %s.snd_caracterizacionescenario_clase_uso CCU on CCU.caracterizacionescenario_id=E.id 
-    LEFT join %s.snd_contacto C on C.escenario_id=E.id 
-    LEFT join %s.snd_horariodisponibilidad H on H.escenario_id=E.id
-    LEFT join %s.snd_horariodisponibilidad_dias HD on HD.horariodisponibilidad_id=H.id
-    LEFT join %s.snd_foto F on F.escenario_id=E.id
-    LEFT join %s.snd_video V on V.escenario_id=E.id
-    LEFT join %s.snd_datohistorico DH on DH.escenario_id=E.id
-    LEFT join %s.snd_mantenimiento M on M.escenario_id=E.id;
-    """)%(entidad,entidad,entidad,entidad,entidad,entidad,entidad,entidad,entidad,entidad,entidad,entidad,entidad,)
+    FROM snd_escenario E 
+    LEFT join snd_caracterizacionescenario CE on CE.escenario_id=E.id 
+    LEFT join snd_caracterizacionescenario_caracteristicas CEC on CEC.caracterizacionescenario_id=E.id 
+    LEFT join snd_caracterizacionescenario_tipo_superficie_juego CTJ on CTJ.caracterizacionescenario_id=E.id 
+    LEFT join snd_caracterizacionescenario_tipo_disciplinas CTD on CTD.caracterizacionescenario_id=E.id 
+    LEFT join snd_caracterizacionescenario_clase_uso CCU on CCU.caracterizacionescenario_id=E.id 
+    LEFT join snd_contacto C on C.escenario_id=E.id 
+    LEFT join snd_horariodisponibilidad H on H.escenario_id=E.id
+    LEFT join snd_horariodisponibilidad_dias HD on HD.horariodisponibilidad_id=H.id
+    LEFT join snd_foto F on F.escenario_id=E.id
+    LEFT join snd_video V on V.escenario_id=E.id
+    LEFT join snd_datohistorico DH on DH.escenario_id=E.id
+    LEFT join snd_mantenimiento M on M.escenario_id=E.id;
+    """
 
     cursor = connection.cursor()
     r=''
@@ -87,38 +88,41 @@ def crear_vista_reportes_tenant_escenario(entidad):
 def generar_vista_escenario():
     from django.db import connection
 
+    #Definiendo tenant actual
+    tenant_actual = connection.tenant
+
     sql = """
         CREATE OR REPLACE VIEW public.reportes_reporteescenarioview AS
     """
 
     from entidades.models import Entidad
-    entidades = Entidad.objects.exclude(schema_name='public').order_by('id')#.values_list('schema_name', flat=True)
-    primero = entidades[1]
+    entidades = Entidad.objects.exclude(schema_name='public').order_by('id')
+    primero = entidades[0]
 
     for entidad in entidades:
-        #if entidad == 'public':
-        #    pass
-        schema =  entidad.schema_name
-        connection.set_tenant(entidad) 
-        crear_vista_reportes_tenant_escenario(schema)
+        connection.set_tenant(entidad)
+        crear_vista_reportes_tenant_escenario()
 
         aux = ("""
-            SELECT
-                select *
-            FROM
-            %s.reportes_escenarioview E
-        """)%(entidad)
+                SELECT * FROM %s.reportes_escenarioview E
+              """)%(entidad.schema_name)
 
         if primero == entidad:
             sql = ("%s %s")%(sql, aux)
         else:
-            sql = ("%s UNION %s")%(sql, aux)
+            sql += (" UNION %s")%(aux)
+
+
+    public = Entidad.objects.get(schema_name='public')
+    connection.set_tenant(public)
         
     sql = ("%s %s")%(sql, ";")
-    connection.set_tenant('public')
-
     cursor = connection.cursor()
     r=''
     r=cursor.execute(sql)
     r=connection.commit()
-    return r
+
+    connection.set_tenant(tenant_actual)
+
+
+        
