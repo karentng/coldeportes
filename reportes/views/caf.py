@@ -48,3 +48,66 @@ def demografia(request):
         'visualizaciones': visualizaciones,
         'form': form,
     })
+
+def generar(request):
+    from django.db import connection
+
+    sql = """
+        CREATE OR REPLACE VIEW public.reportes_reportecafview AS
+    """
+
+    from entidades.models import Entidad
+    entidades = Entidad.objects.all().order_by('id').values_list('schema_name', flat=True)
+    primero = entidades[1]
+    for i in entidades:
+        if i == 'public':
+            continue
+
+        aux = ("""
+            SELECT
+                CAF.id, CAF.ciudad_id,
+                CAF.comuna, CAF.estrato,
+                CAF.latitud, CAF.longitud,
+                CAF.altura, CAF.estado,
+                CAF.entidad_id, CAF.fecha_creacion,
+                CLASE.nombre as nombre_clase, SERVICIO.nombre as nombre_servicio
+            FROM
+            %s.snd_centroacondicionamiento CAF
+            LEFT JOIN %s.snd_centroacondicionamiento_clases CLASES ON CLASES.centroacondicionamiento_id = CAF.id
+            LEFT JOIN public.entidades_caclase CLASE ON CLASE.id = CLASES.caclase_id
+            LEFT JOIN %s.snd_centroacondicionamiento_servicios SERVICIOS ON SERVICIOS.centroacondicionamiento_id = CAF.id
+            LEFT JOIN public.entidades_caservicio SERVICIO ON SERVICIO.id = SERVICIOS.caservicio_id
+        """)%(i, i, i)
+
+        if primero == i:
+            sql = ("%s %s")%(sql, aux)
+        else:
+            sql = ("%s UNION %s")%(sql, aux)
+        
+    sql = ("%s %s")%(sql, ";")
+
+    cursor = connection.cursor()
+    r=''
+    r=cursor.execute(sql)
+    r=connection.commit()
+    return r
+
+def report_caf_publico(request):
+    from reportes.models import ReporteCafView
+    from django.db.models import F, Count
+    
+    try:
+        ReporteCafView.objects.all().exists()
+    except Exception:
+        generar(request)
+    tipoTenant = request.tenant.obtenerTenant()
+    centros = tipoTenant.ajustar_resultado(ReporteCafView.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))
+    print(centros)
+    visualizaciones = [1, 2, 3]
+    form = DemografiaForm(visualizaciones=visualizaciones)
+    #return render(request, 'caf/report_caf_publico.html', {
+    return render(request, 'caf/demografia.html', {
+        'centros': centros,
+        'visualizaciones': visualizaciones,
+        'form': form,
+    })
