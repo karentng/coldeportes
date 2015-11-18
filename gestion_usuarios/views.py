@@ -131,7 +131,7 @@ def inicio(request):
                 return redirect('inicio_tenant')
 
 
-    if schema == 'public':
+    if schema_name == 'public':
         return redirect('inicio_public')
 
     else:
