@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Inicio - SIND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Panel de Control
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/arrayToJson.js"></script>
+    <script src="{{STATIC_URL}}amcharts/amcharts.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/serial.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/amexport.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/canvg.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var actoresAsociados = {{cantidad_entes|safe}};
+        var chartData = [];
+        for (i in actoresAsociados){
+            var aux = actoresAsociados[i];
+            chartData.push(
+                {
+                    "actor": aux.tipo,
+                    "valor": aux.tipo__count,
+                    "color": colors[i%colors.length],
+                }
+            );
+        }
+
+
+        var chart = AmCharts.makeChart("chartdiv", {
+            "type": "serial",
+            "theme": "light",
+            "marginRight": 70,
+            "dataProvider": chartData,
+            "startDuration": 1,
+            "graphs": [{
+                "balloonText": "<b>[[category]]: [[value]]</b>",
+                "fillColorsField": "color",
+                "fillAlphas": 0.9,
+                "lineAlpha": 0.2,
+                "type": "column",
+                "valueField": "valor"
+            }],
+            "chartCursor": {
+                "categoryBalloonEnabled": false,
+                "cursorAlpha": 0,
+                "zoomable": false
+            },
+            "categoryField": "actor",
+            "categoryAxis": {
+                "gridPosition": "start",
+                "labelRotation": 45
+            },
+            "export": {
+                "enabled": true
+            },
+            "exportConfig": exportConfig(),
+            "depth3D": 20,
+            "angle": 30,
+        });
+
+        
+    </script>
+    <script type="text/javascript">
+        datosMostrar = "{{ubicaciones}}";
+        posicionInicial = "{{posicionInicial}}";
+        mapa = "mapa";
+    </script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/creacion_google_maps.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+
+    <script>
+        // EFECTOS DE ANIMACIÓN DASHBOARD
+        $(document).ready(function(){
+            $("#info-tenant").css("display","block");
+            $("#georreferenciacion").css("display","block");
+            $("#noticias").css("display","block");
+
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .profile-image {
+            border: 0;
+        }
+        #mapa {
+            height: 400px;
+            width: 100%;
+          }
+        .item:before {
+            content: '';
+            background: url('{{ STATIC_URL }}img/content-bg-cover.png');
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block contenido %}
+    <div class="row">
+        <div class="col-sm-4">
+            <b><h3>COLDEPORTES</h3></b>
+        </div>
+        <div class="col-sm-3" align="right" style="font-size:15px">
+            <div class="row">
+                <div class="col-sm-12">
+                    DEPORTISTAS
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>{{deportistas}}</b>
+                </div>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1">
+            <img src="{{STATIC_URL}}img/grafica1.png">
+        </div>
+        <div class="col-sm-3" align="right" style="font-size:15px">
+            <div class="row">
+                <div class="col-sm-12">
+                    ESCENARIOS
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>{{escenarios}}</b>
+                </div>
+            </div>
+        </div>
+        <div class="hidden-xs col-sm-1">
+            <img src="{{STATIC_URL}}img/grafica2.png">
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="georreferenciacion" class="panel panel-success animated fadeInLeftBig" style="display:none;">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="panel-title">
+                                Georreferenciación de Escenarios Deportivos y Centros de Acondicionamiento
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div id="mapa"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            {% if noticias %}
+                <div class="row">
+                    <div id="noticias" class="panel panel-success animated fadeInRightBig" style="display:none;">
+                        <div class="panel-heading">
+                            <div class="panel-heading-btn">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
+                            </div>
+                            <h4 class="panel-title">
+                                Noticias
+                            </h4>
+                        </div>
+                        <div class="panel-body"style="padding:0;">
+                            <div id="carrusel-noticias" class="carousel slide" data-ride="carousel">
+                          <!-- Indicators -->
+                          <ol class="carousel-indicators">
+                              {% for noticia in noticias %}
+                                <li data-target="#carrusel-noticias" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                              {% endfor %}
+                          </ol>
+
+                          <!-- Wrapper for slides -->
+                          <div class="carousel-inner" role="listbox">
+                            {% for noticia in noticias %}
+                                <div class="item {% if forloop.first %}active{% endif %}">
+                                  <img style="height:300px;margin:0 auto;" src="{{ noticia.foto.url }}" alt="imagen-noticia">
+                                    <div class="carousel-caption">
+                                      <h3 style="color:lightslategray;">{{ noticia.titulo }}</h3>
+                                      <p>{{ noticia.cuerpo_noticia|truncatewords:10 }}... <a href="javascript:;" data-target="#modal-noticia-{{ noticia.id }}" data-toggle="modal">Leer más <i class="fa fa-search"></i></a></p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                          </div>
+
+                          <!-- Left and right controls -->
+                          <a class="left carousel-control" href="#carrusel-noticias" role="button" data-slide="prev">
+                            <span class="fa fa-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Anterior</span>
+                          </a>
+                          <a class="right carousel-control" href="#carrusel-noticias" role="button" data-slide="next">
+                            <span class="fa fa-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Siguiente</span>
+                          </a>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+                {% for noticia in noticias %}
+                    {% include 'modal_noticia.html' %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="chartdiv" style="width:100%; height:400px"></div>
+        </div>
+    </div>
+{% endblock %}

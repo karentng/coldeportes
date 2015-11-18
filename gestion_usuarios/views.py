@@ -130,10 +130,69 @@ def inicio(request):
             else:
                 return redirect('inicio_tenant')
 
+
     if schema_name == 'public':
-        return redirect('login')
+        return redirect('inicio_public')
+
     else:
         return redirect('inicio_tenant')
+
+def inicio_public(request):
+    from django.db import connection
+    from django.db.models import Count
+
+    import json
+
+    from snd.models import Deportista, CentroAcondicionamiento
+    from entidades.models import TIPOS
+
+    public = request.tenant
+    entidades = Entidad.objects.exclude(schema_name='public')
+    cantidad_deportistas = 0
+    cantidad_escenarios = 0
+
+    ubicaciones = []
+
+    for i in entidades:
+        connection.set_tenant(i)
+        escenarios = Escenario.objects.filter(entidad=i)
+        cantidad_escenarios += escenarios.count()
+        for escenario in escenarios:
+            ubicaciones.append(escenario.obtenerAtributos())
+
+        cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
+        
+        centros = CentroAcondicionamiento.objects.filter(entidad=i)
+        for centro in centros:
+            ubicaciones.append(centro.obtenerAtributos())
+
+    connection.set_tenant(public)
+
+    cantidad_entes = list(Entidad.objects.exclude(schema_name='public').values('tipo').order_by().annotate(Count('tipo')))
+    for i in range(0, len(cantidad_entes)):
+        cantidad_entes[i]['tipo'] = TIPOS[cantidad_entes[i]['tipo']-1][1]
+
+    tipoTenant = request.tenant.obtenerTenant()
+    posicionInicial = tipoTenant.posicionInicialMapa()
+
+    try:
+        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
+        if len(noticias_todas)>5:
+            noticias = noticias_todas[:5]
+        else:
+            noticias = noticias_todas
+    except Exception:
+        noticias = []
+
+    return render(request,'index_public.html',{
+        'deportistas': cantidad_deportistas,
+        'escenarios': cantidad_escenarios,
+        'cantidad_entes': json.dumps(cantidad_entes),
+        'ubicaciones': json.dumps(ubicaciones),
+        'posicionInicial': json.dumps(posicionInicial),
+        'noticias':noticias,
+    })
+
 
 def inicio_tenant(request):
     import json

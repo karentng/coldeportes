@@ -34,7 +34,7 @@ class Norma(models.Model):
     sectores = models.ManyToManyField(TipoSector)
     jurisdiccion = models.CharField(max_length=2,verbose_name="jurisdicción", choices=JURISDICCIONES)
     ciudad = models.ForeignKey(Ciudad, verbose_name="ciudad de donde se hace el registro")
-    archivo = models.FileField(upload_to=foto_name, verbose_name="subir archivo", null=True, blank=True)
+    archivo = models.FileField(upload_to=foto_name, verbose_name="subir archivo")
     descripcion = models.TextField(max_length=1024, verbose_name='descripción')
     contenido_busqueda = models.TextField(editable=False)
 

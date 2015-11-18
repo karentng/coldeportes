@@ -2,6 +2,20 @@ from django.db import models
 from tenant_schemas.models import TenantMixin
 from coldeportes.utilities import permisos_de_tipo
 
+TIPOS = (
+    (1, 'Liga'),
+    (2, 'Federación'),
+    (3, 'Club'),
+    (4, 'Cajas de Compensación'),
+    (5, 'Ente'),
+    (6, 'Comité'),
+    (7,'Federación Paralimpica'),
+    (8,'Liga Paralimpica'),
+    (9,'Club Paralimpico'),
+    (10,'Centro De Acondicionamiento'),
+    (11, 'Escuela de Formación Deportiva'),
+)
+
 class Departamento(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     codigo = models.CharField(max_length=10, null=True, verbose_name='código')
@@ -68,19 +82,6 @@ class Actores(models.Model):
         return actores
 
 class Entidad(TenantMixin): # Entidad deportiva
-    TIPOS = (
-        (1, 'Liga'),
-        (2, 'Federación'),
-        (3, 'Club'),
-        (4, 'Cajas de Compensación'),
-        (5, 'Ente'),
-        (6, 'Comité'),
-        (7,'Federación Paralimpica'),
-        (8,'Liga Paralimpica'),
-        (9,'Club Paralimpico'),
-        (10,'Centro De Acondicionamiento'),
-        (11, 'Escuela de Formación Deportiva'),
-    )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")
     pagina_web = models.URLField(verbose_name="página web propia", blank=True, null=True)
@@ -712,7 +713,7 @@ class Club(ResolucionReconocimiento):
             'tipo_tenant': type(self).__name__,
             'mostrar_info':True,
             'nombre':self.nombre,
-            'disciplina': self.liga.disciplina,
+            #'disciplina': self.liga.disciplina,
             'descripcion': self.descripcion,
             'ciudad': self.ciudad,
             'direccion': self.direccion,
@@ -846,3 +847,37 @@ class EscuelaDeportivaServicio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+
+class ReporteEscenarioView(models.Model):
+    class Meta:
+        managed = False
+    #campos modelo escenario
+    nombre =  models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100)
+    latitud = models.FloatField(max_length=10)
+    longitud = models.FloatField(max_length=10)
+    altura = models.PositiveIntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+    comuna = models.PositiveIntegerField()
+    barrio = models.CharField(max_length=20)
+    estrato = models.CharField(max_length=1)
+    nombre_administrador = models.CharField(max_length=50, null=True)
+    entidad = models.ForeignKey(Entidad)    
+    estado = models.IntegerField()
+    #campos modelo contacto
+    nombre_contacto =  models.CharField(max_length=50)
+    telefono_contacto = models.CharField(max_length=20)
+    email_contacto = models.EmailField()
+    descripcion_contacto = models.CharField(max_length=1024, null=True)
+    #campos modelo horario
+    horario_id = models.IntegerField()
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+    dias = models.ForeignKey(Dias)
+    descripcion_horario = models.CharField(max_length=1024)
+    #campos modelo Foto
+    foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
+    #campo para búsqueda
+    contenido = models.TextField()
