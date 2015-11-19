@@ -7,6 +7,7 @@ urlpatterns = patterns('reportes.views.publico',
     
     url(r'centros-acondicionamiento/', include('reportes.urls.caf')),
     url(r'deportistas/', include('reportes.urls.deportistas')),
+    url(r'personal-apoyo/', include('reportes.urls.personal_apoyo')),
     url(r'^bubble$', 'ejemploBubble', name="ejemplo_bubble"),
     url(r'^motion$', 'ejemploMotion', name="ejemplo_motion"),
     url(r'escenarios/', include('reportes.urls.escenarios')),

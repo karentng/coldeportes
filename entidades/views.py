@@ -87,9 +87,11 @@ def obtenerTenant(request, idEntidad, tipo):
 def generar_vistas_actores(request, nuevo_tenant=None):
     from reportes.crear_vistas_actores.creacion_vista_cafs import generar_vista_caf
     from reportes.crear_vistas_actores.creacion_vista_escenarios import generar_vista_escenario
+    from reportes.crear_vistas_actores.creacion_vista_personal_apoyo import generar_vista_personal_apoyo
 
     generar_vista_caf(nuevo_tenant)
     generar_vista_escenario(nuevo_tenant)
+    generar_vista_personal_apoyo(nuevo_tenant)
     # agregar los demas actores
 
 @login_required
