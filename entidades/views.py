@@ -14,7 +14,7 @@ from snd.modelos.cafs import *
 from snd.modelos.cajas_compensacion import *
 from snd.modelos.dirigentes import *
 from coldeportes.utilities import calculate_age, add_actores, superuser_only
-from reportes.creacion_vista_escenarios import *
+from reportes.crear_vistas_actores import *
 from django.forms import modelformset_factory, modelform_factory
 
 @login_required
