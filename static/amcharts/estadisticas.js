@@ -334,6 +334,62 @@ function Reportes(){
 
     /* Fin Tree Map */
 
+    //Función para generar un gráfico de cilindro 3D
+    function generarGraficoCilindros(datos, nombreDiv, nombreGrafica){
+        chart = new AmCharts.AmSerialChart();
+        chart.dataProvider = datos;
+        chart.titles = [{
+            "text": nombreGrafica,
+            "size": 16
+        }];
+        chart.depth3D = 40;
+        chart.angle = 30;
+
+        chart.categoryField = "descripcion";
+        chart.startDuration = 2;
+        chart.plotAreaBorderColor = "#DADADA";
+        chart.plotAreaBorderAlpha = 1;
+
+        // AXES
+        // Category
+        var categoryAxis = chart.categoryAxis;
+        categoryAxis.gridPosition = "start";
+        categoryAxis.gridAlpha = 0;
+        categoryAxis.axisAlpha = 0;
+
+        // Value
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.axisAlpha = 0;
+        valueAxis.gridAlpha = 0;
+        valueAxis.position = "left";
+        chart.addValueAxis(valueAxis);
+
+        // GRAPHS
+        // first graph
+        var graph1 = new AmCharts.AmGraph();
+        graph1.type = "column";
+        graph1.title = nombreGrafica;
+        graph1.valueField = "valor";
+        graph1.balloonText = "<b>[[category]]</b>: ([[value]])";
+        graph1.lineAlpha = 0.1;
+        graph1.fillAlphas = 0.85;
+        graph1.colorField = "color";
+        graph1.topRadius = 1;
+        chart.addGraph(graph1);
+
+        // LEGEND
+        var legend = new AmCharts.AmLegend();
+        chart.addLegend(legend);
+
+        chart.creditsPosition = "top-right";
+
+        chart.exportConfig = exportConfig();
+
+        // WRITE
+        chart.write(nombreDiv);
+        charts.push([chart, nombreDiv]);
+    }
+
     var exportConfig = function(){
         return {
             menuTop: "0px",
@@ -426,7 +482,7 @@ function Reportes(){
                 {
                     'descripcion': i,
                     'valor': aux,
-                    'color': colores[aux%colores.length],
+                    'color': colores[Math.floor(Math.random()*(colores.length+1))],
                 }
             );
         }
@@ -463,6 +519,26 @@ function Reportes(){
         }
     }
 
+    function cilindros(resultado, nombreDiv,nombreGrafica){
+        var datos = [];
+        for (i in resultado){
+            var aux = resultado[i];
+            datos.push(
+                {
+                    'descripcion': i,
+                    'valor': aux,
+                    'color': colores[Math.floor(Math.random()*(colores.length+1))],
+                }
+            );
+        }
+
+        if (AmCharts.isReady){
+            generarGraficoCilindros(datos, nombreDiv, nombreGrafica);
+        }else{
+            AmCharts.ready(generarGraficoCilindros(datos, nombreDiv, nombreGrafica));
+        }
+    }
+
 
     return {
         crearGrafico: function(resultado, grafico, nombreDiv, nombreGrafica){
@@ -481,6 +557,9 @@ function Reportes(){
                     //treeMap(resultado, nombreDiv, true);
                     ZoomableTreeMap(resultado, nombreDiv, true);
                     break;
+                case 5:
+                    cilindros(resultado, nombreDiv, nombreGrafica);
+                    break;
             }
         },
 
@@ -492,7 +571,7 @@ function Reportes(){
                     {
                         'descripcion': i,
                         'valor': aux,
-                        'color': colores[aux%colores.length],
+                        'color': colores[Math.floor(Math.random()*(colores.length+1))],
                     }
                 );
             }
