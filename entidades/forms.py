@@ -258,215 +258,31 @@ class EscuelaDeportivaForm(forms.ModelForm):
 
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
-class ActoresForm(forms.ModelForm):
+class PermisosForm(forms.ModelForm):
 
+    ENTIDAD = (
+        ([5,1], 'Ente municipal'),
+        ([5,2], 'Ente departamental'),
+        ([6,1], 'Comité Olímpico Colombiano'),
+        ([2,0], 'Federación'),
+        ([1,0], 'Liga'),
+        ([3,0], 'Club'),
+        ([6,2], 'Comité Paralímpico Colombiano'),
+        ([7,0],'Federación Paralimpica'),
+        ([8,0],'Liga Paralimpica'),
+        ([9,0],'Club Paralimpico'),
+        ([4,0], 'Cajas de Compensación'),
+        ([10,0],'Centro de Acondicionamiento'),
+        ([11,0], 'Escuela de Formación Deportiva'),
+    )
 
-    #estos son los actores que se pueden o no tener por tanto son seleccionables
-    ACTORES = {
-        '1': [],#Liga
-        '2': ['escenarios'],#Federacion
-        '3': ['centros','escenarios','deportistas'],#Club
-        '4': ['escenarios'],#CajaDeCompensacion
-        '5': ['escenarios','centros_biomedicos'],#Ente
-        '6': [],#Comite
-        '7': [],#FederacionParalimpica
-        '8': ['deportistas'],#LigaParalimpica
-        '9': ['centros','escenarios'],#clubParalimpico
-        '10': ['escenarios'],#Caf
-        '11': ['escenarios']#EscuelaDeportiva_
-    }
+    entidades = forms.ChoiceField(choices=ENTIDAD)
 
     def __init__(self, *args, **kwargs):
-        tipo = kwargs.pop('tipo', None)
-        tipoEnte = kwargs.pop('tipoEnte', None)#no se está usando
-        super(ActoresForm, self).__init__(*args, **kwargs)
-        if tipo:
-            self.quitar_campos(self.get_campos_quitar(self.ACTORES[tipo]))
-
-    def quitar_campos(self,campos):
-        for campo in campos:
-            del self.fields[campo]
-
-    def get_campos_quitar(self,campos):
-        all_campos = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']
-        for campo in campos:
-            try:
-                del all_campos[all_campos.index(campo)]
-            except ValueError:
-                pass
-        return (all_campos)
-
-    class Meta:
-        model = Actores
-        #exclude = ()
-        fields = '__all__'
-
-
-'''class PermisosForm(forms.Form):
-    ACTORES = (
-        ('no_tiene', '--'),
-        ('obligatorio', 'O'),
-        ('puede_tener', 'X'),
-        ('puede_tener_lectura', 'X %'),
-        ('no_tiene_lectura','-- %'),
-    )
+        super(PermisosForm, self).__init__(*args, **kwargs)
+        if self.instance.entidad:
+            self.fields['entidades'].initial = [self.instance.entidad,self.instance.tipo]
 
     class Meta:
         model = Permisos
-        exclude = ('entidad',)
-    
-    ente_municipal_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_municipal_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    ente_departamental_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ente_departamental_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    coc_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    coc_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    federacion_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacion_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    liga_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    liga_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    club_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    club_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    cpc_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cpc_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    federacionpara_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    federacionpara_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    ligapara_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    ligapara_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    clubpara_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    clubpara_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    cajas_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    cajas_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    caf_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    caf_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-
-    escuelas_centros = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_escenarios = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_deportistas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_personal = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_dirigentes = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_cajas = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_selecciones = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_biomedicos = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_normograma = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_escuela = forms.ChoiceField(choices=ACTORES,initial='1', required = True)
-    escuelas_noticias = forms.ChoiceField(choices=ACTORES,initial='1', required = True)'''
+        exclude = ('entidad','tipo')

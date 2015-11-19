@@ -50,9 +50,14 @@ def asignarPermisosGrupo(request, grupo, permisos):
 
 def asignarPermisosGrupoLectura(request, grupo):
     #agrega los permisos de lectura que son obligatorios, tenga o no el actor
-    normas = Permission.objects.get(codename='view_norma')
-    escenarios = Permission.objects.get(codename='view_escenario')
-    deportistas = Permission.objects.get(codename='view_deportista')
+    '''if request.tipo == '5':
+        tipoEnte = instance.tipo_ente
+    elif request.tipo == '6':
+        tipoEnte = instance.tipo_comite
+    else:
+        tipoEnte = 0
+    permisos = Permisos.objects.get(entidad=request.tipo,tipo=tipoEnte)
+    
 
     tipo = request.tenant.tipo
     #1:#liga:
@@ -64,7 +69,7 @@ def asignarPermisosGrupoLectura(request, grupo):
     if tipo == 1 or tipo == 2 or tipo == 6 or tipo == 7 or tipo == 8:
         grupo.permissions.add(escenarios)
         grupo.permissions.add(deportistas)
-    grupo.permissions.add(normas)#todos ven las normas
+    grupo.permissions.add(normas)#todos ven las normas'''
 
 def inicio(request):
     schema_name = request.tenant.schema_name

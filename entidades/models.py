@@ -891,16 +891,33 @@ class Permisos(models.Model):
         (5, '-- %'),
     )
     entidad = models.IntegerField()
-    tipo = models.IntegerField(null=True,blank=True)
-    nombre = models.CharField(max_length=100)
+    tipo = models.IntegerField()
     centros = models.IntegerField(choices=ACTORES, default=1)
     escenarios = models.IntegerField(choices=ACTORES, default=1)
     deportistas = models.IntegerField(choices=ACTORES, default=1)
-    personal = models.IntegerField(choices=ACTORES, default=1)
+    personal_apoyo = models.IntegerField(choices=ACTORES, default=1)
     dirigentes = models.IntegerField(choices=ACTORES, default=1)
     cajas = models.IntegerField(choices=ACTORES, default=1)
     selecciones = models.IntegerField(choices=ACTORES, default=1)
-    biomedicos = models.IntegerField(choices=ACTORES, default=1)
-    normograma = models.IntegerField(choices=ACTORES, default=1)
-    escuelas = models.IntegerField(choices=ACTORES, default=1)
+    centros_biomedicos = models.IntegerField(choices=ACTORES, default=1)
+    normas = models.IntegerField(choices=ACTORES, default=1)
+    escuelas_deportivas = models.IntegerField(choices=ACTORES, default=1)
     noticias = models.IntegerField(choices=ACTORES, default=1)
+
+    class Meta:
+        unique_together = ('entidad','tipo',)
+
+    def get_actores(self,opcion):
+        if opcion == 'O':
+            opcion = [2]
+        elif opcion == 'X':
+            opcion = [3,4]
+        elif opcion == '%':
+            opcion = [4,5]
+
+        actores_seleccionados = []
+        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']
+        for actor in actores:
+            if getattr(self,actor) in opcion:
+                actores_seleccionados.append(actor)
+        return(actores_seleccionados)

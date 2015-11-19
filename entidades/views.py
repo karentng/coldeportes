@@ -15,7 +15,7 @@ from snd.modelos.cajas_compensacion import *
 from snd.modelos.dirigentes import *
 from coldeportes.utilities import calculate_age, add_actores, superuser_only
 from reportes.creacion_vista_escenarios import *
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, modelform_factory
 
 
 @login_required
@@ -55,7 +55,7 @@ def obtenerFormularioTenant(tipo, post=None, files=None, instance=None):
         nombre = 'Centro de Acondicionamiento Físico'
         form = CafForm(post, files, instance=instance)
     elif tipo == '11':
-        nombre = 'Escuela de Formación deportiva'
+        nombre = 'Escuela de Formación Deportiva'
         form = EscuelaDeportivaForm(post, files, instance=instance)
 
     return [nombre, form]
@@ -90,17 +90,18 @@ def obtenerTenant(request, idEntidad, tipo):
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
 
-    form2 = ActoresForm(tipo=tipo,tipoEnte=tipoEnte)
+    permisos = Permisos.objects.get(entidad=tipo,tipo=tipoEnte if tipoEnte else 0)
+    ActoresForm = modelform_factory(Actores,fields=permisos.get_actores('X'))
+    form2 = ActoresForm()
 
     dominio = settings.SUBDOMINIO_URL
 
     if request.method == 'POST':
         nombre, form = obtenerFormularioTenant(tipo, post=request.POST, files=request.FILES)
-        #form = EntidadForm(request.POST)
         form2 = ActoresForm(request.POST)
         if form.is_valid() and form2.is_valid():
             actores = form2.save(commit=False)
-            add_actores(actores,tipo)
+            add_actores(actores,permisos.get_actores('O'))
             actores = form2.save()
 
             pagina = form.cleaned_data['pagina']
@@ -131,22 +132,30 @@ def registro(request, tipo, tipoEnte=None):
     })
 
 @login_required
-def editar(request, idEntidad, tipo, tipoEnte=None):
+def editar(request, idEntidad, tipo):
     try:
         instance = obtenerTenant(request, idEntidad, tipo)
     except Exception:
-        print("Escepcion")
         return redirect('entidad_listar')
 
     nombre, form = obtenerFormularioTenant(tipo, instance=instance)
-    form2 = ActoresForm(instance=instance.actores, tipo=tipo, tipoEnte=tipoEnte)
+
+    if tipo == '5':
+        tipoEnte = instance.tipo_ente
+    elif tipo == '6':
+        tipoEnte = instance.tipo_comite
+    else:
+        tipoEnte = 0
+    permisos = Permisos.objects.get(entidad=tipo,tipo=tipoEnte)
+    ActoresForm = modelform_factory(Actores,fields=permisos.get_actores('X'))
+    form2 = ActoresForm(instance=instance.actores)
 
     if request.method == 'POST':
         nombre, form = obtenerFormularioTenant(tipo, post=request.POST, files=request.FILES, instance=instance)
         form2 = ActoresForm(request.POST, instance=instance.actores)
         if form.is_valid() and form2.is_valid():
             actores = form2.save(commit=False)
-            add_actores(actores,tipo)
+            add_actores(actores,permisos.get_actores('O'))
             actores.save()
             obj = form.save()
             messages.success(request, ("%s editado correctamente.")%(nombre))
@@ -562,17 +571,27 @@ def ver_caja_tenantnacional(request, id_ccf, tenant):
 @login_required
 @superuser_only
 def permisos(request):
-    PermisosFormSet = modelformset_factory(Permisos, fields='__all__')
+    PermisosFormSet = modelformset_factory(Permisos, form = PermisosForm, max_num=1)
 
     if request.method == 'POST':
         formset = PermisosFormSet(request.POST)
         if formset.is_valid():
-            formset.save()
-            messages.success(request, ("Permisos editados correctamente."))
-            return redirect('permisos')
+            instancies = formset.save(commit=False)
+            for index,instancie in enumerate(instancies):
+                entidades = formset[index].cleaned_data['entidades'].replace('[','').replace(']','').split(',')
+                instancie.entidad = int(entidades[0])
+                instancie.tipo = int(entidades[1])
+            try:
+                formset.save()
+                messages.success(request, "Permisos editados correctamente.")
+                return redirect('permisos')
+            except Exception as e:
+                print(e)
+                messages.error(request,"Ha ocurrido un error al actualizar los permisos. Revise que la entidad no está repetida")
+                return redirect('permisos')
         else:
             form_errors = formset.errors
-            messages.error(request, ("El formulario no es válido."))
+            messages.error(request, "El formulario no es válido.")
             return render(request, 'entidad_permisos.html',{
                 'forms': formset,
                 'form_errors': form_errors

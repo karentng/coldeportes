@@ -448,8 +448,7 @@ def finalizar_deportista(request,opcion):
     elif opcion =='listar':
         return redirect('deportista_listar')
 
-@login_required
-@all_permission_required('snd.add_deportista')
+
 def existencia_deportista(datos):
     #Verificación de existencia dentro del tenant actual
             try:
@@ -585,7 +584,6 @@ def cambio_tipo_documento_deportista(request,id):
         'form': form
     })
 
-#qué permisos tiene esto??
 def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     """
     Agosto 28 /2015

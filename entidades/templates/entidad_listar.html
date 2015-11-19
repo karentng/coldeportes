@@ -50,6 +50,8 @@
                             <td>
                                 {% if entidad.tipo == 5 %}
                                     {{entidad.obtenerTenant.get_tipo_ente_display}}
+                                {% elif entidad.tipo == 6 %}
+                                    {{entidad.obtenerTenant.get_tipo_comite_display}}
                                 {% else %}
                                     {{entidad.get_tipo_display}}
                                 {% endif %}

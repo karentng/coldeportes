@@ -21,7 +21,7 @@
         <div class="table-responsive">
             <table id="tabla-permisos" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                 <thead>
-                    <th>Entidad - Tipo - Tipo ente</th>
+                    <th>Entidad</th>
                     <th>CAF</th>
                     <th>Escenarios</th>
                     <th>Deportistas</th>
@@ -40,17 +40,17 @@
                             {{ hidden }}
                         {% endfor %}
                         <tr>
-                            <td>{{form.nombre.errors.as_ul}}{{form.nombre}} - {{form.entidad.errors.as_ul}}{{form.entidad}} - {{form.tipo}}</td>
+                            <td>{{form.entidades}}</td>
                             <td>{{form.centros}}</td>
                             <td>{{form.escenarios}}</td>
                             <td>{{form.deportistas}}</td>
-                            <td>{{form.personal}}</td>
+                            <td>{{form.personal_apoyo}}</td>
                             <td>{{form.dirigentes}}</td>
                             <td>{{form.cajas}}</td>
                             <td>{{form.selecciones}}</td>
-                            <td>{{form.biomedicos}}</td>
-                            <td>{{form.normograma}}</td>
-                            <td>{{form.escuelas}}</td>
+                            <td>{{form.centros_biomedicos}}</td>
+                            <td>{{form.normas}}</td>
+                            <td>{{form.escuelas_deportivas}}</td>
                             <td>{{form.noticias}}</td>
                         </tr>
                     {% endfor %}
@@ -70,7 +70,4 @@
     <p><strong>--: </strong>No tiene el actor. No aparece como opción al momento de crear el ente. Ningún usuario de ningún grupo('Digitador' y 'Sólo lectura') tendrá permisos para ese actor.</p>
     <p><strong>-- %: </strong>No tiene el actor pero tiene permisos de lectura. No aparece como opción al momento de crear el ente. Los usuarios de tipo 'Digitador' y 'Sólo lectura' del ente tendrán el permiso de vista(view) para ese actor, este permiso se agregará automáticamente.</p>
     <p><strong>X %: </strong>El actor es opcional con permisos de sólo lectura. Aparece como opción al momento de crear el ente. Si es seleccionado los permisos asociados se agregan automáticamente(add, change, delete and view) para los usuarios del ente de tipo 'Digitador' y el permiso de vista(view) para los usuario del ente de tipo 'Sólo lectura'. Si no es seleccionado  los usuarios de tipo 'Digitador' y 'Sólo lectura' del ente tendrán el permiso de vista(view) para ese actor, este permiso se agregará automáticamente.</p>
-
-    <h4>Importante</h4>
-    <p>Si va a agregar un nuevo actor o va a editar uno existente, asegurece que <strong>Tipo</strong> y <strong>Tipo ente</strong> son las correctas, este es el identificador del ente en el sistema, si no es el correcto, los permisos no funcionarán.</p>
 {% endblock %}
