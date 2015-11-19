@@ -2,7 +2,7 @@ from django.db import connection
 
 def crear_vista_reportes_tenant_escenario():
     sql_tenant = """
-    CREATE OR REPLACE view reportes_escenarioview AS 
+    CREATE OR REPLACE view reportes_tenantescenarioview AS 
     SELECT  E.id, E.nombre,
             E.direccion, E.latitud,         
             E.longitud, E.altura,       
@@ -85,26 +85,31 @@ def crear_vista_reportes_tenant_escenario():
     return r
 
 
-def generar_vista_escenario():
+def generar_vista_escenario(nuevo_tenant=None):
     from django.db import connection
 
     #Definiendo tenant actual
     tenant_actual = connection.tenant
 
     sql = """
-        CREATE OR REPLACE VIEW public.reportes_reporteescenarioview AS
+        CREATE OR REPLACE VIEW public.entidades_publicescenarioview AS
     """
 
     from entidades.models import Entidad
     entidades = Entidad.objects.exclude(schema_name='public').order_by('id')
     primero = entidades[0]
 
-    for entidad in entidades:
-        connection.set_tenant(entidad)
+    if nuevo_tenant:
+        connection.set_tenant(nuevo_tenant)
         crear_vista_reportes_tenant_escenario()
 
+    for entidad in entidades:
+        connection.set_tenant(entidad)
+        if not nuevo_tenant:
+            crear_vista_reportes_tenant_escenario()
+
         aux = ("""
-                SELECT * FROM %s.reportes_escenarioview E
+                SELECT * FROM %s.reportes_tenantescenarioview E
               """)%(entidad.schema_name)
 
         if primero == entidad:
@@ -123,6 +128,3 @@ def generar_vista_escenario():
     r=connection.commit()
 
     connection.set_tenant(tenant_actual)
-
-
-        

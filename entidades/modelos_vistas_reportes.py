@@ -2,9 +2,7 @@ from django.db import models
 from entidades.models import *
 from snd.models import *
 
-
-# Create your models here.
-class ReporteEscenarioView(models.Model):
+class PublicEscenarioView(models.Model):
     class Meta:
         managed = False
     #campos modelo escenario
@@ -35,3 +33,19 @@ class ReporteEscenarioView(models.Model):
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
     #campo para búsqueda
     contenido = models.TextField()
+
+class PublicCafView(models.Model):
+    class Meta:
+        managed = False
+
+    ciudad = models.ForeignKey(Ciudad)
+    comuna = models.PositiveIntegerField()
+    estrato = models.PositiveIntegerField()
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    altura = models.PositiveIntegerField()
+    estado = models.IntegerField()
+    entidad = models.ForeignKey(Entidad)
+    fecha_creacion = models.DateTimeField()
+    nombre_clase = models.CharField(max_length=255)
+    nombre_servicio = models.CharField(max_length=255)

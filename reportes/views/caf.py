@@ -13,9 +13,20 @@ Reportes:
 '''
 
 def demografia(request):
+    from entidades.modelos_vistas_reportes import PublicCafView
+    from reportes.models import TenantCafView
+    from snd.models import CentroAcondicionamiento
+    from django.db.models import F, Count
+
     tipoTenant = request.tenant.obtenerTenant()
+    
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicCafView
+    else:
+        tabla = TenantCafView
 
     if request.is_ajax():
+        '''
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         annos = None if request.GET['annos'] == 'null'  else ast.literal_eval(request.GET['annos'])
         
@@ -36,10 +47,15 @@ def demografia(request):
                 centros = tipoTenant.ajustar_resultado(centros)
             else:
                 centros = tipoTenant.ejecutar_consulta(True, "list(CentroAcondicionamiento.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))")
+        '''
+        centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))
+        centros = tipoTenant.ajustar_resultado(centros)
         return JsonResponse(centros)
     else:
-        centros = tipoTenant.ejecutar_consulta(True, "list(CentroAcondicionamiento.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))")
-    
+        #centros = tipoTenant.ejecutar_consulta(True, "list(CentroAcondicionamiento.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))")
+
+        centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))
+        centros = tipoTenant.ajustar_resultado(centros)
     visualizaciones = [1, 2, 3]
 
     form = DemografiaForm(visualizaciones=visualizaciones)
@@ -48,7 +64,7 @@ def demografia(request):
         'visualizaciones': visualizaciones,
         'form': form,
     })
-
+'''
 def generar(request):
     from django.db import connection
 
@@ -111,3 +127,4 @@ def report_caf_publico(request):
         'visualizaciones': visualizaciones,
         'form': form,
     })
+'''
