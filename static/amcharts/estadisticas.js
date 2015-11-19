@@ -504,7 +504,7 @@ function Reportes(){
         
         var chart;
         var legend;
-
+        console.log(datos);
         if (AmCharts.isReady){
             generarTorta(datos, nombreDiv, nombreGrafica);
         }else{
@@ -524,7 +524,7 @@ function Reportes(){
                 }
             );
         }
-            
+        
         if (AmCharts.isReady){
             generarComparativa(datos, nombreDiv, nombreGrafica);
         }else{

@@ -23,9 +23,9 @@ urlpatterns = patterns('',
     url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
     url(r'^noticias/',include('noticias.urls')),#urls del modulo de noticias
     #url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
-    url(r'cargado-datos/', include('snd.urls.cargado_datos')),
+    url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
 
-    url(r'reportes/', include('reportes.urls.publico')),
+    url(r'^reportes/', include('reportes.urls.publico')),
     
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
