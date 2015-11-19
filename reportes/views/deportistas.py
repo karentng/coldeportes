@@ -188,7 +188,7 @@ def formacion_academica(request):
     else:
         formaciones = tipoTenant.ejecutar_consulta(True, "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))")
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Formación Academica de los deportistas',

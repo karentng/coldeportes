@@ -390,6 +390,65 @@ function Reportes(){
         charts.push([chart, nombreDiv]);
     }
 
+    //Función para generar un gráfico de cono 3D
+    function generarGraficoCono(datos, nombreDiv, nombreGrafica){
+        chart = new AmCharts.AmFunnelChart();
+        chart.dataProvider = datos;
+        chart.titles = [{
+            "text": nombreGrafica,
+            "size": 16
+        }];
+        chart.valueField = "valor";
+        chart.titleField = "descripcion";
+        chart.marginRight = 240;
+        chart.marginLeft = 50;
+        chart.startX = -500;
+        chart.depth3D = 100;
+        chart.angle = 40;
+        chart.outlineAlpha = 1;
+        chart.outlineColor = "#FFFFFF";
+        chart.outlineThickness = 2;
+        chart.labelPosition = "right";
+        chart.balloonText = "<b>[[descripcion]]</b>: [[valor]]";
+        chart.exportConfig = exportConfig();
+
+        // WRITE
+        chart.write(nombreDiv);
+        charts.push([chart, nombreDiv]);
+    }
+
+    //Función para generar un gráfico de radar
+    function generarGraficoRadar(datos, nombreDiv, nombreGrafica){
+        chart = new AmCharts.AmRadarChart();
+        chart.dataProvider = datos;
+        chart.titles = [{
+            "text": nombreGrafica,
+            "size": 16
+        }];
+
+        // Value
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.axisAlpha = 0;
+        valueAxis.axisTitleOffset = 20;
+        valueAxis.minimum = 0;
+        chart.addValueAxis(valueAxis);
+        chart.exportConfig = exportConfig();
+
+        // GRAPHS
+        // first graph
+        var graph1 = new AmCharts.AmGraph();
+        graph1.valueField = "valor";
+        graph1.balloonText = "<b>[[category]]</b>: ([[value]])";
+        graph1.bullet = "round";
+        chart.addGraph(graph1);
+
+        chart.categoryField = "descripcion"
+
+        // WRITE
+        chart.write(nombreDiv);
+        charts.push([chart, nombreDiv]);
+    }
+
     var exportConfig = function(){
         return {
             menuTop: "0px",
@@ -539,6 +598,44 @@ function Reportes(){
         }
     }
 
+    function cono(resultado, nombreDiv, nombreGrafica){
+        var datos = [];
+        for (i in resultado){
+            var aux = resultado[i];
+            datos.push(
+                {
+                    'descripcion': i,
+                    'valor': aux
+                }
+            );
+        }
+
+        if (AmCharts.isReady){
+            generarGraficoCono(datos, nombreDiv, nombreGrafica);
+        }else{
+            AmCharts.ready(generarGraficoCono(datos, nombreDiv, nombreGrafica));
+        }
+    }
+
+    function radar(resultado, nombreDiv, nombreGrafica){
+        var datos = [];
+        for (i in resultado){
+            var aux = resultado[i];
+            datos.push(
+                {
+                    'descripcion': i,
+                    'valor': aux
+                }
+            );
+        }
+
+        if (AmCharts.isReady){
+            generarGraficoRadar(datos, nombreDiv, nombreGrafica);
+        }else{
+            AmCharts.ready(generarGraficoRadar(datos, nombreDiv, nombreGrafica));
+        }
+    }
+
 
     return {
         crearGrafico: function(resultado, grafico, nombreDiv, nombreGrafica){
@@ -559,6 +656,12 @@ function Reportes(){
                     break;
                 case 5:
                     cilindros(resultado, nombreDiv, nombreGrafica);
+                    break;
+                case 6:
+                    cono(resultado, nombreDiv, nombreGrafica);
+                    break;
+                case 7:
+                    radar(resultado, nombreDiv, nombreGrafica);
                     break;
             }
         },
