@@ -881,3 +881,26 @@ class ReporteEscenarioView(models.Model):
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
     #campo para búsqueda
     contenido = models.TextField()
+
+class Permisos(models.Model):
+    ACTORES = (
+        (1, '--'),
+        (2, 'O'),
+        (3, 'X'),
+        (4, 'X %'),
+        (5, '-- %'),
+    )
+    entidad = models.IntegerField()
+    tipo = models.IntegerField(null=True,blank=True)
+    nombre = models.CharField(max_length=100)
+    centros = models.IntegerField(choices=ACTORES, default=1)
+    escenarios = models.IntegerField(choices=ACTORES, default=1)
+    deportistas = models.IntegerField(choices=ACTORES, default=1)
+    personal = models.IntegerField(choices=ACTORES, default=1)
+    dirigentes = models.IntegerField(choices=ACTORES, default=1)
+    cajas = models.IntegerField(choices=ACTORES, default=1)
+    selecciones = models.IntegerField(choices=ACTORES, default=1)
+    biomedicos = models.IntegerField(choices=ACTORES, default=1)
+    normograma = models.IntegerField(choices=ACTORES, default=1)
+    escuelas = models.IntegerField(choices=ACTORES, default=1)
+    noticias = models.IntegerField(choices=ACTORES, default=1)

@@ -3,9 +3,11 @@ from normograma.forms import NormaForm, NormogramaBusquedaForm
 from django.contrib.auth.decorators import login_required
 from normograma.models import Norma
 from django.contrib import messages
+from coldeportes.utilities import all_permission_required
 
 
 @login_required
+@all_permission_required('normograma.add_norma')
 def registrar(request):
     """
     Septiembre 14 / 2015
@@ -33,6 +35,7 @@ def registrar(request):
     })
 
 @login_required
+@all_permission_required('normograma.add_norma')
 def editar(request, norma_id):
     """
     Septiembre 14 / 2015
