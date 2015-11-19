@@ -14,6 +14,7 @@ from snd.modelos.cafs import *
 from snd.modelos.cajas_compensacion import *
 from snd.modelos.dirigentes import *
 from coldeportes.utilities import calculate_age, add_actores
+from reportes.creacion_vista_escenarios import *
 
 
 @login_required
@@ -115,6 +116,7 @@ def registro(request, tipo, tipoEnte=None):
             try:
                 obj.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
+                generar_vista_escenario()
                 return redirect('entidad_registro', tipo)
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
@@ -158,6 +160,7 @@ def editar(request, idEntidad, tipo, tipoEnte=None):
 @login_required
 def listar(request):
     entidades = Entidad.objects.exclude(schema_name="public")
+    
     return render(request, 'entidad_listar.html', {
         'entidades': entidades,
     })
