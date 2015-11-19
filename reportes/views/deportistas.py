@@ -58,7 +58,7 @@ def participaciones_deportivas(request):
         #Traer la cantidad de hisotriales ordenados por tipo
         participaciones = tipoTenant.ejecutar_consulta(True, "list(HistorialDeportivo.objects.filter(deportista__estado = 0,).annotate(descripcion=F('tipo')).values('descripcion').annotate(cantidad=Count('tipo')))")
 
-    visualizaciones = [1, 2, 3]
+    visualizaciones = [1, 2, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Participaciones Deportivas',
@@ -106,7 +106,7 @@ def beneficiario_programa_apoyo(request):
         del beneficiados[True]
         del beneficiados[False]
 
-    visualizaciones = [1, 2, 3]
+    visualizaciones = [1, 2, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Beneficiario Programa de Apoyo',
@@ -151,7 +151,7 @@ def etinias_deportistas(request):
             etnias['NO APLICA'] = etnias['']
             del etnias['']
 
-    visualizaciones = [1, 2, 3]
+    visualizaciones = [1, 2, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Etnias de los deportistas',
@@ -188,7 +188,7 @@ def formacion_academica(request):
     else:
         formaciones = tipoTenant.ejecutar_consulta(True, "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))")
 
-    visualizaciones = [1, 2, 3]
+    visualizaciones = [1, 2, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Formación Academica de los deportistas',

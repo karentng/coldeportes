@@ -7,6 +7,7 @@ VISUALIZACIONES = (
     (2, "Gráfica de líneas"),
     (3, "Gráfica de barras"),
     (4, "Tree Map"), 
+    (5, "Gráfica de cilindros"),
 )
 
 class DemografiaForm(forms.Form):

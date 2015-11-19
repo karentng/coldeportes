@@ -10,6 +10,7 @@ Reportes:
     2. Comparativa Horizontal
     3. Comparativa Vertical
     4. Tree Map
+    5. Gráfico de cilindros
 '''
 
 def demografia(request):
