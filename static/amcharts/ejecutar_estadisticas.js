@@ -19,7 +19,7 @@ $.getScript(base+"amcharts/amcharts.js", function(){
 												}
 											}
 
-											graficar(nombreReporte);
+											graficar("Reporte");
 
 											//----------------------------------------------
 
