@@ -17,7 +17,6 @@ from coldeportes.utilities import calculate_age, add_actores, superuser_only
 from reportes.creacion_vista_escenarios import *
 from django.forms import modelformset_factory, modelform_factory
 
-
 @login_required
 def tipo(request):
     return render(request, 'entidad_tipo.html', {
@@ -87,6 +86,15 @@ def obtenerTenant(request, idEntidad, tipo):
     raise Exception
 
 @login_required
+def generar_vistas_actores(request, nuevo_tenant=None):
+    from reportes.crear_vistas_actores.creacion_vista_cafs import generar_vista_caf
+    from reportes.crear_vistas_actores.creacion_vista_escenarios import generar_vista_escenario
+
+    generar_vista_caf(nuevo_tenant)
+    generar_vista_escenario(nuevo_tenant)
+    # agregar los demas actores
+
+@login_required
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
 
@@ -118,7 +126,7 @@ def registro(request, tipo, tipoEnte=None):
             try:
                 obj.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
-                generar_vista_escenario()
+                generar_vistas_actores(request, obj)
                 return redirect('entidad_registro', tipo)
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")

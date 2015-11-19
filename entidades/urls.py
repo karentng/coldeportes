@@ -31,4 +31,7 @@ urlpatterns = patterns('entidades.views',
     url(r'^cargar-datos/(\d+)$', 'cargar_datos_tenantnacional', name='cargar_datos_tenantnacional'),
 
     url(r'^permisos/$', 'permisos', name='permisos'),
+
+    # funcion especial
+    url(r'^actualizar-todas-las-vistas$', 'generar_vistas_actores', name='actualizar_todas_las_vistas'),
 )
