@@ -21,12 +21,12 @@ class LigaForm(forms.ModelForm):
             del self.fields['pagina']
 
     def clean(self):
-        federacion = self.cleaned_data['federacion']
-        disciplina = self.cleaned_data['disciplina']
+        cleaned_data = super(LigaForm, self).clean()
+        federacion = cleaned_data['federacion']
+        disciplina = cleaned_data['disciplina']
         if federacion != None:
             if federacion.disciplina != disciplina:
-                raise forms.ValidationError('La disciplina de la federación asociada no es la misma que la de la liga')
-        
+                raise forms.ValidationError('La disciplina de la federación asociada no es la misma que la de la liga', code='invalid_disciplina')
         return self.cleaned_data
     
     class Meta:
@@ -71,14 +71,24 @@ class ClubForm(forms.ModelForm):
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['liga'] = adicionarClase(self.fields['liga'], 'one')
+        self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
-    
+
+    def clean(self):
+        cleaned_data = super(ClubForm, self).clean()
+        liga = cleaned_data['liga']
+        disciplina = cleaned_data['disciplina']
+        if liga != None:
+            if liga.disciplina != disciplina:
+                raise forms.ValidationError('La disciplina de la liga asociada no es la misma que la del club', code='invalid_disciplina')
+        return self.cleaned_data
+
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina','liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
         widgets = {
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),
@@ -177,12 +187,12 @@ class LigaParalimpicaForm(forms.ModelForm):
             del self.fields['pagina']
 
     def clean(self):
-        federacion = self.cleaned_data['federacion']
-        discapacidad = self.cleaned_data['discapacidad']
+        cleaned_data = super(LigaParalimpicaForm, self).clean()
+        federacion = cleaned_data['federacion']
+        discapacidad = cleaned_data['discapacidad']
         if federacion != None:
             if federacion.discapacidad != discapacidad:
-                raise forms.ValidationError('La discapacidad de la federación asociada no es la misma que la de la liga')
-
+                raise forms.ValidationError('La discapacidad de la federación asociada no es la misma que la de la liga', code='invalid_discapacidad')
         return self.cleaned_data
 
     class Meta:
@@ -207,11 +217,20 @@ class ClubParalimpicoForm(forms.ModelForm):
 
         if instancia != None:
             del self.fields['pagina']
-    
+
+    def clean(self):
+        cleaned_data = super(ClubParalimpicoForm, self).clean()
+        liga = cleaned_data['liga']
+        discapacidad = cleaned_data['discapacidad']
+        if liga != None:
+            if liga.discapacidad != discapacidad:
+                raise forms.ValidationError('La discapacidad de la liga asociada no es la misma que la del club', code='invalid_discapacidad')
+        return self.cleaned_data
+
     class Meta:
         model = ClubParalimpico
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad','liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
         widgets = {
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),
@@ -258,45 +277,31 @@ class EscuelaDeportivaForm(forms.ModelForm):
 
 # --------------------------------------------------- Fin Tenant ---------------------------------------------------------
 
-class ActoresForm(forms.ModelForm):
+class PermisosForm(forms.ModelForm):
 
+    ENTIDAD = (
+        ([5,1], 'Ente municipal'),
+        ([5,2], 'Ente departamental'),
+        ([6,1], 'Comité Olímpico Colombiano'),
+        ([2,0], 'Federación'),
+        ([1,0], 'Liga'),
+        ([3,0], 'Club'),
+        ([6,2], 'Comité Paralímpico Colombiano'),
+        ([7,0],'Federación Paralimpica'),
+        ([8,0],'Liga Paralimpica'),
+        ([9,0],'Club Paralimpico'),
+        ([4,0], 'Cajas de Compensación'),
+        ([10,0],'Centro de Acondicionamiento'),
+        ([11,0], 'Escuela de Formación Deportiva'),
+    )
 
-    #estos son los actores que se pueden o no tener por tanto son seleccionables
-    ACTORES = {
-        '1': [],#Liga
-        '2': ['escenarios'],#Federacion
-        '3': ['centros','escenarios','deportistas'],#Club
-        '4': ['escenarios'],#CajaDeCompensacion
-        '5': ['escenarios','centros_biomedicos'],#Ente
-        '6': [],#Comite
-        '7': [],#FederacionParalimpica
-        '8': ['deportistas'],#LigaParalimpica
-        '9': ['centros','escenarios'],#clubParalimpico
-        '10': ['escenarios'],#Caf
-        '11': ['escenarios']#EscuelaDeportiva_
-    }
+    entidades = forms.ChoiceField(choices=ENTIDAD)
 
     def __init__(self, *args, **kwargs):
-        tipo = kwargs.pop('tipo', None)
-        tipoEnte = kwargs.pop('tipoEnte', None)#no se está usando
-        super(ActoresForm, self).__init__(*args, **kwargs)
-        if tipo:
-            self.quitar_campos(self.get_campos_quitar(self.ACTORES[tipo]))
-
-    def quitar_campos(self,campos):
-        for campo in campos:
-            del self.fields[campo]
-
-    def get_campos_quitar(self,campos):
-        all_campos = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']
-        for campo in campos:
-            try:
-                del all_campos[all_campos.index(campo)]
-            except ValueError:
-                pass
-        return (all_campos)
+        super(PermisosForm, self).__init__(*args, **kwargs)
+        if self.instance.entidad:
+            self.fields['entidades'].initial = [self.instance.entidad,self.instance.tipo]
 
     class Meta:
-        model = Actores
-        #exclude = ()
-        fields = '__all__'
+        model = Permisos
+        exclude = ('entidad','tipo')

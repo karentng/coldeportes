@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Entidades</a>
+    <li class="active">Permisos</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Permisos
+{% endblock %}
+
+{% block titulo_panel %}
+    Permisos
+{% endblock %}
+
+{% block contenido_panel %}
+    <form id="form-permisos" action="" method="post">{% csrf_token %}
+        {{forms.management_form}}
+        <div class="table-responsive">
+            <table id="tabla-permisos" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                <thead>
+                    <th>Entidad</th>
+                    <th>CAF</th>
+                    <th>Escenarios</th>
+                    <th>Deportistas</th>
+                    <th>Personal</th>
+                    <th>Dirigentes</th>
+                    <th>Cajas</th>
+                    <th>Selecciones</th>
+                    <th>Biomedicos</th>
+                    <th>Normograma</th>
+                    <th>Escuela</th>
+                    <th>Noticias</th>
+                </thead>
+                <tbody>
+                    {% for form in forms%}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        <tr>
+                            <td>{{form.entidades}}</td>
+                            <td>{{form.centros}}</td>
+                            <td>{{form.escenarios}}</td>
+                            <td>{{form.deportistas}}</td>
+                            <td>{{form.personal_apoyo}}</td>
+                            <td>{{form.dirigentes}}</td>
+                            <td>{{form.cajas}}</td>
+                            <td>{{form.selecciones}}</td>
+                            <td>{{form.centros_biomedicos}}</td>
+                            <td>{{form.normas}}</td>
+                            <td>{{form.escuelas_deportivas}}</td>
+                            <td>{{form.noticias}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <input class="btn btn-primary pull-right" type="submit" value="Guardar"/>
+            </div>
+        </div>
+    </form>
+
+    <h4>Convenciones</h4>
+    <p><strong>O: </strong>El actor es obligatorio. No se mostrará como opción al momento de crear el ente. Todos los permisos asociados se agregan automáticamente(add, change, delete and view) para los usuarios del ente de tipo 'Digitador' y el permiso de vista(view) para los usuario del ente de tipo 'Sólo lectura'.</p>
+    <p><strong>X: </strong>El actor es opcional. Aparece como opción al momento de crear el ente. Si es seleccionado los permisos asociados se agregan automáticamente(add, change, delete and view) para los usuarios del ente de tipo 'Digitador' y el permiso de vista(view) para los usuario del ente de tipo 'Sólo lectura'. Si no es seleccionado ningún usuario de ningún grupo('Digitador' y 'Sólo lectura') tendrá permisos para ese actor.</p>
+    <p><strong>--: </strong>No tiene el actor. No aparece como opción al momento de crear el ente. Ningún usuario de ningún grupo('Digitador' y 'Sólo lectura') tendrá permisos para ese actor.</p>
+    <p><strong>-- %: </strong>No tiene el actor pero tiene permisos de lectura. No aparece como opción al momento de crear el ente. Los usuarios de tipo 'Digitador' y 'Sólo lectura' del ente tendrán el permiso de vista(view) para ese actor, este permiso se agregará automáticamente.</p>
+    <p><strong>X %: </strong>El actor es opcional con permisos de sólo lectura. Aparece como opción al momento de crear el ente. Si es seleccionado los permisos asociados se agregan automáticamente(add, change, delete and view) para los usuarios del ente de tipo 'Digitador' y el permiso de vista(view) para los usuario del ente de tipo 'Sólo lectura'. Si no es seleccionado  los usuarios de tipo 'Digitador' y 'Sólo lectura' del ente tendrán el permiso de vista(view) para ese actor, este permiso se agregará automáticamente.</p>
+{% endblock %}

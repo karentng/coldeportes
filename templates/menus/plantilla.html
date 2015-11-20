@@ -59,6 +59,7 @@
             {% include "menus/aplicacion/noticias.html" %}
         {% endif %}
     {% endif %}
+    {%comment%}Cualquiera puede buscar normas y buscar en el directorio, no requiere validar permiso de lectura{%endcomment%}
     <li class="has-sub {% if 'directorio' in request.path %} active {% endif %}">
         <a href="javascript:;">
             <b class="caret pull-right"></b>
@@ -72,10 +73,11 @@
     {% include "menus/aplicacion/normograma.html" %}
 {% endif %}
 {% if request.tenant.schema_name == 'public' %}
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.is_superuser %}
         {% include "menus/aplicacion/entidades.html" %}
         {% include "menus/tenant_nacional_menu.html" %}
         {% include "menus/aplicacion/noticias.html" %}
         {% include "menus/aplicacion/normograma.html" %}
+        <li><a href="{% url "permisos" %}">Permisos</a></li>
     {% endif %}
 {% endif %}

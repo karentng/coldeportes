@@ -48,23 +48,26 @@ def asignarPermisosGrupo(request, grupo, permisos):
     for permiso in permisos:
         grupo.permissions.add(permiso)
 
-def asignarPermisosGrupoLectura(request, grupo):
+def asignarPermisosGrupoLectura(request, grupo, permisos):
     #agrega los permisos de lectura que son obligatorios, tenga o no el actor
-    normas = Permission.objects.get(codename='view_norma')
-    escenarios = Permission.objects.get(codename='view_escenario')
-    deportistas = Permission.objects.get(codename='view_deportista')
-
     tipo = request.tenant.tipo
-    #1:#liga:
-    #2:#federacion
-    #6:#comite
-    #7:#federacion paralimpica
-    #8:#liga paralimpica
+    if tipo == '5':
+        tipoEnte = request.tenant.tipo_ente
+    elif tipo == '6':
+        tipoEnte = request.tenant.tipo_comite
+    else:
+        tipoEnte = 0
+    actores = Permisos.objects.get(entidad=request.tenant.tipo,tipo=tipoEnte).get_actores('%')
 
-    if tipo == 1 or tipo == 2 or tipo == 6 or tipo == 7 or tipo == 8:
-        grupo.permissions.add(escenarios)
-        grupo.permissions.add(deportistas)
-    grupo.permissions.add(normas)#todos ven las normas
+    permitidos = []
+    for permiso,actor in permisos:
+        if actor in actores:
+            permitidos.append(permiso)
+    
+    permisos = Permission.objects.filter(codename__in=permitidos)
+    for permiso in permisos:
+        grupo.permissions.add(permiso)
+
 
 def inicio(request):
     schema_name = request.tenant.schema_name
@@ -88,8 +91,8 @@ def inicio(request):
     if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
         asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
         asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
-        asignarPermisosGrupoLectura(request,digitador)
-        asignarPermisosGrupoLectura(request,lectura)
+        asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
+        asignarPermisosGrupoLectura(request, lectura, PERMISOS_LECTURA)
 
     superUsuarios = User.objects.filter(is_superuser=True)
     if len(superUsuarios) == 0:
