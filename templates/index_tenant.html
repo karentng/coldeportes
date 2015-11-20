@@ -275,7 +275,7 @@
                     </div>
                 </div>
             -->
-        {% if entidad.disponible_para_transferencias and user.is_authenticated %}
+        {% if entidad.disponible_para_transferencias and user.is_authenticated and user.groups.all.0.name != 'Solo lectura' %}
             {% include 'panel_solicitudes.html' %}
         {% endif %}
         </div>
