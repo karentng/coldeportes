@@ -30,10 +30,8 @@ class PublicEscenarioView(models.Model):
     dias = models.ForeignKey(Dias)
     descripcion_horario = models.CharField(max_length=1024)
     #campos modelo Foto
-    foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
-    #campo para búsqueda
-    contenido = models.TextField()
-
+    foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True) 
+    
 class PublicCafView(models.Model):
     class Meta:
         managed = False
