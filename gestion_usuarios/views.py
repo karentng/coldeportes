@@ -130,10 +130,8 @@ def inicio(request):
             else:
                 return redirect('inicio_tenant')
 
-
     if schema_name == 'public':
         return redirect('inicio_public')
-
     else:
         return redirect('inicio_tenant')
 

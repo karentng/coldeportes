@@ -1,5 +1,5 @@
 from django.db import models
-from entidades.models import Entidad, Ciudad, Dias
+from entidades.models import Entidad, Ciudad, Dias, Nacionalidad
 
 
 class TenantEscenarioView(models.Model):
@@ -49,3 +49,22 @@ class TenantCafView(models.Model):
 	fecha_creacion = models.DateTimeField()
 	nombre_clase = models.CharField(max_length=255)
 	nombre_servicio = models.CharField(max_length=255)
+
+class TenantPersonalApoyoView(models.Model):
+    class Meta:
+        managed = False
+
+    actividad = models.IntegerField()
+    genero = models.CharField(max_length=11)
+    tipo_id = models.CharField(max_length=5)
+    fecha_nacimiento = models.DateField()
+    nacionalidad = models.ManyToManyField(Nacionalidad)
+    ciudad = models.ForeignKey(Ciudad)
+    etnia = models.CharField(max_length=20)
+    lgtbi = models.BooleanField()
+    fecha_creacion = models.DateField()
+    estado = models.IntegerField()
+    nivel_formacion = models.CharField(max_length=20)
+    estado_formacion = models.CharField(max_length=20)
+    ano_final_formacion = models.IntegerField()
+    creacion_formacion = models.DateField()
