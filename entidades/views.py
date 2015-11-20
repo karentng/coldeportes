@@ -167,7 +167,6 @@ def editar(request, idEntidad, tipo, tipoEnte=None):
 @login_required
 def listar(request):
     entidades = Entidad.objects.exclude(schema_name="public")
-    
     return render(request, 'entidad_listar.html', {
         'entidades': entidades,
     })
