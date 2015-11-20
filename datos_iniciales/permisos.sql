@@ -1,4 +1,4 @@
-﻿INSERT INTO entidades_permisos (id, entidad, centros, escenarios, deportistas, personal, dirigentes, cajas, selecciones, biomedicos, normograma, escuelas, noticias, tipo) VALUES
+﻿INSERT INTO entidades_permisos (id, entidad, centros, escenarios, deportistas, personal_apoyo, dirigentes, cajas, selecciones, centros_biomedicos, normas, escuelas_deportivas, noticias, tipo) VALUES
 (1,5,1,3,1,2,2,1,1,3,2,1,2,2),
 (2,5,1,3,1,2,2,1,1,3,2,1,2,1),
 (3,6,1,5,5,2,2,1,2,1,5,1,2,1),
