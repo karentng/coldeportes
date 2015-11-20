@@ -362,6 +362,7 @@ def desactivarCAF(request, idCAF):
 @login_required
 def georreferenciacion_caf(request):
     import json
+
     tipoTenant = request.tenant.obtenerTenant()
     cafs = tipoTenant.atributos_cafs()
     posicionInicial = tipoTenant.posicionInicialMapa()

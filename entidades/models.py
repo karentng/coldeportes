@@ -61,17 +61,17 @@ class CategoriaDisciplinaDeportiva(models.Model):
 
 
 class Actores(models.Model):
-    centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico")
-    escenarios = models.BooleanField(verbose_name="Escenarios")
-    deportistas = models.BooleanField(verbose_name="Deportistas")
-    personal_apoyo = models.BooleanField(verbose_name="Personal de apoyo")
-    dirigentes = models.BooleanField(verbose_name="Dirigentes")
-    cajas = models.BooleanField(verbose_name="Cajas de Compensación")
-    selecciones = models.BooleanField(verbose_name="Selecciones")
-    centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos")
-    normas = models.BooleanField(verbose_name="Normograma")
-    escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva")
-    noticias = models.BooleanField(verbose_name="Noticias")
+    centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico", default=False)
+    escenarios = models.BooleanField(verbose_name="Escenarios", default=False)
+    deportistas = models.BooleanField(verbose_name="Deportistas", default=False)
+    personal_apoyo = models.BooleanField(verbose_name="Personal de apoyo", default=False)
+    dirigentes = models.BooleanField(verbose_name="Dirigentes", default=False)
+    cajas = models.BooleanField(verbose_name="Cajas de Compensación", default=False)
+    selecciones = models.BooleanField(verbose_name="Selecciones", default=False)
+    centros_biomedicos = models.BooleanField(verbose_name="Centros Biomédicos", default=False)
+    normas = models.BooleanField(verbose_name="Normograma", default=False)
+    escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva", default=False)
+    noticias = models.BooleanField(verbose_name="Noticias", default=False)
 
     def resumen(self):
         actores = []
@@ -423,6 +423,14 @@ class LigaParalimpica(ResolucionReconocimiento):
 
 
 class ClubParalimpico(ResolucionReconocimiento):
+    DISCAPACIDADES = (
+        (1,'Limitaciones Fisicas'),
+        (2,'Limitación Auditiva'),
+        (3,'Limitación Visual'),
+        (4,'Parálisis Cerebral'),
+        (5,'Limitación Intelectual'),
+    )
+    discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
 
     def historiales_para_avalar(self,tipo):
@@ -434,7 +442,7 @@ class ClubParalimpico(ResolucionReconocimiento):
             'tipo_tenant': type(self).__name__,
             'mostrar_info':True,
             'nombre':self.nombre,
-            'disciplina': self.liga.discapacidad,
+            'disciplina': self.discapacidad,
             'descripcion': self.descripcion,
             'ciudad': self.ciudad,
             'direccion': self.direccion,
@@ -487,6 +495,8 @@ class Federacion(ResolucionReconocimiento):
             connection.set_tenant(i)
             escenarios += i.atributos_escenarios()
 
+        connection.set_tenant(self)
+
         return escenarios
 
     def atributos_cafs(self):
@@ -504,6 +514,8 @@ class Federacion(ResolucionReconocimiento):
         for i in ligas:
             connection.set_tenant(i)
             centros += i.atributos_cafs()
+
+        connection.set_tenant(self)
         
         return centros
 
@@ -523,6 +535,8 @@ class Federacion(ResolucionReconocimiento):
             connection.set_tenant(i)
             deportistas += i.atributos_deportistas()
 
+        connection.set_tenant(self)
+
         return deportistas
 
     def atributos_personales_apoyo(self):
@@ -541,6 +555,8 @@ class Federacion(ResolucionReconocimiento):
             connection.set_tenant(i)
             personales_apoyo += i.atributos_personales_apoyo()
 
+        connection.set_tenant(self)
+
         return personales_apoyo
 
     def atributos_dirigentes(self):
@@ -558,6 +574,8 @@ class Federacion(ResolucionReconocimiento):
         for liga in ligas:
             connection.set_tenant(liga)
             dirigentes += liga.atributos_dirigentes()
+
+        connection.set_tenant(self)
 
         return dirigentes
 
@@ -599,6 +617,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             deportistas += i.atributos_deportistas()
 
+        connection.set_tenant(self)
+
         return deportistas
 
     def clubes_asociados(self):
@@ -620,6 +640,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             escenarios += i.atributos_escenarios()
 
+        connection.set_tenant(self)
+
         return escenarios
 
     def atributos_cafs(self):
@@ -638,6 +660,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             centros += i.atributos_cafs()
         
+        connection.set_tenant(self)
+
         return centros
 
     def atributos_personales_apoyo(self):
@@ -656,6 +680,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             personales_apoyo += i.atributos_personales_apoyo()
 
+        connection.set_tenant(self)
+
         return personales_apoyo
 
     def atributos_dirigentes(self):
@@ -673,6 +699,8 @@ class Liga(ResolucionReconocimiento):
         for club in clubes:
             connection.set_tenant(club)
             dirigentes += club.atributos_dirigentes()
+
+        connection.set_tenant(self)
 
         return dirigentes
 
@@ -703,6 +731,7 @@ class Club(ResolucionReconocimiento):
     )
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
+    disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
@@ -713,7 +742,7 @@ class Club(ResolucionReconocimiento):
             'tipo_tenant': type(self).__name__,
             'mostrar_info':True,
             'nombre':self.nombre,
-            #'disciplina': self.liga.disciplina,
+            'disciplina': self.disciplina,
             'descripcion': self.descripcion,
             'ciudad': self.ciudad,
             'direccion': self.direccion,
@@ -748,7 +777,7 @@ class EscuelaDeportiva_(Entidad):
             'tipo_tenant': type(self).__name__,
             'mostrar_info':True,
             'nombre':self.nombre,
-            'disciplina': None,
+            'disciplina': self.disciplina,
             'descripcion': self.descripcion,
             'ciudad': self.ciudad,
             'direccion': self.direccion,
@@ -891,16 +920,33 @@ class Permisos(models.Model):
         (5, '-- %'),
     )
     entidad = models.IntegerField()
-    tipo = models.IntegerField(null=True,blank=True)
-    nombre = models.CharField(max_length=100)
+    tipo = models.IntegerField()
     centros = models.IntegerField(choices=ACTORES, default=1)
     escenarios = models.IntegerField(choices=ACTORES, default=1)
     deportistas = models.IntegerField(choices=ACTORES, default=1)
-    personal = models.IntegerField(choices=ACTORES, default=1)
+    personal_apoyo = models.IntegerField(choices=ACTORES, default=1)
     dirigentes = models.IntegerField(choices=ACTORES, default=1)
     cajas = models.IntegerField(choices=ACTORES, default=1)
     selecciones = models.IntegerField(choices=ACTORES, default=1)
-    biomedicos = models.IntegerField(choices=ACTORES, default=1)
-    normograma = models.IntegerField(choices=ACTORES, default=1)
-    escuelas = models.IntegerField(choices=ACTORES, default=1)
+    centros_biomedicos = models.IntegerField(choices=ACTORES, default=1)
+    normas = models.IntegerField(choices=ACTORES, default=1)
+    escuelas_deportivas = models.IntegerField(choices=ACTORES, default=1)
     noticias = models.IntegerField(choices=ACTORES, default=1)
+
+    class Meta:
+        unique_together = ('entidad','tipo',)
+
+    def get_actores(self,opcion):
+        if opcion == 'O':
+            opcion = [2]
+        elif opcion == 'X':
+            opcion = [3,4]
+        elif opcion == '%':
+            opcion = [4,5]
+
+        actores_seleccionados = []
+        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']
+        for actor in actores:
+            if getattr(self,actor) in opcion:
+                actores_seleccionados.append(actor)
+        return(actores_seleccionados)

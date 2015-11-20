@@ -294,10 +294,10 @@ def _wrap_instance__resolve(wrapping_functions,instance):
     Autor: Cristian Leonardo Ríos López
     Descripción: Permite agregar los actores obligatorios a una entidad
 '''
-def add_actores(actores,tipo):
+def add_actores(model,actores):
 
     #estos son los actores que se tienen por obligación
-    ACTORES = {
+    '''ACTORES = {
         '1': ['selecciones'],#Liga
         '2': ['selecciones'],#Federacion
         '3': [],#Club
@@ -317,4 +317,7 @@ def add_actores(actores,tipo):
 
     actores_agregar = ACTORES[tipo]
     for actor in actores_agregar:
-        setattr(actores, actor, True)
+        setattr(actores, actor, True)'''
+
+    for actor in actores:
+        setattr(model,actor,True)
