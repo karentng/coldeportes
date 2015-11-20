@@ -129,7 +129,10 @@ def registro(request, tipo, tipoEnte=None):
                 obj.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
                 generar_vistas_actores(request, obj)
-                return redirect('entidad_registro', tipo)
+                if tipoEnte:
+                    return redirect('entidad_registro', tipo, tipoEnte)
+                else:
+                    return redirect('entidad_registro', tipo)
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
                 actores.delete()

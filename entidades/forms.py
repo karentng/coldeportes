@@ -21,12 +21,12 @@ class LigaForm(forms.ModelForm):
             del self.fields['pagina']
 
     def clean(self):
-        federacion = self.cleaned_data['federacion']
-        disciplina = self.cleaned_data['disciplina']
+        cleaned_data = super(LigaForm, self).clean()
+        federacion = cleaned_data['federacion']
+        disciplina = cleaned_data['disciplina']
         if federacion != None:
             if federacion.disciplina != disciplina:
-                raise forms.ValidationError('La disciplina de la federación asociada no es la misma que la de la liga')
-        
+                raise forms.ValidationError('La disciplina de la federación asociada no es la misma que la de la liga', code='invalid_disciplina')
         return self.cleaned_data
     
     class Meta:
@@ -71,14 +71,24 @@ class ClubForm(forms.ModelForm):
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['liga'] = adicionarClase(self.fields['liga'], 'one')
+        self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
-    
+
+    def clean(self):
+        cleaned_data = super(ClubForm, self).clean()
+        liga = cleaned_data['liga']
+        disciplina = cleaned_data['disciplina']
+        if liga != None:
+            if liga.disciplina != disciplina:
+                raise forms.ValidationError('La disciplina de la liga asociada no es la misma que la del club', code='invalid_disciplina')
+        return self.cleaned_data
+
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina','liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
         widgets = {
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),
@@ -177,12 +187,12 @@ class LigaParalimpicaForm(forms.ModelForm):
             del self.fields['pagina']
 
     def clean(self):
-        federacion = self.cleaned_data['federacion']
-        discapacidad = self.cleaned_data['discapacidad']
+        cleaned_data = super(LigaParalimpicaForm, self).clean()
+        federacion = cleaned_data['federacion']
+        discapacidad = cleaned_data['discapacidad']
         if federacion != None:
             if federacion.discapacidad != discapacidad:
-                raise forms.ValidationError('La discapacidad de la federación asociada no es la misma que la de la liga')
-
+                raise forms.ValidationError('La discapacidad de la federación asociada no es la misma que la de la liga', code='invalid_discapacidad')
         return self.cleaned_data
 
     class Meta:
@@ -207,11 +217,20 @@ class ClubParalimpicoForm(forms.ModelForm):
 
         if instancia != None:
             del self.fields['pagina']
-    
+
+    def clean(self):
+        cleaned_data = super(ClubParalimpicoForm, self).clean()
+        liga = cleaned_data['liga']
+        discapacidad = cleaned_data['discapacidad']
+        if liga != None:
+            if liga.discapacidad != discapacidad:
+                raise forms.ValidationError('La discapacidad de la liga asociada no es la misma que la del club', code='invalid_discapacidad')
+        return self.cleaned_data
+
     class Meta:
         model = ClubParalimpico
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad','liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
         widgets = {
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),
