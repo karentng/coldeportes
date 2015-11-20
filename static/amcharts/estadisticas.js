@@ -504,7 +504,6 @@ function Reportes(){
         
         var chart;
         var legend;
-        console.log(datos);
         if (AmCharts.isReady){
             generarTorta(datos, nombreDiv, nombreGrafica);
         }else{
@@ -535,6 +534,7 @@ function Reportes(){
     function comparativaVertical(resultado, nombreDiv, nombreGrafica){
         var chart2;
         var datos = [];
+        var cont = 0;
         for (i in resultado){
             var aux = resultado[i];
             datos.push(
@@ -542,8 +542,10 @@ function Reportes(){
                     'descripcion': i,
                     'valor': aux,
                     'color': colores[Math.floor(Math.random()*(colores.length+1))],
+                    //'color': colores[cont%colores.length],
                 }
             );
+            cont += 1;
         }
 
         if (AmCharts.isReady){
@@ -668,15 +670,21 @@ function Reportes(){
 
         modificarDatos: function(datos){
             var nuevosDatos = [];
+            var cont = 0;
             for (i in datos){
                 var aux = datos[i];
                 nuevosDatos.push(
                     {
                         'descripcion': i,
                         'valor': aux,
+<<<<<<< HEAD
                         'color': colores[Math.floor(Math.random()*(colores.length+1))],
+=======
+                        'color': colores[cont%colores.length],
+>>>>>>> 7a155c7f2ae8be96a37e2791ba76ee33b67b2b57
                     }
                 );
+                cont += 1;
             }
             
             for(i in charts){

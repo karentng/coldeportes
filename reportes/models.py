@@ -1,5 +1,5 @@
 from django.db import models
-from entidades.models import Entidad, Ciudad, Dias, Nacionalidad
+from entidades.models import *
 
 
 class TenantEscenarioView(models.Model):
@@ -18,6 +18,9 @@ class TenantEscenarioView(models.Model):
     nombre_administrador = models.CharField(max_length=50, null=True)
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField()
+    #campos modelo caracterizacion
+    tipo_escenario = models.ForeignKey(TipoEscenario)
+
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)
@@ -31,8 +34,6 @@ class TenantEscenarioView(models.Model):
     descripcion_horario = models.CharField(max_length=1024)
     #campos modelo Foto
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
-    #campo para búsqueda
-    contenido = models.TextField()
 
 class TenantCafView(models.Model):
 	class Meta:

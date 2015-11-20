@@ -19,12 +19,12 @@
             url = "{% url 'reportes_escenarios_estrato' %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamento").val());
-                var annos = JSON.stringify($("#id_anno").val());
+                var municipios = JSON.stringify($("#id_municipio").val());
                 var disciplinas = JSON.stringify($("#id_disciplina").val());
 
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos, 'annos':annos, 'disciplinas':disciplinas},
+                    data: {'departamentos': departamentos, 'municipios':municipios, 'disciplinas':disciplinas},
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data);
@@ -32,10 +32,10 @@
                 });
 
             }
-            $("#id_anno").on("change", function(){
+            $("#id_departamento").on("change", function(){
                 realizarConsulta();
             });
-            $("#id_departamento").on("change", function(){
+            $("#id_municipio").on("change", function(){
                 realizarConsulta();
             });
             $("#id_disciplina").on("change", function(){
@@ -53,12 +53,12 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
-    <li><a href="{% url 'inicio' %}">CAF</a></li>
-    <li><a href="{% url 'inicio' %}">Demografía</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">Escenarios</a></li>
+    <li><a href="{% url 'inicio' %}">Tipo Escenario</a></li>
 {% endblock %}
 
 {% block titulo_panel %}
-    Estratos de escenarios por Departamentos, Municipios, y disciplina deportiva
+    Tipos de escenarios por Departamentos, Municipios y Disciplinas Deportivas
 {% endblock %}
 
 {% block contenido_panel %}
