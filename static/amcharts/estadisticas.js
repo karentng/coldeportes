@@ -389,7 +389,6 @@ function Reportes(){
         
         var chart;
         var legend;
-        console.log(datos);
         if (AmCharts.isReady){
             generarTorta(datos, nombreDiv, nombreGrafica);
         }else{
@@ -420,15 +419,17 @@ function Reportes(){
     function comparativaVertical(resultado, nombreDiv, nombreGrafica){
         var chart2;
         var datos = [];
+        var cont = 0;
         for (i in resultado){
             var aux = resultado[i];
             datos.push(
                 {
                     'descripcion': i,
                     'valor': aux,
-                    'color': colores[aux%colores.length],
+                    'color': colores[cont%colores.length],
                 }
             );
+            cont += 1;
         }
 
         if (AmCharts.isReady){
@@ -486,15 +487,17 @@ function Reportes(){
 
         modificarDatos: function(datos){
             var nuevosDatos = [];
+            var cont = 0;
             for (i in datos){
                 var aux = datos[i];
                 nuevosDatos.push(
                     {
                         'descripcion': i,
                         'valor': aux,
-                        'color': colores[aux%colores.length],
+                        'color': colores[cont%colores.length],
                     }
                 );
+                cont += 1;
             }
             
             for(i in charts){
