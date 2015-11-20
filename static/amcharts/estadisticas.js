@@ -677,11 +677,7 @@ function Reportes(){
                     {
                         'descripcion': i,
                         'valor': aux,
-<<<<<<< HEAD
                         'color': colores[Math.floor(Math.random()*(colores.length+1))],
-=======
-                        'color': colores[cont%colores.length],
->>>>>>> 7a155c7f2ae8be96a37e2791ba76ee33b67b2b57
                     }
                 );
                 cont += 1;
