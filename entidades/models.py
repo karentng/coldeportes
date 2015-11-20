@@ -487,6 +487,8 @@ class Federacion(ResolucionReconocimiento):
             connection.set_tenant(i)
             escenarios += i.atributos_escenarios()
 
+        connection.set_tenant(self)
+
         return escenarios
 
     def atributos_cafs(self):
@@ -504,6 +506,8 @@ class Federacion(ResolucionReconocimiento):
         for i in ligas:
             connection.set_tenant(i)
             centros += i.atributos_cafs()
+
+        connection.set_tenant(self)
         
         return centros
 
@@ -523,6 +527,8 @@ class Federacion(ResolucionReconocimiento):
             connection.set_tenant(i)
             deportistas += i.atributos_deportistas()
 
+        connection.set_tenant(self)
+
         return deportistas
 
     def atributos_personales_apoyo(self):
@@ -541,6 +547,8 @@ class Federacion(ResolucionReconocimiento):
             connection.set_tenant(i)
             personales_apoyo += i.atributos_personales_apoyo()
 
+        connection.set_tenant(self)
+
         return personales_apoyo
 
     def atributos_dirigentes(self):
@@ -558,6 +566,8 @@ class Federacion(ResolucionReconocimiento):
         for liga in ligas:
             connection.set_tenant(liga)
             dirigentes += liga.atributos_dirigentes()
+
+        connection.set_tenant(self)
 
         return dirigentes
 
@@ -599,6 +609,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             deportistas += i.atributos_deportistas()
 
+        connection.set_tenant(self)
+
         return deportistas
 
     def clubes_asociados(self):
@@ -620,6 +632,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             escenarios += i.atributos_escenarios()
 
+        connection.set_tenant(self)
+
         return escenarios
 
     def atributos_cafs(self):
@@ -638,6 +652,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             centros += i.atributos_cafs()
         
+        connection.set_tenant(self)
+
         return centros
 
     def atributos_personales_apoyo(self):
@@ -656,6 +672,8 @@ class Liga(ResolucionReconocimiento):
             connection.set_tenant(i)
             personales_apoyo += i.atributos_personales_apoyo()
 
+        connection.set_tenant(self)
+
         return personales_apoyo
 
     def atributos_dirigentes(self):
@@ -673,6 +691,8 @@ class Liga(ResolucionReconocimiento):
         for club in clubes:
             connection.set_tenant(club)
             dirigentes += club.atributos_dirigentes()
+
+        connection.set_tenant(self)
 
         return dirigentes
 
