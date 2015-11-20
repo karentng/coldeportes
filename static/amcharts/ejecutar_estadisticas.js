@@ -9,9 +9,9 @@ $.getScript(base+"amcharts/amcharts.js", function(){
 								$.getScript(base + "amcharts/exporting/rgbcolor.js", function () {
 									$.getScript(base + "amcharts/exporting/filesaver.js", function () {
 										$.getScript(base + "amcharts/estadisticas.js", function () {
+											console.log("Hola");
 											$.getScript(base + "js/d3.js", function () {
 												$.getScript(base + "js/d3plus.js", function () {
-
 													Reportes = Reportes();
 
 													function graficar(nombreReporte) {
@@ -22,7 +22,6 @@ $.getScript(base+"amcharts/amcharts.js", function(){
 													}
 
 													graficar(nombreReporte);
-
 													//----------------------------------------------
 
 													function cambiarDiv(num) {
