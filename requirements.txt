@@ -4,3 +4,4 @@ django-formtools==1.0
 django-tenant-schemas==1.5.2
 Pillow==2.8.1
 psycopg2==2.6
+django-datetime-widget==0.9.3

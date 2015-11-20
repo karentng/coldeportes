@@ -51,13 +51,13 @@ def asignarPermisosGrupo(request, grupo, permisos):
 def asignarPermisosGrupoLectura(request, grupo, permisos):
     #agrega los permisos de lectura que son obligatorios, tenga o no el actor
     tipo = request.tenant.tipo
-    if tipo == '5':
-        tipoEnte = request.tenant.tipo_ente
-    elif tipo == '6':
-        tipoEnte = request.tenant.tipo_comite
+    if tipo == 5:
+        tipoEnte = request.tenant.ente.tipo_ente
+    elif tipo == 6:
+        tipoEnte = request.tenant.comite.tipo_comite
     else:
         tipoEnte = 0
-    actores = Permisos.objects.get(entidad=request.tenant.tipo,tipo=tipoEnte).get_actores('%')
+    actores = Permisos.objects.get(entidad=tipo,tipo=tipoEnte).get_actores('%')
 
     permitidos = []
     for permiso,actor in permisos:
