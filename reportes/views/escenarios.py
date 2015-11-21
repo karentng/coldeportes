@@ -28,29 +28,29 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     """
     #Departamentos, municipios y disciplinas
     if departamentos and municipios and disciplinas:
-        escenarios = list(tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+        escenarios = list(tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Departamentos, municipios
     elif departamentos and municipios:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))    
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))    
     #Departamentos, disciplinas
     elif departamentos and disciplinas:
-        escenarios =  list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(categoria))),
+        escenarios =  list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(categoria, distinct=True))),
     #Municipios y disciplinas
     elif municipios and disciplinas:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Departamentos
     elif departamentos:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Municipios
     elif municipios:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Disciplina
     elif disciplinas:
         print('entro m')
-        escenarios = list(tabla.objects.filter(estado=0,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+        escenarios = list(tabla.objects.filter(estado=0,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Sin filtros
     else:
-        escenarios =  list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+        escenarios =  list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
 
     escenarios = tipoTenant.ajustar_resultado(escenarios)
 
