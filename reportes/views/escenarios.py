@@ -56,6 +56,40 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
 
     return escenarios
 
+
+def generador_reporte_escenario(request, categoria, cantidad):
+
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscenarioView
+    else:
+        tabla = TenantEscenarioView
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
+        disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
+
+        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
+
+        if '' in escenarios:
+            escenarios['Ninguna'] = escenarios['']
+            del escenarios['']
+
+        return JsonResponse(escenarios)
+
+    else:
+        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, None, None, None, tipoTenant, tabla)
+
+        if '' in escenarios:
+            escenarios['NO APLICA'] = escenarios['']
+            del escenarios['']
+
+    return escenarios
+
+
+
 def estrato(request):
     tipoTenant = request.tenant.obtenerTenant()
 
@@ -84,42 +118,18 @@ def tipos_escenarios(request):
 
     Permite conocer el numero de escenarios por cada tipo de escenarios.
     """
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioView
-    else:
-        tabla = TenantEscenarioView
 
     categoria = 'tipo_escenario__descripcion'
     cantidad = 'tipo_escenario'
 
-    if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
-        disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
-
-        tipos = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
-
-        if '' in tipos:
-            tipos['Ninguna'] = tipos['']
-            del tipos['']
-
-        return JsonResponse(tipos)
-
-    else:
-        tipos = ejecutar_consulta_segun_filtro(categoria, cantidad, None, None, None, tipoTenant, tabla)
-
-        if '' in tipos:
-            tipos['NO APLICA'] = tipos['']
-            del tipos['']
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
 
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     return render(request, 'escenarios/tipo_escenario.html', {
         'nombre_reporte' : 'Tipos de Escenarios',
         'url_data' : 'reportes_escenarios_tipos',
-        'datos': tipos,
+        'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Escenarios'
@@ -132,41 +142,41 @@ def estado_fisico(request):
 
     Permite conocer el numero de escenarios por cada condición de estado físico.
     """
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioView
-    else:
-        tabla = TenantEscenarioView
 
     categoria = 'estado_fisico'
     cantidad = 'estado_fisico'
 
-    if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
-        disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
-
-        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
-
-        if '' in escenarios:
-            escenarios['Ninguna'] = escenarios['']
-            del escenarios['']
-
-        return JsonResponse(escenarios)
-
-    else:
-        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, None, None, None, tipoTenant, tabla)
-
-        if '' in escenarios:
-            escenarios['NO APLICA'] = escenarios['']
-            del escenarios['']
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
 
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     return render(request, 'escenarios/tipo_escenario.html', {
         'nombre_reporte' : 'Estados Físicos de Escenarios',
         'url_data' : 'reportes_escenarios_estado_fisico',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })
+
+def tipo_superficie(request):
+    """
+    Noviembre 20, 2015
+    Autor: Karent Narvaez
+
+    Permite conocer el numero de escenarios por cada tipo de superficie.
+    """
+
+    categoria = 'tiposuperficie__descripcion'
+    cantidad = 'tiposuperficie'
+
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+
+    visualizaciones = [1, 5 , 6]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/tipo_escenario.html', {
+        'nombre_reporte' : 'Tipo de Superficie de Escenarios',
+        'url_data' : 'reportes_escenarios_tipo_superficie',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
