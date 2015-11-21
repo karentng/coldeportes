@@ -1,15 +1,4 @@
-var colores = [
-    "#FF0F00",
-    "#FF6600",
-    "#FF9E01",
-    "#FCD202",
-    "#F8FF01",
-    "#B0DE09",
-    "#04D215",
-    "#0D8ECF",
-    "#0D52D1",
-    "#2A0CD0",
-];
+var colores = ["#67b7dc", "#fdd400", "#84b761", "#cc4748", "#cd82ad", "#2f4074", "#448e4d", "#b7b83f", "#b9783f", "#b93e3d", "#913167"];
 
 var charts = []; // [chart, nombreDiv]
 
@@ -30,7 +19,8 @@ $(".nav a").on("shown.bs.tab", function () {
 function Reportes(){
     /* Generar las gráficas */
     function generarComparativa(datos, nombreDiv, nombreGrafica){
-        chart = new AmCharts.AmSerialChart();
+        chart = new AmCharts.AmSerialChart(AmCharts.themes.light);
+        chart.theme = AmCharts.themes.light;
         chart.dataProvider = datos;
         chart.categoryField = "descripcion";
         chart.startDuration = 0.5;
@@ -49,6 +39,11 @@ function Reportes(){
         categoryAxis.axisAlpha = 0;
         categoryAxis.gridPosition = "start";
         categoryAxis.position = "bottom";
+        categoryAxis.labelRotation = 45;
+        categoryAxis.labelFunction =  function(label) {
+                                      label = label.replace(/(.{5}[ ])/g, "$1\n");
+                                      return label;
+                                    }
     
         // value
         var valueAxis = new AmCharts.ValueAxis();
@@ -88,7 +83,7 @@ function Reportes(){
         charts.push([chart, nombreDiv]);
     }
     function generarTorta(datos, nombreDiv, nombreGrafica){
-        chart = new AmCharts.AmPieChart();
+        chart = new AmCharts.AmPieChart(AmCharts.themes.light);
         chart.theme = AmCharts.themes.light;
         chart.titles = [{
             "text": nombreGrafica,
@@ -114,7 +109,8 @@ function Reportes(){
     }
 
     function generarComparativaVertical(datos, nombreDiv, nombreGrafica){
-        chart = new AmCharts.AmSerialChart();
+        chart = new AmCharts.AmSerialChart(AmCharts.themes.light);
+        chart.theme = AmCharts.themes.light;
         chart.dataProvider = datos;
         chart.titles = [{
             "text": nombreGrafica,
@@ -336,7 +332,8 @@ function Reportes(){
 
     //Función para generar un gráfico de cilindro 3D
     function generarGraficoCilindros(datos, nombreDiv, nombreGrafica){
-        chart = new AmCharts.AmSerialChart();
+        chart = new AmCharts.AmSerialChart(AmCharts.themes.light);
+        chart.theme = AmCharts.themes.light;
         chart.dataProvider = datos;
         chart.titles = [{
             "text": nombreGrafica,
@@ -356,6 +353,11 @@ function Reportes(){
         categoryAxis.gridPosition = "start";
         categoryAxis.gridAlpha = 0;
         categoryAxis.axisAlpha = 0;
+        categoryAxis.labelRotation = 45;
+        categoryAxis.labelFunction =  function(label) {
+                                      label = label.replace(/(.{5}[ ])/g, "$1\n");
+                                      return label;
+                                    }
 
         // Value
         var valueAxis = new AmCharts.ValueAxis();
@@ -392,7 +394,8 @@ function Reportes(){
 
     //Función para generar un gráfico de cono 3D
     function generarGraficoCono(datos, nombreDiv, nombreGrafica){
-        chart = new AmCharts.AmFunnelChart();
+        chart = new AmCharts.AmFunnelChart(AmCharts.themes.light);
+        chart.theme = AmCharts.themes.light;
         chart.dataProvider = datos;
         chart.titles = [{
             "text": nombreGrafica,
@@ -419,7 +422,8 @@ function Reportes(){
 
     //Función para generar un gráfico de radar
     function generarGraficoRadar(datos, nombreDiv, nombreGrafica){
-        chart = new AmCharts.AmRadarChart();
+        chart = new AmCharts.AmRadarChart(AmCharts.themes.light);
+        chart.theme = AmCharts.themes.light;
         chart.dataProvider = datos;
         chart.titles = [{
             "text": nombreGrafica,
@@ -542,7 +546,6 @@ function Reportes(){
                     'descripcion': i,
                     'valor': aux,
                     'color': colores[Math.floor(Math.random()*(colores.length+1))],
-                    //'color': colores[cont%colores.length],
                 }
             );
             cont += 1;
@@ -588,7 +591,7 @@ function Reportes(){
                 {
                     'descripcion': i,
                     'valor': aux,
-                    'color': colores[Math.floor(Math.random()*(colores.length+1))],
+                    'color': colores[Math.floor(Math.random()*(colores.length+1))]
                 }
             );
         }
@@ -677,7 +680,7 @@ function Reportes(){
                     {
                         'descripcion': i,
                         'valor': aux,
-                        'color': colores[Math.floor(Math.random()*(colores.length+1))],
+                        'color': colores[Math.floor(Math.random()*(colores.length+1))]
                     }
                 );
                 cont += 1;

@@ -1,1 +1,7 @@
 {# El identificador del grupo de la galeria es: 5 #}
+
+{% with 5 as id %}
+
+    {% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="PERSONAL DE APOYO" color="rgba(234,57,76,0.6)" titulo="Actividades del personal de apoyo" descripcion="En este reporte se muestran las actividades que desempeña el personal de apoyo" url_reporte="reporte_actividades_personal" %}
+
+{% endwith %}
