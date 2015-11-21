@@ -6,6 +6,7 @@ from django.db.models import F, Count
 from reportes.formularios.escenarios import EstratoForm, FiltrosEscenariosDMDForm
 from entidades.modelos_vistas_reportes import PublicEscenarioView
 from reportes.models import TenantEscenarioView
+from snd.modelos.deportistas import *
 
 
 '''
@@ -18,36 +19,40 @@ Reportes:
     6. Gráfica de cono
     7. Gráfica de radar
 '''
-def ejecutar_consulta_segun_filtro(consultas,departamentos,municipios, disciplinas,tipoTenant, tabla):
+def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla):
     """
     Noviembre 19, 2015
     Autor: Karent Narvaez
 
     Permite ejecutar una consulta con base en los filtros que se están enviando en la petición.
     """
+    #Departamentos, municipios y disciplinas
     if departamentos and municipios and disciplinas:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[0]%(tabla,departamentos,municipios,disciplinas))
-
+        escenarios = list(tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+    #Departamentos, municipios
     elif departamentos and municipios:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[1]%(tabla,departamentos,municipios))
-
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))    
+    #Departamentos, disciplinas
     elif departamentos and disciplinas:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[2]%(tabla,departamentos,disciplinas))
-
+        escenarios =  list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(categoria))),
+    #Municipios y disciplinas
     elif municipios and disciplinas:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[3]%(tabla,municipios,disciplinas))
-
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+    #Departamentos
     elif departamentos:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[4]%(tabla,departamentos))
-
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+    #Municipios
     elif municipios:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[5]%(tabla,municipios))
-
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+    #Disciplina
     elif disciplinas:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[6]%(tabla,disciplinas))
-
+        print('entro m')
+        escenarios = list(tabla.objects.filter(estado=0,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+    #Sin filtros
     else:
-        escenarios = tipoTenant.ejecutar_consulta(True,consultas[7]%(tabla))
+        escenarios =  list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad)))
+
+    escenarios = tipoTenant.ajustar_resultado(escenarios)
 
     return escenarios
 
@@ -86,24 +91,15 @@ def tipos_escenarios(request):
     else:
         tabla = TenantEscenarioView
 
+    categoria = 'tipo_escenario__descripcion'
+    cantidad = 'tipo_escenario'
+
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
         disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
 
-        consultas = [
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario')))",
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario__descripcion')))",
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario__descripcion')))",
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario__descripcion')))",
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario__descripcion')))",
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario__descripcion')))",
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario__descripcion')))",
-            "list(%s.objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,ciudad_residencia__id__in=%s,tipo_disciplinas__id__in=%s).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario')))",
-            
-        ]
-
-        tipos = ejecutar_consulta_segun_filtro(consultas,departamentos,genero,tipoTenant, tabla)
+        tipos = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
 
         if '' in tipos:
             tipos['Ninguna'] = tipos['']
@@ -112,7 +108,7 @@ def tipos_escenarios(request):
         return JsonResponse(tipos)
 
     else:
-        tipos = list(tabla.objects.filter(estado=0).annotate(descripcion=F('tipo_escenario__descripcion')).values('descripcion').annotate(cantidad=Count('tipo_escenario')))
+        tipos = ejecutar_consulta_segun_filtro(categoria, cantidad, None, None, None, tipoTenant, tabla)
 
         if '' in tipos:
             tipos['NO APLICA'] = tipos['']
@@ -120,7 +116,7 @@ def tipos_escenarios(request):
 
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'base_reportes.html', {
+    return render(request, 'escenarios/tipo_escenario.html', {
         'nombre_reporte' : 'Tipos de Escenarios',
         'url_data' : 'reportes_escenarios_tipos',
         'datos': tipos,

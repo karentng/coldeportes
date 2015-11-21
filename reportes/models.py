@@ -20,7 +20,8 @@ class TenantEscenarioView(models.Model):
     estado = models.IntegerField()
     #campos modelo caracterizacion
     tipo_escenario = models.ForeignKey(TipoEscenario)
-
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+    
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)
