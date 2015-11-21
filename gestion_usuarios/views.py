@@ -57,7 +57,11 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
         tipoEnte = request.tenant.comite.tipo_comite
     else:
         tipoEnte = 0
-    actores = Permisos.objects.get(entidad=tipo,tipo=tipoEnte).get_actores('%')
+    try:
+        actores = Permisos.objects.get(entidad=tipo,tipo=tipoEnte).get_actores('%')
+    except Permisos.DoesNotExist:
+        messages.error(request,'Ha ocurrido un error al actualizar los permisos de lectura')
+        pass
 
     permitidos = []
     for permiso,actor in permisos:
