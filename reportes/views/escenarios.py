@@ -124,3 +124,51 @@ def tipos_escenarios(request):
         'form': form,
         'actor': 'Escenarios'
     })
+
+def estado_fisico(request):
+    """
+    Noviembre 20, 2015
+    Autor: Karent Narvaez
+
+    Permite conocer el numero de escenarios por cada condición de estado físico.
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscenarioView
+    else:
+        tabla = TenantEscenarioView
+
+    categoria = 'estado_fisico'
+    cantidad = 'estado_fisico'
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
+        disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
+
+        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
+
+        if '' in escenarios:
+            escenarios['Ninguna'] = escenarios['']
+            del escenarios['']
+
+        return JsonResponse(escenarios)
+
+    else:
+        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, None, None, None, tipoTenant, tabla)
+
+        if '' in escenarios:
+            escenarios['NO APLICA'] = escenarios['']
+            del escenarios['']
+
+    visualizaciones = [1, 5 , 6]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/tipo_escenario.html', {
+        'nombre_reporte' : 'Estados Físicos de Escenarios',
+        'url_data' : 'reportes_escenarios_estado_fisico',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })

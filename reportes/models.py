@@ -3,6 +3,21 @@ from entidades.models import *
 
 
 class TenantEscenarioView(models.Model):
+    ACCESOS = (
+        ('pr', 'Privado'),
+        ('dul', 'De Uso Libre'),
+        ('pcp', 'Público Con Pago'),
+    )
+    ESTADOS_FISICOS = (
+        ('bu', 'Bueno'),
+        ('re', 'Regular'),
+        ('ma', 'Malo'),
+    )
+    PROPIETARIOS = (
+        ('of', 'Oficial'),
+        ('pr', 'Privado'),
+    )
+
     class Meta:
         managed = False
     #campos modelo escenario
@@ -21,6 +36,7 @@ class TenantEscenarioView(models.Model):
     #campos modelo caracterizacion
     tipo_escenario = models.ForeignKey(TipoEscenario)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
     
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
