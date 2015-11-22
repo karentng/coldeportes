@@ -12,7 +12,7 @@ def crear_vista_reportes_tenant_deportista():
         HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
         IA.nivel as nivel_formacion, IA.estado as estado_formacion,
         ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
-        HL.tipo_lesion,HL.periodo_rehabilitacion, IFD.fecha
+        HL.tipo_lesion,HL.periodo_rehabilitacion, IFD.fecha as fecha_doping
     FROM
     snd_deportista DE
     LEFT JOIN snd_deportista_nacionalidad NAL ON NAL.deportista_id = DE.id

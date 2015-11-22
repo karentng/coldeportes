@@ -81,6 +81,30 @@ def participaciones_deportivas(request):
         'actor': 'Deportistas'
     })
 
+def beneficiario_programa_apoyo_view(request):
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDeportistaView
+    else:
+        tabla = TenantDeportistaView
+
+    #beneficiados = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo',distinct = True)))
+    beneficiados = tabla.objects.filter(estado = 0).distinct('id')
+    #beneficiados = tipoTenant.ajustar_resultado(beneficiados)
+
+    print(beneficiados)
+
+    visualizaciones = [1, 2, 3, 5]
+    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    return render(request, 'base_reportes.html', {
+        'nombre_reporte' : 'Beneficiario Programa de Apoyo',
+        'url_data' : 'reporte_beneficiario_programa_apoyo',
+        'datos': beneficiados,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Deportistas'
+    })
 
 def beneficiario_programa_apoyo(request):
     """
@@ -113,10 +137,13 @@ def beneficiario_programa_apoyo(request):
 
     else:
         beneficiados = tipoTenant.ejecutar_consulta(True, "list(InformacionAdicional.objects.filter(deportista__estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))")
-        beneficiados['Deportistas beneficiados'] = beneficiados[True]
-        beneficiados['Deportistas no beneficiados'] = beneficiados[False]
-        del beneficiados[True]
-        del beneficiados[False]
+        #beneficiados = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))
+        if True in beneficiados:
+            beneficiados['Deportistas beneficiados'] = beneficiados[True]
+            del beneficiados[True]
+        if False in beneficiados:
+            beneficiados['Deportistas no beneficiados'] = beneficiados[False]
+            del beneficiados[False]
 
     visualizaciones = [1, 2, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
