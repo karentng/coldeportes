@@ -70,37 +70,12 @@ def participaciones_deportivas(request):
         participaciones = list(tabla.objects.filter(estado = 0,estado_participacion="Aprobado").annotate(descripcion=F('tipo_participacion')).values('descripcion').annotate(cantidad=Count('tipo_participacion')))
         participaciones = tipoTenant.ajustar_resultado(participaciones)
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Participaciones Deportivas',
         'url_data' : 'reporte_participaciones_deportivas',
         'datos': participaciones,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Deportistas'
-    })
-
-def beneficiario_programa_apoyo_view(request):
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicDeportistaView
-    else:
-        tabla = TenantDeportistaView
-
-    #beneficiados = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo',distinct = True)))
-    beneficiados = tabla.objects.filter(estado = 0).distinct('id')
-    #beneficiados = tipoTenant.ajustar_resultado(beneficiados)
-
-    print(beneficiados)
-
-    visualizaciones = [1, 2, 3, 5]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'base_reportes.html', {
-        'nombre_reporte' : 'Beneficiario Programa de Apoyo',
-        'url_data' : 'reporte_beneficiario_programa_apoyo',
-        'datos': beneficiados,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas'
@@ -114,15 +89,21 @@ def beneficiario_programa_apoyo(request):
     Permite conocer el numero de deportistas beneficiados por un programa de apoyo
     """
     tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDeportistaView
+    else:
+        tabla = TenantDeportistaView
+
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list(InformacionAdicional.objects.filter(deportista__estado = 0,deportista__ciudad_residencia__departamento__id__in=%s,deportista__genero__in=%s).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))",
-            "list(InformacionAdicional.objects.filter(deportista__estado = 0,deportista__ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))",
-            "list(InformacionAdicional.objects.filter(deportista__estado = 0,deportista__genero__in=%s).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))",
-            "list(InformacionAdicional.objects.filter(deportista__estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))"
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         beneficiados = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -136,8 +117,10 @@ def beneficiario_programa_apoyo(request):
         return JsonResponse(beneficiados)
 
     else:
-        beneficiados = tipoTenant.ejecutar_consulta(True, "list(InformacionAdicional.objects.filter(deportista__estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))")
-        #beneficiados = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))
+        #beneficiados = tipoTenant.ejecutar_consulta(True, "list(InformacionAdicional.objects.filter(deportista__estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('es_beneficiario_programa_apoyo')))")
+        beneficiados = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        beneficiados = tipoTenant.ajustar_resultado(beneficiados)
+
         if True in beneficiados:
             beneficiados['Deportistas beneficiados'] = beneficiados[True]
             del beneficiados[True]
@@ -145,7 +128,7 @@ def beneficiario_programa_apoyo(request):
             beneficiados['Deportistas no beneficiados'] = beneficiados[False]
             del beneficiados[False]
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Beneficiario Programa de Apoyo',
