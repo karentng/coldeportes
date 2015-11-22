@@ -38,7 +38,8 @@ class TenantEscenarioView(models.Model):
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
     tiposuperficie = models.ForeignKey(TipoSuperficie)
-    
+    clase_acceso = models.CharField(max_length=3)
+
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)

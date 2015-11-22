@@ -3,6 +3,20 @@ from entidades.models import *
 from snd.models import *
 
 class PublicEscenarioView(models.Model):
+    ACCESOS = (
+        ('pr', 'Privado'),
+        ('dul', 'De Uso Libre'),
+        ('pcp', 'Público Con Pago'),
+    )
+    ESTADOS_FISICOS = (
+        ('bu', 'Bueno'),
+        ('re', 'Regular'),
+        ('ma', 'Malo'),
+    )
+    PROPIETARIOS = (
+        ('of', 'Oficial'),
+        ('pr', 'Privado'),
+    )
     class Meta:
         managed = False
     #campos modelo escenario
@@ -18,6 +32,12 @@ class PublicEscenarioView(models.Model):
     nombre_administrador = models.CharField(max_length=50, null=True)
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField()
+    #campos modelo caracterizacion
+    tipo_escenario = models.ForeignKey(TipoEscenario)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
+    tiposuperficie = models.ForeignKey(TipoSuperficie)
+    clase_acceso = models.CharField(max_length=3)
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)

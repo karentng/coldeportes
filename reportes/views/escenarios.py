@@ -90,7 +90,7 @@ def generador_reporte_escenario(request, categoria, cantidad):
 
 
 
-def estrato(request):
+def estrato_escenarios(request):
     tipoTenant = request.tenant.obtenerTenant()
 
     if request.is_ajax():
@@ -177,6 +177,56 @@ def tipo_superficie(request):
     return render(request, 'escenarios/tipo_escenario.html', {
         'nombre_reporte' : 'Tipo de Superficie de Escenarios',
         'url_data' : 'reportes_escenarios_tipo_superficie',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })
+
+
+def acceso_escenarios(request):
+    """
+    Noviembre 21, 2015
+    Autor: Milton Lenis
+
+    Permite conocer el tipo de acceso que brindan los escenarios
+    """
+
+    categoria = 'clase_acceso'
+    cantidad = 'clase_acceso'
+
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+
+    visualizaciones = [1,2,3,5,6,7]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/tipo_escenario.html', {
+        'nombre_reporte' : 'Clase de acceso a los escenarios',
+        'url_data' : 'reportes_acceso_escenarios',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })
+
+
+def disponibilidad_escenarios(request):
+    """
+    Noviembre 21, 2015
+    Autor: Milton Lenis
+
+    Permite conocer los días de disponibilidad de los escenarios
+    """
+
+    categoria = 'dias__nombre'
+    cantidad = 'dias'
+
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+
+    visualizaciones = [1,2,3,5,6,7]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/tipo_escenario.html', {
+        'nombre_reporte' : 'Días de disponibilidad de los escenarios',
+        'url_data' : 'reportes_disponibilidad_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
