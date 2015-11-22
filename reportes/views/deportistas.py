@@ -200,15 +200,21 @@ def formacion_academica(request):
     Permite conocer la formacion academica de los deportistas caracterizadas por niveles de formacion
     """
     tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDeportistaView
+    else:
+        tabla = TenantDeportistaView
+
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__ciudad_residencia__departamento__id__in=%s,deportista__genero__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
-            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__ciudad_residencia__departamento__id__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
-            "list(InformacionAcademica.objects.filter(deportista__estado=0,deportista__genero__in=%s,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))",
-            "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))"
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nivel_formacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('nivel_formacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',genero__in=%s).annotate(descripcion=F('nivel_formacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado').annotate(descripcion=F('nivel_formacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         formaciones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -216,7 +222,9 @@ def formacion_academica(request):
         return JsonResponse(formaciones)
 
     else:
-        formaciones = tipoTenant.ejecutar_consulta(True, "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))")
+        #formaciones = tipoTenant.ejecutar_consulta(True, "list(InformacionAcademica.objects.filter(deportista__estado=0,estado='Finalizado').annotate(descripcion=F('nivel')).values('descripcion').annotate(cantidad=Count('nivel')))")
+        formaciones = list(tabla.objects.filter(estado=0,estado_formacion='Finalizado').annotate(descripcion=F('nivel_formacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        formaciones = tipoTenant.ajustar_resultado(formaciones)
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
