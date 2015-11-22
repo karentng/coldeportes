@@ -31,10 +31,11 @@ class FiltrosEscenariosDMDForm(forms.Form):
         self.fields['municipios'] = adicionarClase(self.fields['municipios'], 'many')
         self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
 
+
         add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
 
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     municipios = forms.ModelMultipleChoiceField(queryset=Ciudad.objects.all(), required=False)
-    disciplinas = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all(), required=False, label="Disciplina Deportiva")
+    disciplinas = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all().order_by('descripcion'), required=False, label="Disciplina Deportiva")
     visualizacion = forms.ChoiceField()

@@ -41,6 +41,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     #Departamentos
     elif departamentos:
         escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
+
     #Municipios
     elif municipios:
         escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
@@ -56,6 +57,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
 
     return escenarios
 
+
 def generador_reporte_escenario(request, categoria, cantidad):
 
     tipoTenant = request.tenant.obtenerTenant()
@@ -65,27 +67,25 @@ def generador_reporte_escenario(request, categoria, cantidad):
     else:
         tabla = TenantEscenarioView
 
+    departamentos = None
+    municipios = None
+    disciplinas = None
+
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
         disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
 
-        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
+    escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
 
-        if '' in escenarios:
-            escenarios['Ninguna'] = escenarios['']
-            del escenarios['']
-
-        return JsonResponse(escenarios)
-
-    else:
-        escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, None, None, None, tipoTenant, tabla)
-
-        if '' in escenarios:
-            escenarios['NO APLICA'] = escenarios['']
-            del escenarios['']
+    if '' in escenarios:
+        escenarios['Ninguna'] = escenarios['']
+        del escenarios['']
 
     return escenarios
+
+    
+
 
 def estrato_escenarios(request):
     """
@@ -121,15 +121,19 @@ def tipos_escenarios(request):
 
     Permite conocer el numero de escenarios por cada tipo de escenarios.
     """
-
+    
     categoria = 'tipo_escenario__descripcion'
     cantidad = 'tipo_escenario'
 
     escenarios = generador_reporte_escenario(request, categoria, cantidad)
 
+    if request.is_ajax():
+        
+        return JsonResponse(escenarios)
+        
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/tipo_escenario.html', {
+    return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Tipos de Escenarios',
         'url_data' : 'reportes_escenarios_tipos',
         'datos': escenarios,
@@ -137,6 +141,7 @@ def tipos_escenarios(request):
         'form': form,
         'actor': 'Escenarios'
     })
+
 
 def estado_fisico(request):
     """
@@ -151,9 +156,13 @@ def estado_fisico(request):
 
     escenarios = generador_reporte_escenario(request, categoria, cantidad)
 
+    if request.is_ajax():
+        
+        return JsonResponse(escenarios)
+
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/tipo_escenario.html', {
+    return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Estados Físicos de Escenarios',
         'url_data' : 'reportes_escenarios_estado_fisico',
         'datos': escenarios,
@@ -175,9 +184,13 @@ def tipo_superficie(request):
 
     escenarios = generador_reporte_escenario(request, categoria, cantidad)
 
+    if request.is_ajax():
+        
+        return JsonResponse(escenarios)
+
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/tipo_escenario.html', {
+    return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Tipo de Superficie de Escenarios',
         'url_data' : 'reportes_escenarios_tipo_superficie',
         'datos': escenarios,
