@@ -6,8 +6,8 @@ from django.db.models import F, Count
 import ast
 from datetime import date
 
-from reportes.forms import DemografiaForm
 from entidades.modelos_vistas_reportes import PublicCafView
+from reportes.forms import DemografiaForm
 from reportes.models import TenantCafView
 from snd.models import CentroAcondicionamiento
 
@@ -49,7 +49,6 @@ def demografia(request):
         tabla = TenantCafView
 
     if request.is_ajax():
-        
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         annos = None if request.GET['annos'] == 'null'  else ast.literal_eval(request.GET['annos'])
         
@@ -62,9 +61,12 @@ def demografia(request):
     visualizaciones = [1, 2, 3]
 
     form = DemografiaForm(visualizaciones=visualizaciones)
+
     return render(request, 'caf/demografia.html', {
-        'centros': centros,
+        'nombre_reporte' : 'Centros de Acondicionamiento Físico por Departamentos y Municipios',
+        'url_data' : 'reportes_caf_demografia',
+        'datos': centros,
         'visualizaciones': visualizaciones,
         'form': form,
-
+        'actor': 'Centro de Acondicionamiento',
     })
