@@ -88,3 +88,41 @@ class TenantPersonalApoyoView(models.Model):
     estado_formacion = models.CharField(max_length=20)
     ano_final_formacion = models.IntegerField()
     creacion_formacion = models.DateField()
+
+class TenantDeportistaView(models.Model):
+    class Meta:
+        managed = False
+
+    #campos modelo deportista
+    genero = models.CharField(max_length=11)
+    ciudad_residencia = models.ForeignKey(Ciudad)
+    disciplinas = models.ForeignKey(TipoDisciplinaDeportiva)
+    fecha_nacimiento = models.DateField()
+    fecha_creacion = models.DateTimeField()
+    lgtbi = models.BooleanField()
+    etnia = models.CharField(max_length=20)
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    estado = models.IntegerField()
+
+    #campos historial deportivo
+    tipo_participacion = models.CharField(max_length=100)
+    estado_participacion = models.CharField(max_length=50)
+
+    #campos informacion academica
+    nivel_formacion = models.CharField(max_length=20)
+    estado_formacion = models.CharField(max_length=20)
+
+    #campos informacion adicional
+    usa_centros_biomedicos = models.BooleanField()
+    es_beneficiario_programa_apoyo = models.BooleanField()
+
+    #campos historial lesiones
+    tipo_lesion = models.IntegerField()
+    periodo_rehabilitacion = models.IntegerField()
+
+    #campos doping
+    fecha_doping = models.DateField()
+
+
+
+
