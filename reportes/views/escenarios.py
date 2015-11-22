@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import ast
 from django.db.models import F, Count
-from reportes.formularios.escenarios import EstratoForm, FiltrosEscenariosDMDForm
+from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
 from entidades.modelos_vistas_reportes import PublicEscenarioView
 from reportes.models import TenantEscenarioView
 from snd.modelos.deportistas import *
@@ -28,32 +28,31 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     """
     #Departamentos, municipios y disciplinas
     if departamentos and municipios and disciplinas:
-        escenarios = list(tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
+        escenarios = list(tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Departamentos, municipios
     elif departamentos and municipios:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))    
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Departamentos, disciplinas
     elif departamentos and disciplinas:
-        escenarios =  list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(categoria, distinct=True))),
+        escenarios =  list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(categoria, distinct=True)))
     #Municipios y disciplinas
     elif municipios and disciplinas:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Departamentos
     elif departamentos:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
 
     #Municipios
     elif municipios:
-        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
+        escenarios = list(tabla.objects.filter(estado=0,ciudad__id__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Disciplina
     elif disciplinas:
-        print('entro m')
-        escenarios = list(tabla.objects.filter(estado=0,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
+        escenarios = list(tabla.objects.filter(estado=0,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
     #Sin filtros
     else:
-        escenarios =  list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
+        escenarios =  list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
 
-    escenarios = tipoTenant.ajustar_resultado(escenarios)
+    escenarios = tipoTenant.ajustar_resultado(escenarios)#qué hace esto?
 
     return escenarios
 
@@ -84,7 +83,6 @@ def generador_reporte_escenario(request, categoria, cantidad):
 
     return escenarios
 
-    
 
 
 def estrato_escenarios(request):
@@ -94,23 +92,23 @@ def estrato_escenarios(request):
 
     Permite conocer el numero de escenarios por el estrato del escenario.
     """
-    tipoTenant = request.tenant.obtenerTenant()
 
+    categoria = 'estrato'
+    cantidad = 'estrato'
+
+    escenarios = generador_reporte_escenario(request,categoria,cantidad)
     if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        annos = None if request.GET['annos'] == 'null'  else ast.literal_eval(request.GET['annos'])
-        disciplina = None if request.GET['disciplina'] == 'null' else ast.literal_eval(request.GET['disciplina'])
-        
-        return JsonResponse({})
-    else:
-        escenarios = tipoTenant.ejecutar_consulta(False, "list(Escenario.objects.annotate(descripcion_=F('estrato')).values('descripcion_').annotate(cantidad=Count('estrato')))")
-    visualizaciones = [1, 2, 3]
+        return JsonResponse(escenarios)
 
-    form = EstratoForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/estrato.html', {
-        'escenarios': escenarios,
+    visualizaciones = [1, 5 , 6]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/base_escenario.html', {
+        'nombre_reporte' : 'Estrato de Escenarios',
+        'url_data' : 'reportes_escenarios_estrato',
+        'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
+        'actor': 'Escenarios'
     })
 
 
@@ -193,6 +191,61 @@ def tipo_superficie(request):
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Tipo de Superficie de Escenarios',
         'url_data' : 'reportes_escenarios_tipo_superficie',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })
+
+
+def propietarios_escenarios(request):
+    """
+    Noviembre 22, 2015
+    Autor: Cristian Leonardo Ríos López
+
+    Permite conocer el numero de escenarios por su tipo de propietario(Oficial o privado).
+    """
+
+    categoria = 'tipo_propietario'
+    cantidad = 'tipo_propietario'
+
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
+
+    visualizaciones = [1, 5 , 6]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/base_escenario.html', {
+        'nombre_reporte' : 'Tipo de Propietarios de Escenarios',
+        'url_data' : 'reportes_escenarios_tipo_propietario',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })
+
+def periodicidad_mantenimiento(request):
+    """
+    Noviembre 22, 2015
+    Autor: Cristian Leonardo Ríos López
+
+    Permite conocer el numero de escenarios por su periodicidad de mantenimiento
+    """
+
+    categoria = 'periodicidad'
+    cantidad = 'periodicidad'
+
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
+
+    visualizaciones = [1, 5 , 6]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/base_escenario.html', {
+        'nombre_reporte' : 'Periodicidad de mantenimiento de Escenarios',
+        'url_data' : 'reportes_escenarios_periodicidad_mantenimiento',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
