@@ -27,17 +27,17 @@ def demografia(request):
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).annotate(descripcion=F('ciudad__nombre')).values('descripcion').annotate(cantidad=Count('ciudad'))
+                    centros += tabla.objects.filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).annotate(descripcion=F('ciudad__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad', distinct=True))
             else:
-                centros = list(tabla.objects.filter(ciudad__departamento__id__in=departamentos).annotate(descripcion=F('ciudad__nombre')).values('descripcion').annotate(cantidad=Count('ciudad')))
+                centros = list(tabla.objects.filter(ciudad__departamento__id__in=departamentos).annotate(descripcion=F('ciudad__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad', distinct=True)))
         else:
             if annos:
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento'))
+                    centros += tabla.objects.filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True))
             else:
-                centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))
+                centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros)
         return centros
 
@@ -56,7 +56,7 @@ def demografia(request):
 
         return JsonResponse(centros)
     else:
-        centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('descripcion').annotate(cantidad=Count('ciudad__departamento')))
+        centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros)
     visualizaciones = [1, 2, 3]
 
@@ -78,17 +78,17 @@ def estratos(request):
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('estrato').annotate(cantidad=Count('estrato'))
+                    centros += tabla.objects.filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True))
             else:
-                centros = list(tabla.objects.filter(ciudad__departamento__id__in=departamentos).values('estrato').annotate(cantidad=Count('estrato')))
+                centros = list(tabla.objects.filter(ciudad__departamento__id__in=departamentos).values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True)))
         else:
             if annos:
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('estrato').annotate(cantidad=Count('estrato'))
+                    centros += tabla.objects.filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True))
             else:
-                centros = list(tabla.objects.values('estrato').annotate(cantidad=Count('estrato')))
+                centros = list(tabla.objects.values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros, 'estrato')
         return centros
 
@@ -107,7 +107,7 @@ def estratos(request):
 
         return JsonResponse(centros)
     else:
-        centros = list(tabla.objects.values('estrato').annotate(cantidad=Count('estrato')))
+        centros = list(tabla.objects.values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros, 'estrato')
     visualizaciones = [1, 2, 3]
 
@@ -130,17 +130,17 @@ def clases(request):
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_clase=None).filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('nombre_clase').annotate(cantidad=Count('nombre_clase'))
+                    centros += tabla.objects.exclude(nombre_clase=None).filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True))
             else:
-                centros = list(tabla.objects.exclude(nombre_clase=None).filter(ciudad__departamento__id__in=departamentos).values('nombre_clase').annotate(cantidad=Count('nombre_clase')))
+                centros = list(tabla.objects.exclude(nombre_clase=None).filter(ciudad__departamento__id__in=departamentos).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True)))
         else:
             if annos:
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_clase=None).filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('nombre_clase').annotate(cantidad=Count('nombre_clase'))
+                    centros += tabla.objects.exclude(nombre_clase=None).filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True))
             else:
-                centros = list(tabla.objects.exclude(nombre_clase=None).values('nombre_clase').annotate(cantidad=Count('nombre_clase')))
+                centros = list(tabla.objects.exclude(nombre_clase=None).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros, 'nombre_clase')
         return centros
 
@@ -159,7 +159,7 @@ def clases(request):
 
         return JsonResponse(centros)
     else:
-        centros = list(tabla.objects.exclude(nombre_clase=None).values('nombre_clase').annotate(cantidad=Count('nombre_clase')))
+        centros = list(tabla.objects.exclude(nombre_clase=None).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros, 'nombre_clase')
     visualizaciones = [1, 2, 3]
 
@@ -181,17 +181,17 @@ def tipos_servicios(request):
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_servicio=None).filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('nombre_servicio').annotate(cantidad=Count('nombre_servicio'))
+                    centros += tabla.objects.exclude(nombre_servicio=None).filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True))
             else:
-                centros = list(tabla.objects.exclude(nombre_servicio=None).filter(ciudad__departamento__id__in=departamentos).values('nombre_servicio').annotate(cantidad=Count('nombre_servicio')))
+                centros = list(tabla.objects.exclude(nombre_servicio=None).filter(ciudad__departamento__id__in=departamentos).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True)))
         else:
             if annos:
                 centros = list()
                 for anno in annos:
                     anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_servicio=None).filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('nombre_servicio').annotate(cantidad=Count('nombre_servicio'))
+                    centros += tabla.objects.exclude(nombre_servicio=None).filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True))
             else:
-                centros = list(tabla.objects.exclude(nombre_servicio=None).values('nombre_servicio').annotate(cantidad=Count('nombre_servicio')))
+                centros = list(tabla.objects.exclude(nombre_servicio=None).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros, 'nombre_servicio')
         return centros
 
@@ -210,7 +210,7 @@ def tipos_servicios(request):
 
         return JsonResponse(centros)
     else:
-        centros = list(tabla.objects.exclude(nombre_servicio=None).values('nombre_servicio').annotate(cantidad=Count('nombre_servicio')))
+        centros = list(tabla.objects.exclude(nombre_servicio=None).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True)))
         centros = tipoTenant.ajustar_resultado(centros, 'nombre_servicio')
     visualizaciones = [1, 2, 3]
 

@@ -97,7 +97,10 @@ class Entidad(TenantMixin): # Entidad deportiva
     def ajustar_resultado(self, resultado, campo='descripcion'):
         datos = {}
         for i in resultado:
-            descripcion = i[campo]
+            try:
+                descripcion = i[campo]
+            except Exception:
+                continue
             if descripcion in datos:
                 datos[descripcion] += i['cantidad']
             else:

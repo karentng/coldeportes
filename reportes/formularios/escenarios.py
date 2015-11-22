@@ -25,11 +25,15 @@ class EstratoForm(forms.Form):
 class FiltrosEscenariosDMDForm(forms.Form):
     def __init__(self, *args, **kwargs):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
+        eliminar = kwargs.pop('eliminar', None)
         super(FiltrosEscenariosDMDForm, self).__init__(*args, **kwargs)
         self.fields['departamentos'] = adicionarClase(self.fields['departamentos'], 'many')
         self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
         self.fields['municipios'] = adicionarClase(self.fields['municipios'], 'many')
         self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
+
+        if eliminar:
+            del self.fields[eliminar]
 
 
         add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
