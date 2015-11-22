@@ -90,7 +90,7 @@ def generador_reporte_escenario(request, categoria, cantidad):
 
 
 
-def estrato(request):
+def estrato_escenarios(request):
     tipoTenant = request.tenant.obtenerTenant()
 
     if request.is_ajax():
