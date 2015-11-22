@@ -7,6 +7,8 @@ from reportes.forms import FiltrosDeportistasForm
 from django.db.models import F
 import ast
 from django.http import JsonResponse
+from entidades.modelos_vistas_reportes import PublicDeportistaView
+from reportes.models import TenantDeportistaView
 
 def ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant):
     """
@@ -18,14 +20,18 @@ def ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant):
     LOS CASOS EMPIEZAN EN 1 EL DE MAS ARRIBA HASTA N EL DE MAS ABAJO
     """
     if departamentos and genero:
-        participaciones = tipoTenant.ejecutar_consulta(True,consultas[0]%(departamentos,genero))
+        #participaciones = tipoTenant.ejecutar_consulta(True,consultas[0]%(departamentos,genero))
+        participaciones = eval(consultas[0]%(departamentos,genero))
     elif departamentos:
-        participaciones = tipoTenant.ejecutar_consulta(True,consultas[1]%(departamentos))
+        #participaciones = tipoTenant.ejecutar_consulta(True,consultas[1]%(departamentos))
+        participaciones = eval(consultas[1]%(departamentos))
     elif genero:
-        participaciones = tipoTenant.ejecutar_consulta(True,consultas[2]%(genero))
+        #participaciones = tipoTenant.ejecutar_consulta(True,consultas[2]%(genero))
+        participaciones = eval(consultas[2]%(genero))
     else:
-        participaciones = tipoTenant.ejecutar_consulta(True,consultas[3])
-
+        #participaciones = tipoTenant.ejecutar_consulta(True,consultas[3])
+        participaciones = eval(consultas[3])
+    participaciones = tipoTenant.ajustar_resultado(participaciones)
     return participaciones
 
 def participaciones_deportivas(request):
@@ -37,17 +43,21 @@ def participaciones_deportivas(request):
     Consulta que trae el numero de  participaciones deportiva ordenadas por tipo
     """
     tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDeportistaView
+    else:
+        tabla = TenantDeportistaView
+
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list(HistorialDeportivo.objects.filter(deportista__estado = 0,deportista__ciudad_residencia__departamento__id__in=%s,deportista__genero__in=%s).annotate(descripcion=F('tipo')).values('descripcion').annotate(cantidad=Count('tipo')))",
-            "list(HistorialDeportivo.objects.filter(deportista__estado = 0,deportista__ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('tipo')).values('descripcion').annotate(cantidad=Count('tipo')))",
-            "list(HistorialDeportivo.objects.filter(deportista__estado = 0,deportista__genero__in=%s).annotate(descripcion=F('tipo')).values('descripcion').annotate(cantidad=Count('tipo')))",
-            "list(HistorialDeportivo.objects.filter(deportista__estado = 0,).annotate(descripcion=F('tipo')).values('descripcion').annotate(cantidad=Count('tipo')))"
-
-
+            "list("+tabla.__name__+".objects.filter(estado = 0,estado_participacion='Aprobado',ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('tipo_participacion')).values('descripcion').annotate(cantidad=Count('tipo_participacion')))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,estado_participacion='Aprobado',ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('tipo_participacion')).values('descripcion').annotate(cantidad=Count('tipo_participacion')))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,estado_participacion='Aprobado',genero__in=%s).annotate(descripcion=F('tipo_participacion')).values('descripcion').annotate(cantidad=Count('tipo_participacion')))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,estado_participacion='Aprobado').annotate(descripcion=F('tipo_participacion')).values('descripcion').annotate(cantidad=Count('tipo_participacion')))"
         ]
 
         participaciones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -56,7 +66,9 @@ def participaciones_deportivas(request):
 
     else:
         #Traer la cantidad de hisotriales ordenados por tipo
-        participaciones = tipoTenant.ejecutar_consulta(True, "list(HistorialDeportivo.objects.filter(deportista__estado = 0,).annotate(descripcion=F('tipo')).values('descripcion').annotate(cantidad=Count('tipo')))")
+        #participaciones = tipoTenant.ejecutar_consulta(True, "list(HistorialDeportivo.objects.filter(deportista__estado = 0,).annotate(descripcion=F('tipo')).values('descripcion').annotate(cantidad=Count('tipo')))")
+        participaciones = list(tabla.objects.filter(estado = 0,estado_participacion="Aprobado").annotate(descripcion=F('tipo_participacion')).values('descripcion').annotate(cantidad=Count('tipo_participacion')))
+        participaciones = tipoTenant.ajustar_resultado(participaciones)
 
     visualizaciones = [1, 2, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
