@@ -270,7 +270,7 @@ def acceso_escenarios(request):
 
     visualizaciones = [1,2,3,5,6,7]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/tipo_escenario.html', {
+    return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Clase de acceso a los escenarios',
         'url_data' : 'reportes_acceso_escenarios',
         'datos': escenarios,
@@ -328,7 +328,7 @@ def disponibilidad_escenarios(request):
 
     visualizaciones = [1,2,3,5,6,7]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/tipo_escenario.html', {
+    return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Días de disponibilidad de los escenarios',
         'url_data' : 'reportes_disponibilidad_escenarios',
         'datos': escenarios,
