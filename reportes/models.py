@@ -143,7 +143,3 @@ class TenantDeportistaView(models.Model):
 
     #campos doping
     fecha_doping = models.DateField()
-
-
-
-

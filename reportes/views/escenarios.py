@@ -3,10 +3,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import ast
 from django.db.models import F, Count
-from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
 from entidades.modelos_vistas_reportes import PublicEscenarioView
+from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
 from reportes.models import TenantEscenarioView
-from snd.modelos.deportistas import *
+from snd.modelos.escenarios import *
 
 
 '''
@@ -19,13 +19,15 @@ Reportes:
     6. Gráfica de cono
     7. Gráfica de radar
 '''
-def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla):
+def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla, choices):
     """
     Noviembre 19, 2015
     Autor: Karent Narvaez
 
     Permite ejecutar una consulta con base en los filtros que se están enviando en la petición.
     """
+    from reportes.utilities import sumar_datos_diccionario#, convert_choices_to_array, crear_diccionario_inicial
+
     #Departamentos, municipios y disciplinas
     if departamentos and municipios and disciplinas:
         escenarios = list(tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__id__in=municipios,tipodisciplinadeportiva__id__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
@@ -52,12 +54,15 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     else:
         escenarios =  list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
 
-    escenarios = tipoTenant.ajustar_resultado(escenarios)#qué hace esto?
+    if choices:
+        escenarios = sumar_datos_diccionario(escenarios,choices)
+        return escenarios
 
+    escenarios = tipoTenant.ajustar_resultado(escenarios)#qué hace esto?
     return escenarios
 
 
-def generador_reporte_escenario(request, categoria, cantidad):
+def generador_reporte_escenario(request, categoria, cantidad,choices=None):
 
     tipoTenant = request.tenant.obtenerTenant()
 
@@ -78,12 +83,11 @@ def generador_reporte_escenario(request, categoria, cantidad):
             municipios = None
         disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
 
-    escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
+    escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices)
 
     if '' in escenarios:
         escenarios['Ninguna'] = escenarios['']
         del escenarios['']
-
     return escenarios
 
 
@@ -99,7 +103,7 @@ def estrato_escenarios(request):
     categoria = 'estrato'
     cantidad = 'estrato'
 
-    escenarios = generador_reporte_escenario(request,categoria,cantidad)
+    escenarios = generador_reporte_escenario(request,categoria,cantidad, choices=None)
     if request.is_ajax():
         return JsonResponse(escenarios)
 
@@ -126,7 +130,7 @@ def tipos_escenarios(request):
     categoria = 'tipo_escenario__descripcion'
     cantidad = 'tipo_escenario'
 
-    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+    escenarios = generador_reporte_escenario(request, categoria, cantidad, choices=None)
 
     if request.is_ajax():
         
@@ -155,7 +159,7 @@ def estado_fisico(request):
     categoria = 'estado_fisico'
     cantidad = 'estado_fisico'
 
-    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+    escenarios = generador_reporte_escenario(request, categoria, cantidad, choices=CaracterizacionEscenario.ESTADOS_FISICOS)
 
     if request.is_ajax():
         
@@ -183,7 +187,7 @@ def tipo_superficie(request):
     categoria = 'tiposuperficie__descripcion'
     cantidad = 'tiposuperficie'
 
-    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+    escenarios = generador_reporte_escenario(request, categoria, cantidad, choices=None)
 
     if request.is_ajax():
         
@@ -212,7 +216,7 @@ def propietarios_escenarios(request):
     categoria = 'tipo_propietario'
     cantidad = 'tipo_propietario'
 
-    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+    escenarios = generador_reporte_escenario(request, categoria, cantidad, choices=None)
 
     if request.is_ajax():
         return JsonResponse(escenarios)
@@ -222,31 +226,6 @@ def propietarios_escenarios(request):
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Tipo de Propietarios de Escenarios',
         'url_data' : 'reportes_escenarios_tipo_propietario',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios'
-    })
-
-
-def acceso_escenarios(request):
-    """
-    Noviembre 21, 2015
-    Autor: Milton Lenis
-
-    Permite conocer el tipo de acceso que brindan los escenarios
-    """
-
-    categoria = 'clase_acceso'
-    cantidad = 'clase_acceso'
-
-    escenarios = generador_reporte_escenario(request, categoria, cantidad)
-
-    visualizaciones = [1,2,3,5,6,7]
-    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/base_escenario.html', {
-        'nombre_reporte' : 'Clase de acceso a los escenarios',
-        'url_data' : 'reportes_acceso_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
@@ -271,10 +250,36 @@ def periodicidad_mantenimiento(request):
         return JsonResponse(escenarios)
 
     visualizaciones = [1, 5 , 6]
+
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Periodicidad de mantenimiento de Escenarios',
         'url_data' : 'reportes_escenarios_periodicidad_mantenimiento',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })
+
+
+def acceso_escenarios(request):
+    """
+    Noviembre 21, 2015
+    Autor: Milton Lenis
+
+    Permite conocer el tipo de acceso que brindan los escenarios
+    """
+
+    categoria = 'clase_acceso'
+    cantidad = 'clase_acceso'
+
+    escenarios = generador_reporte_escenario(request, categoria, cantidad, choices=CaracterizacionEscenario.ACCESOS)
+
+    visualizaciones = [1,2,3,5,6,7]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/base_escenario.html', {
+        'nombre_reporte' : 'Clase de acceso a los escenarios',
+        'url_data' : 'reportes_acceso_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
@@ -305,6 +310,7 @@ def division_territorial(request):
         return JsonResponse(escenarios)
 
     visualizaciones = [1, 5 , 6]
+
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='municipios')
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'División Territorial de Escenarios',
