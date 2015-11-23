@@ -20,66 +20,7 @@
     <script src="{{STATIC_URL}}amcharts/exporting/amexport.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/canvg.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
-    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
-    <script type="text/javascript">
-       /* var actoresAsociados = arrayToJson("{{actoresAsociadosJSON}}");
-        var chartData = [];
-        for (i in actoresAsociados){
-            var aux = actoresAsociados[i];
-            chartData.push(
-                {
-                    "actor": aux[0],
-                    "valor": aux[2],
-                    "color": colors[i%colors.length],
-                }
-            );
-        }
-        var chart;
-        AmCharts.ready(function () {
-            // SERIAL CHART
-            chart = new AmCharts.AmSerialChart();
-            chart.dataProvider = chartData;
-            chart.categoryField = "actor";
-            chart.startDuration = 1;
-            chart.rotate = true;
-
-            // AXES
-            // category
-            var categoryAxis = chart.categoryAxis;
-            categoryAxis.gridPosition = "start";
-            categoryAxis.axisColor = "#DADADA";
-            categoryAxis.dashLength = 3;
-
-            // value
-            var valueAxis = new AmCharts.ValueAxis();
-            valueAxis.dashLength = 3;
-            valueAxis.axisAlpha = 0.2;
-            valueAxis.position = "top";
-            valueAxis.title = "Actores en el Sistema";
-            valueAxis.minorGridEnabled = true;
-            valueAxis.minorGridAlpha = 0.08;
-            valueAxis.gridAlpha = 0.15;
-            chart.addValueAxis(valueAxis);
-
-            // GRAPHS
-            // column graph
-            var graph1 = new AmCharts.AmGraph();
-            graph1.type = "column";
-            graph1.title = "Actores";
-            graph1.valueField = "valor";
-            graph1.colorField = "color";
-            graph1.lineAlpha = 0;
-            graph1.fillColors = "#FF0000";
-            graph1.fillAlphas = 0.8;
-            graph1.balloonText = "<span style='font-size:13px;'>Número de [[category]]:<b>[[value]]</b></span>";
-            chart.addGraph(graph1);
-            chart.exportConfig = exportConfig();
-
-            // WRITE
-            chart.write("chartdiv");
-        });
-        */
-    </script>
+    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>    
     <script type="text/javascript">
         datosMostrar = "{{ubicaciones}}";
         posicionInicial = "{{posicionInicial}}";

@@ -40,11 +40,6 @@ $.getScript(base+"amcharts/amcharts.js", function(){
 														cambiarDiv(visualizaciones[0]);
 
 													});
-
-													$(window).resize(function () {
-														var div = document.getElementById("chartdiv4");
-														realizarConsulta();
-													});
 												});
 											});
 										});
