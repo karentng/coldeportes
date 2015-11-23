@@ -9,4 +9,6 @@ urlpatterns = patterns('reportes.views.escenarios',
     url(r'^division-territorial$', 'division_territorial', name='reportes_escenarios_division_territorial'),
     url(r'^tipo-propietario$', 'propietarios_escenarios', name='reportes_escenarios_tipo_propietario'),
     url(r'^periodicidad-mantenimiento$', 'periodicidad_mantenimiento', name='reportes_escenarios_periodicidad_mantenimiento'),
+    url(r'^acceso-escenario$', 'acceso_escenarios', name='reportes_acceso_escenarios'),
+    url(r'^disponibilidad-escenario$', 'disponibilidad_escenarios', name='reportes_disponibilidad_escenarios'),
 )
