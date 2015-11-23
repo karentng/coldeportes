@@ -131,6 +131,7 @@ def registro(request, tipo, tipoEnte=None):
 
             try:
                 obj.save()
+                generar_vistas_actores(request, None)
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
                 if tipoEnte:
                     return redirect('entidad_registro', tipo, tipoEnte)
@@ -174,7 +175,6 @@ def editar(request, idEntidad, tipo):
             add_actores(actores,permisos.get_actores('O'))
             actores.save()
             obj = form.save()
-            generar_vistas_actores(request, obj)
             messages.success(request, ("%s editado correctamente.")%(nombre))
             return redirect('entidad_listar')
 
