@@ -9,8 +9,6 @@ from reportes.utilities import sumar_datos_diccionario, convert_choices_to_array
 from snd.models import PersonalApoyo
 
 
-
-
 def reporte_actividades_personal(request):
     """
     Noviembre 19, 2015
@@ -27,16 +25,7 @@ def reporte_actividades_personal(request):
     else:
         tabla = TenantPersonalApoyoView
 
-    valores_choices = convert_choices_to_array(PersonalApoyo.ACTIVIDADES)
 
-    #Valores del choices del modelo equivalentes a los números que ocupan el diccionario como llaves
-    """valores_choices = ['MÉDICO DEPORTÓLOGO', 'FISIOTERAPEUTA', 'PSICÓLOGO DEPORTIVO', 'NUTRICIONISTA', 'QUINESIÓLOGO',
-                       'QUIROPRÁCTICO', 'PREPARADOR FÍSICO', 'TRABAJADOR SOCIAL', 'FISIÓLOGO', 'BIOMECÁNICO',
-                       'METODÓLOGO', 'ENTRENADOR', 'MONITOR', 'ENTRENADOR PERSONALIZADO', 'ANIMADOR SOCIOCULTURAL',
-                       'RECREADOR', 'PROMOTOR DE ACTIVIDAD FÍSICA']"""
-    #Inicializamos los datos, los números de la izquierda significan el valor real representado en la base de datos para
-    #cada una de las categorías, este valor se saca así de las consultas.
-    datos_iniciales = crear_diccionario_inicial(PersonalApoyo.ACTIVIDADES)
 
     if request.is_ajax():
         datos = list(tabla.objects.annotate(descripcion=F('actividad')).values('id','descripcion').annotate(cantidad=Count('descripcion', distinct=True)))
@@ -46,7 +35,7 @@ def reporte_actividades_personal(request):
     else:
         datos = list(tabla.objects.annotate(descripcion=F('actividad')).values('id','descripcion').annotate(cantidad=Count('descripcion', distinct=True)))
         #datos = tipoTenant.ajustar_resultado(datos)
-        datos = sumar_datos_diccionario(datos_iniciales, datos, valores_choices)
+        datos = sumar_datos_diccionario(datos, PersonalApoyo.ACTIVIDADES)
 
 
     visualizaciones = [1, 2, 3, 5, 6, 7]

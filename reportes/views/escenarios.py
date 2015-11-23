@@ -7,6 +7,8 @@ from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
 from entidades.modelos_vistas_reportes import PublicEscenarioView
 from reportes.models import TenantEscenarioView
 from snd.modelos.deportistas import *
+from reportes.utilities import sumar_datos_diccionario, convert_choices_to_array, crear_diccionario_inicial
+from snd.models import CaracterizacionEscenario
 
 
 '''
@@ -19,7 +21,7 @@ Reportes:
     6. Gráfica de cono
     7. Gráfica de radar
 '''
-def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla):
+def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla, choices):
     """
     Noviembre 19, 2015
     Autor: Karent Narvaez
@@ -52,12 +54,14 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     else:
         escenarios =  list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True)))
 
+    if choices:
+        escenarios = sumar_datos_diccionario(escenarios,choices)
+        return escenarios
     escenarios = tipoTenant.ajustar_resultado(escenarios)#qué hace esto?
-
     return escenarios
 
 
-def generador_reporte_escenario(request, categoria, cantidad):
+def generador_reporte_escenario(request, categoria, cantidad,choices=None):
 
     tipoTenant = request.tenant.obtenerTenant()
 
@@ -78,12 +82,11 @@ def generador_reporte_escenario(request, categoria, cantidad):
             municipios = None
         disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
 
-    escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
+    escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices)
 
     if '' in escenarios:
         escenarios['Ninguna'] = escenarios['']
         del escenarios['']
-
     return escenarios
 
 
@@ -266,7 +269,7 @@ def acceso_escenarios(request):
     categoria = 'clase_acceso'
     cantidad = 'clase_acceso'
 
-    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+    escenarios = generador_reporte_escenario(request, categoria, cantidad, choices=CaracterizacionEscenario.ACCESOS)
 
     visualizaciones = [1,2,3,5,6,7]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)

@@ -5,15 +5,35 @@
     Esta función se utiliza para organizar los datos obtenidos de las consultas con los nombres respectivos de las
     categorías
 """
-def sumar_datos_diccionario(diccionario_inicial, datos, valores_choices):
+def sumar_datos_diccionario(datos, choices):
+    diccionario_inicial = crear_diccionario_inicial(choices)
+    valores_choices = convert_choices_to_array(choices)
+
     for temp_dict in datos:
         diccionario_inicial[temp_dict['descripcion']] += temp_dict['cantidad']
 
     dict_con_choices = {}
     for key in diccionario_inicial:
-        nueva_llave = valores_choices[key]
+        try:
+            nueva_llave = valores_choices[key]
+        except Exception:
+            nueva_llave = obtener_nueva_llave(key,choices)
         dict_con_choices[nueva_llave] = diccionario_inicial[key]
     return dict_con_choices
+
+
+
+"""
+    Noviembre 23, 2015
+    Autor: Milton Lenis
+
+    Función auxiliar para obtener una llave cuando el campo no es numérico en el choices
+"""
+def obtener_nueva_llave(key,choices):
+    for llave,valor in choices:
+        if llave == key:
+            return valor
+    raise Exception
 
 """
     Noviembre 23, 2015
