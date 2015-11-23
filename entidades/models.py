@@ -94,10 +94,13 @@ class Entidad(TenantMixin): # Entidad deportiva
     auto_create_schema = True
 
     #def ajustar_resultado(self, resultado, resultado_consulta):
-    def ajustar_resultado(self, resultado):
+    def ajustar_resultado(self, resultado, campo='descripcion'):
         datos = {}
         for i in resultado:
-            descripcion = i['descripcion']
+            try:
+                descripcion = i[campo]
+            except Exception:
+                continue
             if descripcion in datos:
                 datos[descripcion] += i['cantidad']
             else:

@@ -16,7 +16,7 @@ $(".nav a").on("shown.bs.tab", function () {
     tamanoAmcharts();
 });
 
-function Reportes(){
+function ClaseReportes(){
     /* Generar las gráficas */
     function generarComparativa(datos, nombreDiv, nombreGrafica){
         chart = new AmCharts.AmSerialChart(AmCharts.themes.light);

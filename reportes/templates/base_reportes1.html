@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    {{ nombre_reporte }} - {{ actor }}
+{% endblock %}
+
+{% block titulo_contenido %}
+    {{ nombre_reporte }} - {{ actor }}
+{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
+    <style>
+        #filtros{
+            position: absolute;
+            top: 0;
+            left: 10px;
+            z-index: 100;
+            background-color: transparent;
+        }
+
+        #filtros .well{
+            background-color: rgba(255,255,255,0.4);
+            border: 1px solid #00acac;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {% block js_realizar_consulta %}
+    {% endblock %}
+
+	<script type="text/javascript">
+        nombreReporte = "{{ nombre_reporte }}";
+        visualizaciones = {{visualizaciones|safe}};
+        datos = {{datos|safe}};
+	</script>
+    <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
+    <script>
+        $(document).ready(function(){
+           $("#filtros").css("display","none");
+           $('#contenido').hover(
+                function() {
+                    $("#filtros").css("display","block");
+                }, function() {
+                    $("#filtros").css("display","none");
+                }
+            );
+
+        });
+    </script>
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
+    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
+    <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
+{% endblock %}
+
+{% block titulo_panel %}
+    {{ nombre_reporte }}
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs ">
+        <i class="fa fa-arrow-left"></i> Regresar
+    </a>
+{% endblock %}
+
+{% block contenido_panel %}
+	<div class="row" id="contenido">
+		<div class="col-md-3" id="filtros">
+            <div class="well">
+                <fieldset>
+                    <legend class="pull-left width-full">Filtros</legend>
+                    {% bootstrap_form form layout="vertical" %}
+                </fieldset>
+            </div>
+        </div>
+        <div class="col-md-12">
+            {% for i in visualizaciones %}
+                <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
+            {% endfor %}
+        </div>
+	</div>
+{% endblock %}

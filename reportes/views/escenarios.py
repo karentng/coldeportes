@@ -72,7 +72,10 @@ def generador_reporte_escenario(request, categoria, cantidad):
 
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
+        try:
+            municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
+        except Exception:
+            municipios = None
         disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
 
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla)
@@ -246,6 +249,40 @@ def periodicidad_mantenimiento(request):
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Periodicidad de mantenimiento de Escenarios',
         'url_data' : 'reportes_escenarios_periodicidad_mantenimiento',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios'
+    })
+
+
+def division_territorial(request):
+    """
+    Noviembre 20, 2015
+    Autor: Andres Serna
+
+    Permite conocer el numero de escenarios por division territorial.
+    """
+
+    categoria = 'ciudad__departamento__nombre'
+    cantidad = 'ciudad__departamento'
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        if departamentos:
+            categoria = 'ciudad__nombre'
+            cantidad = 'ciudad'
+
+    escenarios = generador_reporte_escenario(request, categoria, cantidad)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
+
+    visualizaciones = [1, 5 , 6]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='municipios')
+    return render(request, 'escenarios/base_escenario.html', {
+        'nombre_reporte' : 'División Territorial de Escenarios',
+        'url_data' : 'reportes_escenarios_division_territorial',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
