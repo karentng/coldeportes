@@ -3,6 +3,20 @@ from entidades.models import *
 from snd.models import *
 
 class PublicEscenarioView(models.Model):
+    ACCESOS = (
+        ('pr', 'Privado'),
+        ('dul', 'De Uso Libre'),
+        ('pcp', 'Público Con Pago'),
+    )
+    ESTADOS_FISICOS = (
+        ('bu', 'Bueno'),
+        ('re', 'Regular'),
+        ('ma', 'Malo'),
+    )
+    PROPIETARIOS = (
+        ('of', 'Oficial'),
+        ('pr', 'Privado'),
+    )
     class Meta:
         managed = False
     #campos modelo escenario
@@ -18,6 +32,12 @@ class PublicEscenarioView(models.Model):
     nombre_administrador = models.CharField(max_length=50, null=True)
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField()
+    #campos modelo caracterizacion
+    tipo_escenario = models.ForeignKey(TipoEscenario)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
+    tiposuperficie = models.ForeignKey(TipoSuperficie)
+    clase_acceso = models.CharField(max_length=3)
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)
@@ -66,3 +86,37 @@ class PublicPersonalApoyoView(models.Model):
     estado_formacion = models.CharField(max_length=20)
     ano_final_formacion = models.IntegerField()
     creacion_formacion = models.DateField()
+
+class PublicDeportistaView(models.Model):
+    class Meta:
+        managed = False
+
+    #campos modelo deportista
+    genero = models.CharField(max_length=11)
+    ciudad_residencia = models.ForeignKey(Ciudad)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva)
+    fecha_nacimiento = models.DateField()
+    fecha_creacion = models.DateTimeField()
+    lgtbi = models.BooleanField()
+    etnia = models.CharField(max_length=20)
+    nacionalidad = models.ManyToManyField(Nacionalidad)
+    estado = models.IntegerField()
+
+    #campos historial deportivo
+    tipo_participacion = models.CharField(max_length=100)
+    estado_participacion = models.CharField(max_length=50)
+
+    #campos informacion academica
+    nivel_formacion = models.CharField(max_length=20)
+    estado_formacion = models.CharField(max_length=20)
+
+    #campos informacion adicional
+    usa_centros_biomedicos = models.BooleanField()
+    es_beneficiario_programa_apoyo = models.BooleanField()
+
+    #campos historial lesiones
+    tipo_lesion = models.IntegerField()
+    periodo_rehabilitacion = models.IntegerField()
+
+    #campos doping
+    fecha_doping = models.DateField()

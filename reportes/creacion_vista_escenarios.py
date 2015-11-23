@@ -11,7 +11,6 @@ def crear_vista_reportes_tenant_escenario():
             E.nombre_administrador,
             E.division_territorial,
             E.descripcion as descripcion_escenario,
-            E.fecha_creacion,         
             E.entidad_id, E.estado,
             E.fecha_creacion as fecha_creacion_escenario,
 

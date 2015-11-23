@@ -71,6 +71,7 @@ def reporte_actividades_personal(request):
         datos = list(tabla.objects.annotate(descripcion=F('actividad')).values('id','descripcion').annotate(cantidad=Count('descripcion', distinct=True)))
         #datos = tipoTenant.ajustar_resultado(datos)
         datos = sumar_datos_diccionario(datos_iniciales, datos, valores_choices)
+        print(datos)
 
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
