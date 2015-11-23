@@ -5,18 +5,10 @@ from entidades.modelos_vistas_reportes import PublicPersonalApoyoView
 from reportes.models import TenantPersonalApoyoView
 from reportes.forms import FiltrosPersonalApoyoForm
 from django.db.models import F, Count
+from reportes.utilities import sumar_datos_diccionario, convert_choices_to_array
+from snd.models import PersonalApoyo
 
 
-#Función auxiliar
-def sumar_datos_diccionario(diccionario_inicial, datos, valores_choices):
-    for temp_dict in datos:
-        diccionario_inicial[temp_dict['descripcion']] += temp_dict['cantidad']
-
-    dict_con_choices = {}
-    for key in diccionario_inicial:
-        nueva_llave = valores_choices[key]
-        dict_con_choices[nueva_llave] = diccionario_inicial[key]
-    return dict_con_choices
 
 
 def reporte_actividades_personal(request):
@@ -35,11 +27,13 @@ def reporte_actividades_personal(request):
     else:
         tabla = TenantPersonalApoyoView
 
+    valores_choices = convert_choices_to_array(PersonalApoyo.ACTIVIDADES)
+
     #Valores del choices del modelo equivalentes a los números que ocupan el diccionario como llaves
-    valores_choices = ['MÉDICO DEPORTÓLOGO', 'FISIOTERAPEUTA', 'PSICÓLOGO DEPORTIVO', 'NUTRICIONISTA', 'QUINESIÓLOGO',
+    """valores_choices = ['MÉDICO DEPORTÓLOGO', 'FISIOTERAPEUTA', 'PSICÓLOGO DEPORTIVO', 'NUTRICIONISTA', 'QUINESIÓLOGO',
                        'QUIROPRÁCTICO', 'PREPARADOR FÍSICO', 'TRABAJADOR SOCIAL', 'FISIÓLOGO', 'BIOMECÁNICO',
                        'METODÓLOGO', 'ENTRENADOR', 'MONITOR', 'ENTRENADOR PERSONALIZADO', 'ANIMADOR SOCIOCULTURAL',
-                       'RECREADOR', 'PROMOTOR DE ACTIVIDAD FÍSICA']
+                       'RECREADOR', 'PROMOTOR DE ACTIVIDAD FÍSICA']"""
     #Inicializamos los datos, los números de la izquierda significan el valor real representado en la base de datos para
     #cada una de las categorías, este valor se saca así de las consultas.
     datos_iniciales = {
@@ -71,7 +65,6 @@ def reporte_actividades_personal(request):
         datos = list(tabla.objects.annotate(descripcion=F('actividad')).values('id','descripcion').annotate(cantidad=Count('descripcion', distinct=True)))
         #datos = tipoTenant.ajustar_resultado(datos)
         datos = sumar_datos_diccionario(datos_iniciales, datos, valores_choices)
-        print(datos)
 
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
