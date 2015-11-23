@@ -5,7 +5,7 @@ from entidades.modelos_vistas_reportes import PublicPersonalApoyoView
 from reportes.models import TenantPersonalApoyoView
 from reportes.forms import FiltrosPersonalApoyoForm
 from django.db.models import F, Count
-from reportes.utilities import sumar_datos_diccionario, convert_choices_to_array
+from reportes.utilities import sumar_datos_diccionario, convert_choices_to_array, crear_diccionario_inicial
 from snd.models import PersonalApoyo
 
 
@@ -36,25 +36,7 @@ def reporte_actividades_personal(request):
                        'RECREADOR', 'PROMOTOR DE ACTIVIDAD FÍSICA']"""
     #Inicializamos los datos, los números de la izquierda significan el valor real representado en la base de datos para
     #cada una de las categorías, este valor se saca así de las consultas.
-    datos_iniciales = {
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-        11: 0,
-        12: 0,
-        13: 0,
-        14: 0,
-        15: 0,
-        16: 0,
-    }
+    datos_iniciales = crear_diccionario_inicial(PersonalApoyo.ACTIVIDADES)
 
     if request.is_ajax():
         datos = list(tabla.objects.annotate(descripcion=F('actividad')).values('id','descripcion').annotate(cantidad=Count('descripcion', distinct=True)))

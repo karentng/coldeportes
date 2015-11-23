@@ -23,3 +23,16 @@ def sumar_datos_diccionario(diccionario_inicial, datos, valores_choices):
 """
 def convert_choices_to_array(tuple):
     return [cadena for numero,cadena in tuple]
+
+
+"""
+    Noviembre 23, 2015
+    Autor: Milton Lenis
+
+    Método para crear el diccionario inicial con base en el choices obtenido del modelo
+"""
+def crear_diccionario_inicial(tuple):
+    temp_dict = {}
+    for numero,cadena in tuple:
+        temp_dict[numero] = 0
+    return temp_dict
