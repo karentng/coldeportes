@@ -56,8 +56,9 @@ def demografia(request):
 
         return JsonResponse(centros)
     else:
-        centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros)
+        #centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True)))
+        #centros = tipoTenant.ajustar_resultado(centros)
+        centros = {}
     visualizaciones = [1, 2, 3]
 
     form = DemografiaForm(visualizaciones=visualizaciones)

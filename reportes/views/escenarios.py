@@ -218,10 +218,7 @@ def division_territorial(request):
         if departamentos:
             categoria = 'ciudad__nombre'
             cantidad = 'ciudad'
-
-    escenarios = generador_reporte_escenario(request, categoria, cantidad)
-
-    if request.is_ajax():
+        escenarios = generador_reporte_escenario(request, categoria, cantidad)
         return JsonResponse(escenarios)
 
     visualizaciones = [1, 5 , 6]
@@ -229,7 +226,7 @@ def division_territorial(request):
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'División Territorial de Escenarios',
         'url_data' : 'reportes_escenarios_division_territorial',
-        'datos': escenarios,
+        'datos': {},
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Escenarios'
