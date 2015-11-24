@@ -1,5 +1,6 @@
 from django.db import models
 from entidades.models import *
+from snd.modelos.escenarios import *
 
 
 class TenantEscenarioView(models.Model):
@@ -74,6 +75,20 @@ class TenantEscenarioView(models.Model):
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
     #campos mantenimiento
     periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)
+
+
+class TenantEscenarioEstratoView(models.Model):
+    
+    class Meta:
+        managed = False
+            
+    ciudad = models.ForeignKey(Ciudad)
+    fecha_creacion = models.DateTimeField()    
+    estrato = models.CharField(max_length=1)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+    cantidad = models.PositiveIntegerField()
+    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")
+
 
 class TenantCafView(models.Model):
 	class Meta:
