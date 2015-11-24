@@ -50,7 +50,22 @@ class PublicEscenarioView(models.Model):
     dias = models.ForeignKey(Dias)
     descripcion_horario = models.CharField(max_length=1024)
     #campos modelo Foto
-    foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True) 
+    foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
+
+class PublicEscenarioEstratoView(models.Model):
+    
+    class Meta:
+        managed = False
+            
+    id_escenario = models.ForeignKey(Escenario)
+    ciudad = models.ForeignKey(Ciudad)
+    fecha_creacion = models.DateTimeField()    
+    estrato = models.CharField(max_length=1)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+    cantidad = models.PositiveIntegerField()
+    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")
+    
+    
     
 class PublicCafView(models.Model):
     class Meta:

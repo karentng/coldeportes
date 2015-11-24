@@ -11,9 +11,9 @@
     <meta content="Cedesoft" name="author" />
     
 
-    <script src="{{STATIC_URL}}plugins/jquery/jquery-1.9.1.min.js"></script>
-    <script src="{{STATIC_URL}}plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
-    <script src="{{STATIC_URL}}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <!--script src="{{STATIC_URL}}plugins/jquery/jquery-1.9.1.min.js"></script-->
+    <!--script src="{{STATIC_URL}}plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script-->
     
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
     <link rel="icon" type="image/png" href="{{STATIC_URL}}img/favicon.ico">
@@ -30,7 +30,7 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}plugins/toastr/toastr.css"/>
     <!-- ================== END BASE CSS STYLE ================== -->
     <!-- ================== BEGIN BASE JS ================== -->
-    <script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script>
+    <!--script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script-->
     <link href="{{STATIC_URL}}plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
 
     <!-- ================== END BASE JS ================== -->
@@ -271,6 +271,15 @@
         <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
         <!-- end scroll to top btn -->
     </div>
+
+
+    <!--incluyendo archivos que estaban en cabecera -->
+    <script src="{{STATIC_URL}}plugins/jquery/jquery-1.9.1.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/pace/pace.min.js"></script>
+
+
     <!-- end page container -->
     <script type="text/javascript">
         base = "{{STATIC_URL}}";
@@ -283,7 +292,7 @@
         <script src="{{STATIC_URL}}crossbrowserjs/excanvas.min.js"></script>
     <![endif]-->
     <script src="{{STATIC_URL}}plugins/slimscroll/jquery.slimscroll.min.js"></script>
-    
+
     <script src="{{STATIC_URL}}plugins/jquery-cookie/jquery.cookie.js"></script>
     <script src="{{STATIC_URL}}plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
 

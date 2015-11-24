@@ -7,7 +7,7 @@ TIPOS = (
     (2, 'Federación'),
     (3, 'Club'),
     (4, 'Cajas de Compensación'),
-    (5, 'Ente'),
+    (5, 'Ente (Municipal y Departamental)'),
     (6, 'Comité'),
     (7,'Federación Paralimpica'),
     (8,'Liga Paralimpica'),

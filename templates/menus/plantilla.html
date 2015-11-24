@@ -17,7 +17,7 @@
     </li>
     {% if user.is_authenticated %}
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path%}
+            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path and 'reportes' not in request.path %}
                 active
             {% endif %}">
             <a href="javascript:;">
@@ -71,6 +71,8 @@
         </ul>
     </li>
     {% include "menus/aplicacion/normograma.html" %}
+    {% include "menus/aplicacion/reportes.html" %}
+
 {% endif %}
 {% if request.tenant.schema_name == 'public' %}
     {% if user.is_authenticated and user.is_superuser %}
