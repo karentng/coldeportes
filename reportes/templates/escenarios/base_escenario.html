@@ -35,6 +35,7 @@
                 var municipios = JSON.stringify($("#id_municipios").val());
                 var disciplinas = JSON.stringify($("#id_disciplinas").val());
 
+
                 $.ajax({
                     url: url,
                     data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas},

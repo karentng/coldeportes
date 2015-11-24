@@ -83,6 +83,24 @@ def crear_vista_reportes_tenant_escenario():
     r=cursor.execute(sql_tenant)
     r=connection.commit()
     return r
+def crear_vista_reportes_tenant_escenario_estrato():
+    sql_tenant = """
+    CREATE OR REPLACE VIEW reportes_tenantescenarioestratoview AS 
+    SELECT  E.id, E.estado,     
+            E.ciudad_id, E.fecha_creacion as fecha_creacion_escenario,
+            E.estrato, CTD.tipodisciplinadeportiva_id,       
+            COUNT(estrato) as cantidad
+    FROM snd_escenario E 
+    LEFT JOIN snd_caracterizacionescenario CE on CE.escenario_id=E.id  
+    LEFT JOIN snd_caracterizacionescenario_tipo_disciplinas CTD on CTD.caracterizacionescenario_id=E.id
+    GROUP BY E.id, CTD.tipodisciplinadeportiva_id, E.estrato;
+    """
+
+    cursor = connection.cursor()
+    r=''
+    r=cursor.execute(sql_tenant)
+    r=connection.commit()
+    return r
 
 
 def generar_vista_escenario(nuevo_tenant=None):
@@ -101,12 +119,16 @@ def generar_vista_escenario(nuevo_tenant=None):
 
     if nuevo_tenant:
         connection.set_tenant(nuevo_tenant)
+        #creación vistas escenario
         crear_vista_reportes_tenant_escenario()
+        crear_vista_reportes_tenant_escenario_estrato()
 
     for entidad in entidades:
         connection.set_tenant(entidad)
         if not nuevo_tenant:
+            #creación vistas escenario
             crear_vista_reportes_tenant_escenario()
+            crear_vista_reportes_tenant_escenario_estrato()
 
         aux = ("""
                 SELECT * FROM %s.reportes_tenantescenarioview E

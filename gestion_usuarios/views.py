@@ -46,7 +46,10 @@ def asignarPermisosGrupo(request, grupo, permisos):
         if permiso not in permisos:
             grupo.permissions.remove(permiso)
     for permiso in permisos:
-        grupo.permissions.add(permiso)
+        try:
+            grupo.permissions.add(permiso)
+        except Exception:
+            messages.error(request,'Ha ocurrido un error al actulizar los permisos de escritura')
 
 def asignarPermisosGrupoLectura(request, grupo, permisos):
     #agrega los permisos de lectura que son obligatorios, tenga o no el actor
@@ -60,17 +63,19 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
     try:
         actores = Permisos.objects.get(entidad=tipo,tipo=tipoEnte).get_actores('%')
     except Permisos.DoesNotExist:
-        messages.error(request,'Ha ocurrido un error al actualizar los permisos de lectura')
-        pass
-
-    permitidos = []
-    for permiso,actor in permisos:
-        if actor in actores:
-            permitidos.append(permiso)
-    
-    permisos = Permission.objects.filter(codename__in=permitidos)
-    for permiso in permisos:
-        grupo.permissions.add(permiso)
+        messages.error(request,'Ha ocurrido un error al obtener los permisos de lectura')
+    else:
+        permitidos = []
+        for permiso,actor in permisos:
+            if actor in actores:
+                permitidos.append(permiso)
+        permisos = Permission.objects.filter(codename__in=permitidos)
+        for permiso in permisos:
+            try:
+                grupo.permissions.add(permiso)
+            except Exception as e:
+                messages.error(request,'Ha ocurrido un error al actualizar los permisos de lectura')
+                print(e)
 
 
 def inicio(request):

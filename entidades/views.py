@@ -90,13 +90,12 @@ def generar_vistas_actores(request, nuevo_tenant=None):
     from reportes.crear_vistas_actores.creacion_vista_cafs import generar_vista_caf
     from reportes.crear_vistas_actores.creacion_vista_escenarios import generar_vista_escenario
     from reportes.crear_vistas_actores.creacion_vista_personal_apoyo import generar_vista_personal_apoyo
+    from reportes.crear_vistas_actores.creacion_vista_deportista import generar_vista_deportista
 
     generar_vista_caf(nuevo_tenant)
-    print('pasó caf')
     generar_vista_escenario(nuevo_tenant)
-    print('pasó Escenario')
     generar_vista_personal_apoyo(nuevo_tenant)
-    print('pasó personal')
+    generar_vista_deportista(nuevo_tenant)
 
     # agregar los demas actores
 
@@ -174,7 +173,6 @@ def editar(request, idEntidad, tipo):
             add_actores(actores,permisos.get_actores('O'))
             actores.save()
             obj = form.save()
-            generar_vistas_actores(request, obj)
             messages.success(request, ("%s editado correctamente.")%(nombre))
             return redirect('entidad_listar')
 
@@ -187,6 +185,7 @@ def editar(request, idEntidad, tipo):
 @login_required
 def listar(request):
     entidades = Entidad.objects.exclude(schema_name="public")
+    generar_vistas_actores(request, None)
 
     return render(request, 'entidad_listar.html', {
         'entidades': entidades,
