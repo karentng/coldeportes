@@ -529,7 +529,7 @@ def seleccionar_personal(request,id_s,id_entidad,id_personal):
                 per.nombres + ' ' +per.apellidos,
                 per.tipo_id,
                 per.identificacion,
-                per.actividad,
+                per.get_actividad_display(),
                 per.ciudad.__str__(),
                 per.entidad.nombre,
                 "<a data-per="+str(per.id)+" data-entidad="+str(per.entidad.id)+" style='cursor:pointer;'	class='bt-borrar' ><i class='fa fa-trash'></i> Borrar</a>"
