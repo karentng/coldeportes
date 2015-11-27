@@ -130,6 +130,7 @@ def registro(request, tipo, tipoEnte=None):
 
             try:
                 obj.save()
+                generar_vistas_actores(request, obj)
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
                 if tipoEnte:
                     return redirect('entidad_registro', tipo, tipoEnte)
@@ -185,7 +186,6 @@ def editar(request, idEntidad, tipo):
 @login_required
 def listar(request):
     entidades = Entidad.objects.exclude(schema_name="public")
-    generar_vistas_actores(request, None)
 
     return render(request, 'entidad_listar.html', {
         'entidades': entidades,

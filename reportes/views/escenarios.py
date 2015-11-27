@@ -98,9 +98,9 @@ def estrato_escenarios(request):
     tipoTenant = request.tenant.obtenerTenant()
 
     if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioEstratoView
+        tabla = PublicEscenarioView
     else:
-        tabla = TenantEscenarioEstratoView
+        tabla = TenantEscenarioView
 
     categoria = 'estrato'
     cantidad = 'estrato'
@@ -172,7 +172,7 @@ def estado_fisico(request):
     categoria = 'estado_fisico'
     cantidad = 'estado_fisico'
 
-    escenarios = generador_reporte_escenario(request, tabla, categoria, cantidad, choices=CaracterizacionEscenario.ESTADOS_FISICOS)
+    escenarios = generador_reporte_escenario(request, tabla, categoria, cantidad, choices=None)#CaracterizacionEscenario.ESTADOS_FISICOS)
 
     if request.is_ajax():
         
@@ -307,7 +307,7 @@ def acceso_escenarios(request):
     categoria = 'clase_acceso'
     cantidad = 'clase_acceso'
 
-    escenarios = generador_reporte_escenario(request, tabla, categoria, cantidad, choices=CaracterizacionEscenario.ACCESOS)
+    escenarios = generador_reporte_escenario(request, tabla, categoria, cantidad, choices=None)#CaracterizacionEscenario.ACCESOS)
 
     visualizaciones = [1,2,3,5,6,7]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)

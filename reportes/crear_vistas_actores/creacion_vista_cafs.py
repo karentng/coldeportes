@@ -2,7 +2,7 @@ from django.db import connection
 
 def crear_vista_reportes_tenant_caf():
     sql_tenant = """
-    CREATE OR REPLACE view reportes_tenantcafview AS 
+    CREATE MATERIALIZED VIEW reportes_tenantcafview AS 
     SELECT
         CAF.id, CAF.ciudad_id,
         CAF.comuna, CAF.estrato,
@@ -32,7 +32,7 @@ def generar_vista_caf(nuevo_tenant=None):
     tenant_actual = connection.tenant
 
     sql = """
-        CREATE OR REPLACE VIEW public.entidades_publiccafview AS
+        CREATE MATERIALIZED VIEW public.entidades_publiccafview AS
     """
 
     from entidades.models import Entidad

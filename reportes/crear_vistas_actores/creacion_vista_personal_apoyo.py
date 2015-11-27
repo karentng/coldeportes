@@ -2,7 +2,7 @@ from django.db import connection
 
 def crear_vista_reportes_tenant_personal_apoyo():
     sql_tenant = """
-    CREATE OR REPLACE view reportes_tenantpersonalapoyoview AS
+    CREATE MATERIALIZED view reportes_tenantpersonalapoyoview AS
     SELECT
         PA.id, PA.actividad,
         PA.genero, PA.tipo_id,
@@ -32,7 +32,7 @@ def generar_vista_personal_apoyo(nuevo_tenant=None):
     tenant_actual = connection.tenant
 
     sql = """
-        CREATE OR REPLACE VIEW public.entidades_publicpersonalapoyoview AS
+        CREATE MATERIALIZED VIEW public.entidades_publicpersonalapoyoview AS
     """
 
     from entidades.models import Entidad
