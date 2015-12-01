@@ -279,6 +279,8 @@ def ver_seleccion(request,id_s):
         messages.error(request,'No existe la seleccion solicitada')
         return redirect('listar_seleccion')
 
+    entidad_actual = connection.tenant
+
     depor_registrados = []
     for d in DeportistasSeleccion.objects.filter(seleccion=sele):
         entidad = d.entidad
@@ -304,6 +306,8 @@ def ver_seleccion(request,id_s):
             personal.par = False
         count+=1
         personal_registrados += [personal]
+
+    connection.set_tenant(entidad_actual)
 
     return render(request,'selecciones/ver_seleccion.html',{
         'seleccion': sele,
