@@ -1,6 +1,7 @@
 from django.db import models
 from tenant_schemas.models import TenantMixin
 from coldeportes.utilities import permisos_de_tipo
+from django.contrib.auth.models import Group
 
 TIPOS = (
     (1, 'Liga'),
@@ -224,25 +225,37 @@ class Entidad(TenantMixin): # Entidad deportiva
 
         return centros
 
+    def atributos_escuelas_deportivas(self):
+        from snd.modelos.escuela_deportiva import EscuelaDeportiva
+        todos_escuelas = EscuelaDeportiva.objects.filter(entidad=self)
+        escuelas = []
+        for escuela in todos_escuelas:
+            escuelas.append(escuela.obtenerAtributos())
+
+        return escuelas
+
     def atributosDeSusActores(self):
         from django.db import connection
-        def agregarActor(datos, booleano, identificador, metodo):
-            if booleano:
+        def agregarActor(datos, perm, identificador, metodo, perms):
+            if perm in perms:
                 datos[identificador] = metodo()
             connection.set_tenant(self)
             return datos
 
         tenant = self.obtenerTenant()
-        actores = tenant.actores
+        #actores = tenant.actores
+        perms = [x.codename for x in Group.objects.get(name='Solo lectura').permissions.all()]
+        print(perms)
 
         datos = {}
-        datos = agregarActor(datos, actores.centros, "caf", tenant.atributos_cafs)
-        datos = agregarActor(datos, actores.escenarios, "escenarios", tenant.atributos_escenarios)
-        datos = agregarActor(datos, actores.deportistas, "deportistas", tenant.atributos_deportistas)
-        datos = agregarActor(datos, actores.personal_apoyo, "personales", tenant.atributos_personales_apoyo)
-        datos = agregarActor(datos, actores.dirigentes, "dirigentes", tenant.atributos_dirigentes)
-        datos = agregarActor(datos, actores.cajas, "cajas", tenant.atributos_cajas)
-        datos = agregarActor(datos, actores.centros_biomedicos, "centros_biomedicos", tenant.atributos_centros_biomedicos)
+        datos = agregarActor(datos, 'view_centroacondicionamiento', "caf", tenant.atributos_cafs, perms)
+        datos = agregarActor(datos, 'view_escenario', "escenarios", tenant.atributos_escenarios, perms)
+        datos = agregarActor(datos, 'view_deportista', "deportistas", tenant.atributos_deportistas, perms)
+        datos = agregarActor(datos, 'view_personalapoyo', "personales", tenant.atributos_personales_apoyo, perms)
+        datos = agregarActor(datos, 'view_dirigente', "dirigentes", tenant.atributos_dirigentes, perms)
+        datos = agregarActor(datos, 'view_cajacompensacion', "cajas", tenant.atributos_cajas, perms)
+        datos = agregarActor(datos, 'view_centrobiomedico', "centros_biomedicos", tenant.atributos_centros_biomedicos, perms)
+        datos = agregarActor(datos, 'view_escueladeportiva', "escuelas_deportivas", tenant.atributos_escuelas_deportivas, perms)
 
         try:
             datos['ligas'] = tenant.ligas_asociadas()
@@ -278,6 +291,7 @@ class Entidad(TenantMixin): # Entidad deportiva
         definirElementosDashBoard(datos, "dirigentes", "Dirigentes", "purple", "dirigentes_listar","ion-ios-people")
         definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs","fa-building-o")
         definirElementosDashBoard(datos, "centros_biomedicos", "Centros Biomédicos ", "blue", "centro_biomedico_listar","ion-ios-body")
+        definirElementosDashBoard(datos, "escuelas_deportivas", "Escuelas de Formación Deportiva ", "orange", "escuela_deportiva_listar","ion-ios-body")
 
         return datos
 
