@@ -1,5 +1,5 @@
 {# El identificador del grupo de la galeria es: 4 #}
-
+{% comment %}
 {% with 4 as id %}
 
 {% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="IMG1" titulo="Bubble" descripcion="Ejemplo bubble" url_reporte="ejemplo_bubble" %}
@@ -11,3 +11,4 @@
 {% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="IMG1" titulo="Motion" descripcion="Ejemplo motion" url_reporte="ejemplo_motion" %}
 
 {% endwith %}
+{% endcomment %}
