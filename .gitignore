@@ -12,3 +12,4 @@ reportes/migrations
 entidades/migrations
 transferencias/migrations
 gestion_usuarios/migrations
+.idea
