@@ -172,7 +172,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_cafs(self):
         from snd.modelos.cafs import CentroAcondicionamiento
-        todosCentros = CentroAcondicionamiento.objects.filter(entidad=self)
+        todosCentros = CentroAcondicionamiento.objects.filter(estado=0, entidad=self)
         centros = []
         for i in todosCentros:
             centros.append(i.obtenerAtributos())
@@ -181,7 +181,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_deportistas(self):
         from snd.modelos.deportistas import Deportista
-        todos_deportistas = Deportista.objects.filter(entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
         deportistas = []
         for i in todos_deportistas:
             deportistas.append(i.obtenerAtributos())
@@ -190,7 +190,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_personales_apoyo(self):
         from snd.modelos.personal_apoyo import PersonalApoyo
-        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
+        todos_personales_apoyo = PersonalApoyo.objects.filter(estado=0, entidad=self)
         personales_apoyo = []
         for i in todos_personales_apoyo:
             personales_apoyo.append(i.obtenerAtributos())
@@ -199,7 +199,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_dirigentes(self):
         from snd.modelos.dirigentes import Dirigente
-        todos_dirigentes = Dirigente.objects.filter(entidad=self)
+        todos_dirigentes = Dirigente.objects.filter(estado=0, entidad=self)
         dirigentes = []
         for dirigente in todos_dirigentes:
             dirigentes.append(dirigente.obtenerAtributos())
@@ -208,7 +208,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_cajas(self):
         from snd.modelos.cajas_compensacion import CajaCompensacion
-        todas_cajas = CajaCompensacion.objects.filter(entidad=self)
+        todas_cajas = CajaCompensacion.objects.filter(estado=0, entidad=self)
         cajas = []
         for caja in todas_cajas:
             cajas.append(caja.obtenerAtributos())
@@ -217,7 +217,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_centros_biomedicos(self):
         from snd.modelos.centro_biomedico import CentroBiomedico
-        todos_centros = CentroBiomedico.objects.filter(entidad=self)
+        todos_centros = CentroBiomedico.objects.filter(estado=0, entidad=self)
         centros = []
         for centro in todos_centros:
             centros.append(centro.obtenerAtributos())
@@ -488,7 +488,7 @@ class Federacion(ResolucionReconocimiento):
         from django.db import connection
         escenarios = []
 
-        todosEscenarios = Escenario.objects.filter(entidad=self)
+        todosEscenarios = Escenario.objects.filter(estado=0, entidad=self)
         
         for i in todosEscenarios:
             escenarios.append(i.obtenerAtributos())
@@ -508,7 +508,7 @@ class Federacion(ResolucionReconocimiento):
 
         centros = []
 
-        todos_cafs = CentroAcondicionamiento.objects.filter(entidad=self)
+        todos_cafs = CentroAcondicionamiento.objects.filter(estado=0, entidad=self)
         
         for i in todos_cafs:
             centros.append(i.obtenerAtributos())
@@ -528,7 +528,7 @@ class Federacion(ResolucionReconocimiento):
 
         deportistas = []
 
-        todos_deportistas = Deportista.objects.filter(entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
 
         for i in todos_deportistas:
             deportistas.append(i.obtenerAtributos())
@@ -548,7 +548,7 @@ class Federacion(ResolucionReconocimiento):
 
         personales_apoyo = []
 
-        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
+        todos_personales_apoyo = PersonalApoyo.objects.filter(estado=0, entidad=self)
 
         for i in todos_personales_apoyo:
             personales_apoyo.append(i.obtenerAtributos())
@@ -568,7 +568,7 @@ class Federacion(ResolucionReconocimiento):
 
         dirigentes = []
 
-        todosDirigentes = Dirigente.objects.filter(entidad=self)
+        todosDirigentes = Dirigente.objects.filter(estado=0, entidad=self)
 
         for dirigente in todosDirigentes:
             dirigentes.append(dirigente.obtenerAtributos())
@@ -610,7 +610,7 @@ class Liga(ResolucionReconocimiento):
 
         deportistas = []
 
-        todos_deportistas = Deportista.objects.filter(entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
 
         for i in todos_deportistas:
             deportistas.append(i.obtenerAtributos())
@@ -633,7 +633,7 @@ class Liga(ResolucionReconocimiento):
         from django.db import connection
         escenarios = []
 
-        todos_escenarios = Escenario.objects.filter(entidad=self)
+        todos_escenarios = Escenario.objects.filter(estado=0, entidad=self)
         
         for i in todos_escenarios:
             escenarios.append(i.obtenerAtributos())
@@ -653,7 +653,7 @@ class Liga(ResolucionReconocimiento):
 
         centros = []
 
-        todos_cafs = CentroAcondicionamiento.objects.filter(entidad=self)
+        todos_cafs = CentroAcondicionamiento.objects.filter(estado=0, entidad=self)
         
         for i in todos_cafs:
             centros.append(i.obtenerAtributos())
@@ -673,7 +673,7 @@ class Liga(ResolucionReconocimiento):
 
         personales_apoyo = []
 
-        todos_personales_apoyo = PersonalApoyo.objects.filter(entidad=self)
+        todos_personales_apoyo = PersonalApoyo.objects.filter(estado=0, entidad=self)
 
         for i in todos_personales_apoyo:
             personales_apoyo.append(i.obtenerAtributos())
@@ -693,7 +693,7 @@ class Liga(ResolucionReconocimiento):
 
         dirigentes = []
 
-        todosDirigentes = Dirigente.objects.filter(entidad=self)
+        todosDirigentes = Dirigente.objects.filter(estado=0, entidad=self)
 
         for dirigente in todosDirigentes:
             dirigentes.append(dirigente.obtenerAtributos())
