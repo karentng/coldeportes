@@ -56,7 +56,7 @@ fields = {
         validators: {
             file: {
                 extension: 'png,jpg,jpeg,svg',
-                message: 'Seleccione una imagen con alguno de los siguientes formatos (png, jpg, jpeg, svg)',
+                message: 'Seleccione una imagen con alguno de los siguientes formatos (png, jpg, jpeg, svg) y que tenga un tamaño menor a 5MB',
                 maxSize: 5242880 //5MB
             }
         }
