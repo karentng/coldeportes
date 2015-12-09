@@ -34,11 +34,11 @@
                 var departamentos = JSON.stringify($("#id_departamentos").val());
                 var municipios = JSON.stringify($("#id_municipios").val());
                 var disciplinas = JSON.stringify($("#id_disciplinas").val());
-
+                var reporte = JSON.stringify($("#id_reporte").val());
 
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas},
+                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':reporte},
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data);
@@ -53,6 +53,9 @@
                 realizarConsulta();
             });
             $("#id_disciplinas").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_reporte").on("change", function(){
                 realizarConsulta();
             });
         });
