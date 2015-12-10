@@ -245,7 +245,6 @@ class Entidad(TenantMixin): # Entidad deportiva
         tenant = self.obtenerTenant()
         #actores = tenant.actores
         perms = [x.codename for x in Group.objects.get(name='Solo lectura').permissions.all()]
-        print(perms)
 
         datos = {}
         datos = agregarActor(datos, 'view_centroacondicionamiento', "caf", tenant.atributos_cafs, perms)
