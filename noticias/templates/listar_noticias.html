@@ -48,13 +48,18 @@
                                         <i class="fa fa-eye"></i> Vista previa
                                     </a>
                                     <br/>
-                                    <a href='{% url 'editar_noticia' noticia.id %}'>
-                                        <i class="fa fa-edit"></i> Editar
-                                    </a>
-                                    <br/>
-                                    <a href='{% url 'eliminar_noticia' noticia.id %}'>
-                                        <i class="fa fa-trash-o"></i> Eliminar
-                                    </a>
+                                    {% if 'noticias.change_noticia' in perms %}
+                                        <br/>
+                                        <a href='{% url 'editar_noticia' noticia.id %}'>
+                                            <i class="fa fa-edit"></i> Editar
+                                        </a>
+                                    {% endif %}
+                                    {% if 'noticias.delete_noticia' in perms %}
+                                        <br/>
+                                        <a href='{% url 'eliminar_noticia' noticia.id %}'>
+                                            <i class="fa fa-trash-o"></i> Eliminar
+                                        </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% include 'modal_noticia.html' %}

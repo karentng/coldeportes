@@ -288,6 +288,7 @@ def ver_seleccion(request,id_s):
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
         deportista = Deportista.objects.get(id=depor)
+        deportista.disciplinas_deportivas = deportista.disciplinas_deportivas()
         depor_registrados += [deportista]
 
     connection.set_tenant(request.tenant)
