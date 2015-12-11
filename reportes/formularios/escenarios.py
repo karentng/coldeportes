@@ -7,13 +7,13 @@ from reportes.forms import add_visualizacion
 class FiltrosEscenariosDMDForm(forms.Form):
     
     TIPO_REPORTE = (
-        ('CA', 'Clase de Acceso'),
-        ('DT', 'División Territorial'),
-        ('ES', 'Estrato'),
-        ('EF', 'Estados Físicos'),
-        ('TE', 'Tipo de Escenarios'),
-        ('TS', 'Tipo de Superficie'),
-        ('TP', 'Tipo de Propietario'),
+        ('CA', 'Clase de Accesos de Escenarios'),
+        ('DT', 'División Territorial de Escenarios'),
+        ('ES', 'Estratos de Escenarios'),
+        ('EF', 'Estados Físicos de los Escenarios'),
+        ('TE', 'Tipos de Escenarios'),
+        ('TS', 'Tipos de Superficies de los Escenarios'),
+        ('TP', 'Tipos de Propietarios de los Escenarios'),
     )
     def __init__(self, *args, **kwargs):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
@@ -35,6 +35,6 @@ class FiltrosEscenariosDMDForm(forms.Form):
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     municipios = forms.ModelMultipleChoiceField(queryset=Ciudad.objects.all(), required=False)
     disciplinas = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all().order_by('descripcion'), required=False, label="Disciplina Deportiva")
-    reporte = forms.ChoiceField(label="Reporte",required=False,choices=TIPO_REPORTE)
+    reporte = forms.ChoiceField(label="Clasificar por",required=False,choices=TIPO_REPORTE)
     visualizacion = forms.ChoiceField()
 

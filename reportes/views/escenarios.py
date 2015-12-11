@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import ast
+from datetime import datetime
 from django.db.models import F, Count
 from entidades.modelos_vistas_reportes import PublicEscenarioView
 from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
@@ -96,49 +97,15 @@ def generador_reporte_escenario(request, tabla, cantidad,choices=None):
         municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
         disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
         reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
-
+    
     categoria = verificar_seleccion_reporte(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices)
 
     if '' in escenarios:
         escenarios['Ninguna'] = escenarios['']
         del escenarios['']
+
     return escenarios
-
-
-
-def estrato_escenarios(request):
-    """
-    Noviembre 20, 2015
-    Autor: Cristian Leonardo Ríos López
-
-    Permite conocer el numero de escenarios por el estrato del escenario.
-    """
-
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioEstratoView
-    else:
-        tabla = TenantEscenarioEstratoView
-
-    
-    cantidad = 'estrato'
-
-    escenarios = generador_reporte_escenario(request,tabla,categoria,cantidad, choices=Escenario.estratos)
-    if request.is_ajax():
-        return JsonResponse(escenarios)
-
-    visualizaciones = [1, 5 , 6]
-    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/base_escenario.html', {
-        'nombre_reporte' : 'Estrato de Escenarios',
-        'url_data' : 'reportes_escenarios_estrato',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios'
-    })
 
 
 def caracteristicas_escenarios(request):
@@ -156,8 +123,8 @@ def caracteristicas_escenarios(request):
         tabla = TenantEscenarioView
     
     cantidad = 'tipo_escenario'
-
     escenarios = generador_reporte_escenario(request, tabla, cantidad, choices=None)
+    
 
     if request.is_ajax():
         
@@ -166,12 +133,13 @@ def caracteristicas_escenarios(request):
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     return render(request, 'escenarios/base_escenario.html', {
-        'nombre_reporte' : 'Tipos de Escenarios',
+        'nombre_reporte' : '',
         'url_data' : 'reportes_caracteristicas_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
-        'actor': 'Escenarios'
+        'actor': 'Escenarios',
+        'fecha_generado': datetime.now()
     })
 
 def periodicidad_mantenimiento(request):
