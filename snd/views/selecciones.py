@@ -301,6 +301,7 @@ def ver_seleccion(request,id_s):
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
         personal = PersonalApoyo.objects.get(id=per)
+        personal.nacionalidad_str = personal.nacionalidad_str()
         if count % 2 == 0:
             personal.par = True
         else:
