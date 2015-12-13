@@ -60,16 +60,8 @@
         {% endif %}
     {% endif %}
     {%comment%}Cualquiera puede buscar normas y buscar en el directorio, no requiere validar permiso de lectura{%endcomment%}
-    <li class="has-sub {% if 'directorio' in request.path %} active {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-phone-square"></i>
-            <span class="colorMenu">DIRECTORIOS</span>
-        </a>
-        <ul class="sub-menu">
-            {% include "menus/aplicacion/directorio.html" %}
-        </ul>
-    </li>
+    
+    {% include "menus/aplicacion/directorio.html" %}
     {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/reportes.html" %}
 
