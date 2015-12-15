@@ -11,7 +11,6 @@ INSERT INTO "entidades_tiposuperficie" ("id", "descripcion") VALUES
 (10,	'Madera'),
 (11,	'Sintética'),
 (12,	'Madera'),
-(13,	'Sintética'),
 (14,	'Colchonetas'),
 (15,	'Peanas'),
 (16,	'Tatami'),
