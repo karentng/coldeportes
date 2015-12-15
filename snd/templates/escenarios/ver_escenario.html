@@ -89,7 +89,7 @@
                                         </div>                    
                                     </div>
                                     <h5 class="m-t-10">Descripción:</h5>
-                                    <p>{{escenario.descripcion}}</p>
+                                    <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% endif %}</p>
                                 </div>
                             </div>
                             
@@ -260,11 +260,11 @@
                                             <tbody>
                                                 {% for matenimiento in mantenimientos %}
                                                 <tr> 
-                                                    <td>{{matenimiento.fecha_ultimo_mantenimiento}}</td>
-                                                    <td>{{matenimiento.descripcion_ultimo_mantenimiento}}</td>
-                                                    <td>{{matenimiento.get_periodicidad_display}}</td>
+                                                    <td>{% if matenimiento.fecha_ultimo_mantenimiento %}{{matenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{matenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.get_periodicidad_display %}{{matenimiento.get_periodicidad_display}}{% endif %}</td>
                                                     <td>{% if matenimiento.tiene_planos %} Sí {% else %} No {% endif %}</td>
-                                                    <td>{{matenimiento.razones_no_mantenimiento}}</td>
+                                                    <td>{% if mantenimiento.razones_no_mantenimiento %}{{matenimiento.razones_no_mantenimiento}}{% endif %}</td>
                                                 </tr> 
                                                 {% endfor %}                               
                                             </tbody>
