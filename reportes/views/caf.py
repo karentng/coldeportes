@@ -4,10 +4,10 @@ from django.http import JsonResponse
 from django.db.models import F, Count
 
 import ast
-from datetime import date
+from datetime import date, datetime
 
 from entidades.modelos_vistas_reportes import PublicCafView
-from reportes.formularios.caf import DemografiaForm
+from reportes.formularios.caf import DemografiaForm, FiltrosCafDMDForm
 from reportes.models import TenantCafView
 from snd.models import CentroAcondicionamiento
 
@@ -20,208 +20,97 @@ Reportes:
     5. Gráfico de cilindros
 '''
 
-def demografia(request):
-    def casos_de_consulta(departamentos, annos, tabla, tipoTenant):
-        if departamentos:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).annotate(descripcion=F('ciudad__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad', distinct=True))
-            else:
-                centros = list(tabla.objects.filter(ciudad__departamento__id__in=departamentos).annotate(descripcion=F('ciudad__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad', distinct=True)))
-        else:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True))
-            else:
-                centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros)
-        return centros
+def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices):
+    """
+    Noviembre 19, 2015
+    Autor: Karent Narvaez
+
+    Permite ejecutar una consulta con base en los filtros que se están enviando en la petición.
+    """
+    from reportes.utilities import sumar_datos_diccionario#, convert_choices_to_array, crear_diccionario_inicial
+
+    if departamentos and municipios:
+        cafs = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+    #Departamentos, disciplinas
+    elif departamentos:
+        cafs = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+    #Municipios
+    elif municipios:
+        cafs = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+    #Disciplina
+    else:
+        cafs =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+
+    if choices:
+        cafs = sumar_datos_diccionario(cafs, choices)
+        return cafs
+
+    cafs = tipoTenant.ajustar_resultado(cafs)
+    return cafs
+
+def verificar_seleccion_reporte(opcion_reporte):
+    categoria = 'ciudad__departamento__nombre'
+    if opcion_reporte == 'DT':
+        categoria = 'ciudad__departamento__nombre'
+    elif opcion_reporte == 'ES':
+        categoria = 'estrato'
+    elif opcion_reporte == 'CC':
+        categoria = 'nombre_clase'
+    elif opcion_reporte == 'SC':
+        categoria = 'nombre_servicio'
+
+    return categoria
+
+def generador_reporte_caf(request, tabla, cantidad,choices=None):
 
     tipoTenant = request.tenant.obtenerTenant()
+
+    departamentos = None
+    municipios = None
+    reporte = None
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
+        reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
     
+    categoria = verificar_seleccion_reporte(reporte)
+    cafs = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
+
+    if '' in cafs:
+        cafs['Ninguna'] = cafs['']
+        del cafs['']
+
+    return cafs
+
+def caracteristicas_caf(request):
+    """
+    Diciembre 12, 2015
+    Autor: Andrés Serna
+
+    Permite conocer el numero de caf por cada tipo de caf.
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
     if tipoTenant.schema_name == 'public':
         tabla = PublicCafView
     else:
         tabla = TenantCafView
-
-    if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        annos = None if request.GET['annos'] == 'null'  else ast.literal_eval(request.GET['annos'])
-        
-        centros = casos_de_consulta(departamentos, annos, tabla, tipoTenant)
-
-        return JsonResponse(centros)
-    else:
-        #centros = list(tabla.objects.annotate(descripcion=F('ciudad__departamento__nombre')).values('id', 'descripcion').annotate(cantidad=Count('ciudad__departamento', distinct=True)))
-        #centros = tipoTenant.ajustar_resultado(centros)
-        centros = {}
-    visualizaciones = [1, 2, 3]
-
-    form = DemografiaForm(visualizaciones=visualizaciones)
-
-    return render(request, 'caf/caf_template.html', {
-        'nombre_reporte' : 'Centros de Acondicionamiento Físico por Departamentos y Municipios',
-        'url_data' : 'reportes_caf_demografia',
-        'datos': centros,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Centro de Acondicionamiento',
-    })
-
-def estratos(request):
-    def casos_de_consulta(departamentos, annos, tabla, tipoTenant):
-        if departamentos:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True))
-            else:
-                centros = list(tabla.objects.filter(ciudad__departamento__id__in=departamentos).values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True)))
-        else:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True))
-            else:
-                centros = list(tabla.objects.values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros, 'estrato')
-        return centros
-
-    tipoTenant = request.tenant.obtenerTenant()
     
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicCafView
-    else:
-        tabla = TenantCafView
-
-    if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        annos = None if request.GET['annos'] == 'null'  else ast.literal_eval(request.GET['annos'])
-        
-        centros = casos_de_consulta(departamentos, annos, tabla, tipoTenant)
-
-        return JsonResponse(centros)
-    else:
-        centros = list(tabla.objects.values('id', 'estrato').annotate(cantidad=Count('estrato', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros, 'estrato')
-    visualizaciones = [1, 2, 3]
-
-    form = DemografiaForm(visualizaciones=visualizaciones)
-
-    return render(request, 'caf/caf_template.html', {
-        'nombre_reporte' : 'Centros de Acondicionamiento Físico por Estratos',
-        'url_data' : 'reportes_caf_estratos',
-        'datos': centros,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Centro de Acondicionamiento',
-    })
-
-
-def clases(request):
-    def casos_de_consulta(departamentos, annos, tabla, tipoTenant):
-        if departamentos:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_clase=None).filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True))
-            else:
-                centros = list(tabla.objects.exclude(nombre_clase=None).filter(ciudad__departamento__id__in=departamentos).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True)))
-        else:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_clase=None).filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True))
-            else:
-                centros = list(tabla.objects.exclude(nombre_clase=None).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros, 'nombre_clase')
-        return centros
-
-    tipoTenant = request.tenant.obtenerTenant()
+    cantidad = 'id'
+    cafs = generador_reporte_caf(request, tabla, cantidad, choices=None)
     
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicCafView
-    else:
-        tabla = TenantCafView
-
     if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        annos = None if request.GET['annos'] == 'null'  else ast.literal_eval(request.GET['annos'])
+        return JsonResponse(cafs)
         
-        centros = casos_de_consulta(departamentos, annos, tabla, tipoTenant)
-
-        return JsonResponse(centros)
-    else:
-        centros = list(tabla.objects.exclude(nombre_clase=None).values('id', 'nombre_clase').annotate(cantidad=Count('nombre_clase', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros, 'nombre_clase')
-    visualizaciones = [1, 2, 3]
-
-    form = DemografiaForm(visualizaciones=visualizaciones)
-
-    return render(request, 'caf/caf_template.html', {
-        'nombre_reporte' : 'Centros de Acondicionamiento Físico que ofrecen ciertas Clases',
-        'url_data' : 'reportes_caf_clases',
-        'datos': centros,
+    visualizaciones = [1, 5, 6]
+    form = FiltrosCafDMDForm(visualizaciones=visualizaciones)
+    return render(request, 'caf/base_caf.html', {
+        'nombre_reporte' : '',
+        'url_data' : 'reportes_caracteristicas_caf',
+        'datos': cafs,
         'visualizaciones': visualizaciones,
         'form': form,
-        'actor': 'Centro de Acondicionamiento',
-    })
-
-def tipos_servicios(request):
-    def casos_de_consulta(departamentos, annos, tabla, tipoTenant):
-        if departamentos:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_servicio=None).filter(ciudad__departamento__id__in=departamentos, fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True))
-            else:
-                centros = list(tabla.objects.exclude(nombre_servicio=None).filter(ciudad__departamento__id__in=departamentos).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True)))
-        else:
-            if annos:
-                centros = list()
-                for anno in annos:
-                    anno = int(anno)
-                    centros += tabla.objects.exclude(nombre_servicio=None).filter(fecha_creacion__gte=date(anno, 1, 1), fecha_creacion__lte=date(anno, 12, 31)).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True))
-            else:
-                centros = list(tabla.objects.exclude(nombre_servicio=None).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros, 'nombre_servicio')
-        return centros
-
-    tipoTenant = request.tenant.obtenerTenant()
-    
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicCafView
-    else:
-        tabla = TenantCafView
-
-    if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        annos = None if request.GET['annos'] == 'null'  else ast.literal_eval(request.GET['annos'])
-        
-        centros = casos_de_consulta(departamentos, annos, tabla, tipoTenant)
-
-        return JsonResponse(centros)
-    else:
-        centros = list(tabla.objects.exclude(nombre_servicio=None).values('id', 'nombre_servicio').annotate(cantidad=Count('nombre_servicio', distinct=True)))
-        centros = tipoTenant.ajustar_resultado(centros, 'nombre_servicio')
-    visualizaciones = [1, 2, 3]
-
-    form = DemografiaForm(visualizaciones=visualizaciones)
-
-    return render(request, 'caf/caf_template.html', {
-        'nombre_reporte' : 'Centros de Acondicionamiento Físico que ofrecen ciertos Servicios',
-        'url_data' : 'reportes_caf_tipos_servicios',
-        'datos': centros,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Centro de Acondicionamiento',
+        'actor': 'Centro de Acondicionamiento Físico',
+        'fecha_generado': datetime.now(),
     })
