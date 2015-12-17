@@ -5,7 +5,7 @@ from snd.views.selecciones import *
 urlpatterns = patterns('snd.views.selecciones',
     url(r'^registro/base$', 'registrar_base', name='registrar_seleccion'),
     url(r'^edicion/base/(\d+)$', 'editar_base', name='editar_seleccion'),
-    url(r'^registro/deportistas-seleccion/(\d+)$', 'registrar_deportistas', name='registrar_deportistas'),
+    url(r'^registro/depor-seleccion/(\d+)$', 'registrar_deportistas', name='registrar_deportistas'),
     url(r'^registro/personal/(\d+)$', 'registrar_personal', name='registrar_personal'),
     url(r'^listar$', 'listar_seleccion', name='listar_seleccion'),
     url(r'^ver/(\d+)$', 'ver_seleccion', name='ver_seleccion'),
