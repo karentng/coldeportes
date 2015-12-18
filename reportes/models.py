@@ -175,13 +175,14 @@ class TenantDeportistaView(models.Model):
     #campos doping
     fecha_doping = models.DateField()
 
-    def return_display_tipo_lesion(self,dic):
+    def return_display_lesion(self,dic,is_tipo):
         ids = [id for id in dic]
+        dic_nombres = self.TIPOS_LESION if is_tipo else self.PERIODOS_REHABILITACION
         for elemento in ids:
             if None == elemento:
-                dic['NINGUNA'] = dic[None]
+                dic['NINGUNA LESIÓN'] = dic[None]
                 del dic[None]
             else:
-                dic[self.TIPOS_LESION[elemento]] = dic[elemento]
+                dic[dic_nombres[elemento]] = dic[elemento]
                 del dic[elemento]
         return dic
