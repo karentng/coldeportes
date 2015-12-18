@@ -182,6 +182,8 @@ def registrar_deportistas(request,id_s):
 
     deportistas = personas_por_entidad(request.tenant.tipo,'Deportista',request.tenant)
 
+    tenant_actual = connection.tenant
+
     depor_registrados = []
     for d in DeportistasSeleccion.objects.filter(seleccion=sele): #Obtener deportistas seleccionados al momento
         entidad = d.entidad
@@ -193,6 +195,8 @@ def registrar_deportistas(request,id_s):
     for depo in depor_registrados: #Quitar de la lista de deportistas los que ya estan registrados
         if depo in deportistas:
             deportistas.remove(depo)
+
+    connection.set_tenant(tenant_actual)
 
     return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
         'titulo': 'Selección de Deportistas',
@@ -221,6 +225,7 @@ def registrar_personal(request,id_s):
         return redirect('listar_seleccion')
 
     personal = personas_por_entidad(request.tenant.tipo,'PersonalApoyo',request.tenant)
+    tenant_actual = connection.tenant
 
     personal_registrados = []
     for p in PersonalSeleccion.objects.filter(seleccion=sele): #Obtener personal seleccionado al momento
@@ -233,6 +238,8 @@ def registrar_personal(request,id_s):
     for person in personal_registrados: #Quitar de la lista de personal los que ya estan registrados
         if person in personal:
             personal.remove(person)
+
+    connection.set_tenant(tenant_actual)
 
     return render(request,'selecciones/wizard/wizard_seleccion_personal.html',{
         'titulo': 'Selección de Personal de Apoyo',
