@@ -7,4 +7,6 @@ urlpatterns = patterns('reportes.views.deportistas',
     url(r'^etnias', 'etinias_deportistas', name='reporte_etinias_deportistas'),
     url(r'^formacion-academica', 'formacion_academica', name='reporte_formacion_academica'),
     url(r'^nacionalidad', 'nacionalidad', name='reporte_nacionalidad'),
+    url(r'^tipo-lesion', 'tipo_lesion', name='reporte_tipo_lesion'),
+    url(r'^periodo-lesion', 'periodo_lesion', name='reporte_periodo_lesion'),
 )
