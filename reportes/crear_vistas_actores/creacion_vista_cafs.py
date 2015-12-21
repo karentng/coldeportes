@@ -1,8 +1,19 @@
 from django.db import connection
 
-def crear_vista_reportes_tenant_caf():
+def eliminar_vista_reportes_public_caf():
     sql_tenant = """
-    CREATE MATERIALIZED VIEW reportes_tenantcafview AS 
+        DROP MATERIALIZED VIEW IF EXISTS public.entidades_publiccafview;
+    """
+
+    cursor = connection.cursor()
+    r=''
+    r=cursor.execute(sql_tenant)
+    r=connection.commit()
+    return r
+
+def crear_vista_reportes_tenant_caf(nuevo_tenant):
+    sql_tenant = """
+    CREATE OR REPLACE VIEW reportes_tenantcafview AS 
     SELECT
         CAF.id, CAF.ciudad_id,
         CAF.comuna, CAF.estrato,
@@ -46,7 +57,7 @@ def generar_vista_caf(nuevo_tenant=None):
     for entidad in entidades:
         connection.set_tenant(entidad)
         if not nuevo_tenant:
-            crear_vista_reportes_tenant_caf()
+            crear_vista_reportes_tenant_caf(nuevo_tenant)
 
         aux = ("""
                 SELECT * FROM %s.reportes_tenantcafview E
@@ -60,7 +71,9 @@ def generar_vista_caf(nuevo_tenant=None):
 
     public = Entidad.objects.get(schema_name='public')
     connection.set_tenant(public)
-        
+    
+    eliminar_vista_reportes_public_caf()
+
     sql = ("%s %s")%(sql, ";")
     cursor = connection.cursor()
     r=''
