@@ -117,7 +117,7 @@ def generar_vista_escenario(nuevo_tenant=None):
         if not nuevo_tenant:
             #creación vistas escenario
             crear_vista_reportes_tenant_escenario()
-            crear_vista_reportes_tenant_escenario_estrato()
+            #crear_vista_reportes_tenant_escenario_estrato()
 
         aux = ("""
                 SELECT * FROM %s.reportes_tenantescenarioview E
