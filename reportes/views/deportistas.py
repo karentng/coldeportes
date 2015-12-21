@@ -240,17 +240,17 @@ def reporte_lgtbi(request):
         lgtbi = tipoTenant.ajustar_resultado(lgtbi)
 
         if True in lgtbi:
-            lgtbi['Usa centros biomédicos'] = lgtbi[True]
+            lgtbi['Pertenece a la comunidad LGTBI'] = lgtbi[True]
             del lgtbi[True]
         if False in lgtbi:
-            lgtbi['No usa centros biomédicos'] = lgtbi[False]
+            lgtbi['No pertenece a la comunidad LGTBI'] = lgtbi[False]
             del lgtbi[False]
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Deportistas que pertenecen a la comunidad LGTBI',
-        'url_data' : 'reporte_lgtbi',
+        'url_data' : 'reporte_lgtbi_deportistas',
         'datos': lgtbi,
         'visualizaciones': visualizaciones,
         'form': form,
@@ -287,10 +287,10 @@ def reporte_doping(request):
         beneficiados = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         beneficiados = tipoTenant.ajustar_resultado(beneficiados)
         if True in beneficiados:
-            beneficiados['Deportistas beneficiados'] = beneficiados[True]
+            beneficiados['Deportistas con reportes de doping'] = beneficiados[True]
             del beneficiados[True]
         if False in beneficiados:
-            beneficiados['Deportistas no beneficiados'] = beneficiados[False]
+            beneficiados['Deportistas sin reportes de doping'] = beneficiados[False]
             del beneficiados[False]
 
         return JsonResponse(beneficiados)
@@ -353,7 +353,9 @@ def reporte_cantidad_total_deportistas(request):
         return JsonResponse(resultado)
 
     else:
+        print(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
         total_deportistas = len(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
+        print(total_deportistas)
 
         resultado = {
             'Total Deportistas':total_deportistas

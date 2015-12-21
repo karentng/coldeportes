@@ -8,6 +8,7 @@ from django.db.models import F, Count
 from reportes.utilities import sumar_datos_diccionario, convert_choices_to_array, crear_diccionario_inicial
 from snd.models import PersonalApoyo
 import ast
+from datetime import datetime
 
 
 def ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant):
@@ -108,7 +109,7 @@ def reporte_formacion_academica_personal(request):
         formaciones = tipoTenant.ajustar_resultado(formaciones)
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Formación Academica del personal de apoyo',
         'url_data' : 'reporte_formacion_academica_personal',
@@ -161,7 +162,7 @@ def reporte_cantidad_total_personal_apoyo(request):
         }
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Cantidad TOTAL de personal de apoyo',
         'url_data' : 'reporte_cantidad_total_personal_apoyo',
@@ -219,10 +220,11 @@ def reporte_lgtbi(request):
             del lgtbi[False]
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
+
     return render(request, 'base_reportes.html', {
         'nombre_reporte' : 'Personal de Apoyo que pertenece a la comunidad LGTBI',
-        'url_data' : 'reporte_lgtbi',
+        'url_data' : 'reporte_lgtbi_personal_apoyo',
         'datos': lgtbi,
         'visualizaciones': visualizaciones,
         'form': form,
