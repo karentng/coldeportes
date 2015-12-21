@@ -36,6 +36,8 @@ def verificar_seleccion_reporte(opcion_reporte):
         categoria = 'tiposuperficie__descripcion'
     elif opcion_reporte == 'TP':
         categoria = 'tipo_propietario'
+    elif opcion_reporte == 'CE':
+        categoria = 'capacidad_espectadores'
 
     return categoria
 
