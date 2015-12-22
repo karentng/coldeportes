@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from snd.modelos.deportistas import HistorialDeportivo,Deportista,InformacionAdicional,Deportista,InformacionAcademica
 from entidades.models import Departamento
 from django.db.models import Count
-from reportes.forms import FiltrosDeportistasForm
+from reportes.formularios.deportistas import FiltrosDeportistasForm,FiltrosDeportistasCategoriaForm
 from django.db.models import F
 import ast
 from datetime import datetime
@@ -520,12 +520,13 @@ def nacionalidad(request):
         'fecha_generado': datetime.now()
     })
 
-def tipo_lesion(request):
+def lesiones_deportivas(request):
     """
-    Diciembre 18, 2015
+    Diciembre 22, 2015
     Autor: Daniel Correa
 
-    Permite conocer la cantidad de deportistas organizados por tipo de lesion
+    Esta vista reune la implementación de los reportes de lesiones deportivas caractetirzadas por tipo de lesion
+    y perido de rehabilitación
     """
     tipoTenant = request.tenant.obtenerTenant()
 
@@ -534,15 +535,19 @@ def tipo_lesion(request):
     else:
         tabla = TenantDeportistaView
 
+    categoria = 'tipo_lesion'
+
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+        reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
+        categoria = 'tipo_lesion' if reporte == 'TL' else 'periodo_rehabilitacion'
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('tipo_lesion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('tipo_lesion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('tipo_lesion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('tipo_lesion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         lesiones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -552,68 +557,19 @@ def tipo_lesion(request):
         return JsonResponse(lesiones)
 
     else:
-        lesiones = list(tabla.objects.filter(estado=0).annotate(descripcion=F('tipo_lesion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        lesiones = list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         lesiones = tipoTenant.ajustar_resultado(lesiones)
         lesiones = tabla.return_display_lesion(tabla,lesiones,True)
 
-
     visualizaciones = [1, 2, 3, 5]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Deportistas por tipos de lesión',
-        'url_data' : 'reporte_tipo_lesion',
+        'nombre_reporte' : 'Tipo de lesión',
+        'url_data' : 'reporte_lesiones',
         'datos': lesiones,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
-    })
-
-def periodo_lesion(request):
-    """
-    Diciembre 18, 2015
-    Autor: Daniel Correa
-
-    Permite conocer la cantidad de deportistas organizados por periodo de lesion
-    """
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicDeportistaView
-    else:
-        tabla = TenantDeportistaView
-
-    if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
-
-        consultas = [
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('periodo_rehabilitacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('periodo_rehabilitacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('periodo_rehabilitacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('periodo_rehabilitacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-        ]
-
-        lesiones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
-        lesiones = tipoTenant.ajustar_resultado(lesiones)
-        lesiones = tabla.return_display_lesion(tabla,lesiones,False)
-
-        return JsonResponse(lesiones)
-
-    else:
-        lesiones = list(tabla.objects.filter(estado=0).annotate(descripcion=F('periodo_rehabilitacion')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
-        lesiones = tipoTenant.ajustar_resultado(lesiones)
-        lesiones = tabla.return_display_lesion(tabla,lesiones,False)
-
-
-    visualizaciones = [1, 2, 3, 5]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Deportistas por periodo de lesión',
-        'url_data' : 'reporte_periodo_lesion',
-        'datos': lesiones,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'agrupado': True
     })
