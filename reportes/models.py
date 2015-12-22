@@ -148,7 +148,7 @@ class TenantDeportistaView(models.Model):
     #campos modelo deportista
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
-    disciplinas = models.ForeignKey(TipoDisciplinaDeportiva)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     fecha_nacimiento = models.DateField()
     fecha_creacion = models.DateTimeField()
     lgtbi = models.BooleanField()

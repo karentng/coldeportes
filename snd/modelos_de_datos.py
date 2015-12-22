@@ -164,11 +164,6 @@ MODELOS_DE_DATOS = (
                         ['estado'],
                         ['EN TRANSFERENCIA'],
                         lambda x, y: operator.eq(x[0], y[0])
-                    ],
-                    [
-                        ['estado'],
-                        ['EN TRANSFERENCIA'],
-                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
 
@@ -211,7 +206,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-gear',
                 [
-                    ['snd.add_personalapoyo',]
+                    [
+                        'snd.add_personalapoyo',
+                    ]
                 ]
             ],
             [
@@ -252,7 +249,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-gear',
                 [
-                    ['snd.add_personalapoyo',]
+                    [
+                        'snd.add_personalapoyo',
+                    ]
                 ]
             ],
             [
@@ -292,7 +291,11 @@ MODELOS_DE_DATOS = (
                 'dirigentes_edicion',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    [
+                        'snd.add_dirigente',
+                    ]
+                ]
             ],
             [
                 "A/I",
@@ -300,6 +303,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.change_dirigente',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
@@ -329,7 +335,11 @@ MODELOS_DE_DATOS = (
                 'dirigentes_edicion',
                 ['id'],
                 'fa-gear',
-                None
+                [
+                    [
+                        'snd.add_dirigente',
+                    ]
+                ]
             ],
             [
                 "A/I",
@@ -337,6 +347,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-ban',
                 [
+                    [
+                        'snd.change_dirigente',
+                    ],
                     [
                         ['estado'],
                         ['ACTIVO','INACTIVO'],
@@ -366,7 +379,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-gear',
                 [
-                    ['snd.add_escenario',]
+                    [
+                        'snd.add_escenario',
+                    ]
                 ]
             ],
             [
@@ -515,7 +530,11 @@ MODELOS_DE_DATOS = (
                 'centro_biomedico_crear_editar',
                 ['identificacion', '1', 'id'],
                 'fa-gear',
-                None
+                [
+                    [
+                        'snd.add_centrobiomedico',
+                    ]
+                ]
             ],
         ],
     ),
@@ -539,7 +558,9 @@ MODELOS_DE_DATOS = (
                 ['id'],
                 'fa-gear',
                 [
-                    ['snd.add_cajacompensacion',]
+                    [
+                        'snd.add_cajacompensacion',
+                    ]
                 ]
             ],
             [
@@ -549,7 +570,7 @@ MODELOS_DE_DATOS = (
                 'fa-ban',
                 [
                     [
-                        'snd.add_cajacompensacion',
+                        'snd.change_cajacompensacion',
                     ],
                     [
                         ['estado'],
@@ -580,7 +601,11 @@ MODELOS_DE_DATOS = (
                 'escuela_deportiva_crear_editar',
                 ['identificacion', '1', 'id'],
                 'fa-gear',
-                None
+                [
+                    [
+                        'snd.add_escueladeportiva',
+                    ]
+                ]
             ],
         ],
     ),

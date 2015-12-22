@@ -178,8 +178,6 @@ def periodicidad_mantenimiento(request):
         'actor': 'Escenarios'
     })
 
-
-
 def disponibilidad_escenarios(request):
     """
     Noviembre 21, 2015

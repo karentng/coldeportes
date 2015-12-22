@@ -2,7 +2,7 @@ from django.db import connection
 
 def crear_vista_reportes_tenant_escenario():
     sql_tenant = """
-    CREATE OR REPLACE view reportes_tenantescenarioview AS 
+    CREATE MATERIALIZED VIEW reportes_tenantescenarioview AS 
     SELECT  E.id, E.nombre,
             E.direccion, E.latitud,         
             E.longitud, E.altura,       
@@ -81,27 +81,12 @@ def crear_vista_reportes_tenant_escenario():
 
     cursor = connection.cursor()
     r=''
-    r=cursor.execute(sql_tenant)
-    r=connection.commit()
-    return r
-def crear_vista_reportes_tenant_escenario_estrato():
-    sql_tenant = """
-    CREATE OR REPLACE VIEW reportes_tenantescenarioestratoview AS 
-    SELECT  E.id, E.estado,     
-            E.ciudad_id, E.fecha_creacion as fecha_creacion_escenario,
-            E.estrato, CTD.tipodisciplinadeportiva_id,       
-            COUNT(estrato) as cantidad
-    FROM snd_escenario E 
-    LEFT JOIN snd_caracterizacionescenario CE on CE.escenario_id=E.id  
-    LEFT JOIN snd_caracterizacionescenario_tipo_disciplinas CTD on CTD.caracterizacionescenario_id=E.id
-    GROUP BY E.id, CTD.tipodisciplinadeportiva_id, E.estrato;
-    """
-
-    cursor = connection.cursor()
-    r=''
-    r=cursor.execute(sql_tenant)
-    r=connection.commit()
-    return r
+    try:
+        r=cursor.execute(sql_tenant)
+        r=connection.commit()
+        return r
+    except Exception:
+        pass
 
 
 def generar_vista_escenario(nuevo_tenant=None):
@@ -111,7 +96,7 @@ def generar_vista_escenario(nuevo_tenant=None):
     tenant_actual = connection.tenant
 
     sql = """
-        CREATE OR REPLACE VIEW public.entidades_publicescenarioview AS
+        CREATE MATERIALIZED VIEW public.entidades_publicescenarioview AS
     """
 
     from entidades.models import Entidad
@@ -122,14 +107,17 @@ def generar_vista_escenario(nuevo_tenant=None):
         connection.set_tenant(nuevo_tenant)
         #creación vistas escenario
         crear_vista_reportes_tenant_escenario()
-        crear_vista_reportes_tenant_escenario_estrato()
 
+
+    cont = 0
     for entidad in entidades:
         connection.set_tenant(entidad)
+        print (cont)
+        cont += 1
         if not nuevo_tenant:
             #creación vistas escenario
             crear_vista_reportes_tenant_escenario()
-            crear_vista_reportes_tenant_escenario_estrato()
+            #crear_vista_reportes_tenant_escenario_estrato()
 
         aux = ("""
                 SELECT * FROM %s.reportes_tenantescenarioview E
