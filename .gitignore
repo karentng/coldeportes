@@ -1,5 +1,7 @@
 *.pyc
 .gitignore
+.gitignore~
+.idea/
 Thumbs.db
 coldeportes/settings.py
 snd/pendiente/

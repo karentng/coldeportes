@@ -59,6 +59,7 @@ class TenantEscenarioView(models.Model):
     tiposuperficie = models.ForeignKey(TipoSuperficie)
     tipo_propietario = models.CharField(max_length=2, choices=PROPIETARIOS)
     clase_acceso = models.CharField(max_length=3)
+    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
 
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
@@ -126,13 +127,28 @@ class TenantPersonalApoyoView(models.Model):
     creacion_formacion = models.DateField()
 
 class TenantDeportistaView(models.Model):
+    TIPOS_LESION = {
+        1:'FRACTURA',
+        2:'LUXACIÓN',
+        3:'RUPTURA',
+        4:'LESIÓN MENISCAL',
+        5:'ESGUINCE',
+    }
+
+    PERIODOS_REHABILITACION = {
+        1:'MENOR A 1 MES',
+        2:'ENTRE 1 y 3 MESES',
+        3:'ENTRE 3 y 6 MESES',
+        4:'MAYOR A 6 MESES',
+    }
+
     class Meta:
         managed = False
 
     #campos modelo deportista
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
-    disciplinas = models.ForeignKey(TipoDisciplinaDeportiva)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     fecha_nacimiento = models.DateField()
     fecha_creacion = models.DateTimeField()
     lgtbi = models.BooleanField()
@@ -158,3 +174,15 @@ class TenantDeportistaView(models.Model):
 
     #campos doping
     fecha_doping = models.DateField()
+
+    def return_display_lesion(self,dic,is_tipo):
+        ids = [id for id in dic]
+        dic_nombres = self.TIPOS_LESION if is_tipo else self.PERIODOS_REHABILITACION
+        for elemento in ids:
+            if None == elemento:
+                dic['NINGUNA LESIÓN'] = dic[None]
+                del dic[None]
+            else:
+                dic[dic_nombres[elemento]] = dic[elemento]
+                del dic[elemento]
+        return dic
