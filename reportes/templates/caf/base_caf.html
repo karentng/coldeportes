@@ -33,12 +33,11 @@
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamentos").val());
                 var municipios = JSON.stringify($("#id_municipios").val());
-                var disciplinas = JSON.stringify($("#id_disciplinas").val());
                 var reporte = JSON.stringify($("#id_reporte").val());
 
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':reporte},
+                    data: {'departamentos': departamentos,'municipios':municipios, 'reporte':reporte},
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data);
@@ -58,7 +57,7 @@
             $("#id_reporte").on("change", function(){
                 realizarConsulta();
                 var titulo =  $("#id_reporte option:selected").text();
-                $(".titulo").html(titulo); 
+                $("#titulo").html(titulo); 
             });
 
               
@@ -81,10 +80,11 @@
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
     <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
-    <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
+    <li><a href="{% url 'inicio' %}">Características</a></li>
 {% endblock %}
-{% block titulo_panel %}
-    <label class="titulo" style="color:white;"> Clase de Accesos de Escenarios</label>
+
+{% block botones_panel %}
+    {#<a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>#}
 {% endblock %}
 
 {% block contenido_panel %}
@@ -98,12 +98,12 @@
         </div>
         <div class="col-md-12">
             <br>
-            <h4 class="titulo" align="center">Clase de Accesos de Escenarios</h4>
+            <h4 id="titulo" align="center">Clase de Accesos de Escenarios</h4>
             {% for i in visualizaciones %}
                 <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
             {% endfor %}
         </div>
-        <h6 align="right">Consultado: <b>{{fecha_generado}}</b></h6>
+        <h5 align="right">Consultado: <b>{{fecha_generado}}</b></h5>
     </div>
 
 {% endblock %}
