@@ -92,12 +92,14 @@ def generar_vistas_actores(request, nuevo_tenant=None):
     from reportes.crear_vistas_actores.creacion_vista_personal_apoyo import generar_vista_personal_apoyo
     from reportes.crear_vistas_actores.creacion_vista_deportista import generar_vista_deportista
     from reportes.crear_vistas_actores.creacion_vista_dirigente import generar_vista_dirigente
+    from reportes.crear_vistas_actores.creacion_vista_escuela import generar_vista_escuela
 
     generar_vista_caf(nuevo_tenant)
-    #generar_vista_escenario(nuevo_tenant)
+    generar_vista_escenario(nuevo_tenant)
     generar_vista_personal_apoyo(nuevo_tenant)
     generar_vista_deportista(nuevo_tenant)
     generar_vista_dirigente(nuevo_tenant)
+    generar_vista_escuela(nuevo_tenant)
 
     # agregar los demas actores
 

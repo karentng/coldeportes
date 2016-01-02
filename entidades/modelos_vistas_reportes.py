@@ -175,3 +175,16 @@ class PublicDirigenteView(models.Model):
     nacionalidad = models.ForeignKey(Nacionalidad)
     entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+
+class PublicEscuelaView(models.Model):
+
+    class Meta:
+        managed = False
+
+    fecha_creacion = models.DateTimeField()
+    estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+    estrato = models.PositiveIntegerField()
+    entidad = models.ForeignKey(Entidad)
+    nombre_servicio = models.CharField(max_length=255)

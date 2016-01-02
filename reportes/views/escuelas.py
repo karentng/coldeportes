@@ -6,10 +6,10 @@ from django.db.models import F, Count
 import ast
 from datetime import date, datetime
 
-from entidades.modelos_vistas_reportes import PublicDirigenteView
-from reportes.formularios.dirigentes import NacionalidadForm
-from reportes.models import TenantDirigenteView
-from snd.models import Dirigente
+from entidades.modelos_vistas_reportes import PublicEscuelaView
+from reportes.formularios.escuelas import EscuelasForm
+from reportes.models import TenantEscuelaView
+from snd.models import EscuelaDeportiva
 
 def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices):
     """
@@ -39,7 +39,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipio
     dirigentes = tipoTenant.ajustar_resultado(dirigentes)
     return dirigentes
 
-def generador_reporte_dirigentes(request, tabla, cantidad, categoria, choices=None):
+def generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=None):
 
     tipoTenant = request.tenant.obtenerTenant()
 
@@ -50,43 +50,76 @@ def generador_reporte_dirigentes(request, tabla, cantidad, categoria, choices=No
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
     
-    dirigentes = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
+    escuelas = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
 
-    if '' in dirigentes:
-        dirigentes['Ninguna'] = dirigentes['']
-        del dirigentes['']
+    if '' in escuelas:
+        escuelas['Ninguna'] = escuelas['']
+        del escuelas['']
 
-    return dirigentes
+    return escuelas
 
-def nacionalidad_dirigentes(request):
+def estrato_escuelas(request):
     """
-    Diciembre 31, 2015
+    Enero 2, 2016
     Autor: Cristian Leonardo Ríos López
 
-    Permite conocer el numero de dirigentes segun su nacionalidad.
+    Permite conocer el número de escuelas de formaicón deportiva por su estrato.
     """
     tipoTenant = request.tenant.obtenerTenant()
 
     if tipoTenant.schema_name == 'public':
-        tabla = PublicDirigenteView
+        tabla = PublicEscuelaView
     else:
-        tabla = TenantDirigenteView
+        tabla = TenantEscuelaView
     
-    cantidad = 'nacionalidad'
-    categoria = 'nacionalidad__nombre'
-    dirigentes = generador_reporte_dirigentes(request, tabla, cantidad, categoria, choices=None)
+    cantidad = 'estrato'
+    categoria = 'estrato'
+    escuelas = generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=EscuelaDeportiva.ESTRATOS)
     
     if request.is_ajax():
-        return JsonResponse(dirigentes)
+        return JsonResponse(escuelas)
         
     visualizaciones = [1, 5, 6]
-    form = NacionalidadForm(visualizaciones=visualizaciones)
-    return render(request, 'dirigentes/base_dirigentes.html', {
-        'nombre_reporte' : 'Nacionalidad de los dirigentes',
-        'url_data' : 'reportes_nacionalidad_dirigentes',
-        'datos': dirigentes,
+    form = EscuelasForm(visualizaciones=visualizaciones)
+    return render(request, 'escuelas/base_escuelas.html', {
+        'nombre_reporte' : 'Escuelas de formación deportiva por estrato',
+        'url_data' : 'reportes_estrato_escuelas',
+        'datos': escuelas,
         'visualizaciones': visualizaciones,
         'form': form,
-        'actor': 'Dirigentes',
+        'actor': 'Escuelas de Formación Deportiva',
+        'fecha_generado': datetime.now(),
+    })
+
+def servicios_escuelas(request):
+    """
+    Enero 2, 2016
+    Autor: Cristian Leonardo Ríos López
+
+    Permite conocer el número de escuelas de formación deportiva según los servicios que presta.
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscuelaView
+    else:
+        tabla = TenantEscuelaView
+    
+    cantidad = 'nombre_servicio'
+    categoria = 'nombre_servicio'
+    escuelas = generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=None)
+    
+    if request.is_ajax():
+        return JsonResponse(escuelas)
+        
+    visualizaciones = [1, 5, 6]
+    form = EscuelasForm(visualizaciones=visualizaciones)
+    return render(request, 'escuelas/base_escuelas.html', {
+        'nombre_reporte' : 'Escuelas de formación deportiva por servicios prestados',
+        'url_data' : 'reportes_servicios_escuelas',
+        'datos': escuelas,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escuelas de Formación Deportiva',
         'fecha_generado': datetime.now(),
     })
