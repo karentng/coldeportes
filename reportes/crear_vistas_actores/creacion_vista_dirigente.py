@@ -16,7 +16,8 @@ def crear_vista_reportes_tenant_dirigente(nuevo_tenant):
     CREATE OR REPLACE VIEW reportes_tenantdirigenteview AS 
     SELECT
         DIR.id, NAL.nacionalidad_id,
-        DIR.entidad_id, DIR.fecha_creacion
+        DIR.entidad_id, DIR.fecha_creacion,
+        DIR.estado
     FROM
     snd_dirigente DIR
     LEFT JOIN snd_dirigente_nacionalidad NAL ON NAL.dirigente_id = DIR.id;

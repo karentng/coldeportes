@@ -186,3 +186,13 @@ class TenantDeportistaView(models.Model):
                 dic[dic_nombres[elemento]] = dic[elemento]
                 del dic[elemento]
         return dic
+
+class TenantDirigenteView(models.Model):
+
+    class Meta:
+        managed = False
+
+    fecha_creacion = models.DateTimeField()
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    entidad = models.ForeignKey(Entidad)
+    estado = models.IntegerField()

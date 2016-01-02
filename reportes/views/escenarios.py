@@ -161,7 +161,7 @@ def periodicidad_mantenimiento(request):
     categoria = 'periodicidad'
     cantidad = 'periodicidad'
 
-    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
+    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria, Mantenimiento.PERIODICIDADES)
 
     if request.is_ajax():
         return JsonResponse(escenarios)

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    {{ actor }}
+{% endblock %}
+
+{% block titulo_contenido %}
+   {{ actor }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
+    <style>
+        #filtros{
+            position: absolute;
+            top: 0;
+            left: 10px;
+            z-index: 100;
+            background-color: transparent;
+        }
+
+        #filtros .well{
+            background-color: rgba(255,255,255,0.4);
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            url = "{% url url_data %}";
+            realizarConsulta = function realizarConsulta(){
+                var departamentos = JSON.stringify($("#id_departamentos").val());
+                var municipios = JSON.stringify($("#id_municipios").val());
+
+                $.ajax({
+                    url: url,
+                    data: {'departamentos': departamentos,'municipios':municipios},
+                    dataType: 'json',
+                    success: function(data) {
+                        Reportes.modificarDatos(data);
+                    }
+                });
+
+            }
+            $("#id_departamentos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_municipios").on("change", function(){
+                realizarConsulta();
+            });
+
+        });
+        nombreReporte = "{{ nombre_reporte }}";
+        visualizaciones = {{visualizaciones|safe}};
+        datos = {{datos|safe}};
+
+    </script>
+    <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
+    <script>
+        $(document).ready(function(){
+           $("#filtros").css("display","none");
+           
+        });
+    </script>
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
+    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
+    <li><a href="{% url 'inicio' %}">Nacionalidad</a></li>
+{% endblock %}
+
+{% block botones_panel %}
+    {#<a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>#}
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row" id="contenido">
+        <div class="col-md-12">
+        {% for field in form %}
+            <div class="col-md-2">
+                {% bootstrap_field field layout="vertical" %}
+            </div>
+        {% endfor %}
+        </div>
+        <div class="col-md-12">
+            <br>
+            {% for i in visualizaciones %}
+                <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
+            {% endfor %}
+        </div>
+        <h5 align="right">Consultado: <b>{{fecha_generado}}</b></h5>
+    </div>
+
+{% endblock %}

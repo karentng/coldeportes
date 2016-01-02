@@ -94,7 +94,7 @@ def generar_vistas_actores(request, nuevo_tenant=None):
     from reportes.crear_vistas_actores.creacion_vista_dirigente import generar_vista_dirigente
 
     generar_vista_caf(nuevo_tenant)
-    generar_vista_escenario(nuevo_tenant)
+    #generar_vista_escenario(nuevo_tenant)
     generar_vista_personal_apoyo(nuevo_tenant)
     generar_vista_deportista(nuevo_tenant)
     generar_vista_dirigente(nuevo_tenant)
