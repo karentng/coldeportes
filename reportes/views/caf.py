@@ -106,7 +106,7 @@ def caracteristicas_caf(request):
     visualizaciones = [1, 5, 6]
     form = FiltrosCafDMDForm(visualizaciones=visualizaciones)
     return render(request, 'caf/base_caf.html', {
-        'nombre_reporte' : '',
+        'nombre_reporte' : 'División Territorial de CAF',
         'url_data' : 'reportes_caracteristicas_caf',
         'datos': cafs,
         'visualizaciones': visualizaciones,
