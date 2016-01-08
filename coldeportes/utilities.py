@@ -326,6 +326,8 @@ def refresh_public():
     from django.db import connection
     sql_tenant = """
         REFRESH MATERIALIZED VIEW entidades_publiccafview;
+        REFRESH MATERIALIZED VIEW entidades_publicpersonalapoyoview;
+        REFRESH MATERIALIZED VIEW entidades_publicdeportistaview;
     """
     try:
         cursor = connection.cursor()
