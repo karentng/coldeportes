@@ -40,7 +40,7 @@
                     data: {'departamentos': departamentos, 'genero':genero, 'reporte':reporte},
                     dataType: 'json',
                     success: function(data) {
-                        Reportes.modificarDatos(data);
+                        Reportes.modificarDatos(data,"{{ nombre_reporte }}");
                     }
                 });
 

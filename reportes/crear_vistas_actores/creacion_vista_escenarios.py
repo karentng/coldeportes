@@ -120,7 +120,6 @@ def generar_vista_escenario(nuevo_tenant=None):
         #creación vistas escenario para cada tenant
         crear_vista_reportes_tenant_escenario()
 
-
     for entidad in entidades:
         connection.set_tenant(entidad)
         if not nuevo_tenant:
