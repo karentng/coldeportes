@@ -108,6 +108,7 @@ class DirigenteView(models.Model):
         managed = False
 
     nombres = models.CharField(max_length=100)
+    cargo = models.CharField(max_length=100, verbose_name="Nombre del cargo")
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(max_length=6, verbose_name='Género')
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")

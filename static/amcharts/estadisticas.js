@@ -16,6 +16,35 @@ $(".nav a").on("shown.bs.tab", function () {
     tamanoAmcharts();
 });
 
+AmCharts.checkEmptyData = function (chart) {
+    if ( 0 == chart.dataProvider.length ) {
+        // set min/max on the value axis
+        try{
+            chart.valueAxes[0].minimum = 0;
+            chart.valueAxes[0].maximum = 100;
+        }catch(e){
+
+        }
+        // add dummy data point
+        var dataPoint = {
+            dummyValue: 0
+        };
+        dataPoint[chart.categoryField] = '';
+        chart.dataProvider = [dataPoint];
+        
+        // add label
+        chart.addLabel(0, '50%', 'No hay datos para el reporte especificado', 'center', 19, "#00acac");
+        
+        // set opacity of the chart div
+        chart.chartDiv.style.opacity = 0.75;
+        
+    }else{
+        chart.allLabels = [];
+    }
+    chart.validateNow();
+}
+
+
 function ClaseReportes(){
     /* Generar las gráficas */
     function generarComparativa(datos, nombreDiv, nombreGrafica){
@@ -104,7 +133,7 @@ function ClaseReportes(){
         chart.exportConfig = exportConfig();
 
         // WRITE
-        chart.write(nombreDiv);
+        chart.write(nombreDiv); 
         charts.push([chart, nombreDiv]);
     }
 
@@ -671,7 +700,7 @@ function ClaseReportes(){
             }
         },
 
-        modificarDatos: function(datos){
+        modificarDatos: function(datos, nombreNuevoReporte){
             var nuevosDatos = [];
             var cont = 0;
             for (i in datos){
@@ -700,8 +729,13 @@ function ClaseReportes(){
                     }
                 }else{
                     chartSeleccionado.dataProvider = nuevosDatos;
+                    chartSeleccionado.titles = [{
+                        "text": nombreNuevoReporte,
+                        "size": 16
+                    }];
                     chartSeleccionado.validateData();
                     chartSeleccionado.animateAgain();
+                    AmCharts.checkEmptyData(chartSeleccionado);
                 }
             }
         },
