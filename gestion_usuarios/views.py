@@ -408,7 +408,6 @@ def grupos_modificar(request, idGrupo):
 @superuser_only
 def datos_basicos_entidad(request):
     from entidades.views import obtenerTenant, obtenerFormularioTenant
-    from entidades.forms import ActoresForm
 
     entidad = request.tenant
     try:

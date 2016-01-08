@@ -617,3 +617,8 @@ def permisos(request):
         return render(request, 'entidad_permisos.html',{
             'forms': formset
             })
+
+@login_required
+def refresh_public(request):
+    from coldeportes.utilities import refresh_public
+    refresh_public()
