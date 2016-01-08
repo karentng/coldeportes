@@ -12,6 +12,7 @@ def eliminar_vista_reportes_public_escenario():
     return r
 
 def crear_vista_reportes_tenant_escenario():
+
     sql_tenant = """
     CREATE OR REPLACE VIEW reportes_tenantescenarioview AS 
     SELECT  E.id, E.nombre,
@@ -35,7 +36,6 @@ def crear_vista_reportes_tenant_escenario():
             CE.tipo_propietario,
             CE.descripcion as descripcion_caracterizacion,
             CE.fecha_creacion as fecha_creacion_caracterizacion_escenario,
-            CE.capacidad_espectadores as capacidad_espectadores,
 
             CEC.caracteristicaescenario_id,
             CTJ.tiposuperficie_id,
@@ -119,16 +119,11 @@ def generar_vista_escenario(nuevo_tenant=None):
         #creación vistas escenario para cada tenant
         crear_vista_reportes_tenant_escenario()
 
-
-    cont = 0
     for entidad in entidades:
         connection.set_tenant(entidad)
-        print (cont)
-        cont += 1
         if not nuevo_tenant:
-            #creación vistas escenario
+            #creación vistas escenario 
             crear_vista_reportes_tenant_escenario()
-            #crear_vista_reportes_tenant_escenario_estrato()
 
         aux = ("""
                 SELECT * FROM %s.reportes_tenantescenarioview E
