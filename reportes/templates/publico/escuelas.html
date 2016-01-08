@@ -1,0 +1,10 @@
+{# El identificador del grupo de la galeria es: 6 #}
+
+{% with 6 as id %}
+
+{% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="ESCUELAS DEPORTIVAS" titulo="Estrato" color="rgba(126,41,230,0.6)" descripcion="Visualización de la cantidad de escuelas de formación deportiva por estrato." url_reporte="reportes_estrato_escuelas" %}
+
+
+{% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="ESCUELAS DEPORTIVAS" titulo="Servicios" color="rgba(126,41,230,0.6)" descripcion="Visualización de la cantidad de escuelas de formación deportiva por servicios prestados." url_reporte="reportes_servicios_escuelas" %}
+
+{% endwith %}

@@ -14,7 +14,6 @@ class FiltrosEscenariosDMDForm(forms.Form):
         ('TE', 'Tipos de Escenarios'),
         ('TS', 'Tipos de Superficies de los Escenarios'),
         ('TP', 'Tipos de Propietarios de los Escenarios'),
-        ('TP', 'Tipos de Propietarios de los Escenarios'),
         ('CE', 'Cantidad de Espectadores de los Escenarios'),
     )
     def __init__(self, *args, **kwargs):
@@ -30,7 +29,6 @@ class FiltrosEscenariosDMDForm(forms.Form):
         if eliminar:
             del self.fields[eliminar]
 
-
         add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
 
@@ -39,4 +37,3 @@ class FiltrosEscenariosDMDForm(forms.Form):
     disciplinas = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all().order_by('descripcion'), required=False, label="Disciplina Deportiva")
     reporte = forms.ChoiceField(label="Clasificar por",required=False,choices=TIPO_REPORTE)
     visualizacion = forms.ChoiceField()
-
