@@ -34,13 +34,19 @@
                 var departamentos = JSON.stringify($("#id_departamentos").val());
                 var municipios = JSON.stringify($("#id_municipios").val());
                 var disciplinas = JSON.stringify($("#id_disciplinas").val());
+                $('#loading').modal('show');
 
                 $.ajax({
                     url: url,
                     data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':'null'},
                     dataType: 'json',
                     success: function(data) {
-                        Reportes.modificarDatos(data);
+                        Reportes.modificarDatos(data, "{{ nombre_reporte}}");
+                        $('#loading').modal('hide');
+                    }, 
+                    error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
                     }
                 });
 
@@ -97,6 +103,16 @@
             {% endfor %}
         </div>
         <h6 align="right">Consultado: <b>{{fecha_generado}}</b></h6>
+    </div>
+
+    <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 20%;">
+        <div class="modal-dialog" role="document">
+            <div class="progress progress-striped active">
+                <div class="progress-bar" style="width: 100%">
+                    Cargando reporte, por favor espere
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

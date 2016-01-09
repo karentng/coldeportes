@@ -6,7 +6,7 @@ from datetime import datetime
 from django.db.models import F, Count
 from entidades.modelos_vistas_reportes import PublicEscenarioView
 from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
-from reportes.models import TenantEscenarioView, TenantEscenarioEstratoView
+from reportes.models import TenantEscenarioView
 from snd.modelos.escenarios import *
 
 
@@ -197,6 +197,9 @@ def disponibilidad_escenarios(request):
     cantidad = 'dias'
 
     escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
 
     visualizaciones = [1,2,3,5,6,7]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')

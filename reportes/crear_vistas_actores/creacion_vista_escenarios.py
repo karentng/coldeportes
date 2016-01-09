@@ -36,7 +36,6 @@ def crear_vista_reportes_tenant_escenario():
             CE.tipo_propietario,
             CE.descripcion as descripcion_caracterizacion,
             CE.fecha_creacion as fecha_creacion_caracterizacion_escenario,
-            CE.capacidad_espectadores as capacidad_espectadores,
 
             CEC.caracteristicaescenario_id,
             CTJ.tiposuperficie_id,
@@ -97,7 +96,7 @@ def crear_vista_reportes_tenant_escenario():
         r=cursor.execute(sql_tenant)
         r=connection.commit()
         return r
-    except Exception:
+    except Exception as e:
         pass
 
 
