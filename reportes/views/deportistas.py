@@ -542,6 +542,7 @@ def lesiones_deportivas(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
         reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
         categoria = 'tipo_lesion' if reporte == 'TL' else 'periodo_rehabilitacion'
+        tipo = True if reporte == 'TL' else False
 
         consultas = [
             "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
@@ -552,7 +553,7 @@ def lesiones_deportivas(request):
 
         lesiones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         lesiones = tipoTenant.ajustar_resultado(lesiones)
-        lesiones = tabla.return_display_lesion(tabla,lesiones,True)
+        lesiones = tabla.return_display_lesion(tabla,lesiones,tipo)
 
         return JsonResponse(lesiones)
 
