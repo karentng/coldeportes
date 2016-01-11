@@ -29,6 +29,7 @@
 {% block js %}
     <script type="text/javascript">
         $(document).ready(function(){
+            $('#loading').modal('show');
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamentos").val());

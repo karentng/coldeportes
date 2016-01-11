@@ -86,18 +86,9 @@ def obtenerTenant(request, idEntidad, tipo):
     raise Exception
 
 @login_required
-def generar_vistas_actores(request, nuevo_tenant=None):
-    from reportes.crear_vistas_actores.creacion_vista_cafs import generar_vista_caf
-    from reportes.crear_vistas_actores.creacion_vista_escenarios import generar_vista_escenario
-    from reportes.crear_vistas_actores.creacion_vista_personal_apoyo import generar_vista_personal_apoyo
-    from reportes.crear_vistas_actores.creacion_vista_deportista import generar_vista_deportista
-
-    generar_vista_caf(nuevo_tenant)
-    generar_vista_escenario(nuevo_tenant)
-    generar_vista_personal_apoyo(nuevo_tenant)
-    generar_vista_deportista(nuevo_tenant)
-
-    # agregar los demas actores
+def generar_vistas_actores(request):
+    from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
+    generar_vistas()
 
 @login_required
 def registro(request, tipo, tipoEnte=None):
@@ -131,6 +122,8 @@ def registro(request, tipo, tipoEnte=None):
             try:
                 obj.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
+                from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
+                generar_vistas(instance, instance.obtener_padre())
                 if tipoEnte:
                     return redirect('entidad_registro', tipo, tipoEnte)
                 else:
@@ -166,6 +159,7 @@ def editar(request, idEntidad, tipo):
     form2 = ActoresForm(instance=instance.actores)
 
     if request.method == 'POST':
+        padre = instance.obtener_padre()
         nombre, form = obtenerFormularioTenant(tipo, post=request.POST, files=request.FILES, instance=instance)
         form2 = ActoresForm(request.POST, instance=instance.actores)
         if form.is_valid() and form2.is_valid():
@@ -174,6 +168,8 @@ def editar(request, idEntidad, tipo):
             actores.save()
             obj = form.save()
             messages.success(request, ("%s editado correctamente.")%(nombre))
+            from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
+            generar_vistas(instance, padre)
             return redirect('entidad_listar')
 
     return render(request, 'entidad_editar.html', {
