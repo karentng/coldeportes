@@ -13,22 +13,9 @@ def seleccion_datos_cafs(tenant=''):
     %ssnd_centroacondicionamiento CAF
     LEFT JOIN %ssnd_centroacondicionamiento_clases CLASES ON CLASES.centroacondicionamiento_id = CAF.id
     LEFT JOIN public.entidades_caclase CLASE ON CLASE.id = CLASES.caclase_id
-    LEFT JOIN %ssnd_centroacondicionamiento_servicios SERVICIOS ON SERVICIOS.centroaco|ndicionamiento_id = CAF.id
+    LEFT JOIN %ssnd_centroacondicionamiento_servicios SERVICIOS ON SERVICIOS.centroacondicionamiento_id = CAF.id
     LEFT JOIN public.entidades_caservicio SERVICIO ON SERVICIO.id = SERVICIOS.caservicio_id 
     """)%(tenant, tenant, tenant)
-
-COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
-    #[
-    #   Funcion que genera el comando de seleccion de datos,
-    #   Nombre de la vista (tenant),
-    #   Nombre vista materializada (public)
-    #]
-    [
-        seleccion_datos_cafs,
-        "reportes_tenantcafview",
-        "public.entidades_publiccafview",
-    ]
-]
 
 def seleccion_datos_escenarios(tenant=''):
     if tenant != '':
@@ -115,6 +102,11 @@ COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
     #   Nombre de la vista (tenant),
     #   Nombre vista materializada (public)
     #]
+    [
+        seleccion_datos_cafs,
+        "reportes_tenantcafview",
+        "public.entidades_publiccafview",
+    ],
     [
         seleccion_datos_escenarios,
         "reportes_tenantescenarioview",
