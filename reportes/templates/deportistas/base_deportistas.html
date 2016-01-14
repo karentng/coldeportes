@@ -40,7 +40,12 @@
                     data: {'departamentos': departamentos, 'genero':genero, 'reporte':reporte},
                     dataType: 'json',
                     success: function(data) {
-                        Reportes.modificarDatos(data,"{{ nombre_reporte }}");
+                        Reportes.modificarDatos(data,$("#id_reporte option:selected").text());
+                        $('#loading').modal('hide');
+                    },
+                    error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
                     }
                 });
 
@@ -53,12 +58,10 @@
             });
             $("#id_reporte").on("change", function(){
                 realizarConsulta();
-                var titulo =  $("#id_reporte option:selected").text();
-                console.log(titulo);
-                $(".titulo").html(titulo);
+
             });
         });
-        nombreReporte = "";
+        nombreReporte = "{{ nombre_reporte }}";
         visualizaciones = {{visualizaciones|safe}};
         datos = {{datos|safe}};
 
@@ -102,12 +105,22 @@
         </div>
         <div class="col-md-12">
             <br>
-            <h4 class="titulo" align="center">{{ nombre_reporte }}</h4>
+            {# <h4 class="titulo" align="center">{{ nombre_reporte }}</h4>#}
             {% for i in visualizaciones %}
                 <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
             {% endfor %}
         </div>
         <h5 align="right">Consultado: <b>{{fecha_generado}}</b></h5>
+    </div>
+
+    <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 20%;">
+        <div class="modal-dialog" role="document">
+            <div class="progress progress-striped active">
+                <div class="progress-bar" style="width: 100%">
+                    Cargando reporte, por favor espere
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
