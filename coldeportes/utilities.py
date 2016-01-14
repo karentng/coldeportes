@@ -321,3 +321,21 @@ def add_actores(model,actores):
 
     for actor in actores:
         setattr(model,actor,True)
+
+def refresh_public():
+    from django.db import connection
+    sql_tenant = """
+        REFRESH MATERIALIZED VIEW entidades_publiccafview;
+        REFRESH MATERIALIZED VIEW entidades_publicescenarioview;
+        REFRESH MATERIALIZED VIEW entidades_publicpersonalapoyoview;
+        REFRESH MATERIALIZED VIEW entidades_publicdeportistaview;
+        REFRESH MATERIALIZED VIEW entidades_publicdirigenteview;
+        REFRESH MATERIALIZED VIEW entidades_publicescuelaview;
+    """
+    try:
+        cursor = connection.cursor()
+        r=''
+        r=cursor.execute(sql_tenant)
+        r=connection.commit()
+    except Exception as e:
+        print (("%s %s")%("Error en refresh_public (coldeportes.utilities.py): ", e))

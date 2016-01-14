@@ -78,7 +78,7 @@ class TenantEscenarioView(models.Model):
     periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)
 
 
-class TenantEscenarioEstratoView(models.Model):
+'''class TenantEscenarioEstratoView(models.Model):
     
     class Meta:
         managed = False
@@ -88,7 +88,7 @@ class TenantEscenarioEstratoView(models.Model):
     estrato = models.CharField(max_length=1)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     cantidad = models.PositiveIntegerField()
-    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")
+    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")'''
 
 
 class TenantCafView(models.Model):

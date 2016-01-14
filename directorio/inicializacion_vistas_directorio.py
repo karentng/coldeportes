@@ -1,7 +1,7 @@
 from django.db import connection
 
 def checkear_inicializacion_directorio():
-    try:
+    """try:
         EscenarioView.objects.all().exists()
         CAFView.objects.all().exists()
         DeportistaView.objects.all().exists()
@@ -9,8 +9,8 @@ def checkear_inicializacion_directorio():
         DirigenteView.objects.all().exists()
         CajaCompensacionView.objects.all().exists()
 
-    except Exception:
-        crear_vistas()
+    except Exception:"""
+    crear_vistas()
 
 def crear_vistas():
     sql = """create or replace view directorio_escenarioview as 
@@ -86,7 +86,7 @@ def crear_vistas():
     LEFT join snd_personalapoyo_nacionalidad ENN on ENN.personalapoyo_id=EN.id
     LEFT join public.entidades_nacionalidad N on ENN.nacionalidad_id=N.id;
 
-
+    DROP VIEW IF EXISTS directorio_dirigenteview;
     create or replace view directorio_dirigenteview as 
     select  DI.id, DI.nombres,
             DI.apellidos, DI.genero,
@@ -95,11 +95,13 @@ def crear_vistas():
             DIN.nacionalidad_id,         
             DI.entidad_id, DI.estado,       
             DI.foto,     
-            DI.nombres||' '||DI.apellidos||' '||EN.nombre as contenido
+            DI.nombres||' '||DI.apellidos||' '||EN.nombre as contenido,            
+            C.cargo
     from snd_dirigente DI
     LEFT join public.entidades_entidad EN on DI.entidad_id=EN.id
     LEFT join snd_dirigente_nacionalidad DIN on DIN.dirigente_id=DI.id
-    LEFT join public.entidades_nacionalidad N on DIN.nacionalidad_id=N.id;
+    LEFT join public.entidades_nacionalidad N on DIN.nacionalidad_id=N.id
+    LEFT join (SELECT DIC.id, DIC.dirigente_id, DIC.nombre as cargo, max(fecha_posesion) as fecha_posesion_cargo FROM snd_dirigentecargo as DIC group by DIC.id) C on C.dirigente_id=DI.id;
 
     create or replace view directorio_cajacompensacionview as 
     select  CC.id, CC.nombre,
