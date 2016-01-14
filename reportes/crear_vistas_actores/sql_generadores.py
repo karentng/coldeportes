@@ -114,7 +114,7 @@ def seleccion_datos_personal_apoyo(tenant=''):
         FROM
         %ssnd_personalapoyo PA
         LEFT JOIN %ssnd_formaciondeportiva FD ON FD.personal_apoyo_id = PA.id
-        LEFT JOIN %ssnd_personalapoyo_nacionalidad NAL ON NAL.personalapoyo_id = PA.id;
+        LEFT JOIN %ssnd_personalapoyo_nacionalidad NAL ON NAL.personalapoyo_id = PA.id
         """)%(tenant,tenant,tenant)
 
 
@@ -141,7 +141,7 @@ def seleccion_datos_deportistas(tenant=''):
         LEFT JOIN %ssnd_informacionacademica IA ON IA.deportista_id = DE.id
         LEFT JOIN %ssnd_informacionadicional ID ON ID.deportista_id = DE.id
         LEFT JOIN %ssnd_historiallesiones HL ON HL.deportista_id = DE.id
-        LEFT JOIN %ssnd_historialdoping IFD ON IFD.deportista_id = DE.id;
+        LEFT JOIN %ssnd_historialdoping IFD ON IFD.deportista_id = DE.id
         """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant,tenant)
 
 COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
