@@ -465,7 +465,7 @@ def formacion_academica(request):
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Formación Academica de los deportistas',
+        'nombre_reporte' : 'Formación académica de los deportistas',
         'url_data' : 'reporte_formacion_academica',
         'datos': formaciones,
         'visualizaciones': visualizaciones,
