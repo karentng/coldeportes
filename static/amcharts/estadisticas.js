@@ -698,6 +698,7 @@ function ClaseReportes(){
                     radar(resultado, nombreDiv, nombreGrafica);
                     break;
             }
+            AmCharts.checkEmptyData(charts[charts.length-1][0]);
         },
 
         modificarDatos: function(datos, nombreNuevoReporte){
