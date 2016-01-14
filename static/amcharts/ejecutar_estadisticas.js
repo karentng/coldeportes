@@ -20,6 +20,7 @@ $.getScript(base+"amcharts/amcharts.js", function(){
 															var aux = parseInt(visualizaciones[i]);
 															Reportes.crearGrafico(datos, parseInt(visualizaciones[i]), "chartdiv" + aux, nombreReporte);
 														}
+														$('#loading').modal('hide');
 													}
 
 													graficar(nombreReporte);

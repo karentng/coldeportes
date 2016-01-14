@@ -59,8 +59,6 @@ class CategoriaDisciplinaDeportiva(models.Model):
     def __str__(self):
         return self.nombre
 
-
-
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico", default=False)
     escenarios = models.BooleanField(verbose_name="Escenarios", default=False)
@@ -93,6 +91,9 @@ class Entidad(TenantMixin): # Entidad deportiva
     tipo = models.IntegerField(choices=TIPOS)
     actores = models.OneToOneField(Actores, null=True)
     auto_create_schema = True
+
+    def obtener_padre(self):
+        return None
 
     #def ajustar_resultado(self, resultado, resultado_consulta):
     def ajustar_resultado(self, resultado, campo='descripcion'):
@@ -392,6 +393,9 @@ class FederacionParalimpica(ResolucionReconocimiento):
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     comite = models.ForeignKey(Comite)
 
+    def obtener_padre(self):
+        return self.comite
+
     def save(self, *args, **kwargs):
         comite_para = Comite.objects.get(tipo_comite=2)
         self.comite=comite_para
@@ -422,6 +426,9 @@ class LigaParalimpica(ResolucionReconocimiento):
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     federacion = models.ForeignKey(FederacionParalimpica)
 
+    def obtener_padre(self):
+        return self.federacion
+
     def obtener_datos_entidad(self):
         entidad = {
             'tipo_tenant': type(self).__name__,
@@ -449,6 +456,9 @@ class ClubParalimpico(ResolucionReconocimiento):
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
 
+    def obtener_padre(self):
+        return self.liga
+
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
@@ -471,6 +481,9 @@ class ClubParalimpico(ResolucionReconocimiento):
 class Federacion(ResolucionReconocimiento):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
     comite = models.ForeignKey(Comite)
+
+    def obtener_padre(self):
+        return self.comite
 
     def obtener_datos_entidad(self):
         entidad = {
@@ -735,6 +748,9 @@ class Liga(ResolucionReconocimiento):
         }
         return entidad
 
+    def obtener_padre(self):
+        return self.federacion
+
     federacion = models.ForeignKey(Federacion, null=True, blank=True, verbose_name="federación")
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
@@ -748,6 +764,9 @@ class Club(ResolucionReconocimiento):
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+
+    def obtener_padre(self):
+        return self.liga
 
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
