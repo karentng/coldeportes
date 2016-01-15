@@ -96,6 +96,54 @@ def seleccion_datos_escenarios(tenant=''):
     LEFT join %ssnd_mantenimiento M on M.escenario_id=E.id
     """)%(tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant)
 
+
+def seleccion_datos_personal_apoyo(tenant=''):
+    if tenant != '':
+        tenant = ("%s.")%(tenant)
+    return (
+        """
+        SELECT
+            PA.id, PA.actividad,
+            PA.genero, PA.tipo_id,
+            PA.fecha_nacimiento, NAL.nacionalidad_id,
+            PA.ciudad_id, PA.etnia,
+            PA.lgtbi, PA.fecha_creacion,
+            PA.estado,
+            FD.nivel as nivel_formacion, FD.estado as estado_formacion,
+            FD.fecha_finalizacion as ano_final_formacion, FD.fecha_creacion as creacion_formacion
+        FROM
+        %ssnd_personalapoyo PA
+        LEFT JOIN %ssnd_formaciondeportiva FD ON FD.personal_apoyo_id = PA.id
+        LEFT JOIN %ssnd_personalapoyo_nacionalidad NAL ON NAL.personalapoyo_id = PA.id
+        """)%(tenant,tenant,tenant)
+
+
+def seleccion_datos_deportistas(tenant=''):
+    if tenant != '':
+        tenant = ("%s.")%(tenant)
+    return (
+        """
+        SELECT
+            DE.id, DE.genero,
+            DE.ciudad_residencia_id,DIS.tipodisciplinadeportiva_id,
+            DE.fecha_nacimiento,DE.fecha_creacion,
+            DE.lgtbi,DE.etnia,
+            NAL.nacionalidad_id,DE.estado,
+            HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
+            IA.nivel as nivel_formacion, IA.estado as estado_formacion,
+            ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
+            HL.tipo_lesion,HL.periodo_rehabilitacion, IFD.fecha as fecha_doping
+        FROM
+        %ssnd_deportista DE
+        LEFT JOIN %ssnd_deportista_nacionalidad NAL ON NAL.deportista_id = DE.id
+        LEFT JOIN %ssnd_deportista_disciplinas DIS ON DIS.deportista_id = DE.id
+        LEFT JOIN %ssnd_historialdeportivo HD ON HD.deportista_id = DE.id
+        LEFT JOIN %ssnd_informacionacademica IA ON IA.deportista_id = DE.id
+        LEFT JOIN %ssnd_informacionadicional ID ON ID.deportista_id = DE.id
+        LEFT JOIN %ssnd_historiallesiones HL ON HL.deportista_id = DE.id
+        LEFT JOIN %ssnd_historialdoping IFD ON IFD.deportista_id = DE.id
+        """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant,tenant)
+
 COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
     #[
     #   Funcion que genera el comando de seleccion de datos,
@@ -111,5 +159,15 @@ COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
         seleccion_datos_escenarios,
         "reportes_tenantescenarioview",
         "public.entidades_publicescenarioview",
+    ],
+    [
+        seleccion_datos_personal_apoyo,
+        "reportes_tenantpersonalapoyoview",
+        "public.entidades_publicpersonalapoyoview"
+    ],
+    [
+        seleccion_datos_deportistas,
+        "reportes_tenantdeportistaview",
+        "public.entidades_publicdeportistaview"
     ]
 ]
