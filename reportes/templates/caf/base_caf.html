@@ -29,6 +29,7 @@
 {% block js %}
     <script type="text/javascript">
         $(document).ready(function(){
+            $('#loading').modal('show');
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamentos").val());
@@ -88,14 +89,18 @@
 {% endblock %}
 
 {% block botones_panel %}
-    {#<a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>#}
+    <a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
+{% block titulo_panel %}
+    <label class="titulo" style="color:white;"> Reportes Centros de Acondicionamiento Físico</label>
 {% endblock %}
 
 {% block contenido_panel %}
     <div class="row" id="contenido">
         <div class="col-md-12">       
         {% for field in form %}
-            <div class="col-md-2">
+            <div class="col-md-3">
                 {% bootstrap_field field layout="vertical" %}
             </div>
         {% endfor %}
