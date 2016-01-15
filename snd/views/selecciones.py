@@ -182,6 +182,8 @@ def registrar_deportistas(request,id_s):
 
     deportistas = personas_por_entidad(request.tenant.tipo,'Deportista',request.tenant)
 
+    tenant_actual = connection.tenant
+
     depor_registrados = []
     for d in DeportistasSeleccion.objects.filter(seleccion=sele): #Obtener deportistas seleccionados al momento
         entidad = d.entidad
@@ -193,6 +195,8 @@ def registrar_deportistas(request,id_s):
     for depo in depor_registrados: #Quitar de la lista de deportistas los que ya estan registrados
         if depo in deportistas:
             deportistas.remove(depo)
+
+    connection.set_tenant(tenant_actual)
 
     return render(request,'selecciones/wizard/wizard_seleccion_deportistas.html',{
         'titulo': 'Selección de Deportistas',
@@ -221,6 +225,7 @@ def registrar_personal(request,id_s):
         return redirect('listar_seleccion')
 
     personal = personas_por_entidad(request.tenant.tipo,'PersonalApoyo',request.tenant)
+    tenant_actual = connection.tenant
 
     personal_registrados = []
     for p in PersonalSeleccion.objects.filter(seleccion=sele): #Obtener personal seleccionado al momento
@@ -233,6 +238,8 @@ def registrar_personal(request,id_s):
     for person in personal_registrados: #Quitar de la lista de personal los que ya estan registrados
         if person in personal:
             personal.remove(person)
+
+    connection.set_tenant(tenant_actual)
 
     return render(request,'selecciones/wizard/wizard_seleccion_personal.html',{
         'titulo': 'Selección de Personal de Apoyo',
@@ -279,6 +286,8 @@ def ver_seleccion(request,id_s):
         messages.error(request,'No existe la seleccion solicitada')
         return redirect('listar_seleccion')
 
+    entidad_actual = connection.tenant
+
     depor_registrados = []
     for d in DeportistasSeleccion.objects.filter(seleccion=sele):
         entidad = d.entidad
@@ -286,6 +295,7 @@ def ver_seleccion(request,id_s):
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
         deportista = Deportista.objects.get(id=depor)
+        deportista.disciplinas_deportivas = deportista.disciplinas_deportivas()
         depor_registrados += [deportista]
 
     connection.set_tenant(request.tenant)
@@ -298,12 +308,15 @@ def ver_seleccion(request,id_s):
         connection.set_tenant(entidad)
         ContentType.objects.clear_cache()
         personal = PersonalApoyo.objects.get(id=per)
+        personal.nacionalidad_str = personal.nacionalidad_str()
         if count % 2 == 0:
             personal.par = True
         else:
             personal.par = False
         count+=1
         personal_registrados += [personal]
+
+    connection.set_tenant(entidad_actual)
 
     return render(request,'selecciones/ver_seleccion.html',{
         'seleccion': sele,
@@ -529,7 +542,7 @@ def seleccionar_personal(request,id_s,id_entidad,id_personal):
                 per.nombres + ' ' +per.apellidos,
                 per.tipo_id,
                 per.identificacion,
-                per.actividad,
+                per.get_actividad_display(),
                 per.ciudad.__str__(),
                 per.entidad.nombre,
                 "<a data-per="+str(per.id)+" data-entidad="+str(per.entidad.id)+" style='cursor:pointer;'	class='bt-borrar' ><i class='fa fa-trash'></i> Borrar</a>"

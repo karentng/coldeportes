@@ -187,6 +187,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones,reque
                 "imagen": i[3],
             }
 
+            #3:club; 4:cajas; 5:ente; 9:club paralímpico; 10:caf; 11:escuela
             if request.tenant.tipo not in [3,4,5,9,10,11]:
                 if objeto.__class__.__name__ == 'Dirigente' or objeto.__class__.__name__ == 'PersonalApoyo':
                     if objeto.entidad == request.tenant:
@@ -423,6 +424,7 @@ def obtenerDatos(request, modelo):
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
 
+    #1:liga; 2:federación; 6:comité; 7:federación paralímpica; 8:liga paralímpico
     if request.tenant.tipo in [1,2,6,7,8]:
         multiples_tenant = True
     else:
