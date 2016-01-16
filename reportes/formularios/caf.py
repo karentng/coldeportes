@@ -55,8 +55,7 @@ class FiltrosCafDMDForm(forms.Form):
 
         add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
-
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     municipios = forms.ModelMultipleChoiceField(queryset=Ciudad.objects.all(), required=False)
-    reporte = forms.ChoiceField(label="Clasificar por",required=False,choices=TIPO_REPORTE)
-    visualizacion = forms.ChoiceField()
+    reporte = forms.ChoiceField(label="Clasificar por:",required=False,choices=TIPO_REPORTE)
+    visualizacion = forms.ChoiceField(label="Visualización")
