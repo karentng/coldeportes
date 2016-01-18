@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    {{ actor }}
+{% endblock %}
+
+{% block titulo_contenido %}
+   {{ actor }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
+    <style>
+        #filtros{
+            position: absolute;
+            top: 0;
+            left: 10px;
+            z-index: 100;
+            background-color: transparent;
+        }
+
+        #filtros .well{
+            background-color: rgba(255,255,255,0.4);
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            url = "{% url url_data %}";
+            realizarConsulta = function realizarConsulta(){
+                var departamentos = JSON.stringify($("#id_departamentos").val());
+                var municipios = JSON.stringify($("#id_municipios").val());
+                var disciplinas = JSON.stringify($("#id_disciplinas").val());
+                $('#loading').modal('show');
+
+                $.ajax({
+                    url: url,
+                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':'null'},
+                    dataType: 'json',
+                    success: function(data) {
+                        Reportes.modificarDatos(data, "{{ nombre_reporte}}");
+                        $('#loading').modal('hide');
+                    }, 
+                    error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
+                    }
+                });
+
+            }
+            $("#id_departamentos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_municipios").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_disciplinas").on("change", function(){
+                realizarConsulta();
+            });
+
+        });
+        nombreReporte = "{{ nombre_reporte }}";
+        visualizaciones = {{visualizaciones|safe}};
+        datos = {{datos|safe}};
+
+    </script>
+    <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
+    <script>
+        $(document).ready(function(){
+           $("#filtros").css("display","none");
+           
+        });
+    </script>
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
+    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
+    <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
+{% endblock %}
+{% block titulo_panel %}
+    <label class="titulo" style="color:white;"> {{nombre_reporte}}</label>
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row" id="contenido">
+        <div class="col-md-12">
+        {% for field in form %}
+            <div class="col-md-2">
+                {% bootstrap_field field layout="vertical" %}
+            </div>
+        {% endfor %}
+        </div>
+        <div class="col-md-12">
+            <br>
+            <!--<h4 class="titulo" align="center">{{nombre_reporte}}</h4>-->
+            {% for i in visualizaciones %}
+                <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
+            {% endfor %}
+        </div>
+        <h6 align="right">Consultado: <b>{{fecha_generado}}</b></h6>
+    </div>
+
+    <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 20%;">
+        <div class="modal-dialog" role="document">
+            <div class="progress progress-striped active">
+                <div class="progress-bar" style="width: 100%">
+                    Cargando reporte, por favor espere
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

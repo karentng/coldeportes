@@ -334,6 +334,10 @@ def refresh_public():
     sql_tenant = """
         REFRESH MATERIALIZED VIEW entidades_publiccafview;
         REFRESH MATERIALIZED VIEW entidades_publicescenarioview;
+        REFRESH MATERIALIZED VIEW entidades_publicpersonalapoyoview;
+        REFRESH MATERIALIZED VIEW entidades_publicdeportistaview;
+        REFRESH MATERIALIZED VIEW entidades_publicdirigenteview;
+        REFRESH MATERIALIZED VIEW entidades_publicescuelaview;
     """
     try:
         cursor = connection.cursor()

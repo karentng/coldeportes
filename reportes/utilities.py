@@ -52,6 +52,7 @@ def convert_choices_to_array(tuple):
     Método para crear el diccionario inicial con base en el choices obtenido del modelo
 """
 def crear_diccionario_inicial(tuple):
+    print("tuple: ", tuple)
     temp_dict = {}
     for numero,cadena in tuple:
         temp_dict[numero] = 0

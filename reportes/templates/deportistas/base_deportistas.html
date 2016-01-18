@@ -2,15 +2,15 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    {{ nombre_reporte }} - {{ actor }}
+    {{ actor }}
 {% endblock %}
 
 {% block titulo_contenido %}
-    {{ nombre_reporte }} - {{ actor }}
+   {{ actor }}
 {% endblock %}
 
 {% block css %}
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
     <style>
         #filtros{
             position: absolute;
@@ -22,53 +22,52 @@
 
         #filtros .well{
             background-color: rgba(255,255,255,0.4);
-            border: 1px solid #00acac;
         }
     </style>
 {% endblock %}
 
 {% block js %}
-	<script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function(){
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamento").val());
                 var genero = JSON.stringify($("#id_genero").val());
+                var reporte = JSON.stringify($("#id_reporte").val());
 
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos, 'genero':genero},
+                    data: {'departamentos': departamentos, 'genero':genero, 'reporte':reporte},
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data,"{{ nombre_reporte }}");
                     }
                 });
 
-            }
+            };
             $("#id_genero").on("change", function(){
                 realizarConsulta();
             });
             $("#id_departamento").on("change", function(){
                 realizarConsulta();
             });
+            $("#id_reporte").on("change", function(){
+                realizarConsulta();
+                var titulo =  $("#id_reporte option:selected").text();
+                console.log(titulo);
+                $(".titulo").html(titulo);
+            });
         });
-        nombreReporte = "{{ nombre_reporte }}";
+        nombreReporte = "";
         visualizaciones = {{visualizaciones|safe}};
         datos = {{datos|safe}};
 
-	</script>
+    </script>
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
     <script>
         $(document).ready(function(){
            $("#filtros").css("display","none");
-           $('#contenido').hover(
-                function() {
-                    $("#filtros").css("display","block");
-                }, function() {
-                    $("#filtros").css("display","none");
-                }
-            );
-
+           
         });
     </script>
 {% endblock %}
@@ -81,7 +80,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    {{ nombre_reporte }}
+    {{ nombre_reporte }} - {{ actor }}
 {% endblock %}
 
 {% block botones_panel %}
@@ -89,22 +88,26 @@
 {% endblock %}
 
 {% block contenido_panel %}
-	<div class="row" id="contenido">
-		<div class="col-md-3" id="filtros">
-            <div class="well">
-                <fieldset>
-                <legend class="pull-left width-full">Filtros</legend>
-                {% for i in form %}
-                    {% bootstrap_field i layout="vertical" %}
-                {% endfor %}
-                </fieldset>
+    <div class="row" id="contenido">
+        <div class="col-md-12">       
+        {% for field in form %}
+            {% if agrupado %}
+                <div class="col-md-3">
+            {% else %}
+                <div class="col-md-4">
+            {% endif %}
+                {% bootstrap_field field layout="vertical" %}
             </div>
+        {% endfor %}
         </div>
         <div class="col-md-12">
+            <br>
+            <h4 class="titulo" align="center">{{ nombre_reporte }}</h4>
             {% for i in visualizaciones %}
                 <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
             {% endfor %}
         </div>
-	</div>
+        <h5 align="right">Consultado: <b>{{fecha_generado}}</b></h5>
+    </div>
 
 {% endblock %}

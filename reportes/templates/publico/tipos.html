@@ -20,6 +20,23 @@
     <link href="{{STATIC_URL}}plugins/lightbox/css/lightbox.css" rel="stylesheet" />
     <link href="{{STATIC_URL}}css/dim-buttons.css" rel="stylesheet" />
     <!-- ================== END PAGE LEVEL STYLE ================== -->
+    <style type="text/css">
+        .btn.btn-personal {
+            color: #fff;
+            background: #7B29E6;
+            border-color: #7B29E6;
+        }
+
+        a.btn-personal.dim {
+            box-shadow: inset 0px 0px 0px #6F25D0, 0px 5px 0px 0px #6F25D0, 0px 10px 5px #999999;
+        }
+
+        .btn-personal.active, .btn-personal.focus, .btn-personal:active, .btn-personal:focus, .btn-personal:hover, .open>.dropdown-toggle.btn-personal {
+            color: #fff;
+            background-color: #6F25D0;
+            border-color: #6F25D0;
+        }
+    </style>
     
 {% endblock %}
 
@@ -65,6 +82,10 @@
                 <i class="ion-ios-basketball-outline"></i>
                 Personal de Apoyo
             </a>
+            <a href="#gallery-group-6" class="btn btn-personal dim btn-sm" data-option-value=".gallery-group-6">
+                <i class="ion-ribbon-a"></i>
+                Escuelas Deportivas
+            </a>
         </span>
     </div>
     <div id="gallery" class="gallery">
@@ -73,5 +94,6 @@
         {% include "publico/dirigentes.html" %}
         {% include "publico/escenarios.html" %}
         {% include "publico/personal_apoyo.html" %}
+        {% include "publico/escuelas.html" %}
     </div>
 {% endblock %}

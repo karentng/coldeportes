@@ -2,7 +2,7 @@ from django.db import connection
 
 def crear_vista_reportes_tenant_deportista():
     sql_tenant = """
-    CREATE OR REPLACE view reportes_tenantdeportistaview AS
+    CREATE MATERIALIZED view reportes_tenantdeportistaview AS
     SELECT
         DE.id, DE.genero,
         DE.ciudad_residencia_id,DIS.tipodisciplinadeportiva_id,
@@ -37,7 +37,7 @@ def generar_vista_deportista(nuevo_tenant=None):
     tenant_actual = connection.tenant
 
     sql = """
-        CREATE OR REPLACE VIEW public.entidades_publicdeportistaview AS
+        CREATE MATERIALIZED VIEW public.entidades_publicdeportistaview AS
     """
 
     from entidades.models import Entidad

@@ -36,8 +36,10 @@
         opciones = true;
         {% if tipo_tenant == 1 or tipo_tenant == 2 or tipo_tenant == 6 or tipo_tenant == 7 or tipo_tenant == 8%}
             url = "{% url 'cargar_columnas' 3 %}";
-        {% elif tipo_tenant == 9 or tipo_tenant == 3 or tipo_tenant == 11 %}
+        {% elif tipo_tenant == 9 or tipo_tenant == 3%}
             url = "{% url 'cargar_columnas' 2 %}";
+        {% elif tipo_tenant == 11 or tipo_tenant == 5 %}
+            url = "{% url 'cargar_columnas' 11 %}";
         {% endif %}
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>

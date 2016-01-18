@@ -59,6 +59,9 @@ class TenantEscenarioView(models.Model):
     tiposuperficie = models.ForeignKey(TipoSuperficie)
     tipo_propietario = models.CharField(max_length=2, choices=PROPIETARIOS)
     clase_acceso = models.CharField(max_length=3)
+    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
+    caracteristicas = models.ForeignKey(CaracteristicaEscenario)
+
 
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
@@ -77,7 +80,7 @@ class TenantEscenarioView(models.Model):
     periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)
 
 
-class TenantEscenarioEstratoView(models.Model):
+'''class TenantEscenarioEstratoView(models.Model):
     
     class Meta:
         managed = False
@@ -87,7 +90,7 @@ class TenantEscenarioEstratoView(models.Model):
     estrato = models.CharField(max_length=1)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     cantidad = models.PositiveIntegerField()
-    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")
+    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")'''
 
 
 class TenantCafView(models.Model):
@@ -126,13 +129,28 @@ class TenantPersonalApoyoView(models.Model):
     creacion_formacion = models.DateField()
 
 class TenantDeportistaView(models.Model):
+    TIPOS_LESION = {
+        1:'FRACTURA',
+        2:'LUXACIÓN',
+        3:'RUPTURA',
+        4:'LESIÓN MENISCAL',
+        5:'ESGUINCE',
+    }
+
+    PERIODOS_REHABILITACION = {
+        1:'MENOR A 1 MES',
+        2:'ENTRE 1 y 3 MESES',
+        3:'ENTRE 3 y 6 MESES',
+        4:'MAYOR A 6 MESES',
+    }
+
     class Meta:
         managed = False
 
     #campos modelo deportista
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
-    disciplinas = models.ForeignKey(TipoDisciplinaDeportiva)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     fecha_nacimiento = models.DateField()
     fecha_creacion = models.DateTimeField()
     lgtbi = models.BooleanField()
@@ -158,3 +176,38 @@ class TenantDeportistaView(models.Model):
 
     #campos doping
     fecha_doping = models.DateField()
+
+    def return_display_lesion(self,dic,is_tipo):
+        ids = [id for id in dic]
+        dic_nombres = self.TIPOS_LESION if is_tipo else self.PERIODOS_REHABILITACION
+        for elemento in ids:
+            if None == elemento:
+                dic['NINGUNA LESIÓN'] = dic[None]
+                del dic[None]
+            else:
+                dic[dic_nombres[elemento]] = dic[elemento]
+                del dic[elemento]
+        return dic
+
+class TenantDirigenteView(models.Model):
+
+    class Meta:
+        managed = False
+
+    fecha_creacion = models.DateTimeField()
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    entidad = models.ForeignKey(Entidad)
+    estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+
+class TenantEscuelaView(models.Model):
+
+    class Meta:
+        managed = False
+
+    fecha_creacion = models.DateTimeField()
+    estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+    estrato = models.PositiveIntegerField()
+    entidad = models.ForeignKey(Entidad)
+    nombre_servicio = models.CharField(max_length=255)
