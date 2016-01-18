@@ -7,14 +7,14 @@ TIPOS = (
     (1, 'Liga'),
     (2, 'Federación'),
     (3, 'Club'),
-    (4, 'Cajas de Compensación'),
+    (4, 'Cajas Compensación'),
     (5, 'Ente (Municipal y Departamental)'),
     (6, 'Comité'),
     (7,'Federación Paralimpica'),
     (8,'Liga Paralimpica'),
     (9,'Club Paralimpico'),
-    (10,'Centro De Acondicionamiento'),
-    (11, 'Escuela de Formación Deportiva'),
+    (10,'Centro Acondicionamiento'),
+    (11, 'Escuela Formación Deportiva'),
 )
 
 class Departamento(models.Model):

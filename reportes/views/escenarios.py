@@ -5,10 +5,9 @@ import ast
 from datetime import datetime
 from django.db.models import F, Count
 from entidades.modelos_vistas_reportes import PublicEscenarioView
-from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
+from reportes.formularios.escenarios import FiltrosEscenariosDMDForm, FiltrosEscenariosComunasForm
 from reportes.models import TenantEscenarioView
 from snd.modelos.escenarios import *
-
 
 '''
 Reportes:
@@ -76,7 +75,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     #Sin filtros
     else:
         escenarios =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
-
+    print(escenarios.query)
     if choices:
         escenarios = sumar_datos_diccionario(escenarios,choices)
         return escenarios
@@ -85,8 +84,9 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     return escenarios
 
 
-def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choices=None):
 
+def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choices=None):
+    from coldeportes.utilities import get_request_or_none
     tipoTenant = request.tenant.obtenerTenant()
 
     departamentos = None
@@ -95,10 +95,10 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
     reporte = None
 
     if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
-        disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
-        reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
+        departamentos = get_request_or_none(request.GET, 'departamentos')
+        municipios = get_request_or_none(request.GET, 'municipios')
+        disciplinas = get_request_or_none(request.GET, 'disciplinas')
+        reporte = get_request_or_none(request.GET, 'reporte')
     
     if not categoria:
     #si categoria es none es el reporte características escenarios
@@ -206,6 +206,78 @@ def disponibilidad_escenarios(request):
     return render(request, 'escenarios/base2_escenario.html', {
         'nombre_reporte' : 'Días de disponibilidad de los escenarios',
         'url_data' : 'reportes_disponibilidad_escenarios',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios',
+        'fecha_generado': datetime.now()
+    })
+
+
+
+def clase_escenarios(request):
+    """
+    Enero 15, 2015
+    Autor: Karent Narvaez
+
+    Permite conocer la cantidad de escenarios en cada clase determinada.
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscenarioView
+    else:
+        tabla = TenantEscenarioView
+
+    categoria = 'caracteristicas__descripcion'
+    cantidad = 'caracteristicas'
+
+    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
+
+    visualizaciones = [1,2,3,5,6,7]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
+    return render(request, 'escenarios/base2_escenario.html', {
+        'nombre_reporte' : 'Clases de Escenario',
+        'url_data' : 'reportes_clase_escenarios',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios',
+        'fecha_generado': datetime.now()
+    })
+
+def comunas_escenarios(request):
+    from coldeportes.utilities import get_request_or_none
+
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscenarioView
+    else:
+        tabla = TenantEscenarioView
+
+    municipios = None
+    disciplinas = None
+
+    if request.is_ajax():
+        municipios = get_request_or_none(request.GET, 'municipios')
+        if municipios != None:
+            municipios = [municipios]
+        disciplinas = get_request_or_none(request.GET, 'disciplinas')
+
+    escenarios = ejecutar_consulta_segun_filtro('comuna', 'comuna', None, municipios, disciplinas, tipoTenant, tabla, None)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
+
+    visualizaciones = [1,2,3,5,6,7]
+    form = FiltrosEscenariosComunasForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/base_escenario.html', {
+        'nombre_reporte' : 'Escenarios por comunas',
+        'url_data' : 'reportes_escenarios_comunas',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
