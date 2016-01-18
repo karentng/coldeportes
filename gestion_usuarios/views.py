@@ -233,7 +233,7 @@ def inicio_tenant(request):
     actoresAsociados = request.tenant.cantidadActoresAsociados()
 
     tipoTenant = request.tenant.obtenerTenant()
-    ubicaciones += tipoTenant.atributos_escenarios()
+    ubicaciones = tipoTenant.atributos_escenarios()
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     connection.set_tenant(request.tenant)
