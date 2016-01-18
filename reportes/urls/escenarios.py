@@ -7,4 +7,6 @@ urlpatterns = patterns('reportes.views.escenarios',
     url(r'^periodicidad-mantenimiento$', 'periodicidad_mantenimiento', name='reportes_escenarios_periodicidad_mantenimiento'),
     
     url(r'^disponibilidad-escenario$', 'disponibilidad_escenarios', name='reportes_disponibilidad_escenarios'),
+
+    url(r'^clase-escenarios$', 'clase_escenarios', name='reportes_clase_escenarios'),
 )
