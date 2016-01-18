@@ -8,6 +8,13 @@ from django.contrib.auth.models import *
 from datetimewidget.widgets import DateWidget
 import urllib.parse
 
+def get_request_or_none(request, field):
+    import ast
+    try:
+        return None if request[field] == 'null'  else ast.literal_eval(request[field])
+    except Exception as e:
+        return None
+
 def MyDateWidget():
     return DateWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd', 'startView':4, 'language':'es'})
 

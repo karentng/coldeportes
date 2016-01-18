@@ -38,3 +38,21 @@ class FiltrosEscenariosDMDForm(forms.Form):
     reporte = forms.ChoiceField(label="Clasificar por",required=False,choices=TIPO_REPORTE)
     visualizacion = forms.ChoiceField()
 
+class FiltrosEscenariosComunasForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        visualizaciones_definidas = kwargs.pop('visualizaciones', None)
+        eliminar = kwargs.pop('eliminar', None)
+        super(FiltrosEscenariosComunasForm, self).__init__(*args, **kwargs)
+        self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
+        self.fields['municipios'] = adicionarClase(self.fields['municipios'], 'one')
+        self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
+
+        if eliminar:
+            del self.fields[eliminar]
+
+
+        add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
+
+    municipios = forms.ModelChoiceField(queryset=Ciudad.objects.all(), required=False, empty_label="(Todos)")
+    disciplinas = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all().order_by('descripcion'), required=False, label="Disciplina Deportiva")
+    visualizacion = forms.ChoiceField()
