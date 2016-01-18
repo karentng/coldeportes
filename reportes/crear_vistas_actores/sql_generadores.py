@@ -43,7 +43,7 @@ def seleccion_datos_escenarios(tenant=''):
             CE.descripcion as descripcion_caracterizacion,
             CE.fecha_creacion as fecha_creacion_caracterizacion_escenario,
 
-            CEC.caracteristicaescenario_id as caracteristicas_id,
+            CEC.caracteristicaescenario_id,
             CTJ.tiposuperficie_id,
             CTD.tipodisciplinadeportiva_id,
             CCU.tipousoescenario_id,

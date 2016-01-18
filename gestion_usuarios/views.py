@@ -171,10 +171,6 @@ def inicio_public(request):
             ubicaciones.append(escenario.obtenerAtributos())
 
         cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
-        
-        centros = CentroAcondicionamiento.objects.filter(entidad=i)
-        for centro in centros:
-            ubicaciones.append(centro.obtenerAtributos())
 
     connection.set_tenant(public)
 
@@ -237,8 +233,7 @@ def inicio_tenant(request):
     actoresAsociados = request.tenant.cantidadActoresAsociados()
 
     tipoTenant = request.tenant.obtenerTenant()
-    ubicaciones = tipoTenant.atributos_cafs()
-    ubicaciones += tipoTenant.atributos_escenarios()
+    ubicaciones = tipoTenant.atributos_escenarios()
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     connection.set_tenant(request.tenant)

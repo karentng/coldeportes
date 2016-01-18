@@ -5,10 +5,9 @@ import ast
 from datetime import datetime
 from django.db.models import F, Count
 from entidades.modelos_vistas_reportes import PublicEscenarioView
-from reportes.formularios.escenarios import FiltrosEscenariosDMDForm
+from reportes.formularios.escenarios import FiltrosEscenariosDMDForm, FiltrosEscenariosComunasForm
 from reportes.models import TenantEscenarioView
 from snd.modelos.escenarios import *
-
 
 '''
 Reportes:
@@ -41,17 +40,26 @@ def verificar_seleccion_reporte(opcion_reporte):
 
     return categoria
 
-def obtener_choices_categoria(categoria):
-    if categoria == 'clase_acceso':
-        return CaracterizacionEscenario.ACCESOS
-    elif categoria == 'estrato':
-        return Escenario.estratos
-    elif categoria == 'estado_fisico':
-        return CaracterizacionEscenario.ESTADOS_FISICOS
-    elif categoria == 'tipo_propietario':
-        return CaracterizacionEscenario.PROPIETARIOS
-    else:
-        return None
+def obtener_choices(opcion_reporte):
+    clases_choices = CaracterizacionEscenario.ACCESOS
+    if opcion_reporte == 'ES':
+        clases_choices = Escenario.estratos
+    elif opcion_reporte == 'CA':
+        clases_choices = CaracterizacionEscenario.ACCESOS
+    elif opcion_reporte == 'DT':
+        clases_choices = None
+    elif opcion_reporte == 'EF':
+        clases_choices = CaracterizacionEscenario.ESTADOS_FISICOS
+    elif opcion_reporte == 'TE':
+        clases_choices = None
+    elif opcion_reporte == 'TS':
+        clases_choices = None
+    elif opcion_reporte == 'TP':
+        clases_choices = CaracterizacionEscenario.PROPIETARIOS
+    elif opcion_reporte == 'CE':
+        clases_choices = None
+
+    return clases_choices
 
 
 def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla, choices):
@@ -88,7 +96,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     #Sin filtros
     else:
         escenarios =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
-
+    print(escenarios.query)
     if choices:
         escenarios = sumar_datos_diccionario(escenarios,choices)
         return escenarios
@@ -97,8 +105,9 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     return escenarios
 
 
-def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choices=None):
 
+def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choices=None):
+    from coldeportes.utilities import get_request_or_none
     tipoTenant = request.tenant.obtenerTenant()
 
     departamentos = None
@@ -107,15 +116,14 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
     reporte = None
 
     if request.is_ajax():
-        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
-        disciplinas = None if request.GET['disciplinas'] == 'null'  else ast.literal_eval(request.GET['disciplinas'])
-        reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
+        departamentos = get_request_or_none(request.GET, 'departamentos')
+        municipios = get_request_or_none(request.GET, 'municipios')
+        disciplinas = get_request_or_none(request.GET, 'disciplinas')
+        reporte = get_request_or_none(request.GET, 'reporte')
     
     if not categoria:
     #si categoria es none es el reporte características escenarios
         categoria = verificar_seleccion_reporte(reporte)
-    choices = obtener_choices_categoria(categoria)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices)
 
     if '' in escenarios:
@@ -148,7 +156,7 @@ def caracteristicas_escenarios(request):
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     return render(request, 'escenarios/base_escenario.html', {
-        'nombre_reporte' : '',
+        'nombre_reporte' : 'Clase de Acceso Escenarios',
         'url_data' : 'reportes_caracteristicas_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
@@ -226,6 +234,8 @@ def disponibilidad_escenarios(request):
         'fecha_generado': datetime.now()
     })
 
+
+
 def clase_escenarios(request):
     """
     Enero 15, 2015
@@ -253,6 +263,42 @@ def clase_escenarios(request):
     return render(request, 'escenarios/base2_escenario.html', {
         'nombre_reporte' : 'Clases de Escenario',
         'url_data' : 'reportes_clase_escenarios',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios',
+        'fecha_generado': datetime.now()
+    })
+
+def comunas_escenarios(request):
+    from coldeportes.utilities import get_request_or_none
+
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscenarioView
+    else:
+        tabla = TenantEscenarioView
+
+    municipios = None
+    disciplinas = None
+
+    if request.is_ajax():
+        municipios = get_request_or_none(request.GET, 'municipios')
+        if municipios != None:
+            municipios = [municipios]
+        disciplinas = get_request_or_none(request.GET, 'disciplinas')
+
+    escenarios = ejecutar_consulta_segun_filtro('comuna', 'comuna', None, municipios, disciplinas, tipoTenant, tabla, None)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
+
+    visualizaciones = [1,2,3,5,6,7]
+    form = FiltrosEscenariosComunasForm(visualizaciones=visualizaciones)
+    return render(request, 'escenarios/base_escenario.html', {
+        'nombre_reporte' : 'Escenarios por comunas',
+        'url_data' : 'reportes_escenarios_comunas',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,

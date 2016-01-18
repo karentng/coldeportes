@@ -117,6 +117,7 @@ def caracteristicas_caf(request):
         
     visualizaciones = [1, 5, 6]
     form = FiltrosCafDMDForm(visualizaciones=visualizaciones)
+    nombres_columnas = ["Departamento", "Estrato", "Clase", "Servicio"]
     return render(request, 'caf/base_caf.html', {
         'nombre_reporte' : 'División Territorial de CAF',
         'url_data' : 'reportes_caracteristicas_caf',
@@ -125,4 +126,5 @@ def caracteristicas_caf(request):
         'form': form,
         'actor': 'Centro de Acondicionamiento Físico',
         'fecha_generado': datetime.now(),
+        'nombres_columnas': nombres_columnas,
     })

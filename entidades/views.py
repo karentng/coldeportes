@@ -91,8 +91,6 @@ def generar_vistas_actores(request):
     generar_vistas()
 
 
-    # agregar los demas actores
-
 @login_required
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
@@ -124,6 +122,7 @@ def registro(request, tipo, tipoEnte=None):
 
             try:
                 obj.save()
+                generar_vistas_actores(request, obj)
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
                 from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
                 generar_vistas(instance, instance.obtener_padre())
