@@ -41,6 +41,18 @@ def verificar_seleccion_reporte(opcion_reporte):
 
     return categoria
 
+def obtener_choices_categoria(categoria):
+    if categoria == 'clase_acceso':
+        return CaracterizacionEscenario.ACCESOS
+    elif categoria == 'estrato':
+        return Escenario.estratos
+    elif categoria == 'estado_fisico':
+        return CaracterizacionEscenario.ESTADOS_FISICOS
+    elif categoria == 'tipo_propietario':
+        return CaracterizacionEscenario.PROPIETARIOS
+    else:
+        return None
+
 
 def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla, choices):
     """
@@ -103,6 +115,7 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
     if not categoria:
     #si categoria es none es el reporte características escenarios
         categoria = verificar_seleccion_reporte(reporte)
+    choices = obtener_choices_categoria(categoria)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices)
 
     if '' in escenarios:

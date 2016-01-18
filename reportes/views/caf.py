@@ -48,6 +48,14 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipio
     cafs = tipoTenant.ajustar_resultado(cafs)
     return cafs
 
+
+def obtener_choices_categoria(categoria):
+    if categoria == 'estrato':
+        return CentroAcondicionamiento.ESTRATOS
+    else:
+        return None
+
+
 def verificar_seleccion_reporte(opcion_reporte):
     categoria = 'ciudad__departamento__nombre'
     if opcion_reporte == 'DT':
@@ -58,8 +66,8 @@ def verificar_seleccion_reporte(opcion_reporte):
         categoria = 'nombre_clase'
     elif opcion_reporte == 'SC':
         categoria = 'nombre_servicio'
-
     return categoria
+
 
 def generador_reporte_caf(request, tabla, cantidad,choices=None):
 
@@ -75,6 +83,10 @@ def generador_reporte_caf(request, tabla, cantidad,choices=None):
         reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
     
     categoria = verificar_seleccion_reporte(reporte)
+
+    choices = obtener_choices_categoria(categoria)
+    print(choices)
+
     cafs = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
 
     if '' in cafs:
