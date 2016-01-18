@@ -225,3 +225,37 @@ def disponibilidad_escenarios(request):
         'actor': 'Escenarios',
         'fecha_generado': datetime.now()
     })
+
+def clase_escenarios(request):
+    """
+    Enero 15, 2015
+    Autor: Karent Narvaez
+
+    Permite conocer la cantidad de escenarios en cada clase determinada.
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscenarioView
+    else:
+        tabla = TenantEscenarioView
+
+    categoria = 'caracteristicas__descripcion'
+    cantidad = 'caracteristicas'
+
+    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
+
+    if request.is_ajax():
+        return JsonResponse(escenarios)
+
+    visualizaciones = [1,2,3,5,6,7]
+    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
+    return render(request, 'escenarios/base2_escenario.html', {
+        'nombre_reporte' : 'Clases de Escenario',
+        'url_data' : 'reportes_clase_escenarios',
+        'datos': escenarios,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escenarios',
+        'fecha_generado': datetime.now()
+    })
