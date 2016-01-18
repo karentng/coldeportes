@@ -33,6 +33,9 @@
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamentos").val());
                 var municipios = JSON.stringify($("#id_municipios").val());
+                if (municipios == '""'){
+                    municipios = null;
+                }
                 var disciplinas = JSON.stringify($("#id_disciplinas").val());
                 var reporte = JSON.stringify($("#id_reporte").val());
                 $('#loading').modal('show');
