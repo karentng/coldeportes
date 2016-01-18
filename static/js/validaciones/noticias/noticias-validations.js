@@ -2,6 +2,9 @@ form = "#noticia";
 fields = {
     foto: {
         validators: {
+            notEmpty: {
+                message: "Por favor seleccione una foto"
+            },
             file: {
                 extension: 'png,jpg,jpeg,svg',
                 message: 'Seleccione una imagen con alguno de los siguientes formatos (png, jpg, jpeg, svg) y que tenga un tamaño menor a 5MB',

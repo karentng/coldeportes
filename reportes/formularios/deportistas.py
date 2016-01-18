@@ -32,9 +32,9 @@ class FiltrosDeportistasForm(forms.Form):
             self.fields['visualizacion'].choices = visualizaciones
 
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
-    genero = forms.MultipleChoiceField(choices=(('HOMBRE','HOMBRE'),('MUJER','MUJER'),),required=False, label="Genero")
+    genero = forms.MultipleChoiceField(choices=(('HOMBRE','HOMBRE'),('MUJER','MUJER'),),required=False, label="Género")
     #disciplina = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all(), required=False)
-    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES, label="Visualización")
 
 class FiltrosDeportistasCategoriaForm(forms.Form):
     """
