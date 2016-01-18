@@ -90,9 +90,6 @@ def generar_vistas_actores(request):
     from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
     generar_vistas()
 
-
-    # agregar los demas actores
-
 @login_required
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
