@@ -120,7 +120,7 @@ def reporte_formacion_academica_personal(request):
         ]
 
         formaciones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
-
+        formaciones = tipoTenant.ajustar_resultado(formaciones)
         return JsonResponse(formaciones)
 
     else:
@@ -159,8 +159,8 @@ def reporte_cantidad_total_personal_apoyo(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s).order_by('id').distinct('id'))",
             "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).order_by('id').distinct('id'))",
             "list("+tabla.__name__+".objects.filter(estado = 0).order_by('id').distinct('id'))",
         ]
