@@ -158,7 +158,7 @@ def caracteristicas_escenarios(request):
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     return render(request, 'escenarios/base_escenario.html', {
-        'nombre_reporte' : '',
+        'nombre_reporte' : 'Clase de Acceso Escenarios',
         'url_data' : 'reportes_caracteristicas_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
