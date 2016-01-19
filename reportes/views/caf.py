@@ -103,7 +103,7 @@ def caracteristicas_caf(request):
     if request.is_ajax():
         return JsonResponse(cafs)
         
-    visualizaciones = [1, 5, 6]
+    visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosCafDMDForm(visualizaciones=visualizaciones)
     nombres_columnas = ["Departamento", "Estrato", "Clase", "Servicio"]
     return render(request, 'caf/base_caf.html', {
