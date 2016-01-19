@@ -119,6 +119,7 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
     if not categoria:
     #si categoria es none es el reporte características escenarios        
         categoria = verificar_seleccion_reporte(reporte)
+    choices = obtener_choices(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices,ajustados)
 
     if '' in escenarios:
