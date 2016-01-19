@@ -1,7 +1,7 @@
 #encoding:utf-8
 from django.shortcuts import render, redirect
 from snd.modelos.deportistas import HistorialDeportivo,Deportista,InformacionAdicional,Deportista,InformacionAcademica
-from entidades.models import Departamento
+from entidades.models import Departamento,Nacionalidad
 from django.db.models import Count
 from reportes.formularios.deportistas import FiltrosDeportistasForm,FiltrosDeportistasCategoriaForm
 from django.db.models import F
@@ -353,7 +353,7 @@ def reporte_cantidad_total_deportistas(request):
         return JsonResponse(resultado)
 
     else:
-        print(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
+        print(tabla.objects.filter(estado = 0).order_by('id').distinct('id').query)
         total_deportistas = len(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
         print(total_deportistas)
 
@@ -465,7 +465,7 @@ def formacion_academica(request):
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Formación Academica de los deportistas',
+        'nombre_reporte' : 'Formación académica de los deportistas',
         'url_data' : 'reporte_formacion_academica',
         'datos': formaciones,
         'visualizaciones': visualizaciones,
@@ -511,7 +511,7 @@ def nacionalidad(request):
     visualizaciones = [1, 2, 3,5,6,7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Nacionalidad de los deportistas',
+        'nombre_reporte' : 'Número de deportistas por nacionalidad',
         'url_data' : 'reporte_nacionalidad',
         'datos': nacionalidades,
         'visualizaciones': visualizaciones,
@@ -519,6 +519,64 @@ def nacionalidad(request):
         'actor': 'Deportistas',
         'fecha_generado': datetime.now()
     })
+
+def extranjeros(request):
+    """
+    Enero 16, 2016
+    Autor: Daniel Correa
+
+    Esta vista implementa el reporte de cantidad de extranjeros y colombianos
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDeportistaView
+    else:
+        tabla = TenantDeportistaView
+
+    colombia = Nacionalidad.objects.filter(iso='CO')
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s)",
+            tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s)",
+            tabla.__name__+".objects.filter(estado=0,genero__in=%s)",
+            tabla.__name__+".objects.filter(estado=0)",
+        ]
+
+        consulta_general = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+        consulta_completa = list(consulta_general.filter(nacionalidad=colombia).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).count()
+        if numero_extranjeros > 0:
+            consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
+        consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
+
+        return JsonResponse(consulta_completa)
+
+    else:
+        consulta_general = tabla.objects.filter(estado=0)
+        consulta_completa = list(consulta_general.filter(nacionalidad=colombia).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).count()
+        if numero_extranjeros > 0:
+            consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
+        consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
+
+
+    visualizaciones = [1, 2, 3,5,6,7]
+    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    return render(request, 'deportistas/base_deportistas.html', {
+        'nombre_reporte' : 'Número de deportistas extranjeros y colombianos',
+        'url_data' : 'reporte_extranjeros',
+        'datos': consulta_completa,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Deportistas',
+        'fecha_generado': datetime.now()
+    })
+
 
 def lesiones_deportivas(request):
     """
@@ -542,6 +600,7 @@ def lesiones_deportivas(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
         reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
         categoria = 'tipo_lesion' if reporte == 'TL' else 'periodo_rehabilitacion'
+        tipo = True if reporte == 'TL' else False
 
         consultas = [
             "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
@@ -552,7 +611,7 @@ def lesiones_deportivas(request):
 
         lesiones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         lesiones = tipoTenant.ajustar_resultado(lesiones)
-        lesiones = tabla.return_display_lesion(tabla,lesiones,True)
+        lesiones = tabla.return_display_lesion(tabla,lesiones,tipo)
 
         return JsonResponse(lesiones)
 

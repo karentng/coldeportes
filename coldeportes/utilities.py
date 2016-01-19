@@ -336,8 +336,6 @@ def refresh_public():
         REFRESH MATERIALIZED VIEW entidades_publicescenarioview;
         REFRESH MATERIALIZED VIEW entidades_publicpersonalapoyoview;
         REFRESH MATERIALIZED VIEW entidades_publicdeportistaview;
-        REFRESH MATERIALIZED VIEW entidades_publicdirigenteview;
-        REFRESH MATERIALIZED VIEW entidades_publicescuelaview;
     """
     try:
         cursor = connection.cursor()

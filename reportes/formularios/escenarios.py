@@ -14,7 +14,6 @@ class FiltrosEscenariosDMDForm(forms.Form):
         ('TE', 'Tipos de Escenarios'),
         ('TS', 'Tipos de Superficies de los Escenarios'),
         ('TP', 'Tipos de Propietarios de los Escenarios'),
-        ('CE', 'Cantidad de Espectadores de los Escenarios'),
     )
     def __init__(self, *args, **kwargs):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
