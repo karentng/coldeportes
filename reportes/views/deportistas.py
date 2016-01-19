@@ -353,7 +353,7 @@ def reporte_cantidad_total_deportistas(request):
         return JsonResponse(resultado)
 
     else:
-        print(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
+        print(tabla.objects.filter(estado = 0).order_by('id').distinct('id').query)
         total_deportistas = len(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
         print(total_deportistas)
 
