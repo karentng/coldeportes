@@ -40,6 +40,21 @@ def verificar_seleccion_reporte(opcion_reporte):
 
     return categoria
 
+def obtener_choices(opcion_reporte):
+    #clases_choices = CaracterizacionEscenario.ACCESOS
+    if opcion_reporte == 'ES':
+        clases_choices = Escenario.estratos
+    elif opcion_reporte == 'CA':
+        clases_choices = CaracterizacionEscenario.ACCESOS
+    elif opcion_reporte == 'EF':
+        clases_choices = CaracterizacionEs0cenario.ESTADOS_FISICOS
+    elif opcion_reporte == 'TP':
+        clases_choices = CaracterizacionEscenario.PROPIETARIOS
+    else:
+        clases_choices = None
+
+    return clases_choices
+
 
 def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios, disciplinas,tipoTenant, tabla, choices):
     """
@@ -100,9 +115,14 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
         disciplinas = get_request_or_none(request.GET, 'disciplinas')
         reporte = get_request_or_none(request.GET, 'reporte')
     
+    if not categoria and not request.is_ajax():
+        #por default carga el reporte de Clase de accesos
+        reporte = 'CA'
     if not categoria:
-    #si categoria es none es el reporte características escenarios
+    #si categoria es none es el reporte características escenarios        
         categoria = verificar_seleccion_reporte(reporte)
+
+    choices = obtener_choices(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices)
 
     if '' in escenarios:
@@ -135,7 +155,7 @@ def caracteristicas_escenarios(request):
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     return render(request, 'escenarios/base_escenario.html', {
-        'nombre_reporte' : '',
+        'nombre_reporte' : 'Clase de Acceso Escenarios',
         'url_data' : 'reportes_caracteristicas_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
