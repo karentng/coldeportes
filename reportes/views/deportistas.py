@@ -106,10 +106,10 @@ def beneficiario_programa_apoyo(request):
         beneficiados = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         beneficiados = tipoTenant.ajustar_resultado(beneficiados)
         if True in beneficiados:
-            beneficiados['Deportistas beneficiados'] = beneficiados[True]
+            beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
         if False in beneficiados:
-            beneficiados['Deportistas no beneficiados'] = beneficiados[False]
+            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
             del beneficiados[False]
 
         return JsonResponse(beneficiados)
@@ -119,10 +119,10 @@ def beneficiario_programa_apoyo(request):
         beneficiados = tipoTenant.ajustar_resultado(beneficiados)
 
         if True in beneficiados:
-            beneficiados['Deportistas beneficiados'] = beneficiados[True]
+            beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
         if False in beneficiados:
-            beneficiados['Deportistas no beneficiados'] = beneficiados[False]
+            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
             del beneficiados[False]
 
     visualizaciones = [1, 2, 3, 5, 6]
@@ -165,31 +165,31 @@ def reporte_uso_centros_biomedicos(request):
 
         usa_centros = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         usa_centros = tipoTenant.ajustar_resultado(usa_centros)
-        if True in usa_centros:
-            usa_centros['Usa centros biomédicos'] = usa_centros[True]
-            del usa_centros[True]
-        if False in usa_centros:
-            usa_centros['No usa centros biomédicos'] = usa_centros[False]
-            del usa_centros[False]
 
+        if True in usa_centros:
+            usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
+            del usa_centros[True]
+        if None in usa_centros:
+            usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+            del usa_centros[None]
 
         return JsonResponse(usa_centros)
 
     else:
         usa_centros = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('usa_centros_biomedicos')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         usa_centros = tipoTenant.ajustar_resultado(usa_centros)
-
         if True in usa_centros:
-            usa_centros['Usa centros biomédicos'] = usa_centros[True]
+            usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
             del usa_centros[True]
-        if False in usa_centros:
-            usa_centros['No usa centros biomédicos'] = usa_centros[False]
-            del usa_centros[False]
+        if None in usa_centros:
+            usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+            del usa_centros[None]
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+
+    visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Uso de centros biomédicos',
+        'nombre_reporte' : 'Cantidad de deportistas que usan centros biomédicos',
         'url_data' : 'reporte_uso_centros_biomedicos',
         'datos': usa_centros,
         'visualizaciones': visualizaciones,
@@ -226,11 +226,12 @@ def reporte_lgtbi(request):
 
         lgtbi = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         lgtbi = tipoTenant.ajustar_resultado(lgtbi)
+
         if True in lgtbi:
-            lgtbi['Pertenece a la comunidad LGTBI'] = lgtbi[True]
+            lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
         if False in lgtbi:
-            lgtbi['No pertenece a la comunidad LGTBI'] = lgtbi[False]
+            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
             del lgtbi[False]
 
         return JsonResponse(lgtbi)
@@ -238,18 +239,17 @@ def reporte_lgtbi(request):
     else:
         lgtbi = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         lgtbi = tipoTenant.ajustar_resultado(lgtbi)
-
         if True in lgtbi:
-            lgtbi['Pertenece a la comunidad LGTBI'] = lgtbi[True]
+            lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
         if False in lgtbi:
-            lgtbi['No pertenece a la comunidad LGTBI'] = lgtbi[False]
+            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
             del lgtbi[False]
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Deportistas que pertenecen a la comunidad LGTBI',
+        'nombre_reporte' : 'Cantidad de deportistas que pertenecen a la comunidad LGTBI',
         'url_data' : 'reporte_lgtbi_deportistas',
         'datos': lgtbi,
         'visualizaciones': visualizaciones,
@@ -277,41 +277,37 @@ def reporte_doping(request):
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
-        consultas = [
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('fecha_doping')).values('descripcion').annotate(cantidad=Count('fecha_doping',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('fecha_doping')).values('descripcion').annotate(cantidad=Count('fecha_doping',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).annotate(descripcion=F('fecha_doping')).values('descripcion').annotate(cantidad=Count('fecha_doping',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado = 0).annotate(descripcion=F('fecha_doping')).values('descripcion').annotate(cantidad=Count('fecha_doping',distinct=True)))",
+        consultas_con_doping = [
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).exclude(fecha_doping=None).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).exclude(fecha_doping=None).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).exclude(fecha_doping=None).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0).exclude(fecha_doping=None).order_by('id').distinct('id'))",
         ]
 
-        beneficiados = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
-        beneficiados = tipoTenant.ajustar_resultado(beneficiados)
-        if True in beneficiados:
-            beneficiados['Deportistas con reportes de doping'] = beneficiados[True]
-            del beneficiados[True]
-        if False in beneficiados:
-            beneficiados['Deportistas sin reportes de doping'] = beneficiados[False]
-            del beneficiados[False]
+        consultas_sin_doping = [
+            "list("+tabla.__name__+".objects.filter(estado = 0,fecha_doping=None,ciudad_residencia__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,fecha_doping=None,ciudad_residencia__departamento__id__in=%s).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,fecha_doping=None,genero__in=%s).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0, fecha_doping=None).order_by('id').distinct('id'))",
+        ]
 
-        return JsonResponse(beneficiados)
+        doping = {}
+        doping['DEPORTISTAS CON REPORTES DE DOPING'] = len(ejecutar_casos_recursivos(consultas_con_doping,departamentos,genero,tipoTenant))
+        doping['DEPORTISTAS SIN REPORTES DE DOPING'] = len(ejecutar_casos_recursivos(consultas_sin_doping,departamentos,genero,tipoTenant))
+
+        return JsonResponse(doping)
 
     else:
-        beneficiados = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('es_beneficiario_programa_apoyo')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
-        beneficiados = tipoTenant.ajustar_resultado(beneficiados)
-
-        if True in beneficiados:
-            beneficiados['Deportistas beneficiados'] = beneficiados[True]
-            del beneficiados[True]
-        if False in beneficiados:
-            beneficiados['Deportistas no beneficiados'] = beneficiados[False]
-            del beneficiados[False]
+        doping = {}
+        doping['DEPORTISTAS CON REPORTES DE DOPING'] = len(tabla.objects.filter(estado = 0).exclude(fecha_doping=None).order_by('id').distinct('id'))
+        doping['DEPORTISTAS SIN REPORTES DE DOPING'] = len(tabla.objects.filter(estado = 0, fecha_doping=None).order_by('id').distinct('id'))
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Beneficiario Programa de Apoyo',
-        'url_data' : 'reporte_beneficiario_programa_apoyo',
-        'datos': beneficiados,
+        'nombre_reporte' : 'Cantidad de deportistas con reportes de doping',
+        'url_data' : 'reporte_doping',
+        'datos': doping,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
@@ -353,9 +349,7 @@ def reporte_cantidad_total_deportistas(request):
         return JsonResponse(resultado)
 
     else:
-        print(tabla.objects.filter(estado = 0).order_by('id').distinct('id').query)
         total_deportistas = len(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
-        print(total_deportistas)
 
         resultado = {
             'Total Deportistas':total_deportistas

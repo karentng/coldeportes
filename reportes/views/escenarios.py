@@ -35,6 +35,10 @@ def verificar_seleccion_reporte(opcion_reporte):
         categoria = 'tiposuperficie__descripcion'
     elif opcion_reporte == 'TP':
         categoria = 'tipo_propietario'
+    elif opcion_reporte == 'PM':
+        categoria = 'periodicidad'
+    elif opcion_reporte == 'DIS':
+        categoria = 'dias__nombre'
 
     return categoria
 
@@ -48,6 +52,8 @@ def obtener_choices(opcion_reporte):
         clases_choices = CaracterizacionEs0cenario.ESTADOS_FISICOS
     elif opcion_reporte == 'TP':
         clases_choices = CaracterizacionEscenario.PROPIETARIOS
+    elif opcion_reporte == 'PM':
+        clases_choices = Mantenimiento.PERIODICIDADES
     else:
         clases_choices = None
 
@@ -161,76 +167,6 @@ def caracteristicas_escenarios(request):
         'fecha_generado': datetime.now()
     })
 
-def periodicidad_mantenimiento(request):
-    """
-    Noviembre 22, 2015
-    Autor: Cristian Leonardo Ríos López
-
-    Permite conocer el numero de escenarios por su periodicidad de mantenimiento
-    """
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioView
-    else:
-        tabla = TenantEscenarioView
-
-    categoria = 'periodicidad'
-    cantidad = 'periodicidad'
-
-    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria, Mantenimiento.PERIODICIDADES)
-
-    if request.is_ajax():
-        return JsonResponse(escenarios)
-
-    visualizaciones = [1, 5 , 6]
-
-    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
-    return render(request, 'escenarios/base2_escenario.html', {
-        'nombre_reporte' : 'Periodicidad de mantenimiento de Escenarios',
-        'url_data' : 'reportes_escenarios_periodicidad_mantenimiento',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios',
-        'fecha_generado': datetime.now()
-    })
-
-def disponibilidad_escenarios(request):
-    """
-    Noviembre 21, 2015
-    Autor: Milton Lenis
-
-    Permite conocer los días de disponibilidad de los escenarios
-    """
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioView
-    else:
-        tabla = TenantEscenarioView
-
-    categoria = 'dias__nombre'
-    cantidad = 'dias'
-
-    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
-
-    if request.is_ajax():
-        return JsonResponse(escenarios)
-
-    visualizaciones = [1,2,3,5,6,7]
-    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
-    return render(request, 'escenarios/base2_escenario.html', {
-        'nombre_reporte' : 'Días de disponibilidad de los escenarios',
-        'url_data' : 'reportes_disponibilidad_escenarios',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios',
-        'fecha_generado': datetime.now()
-    })
-
-
 
 def clase_escenarios(request):
     """
@@ -265,6 +201,7 @@ def clase_escenarios(request):
         'actor': 'Escenarios',
         'fecha_generado': datetime.now()
     })
+
 
 def comunas_escenarios(request):
     from coldeportes.utilities import get_request_or_none
@@ -301,6 +238,7 @@ def comunas_escenarios(request):
         'actor': 'Escenarios',
         'fecha_generado': datetime.now()
     })
+
 
 def cantidad_espectadores(request):
     """
