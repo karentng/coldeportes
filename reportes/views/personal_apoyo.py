@@ -84,14 +84,14 @@ def reporte_actividades_personal(request):
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
-    print(type(datos))
     return render(request,'personal_apoyo/base_personal_apoyo.html',{
         'nombre_reporte' : 'Actividades que desempeña el personal de apoyo',
         'url_data' : 'reporte_actividades_personal',
         'datos': datos,
         'visualizaciones': visualizaciones,
         'form': form,
-        'actor': 'Personal de Apoyo'
+        'actor': 'Personal de Apoyo',
+        'nombre_columna':'Actividad'
     })
 
 
@@ -130,7 +130,6 @@ def reporte_formacion_academica_personal(request):
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
-    print(type(formaciones))
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Formación académica del personal de apoyo',
         'url_data' : 'reporte_formacion_academica_personal',
@@ -138,7 +137,8 @@ def reporte_formacion_academica_personal(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Personal de Apoyo',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombre_columna':'Nivel de Formación'
     })
 
 
@@ -191,7 +191,8 @@ def reporte_cantidad_total_personal_apoyo(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Personal de Apoyo',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombre_columna':'Descripción'
     })
 
 def reporte_lgtbi(request):
@@ -251,5 +252,6 @@ def reporte_lgtbi(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Personal de Apoyo',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombre_columna':'Descripción'
     })
