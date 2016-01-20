@@ -84,6 +84,7 @@ def reporte_actividades_personal(request):
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
+    print(type(datos))
     return render(request,'personal_apoyo/base_personal_apoyo.html',{
         'nombre_reporte' : 'Actividades que desempeña el personal de apoyo',
         'url_data' : 'reporte_actividades_personal',
@@ -129,6 +130,7 @@ def reporte_formacion_academica_personal(request):
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
+    print(type(formaciones))
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Formación académica del personal de apoyo',
         'url_data' : 'reporte_formacion_academica_personal',
