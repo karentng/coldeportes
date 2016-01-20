@@ -94,20 +94,23 @@ class TenantEscenarioView(models.Model):
 
 
 class TenantCafView(models.Model):
-	class Meta:
-		managed = False
+    class Meta:
+        managed = False
 
-	ciudad = models.ForeignKey(Ciudad)
-	comuna = models.PositiveIntegerField()
-	estrato = models.PositiveIntegerField()
-	latitud = models.FloatField()
-	longitud = models.FloatField()
-	altura = models.PositiveIntegerField()
-	estado = models.IntegerField()
-	entidad = models.ForeignKey(Entidad)
-	fecha_creacion = models.DateTimeField()
-	nombre_clase = models.CharField(max_length=255)
-	nombre_servicio = models.CharField(max_length=255)
+    nombre =  models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100, verbose_name="dirección")
+    telefono = models.CharField(max_length=50, verbose_name="teléfono")
+    ciudad = models.ForeignKey(Ciudad)
+    comuna = models.PositiveIntegerField()
+    estrato = models.PositiveIntegerField()
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    altura = models.PositiveIntegerField()
+    estado = models.IntegerField()
+    entidad = models.ForeignKey(Entidad)
+    fecha_creacion = models.DateTimeField()
+    nombre_clase = models.CharField(max_length=255)
+    nombre_servicio = models.CharField(max_length=255)
 
 class TenantPersonalApoyoView(models.Model):
     class Meta:
