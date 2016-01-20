@@ -38,6 +38,7 @@ class PublicEscenarioView(models.Model):
     estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
     tiposuperficie = models.ForeignKey(TipoSuperficie)
     clase_acceso = models.CharField(max_length=3)
+    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)
