@@ -223,6 +223,10 @@ def comunas_escenarios(request):
         disciplinas = get_request_or_none(request.GET, 'disciplinas')
 
     escenarios = ejecutar_consulta_segun_filtro('comuna', 'comuna', None, municipios, disciplinas, tipoTenant, tabla, None)
+    aux_esc = dict()
+    for k, v in escenarios.items():
+        aux_esc[("%s %s")%("Comuna ", k)] = v
+    escenarios = aux_esc
 
     if request.is_ajax():
         return JsonResponse(escenarios)
