@@ -90,8 +90,9 @@
     <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
     <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
 {% endblock %}
+
 {% block botones_panel %}
-    {#<a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>#}
+    <a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
 {% endblock %}
 
 {% block titulo_panel %}
