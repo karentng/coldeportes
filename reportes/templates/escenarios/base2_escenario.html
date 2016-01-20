@@ -86,6 +86,10 @@
     <label class="titulo" style="color:white;"> {{nombre_reporte}}</label>
 {% endblock %}
 
+{% block botones_panel %}
+    <a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
 {% block contenido_panel %}
     <div class="row" id="contenido">
         <div class="col-md-12">

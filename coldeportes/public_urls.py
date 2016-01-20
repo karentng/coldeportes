@@ -18,5 +18,6 @@ urlpatterns = patterns('',
     url(r'^noticias/',include('noticias.urls')),
     url(r'^directorio-publico/',include('directorio.publico_urls')),
     url(r'^normograma/',include('normograma.urls')),
-    url(r'reportes/', include('reportes.urls.publico')),
+    url(r'^reportes/', include('reportes.urls.publico')),
+    url(r'^buscador/', include('buscador.urls')),
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

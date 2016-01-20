@@ -12,16 +12,35 @@ from datetime import datetime
 
 
 def ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant):
+    """
+    Noviembre 13, 2015
+    Autor: Daniel Correa
 
+    Permite ejecutar los diferentes filtros de casos de acuerdo a un arreglo de consultas
+    CONSULTAS LLEVA EL SIGUIENTE FORMATO [contulta caso 1, consulta caso 2 , consulta caso 3, ... ,consulta caso n]
+    LOS CASOS EMPIEZAN EN 1 EL DE MAS ARRIBA HASTA N EL DE MAS ABAJO
+    """
     if departamentos and genero:
-        participaciones = eval(consultas[0]%(departamentos,genero))
+        try:
+            resultado = eval(consultas[0]%(departamentos,genero))
+        except Exception as e:
+            print(e)
     elif departamentos:
-        participaciones = eval(consultas[1]%(departamentos))
+        try:
+            resultado = eval(consultas[1]%(departamentos))
+        except Exception as e:
+            print(e)
     elif genero:
-        participaciones = eval(consultas[2]%(genero))
+        try:
+            resultado = eval(consultas[2]%(genero))
+        except Exception as e:
+            print(e)
     else:
-        participaciones = eval(consultas[3])
-    return participaciones
+        try:
+            resultado = eval(consultas[3])
+        except Exception as e:
+            print(e)
+    return resultado
 
 
 def reporte_actividades_personal(request):
@@ -65,7 +84,7 @@ def reporte_actividades_personal(request):
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
-    return render(request,'base_reportes.html',{
+    return render(request,'personal_apoyo/base_personal_apoyo.html',{
         'nombre_reporte' : 'Actividades que desempeña el personal de apoyo',
         'url_data' : 'reporte_actividades_personal',
         'datos': datos,
@@ -101,7 +120,7 @@ def reporte_formacion_academica_personal(request):
         ]
 
         formaciones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
-
+        formaciones = tipoTenant.ajustar_resultado(formaciones)
         return JsonResponse(formaciones)
 
     else:
@@ -110,8 +129,8 @@ def reporte_formacion_academica_personal(request):
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
-    return render(request, 'base_reportes.html', {
-        'nombre_reporte' : 'Formación Academica del personal de apoyo',
+    return render(request, 'personal_apoyo/base_personal_apoyo.html', {
+        'nombre_reporte' : 'Formación académica del personal de apoyo',
         'url_data' : 'reporte_formacion_academica_personal',
         'datos': formaciones,
         'visualizaciones': visualizaciones,
@@ -140,8 +159,8 @@ def reporte_cantidad_total_personal_apoyo(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s).order_by('id').distinct('id'))",
             "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).order_by('id').distinct('id'))",
             "list("+tabla.__name__+".objects.filter(estado = 0).order_by('id').distinct('id'))",
         ]
@@ -163,7 +182,7 @@ def reporte_cantidad_total_personal_apoyo(request):
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
-    return render(request, 'base_reportes.html', {
+    return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Cantidad TOTAL de personal de apoyo',
         'url_data' : 'reporte_cantidad_total_personal_apoyo',
         'datos': resultado,
@@ -192,19 +211,20 @@ def reporte_lgtbi(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
             "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
             "list("+tabla.__name__+".objects.filter(estado = 0).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
-        lgbti = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
-        if True in lgbti:
-            lgbti['Pertenece a la comunidad LGTBI'] = lgbti[True]
-            del lgbti[True]
-        if False in lgbti:
-            lgbti['No pertenece a la comunidad LGTBI'] = lgbti[False]
-            del lgbti[False]
+        lgtbi = ejecutar_casos_recursivos(consultas, departamentos, genero, tipoTenant)
+        lgtbi = tipoTenant.ajustar_resultado(lgtbi)
+        if True in lgtbi:
+            lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
+            del lgtbi[True]
+        if False in lgtbi:
+            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
+            del lgtbi[False]
 
         return JsonResponse(lgtbi)
 
@@ -213,16 +233,16 @@ def reporte_lgtbi(request):
         lgtbi = tipoTenant.ajustar_resultado(lgtbi)
 
         if True in lgtbi:
-            lgtbi['Usa centros biomédicos'] = lgtbi[True]
+            lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
         if False in lgtbi:
-            lgtbi['No usa centros biomédicos'] = lgtbi[False]
+            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
             del lgtbi[False]
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
 
-    return render(request, 'base_reportes.html', {
+    return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Personal de Apoyo que pertenece a la comunidad LGTBI',
         'url_data' : 'reporte_lgtbi_personal_apoyo',
         'datos': lgtbi,

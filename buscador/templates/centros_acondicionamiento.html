@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Buscador</a>
+    <li class="active">Centro de Acondicionamiento Físico</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Buscar Centro de Acondicionamiento Físico
+{% endblock %}
+
+{% block titulo_panel %}
+    Buscar Centro de Acondicionamiento Físico
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
+    <script type="text/javascript">
+    	function desplegarTabla(){
+    		$("#tabla").css("visibility", "visible");
+    	}
+	    function cargarDatos(){
+	    	var nombre = JSON.stringify($("#id_nombre").val());
+			var ciudades = JSON.stringify($("#id_ciudades").val());
+	    	var departamentos = JSON.stringify($("#id_departamentos").val());
+	    	$('#loading').modal('show');
+
+	    	if($.fn.dataTable.isDataTable("#data-table")){
+	    		tabla = $("#data-table").DataTable().destroy();
+	    	}
+
+	    	$('#data-table').DataTable({
+                dom: 'T<"clear">lfrtip',
+                tableTools: {
+                    "sSwfPath": "{{STATIC_URL}}"+"plugins/DataTables/swf/copy_csv_xls_pdf.swf"
+                },
+                "ajax": {
+                	"url": "{% url 'buscador_centros_acondicionamiento' %}",
+                	"data": function(d){
+                		d.departamentos = departamentos;
+                		d.ciudades = ciudades;
+                		d.nombre = nombre;
+                	},
+                	"dataSrc": function(json){
+                		$('#loading').modal('hide');
+                		desplegarTabla();
+                		return json.data;
+                	}
+                },
+                "deferRender": true,
+            });
+	    }
+    </script>
+{% endblock %}
+
+{% block css %}
+	<link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+	{% include "loading.html" %}
+	<div class="row">
+		<div class="col-xs-12">
+			Ingrese la información por la cual desea filtrar los Centros de Acondicionamiento Físico, ningún campo es obligatorio.
+		</div>
+	</div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1" id="formulario">
+            {% bootstrap_form form %}
+            <button class="btn btn-primary pull-right" type="button" onclick="cargarDatos()">
+            	<i class="fa fa-search"></i>
+                Buscar
+            </button>
+        </div>
+    </div>
+    <div class="row">
+    	<hr>
+    	<div class="col-md-12" id="tabla" style="visibility:hidden">
+        	<table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+		        <thead>
+		            <tr>
+		                <th>Nombre</th>
+		                <th>Ciudad</th>
+		                <th>Dirección</th>
+		                <th>Teléfono</th>
+		            </tr>
+		        </thead>
+		    </table>
+        </div>
+    </div>
+{% endblock %}

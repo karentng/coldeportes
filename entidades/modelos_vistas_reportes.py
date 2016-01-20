@@ -71,6 +71,9 @@ class PublicCafView(models.Model):
     class Meta:
         managed = False
 
+    nombre =  models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100, verbose_name="dirección")
+    telefono = models.CharField(max_length=50, verbose_name="teléfono")
     ciudad = models.ForeignKey(Ciudad)
     comuna = models.PositiveIntegerField()
     estrato = models.PositiveIntegerField()
@@ -127,7 +130,7 @@ class PublicDeportistaView(models.Model):
     #campos modelo deportista
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
-    disciplinas = models.ForeignKey(TipoDisciplinaDeportiva)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     fecha_nacimiento = models.DateField()
     fecha_creacion = models.DateTimeField()
     lgtbi = models.BooleanField()
