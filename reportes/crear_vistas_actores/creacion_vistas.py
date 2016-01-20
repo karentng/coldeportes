@@ -112,6 +112,19 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                 )
             ejecutar_sql(sql)
 
+    def eliminar_vistas_actuales(tenant, public):
+        entidades = Entidad.objects.exclude(schema_name="public")
+        drop = "DROP VIEW"
+        for i in entidades:
+            sql = ("%s %s.%s CASCADE")%(drop, i.schema_name, tenant)
+            try:
+                ejecutar_sql(sql)
+            except Exception as e:
+                print(e)
+                print(sql)
+        sql = ("DROP MATERIALIZED VIEW %s")%(public)
+        ejecutar_sql(sql)
+
     def inicio_generacion(nuevo_tenant, padre):
         def acomodar_comandos(comandos):
             global CONSULTA
@@ -126,6 +139,7 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                 generar_vista_caf_padre_nuevo_tenant(nuevo_tenant.obtener_padre())
                 generar_vista_caf_padre_nuevo_tenant(padre)
             else: # se deben actualizar todos
+                eliminar_vistas_actuales(TENANT, PUBLIC)
                 # Clubes, Cafs, Escuelas, Cajas, Entes
                 generar_vista_caf_independientes() 
                 # Ligas, Federaciones, Comites

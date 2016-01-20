@@ -118,15 +118,7 @@
         {% endfor %}
         </div>
     </div>
-    <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 20%;">
-        <div class="modal-dialog" role="document">
-            <div class="progress progress-striped active">
-                <div class="progress-bar" style="width: 100%">
-                    Cargando reporte, por favor espere
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "loading.html" %}
 
     <ul class="nav nav-pills">
         <li class="active"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
