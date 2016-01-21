@@ -108,9 +108,9 @@ def beneficiario_programa_apoyo(request):
         if True in beneficiados:
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
-        if False in beneficiados:
-            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
-            del beneficiados[False]
+        if None in beneficiados:
+            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+            del beneficiados[None]
 
         return JsonResponse(beneficiados)
 
@@ -121,9 +121,9 @@ def beneficiario_programa_apoyo(request):
         if True in beneficiados:
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
-        if False in beneficiados:
-            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
-            del beneficiados[False]
+        if None in beneficiados:
+            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+            del beneficiados[None]
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
@@ -134,7 +134,8 @@ def beneficiario_programa_apoyo(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Descripción"]
     })
 
 
@@ -195,7 +196,8 @@ def reporte_uso_centros_biomedicos(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Descripción"]
     })
 
 
@@ -255,7 +257,8 @@ def reporte_lgtbi(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Descripción"]
     })
 
 
@@ -311,7 +314,8 @@ def reporte_doping(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Descripción"]
     })
 
 
@@ -364,7 +368,8 @@ def reporte_cantidad_total_deportistas(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Descripción"]
     })
 
 
@@ -419,7 +424,8 @@ def etinias_deportistas(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Etnia"]
     })
 
 def formacion_academica(request):
@@ -465,7 +471,8 @@ def formacion_academica(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Nivel Académico"]
     })
 
 def nacionalidad(request):
@@ -511,7 +518,8 @@ def nacionalidad(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["País"]
     })
 
 def extranjeros(request):
@@ -568,7 +576,8 @@ def extranjeros(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Descripción"]
     })
 
 
@@ -624,5 +633,6 @@ def lesiones_deportivas(request):
         'form': form,
         'actor': 'Deportistas',
         'fecha_generado': datetime.now(),
-        'agrupado': True
+        'agrupado': True,
+        'nombres_columnas':["Tipo de lesión","Periodo de rehabilitación"]
     })
