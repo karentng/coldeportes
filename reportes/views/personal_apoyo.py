@@ -231,7 +231,7 @@ def reporte_lgtbi(request):
     else:
         lgtbi = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         lgtbi = tipoTenant.ajustar_resultado(lgtbi)
-
+        print(lgtbi)
         if True in lgtbi:
             lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
@@ -239,11 +239,11 @@ def reporte_lgtbi(request):
             lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
             del lgtbi[False]
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
 
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
-        'nombre_reporte' : 'Personal de Apoyo que pertenece a la comunidad LGTBI',
+        'nombre_reporte' : 'Cantidad de personal de apoyo que pertenece a la comunidad LGTBI',
         'url_data' : 'reporte_lgtbi_personal_apoyo',
         'datos': lgtbi,
         'visualizaciones': visualizaciones,
