@@ -535,18 +535,7 @@ def nacionalidad(request):
         nacionalidades = list(tabla.objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         nacionalidades = tipoTenant.ajustar_resultado(nacionalidades)
 
-    visualizaciones = [1, 2, 3,5,6,7]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Número de deportistas por nacionalidad',
-        'url_data' : 'reporte_nacionalidad',
-        'datos': nacionalidades,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Deportistas',
-        'fecha_generado': datetime.now(),
-        'nombres_columnas':["País"]
-    })
+    return nacionalidades
 
 def extranjeros(request):
     """
@@ -593,16 +582,44 @@ def extranjeros(request):
         consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
 
 
+    return consulta_completa
+
+def extranjeros_vs_nacionalidad(request):
+    """
+    Enero 21, 2016
+    Autor: Daniel Correa
+
+    Esta vista implementa el reporte de cantidad de extranjeros y colombianos vs nacionalidad de los deportistas
+    """
+
+    reporte = 'NA'
+
+    if request.is_ajax():
+
+        reporte = 'NA' if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
+
+        return nacionalidad(request) if reporte == 'NA' else extranjeros(request)
+    else:
+        print('antes')
+        datos = nacionalidad(request) if reporte == 'NA' else extranjeros(request)
+        print('dsps')
+
     visualizaciones = [1, 2, 3,5,6,7]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    TIPO_REPORTE = (
+        ('NA', 'Número de deportistas por Nacionalidad'),
+        ('EX', 'Número de deportistas Colombianos vs Extranjeros'),
+    )
+    form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones,TIPO_REPORTE=TIPO_REPORTE)
+
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Número de deportistas extranjeros y colombianos',
-        'url_data' : 'reporte_extranjeros',
-        'datos': consulta_completa,
+        'nombre_reporte' : 'Número de deportistas por nacionalidad',
+        'url_data' : 'reporte_nacional_extranjero',
+        'datos': datos,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
         'fecha_generado': datetime.now(),
+        'agrupado': True,
         'nombres_columnas':["Descripción"]
     })
 
@@ -650,7 +667,11 @@ def lesiones_deportivas(request):
         lesiones = tabla.return_display_lesion(tabla,lesiones,True)
 
     visualizaciones = [1, 2, 3, 5]
-    form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones)
+    TIPO_REPORTE = (
+        ('TL', 'Tipo de lesión'),
+        ('PL', 'Periodo de lesión'),
+    )
+    form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones,TIPO_REPORTE=TIPO_REPORTE)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte': 'Tipo de lesión',
         'url_data': 'reporte_lesiones',
