@@ -75,7 +75,8 @@ def participaciones_deportivas(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':['Descripción']
     })
 
 def beneficiario_programa_apoyo(request):
@@ -105,12 +106,17 @@ def beneficiario_programa_apoyo(request):
 
         beneficiados = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         beneficiados = tipoTenant.ajustar_resultado(beneficiados)
+
         if True in beneficiados:
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
-        if None in beneficiados:
-            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
-            del beneficiados[None]
+        if None in beneficiados or False in beneficiados:
+            try:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                del beneficiados[None]
+            except Exception:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
+                del beneficiados[False]
 
         return JsonResponse(beneficiados)
 
@@ -121,9 +127,13 @@ def beneficiario_programa_apoyo(request):
         if True in beneficiados:
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
-        if None in beneficiados:
-            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
-            del beneficiados[None]
+        if None in beneficiados or False in beneficiados:
+            try:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                del beneficiados[None]
+            except Exception:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
+                del beneficiados[False]
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
@@ -170,9 +180,13 @@ def reporte_uso_centros_biomedicos(request):
         if True in usa_centros:
             usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
             del usa_centros[True]
-        if None in usa_centros:
-            usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
-            del usa_centros[None]
+        if None in usa_centros or False in usa_centros:
+            try:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                del usa_centros[None]
+            except Exception:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
+                del usa_centros[False]
 
         return JsonResponse(usa_centros)
 
@@ -182,9 +196,13 @@ def reporte_uso_centros_biomedicos(request):
         if True in usa_centros:
             usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
             del usa_centros[True]
-        if None in usa_centros:
-            usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
-            del usa_centros[None]
+        if None in usa_centros or False in usa_centros:
+            try:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                del usa_centros[None]
+            except Exception:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
+                del usa_centros[False]
 
 
     visualizaciones = [1, 2, 3, 5, 6]
@@ -232,9 +250,13 @@ def reporte_lgtbi(request):
         if True in lgtbi:
             lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
-        if False in lgtbi:
-            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
-            del lgtbi[False]
+        if False in lgtbi or None in lgtbi:
+            try:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
+                del lgtbi[False]
+            except Exception:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[None]
+                del lgtbi[None]
 
         return JsonResponse(lgtbi)
 
@@ -244,9 +266,13 @@ def reporte_lgtbi(request):
         if True in lgtbi:
             lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
-        if False in lgtbi:
-            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
-            del lgtbi[False]
+        if False in lgtbi or None in lgtbi:
+            try:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
+                del lgtbi[False]
+            except Exception:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[None]
+                del lgtbi[None]
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
