@@ -3,7 +3,8 @@ def seleccion_datos_cafs(tenant=''):
         tenant = ("%s.")%(tenant)
     return ("""
     SELECT
-        CAF.id, CAF.ciudad_id,
+        CAF.id, CAF.nombre, CAF.telefono,
+        CAF.direccion, CAF.ciudad_id,
         CAF.comuna, CAF.estrato,
         CAF.latitud, CAF.longitud,
         CAF.altura, CAF.estado,

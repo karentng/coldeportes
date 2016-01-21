@@ -71,6 +71,9 @@ class PublicCafView(models.Model):
     class Meta:
         managed = False
 
+    nombre =  models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100, verbose_name="dirección")
+    telefono = models.CharField(max_length=50, verbose_name="teléfono")
     ciudad = models.ForeignKey(Ciudad)
     comuna = models.PositiveIntegerField()
     estrato = models.PositiveIntegerField()
