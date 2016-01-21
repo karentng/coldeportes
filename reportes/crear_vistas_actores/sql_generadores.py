@@ -58,8 +58,8 @@ def seleccion_datos_escenarios(tenant=''):
             H.id as horario_id,      
             H.hora_inicio,      
             H.hora_fin,                 
-            H.descripcion as descripcion_horario,  
-            H.fecha_creacion as fecha_creacion_horario_disponibilidad,     
+            H.descripcion as descripcion_horario,
+            H.fecha_creacion as fecha_creacion_horario_disponibilidad,
             HD.dias_id,    
 
             F.foto,
@@ -145,6 +145,36 @@ def seleccion_datos_deportistas(tenant=''):
         LEFT JOIN %ssnd_historialdoping IFD ON IFD.deportista_id = DE.id 
         """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant,tenant)
 
+def seleccion_datos_dirigentes(tenant=''):
+    if tenant != '':
+        tenant = ("%s.")%(tenant)
+    return (
+        """
+        SELECT
+            DIR.id, NAL.nacionalidad_id,
+            DIR.entidad_id, DIR.fecha_creacion,
+            DIR.estado, DIR.ciudad_residencia_id AS ciudad_id
+        FROM
+        {0}snd_dirigente DIR
+        LEFT JOIN {0}snd_dirigente_nacionalidad NAL ON NAL.dirigente_id = DIR.id
+        """.format(tenant))
+
+def seleccion_datos_escuelas(tenant=''):
+    if tenant != '':
+        tenant = ("%s.")%(tenant)
+    return (
+        """
+        SELECT
+            ESCUELA.id, ESCUELA.estrato,
+            ESCUELA.estado, ESCUELA.ciudad_id,
+            ESCUELA.entidad_id, ESCUELA.fecha_creacion,
+            SERVICIO.nombre as nombre_servicio
+        FROM
+        {0}snd_escueladeportiva ESCUELA
+        LEFT JOIN {0}snd_escueladeportiva_servicios SERVICIOS ON SERVICIOS.escueladeportiva_id = ESCUELA.id
+        LEFT JOIN public.entidades_escueladeportivaservicio SERVICIO ON SERVICIO.id = SERVICIOS.escueladeportivaservicio_id
+    """.format(tenant))
+
 COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
     #[
     #   Funcion que genera el comando de seleccion de datos,
@@ -154,12 +184,12 @@ COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
     [
         seleccion_datos_cafs,
         "reportes_tenantcafview",
-        "public.entidades_publiccafview",
+        "public.entidades_publiccafview"
     ],
     [
         seleccion_datos_escenarios,
         "reportes_tenantescenarioview",
-        "public.entidades_publicescenarioview",
+        "public.entidades_publicescenarioview"
     ],
     [
         seleccion_datos_personal_apoyo,
@@ -170,5 +200,15 @@ COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
         seleccion_datos_deportistas,
         "reportes_tenantdeportistaview",
         "public.entidades_publicdeportistaview"
+    ],
+    [
+        seleccion_datos_dirigentes,
+        "reportes_tenantdirigenteview",
+        "public.entidades_dirigenteview"
+    ],
+    [
+        seleccion_datos_escuelas,
+        "reportes_tenantescuelaview",
+        "public.entidades_publicescuelaview"
     ]
 ]

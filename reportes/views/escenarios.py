@@ -49,7 +49,7 @@ def obtener_choices(opcion_reporte):
     elif opcion_reporte == 'CA':
         clases_choices = CaracterizacionEscenario.ACCESOS
     elif opcion_reporte == 'EF':
-        clases_choices = CaracterizacionEs0cenario.ESTADOS_FISICOS
+        clases_choices = CaracterizacionEscenario.ESTADOS_FISICOS
     elif opcion_reporte == 'TP':
         clases_choices = CaracterizacionEscenario.PROPIETARIOS
     elif opcion_reporte == 'PM':
@@ -94,7 +94,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     #Sin filtros
     else:
         escenarios =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
-    print(escenarios.query)
+
     if choices:
         escenarios = sumar_datos_diccionario(escenarios,choices)
         return escenarios

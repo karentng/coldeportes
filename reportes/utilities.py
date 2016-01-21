@@ -6,11 +6,15 @@
     categorías
 """
 def sumar_datos_diccionario(datos, choices):
+    choices = choices + (('nr', 'NO REGISTRA'),)
     diccionario_inicial = crear_diccionario_inicial(choices)
     valores_choices = convert_choices_to_array(choices)
 
     for temp_dict in datos:
-        diccionario_inicial[temp_dict['descripcion']] += temp_dict['cantidad']
+        if temp_dict['descripcion']:
+            diccionario_inicial[temp_dict['descripcion']] += temp_dict['cantidad']
+        else:
+            diccionario_inicial['nr'] += temp_dict['cantidad']
 
     dict_con_choices = {}
     for key in diccionario_inicial:
