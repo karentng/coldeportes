@@ -652,8 +652,8 @@ def lesiones_deportivas(request):
     visualizaciones = [1, 2, 3, 5]
     form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Tipo de lesión',
-        'url_data' : 'reporte_lesiones',
+        'nombre_reporte': 'Tipo de lesión',
+        'url_data': 'reporte_lesiones',
         'datos': lesiones,
         'visualizaciones': visualizaciones,
         'form': form,

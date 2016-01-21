@@ -1,7 +1,7 @@
 <div class="image gallery-group-{{id}}">
     <div class="image-inner">
         <a href="{% url url_reporte %}">
-            <img src="{{imagen}}" alt="{{ alt }}" />
+            <img src="{% if nombre_imagen == 'DEPORTISTAS' %}{{ STATIC_URL }}{% endif %}{{imagen}}" alt="{{ alt }}" />
         </a>
         <p class="image-caption" style="background:{{ color }}">
             {{nombre_imagen}}
