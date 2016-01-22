@@ -108,7 +108,7 @@
                                                         <b>Entidad:</b> {{ dirigente.entidad | upper}}<br/>
                                                     {% endif %}</p>
                                                     <p><b>Estado:</b> {{dirigente.get_estado_display}}</p>
-                                                    <p><b>Género:</b> {{dirigente.genero}}</p>
+                                                    <p><b>Género:</b> {{dirigente.get_genero_display}}</p>
                                                     <p><b>Teléfono:</b> {{dirigente.telefono_fijo}}</p>
                                                     <p><b>Email:</b> 
                                                     {% if dirigente.email %} 
