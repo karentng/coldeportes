@@ -21,23 +21,30 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipio
     from reportes.utilities import sumar_datos_diccionario#, convert_choices_to_array, crear_diccionario_inicial
 
     if departamentos and municipios:
-        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        escuelas = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Departamentos, disciplinas
     elif departamentos:
-        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        escuelas = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Municipios
     elif municipios:
-        dirigentes = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        escuelas = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Disciplina
     else:
-        dirigentes =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        try:
+            escuelas =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        except Exception as e:
+            print(e)
 
+    print(escuelas.query)
     if choices:
-        dirigentes = sumar_datos_diccionario(dirigentes, choices)
-        return dirigentes
+        print("Escuelas antes de sumar ", escuelas)
+        escuelas = sumar_datos_diccionario(escuelas, choices)
+        print("Escuelas despues de sumar")
+        print(escuelas)
+        return escuelas
 
-    dirigentes = tipoTenant.ajustar_resultado(dirigentes)
-    return dirigentes
+    escuelas = tipoTenant.ajustar_resultado(escuelas)
+    return escuelas
 
 def generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=None):
 

@@ -123,7 +123,7 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
         #por default carga el reporte de Clase de accesos
         reporte = 'CA'
     if not categoria:
-    #si categoria es none es el reporte características escenarios        
+    #si categoria es none es el reporte características escenarios
         categoria = verificar_seleccion_reporte(reporte)
     choices = obtener_choices(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices,ajustados)
@@ -133,6 +133,7 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
         del escenarios['']
 
     return escenarios
+
 
 
 def caracteristicas_escenarios(request):
@@ -148,7 +149,7 @@ def caracteristicas_escenarios(request):
         tabla = PublicEscenarioView
     else:
         tabla = TenantEscenarioView
-    
+
     cantidad = 'tipo_escenario'
     escenarios = generador_reporte_escenario(request, tabla, cantidad)
 
@@ -182,8 +183,8 @@ def clase_escenarios(request):
     else:
         tabla = TenantEscenarioView
 
-    categoria = 'caracteristicas__descripcion'
-    cantidad = 'caracteristicas'
+    categoria = 'caracteristicaescenario__descripcion'
+    cantidad = 'caracteristicaescenario'
 
     escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
 

@@ -4,36 +4,6 @@ from snd.modelos.escenarios import *
 
 
 class TenantEscenarioView(models.Model):
-    ACCESOS = (
-        ('pr', 'Privado'),
-        ('dul', 'De Uso Libre'),
-        ('pcp', 'Público Con Pago'),
-    )
-    ESTADOS_FISICOS = (
-        ('bu', 'Bueno'),
-        ('re', 'Regular'),
-        ('ma', 'Malo'),
-    )
-    PROPIETARIOS = (
-        ('of', 'Oficial'),
-        ('pr', 'Privado'),
-    )
-    DIVISIONES = (
-        ('CP','Centro Poblado'),
-        ('ZR','Zona Rural'),
-        ('ZU','Zona Urbana'),
-    )
-    PERIODICIDADES = (
-        ('di', 'Diaria'),
-        ('se', 'Semanal'),
-        ('qu', 'Quincenal'),
-        ('me', 'Mensual'),
-        ('bm', 'Bimestral'),
-        ('tm', 'Trimestral'),
-        ('sm', 'Semestral'),
-        ('an', 'Anual'),
-    )
-
     class Meta:
         managed = False
     #campos modelo escenario
@@ -49,18 +19,18 @@ class TenantEscenarioView(models.Model):
     nombre_administrador = models.CharField(max_length=50, null=True)
     entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField()
-    division_territorial = models.CharField(choices=DIVISIONES, max_length=2)
+    division_territorial = models.CharField(max_length=2)
     descripcion_escenario = models.CharField(max_length=1024, null=True)
     fecha_creacion_escenario = models.DateTimeField()
     #campos modelo caracterizacion
     tipo_escenario = models.ForeignKey(TipoEscenario)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
+    estado_fisico = models.CharField(max_length=2)
     tiposuperficie = models.ForeignKey(TipoSuperficie)
-    tipo_propietario = models.CharField(max_length=2, choices=PROPIETARIOS)
+    tipo_propietario = models.CharField(max_length=2)
     clase_acceso = models.CharField(max_length=3)
-    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
-    caracteristicas = models.ForeignKey(CaracteristicaEscenario)
+    capacidad_espectadores = models.CharField(max_length=50)
+    caracteristicaescenario = models.ForeignKey(CaracteristicaEscenario)
 
 
     #campos modelo contacto
@@ -77,7 +47,7 @@ class TenantEscenarioView(models.Model):
     #campos modelo Foto
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
     #campos mantenimiento
-    periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)
+    periodicidad = models.CharField(max_length=2, null=True, blank=True)
 
 
 '''class TenantEscenarioEstratoView(models.Model):
