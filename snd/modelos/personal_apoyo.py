@@ -18,8 +18,8 @@ class PersonalApoyo(models.Model):
     )
 
     tipo_genero = (
-        ('HOMBRE','HOMBRE'),
-        ('MUJER','MUJER'),
+        ('HOMBRE','MASCULINO'),
+        ('MUJER','FEMENINO'),
     )
 
     TIPO_IDENTIDAD = (

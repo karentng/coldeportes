@@ -10,8 +10,8 @@ class Deportista(models.Model):
     #Datos personales
         #Identificacion
     tipo_sexo = (
-        ('HOMBRE','HOMBRE'),
-        ('MUJER','MUJER'),
+        ('HOMBRE','MASCULINO'),
+        ('MUJER','FEMENINO'),
     )
     TIPO_IDENTIDAD = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
