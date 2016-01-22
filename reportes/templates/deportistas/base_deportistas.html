@@ -39,9 +39,9 @@
         datos = {{datos|safe}};
 
         $(document).ready(function(){
-            tablaDeDatos = TablaDeDatos("tabla");
-            datosTransformados = tablaDeDatos.transformarDatos(datos);
-            tablaDeDatos.actualizar(datosTransformados, [nombres_columnas[0], "Cantidad"]);
+            columnas = [nombres_columnas[0], "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla", columnas);
+            tablaDeDatos.setDatos(datos);
             $('#loading').modal('show');
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
@@ -57,13 +57,13 @@
                         {% if agrupado %}
                             Reportes.modificarDatos(data,$("#id_reporte option:selected").text());
                             id = $("#id_reporte").prop('selectedIndex');
-                            datosTransformados = tablaDeDatos.transformarDatos(data);
-                            tablaDeDatos.actualizar(datosTransformados, [nombres_columnas[id], "Cantidad"]);
+                            tablaDeDatos.setDatos(data);
+                            tablaDeDatos.verificarActualizacion();
                         {% else %}
                             Reportes.modificarDatos(data,nombreReporte);
                             id = 0;
-                            datosTransformados = tablaDeDatos.transformarDatos(data);
-                            tablaDeDatos.actualizar(datosTransformados, [nombres_columnas[id], "Cantidad"]);
+                            tablaDeDatos.setDatos(data);
+                            tablaDeDatos.verificarActualizacion();
                         {% endif %}
                         $('#loading').modal('hide');
                     },

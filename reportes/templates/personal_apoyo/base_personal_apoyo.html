@@ -21,9 +21,9 @@
     <script src="{{STATIC_URL}}amcharts/tabla_de_datos.js"></script>
 	<script type="text/javascript">
         $(document).ready(function(){
-            tablaDeDatos = TablaDeDatos("tabla");
-            datosTransformados = tablaDeDatos.transformarDatos(datos);
-            tablaDeDatos.actualizar(datosTransformados, [nombre_columna, "Cantidad"]);
+            columnas = [nombre_columna, "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla",columnas);
+            tablaDeDatos.setDatos(datos);
             $('#loading').modal('show');
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
@@ -36,8 +36,8 @@
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data,"{{ nombre_reporte }}");
-                        datosTransformados = tablaDeDatos.transformarDatos(data);
-                        tablaDeDatos.actualizar(datosTransformados, [nombre_columna, "Cantidad"]);
+                        tablaDeDatos.setDatos(data);
+                        tablaDeDatos.verificarActualizacion();
                         $('#loading').modal('hide');
                     },
                     error: function(err){
