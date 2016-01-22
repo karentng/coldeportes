@@ -87,8 +87,8 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
-    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
-    <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">{{ actor }}</a></li>
+    <li>{{ nombre_reporte }}</li>
 {% endblock %}
 
 {% block botones_panel %}
@@ -96,7 +96,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    <label class="titulo" style="color:white;"> Clase de Accesos de Escenarios</label>
+    <label class="titulo" style="color:white;"> Reportes Escenarios</label>
 {% endblock %}
 
 {% block contenido_panel %}
