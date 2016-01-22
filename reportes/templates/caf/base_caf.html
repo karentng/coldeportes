@@ -34,9 +34,9 @@
     <script src="{{STATIC_URL}}amcharts/tabla_de_datos.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            tablaDeDatos = TablaDeDatos("tabla");
-            datosTransformados = tablaDeDatos.transformarDatos(datos);
-            tablaDeDatos.actualizar(datosTransformados, [nombres_columnas[0], "Cantidad"]);
+            columnas = [nombres_columnas[0], "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla", columnas);
+            tablaDeDatos.setDatos(datos);
             $('#loading').modal('show');
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
@@ -51,8 +51,8 @@
                     success: function(data) {
                         Reportes.modificarDatos(data, $("#id_reporte option:selected").text());
                         id = $("#id_reporte").prop('selectedIndex');
-                        datosTransformados = tablaDeDatos.transformarDatos(data);
-                        tablaDeDatos.actualizar(datosTransformados, [nombres_columnas[id], "Cantidad"]);
+                        tablaDeDatos.setDatos(data);
+                        tablaDeDatos.verificarActualizacion();
                         $('#loading').modal('hide');
                     }, error: function(err){
                         console.log(err);
@@ -95,8 +95,8 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
-    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
-    <li><a href="{% url 'inicio' %}">Características</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">{{ actor }}</a></li>
+    <li>Características</li>
 {% endblock %}
 
 {% block botones_panel %}
@@ -121,8 +121,8 @@
     {% include "loading.html" %}
 
     <ul class="nav nav-pills">
-        <li class="active"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
-        <li><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
+        <li class="active" onclick="tablaDeDatos.cambioDiv(0)"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
+        <li onclick="tablaDeDatos.cambioDiv(1)"><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade active in" id="nav-pills-tab-1">
