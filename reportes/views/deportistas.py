@@ -75,7 +75,8 @@ def participaciones_deportivas(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':['Descripción']
     })
 
 def beneficiario_programa_apoyo(request):
@@ -105,12 +106,17 @@ def beneficiario_programa_apoyo(request):
 
         beneficiados = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         beneficiados = tipoTenant.ajustar_resultado(beneficiados)
+
         if True in beneficiados:
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
-        if None in beneficiados:
-            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
-            del beneficiados[None]
+        if None in beneficiados or False in beneficiados:
+            try:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                del beneficiados[None]
+            except Exception:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
+                del beneficiados[False]
 
         return JsonResponse(beneficiados)
 
@@ -121,9 +127,13 @@ def beneficiario_programa_apoyo(request):
         if True in beneficiados:
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
-        if None in beneficiados:
-            beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
-            del beneficiados[None]
+        if None in beneficiados or False in beneficiados:
+            try:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                del beneficiados[None]
+            except Exception:
+                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
+                del beneficiados[False]
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
@@ -170,9 +180,13 @@ def reporte_uso_centros_biomedicos(request):
         if True in usa_centros:
             usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
             del usa_centros[True]
-        if None in usa_centros:
-            usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
-            del usa_centros[None]
+        if None in usa_centros or False in usa_centros:
+            try:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                del usa_centros[None]
+            except Exception:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
+                del usa_centros[False]
 
         return JsonResponse(usa_centros)
 
@@ -182,9 +196,13 @@ def reporte_uso_centros_biomedicos(request):
         if True in usa_centros:
             usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
             del usa_centros[True]
-        if None in usa_centros:
-            usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
-            del usa_centros[None]
+        if None in usa_centros or False in usa_centros:
+            try:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                del usa_centros[None]
+            except Exception:
+                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
+                del usa_centros[False]
 
 
     visualizaciones = [1, 2, 3, 5, 6]
@@ -232,9 +250,13 @@ def reporte_lgtbi(request):
         if True in lgtbi:
             lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
-        if False in lgtbi:
-            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
-            del lgtbi[False]
+        if False in lgtbi or None in lgtbi:
+            try:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
+                del lgtbi[False]
+            except Exception:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[None]
+                del lgtbi[None]
 
         return JsonResponse(lgtbi)
 
@@ -244,9 +266,13 @@ def reporte_lgtbi(request):
         if True in lgtbi:
             lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
             del lgtbi[True]
-        if False in lgtbi:
-            lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
-            del lgtbi[False]
+        if False in lgtbi or None in lgtbi:
+            try:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
+                del lgtbi[False]
+            except Exception:
+                lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[None]
+                del lgtbi[None]
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
@@ -509,18 +535,7 @@ def nacionalidad(request):
         nacionalidades = list(tabla.objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         nacionalidades = tipoTenant.ajustar_resultado(nacionalidades)
 
-    visualizaciones = [1, 2, 3,5,6,7]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
-    return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Número de deportistas por nacionalidad',
-        'url_data' : 'reporte_nacionalidad',
-        'datos': nacionalidades,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Deportistas',
-        'fecha_generado': datetime.now(),
-        'nombres_columnas':["País"]
-    })
+    return nacionalidades
 
 def extranjeros(request):
     """
@@ -567,16 +582,44 @@ def extranjeros(request):
         consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
 
 
+    return consulta_completa
+
+def extranjeros_vs_nacionalidad(request):
+    """
+    Enero 21, 2016
+    Autor: Daniel Correa
+
+    Esta vista implementa el reporte de cantidad de extranjeros y colombianos vs nacionalidad de los deportistas
+    """
+
+    reporte = 'NA'
+
+    if request.is_ajax():
+
+        reporte = 'NA' if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
+
+        return nacionalidad(request) if reporte == 'NA' else extranjeros(request)
+    else:
+        print('antes')
+        datos = nacionalidad(request) if reporte == 'NA' else extranjeros(request)
+        print('dsps')
+
     visualizaciones = [1, 2, 3,5,6,7]
-    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    TIPO_REPORTE = (
+        ('NA', 'Número de deportistas por Nacionalidad'),
+        ('EX', 'Número de deportistas Colombianos vs Extranjeros'),
+    )
+    form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones,TIPO_REPORTE=TIPO_REPORTE)
+
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Número de deportistas extranjeros y colombianos',
-        'url_data' : 'reporte_extranjeros',
-        'datos': consulta_completa,
+        'nombre_reporte' : 'Número de deportistas por nacionalidad',
+        'url_data' : 'reporte_nacional_extranjero',
+        'datos': datos,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Deportistas',
         'fecha_generado': datetime.now(),
+        'agrupado': True,
         'nombres_columnas':["Descripción"]
     })
 
@@ -624,10 +667,14 @@ def lesiones_deportivas(request):
         lesiones = tabla.return_display_lesion(tabla,lesiones,True)
 
     visualizaciones = [1, 2, 3, 5]
-    form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones)
+    TIPO_REPORTE = (
+        ('TL', 'Tipo de lesión'),
+        ('PL', 'Periodo de lesión'),
+    )
+    form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones,TIPO_REPORTE=TIPO_REPORTE)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Tipo de lesión',
-        'url_data' : 'reporte_lesiones',
+        'nombre_reporte': 'Tipo de lesión',
+        'url_data': 'reporte_lesiones',
         'datos': lesiones,
         'visualizaciones': visualizaciones,
         'form': form,
