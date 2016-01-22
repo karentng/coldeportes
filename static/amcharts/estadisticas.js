@@ -111,12 +111,7 @@ function ClaseReportes(){
         chartCursor.cursorPosition = "mouse";
         chartCursor.zoomable = false;
         chartCursor.cursorAlpha = 0;
-        chart.addChartCursor(chartCursor);                
-    
-        // LEGEND
-        var legend = new AmCharts.AmLegend();
-        legend.useGraphSettings = true;
-        chart.addLegend(legend);
+        chart.addChartCursor(chartCursor);
 
         chart.exportConfig = exportConfig();
     
@@ -194,10 +189,6 @@ function ClaseReportes(){
         graph1.fillAlphas = 1;
         graph1.colorField = "color";
         chart.addGraph(graph1);
-
-        // LEGEND
-        var legend = new AmCharts.AmLegend();
-        chart.addLegend(legend);
 
         chart.creditsPosition = "top-right";
 
@@ -421,10 +412,6 @@ function ClaseReportes(){
         graph1.topRadius = 1;
         chart.addGraph(graph1);
 
-        // LEGEND
-        var legend = new AmCharts.AmLegend();
-        chart.addLegend(legend);
-
         chart.creditsPosition = "top-right";
 
         chart.exportConfig = exportConfig();
@@ -549,7 +536,6 @@ function ClaseReportes(){
         }
         
         var chart;
-        var legend;
         if (AmCharts.isReady){
             generarTorta(datos, nombreDiv, nombreGrafica);
         }else{

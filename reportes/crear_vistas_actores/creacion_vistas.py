@@ -121,9 +121,8 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                 ejecutar_sql(sql)
             except Exception as e:
                 print(e)
-                print(sql)
-        sql = ("DROP MATERIALIZED VIEW %s")%(public)
-        ejecutar_sql(sql)
+        #sql = ("DROP MATERIALIZED VIEW %s")%(public)
+        #ejecutar_sql(sql)
 
     def inicio_generacion(nuevo_tenant, padre):
         def acomodar_comandos(comandos):
