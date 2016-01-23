@@ -204,7 +204,7 @@ COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
     [
         seleccion_datos_dirigentes,
         "reportes_tenantdirigenteview",
-        "public.entidades_dirigenteview"
+        "public.entidades_publicdirigenteview"
     ],
     [
         seleccion_datos_escuelas,
