@@ -6,7 +6,7 @@ import os
 class EscuelaDeportiva(models.Model):
 
     def file_name(instance, filename):
-    
+
         ruta = 'aval_escuelas/' + instance.nombre.strip().replace(" ","") + filename[-4:]
         ruta_delete = settings.MEDIA_ROOT + "/" + ruta
         if(os.path.exists(ruta_delete)):

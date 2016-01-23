@@ -10,6 +10,9 @@ def sumar_datos_diccionario(datos, choices):
     diccionario_inicial = crear_diccionario_inicial(choices)
     valores_choices = convert_choices_to_array(choices)
 
+    if choices[0][0] != 0 and isinstance(choices[0][0],int):
+        valores_choices = ['Comodin'] + valores_choices
+
     for temp_dict in datos:
         if temp_dict['descripcion']:
             diccionario_inicial[temp_dict['descripcion']] += temp_dict['cantidad']

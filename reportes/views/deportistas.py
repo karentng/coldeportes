@@ -665,7 +665,6 @@ def lesiones_deportivas(request):
         lesiones = list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         lesiones = tipoTenant.ajustar_resultado(lesiones)
         lesiones = tabla.return_display_lesion(tabla,lesiones,True)
-
     visualizaciones = [1, 2, 3, 5]
     TIPO_REPORTE = (
         ('TL', 'Tipo de lesión'),
