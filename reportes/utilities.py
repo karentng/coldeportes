@@ -1,4 +1,19 @@
 """
+    Enero 24, 2016
+    Autor: Daniel Correa
+
+    Esta funcion permite conocer la fecha de nacimiento maxima dada una edad y el dia en curso
+"""
+def fecha_nacimiento_maxima(edades):
+    from datetime import date
+    hoy = date.today()
+    result = []
+    for edad in edades:
+        maximo = hoy.replace(year=hoy.year-edad)
+        result.append(maximo)
+    return result
+
+"""
     Noviembre 23, 2015
     Autor: Milton Lenis
 

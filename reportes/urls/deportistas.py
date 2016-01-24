@@ -12,5 +12,6 @@ urlpatterns = patterns('reportes.views.deportistas',
     url(r'^cantidad-total-deportistas', 'reporte_cantidad_total_deportistas', name='reporte_cantidad_total_deportistas'),
     url(r'^lesiones', 'lesiones_deportivas', name='reporte_lesiones'),
     url(r'^nacionalidad-extranjeros', 'extranjeros_vs_nacionalidad', name='reporte_nacional_extranjero'),
+    url(r'^edad','edad_deportistas',name='reporte_edad_deportistas')
 
 )

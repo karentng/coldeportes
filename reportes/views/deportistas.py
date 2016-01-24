@@ -10,7 +10,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
-from reportes.utilities import sumar_datos_diccionario
+from reportes.utilities import sumar_datos_diccionario,fecha_nacimiento_maxima
 
 def ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant):
     """
@@ -568,8 +568,7 @@ def extranjeros(request):
         consulta_general = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         consulta_completa = list(consulta_general.filter(nacionalidad=colombia).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).count()
-        if numero_extranjeros > 0:
-            consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
+        consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
         consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
 
         return JsonResponse(consulta_completa)
@@ -578,8 +577,7 @@ def extranjeros(request):
         consulta_general = tabla.objects.filter(estado=0)
         consulta_completa = list(consulta_general.filter(nacionalidad=colombia).annotate(descripcion=F('nacionalidad__nombre')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
         numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).count()
-        if numero_extranjeros > 0:
-            consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
+        consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
         consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
 
 
@@ -680,4 +678,70 @@ def lesiones_deportivas(request):
         'fecha_generado': datetime.now(),
         'agrupado': True,
         'nombres_columnas':["Tipo de lesión","Periodo de rehabilitación"]
+    })
+
+def ordenar_edades_rangos(deportistas):
+    edades = []
+    fechas_maximas = fecha_nacimiento_maxima([13,18,25,50])
+    uno_doce = {'descripcion':'Niños (1-12 años)','cantidad':deportistas.filter(fecha_nacimiento__lte=fechas_maximas[0]).count()}
+    edades.append(uno_doce)
+    trece_diezsiete = {'descripcion':'Jovenes (13-17 años)','cantidad':deportistas.filter(fecha_nacimiento__gte=fechas_maximas[0],fecha_nacimiento__lte=fechas_maximas[1]).count()}
+    edades.append(trece_diezsiete)
+    diezocho_veinticinco = {'descripcion':'Adultos Jovenes (18-25 años)','cantidad':deportistas.filter(fecha_nacimiento__gte=fechas_maximas[1],fecha_nacimiento__lte=fechas_maximas[2]).count()}
+    edades.append(diezocho_veinticinco)
+    veinticinco_cincuenta = {'descripcion':'Adultos (25-50 años)','cantidad':deportistas.filter(fecha_nacimiento__gte=fechas_maximas[2],fecha_nacimiento__lte=fechas_maximas[3]).count()}
+    edades.append(veinticinco_cincuenta)
+    cincuenta_mas = {'descripcion':'Adultos Mayores (> 50 años)','cantidad':deportistas.filter(fecha_nacimiento__gte=fechas_maximas[3]).count()}
+    edades.append(cincuenta_mas)
+    return edades
+
+def edad_deportistas(request):
+    """
+    Enero 24, 2016
+    Autor: Daniel Correa
+
+    Permite ver la cantidad de deportistas ordenados por rangos de edad
+
+    """
+
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDeportistaView
+    else:
+        tabla = TenantDeportistaView
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s)",
+            tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s)",
+            tabla.__name__+".objects.filter(estado=0,genero__in=%s)",
+            tabla.__name__+".objects.filter(estado=0)",
+        ]
+
+        deportistas = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+        edades = ordenar_edades_rangos(deportistas)
+        edades = tipoTenant.ajustar_resultado(edades)
+
+        return JsonResponse(edades)
+
+    else:
+        deportistas = tabla.objects.filter(estado=0)
+        edades = ordenar_edades_rangos(deportistas)
+        edades = tipoTenant.ajustar_resultado(edades)
+
+    visualizaciones = [1, 2, 3, 5]
+    form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
+    return render(request, 'deportistas/base_deportistas.html', {
+        'nombre_reporte': 'Edades de los deportistas',
+        'url_data': 'reporte_edad_deportistas',
+        'datos': edades,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Deportistas',
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':["Rangos de Edades"]
     })
