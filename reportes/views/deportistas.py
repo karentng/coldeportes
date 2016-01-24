@@ -1,6 +1,6 @@
 #encoding:utf-8
 from django.shortcuts import render, redirect
-from snd.modelos.deportistas import HistorialDeportivo,Deportista,InformacionAdicional,Deportista,InformacionAcademica
+from snd.modelos.deportistas import HistorialLesiones
 from entidades.models import Departamento,Nacionalidad
 from django.db.models import Count
 from reportes.formularios.deportistas import FiltrosDeportistasForm,FiltrosDeportistasCategoriaForm
@@ -10,6 +10,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
+from reportes.utilities import sumar_datos_diccionario
 
 def ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant):
     """
@@ -646,7 +647,7 @@ def lesiones_deportivas(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
         reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
         categoria = 'tipo_lesion' if reporte == 'TL' else 'periodo_rehabilitacion'
-        tipo = True if reporte == 'TL' else False
+        tipo = HistorialLesiones.TIPOS_LESION if reporte == 'TL' else HistorialLesiones.PERIODOS_REHABILITACION
 
         consultas = [
             "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
@@ -656,15 +657,13 @@ def lesiones_deportivas(request):
         ]
 
         lesiones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
-        lesiones = tipoTenant.ajustar_resultado(lesiones)
-        lesiones = tabla.return_display_lesion(tabla,lesiones,tipo)
+        lesiones = sumar_datos_diccionario(lesiones,tipo)
 
         return JsonResponse(lesiones)
 
     else:
         lesiones = list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
-        lesiones = tipoTenant.ajustar_resultado(lesiones)
-        lesiones = tabla.return_display_lesion(tabla,lesiones,True)
+        lesiones = sumar_datos_diccionario(lesiones,HistorialLesiones.TIPOS_LESION)
     visualizaciones = [1, 2, 3, 5]
     TIPO_REPORTE = (
         ('TL', 'Tipo de lesión'),
