@@ -255,3 +255,58 @@ def reporte_lgtbi(request):
         'fecha_generado': datetime.now(),
         'nombre_columna':'Descripción'
     })
+
+def reporte_etnias(request):
+    """
+    Enero 23, 2016
+    Autor: Cristian Leonardo Ríos López
+
+    Permite conocer el numero de personal de apoyo agrupado por etnias
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicPersonalApoyoView
+    else:
+        tabla = TenantPersonalApoyoView
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('etnia')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s).annotate(descripcion=F('etnia')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('etnia')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('etnia')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+        ]
+
+        etnias = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
+        etnias = tipoTenant.ajustar_resultado(etnias)
+
+        if '' in etnias:
+            etnias['Ninguna'] = etnias['']
+            del etnias['']
+
+        return JsonResponse(etnias)
+
+    else:
+        etnias = list(tabla.objects.filter(estado=0).annotate(descripcion=F('etnia')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        etnias = tipoTenant.ajustar_resultado(etnias)
+
+        if '' in etnias:
+            etnias['NO APLICA'] = etnias['']
+            del etnias['']
+
+    visualizaciones = [1, 2, 3, 5]
+    form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
+    return render(request, 'personal_apoyo/base_personal_apoyo.html', {
+        'nombre_reporte' : 'Etnias del personal de apoyo',
+        'url_data' : 'reporte_etnias_personal_apoyo',
+        'datos': etnias,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Personal de Apoyo',
+        'fecha_generado': datetime.now(),
+        'nombres_columna':'Etnia'
+    })

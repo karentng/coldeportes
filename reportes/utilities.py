@@ -24,6 +24,8 @@ def sumar_datos_diccionario(datos, choices):
     choices = choices + (('nr', 'NO REGISTRA'),)
     diccionario_inicial = crear_diccionario_inicial(choices)
     valores_choices = convert_choices_to_array(choices)
+    if choices[0][0] != 0 and isinstance(choices[0][0],int):
+        valores_choices = ['Comodin'] + valores_choices
 
     if choices[0][0] != 0 and isinstance(choices[0][0],int):
         valores_choices = ['Comodin'] + valores_choices
@@ -42,7 +44,6 @@ def sumar_datos_diccionario(datos, choices):
             nueva_llave = obtener_nueva_llave(key,choices)
         dict_con_choices[nueva_llave] = diccionario_inicial[key]
     return dict_con_choices
-
 
 
 """
