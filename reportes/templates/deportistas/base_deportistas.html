@@ -33,7 +33,7 @@
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
     <script src="{{STATIC_URL}}amcharts/tabla_de_datos.js"></script>
     <script type="text/javascript">
-        nombreReporte = "{{ nombre_reporte }}";
+        nombreReporte = "{{nombre_reporte}}";
         visualizaciones = {{visualizaciones|safe}};
         nombres_columnas = {{nombres_columnas|safe}};
         datos = {{datos|safe}};
@@ -133,8 +133,8 @@
         </div>
     </div>
     <ul class="nav nav-pills">
-        <li class="active"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
-        <li><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
+        <li class="active" onclick="tablaDeDatos.cambioDiv(0)"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
+        <li onclick="tablaDeDatos.cambioDiv(1)"><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade active in" id="nav-pills-tab-1">

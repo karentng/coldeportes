@@ -56,6 +56,7 @@ function TablaDeDatos(identificadorTabla, columnas, datosIniciales){
 			trasformarDatos(datos);
 		},
 		cambioDiv: function(nuevoEstado){ // 1) es el de la tabla, 0) otro
+			console.log(nuevoEstado);
 			cambioDiv(nuevoEstado);
 		},
 		setDatos: function(data){ // OK
