@@ -153,6 +153,7 @@ def caracteristicas_escenarios(request):
     nombres_columnas = ["Clase", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario"]
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Clase de Acceso Escenarios',
+        'nombre_generador': 'Características Escenarios',
         'url_data' : 'reportes_caracteristicas_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
