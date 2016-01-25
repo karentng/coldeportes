@@ -95,7 +95,7 @@
                                             {% endif %}</p>
                                             <p><b>Estado:</b> {{personal_apoyo.get_estado_display}}</p>
                                             <p><b>Actividad:</b> {{personal_apoyo.get_actividad_display}}</p>
-                                            <p><b>Género:</b> {{personal_apoyo.genero}}</p>
+                                            <p><b>Género:</b> {{personal_apoyo.get_genero_display}}</p>
                                             <p><b>Edad:</b> {{ personal_apoyo.edad }}</p>
                                             <p><b>Nacionalidades:</b>
                                                 {% for nac in personal_apoyo.nacionalidad.all %}
