@@ -1,4 +1,19 @@
 """
+    Enero 24, 2016
+    Autor: Daniel Correa
+
+    Esta funcion permite conocer la fecha de nacimiento maxima dada una edad y el dia en curso
+"""
+def fecha_nacimiento_maxima(edades):
+    from datetime import date
+    hoy = date.today()
+    result = []
+    for edad in edades:
+        maximo = hoy.replace(year=hoy.year-edad)
+        result.append(maximo)
+    return result
+
+"""
     Noviembre 23, 2015
     Autor: Milton Lenis
 
@@ -9,6 +24,9 @@ def sumar_datos_diccionario(datos, choices):
     choices = choices + (('nr', 'NO REGISTRA'),)
     diccionario_inicial = crear_diccionario_inicial(choices)
     valores_choices = convert_choices_to_array(choices)
+
+    if choices[0][0] != 0 and isinstance(choices[0][0],int):
+        valores_choices = ['Comodin'] + valores_choices
 
     for temp_dict in datos:
         if temp_dict['descripcion']:

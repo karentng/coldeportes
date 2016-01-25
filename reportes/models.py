@@ -132,20 +132,6 @@ class TenantPersonalApoyoView(models.Model):
     creacion_formacion = models.DateField()
 
 class TenantDeportistaView(models.Model):
-    TIPOS_LESION = {
-        1:'FRACTURA',
-        2:'LUXACIÓN',
-        3:'RUPTURA',
-        4:'LESIÓN MENISCAL',
-        5:'ESGUINCE',
-    }
-
-    PERIODOS_REHABILITACION = {
-        1:'MENOR A 1 MES',
-        2:'ENTRE 1 y 3 MESES',
-        3:'ENTRE 3 y 6 MESES',
-        4:'MAYOR A 6 MESES',
-    }
 
     class Meta:
         managed = False
@@ -179,18 +165,6 @@ class TenantDeportistaView(models.Model):
 
     #campos doping
     fecha_doping = models.DateField()
-
-    def return_display_lesion(self,dic,is_tipo):
-        ids = [id for id in dic]
-        dic_nombres = self.TIPOS_LESION if is_tipo else self.PERIODOS_REHABILITACION
-        for elemento in ids:
-            if None == elemento:
-                dic['NINGUNA LESIÓN'] = dic[None]
-                del dic[None]
-            else:
-                dic[dic_nombres[elemento]] = dic[elemento]
-                del dic[elemento]
-        return dic
 
 class TenantDirigenteView(models.Model):
 

@@ -65,7 +65,7 @@
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
-    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">{{ actor }}</a></li>
     <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
 {% endblock %}
 
@@ -103,8 +103,8 @@
 
 
     <ul class="nav nav-pills">
-        <li class="active"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
-        <li><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
+        <li class="active" onclick="tablaDeDatos.cambioDiv(0)"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
+        <li onclick="tablaDeDatos.cambioDiv(1)"><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade active in" id="nav-pills-tab-1">

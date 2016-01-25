@@ -32,18 +32,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'deportista_listar' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             Información del deportista: {{deportista.nombres}} {{deportista.apellidos}}
@@ -120,7 +109,7 @@
                                                 {% else %}
                                                     <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
                                                 {% endifequal %}
-                                                    <p><b>Género:</b> {{deportista.genero}}</p>
+                                                    <p><b>Género:</b> {{deportista.get_genero_display}}</p>
                                                     <p><b>Edad:</b> {{ deportista.edad }}</p>
                                                     <p><b>Disciplinas:</b> {{ deportista.disciplinas_deportivas }}</p>
                                                     <p><b>Etnia:</b>

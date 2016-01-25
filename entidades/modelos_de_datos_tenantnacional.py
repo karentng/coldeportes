@@ -30,14 +30,14 @@ from snd.models import *
 MODELOS_DE_DATOS = (
     (   #Numero de modelo 0
         PersonalApoyo,
-        ['nombres','apellidos','actividad', 'entidad', 'correo_electronico'],
-        ['Nombres','Apellidos','Actividad Desempeñada', 'Entidad', 'Correo electrónico'],
+        ['nombres','apellidos','actividad', 'entidad'],
+        ['Nombres','Apellidos','Actividad Desempeñada', 'Entidad'],
         None,
         [
             [
                 "Ver más",
                 'ver_personal_apoyo_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -45,14 +45,14 @@ MODELOS_DE_DATOS = (
     ),
     (   #Numero de modelo 1
         Dirigente,
-        ['nombres','apellidos', 'entidad', 'cargo', 'email'],
-        ['Nombres','Apellidos', 'Entidad', 'Cargo', 'Correo Electrónico'],
+        ['nombres','apellidos', 'entidad', 'cargo'],
+        ['Nombres','Apellidos', 'Entidad', 'Cargo'],
         None,
         [
             [
                 "Ver más",
                 'ver_dirigente_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
@@ -60,8 +60,8 @@ MODELOS_DE_DATOS = (
     ),
     (   #Numero de modelo 2
         Escenario,
-        ['nombre','ciudad', 'entidad', 'estrato'],
-        ['Nombre','Ciudad(Departamento)', 'Entidad', 'Estrato'],
+        ['nombre','ciudad', 'entidad'],
+        ['Nombre','Ciudad(Departamento)', 'Entidad'],
         None,
         [
             [
@@ -83,7 +83,7 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_deportista_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ],
@@ -98,21 +98,6 @@ MODELOS_DE_DATOS = (
             [
                 "Ver más",
                 'ver_caf_tenantnacional',
-                ['id','entidad'],
-                'fa-eye',
-                None
-            ],
-        ],
-    ),
-    (   #Numero de modelo 5
-        CajaCompensacion,
-        ['nombre', 'publico', 'clasificacion', 'region'],
-        ['Nombre', 'Público', 'Clasificación', 'Región'],
-        None,
-        [
-            [
-                "Ver más",
-                'ver_caja_tenantnacional',
                 ['id','entidad.id'],
                 'fa-eye',
                 None
