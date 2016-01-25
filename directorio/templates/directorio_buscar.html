@@ -87,8 +87,7 @@
                         {% if resultado.cargo %}Cargo: {{resultado.cargo}} {% endif %}
                         Ciudad: {{resultado.ciudad.nombre}} {{resultado.ciudad_residencia.nombre}}<br>
                         <button class="btn-link" data-html="true" data-container="body" data-toggle="popover" data-placement="top" 
-                            data-content="Teléfono: {% if resultado.telefono_contacto %}{{resultado.telefono_contacto}}{% else %}No hay información.{% endif %}<br/>
-                            Celular: {% if resultado.telefono_celular %}{{resultado.telefono_celular}}{% else %}No hay información.{% endif %}<br/>
+                            data-content="Teléfono: {% if resultado.telefono_contacto %}{{resultado.telefono_contacto}}{% else %}No hay información.{% endif %}<br/>                            
                             Contacto: {% if resultado.nombre_contacto %}{{resultado.nombre_contacto}} {% else %}No hay información.{% endif %}">
                           Ver Teléfonos
                         </button>                        
