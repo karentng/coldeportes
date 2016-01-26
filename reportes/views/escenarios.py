@@ -132,7 +132,8 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
 
     choices = obtener_choices(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices,ajustados)
-    
+
+    #verifica si es el reporte de comunas para escenarios y le agrega el label de comuna para el valor que muestra en la gráfica
     if reporte == 'CO':
         auxiliar_escenarios = dict()
         for key, value in escenarios.items():
