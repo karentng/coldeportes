@@ -35,6 +35,10 @@ def verificar_seleccion_reporte(opcion_reporte):
         categoria = 'tiposuperficie__descripcion'
     elif opcion_reporte == 'TP':
         categoria = 'tipo_propietario'
+    elif opcion_reporte == 'CE':
+        categoria = 'caracteristicas__descripcion'
+    elif opcion_reporte == 'CO':
+        categoria = 'comuna'
 
     return categoria
 
@@ -45,7 +49,7 @@ def obtener_choices(opcion_reporte):
     elif opcion_reporte == 'CA':
         clases_choices = CaracterizacionEscenario.ACCESOS
     elif opcion_reporte == 'EF':
-        clases_choices = CaracterizacionEs0cenario.ESTADOS_FISICOS
+        clases_choices = CaracterizacionEscenario.ESTADOS_FISICOS
     elif opcion_reporte == 'TP':
         clases_choices = CaracterizacionEscenario.PROPIETARIOS
     else:
@@ -88,7 +92,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
     #Sin filtros
     else:
         escenarios =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
-    print(escenarios.query)
+    
     if choices:
         escenarios = sumar_datos_diccionario(escenarios,choices)
         return escenarios
@@ -119,6 +123,8 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
     if not categoria:
     #si categoria es none es el reporte características escenarios        
         categoria = verificar_seleccion_reporte(reporte)
+
+    choices = obtener_choices(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices,ajustados)
 
     if '' in escenarios:
@@ -150,14 +156,18 @@ def caracteristicas_escenarios(request):
         
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
+    nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario"]
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Clase de Acceso Escenarios',
+        'nombre_generador': 'Características Escenarios',
         'url_data' : 'reportes_caracteristicas_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Escenarios',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas': nombres_columnas
+
     })
 
 def periodicidad_mantenimiento(request):
@@ -230,41 +240,7 @@ def disponibilidad_escenarios(request):
     })
 
 
-
-def clase_escenarios(request):
-    """
-    Enero 15, 2015
-    Autor: Karent Narvaez
-
-    Permite conocer la cantidad de escenarios en cada clase determinada.
-    """
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioView
-    else:
-        tabla = TenantEscenarioView
-
-    categoria = 'caracteristicas__descripcion'
-    cantidad = 'caracteristicas'
-
-    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
-
-    if request.is_ajax():
-        return JsonResponse(escenarios)
-
-    visualizaciones = [1,2,3,5,6,7]
-    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
-    return render(request, 'escenarios/base2_escenario.html', {
-        'nombre_reporte' : 'Clases de Escenario',
-        'url_data' : 'reportes_clase_escenarios',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios',
-        'fecha_generado': datetime.now()
-    })
-
+"""
 def comunas_escenarios(request):
     from coldeportes.utilities import get_request_or_none
 
@@ -304,7 +280,7 @@ def comunas_escenarios(request):
         'actor': 'Escenarios',
         'fecha_generado': datetime.now()
     })
-
+"""
 def cantidad_espectadores(request):
     """
     Enero 19, 2015
