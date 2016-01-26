@@ -132,6 +132,12 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
 
     choices = obtener_choices(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices,ajustados)
+    
+    if reporte == 'CO':
+        auxiliar_escenarios = dict()
+        for key, value in escenarios.items():
+            auxiliar_escenarios[("%s %s")%("Comuna ", key)] = value
+        escenarios = auxiliar_escenarios
 
     if '' in escenarios:
         escenarios['Ninguna'] = escenarios['']
@@ -156,6 +162,7 @@ def caracteristicas_escenarios(request):
     
     cantidad = 'tipo_escenario'
     escenarios = generador_reporte_escenario(request, tabla, cantidad)
+    
 
     if request.is_ajax():
         return JsonResponse(escenarios)
