@@ -286,7 +286,7 @@ def cantidad_espectadores(request):
 
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
     return render(request, 'escenarios/base2_escenario.html', {
-        'nombre_reporte' : 'Numero de escenarios por cantidad de espectadores',
+        'nombre_reporte' : 'Número de escenarios deportivos por espectadores habituales',
         'url_data' : 'reporte_cantidad_espectadores',
         'datos': result,
         'visualizaciones': visualizaciones,
