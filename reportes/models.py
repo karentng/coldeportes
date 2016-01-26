@@ -60,7 +60,7 @@ class TenantEscenarioView(models.Model):
     tipo_propietario = models.CharField(max_length=2, choices=PROPIETARIOS)
     clase_acceso = models.CharField(max_length=3)
     capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
-    caracteristicas = models.ForeignKey(CaracteristicaEscenario)
+    caracteristicaescenario = models.ForeignKey(CaracteristicaEscenario)
 
 
     #campos modelo contacto
