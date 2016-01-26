@@ -35,7 +35,6 @@ def verificar_seleccion_reporte(opcion_reporte):
         categoria = 'tiposuperficie__descripcion'
     elif opcion_reporte == 'TP':
         categoria = 'tipo_propietario'
-        categoria = 'tipo_escenario__descripcion'
     elif opcion_reporte == 'CE':
         categoria = 'caracteristicas__descripcion'
     elif opcion_reporte == 'CO':
@@ -157,7 +156,7 @@ def caracteristicas_escenarios(request):
         
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    nombres_columnas = ["Clase", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario"]
+    nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario"]
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Clase de Acceso Escenarios',
         'nombre_generador': 'Características Escenarios',
