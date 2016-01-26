@@ -11,11 +11,7 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% if request.tenant.schema_name == 'public' %}
-                    {% url 'listar_personal_apoyo_nacionales' %}
-                 {% else %}
-                    {% url 'personal_apoyo_listar' %}
-                 {% endif %}">Personal de Apoyo</a></li>
+    <li><a href="{% url 'personal_apoyo_listar' %}">Personal de Apoyo</a></li>
     <li class="active">Visualizar</li>
 {% endblock %}
 
@@ -35,18 +31,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'personal_apoyo_listar' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             Información del personal de apoyo: {{personal_apoyo.nombres}} {{personal_apoyo.apellidos}}
@@ -110,7 +95,7 @@
                                             {% endif %}</p>
                                             <p><b>Estado:</b> {{personal_apoyo.get_estado_display}}</p>
                                             <p><b>Actividad:</b> {{personal_apoyo.get_actividad_display}}</p>
-                                            <p><b>Género:</b> {{personal_apoyo.genero}}</p>
+                                            <p><b>Género:</b> {{personal_apoyo.get_genero_display}}</p>
                                             <p><b>Edad:</b> {{ personal_apoyo.edad }}</p>
                                             <p><b>Nacionalidades:</b>
                                                 {% for nac in personal_apoyo.nacionalidad.all %}

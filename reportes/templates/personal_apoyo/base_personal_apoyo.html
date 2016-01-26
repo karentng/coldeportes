@@ -10,12 +10,21 @@
 {% endblock %}
 
 {% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
 {% endblock %}
 
 {% block js %}
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
+    <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
+    <script src="{{STATIC_URL}}amcharts/tabla_de_datos.js"></script>
 	<script type="text/javascript">
         $(document).ready(function(){
+            columnas = [nombre_columna, "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla",columnas);
+            tablaDeDatos.setDatos(datos);
+            $('#loading').modal('show');
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamento").val());
@@ -27,6 +36,8 @@
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data,"{{ nombre_reporte }}");
+                        tablaDeDatos.setDatos(data);
+                        tablaDeDatos.verificarActualizacion();
                         $('#loading').modal('hide');
                     },
                     error: function(err){
@@ -45,16 +56,16 @@
         });
         nombreReporte = "{{ nombre_reporte }}";
         visualizaciones = {{visualizaciones|safe}};
+        nombre_columna = "{{nombre_columna}}";
         datos = {{datos|safe}};
 
 	</script>
-    <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
-    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">{{ actor }}</a></li>
     <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
 {% endblock %}
 
@@ -67,7 +78,7 @@
 {% endblock %}
 
 {% block contenido_panel %}
-	<div class="row" id="contenido">
+	<div class="row">
 		<div class="col-md-12">
             {% for field in form %}
                 {% if agrupado %}
@@ -79,14 +90,7 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="col-md-12">
-            {% for i in visualizaciones %}
-                <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
-            {% endfor %}
-        </div>
-        <h5 align="right">Consultado: <b>{{fecha_generado}}</b></h5>
-	</div>
-
+    </div>
     <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 20%;">
         <div class="modal-dialog" role="document">
             <div class="progress progress-striped active">
@@ -96,5 +100,30 @@
             </div>
         </div>
     </div>
+
+
+    <ul class="nav nav-pills">
+        <li class="active" onclick="tablaDeDatos.cambioDiv(0)"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
+        <li onclick="tablaDeDatos.cambioDiv(1)"><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="nav-pills-tab-1">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for i in visualizaciones %}
+                        <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
+                    {% endfor %}
+                </div>
+                <h5 align="right">Consultado: <b>{{fecha_generado}}</b></h5>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-pills-tab-2">
+            <table id="tabla" class="table table-bordered table-hover">
+                <thead>
+                </thead>
+            </table>
+        </div>
+    </div>
+
 
 {% endblock %}

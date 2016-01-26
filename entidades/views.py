@@ -90,7 +90,6 @@ def generar_vistas_actores(request):
     from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
     generar_vistas()
 
-
 @login_required
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
@@ -306,6 +305,7 @@ def cargar_datos_tenantnacional(request, modelo):
 
     return JsonResponse(datos)
 
+
 def cargar_columnas_tenantnacional(request, modelo):
     from entidades.cargado_datos_tenantnacional import obtenerCantidadColumnas
     from django.http import JsonResponse
@@ -318,95 +318,189 @@ def cargar_columnas_tenantnacional(request, modelo):
 def listar_personal_apoyo_nacionales(request):
     return render(request,'tenant_nacional/personal_apoyo_listar.html',{})
 
+
 def listar_dirigentes_nacionales(request):
     return render(request,'tenant_nacional/dirigentes_listar.html',{})
+
 
 def listar_deportistas_nacionales(request):
     return render(request,'tenant_nacional/deportistas_listar.html',{})
 
+
 def listar_escenarios_nacionales(request):
     return render(request,'tenant_nacional/escenarios_listar.html',{})
 
-def listar_cajas_nacionales(request):
-    return render(request,'tenant_nacional/cajas_listar.html',{})
 
 def listar_cafs_nacionales(request):
     return render(request,'tenant_nacional/cafs_listar.html',{})
 
-def ver_personal_apoyo_tenantnacional(request, id_personal_apoyo, tenant):
+
+def ver_personal_apoyo_tenantnacional(request,id_personal_apoyo,id_entidad):
     """
-    Agosto 11 /2015
+    Junio 23 /2015
     Autor: Milton Lenis
 
-    Ver Personal de apoyo en el tenant nacional
-    Se identifica el tenant al que pertenece un personal de apoyo y se busca
+    Ver Personal de apoyo
+
     Se obtiene la informacion general del personal de apoyo desde la base de datos y se muestra
+
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
 
     :param request: Petición Realizada
     :type request: WSGIRequest
     :param id_personal_apoyo: Llave primaria del personal de apoyo
     :type id_personal_apoyo: String
-    :param tenant: Nombre del esquema del tenant
-    :type tenant: String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
-    try:
-        entidad = Entidad.objects.get(nombre=tenant)
-    except Exception:
-        messages.error(request, "Error: La entidad solicitada no existe")
-        return redirect('listar_personal_apoyo_nacionales')
-
-    connection.set_tenant(entidad)
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
     try:
         personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
     except:
         messages.error(request, "Error: No existe el personal de apoyo solicitado o su información es incompleta")
-        return redirect('listar_personal_apoyo_nacionales')
+        return redirect('personal_apoyo_listar')
     formacion_deportiva = FormacionDeportiva.objects.filter(personal_apoyo=personal_apoyo)
     experiencia_laboral = ExperienciaLaboral.objects.filter(personal_apoyo=personal_apoyo)
     personal_apoyo.edad = calculate_age(personal_apoyo.fecha_nacimiento)
-
     return render(request,'personal_apoyo/ver_personal_apoyo.html',{
             'personal_apoyo':personal_apoyo,
             'formacion_deportiva':formacion_deportiva,
-            'experiencia_laboral':experiencia_laboral,
-            'tenant_nacional':True
+            'experiencia_laboral':experiencia_laboral
         })
 
-def ver_escenario_tenantnacional(request, id_escenario, tenant):
-    """
-    Agosto 11 /2015
-    Autor: Milton Lenis
 
-    Ver Escenario en el tenant nacional
-    Se identifica el tenant al que pertenece un escenario y se busca
-    Se obtiene la informacion general del escenario desde la base de datos y se muestra
+def ver_dirigente_tenantnacional(request,dirigente_id,id_entidad):
+    """
+    Junio 21 / 2015
+    Autor: Cristian Leonardo Ríos López
+
+    ver dirigente
+
+    Se obtienen toda la información registrada del dirigente dado y se muestra.
+
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param dirigente_id:   Identificador del dirigente
+    :type dirigente_id:    String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
+    """
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
+    try:
+        dirigente = Dirigente.objects.get(id=dirigente_id)
+    except Dirigente.DoesNotExist:
+        messages.error(request, 'El dirigente que desea ver no existe')
+        return redirect('dirigentes_listar')
+
+    cargos = DirigenteCargo.objects.filter(dirigente=dirigente)
+    for cargo in cargos:
+        cargo.funciones = DirigenteFuncion.objects.filter(dirigente=dirigente, cargo=cargo.id)
+
+    return render(request, 'dirigentes/dirigentes_ver.html', {
+        'dirigente': dirigente,
+        'cargos': cargos
+    })
+
+
+def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
+    """
+    Junio 22 /2015
+    Autor: Daniel Correa
+
+    ##Editado por Milton Lenis el 05 de octubre de 2015
+
+    Ver Deportista
+
+    Se obtiene la informacion general del deportista desde la base de datos y se muestra
+
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
 
     :param request: Petición Realizada
     :type request: WSGIRequest
-    :param id_escenario: Llave primaria del escenario
-    :type id_escenario: String
-    :param tenant: Nombre del esquema del tenant
-    :type tenant: String
+    :param id_depor: Llave primaria del deportista
+    :type id_depor: String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
-    try:
-        entidad = Entidad.objects.get(id=tenant)
-    except Exception:
-        messages.error(request, "Error: La entidad solicitada no existe")
-        return redirect('listar_escenarios_nacionales')
 
-    connection.set_tenant(entidad)
+    if estado != 'TRANSFERIDO':
+        tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+        connection.set_tenant(tenant)
+        ContentType.objects.clear_cache()
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request, "Error: No existe el deportista solicitado")
+        return redirect('deportista_listar')
+    composicion = ComposicionCorporal.objects.filter(deportista=deportista)
+    if len(composicion) != 0:
+        composicion = composicion[0]
+    info_adicional = InformacionAdicional.objects.filter(deportista=deportista)
+    if len(info_adicional) != 0:
+        info_adicional = info_adicional[0]
+    historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
+    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
+    historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
+    informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
+    return render(request,'deportistas/ver_deportista.html',{
+            'deportista':deportista,
+            'composicion':composicion,
+            'info_adicional':info_adicional,
+            'historial_deportivo':historial_deportivo,
+            'historial_lesiones':historial_lesiones,
+            'historial_doping':historial_doping,
+            'informacion_academica':informacion_academica
+    })
+
+
+def ver_escenario_tenantnacional(request,escenario_id,id_entidad):
+    """
+    Mayo 30 / 2015
+    Autor: Karent Narvaez Grisales
+
+    ver escenario
+
+    Se obtienen toda la información registrada del escenario dado y se muestra.
+
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del escenario
+    :type escenario_id:    String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
+    """
+
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
     try:
-        escenario = Escenario.objects.get(id=id_escenario)
-    except Exception:
-        messages.error(request, "Error: El escenario no existe")
-        return redirect('listar_escenarios_nacionales')
+        escenario = Escenario.objects.get(id=escenario_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, "El escenario que intenta acceder no existe.")
+        return redirect('listar_escenarios')
+
     caracteristicas = CaracterizacionEscenario.objects.filter(escenario=escenario)
     horarios = HorarioDisponibilidad.objects.filter(escenario=escenario)
     fotos = Foto.objects.filter(escenario=escenario)
     videos =  Video.objects.filter(escenario=escenario)
     historicos =  DatoHistorico.objects.filter(escenario=escenario)
+    mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
     contactos = Contacto.objects.filter(escenario=escenario)
 
     return render(request, 'escenarios/ver_escenario.html', {
@@ -416,167 +510,47 @@ def ver_escenario_tenantnacional(request, id_escenario, tenant):
         'historicos': historicos,
         'fotos': fotos,
         'videos': videos,
-        'contactos': contactos,
-        'tenant_nacional': True
+        'mantenimientos': mantenimientos,
+        'escenario_id': escenario_id,
+        'contactos': contactos
     })
 
-def ver_deportista_tenantnacional(request, id_depor, tenant):
+
+def ver_caf_tenantnacional(request,idCAF,id_entidad):
     """
-    Agosto 11 /2015
-    Autor: Milton Lenis
+    Junio 23 / 2015
+    Autor: Andrés Serna
 
-    Ver Deportista en el tenant nacional
-    Se identifica el tenant al que pertenece un deportista y se busca
-    Se obtiene la informacion general del deportista desde la base de datos y se muestra
+    Ver CAF
 
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param id_depor: Llave primaria del deportista
-    :type id_depor: String
-    :param tenant: Nombre del esquema del tenant
-    :type tenant: String
+    Se obtienen toda la información registrada del CAF dado y se muestra.
+
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param escenario_id:   Identificador del CAF
+    :type escenario_id:    String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
     """
-    try:
-        entidad = Entidad.objects.get(nombre=tenant)
-    except Exception:
-        messages.error(request, "Error: La entidad solicitada no existe")
-        return redirect('listar_deportistas_nacionales')
-
-    connection.set_tenant(entidad)
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
     try:
-        deportista = Deportista.objects.get(id=id_depor)
-    except:
-        messages.error(request, "Error: No existe el deportista solicitado")
-        return redirect('listar_deportistas_nacionales')
-    composicion = ComposicionCorporal.objects.filter(deportista=deportista)
-    if len(composicion) != 0:
-        composicion = composicion[0]
-    historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista)
-    informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
-    deportista.edad = calculate_age(deportista.fecha_nacimiento)
-    deportista.disciplinas_str = ','.join(x.descripcion for x in deportista.disciplinas.all())
-    return render(request,'deportistas/ver_deportista.html',{
-            'deportista':deportista,
-            'composicion':composicion,
-            'historial_deportivo':historial_deportivo,
-            'informacion_academica':informacion_academica,
-            'tenant_nacional':True
-        })
-
-def ver_dirigente_tenantnacional(request, dirigente_id, tenant):
-    """
-    Agosto 11 /2015
-    Autor: Milton Lenis
-
-    Ver Dirigente en el tenant nacional
-    Se identifica el tenant al que pertenece un dirigente y se busca
-    Se obtiene la informacion general del dirigente desde la base de datos y se muestra
-
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param dirigente_id: Llave primaria del dirigente
-    :type dirigente_id: String
-    :param tenant: Nombre del esquema del tenant
-    :type tenant: String
-    """
-    try:
-        entidad = Entidad.objects.get(nombre=tenant)
-    except Exception:
-        messages.error(request, "Error: La entidad solicitada no existe")
-        return redirect('listar_dirigentes_nacionales')
-
-    connection.set_tenant(entidad)
-    ContentType.objects.clear_cache()
-    try:
-        dirigente = Dirigente.objects.get(id=dirigente_id)
-    except Dirigente.DoesNotExist:
-        messages.error(request, 'El dirigente que desea ver no existe')
-        return redirect('listar_dirigentes_nacionales')
-
-    #funciones = Funcion.objects.filter(dirigente=dirigente)
-
-    return render(request, 'dirigentes/dirigentes_ver.html', {
-        'dirigente': dirigente,
-        #'funciones': funciones,
-        'tenant_nacional':True
-    })
-
-def ver_caf_tenantnacional(request, id_caf,tenant):
-    """
-    Agosto 11 /2015
-    Autor: Milton Lenis
-
-    Ver CAF en el tenant nacional
-    Se identifica el tenant al que pertenece un caf y se busca
-    Se obtiene la informacion general del caf desde la base de datos y se muestra
-
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param id_caf: Llave primaria del caf
-    :type id_caf: String
-    :param tenant: Nombre del esquema del tenant
-    :type tenant: String
-    """
-    try:
-        entidad = Entidad.objects.get(nombre=tenant)
-    except Exception:
-        messages.error(request, "Error: La entidad solicitada no existe")
-        return redirect('listar_cafs_nacionales')
-
-    connection.set_tenant(entidad)
-    ContentType.objects.clear_cache()
-    try:
-        centro = CentroAcondicionamiento.objects.get(id=id_caf)
+        centro = CentroAcondicionamiento.objects.get(id=idCAF)
         planes = CAPlan.objects.filter(centro=centro)
         fotos = CAFoto.objects.filter(centro=centro)
     except Exception:
-        return redirect('listar_cafs_nacionales')
+        return redirect('listar_cafs')
 
     return render(request, 'cafs/ver_caf.html', {
         'centro': centro,
         'planes': planes,
         'fotos': fotos,
-        'tenant_nacional':True
-    })
-
-def ver_caja_tenantnacional(request, id_ccf, tenant):
-    """
-    Agosto 11 /2015
-    Autor: Milton Lenis
-
-    Ver CCF en el tenant nacional
-    Se identifica el tenant al que pertenece un ccf y se busca
-    Se obtiene la informacion general del ccf desde la base de datos y se muestra
-
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param id_ccf: Llave primaria del ccf
-    :type id_ccf: String
-    :param tenant: Nombre del esquema del tenant
-    :type tenant: String
-    """
-    try:
-        entidad = Entidad.objects.get(id=tenant)
-    except Exception:
-        messages.error(request, "Error: La entidad solicitada no existe")
-        return redirect('listar_cajas_nacionales')
-
-    connection.set_tenant(entidad)
-    ContentType.objects.clear_cache()
-    try:
-        ccf = CajaCompensacion.objects.get(id=id_ccf)
-    except Exception:
-        messages.error(request, "Error: La caja de compensación no existe")
-        return redirect('listar_cajas_nacionales')
-    horarios = HorarioDisponibilidadCajas.objects.filter(caja_compensacion=id_ccf)
-    tarifas = Tarifa.objects.filter(caja_compensacion=id_ccf)
-
-    return render(request, 'cajas_compensacion/ver_ccf.html', {
-        'ccf': ccf,
-        'horarios': horarios,
-        'tarifas': tarifas,
-        'tenant_nacional': True
+        'contenidoSinPadding': True,
     })
 
 

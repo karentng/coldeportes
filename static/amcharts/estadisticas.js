@@ -16,8 +16,21 @@ $(".nav a").on("shown.bs.tab", function () {
     tamanoAmcharts();
 });
 
+
+//FUNCIÓN AUXILIAR PARA VALIDAR EL NO_DATA EN LOS ARCHIVOS GENERADOS POR LA FUNCIÓN SUMAR_DATOS_INICIALES DE PYTHON
+function valoresEnCero(datos){
+    for(i=0;i<datos.length;i++){
+        if(datos[i].valor){
+            return false;
+        }
+    }
+    return true;
+}
+
+
 AmCharts.checkEmptyData = function (chart) {
-    if ( 0 == chart.dataProvider.length ) {
+    console.log(valoresEnCero(chart.dataProvider));
+    if ( 0 == chart.dataProvider.length || valoresEnCero(chart.dataProvider)) {
         // set min/max on the value axis
         try{
             chart.valueAxes[0].minimum = 0;

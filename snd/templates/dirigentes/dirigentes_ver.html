@@ -34,18 +34,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'dirigentes_listar' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             Información del dirigente: {{dirigente.nombres}} {{dirigente.apellidos}}
@@ -108,7 +97,7 @@
                                                         <b>Entidad:</b> {{ dirigente.entidad | upper}}<br/>
                                                     {% endif %}</p>
                                                     <p><b>Estado:</b> {{dirigente.get_estado_display}}</p>
-                                                    <p><b>Género:</b> {{dirigente.genero}}</p>
+                                                    <p><b>Género:</b> {{dirigente.get_genero_display}}</p>
                                                     <p><b>Teléfono:</b> {{dirigente.telefono_fijo}}</p>
                                                     <p><b>Email:</b> 
                                                     {% if dirigente.email %} 

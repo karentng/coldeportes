@@ -182,7 +182,7 @@ def obtenerDatos(request, modelo):
         for entidad in entidades:
             connection.set_tenant(entidad)
             ContentType.objects.clear_cache()
-            qs = modeloTipo.objects.filter(estado=0)
+            qs = modeloTipo.objects.filter(estado__in=[0,2])
             for objeto in qs:
                 objetos.append(objeto)
         connection.set_schema_to_public()
