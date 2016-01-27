@@ -1,0 +1,54 @@
+{% extends "base_reportes.html" %}
+{% load bootstrap3 %}
+
+{% block filtros %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            url = "{% url url_data %}";
+            realizarConsulta = function realizarConsulta(){
+                var departamentos = JSON.stringify($("#id_departamentos").val());
+                var municipios = JSON.stringify($("#id_municipios").val());
+                var disciplinas = JSON.stringify($("#id_disciplinas").val());
+
+                $('#loading').modal('show');
+
+                $.ajax({
+                    url: url,
+                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':'null'},
+                    dataType: 'json',
+                    success: function(data) {
+                        Reportes.modificarDatos(data, "{{ nombre_reporte}}");
+                        $('#loading').modal('hide');
+                    }, 
+                    error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
+                    }
+                });
+
+            }
+            $("#id_departamentos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_municipios").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_disciplinas").on("change", function(){
+                realizarConsulta();
+            });
+
+        });
+        nombreReporte = "{{ nombre_reporte }}";
+        visualizaciones = {{visualizaciones|safe}};
+        datos = {{datos|safe}};
+
+    </script>
+    <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
+    <script>
+        $(document).ready(function(){
+           $("#filtros").css("display","none");
+           
+        });
+    </script>
+    
+{% endblock %}
