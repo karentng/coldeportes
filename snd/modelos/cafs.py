@@ -50,28 +50,6 @@ class CentroAcondicionamiento(models.Model):
         self.nombre_administrador = self.nombre_administrador.upper()
         super(CentroAcondicionamiento, self).save(*args, **kwargs)
 
-    def obtenerAtributos(self):
-        from django.conf import settings
-        imagen = None
-        fotos = CAFoto.objects.filter(centro=self)
-        if len(fotos) > 0:
-            imagen = ("%s%s")%(settings.MEDIA_URL, fotos[0].foto.__str__())
-        else:
-            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/CAFView.PNG")
-
-        atributos = [
-            ["Nombre", self.nombre],
-            ["Ciudad", self.ciudad.nombre],
-            ["Comuna", self.comuna],
-            ["Barrio", self.barrio],
-            ["Estrato", self.estrato],
-            ["Dirección", self.direccion],
-            ["Teléfono", self.telefono],
-            ["Latitud", self.latitud],
-            ["Longitud", self.longitud],
-        ]
-
-        return [imagen, atributos, self.latitud, self.longitud, "CAF!"]
 
 class CAPlan(models.Model):
     centro = models.ForeignKey(CentroAcondicionamiento)

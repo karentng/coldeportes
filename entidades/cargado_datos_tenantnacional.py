@@ -211,7 +211,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
                     query = {instruccion : palabra}
 
                     try:
-                        qs = qs | modeloTipo.objects.filter(**query).filter(estado=0)
+                        qs = qs | modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
                     except Exception:
                         pass
         for objeto in qs:
