@@ -5,7 +5,7 @@
     <span class="colorMenu">DIRECTORIO</span>
   </a>
   <ul class="sub-menu">
-    {% if request.tenant.schema_name == 'public' %}
+    {% if request.tenant.schema_name == 'public' or not request.user.is_authenticated %}
     <li class="has-sub {% if '/directorio-publico/' in request.path %} active {% endif %}">
       <a href="{% url 'directorio_publico_buscar' %}"><span class="colorMenu">Directorio público </span></a>
     </li>
