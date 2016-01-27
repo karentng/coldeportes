@@ -217,6 +217,7 @@ def inicio_tenant(request):
     #Inicio consulta de transferencias
     transferencias = Transferencia.objects.filter(estado='Pendiente')
     transfer_personas = []
+
     for t in transferencias:
         connection.set_tenant(t.entidad)
         ContentType.objects.clear_cache()
@@ -240,7 +241,6 @@ def inicio_tenant(request):
     ContentType.objects.clear_cache()
 
     entidad = tipoTenant.obtener_datos_entidad()
-
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
         if len(noticias_todas)>5:
@@ -249,11 +249,10 @@ def inicio_tenant(request):
             noticias = noticias_todas
     except Exception:
         noticias = []
-
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
         'actoresAsociados': actoresAsociados,
-        'actoresAsociadosJSON': json.dumps(actoresAsociados),
+        #'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
         'noticias':noticias,
