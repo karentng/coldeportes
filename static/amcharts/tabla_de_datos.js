@@ -62,6 +62,9 @@ function TablaDeDatos(identificadorTabla, columnas, datosIniciales){
 		setDatos: function(data){ // OK
 			datos = transformarDatos(data);
 		},
+		setColumnas: function(cols){ // OK
+			todasLasColumnas = cols;
+		},
 		verificarActualizacion: function(){
 			generado = false;
 			if(estado == 1){
