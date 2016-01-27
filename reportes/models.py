@@ -29,7 +29,7 @@ class TenantEscenarioView(models.Model):
     tiposuperficie = models.ForeignKey(TipoSuperficie)
     tipo_propietario = models.CharField(max_length=2)
     clase_acceso = models.CharField(max_length=3)
-    capacidad_espectadores = models.CharField(max_length=50)
+    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
     caracteristicaescenario = models.ForeignKey(CaracteristicaEscenario)
 
 
