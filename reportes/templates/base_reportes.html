@@ -32,63 +32,11 @@
     <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
     <script src="{{STATIC_URL}}amcharts/tabla_de_datos.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            columnas = [nombres_columnas[0], "Cantidad"];
-            tablaDeDatos = TablaDeDatos("tabla", columnas);
-            tablaDeDatos.setDatos(datos);
-            $('#loading').modal('show');
-            url = "{% url url_data %}";
-            realizarConsulta = function realizarConsulta(){
-                var departamentos = JSON.stringify($("#id_departamentos").val());
-                var municipios = JSON.stringify($("#id_municipios").val());
-                if (municipios == '""'){
-                    municipios = null;
-                }
-                var disciplinas = JSON.stringify($("#id_disciplinas").val());
-                var reporte = JSON.stringify($("#id_reporte").val());
-                $('#loading').modal('show');
-                $.ajax({
-                    url: url,
-                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':reporte},
-                    dataType: 'json',
-                    success: function(data) {
-                        Reportes.modificarDatos(data,  $("#id_reporte option:selected").text());
-                        id = $("#id_reporte").prop('selectedIndex');
-                        tablaDeDatos.setDatos(data);
-                        tablaDeDatos.setColumnas([nombres_columnas[id], "Cantidad"]);
-                        tablaDeDatos.verificarActualizacion();
-                        $('#loading').modal('hide');
-                    }, error: function(err){
-                        console.log(err);
-                        $('#loading').modal('hide');
-                    }
-                });
 
-            }
-            $("#id_departamentos").on("change", function(){
-                realizarConsulta();
-            });
-            $("#id_municipios").on("change", function(){
-                realizarConsulta();
-            });
-            $("#id_disciplinas").on("change", function(){
-                realizarConsulta();
-            });
-            $("#id_reporte").on("change", function(){
-                realizarConsulta();
-                var titulo =  $("#id_reporte option:selected").text();
-                $(".titulo").html(titulo); 
-            });
+    {% block filtros %}
 
-              
-        });
-        nombreReporte = "{{ nombre_reporte }}";
-        visualizaciones = {{visualizaciones|safe}};
-        nombres_columnas = {{nombres_columnas|safe}};
-        datos = {{datos|safe}};
+    {% endblock %}
 
-    </script>
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
     <script>
         $(document).ready(function(){
@@ -98,26 +46,29 @@
     </script>
 {% endblock %}
 
+
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">{{ actor }}</a></li>
-    <li>{{ nombre_generador }}</li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">{% if nombre_generador %}{{ nombre_generador }}{% else %}{{ nombre_reporte }} {% endif %}</a></li>
 {% endblock %}
+
 
 {% block botones_panel %}
     <a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
 {% endblock %}
 
 {% block titulo_panel %}
-    <label class="titulo" style="color:white;"> Reportes Escenarios</label>
+    <label class="titulo" style="color:white;"> {% if nombre_generador %}{{ nombre_generador }}{% else %}{{ nombre_reporte }} {% endif %}</label>
 {% endblock %}
+
 
 {% block contenido_panel %}
     <div class="row" id="contenido">
         <div class="col-md-12">       
         {% for field in form %}
-            <div class="col-md-2">
+            <div class="{% if nombre_generador %}col-md-2{% else %}col-md-3{% endif %}">
                 {% bootstrap_field field layout="vertical" %}
             </div>
         {% endfor %}
@@ -143,7 +94,7 @@
         </div>
         <div class="tab-pane fade" id="nav-pills-tab-2">
             <table id="tabla" class="table table-bordered table-hover">
-                <h5 align="center"><b class="titulo">Clase de Acceso Escenarios</b></h5><br>
+                <h5 align="center"><b class="titulo">{{ nombre_reporte }}</b></h5><br>
                 <thead>
                 </thead>
             </table>
