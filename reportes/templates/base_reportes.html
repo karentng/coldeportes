@@ -49,7 +49,9 @@
     <div class="row" id="contenido">
         <div class="col-md-12">       
         {% for field in form %}
+            {% block tam_bloque %}
             <div class="{% if nombre_generador %}col-md-2{% else %}col-md-3{% endif %}">
+            {% endblock %}
                 {% bootstrap_field field layout="vertical" %}
             </div>
         {% endfor %}
