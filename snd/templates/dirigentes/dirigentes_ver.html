@@ -96,15 +96,19 @@
                                                     {% else %}
                                                         <b>Entidad:</b> {{ dirigente.entidad | upper}}<br/>
                                                     {% endif %}</p>
-                                                    <p><b>Estado:</b> {{dirigente.get_estado_display}}</p>
+                                                    {% if request.tenant.schema_name != 'public' %}
+                                                        <p><b>Estado:</b> {{dirigente.get_estado_display}}</p>
+                                                    {% endif %}
                                                     <p><b>Género:</b> {{dirigente.get_genero_display}}</p>
-                                                    <p><b>Teléfono:</b> {{dirigente.telefono_fijo}}</p>
-                                                    <p><b>Email:</b> 
-                                                    {% if dirigente.email %} 
-                                                        {{dirigente.email}} 
-                                                    {% else %} 
-                                                        Ninguno 
-                                                    {% endif %}</p>
+                                                    {% if request.tenant.schema_name != 'public' %}
+                                                        <p><b>Teléfono:</b> {{dirigente.telefono_fijo}}</p>
+                                                        <p><b>Email:</b>
+                                                        {% if dirigente.email %}
+                                                            {{dirigente.email}}
+                                                        {% else %}
+                                                            Ninguno
+                                                        {% endif %}</p>
+                                                    {% endif %}
                                                     <p><b>Nacionalidad:</b> 
                                                         {% for nac in dirigente.nacionalidad.all%}
                                                             {{nac}} 
