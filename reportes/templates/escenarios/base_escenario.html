@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
     <style>
         #filtros{
@@ -100,7 +101,7 @@
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">{{ actor }}</a></li>
-    <li>{{ nombre_reporte }}</li>
+    <li>{{ nombre_generador }}</li>
 {% endblock %}
 
 {% block botones_panel %}
@@ -141,6 +142,7 @@
         </div>
         <div class="tab-pane fade" id="nav-pills-tab-2">
             <table id="tabla" class="table table-bordered table-hover">
+                <h5 align="center"><b class="titulo">Clase de Acceso Escenarios</b></h5><br>
                 <thead>
                 </thead>
             </table>

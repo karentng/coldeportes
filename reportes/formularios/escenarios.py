@@ -8,6 +8,8 @@ class FiltrosEscenariosDMDForm(forms.Form):
     
     TIPO_REPORTE = (
         ('CA', 'Clase de Accesos de Escenarios'),
+        ('CE', 'Características de Escenarios'),
+        ('CO', 'Escenarios por Comunas'),
         ('DT', 'Escenarios por Departamentos'),
         ('ES', 'Escenarios por Estratos'),
         ('EF', 'Estados Físicos de los Escenarios'),

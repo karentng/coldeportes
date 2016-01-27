@@ -3,20 +3,6 @@ from entidades.models import *
 from snd.models import *
 
 class PublicEscenarioView(models.Model):
-    ACCESOS = (
-        ('pr', 'Privado'),
-        ('dul', 'De Uso Libre'),
-        ('pcp', 'Público Con Pago'),
-    )
-    ESTADOS_FISICOS = (
-        ('bu', 'Bueno'),
-        ('re', 'Regular'),
-        ('ma', 'Malo'),
-    )
-    PROPIETARIOS = (
-        ('of', 'Oficial'),
-        ('pr', 'Privado'),
-    )
     class Meta:
         managed = False
     #campos modelo escenario
@@ -30,15 +16,21 @@ class PublicEscenarioView(models.Model):
     barrio = models.CharField(max_length=20)
     estrato = models.CharField(max_length=1)
     nombre_administrador = models.CharField(max_length=50, null=True)
-    entidad = models.ForeignKey(Entidad)    
+    entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField()
+    division_territorial = models.CharField(max_length=2)
+    descripcion_escenario = models.CharField(max_length=1024, null=True)
+    fecha_creacion_escenario = models.DateTimeField()
     #campos modelo caracterizacion
     tipo_escenario = models.ForeignKey(TipoEscenario)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
+    estado_fisico = models.CharField(max_length=2)
     tiposuperficie = models.ForeignKey(TipoSuperficie)
+    tipo_propietario = models.CharField(max_length=2)
     clase_acceso = models.CharField(max_length=3)
-    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
+    capacidad_espectadores = models.CharField(max_length=50)
+    caracteristicaescenario = models.ForeignKey(CaracteristicaEscenario)
+
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
     telefono_contacto = models.CharField(max_length=20)
@@ -52,8 +44,11 @@ class PublicEscenarioView(models.Model):
     descripcion_horario = models.CharField(max_length=1024)
     #campos modelo Foto
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
+    #campos mantenimiento
+    periodicidad = models.CharField(max_length=2, null=True, blank=True)
 
-class PublicEscenarioEstratoView(models.Model):
+
+'''class PublicEscenarioEstratoView(models.Model):
     
     class Meta:
         managed = False
@@ -65,9 +60,8 @@ class PublicEscenarioEstratoView(models.Model):
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     cantidad = models.PositiveIntegerField()
     estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")
-    
-    
-    
+'''
+
 class PublicCafView(models.Model):
     class Meta:
         managed = False

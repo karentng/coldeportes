@@ -35,6 +35,10 @@ def verificar_seleccion_reporte(opcion_reporte):
         categoria = 'tiposuperficie__descripcion'
     elif opcion_reporte == 'TP':
         categoria = 'tipo_propietario'
+    elif opcion_reporte == 'CE':
+        categoria = 'caracteristicaescenario__descripcion'
+    elif opcion_reporte == 'CO':
+        categoria = 'comuna'
     elif opcion_reporte == 'PM':
         categoria = 'periodicidad'
     elif opcion_reporte == 'DIS':
@@ -123,16 +127,25 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
         #por default carga el reporte de Clase de accesos
         reporte = 'CA'
     if not categoria:
-    #si categoria es none es el reporte características escenarios        
+    #si categoria es none es el reporte características escenarios
         categoria = verificar_seleccion_reporte(reporte)
+
     choices = obtener_choices(reporte)
     escenarios = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, disciplinas, tipoTenant, tabla, choices,ajustados)
+
+    #verifica si es el reporte de comunas para escenarios y le agrega el label de comuna para el valor que muestra en la gráfica
+    if reporte == 'CO':
+        auxiliar_escenarios = dict()
+        for key, value in escenarios.items():
+            auxiliar_escenarios[("%s %s")%("Comuna ", key)] = value
+        escenarios = auxiliar_escenarios
 
     if '' in escenarios:
         escenarios['Ninguna'] = escenarios['']
         del escenarios['']
 
     return escenarios
+
 
 
 def caracteristicas_escenarios(request):
@@ -148,18 +161,20 @@ def caracteristicas_escenarios(request):
         tabla = PublicEscenarioView
     else:
         tabla = TenantEscenarioView
-    
+
     cantidad = 'tipo_escenario'
     escenarios = generador_reporte_escenario(request, tabla, cantidad)
+    
 
     if request.is_ajax():
         return JsonResponse(escenarios)
         
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    nombres_columnas = ["Clase", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario"]
+    nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario"]
     return render(request, 'escenarios/base_escenario.html', {
         'nombre_reporte' : 'Clase de Acceso Escenarios',
+        'nombre_generador': 'Características Escenarios',
         'url_data' : 'reportes_caracteristicas_escenarios',
         'datos': escenarios,
         'visualizaciones': visualizaciones,
@@ -169,83 +184,6 @@ def caracteristicas_escenarios(request):
         'nombres_columnas': nombres_columnas
 
     })
-
-
-def clase_escenarios(request):
-    """
-    Enero 15, 2015
-    Autor: Karent Narvaez
-
-    Permite conocer la cantidad de escenarios en cada clase determinada.
-    """
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioView
-    else:
-        tabla = TenantEscenarioView
-
-    categoria = 'caracteristicas__descripcion'
-    cantidad = 'caracteristicas'
-
-    escenarios = generador_reporte_escenario(request, tabla, cantidad, categoria)
-
-    if request.is_ajax():
-        return JsonResponse(escenarios)
-
-    visualizaciones = [1,2,3,5,6,7]
-    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
-    return render(request, 'escenarios/base2_escenario.html', {
-        'nombre_reporte' : 'Clases de Escenario',
-        'url_data' : 'reportes_clase_escenarios',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios',
-        'fecha_generado': datetime.now()
-    })
-
-
-def comunas_escenarios(request):
-    from coldeportes.utilities import get_request_or_none
-
-    tipoTenant = request.tenant.obtenerTenant()
-
-    if tipoTenant.schema_name == 'public':
-        tabla = PublicEscenarioView
-    else:
-        tabla = TenantEscenarioView
-
-    municipios = None
-    disciplinas = None
-
-    if request.is_ajax():
-        municipios = get_request_or_none(request.GET, 'municipios')
-        if municipios != None:
-            municipios = [municipios]
-        disciplinas = get_request_or_none(request.GET, 'disciplinas')
-
-    escenarios = ejecutar_consulta_segun_filtro('comuna', 'comuna', None, municipios, disciplinas, tipoTenant, tabla, None)
-    aux_esc = dict()
-    for k, v in escenarios.items():
-        aux_esc[("%s %s")%("Comuna ", k)] = v
-    escenarios = aux_esc
-
-    if request.is_ajax():
-        return JsonResponse(escenarios)
-
-    visualizaciones = [1,2,3,5,6,7]
-    form = FiltrosEscenariosComunasForm(visualizaciones=visualizaciones)
-    return render(request, 'escenarios/base_escenario.html', {
-        'nombre_reporte' : 'Escenarios por comunas',
-        'url_data' : 'reportes_escenarios_comunas',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios',
-        'fecha_generado': datetime.now()
-    })
-
 
 def cantidad_espectadores(request):
     """

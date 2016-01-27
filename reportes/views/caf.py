@@ -85,7 +85,6 @@ def generador_reporte_caf(request, tabla, cantidad,choices=None):
     categoria = verificar_seleccion_reporte(reporte)
 
     choices = obtener_choices_categoria(categoria)
-    print(choices)
 
     cafs = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
 
