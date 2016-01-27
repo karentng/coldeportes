@@ -12,19 +12,6 @@
 {% block css %}
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
-    <style>
-        #filtros{
-            position: absolute;
-            top: 0;
-            left: 10px;
-            z-index: 100;
-            background-color: transparent;
-        }
-
-        #filtros .well{
-            background-color: rgba(255,255,255,0.4);
-        }
-    </style>
 {% endblock %}
 
 {% block js %}
@@ -38,12 +25,6 @@
     {% endblock %}
 
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
-    <script>
-        $(document).ready(function(){
-           $("#filtros").css("display","none");
-           
-        });
-    </script>
 {% endblock %}
 
 
