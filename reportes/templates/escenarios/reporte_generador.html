@@ -13,14 +13,18 @@
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamentos").val());
                 var municipios = JSON.stringify($("#id_municipios").val());
+                if (municipios == '""'){
+                    municipios = null;
+                }
+                var disciplinas = JSON.stringify($("#id_disciplinas").val());
                 var reporte = JSON.stringify($("#id_reporte").val());
                 $('#loading').modal('show');
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos,'municipios':municipios, 'reporte':reporte},
+                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':reporte},
                     dataType: 'json',
                     success: function(data) {
-                        Reportes.modificarDatos(data, $("#id_reporte option:selected").text());
+                        Reportes.modificarDatos(data,  $("#id_reporte option:selected").text());
                         id = $("#id_reporte").prop('selectedIndex');
                         tablaDeDatos.setDatos(data);
                         tablaDeDatos.setColumnas([nombres_columnas[id], "Cantidad"]);
@@ -44,16 +48,19 @@
             });
             $("#id_reporte").on("change", function(){
                 realizarConsulta();
+
                 var titulo =  $("#id_reporte option:selected").text();
                 $(".titulo").html(titulo); 
             });
 
               
         });
+
         nombreReporte = "{{ nombre_reporte }}";
         visualizaciones = {{visualizaciones|safe}};
         nombres_columnas = {{nombres_columnas|safe}};
         datos = {{datos|safe}};
+
     </script>
     
 {% endblock %}

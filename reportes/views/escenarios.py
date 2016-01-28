@@ -171,8 +171,8 @@ def caracteristicas_escenarios(request):
         
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario"]
-    return render(request, 'escenarios/base_escenario.html', {
+    nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario", "Periodicidad", "Día"]
+    return render(request, 'escenarios/reporte_generador.html', {
         'nombre_reporte' : 'Clase de Acceso Escenarios',
         'nombre_generador': 'Características Escenarios',
         'url_data' : 'reportes_caracteristicas_escenarios',
@@ -223,12 +223,14 @@ def cantidad_espectadores(request):
     visualizaciones = [1, 5 , 6]
 
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones, eliminar='reporte')
-    return render(request, 'escenarios/base2_escenario.html', {
+    nombres_columnas = ["Cantidad Espectadores"]
+    return render(request, 'escenarios/reporte_sencillo.html', {
         'nombre_reporte' : 'Número de escenarios deportivos por espectadores habituales',
         'url_data' : 'reporte_cantidad_espectadores',
         'datos': result,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Escenarios',
-        'fecha_generado': datetime.now()
+        'fecha_generado': datetime.now(),
+        'nombres_columnas': nombres_columnas
     })
