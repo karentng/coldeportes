@@ -40,9 +40,30 @@ function TablaDeDatos(identificadorTabla, columnas, datosIniciales){
 	            "aaData": datos,
 	            "columns": misColumnas,
 	            "tableTools": {
-	                "sSwfPath": base+"plugins/DataTables/swf/copy_csv_xls.swf",
-	                
-	            },
+		            "sSwfPath": base+"plugins/DataTables/swf/copy_csv_xls_pdf.swf",
+		            "aButtons": [
+		                {
+		                    "sExtends": "copy",
+		                    "sButtonClass": "btn",
+		                    "sButtonText": "<i class='fa fa-copy bigger-110 pink'></i> Copiar",
+		                },
+		                {
+		                    "sExtends": "xls",
+		                    "sButtonClass": "btn",
+		                    "sButtonText": "<i class='fa fa-file-excel-o bigger-110 green'></i> XLS"
+		                },
+		                {
+		                    "sExtends": "pdf",
+		                    "sButtonClass": "btn",
+		                    "sButtonText": "<i class='fa fa-file-pdf-o bigger-110 red'></i> PDF"
+		                },
+		                {
+		                    "sExtends": "print",
+		                    "sButtonClass": "btn",
+		                    "sButtonText": "<i class='fa fa-print bigger-110 grey'></i> Imprimir",
+		                },
+		            ],
+		        },
 	        });
 		}
 		, 500);
