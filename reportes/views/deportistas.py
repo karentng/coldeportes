@@ -612,6 +612,7 @@ def extranjeros_vs_nacionalidad(request):
 
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Número de deportistas por nacionalidad',
+        'nombre_generador': 'Deportistas extranjeros vs deportistas por nacionalidad',
         'url_data' : 'reporte_nacional_extranjero',
         'datos': datos,
         'visualizaciones': visualizaciones,
@@ -670,6 +671,7 @@ def lesiones_deportivas(request):
     form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones,TIPO_REPORTE=TIPO_REPORTE)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte': 'Tipo de lesión',
+        'nombre_generador': 'Lesiones de los deportistas',
         'url_data': 'reporte_lesiones',
         'datos': lesiones,
         'visualizaciones': visualizaciones,
