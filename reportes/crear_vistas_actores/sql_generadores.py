@@ -8,6 +8,7 @@ def seleccion_datos_cafs(tenant=''):
         CAF.comuna, CAF.estrato,
         CAF.latitud, CAF.longitud,
         CAF.altura, CAF.estado,
+        CAF.email, CAF.web,
         CAF.entidad_id, CAF.fecha_creacion,
         CLASE.nombre as nombre_clase, SERVICIO.nombre as nombre_servicio
     FROM
@@ -106,10 +107,11 @@ def seleccion_datos_personal_apoyo(tenant=''):
         SELECT
             PA.id, PA.actividad,
             PA.genero, PA.tipo_id,
+            PA.nombres, PA.apellidos,
             PA.fecha_nacimiento, NAL.nacionalidad_id,
             PA.ciudad_id, PA.etnia,
             PA.lgtbi, PA.fecha_creacion,
-            PA.estado,
+            PA.estado, PA.entidad_id,
             FD.nivel as nivel_formacion, FD.estado as estado_formacion,
             FD.fecha_finalizacion as ano_final_formacion, FD.fecha_creacion as creacion_formacion
         FROM
@@ -129,6 +131,7 @@ def seleccion_datos_deportistas(tenant=''):
             DE.ciudad_residencia_id,DIS.tipodisciplinadeportiva_id,
             DE.fecha_nacimiento,DE.fecha_creacion,
             DE.lgtbi,DE.etnia,
+            DE.nombres, DE.apellidos, DE.entidad_id,
             NAL.nacionalidad_id,DE.estado,
             HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
             IA.nivel as nivel_formacion, IA.estado as estado_formacion,
@@ -152,6 +155,7 @@ def seleccion_datos_dirigentes(tenant=''):
         """
         SELECT
             DIR.id, NAL.nacionalidad_id,
+            DIR.nombres, DIR.apellidos,
             DIR.entidad_id, DIR.fecha_creacion,
             DIR.estado, DIR.ciudad_residencia_id AS ciudad_id
         FROM
