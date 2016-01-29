@@ -188,7 +188,7 @@
                                                     <p><strong>Composicion Corporal:</strong></p>
                                                     <p><b>Camisa:</b> {{ composicion.talla_camisa }}</p>
                                                     <p><b>Pantaloneta:</b> {{ composicion.talla_pantaloneta }}<p/>
-                                                    <p><b>Zapato:</b>{{ composicion.talla_zapato }}</p>
+                                                    <p><b>Zapato:</b> {{ composicion.talla_zapato | upper}}</p>
                                                     <p><b>Indice de Masa Corporal:</b> {{composicion.imc}} kg/m^2</p>
                                                     <p><b>Porcentaje Grasa:</b> {{ composicion.porcentaje_grasa }}% </p>
                                                     <p><b>Masa Muscular Magra:</b> {{ composicion.masa_corporal_magra }} kg </p>
@@ -196,8 +196,8 @@
                                                         <p><b>EPS:</b> {{composicion.eps}}</p>
                                                         <p><b>RH:</b> {{composicion.RH}}</p>
                                                     {% endif %}
-                                                    <p><b>Estatura:</b> {{composicion.estatura}}</p>
-                                                    <p><b>Peso:</b> {{composicion.peso}}</p>
+                                                    <p><b>Estatura:</b> {{composicion.estatura}} Cm</p>
+                                                    <p><b>Peso:</b> {{composicion.peso}} Kg</p>
                                                 </div>
                                             </address>
                                         </div>
