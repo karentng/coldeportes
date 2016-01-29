@@ -75,6 +75,8 @@ class TenantCafView(models.Model):
     estrato = models.PositiveIntegerField()
     latitud = models.FloatField()
     longitud = models.FloatField()
+    email = models.EmailField()
+    web = models.URLField(verbose_name="página web")
     altura = models.PositiveIntegerField()
     estado = models.IntegerField()
     entidad = models.ForeignKey(Entidad)
@@ -83,10 +85,33 @@ class TenantCafView(models.Model):
     nombre_servicio = models.CharField(max_length=255)
 
 class TenantPersonalApoyoView(models.Model):
+    ACTIVIDADES = (
+        (0,'MÉDICO DEPORTÓLOGO'),
+        (1,'FISIOTERAPEUTA'),
+        (2,'PSICÓLOGO DEPORTIVO'),
+        (3,'NUTRICIONISTA'),
+        (4,'QUINESIÓLOGO'),
+        (5,'QUIROPRÁCTICO'),
+        (6,'PREPARADOR FÍSICO'),
+        (7,'TRABAJADOR SOCIAL'),
+        (8,'FISIÓLOGO'),
+        (9,'BIOMECÁNICO'),
+        (10,'METODÓLOGO'),
+        (11,'ENTRENADOR'),
+        (12,'MONITOR'),
+        (13,'ENTRENADOR PERSONALIZADO'),
+        (14,'ANIMADOR SOCIOCULTURAL'),
+        (15,'RECREADOR'),
+        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+    )
+
     class Meta:
         managed = False
 
-    actividad = models.IntegerField()
+    actividad = models.IntegerField(choices=ACTIVIDADES)
+    nombres = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=50)
+    entidad = models.ForeignKey(Entidad)
     genero = models.CharField(max_length=11)
     tipo_id = models.CharField(max_length=5)
     fecha_nacimiento = models.DateField()
@@ -116,7 +141,9 @@ class TenantDeportistaView(models.Model):
     etnia = models.CharField(max_length=20)
     nacionalidad = models.ForeignKey(Nacionalidad)
     estado = models.IntegerField()
-
+    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
+    entidad = models.ForeignKey(Entidad)
     #campos historial deportivo
     tipo_participacion = models.CharField(max_length=100)
     estado_participacion = models.CharField(max_length=50)
@@ -142,6 +169,8 @@ class TenantDirigenteView(models.Model):
         managed = False
 
     fecha_creacion = models.DateTimeField()
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
     nacionalidad = models.ForeignKey(Nacionalidad)
     entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField()

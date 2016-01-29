@@ -48,20 +48,6 @@ class PublicEscenarioView(models.Model):
     periodicidad = models.CharField(max_length=2, null=True, blank=True)
 
 
-'''class PublicEscenarioEstratoView(models.Model):
-    
-    class Meta:
-        managed = False
-            
-    id_escenario = models.ForeignKey(Escenario)
-    ciudad = models.ForeignKey(Ciudad)
-    fecha_creacion = models.DateTimeField()    
-    estrato = models.CharField(max_length=1)
-    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    cantidad = models.PositiveIntegerField()
-    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")
-'''
-
 class PublicCafView(models.Model):
     class Meta:
         managed = False
@@ -72,6 +58,8 @@ class PublicCafView(models.Model):
     ciudad = models.ForeignKey(Ciudad)
     comuna = models.PositiveIntegerField()
     estrato = models.PositiveIntegerField()
+    email = models.EmailField()
+    web = models.URLField(verbose_name="página web")
     latitud = models.FloatField()
     longitud = models.FloatField()
     altura = models.PositiveIntegerField()
@@ -81,11 +69,34 @@ class PublicCafView(models.Model):
     nombre_clase = models.CharField(max_length=255)
     nombre_servicio = models.CharField(max_length=255)
 
+
 class PublicPersonalApoyoView(models.Model):
+    ACTIVIDADES = (
+        (0,'MÉDICO DEPORTÓLOGO'),
+        (1,'FISIOTERAPEUTA'),
+        (2,'PSICÓLOGO DEPORTIVO'),
+        (3,'NUTRICIONISTA'),
+        (4,'QUINESIÓLOGO'),
+        (5,'QUIROPRÁCTICO'),
+        (6,'PREPARADOR FÍSICO'),
+        (7,'TRABAJADOR SOCIAL'),
+        (8,'FISIÓLOGO'),
+        (9,'BIOMECÁNICO'),
+        (10,'METODÓLOGO'),
+        (11,'ENTRENADOR'),
+        (12,'MONITOR'),
+        (13,'ENTRENADOR PERSONALIZADO'),
+        (14,'ANIMADOR SOCIOCULTURAL'),
+        (15,'RECREADOR'),
+        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+    )
     class Meta:
         managed = False
 
-    actividad = models.IntegerField()
+    actividad = models.IntegerField(choices=ACTIVIDADES)
+    nombres = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=50)
+    entidad = models.ForeignKey(Entidad)
     genero = models.CharField(max_length=11)
     tipo_id = models.CharField(max_length=5)
     fecha_nacimiento = models.DateField()
@@ -99,6 +110,7 @@ class PublicPersonalApoyoView(models.Model):
     estado_formacion = models.CharField(max_length=20)
     ano_final_formacion = models.IntegerField()
     creacion_formacion = models.DateField()
+
 
 class PublicDeportistaView(models.Model):
     class Meta:
@@ -132,7 +144,9 @@ class PublicDeportistaView(models.Model):
     etnia = models.CharField(max_length=20)
     nacionalidad = models.ForeignKey(Nacionalidad)
     estado = models.IntegerField()
-
+    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
+    entidad = models.ForeignKey(Entidad)
     #campos historial deportivo
     tipo_participacion = models.CharField(max_length=100)
     estado_participacion = models.CharField(max_length=50)
@@ -164,16 +178,20 @@ class PublicDeportistaView(models.Model):
                 del dic[elemento]
         return dic
 
+
 class PublicDirigenteView(models.Model):
 
     class Meta:
         managed = False
 
     fecha_creacion = models.DateTimeField()
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
     nacionalidad = models.ForeignKey(Nacionalidad)
     entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
+
 
 class PublicEscuelaView(models.Model):
 

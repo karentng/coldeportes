@@ -164,13 +164,17 @@ def inicio_public(request):
     ubicaciones = []
 
     for i in entidades:
-        connection.set_tenant(i)
-        escenarios = Escenario.objects.filter(entidad=i)
-        cantidad_escenarios += escenarios.count()
-        for escenario in escenarios:
-            ubicaciones.append(escenario.obtenerAtributos())
+        try:
+            connection.set_tenant(i)
+            escenarios = Escenario.objects.filter(entidad=i)
+            cantidad_escenarios += escenarios.count()
+            for escenario in escenarios:
+                ubicaciones.append(escenario.obtenerAtributos())
 
-        cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
+            cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
+        except Exception:
+            cantidad_escenarios += 0
+            cantidad_deportistas += 0
 
     connection.set_tenant(public)
 

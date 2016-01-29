@@ -77,7 +77,6 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                     sql,
                     ("SELECT * FROM %s.%s E")%(no_dependiente.schema_name, TENANT)
                 )
-            print(sql)
             ejecutar_sql(sql)
 
     def generar_vista_caf_independientes():

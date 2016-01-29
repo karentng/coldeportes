@@ -58,13 +58,12 @@ def obtenerDato(modelo, campos):
             try:
                 valor = getattr(modelo, campo)
                 if valor.__class__.__name__ == 'ManyRelatedManager':
-                    connection.set_tenant(modelo.entidad)
-                    ContentType.objects.clear_cache()
-                    try:
-                        valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
-                    except Exception as e:
-                        print(e)
-                    connection.set_schema_to_public()
+                    valor = render_to_string("configuracionDataTables.html", {"tipo": "ManyToMany", "valores": valor.all()})
+                elif valor.__class__.__name__ == 'method':
+                    valor = valor()
+                    valor = ('%s'%valor)
+                if valor.__class__.__name__ == "ImageFieldFile":
+                    valor = render_to_string("configuracionDataTables.html", {"tipo": "foto", "valor": valor,"MEDIA_URL":MEDIA_URL,"STATIC_URL":STATIC_URL})
                 else:
                     valor = ('%s'%valor)
             except Exception:
@@ -87,15 +86,54 @@ def evaluarAtributos(objeto, atributos):
     return valores
 
 def evaluarCondiciones(objeto, condiciones):
+    try:
+        condicion_es_actor_propio = type(condiciones[0][0] is list) and condiciones[0][0][0] == 'entidad'
+    except Exception:
+        condicion_es_actor_propio = False
+
     if condiciones == None:
         return True
-    # Aplica el operador OR
-    for i in condiciones:
-        valoresDeAtributos = evaluarAtributos(objeto, i[0])
-        atributosDefinidos = i[1]
-        ok = i[2](valoresDeAtributos, atributosDefinidos)
-        if ok == True:
-            return ok
+    # Aplica el operador AND (Editado por Milton)
+    cumple = True
+    if type(condiciones[0][0]) is str:
+        for permiso in condiciones[0]:
+            cumple = cumple and request.user.has_perm(permiso)
+        #En el caso de que se cumplan todos los permisos anteriores, debemos verificar las condiciones siguientes
+        #que pueden o no existir
+        if cumple:
+            #Verificamos si hay más condiciones por verificar
+            try:
+                condiciones[1]
+                hay_mas_condiciones = True
+            except Exception as e:
+                hay_mas_condiciones = False
+            #Si hay más condiciones verificamos cada una de ellas.
+            if hay_mas_condiciones:
+                condiciones_array = condiciones[1:len(condiciones)]
+                for i in condiciones_array:
+                    valoresDeAtributos = evaluarAtributos(objeto, i[0])
+                    atributosDefinidos = i[1]
+                    ok = i[2](valoresDeAtributos, atributosDefinidos)
+
+                    if ok == True:
+                        return ok
+            else:
+                return cumple
+        else:
+            return False
+    elif condicion_es_actor_propio:
+        try:
+            if objeto.entidad == request.tenant:
+                return True
+        except Exception: # No tiene entidad
+            return False
+    else:
+        for i in condiciones:
+            valoresDeAtributos = evaluarAtributos(objeto, i[0])
+            atributosDefinidos = i[1]
+            ok = i[2](valoresDeAtributos, atributosDefinidos)
+            if ok == True:
+                return ok
     return False
 
 
@@ -176,16 +214,7 @@ def obtenerDatos(request, modelo):
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
     else:
-
-        objetos = []
-        entidades = Entidad.objects.exclude(schema_name='public')
-        for entidad in entidades:
-            connection.set_tenant(entidad)
-            ContentType.objects.clear_cache()
-            qs = modeloTipo.objects.filter(estado__in=[0,2])
-            for objeto in qs:
-                objetos.append(objeto)
-        connection.set_schema_to_public()
+        objetos = modeloTipo.objects.filter(estado__in=[0,2])
         cantidadObjetos = len(objetos)
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
@@ -195,43 +224,39 @@ def obtenerDatos(request, modelo):
     return {'datos':datos, 'nombreDeColumnas': nombreDeColumnas+["Opciones"]}
 
 def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
-    qs = modeloTipo.objects.none()
-    objetos = []
+    objetos = modeloTipo.objects.none()
     busqueda = busqueda.split(" ")
 
-    entidades = Entidad.objects.exclude(schema_name='public')
-    for entidad in entidades:
-        connection.set_tenant(entidad)
-        ContentType.objects.clear_cache()
-        for atributo in atributos:
-            arregloAtributos = atributo.split(" ")
-            for elementoAtributo in arregloAtributos:
-                for palabra in busqueda:
-                    instruccion = "%s__contains" % elementoAtributo
-                    query = {instruccion : palabra}
-
+    for atributo in atributos:
+        arregloAtributos = atributo.split(" ")
+        for elementoAtributo in arregloAtributos:
+            for palabra in busqueda:
+                choices = modeloTipo._meta.get_field(elementoAtributo).choices
+                if choices != []:
+                    import re
+                    for k, v in choices:
+                        if re.search(palabra, v, re.IGNORECASE):
+                            instruccion = "%s" % elementoAtributo
+                            query = {instruccion : k}
+                            objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
+                            objetos = objetos | objeto
+                else:
                     try:
-                        qs = qs | modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
+                        instruccion = "%s__nombre__icontains" % elementoAtributo
+                        query = {instruccion : palabra}
+                        objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
                     except Exception:
-                        pass
-        for objeto in qs:
-            objetos.append(objeto)
-    connection.set_schema_to_public()
-
+                        instruccion = "%s__icontains" % elementoAtributo
+                        query = {instruccion : palabra}
+                        objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
+                    finally:
+                        objetos = objetos | objeto
     return objetos
 
 def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion):
     columna = columna.split(" ")[0]
-    orden = False
+    orden = ''
     if direccion == 'desc':
-        orden = True
+        orden = "-"
 
-    llave = None
-    if len(objetos) > 0:
-        if getattr(objetos[0],columna).__class__ == str:
-            llave = attrgetter(columna)
-        else:
-            llave = methodcaller('__str__')
-
-    objetos_procesados = sorted(objetos, key=llave, reverse=orden)
-    return objetos_procesados[inicio:fin]
+    return objetos.order_by(orden+columna).order_by('id','entidad').distinct('id','entidad')[inicio:fin]

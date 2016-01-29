@@ -97,7 +97,6 @@ def evaluarCondiciones(objeto, condiciones, request):
     except Exception:
         condicion_es_actor_propio = False
 
-
     if condiciones == None:
         return True
     # Aplica el operador AND (Editado por Milton)
