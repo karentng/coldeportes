@@ -4593,11 +4593,11 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before,ul.tag
 }
 
 .gallery .image{
-	width:235px;
+	width:255px;
 	display:block;
-	margin-right:-10px;
+	
 	overflow:hidden;
-	padding:10px
+	padding-bottom:15px;
 }
 
 .gallery .image img{
