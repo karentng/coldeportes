@@ -214,7 +214,7 @@ def obtenerDatos(request, modelo):
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
     else:
-        objetos = modeloTipo.objects.filter(estado__in=[0,2])
+        objetos = modeloTipo.objects.filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad')
         cantidadObjetos = len(objetos)
         datos['recordsTotal'] = cantidadObjetos
         datos['recordsFiltered'] = cantidadObjetos
@@ -238,25 +238,34 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
                         if re.search(palabra, v, re.IGNORECASE):
                             instruccion = "%s" % elementoAtributo
                             query = {instruccion : k}
-                            objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
+                            objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad')
                             objetos = objetos | objeto
                 else:
                     try:
                         instruccion = "%s__nombre__icontains" % elementoAtributo
                         query = {instruccion : palabra}
-                        objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
+                        objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad')
                     except Exception:
                         instruccion = "%s__icontains" % elementoAtributo
                         query = {instruccion : palabra}
-                        objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
+                        objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad')
                     finally:
                         objetos = objetos | objeto
     return objetos
 
 def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion):
-    columna = columna.split(" ")[0]
-    orden = ''
-    if direccion == 'desc':
-        orden = "-"
+    from operator import methodcaller
+    import operator
 
-    return objetos.order_by(orden+columna).order_by('id','entidad').distinct('id','entidad')[inicio:fin]
+    columna = columna.split(" ")[0]
+    orden = False
+    if direccion == 'desc':
+            orden = True
+    llave = None
+    if len(objetos) > 0:
+        if getattr(objetos[0],columna).__class__ == str:
+            llave = operator.attrgetter(columna)
+        else:
+            llave = methodcaller('__str__')
+    objetos_procesados = sorted(objetos, key=llave, reverse=orden)
+    return objetos_procesados[inicio:fin]
