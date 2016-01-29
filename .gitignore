@@ -9,6 +9,7 @@ media/
 snd/migrations
 directorio/migrations
 normograma/migrations
+manual/migrations
 noticias/migrations
 reportes/migrations
 entidades/migrations
