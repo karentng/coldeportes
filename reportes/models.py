@@ -175,6 +175,7 @@ class TenantDirigenteView(models.Model):
     entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
+    genero = models.CharField(max_length=11)
 
 class TenantEscuelaView(models.Model):
 

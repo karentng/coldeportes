@@ -157,6 +157,7 @@ def seleccion_datos_dirigentes(tenant=''):
             DIR.id, NAL.nacionalidad_id,
             DIR.nombres, DIR.apellidos,
             DIR.entidad_id, DIR.fecha_creacion,
+            DIR.genero,
             DIR.estado, DIR.ciudad_residencia_id AS ciudad_id
         FROM
         {0}snd_dirigente DIR

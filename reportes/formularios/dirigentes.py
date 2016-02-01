@@ -8,11 +8,11 @@ class NacionalidadForm(forms.Form):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
         super(NacionalidadForm, self).__init__(*args, **kwargs)
         self.fields['departamentos'] = adicionarClase(self.fields['departamentos'], 'many')
-        self.fields['municipios'] = adicionarClase(self.fields['municipios'], 'many')
+        self.fields['genero'] = adicionarClase(self.fields['genero'], 'many')
         self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
 
         add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
-    municipios = forms.ModelMultipleChoiceField(queryset=Ciudad.objects.all(), required=False)
+    genero = forms.MultipleChoiceField(choices=(('HOMBRE','MASCULINO'),('MUJER','FEMENINO'),), required=False, label="Género")
     visualizacion = forms.ChoiceField()

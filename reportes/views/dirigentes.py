@@ -11,23 +11,23 @@ from reportes.formularios.dirigentes import NacionalidadForm
 from reportes.models import TenantDirigenteView
 from snd.models import Dirigente
 
-def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices):
+
+def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, genero, tipoTenant, tabla, choices):
     """
     Noviembre 19, 2015
     Autor: Karent Narvaez
 
     Permite ejecutar una consulta con base en los filtros que se están enviando en la petición.
     """
-    from reportes.utilities import sumar_datos_diccionario#, convert_choices_to_array, crear_diccionario_inicial
-
-    if departamentos and municipios:
-        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
-    #Departamentos, disciplinas
+    from reportes.utilities import sumar_datos_diccionario
+    if departamentos and genero:
+        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,genero__in=genero).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+    #Departamentos
     elif departamentos:
         dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
-    #Municipios
-    elif municipios:
-        dirigentes = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+    #Genero
+    elif genero:
+        dirigentes = tabla.objects.filter(estado=0,genero__in=genero).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Disciplina
     else:
         dirigentes =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
@@ -44,13 +44,15 @@ def generador_reporte_dirigentes(request, tabla, cantidad, categoria, choices=No
     tipoTenant = request.tenant.obtenerTenant()
 
     departamentos = None
-    municipios = None
-
+    #municipios = None
+    genero = None
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
-        municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
-    
-    dirigentes = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        #municipios = None if request.GET['municipios'] == 'null'  else ast.literal_eval(request.GET['municipios'])
+
+    dirigentes = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, genero, tipoTenant, tabla, choices)
 
     if '' in dirigentes:
         dirigentes['Ninguna'] = dirigentes['']
@@ -89,4 +91,5 @@ def nacionalidad_dirigentes(request):
         'form': form,
         'actor': 'Dirigentes',
         'fecha_generado': datetime.now(),
+        'nombre_columna': 'Nacionalidades'
     })
