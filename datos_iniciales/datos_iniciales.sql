@@ -1239,13 +1239,7 @@ INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
 (51,'Taekwondo'),
 (52,'Tenis'),
 (53,'Tenis de mesa'),
-(54,'Tiro deportivo');
-
-
-
-INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
-(55, 'Actividades Subacuaticas'),
-(56, 'Arqueros De Colombia'),
+(54,'Tiro deportivo'),
 (57, 'Automovilismo'),
 (58, 'Badminton'),
 (59, 'Baile Deportivo'),
@@ -1271,7 +1265,6 @@ INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
 (79, 'Sambo'),
 (80, 'Tenis De Campo'),
 (81, 'Tiro Y Caza'),
-(82, 'Triathlon'),
 (83, 'Wushu'),
 (84, 'Deporte Especial'),
 (85, 'Discapacidad Fisica'),
