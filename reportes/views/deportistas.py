@@ -70,7 +70,7 @@ def participaciones_deportivas(request):
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Participaciones Deportivas',
+        'nombre_reporte' : 'PARTICIPACIONES DEPORTIVAS POR TIPO DE CAMPEONATO',
         'url_data' : 'reporte_participaciones_deportivas',
         'datos': participaciones,
         'visualizaciones': visualizaciones,
