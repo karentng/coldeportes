@@ -93,3 +93,4 @@ def nacionalidad_dirigentes(request):
         'fecha_generado': datetime.now(),
         'nombre_columna': 'Nacionalidades'
     })
+

@@ -135,41 +135,11 @@ def permisosPermitidos(request, permisos):
             if valor:
                 permitidos.append(i[0])
         except Exception as e:
-            print (e)
+            print (e, "Excepción en función permisosPermitidos, coldeportes.utilities")
             pass
     return permitidos
 
-'''def tenant_actor(actor):
-    """
-    Agosto 05 / 2015
-    Autor: Andrés Serna
 
-    Función que verifica si el tenant tiene tiene acceso al actor especificado
-    :param actor:  Actor que se verificará
-    :type actor:   String
-    :returns:      Redirección al inicio (No tenía permisos) o a la página deseada (Si tenía permisos)
-    :rtype:        HttpResponseRedirect
-    """
-    def decorator(a_view):
-        def _wrapped_view(request, *args, **kwargs):
-            try:
-                valor = hasattr(request.tenant.actores, actor)
-                if valor == True:
-                    valor = getattr(request.tenant.actores, actor)
-                    if valor == True:
-                        return a_view(request, *args, **kwargs)
-                    else:
-                        print ("No tiene los permisos para el actor: %s"%(actor))
-                        return render(request,'403.html',{})
-                else:
-                    print ("Actor %s no existente"%(actor))
-                    return render(request,'403.html',{})
-            except Exception as e:
-                return a_view(request, *args, **kwargs)
-            return a_view(request, *args, **kwargs)
-        return _wrapped_view
-    return decorator
-'''
 def tenant_actor(actor):
     """
     Noviembre 14 / 2015
