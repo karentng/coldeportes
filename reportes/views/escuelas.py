@@ -96,6 +96,7 @@ def estrato_escuelas(request):
         'form': form,
         'actor': 'Escuelas de Formación Deportiva',
         'fecha_generado': datetime.now(),
+        'nombre_columna':'Estrato'
     })
 
 def servicios_escuelas(request):
@@ -129,4 +130,5 @@ def servicios_escuelas(request):
         'form': form,
         'actor': 'Escuelas de Formación Deportiva',
         'fecha_generado': datetime.now(),
+        'nombre_columna':'Servicio'
     })

@@ -33,9 +33,9 @@
                     {% if tenant_existencia %}
                             <h4 class="text-warning"><i class="fa fa-warning"></i>¡Deportista encontrado!</h4>
                             <p>
-                                Se ha encontrado al deportista {{ deportista.full_name }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
+                                Se ha encontrado al deportista <b>{{ deportista.full_name }}</b> registrado en la entidad <b>{{ tenant_existencia.nombre | upper}}</b>, por favor pongase en contacto
                                 con la entidad para solicitar una transferencia de este deportista o intente con otro número de identificación si así lo desea
-                                <p><a href="{% url 'verificar_deportista' %}" class="btn btn-primary btn-sm m-r-5">Intentar con otra identificación</a></p>
+                                <p><a href="{% url 'verificar_deportista' %}" class="btn btn-warning btn-sm m-r-5">Intentar con otra identificación</a></p>
                             </p>
                     {% else %}
                             <h4 class="text-warning"><i class="fa fa-warning"></i> ¡Deportista encontrado!</h4>
@@ -44,7 +44,7 @@
                                 <div class="p-t-5 pull-right">
                                     <a href="{% url 'verificar_deportista' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a>
                                     <a href="{% url 'edicion_deportista' deportista.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-edit"></i> Editar este deportista</a>
-                                    <a href="{% url 'ver_deportista' deportista.id request.tenant.id %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este deportista</a>
+                                    <a href="{% url 'ver_deportista' deportista.id request.tenant.id deportista.estado %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-eye"></i> Ver este deportista</a>
                                 </div>
                             </p>
                     {% endif %}

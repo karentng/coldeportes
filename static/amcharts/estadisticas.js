@@ -46,7 +46,12 @@ AmCharts.checkEmptyData = function (chart) {
         chart.dataProvider = [dataPoint];
         
         // add label
-        chart.addLabel(0, '50%', 'No hay datos para el reporte especificado', 'center', 19, "#00acac");
+        try{
+            chart.addLabel(0, '50%', 'No hay datos para el reporte especificado', 'center', 19, "#00acac");
+        }catch(e){
+
+        }
+        
         
         // set opacity of the chart div
         chart.chartDiv.style.opacity = 0.75;
