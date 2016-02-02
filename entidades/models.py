@@ -44,19 +44,25 @@ class TipoDisciplinaDeportiva(models.Model):
         return self.descripcion
 
 class ModalidadDisciplinaDeportiva(models.Model):
-    tipo = models.ForeignKey(TipoDisciplinaDeportiva)
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
     descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    general = models.CharField(max_length=50, verbose_name='general', blank=True)
 
     def __str__(self):
+        if self.general:
+            return '('+self.general+')-'+self.nombre
         return self.nombre
 
 class CategoriaDisciplinaDeportiva(models.Model):
-    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva)
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
     descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    general = models.CharField(max_length=50, verbose_name='general', blank=True)
 
     def __str__(self):
+        if self.general:
+            return '('+self.general+')-'+self.nombre
         return self.nombre
 
 class Actores(models.Model):
