@@ -649,10 +649,10 @@ def lesiones_deportivas(request):
         tipo = HistorialLesiones.TIPOS_LESION if reporte == 'TL' else HistorialLesiones.PERIODOS_REHABILITACION
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('"+categoria+"')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('id','descripcion','entidad'').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('"+categoria+"')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('"+categoria+"')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         lesiones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -661,8 +661,10 @@ def lesiones_deportivas(request):
         return JsonResponse(lesiones)
 
     else:
-        lesiones = list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        lesiones = list(tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
         lesiones = sumar_datos_diccionario(lesiones,HistorialLesiones.TIPOS_LESION)
+
+
     visualizaciones = [1, 2, 3, 5]
     TIPO_REPORTE = (
         ('TL', 'Tipo de lesión'),
