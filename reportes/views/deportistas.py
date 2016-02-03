@@ -112,12 +112,21 @@ def beneficiario_programa_apoyo(request):
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
         if None in beneficiados or False in beneficiados:
-            try:
-                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
-                del beneficiados[None]
-            except Exception:
-                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
-                del beneficiados[False]
+            if None in beneficiados and False in beneficiados:
+                try:
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                    del beneficiados[None]
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] += beneficiados[False]
+                    del beneficiados[False]
+                except Exception as e:
+                    print(e,"Falló la estrategia cuando None y False están presentes en el mismo reporte")
+            else:
+                try:
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                    del beneficiados[None]
+                except Exception:
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
+                    del beneficiados[False]
 
         return JsonResponse(beneficiados)
 
@@ -129,12 +138,21 @@ def beneficiario_programa_apoyo(request):
             beneficiados['DEPORTISTAS BENEFICIADOS'] = beneficiados[True]
             del beneficiados[True]
         if None in beneficiados or False in beneficiados:
-            try:
-                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
-                del beneficiados[None]
-            except Exception:
-                beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
-                del beneficiados[False]
+            if None in beneficiados and False in beneficiados:
+                try:
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                    del beneficiados[None]
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] += beneficiados[False]
+                    del beneficiados[False]
+                except Exception as e:
+                    print(e,"Falló la estrategia cuando None y False están presentes en el mismo reporte")
+            else:
+                try:
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[None]
+                    del beneficiados[None]
+                except Exception:
+                    beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
+                    del beneficiados[False]
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
@@ -169,10 +187,10 @@ def reporte_uso_centros_biomedicos(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('usa_centros_biomedicos')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('usa_centros_biomedicos')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).annotate(descripcion=F('usa_centros_biomedicos')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado = 0).annotate(descripcion=F('usa_centros_biomedicos')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('usa_centros_biomedicos')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2],ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('usa_centros_biomedicos')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2],genero__in=%s).annotate(descripcion=F('usa_centros_biomedicos')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2]).annotate(descripcion=F('usa_centros_biomedicos')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         usa_centros = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -182,28 +200,46 @@ def reporte_uso_centros_biomedicos(request):
             usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
             del usa_centros[True]
         if None in usa_centros or False in usa_centros:
-            try:
-                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
-                del usa_centros[None]
-            except Exception:
-                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
-                del usa_centros[False]
+            if None in usa_centros and False in usa_centros:
+                try:
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                    del usa_centros[None]
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] += usa_centros[False]
+                    del usa_centros[False]
+                except Exception as e:
+                    print(e,"Falló la estrategia cuando None y False están presentes en el mismo reporte")
+            else:
+                try:
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                    del usa_centros[None]
+                except Exception:
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
+                    del usa_centros[False]
 
         return JsonResponse(usa_centros)
 
     else:
-        usa_centros = list(tabla.objects.filter(estado = 0).annotate(descripcion=F('usa_centros_biomedicos')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        usa_centros = list(tabla.objects.filter(estado__in = [0,2]).annotate(descripcion=F('usa_centros_biomedicos')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
         usa_centros = tipoTenant.ajustar_resultado(usa_centros)
         if True in usa_centros:
             usa_centros['USAN CENTROS BIOMÉDICOS'] = usa_centros[True]
             del usa_centros[True]
         if None in usa_centros or False in usa_centros:
-            try:
-                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
-                del usa_centros[None]
-            except Exception:
-                usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
-                del usa_centros[False]
+            if None in usa_centros and False in usa_centros:
+                try:
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                    del usa_centros[None]
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] += usa_centros[False]
+                    del usa_centros[False]
+                except Exception as e:
+                    print(e,"Falló la estrategia cuando None y False están presentes en el mismo reporte")
+            else:
+                try:
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[None]
+                    del usa_centros[None]
+                except Exception:
+                    usa_centros['NO USAN CENTROS BIOMÉDICOS'] = usa_centros[False]
+                    del usa_centros[False]
 
 
     visualizaciones = [1, 2, 3, 5, 6]
