@@ -425,7 +425,7 @@ def reporte_cantidad_total_deportistas(request):
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
-        'nombre_reporte' : 'Cantidad TOTAL de deportistas',
+        'nombre_reporte' : 'Cantidad total de deportistas',
         'url_data' : 'reporte_cantidad_total_deportistas',
         'datos': resultado,
         'visualizaciones': visualizaciones,

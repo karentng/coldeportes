@@ -162,10 +162,10 @@ def reporte_cantidad_total_personal_apoyo(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s,genero__in=%s).order_by('id','entidad').distinct('id','entidad'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s).order_by('id','entidad').distinct('id','entidad'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).order_by('id','entidad').distinct('id','entidad'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0).order_by('id','entidad').distinct('id','entidad'))",
         ]
 
         total_personal = len(ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant))
@@ -177,7 +177,7 @@ def reporte_cantidad_total_personal_apoyo(request):
         return JsonResponse(resultado)
 
     else:
-        total_personal = len(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
+        total_personal = len(tabla.objects.filter(estado = 0).order_by('id','entidad').distinct('id','entidad'))
 
         resultado = {
             'Total Personal de Apoyo':total_personal
