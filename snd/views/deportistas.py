@@ -343,7 +343,11 @@ def desactivar_deportista(request,id_depor):
         estado_actual = deportista.estado
         deportista.estado = not estado_actual
         deportista.save()
-        messages.warning(request, "Deportista desactivado/activado correctamente.")
+        if estado_actual:
+            message = "Deportista activado correctamente."
+        else:
+            message = "Deportista desactivado correctamente."
+        messages.warning(request, message)
         return redirect('deportista_listar')
     except:
         messages.error(request, "Error: No existe el deportista solicitado")
