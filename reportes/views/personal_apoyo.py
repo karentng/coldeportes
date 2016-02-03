@@ -91,6 +91,7 @@ def reporte_actividades_personal(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Personal de Apoyo',
+        'fecha_generado': datetime.now(),
         'nombre_columna':'Actividad'
     })
 
@@ -185,7 +186,7 @@ def reporte_cantidad_total_personal_apoyo(request):
     visualizaciones = [1, 2, 3, 5, 6, 7]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
-        'nombre_reporte' : 'Cantidad TOTAL de personal de apoyo',
+        'nombre_reporte' : 'Cantidad total de personal de apoyo',
         'url_data' : 'reporte_cantidad_total_personal_apoyo',
         'datos': resultado,
         'visualizaciones': visualizaciones,
