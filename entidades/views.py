@@ -251,7 +251,6 @@ def actualizarLocalizacionActor(actor, modelo):
     instancia = modelo.objects.get(id=actor['id'])
     instancia.latitud = actor['latitud']
     instancia.longitud = actor['longitud']
-    instancia.altura = actor['altura']
     instancia.save()
 
 import json
