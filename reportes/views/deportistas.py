@@ -603,8 +603,9 @@ def extranjeros(request):
 
         consulta_general = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
         consulta_completa = list(consulta_general.filter(nacionalidad=colombia).annotate(descripcion=F('nacionalidad__nombre')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
-        numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).count()
-        consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
+        numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).values('id','entidad').annotate(cantidad=Count('id',distinct=True))
+        for x in numero_extranjeros: x['descripcion']='Extranjeros'
+        consulta_completa += (numero_extranjeros)
         consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
 
         return JsonResponse(consulta_completa)
@@ -612,8 +613,9 @@ def extranjeros(request):
     else:
         consulta_general = tabla.objects.filter(estado__in=[0,2])
         consulta_completa = list(consulta_general.filter(nacionalidad=colombia).annotate(descripcion=F('nacionalidad__nombre')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
-        numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).count()
-        consulta_completa.append({'cantidad':numero_extranjeros,'descripcion':'Extranjeros'})
+        numero_extranjeros = consulta_general.exclude(nacionalidad=colombia).values('id','entidad').annotate(cantidad=Count('id',distinct=True))
+        for x in numero_extranjeros: x['descripcion']='Extranjeros'
+        consulta_completa += (numero_extranjeros)
         consulta_completa = tipoTenant.ajustar_resultado(consulta_completa)
 
 
@@ -635,9 +637,7 @@ def extranjeros_vs_nacionalidad(request):
 
         return nacionalidad(request) if reporte == 'NA' else extranjeros(request)
     else:
-        print('antes')
         datos = nacionalidad(request) if reporte == 'NA' else extranjeros(request)
-        print('dsps')
 
     visualizaciones = [1, 2, 3,5,6,7]
     TIPO_REPORTE = (
@@ -723,16 +723,20 @@ def lesiones_deportivas(request):
 def ordenar_edades_rangos(deportistas):
     edades = []
     fechas_maximas = fecha_nacimiento_maxima([13,18,25,50])
-    uno_doce = {'descripcion':'Niños (1-12 años)','cantidad':deportistas.filter(fecha_nacimiento__gte=fechas_maximas[0]).distinct('id').count()}
-    edades.append(uno_doce)
-    trece_diezsiete = {'descripcion':'Jovenes (13-17 años)','cantidad':deportistas.filter(fecha_nacimiento__lte=fechas_maximas[0],fecha_nacimiento__gte=fechas_maximas[1]).distinct('id').count()}
-    edades.append(trece_diezsiete)
-    diezocho_veinticinco = {'descripcion':'Adultos Jovenes (18-25 años)','cantidad':deportistas.filter(fecha_nacimiento__lte=fechas_maximas[1],fecha_nacimiento__gte=fechas_maximas[2]).distinct('id').count()}
-    edades.append(diezocho_veinticinco)
-    veinticinco_cincuenta = {'descripcion':'Adultos (25-50 años)','cantidad':deportistas.filter(fecha_nacimiento__lte=fechas_maximas[2],fecha_nacimiento__gte=fechas_maximas[3]).distinct('id').count()}
-    edades.append(veinticinco_cincuenta)
-    cincuenta_mas = {'descripcion':'Adultos Mayores (> 50 años)','cantidad':deportistas.filter(fecha_nacimiento__lte=fechas_maximas[3]).distinct('id').count()}
-    edades.append(cincuenta_mas)
+    etiquetas = ['Niños (1-12 años)','Jovenes (13-17 años)','Adultos Jovenes (18-25 años)','Adultos (25-50 años)','Adultos Mayores (> 50 años)']
+    consultas = [deportistas.filter(fecha_nacimiento__gte=fechas_maximas[0]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)),
+                 deportistas.filter(fecha_nacimiento__lte=fechas_maximas[0],fecha_nacimiento__gte=fechas_maximas[1]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)),
+                 deportistas.filter(fecha_nacimiento__lte=fechas_maximas[1],fecha_nacimiento__gte=fechas_maximas[2]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)),
+                 deportistas.filter(fecha_nacimiento__lte=fechas_maximas[2],fecha_nacimiento__gte=fechas_maximas[3]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)),
+                 deportistas.filter(fecha_nacimiento__lte=fechas_maximas[3]).values('id','entidad').annotate(cantidad=Count('id',distinct=True))]
+
+    etiqueta_i = 0
+    for c in consultas:
+        for sub_c in c:
+            sub_c['descripcion'] = etiquetas[etiqueta_i]
+        etiqueta_i+=1
+        edades += c
+
     return edades
 
 def edad_deportistas(request):

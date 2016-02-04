@@ -46,7 +46,6 @@ class FiltrosDeportistasCategoriaForm(forms.Form):
     def __init__(self, *args, **kwargs):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
         self.TIPO_REPORTE = kwargs.pop('TIPO_REPORTE', None)
-        print(self.TIPO_REPORTE)
         super(FiltrosDeportistasCategoriaForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'many')
         self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
