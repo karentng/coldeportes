@@ -11,7 +11,7 @@
             </li>
         {% endif %} 
         <li {% if "" in request.path %} class="active" {% endif %}>
-            <a href="">Buscar</a>
+            <a href="{% url 'ver_articulo_manual' %}">Listar</a>
         </li>
     </ul>
 </li>
