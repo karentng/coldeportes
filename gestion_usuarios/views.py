@@ -78,6 +78,53 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
                 print(e)
 
 
+"""
+Autor: Milton Lenis
+Fecha: 3 Febrero 2016
+
+
+NOTA: En esta vista se crea un fix para los actores de aquellas entidades que se crearon antes de crear la funcionalidad
+de permisos que hizo Cristian, NO ES NECESARIO QUE LA USEN PARA SUS ENTORNOS DE DESARROLLO LOCALES ES SOLO PARA ACOMODAR
+LOS SERVIDORES.
+"""
+def fix_actores_entidades(request):
+    entidades = Entidad.objects.exclude(schema_name='public')
+    for entidad in entidades:
+        entidad = entidad.obtenerTenant()
+        if entidad.tipo == 5:
+            tipo_sub_entidad = entidad.tipo_ente
+        elif entidad.tipo == 6:
+            tipo_sub_entidad = entidad.tipo_comite
+        else:
+            tipo_sub_entidad = 0
+
+        tipo_entidad = entidad.tipo
+
+        permisos = Permisos.objects.get(tipo=tipo_sub_entidad,entidad=tipo_entidad)
+        print(permisos.get_actores('--'))
+        for actor_false in permisos.get_actores('--'):
+            #setattr(entidad.actores,actor_false,True)
+            #entidad.save()
+            print (getattr(entidad.actores,actor_false))
+
+        """connection.set_tenant(entidad)
+        try:
+            #si llegan a editar el nombre del grupo, tendremos un error
+            digitador = Group.objects.get(name="Digitador")
+            lectura = Group.objects.get(name='Solo lectura')
+        except Group.DoesNotExist:
+            pass
+        if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
+            asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+            asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
+            asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
+            asignarPermisosGrupoLectura(request, lectura, PERMISOS_LECTURA)
+        connection.set_schema_to_public()
+        """
+"""
+------------------------------------------------------------------------------------------------------------------------
+"""
+
 def inicio(request):
     schema_name = request.tenant.schema_name
 

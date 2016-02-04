@@ -907,6 +907,8 @@ class Permisos(models.Model):
             opcion = [3,4]
         elif opcion == '%':
             opcion = [4,5]
+        elif opcion == '--':
+            opcion = [1,5]
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']
