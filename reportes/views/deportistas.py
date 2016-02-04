@@ -401,10 +401,10 @@ def reporte_cantidad_total_deportistas(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado = 0).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s,genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad_residencia__departamento__id__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         total_deportistas = len(ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant))
@@ -416,7 +416,7 @@ def reporte_cantidad_total_deportistas(request):
         return JsonResponse(resultado)
 
     else:
-        total_deportistas = len(tabla.objects.filter(estado = 0).order_by('id').distinct('id'))
+        total_deportistas = len(tabla.objects.filter(estado = 0).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))
 
         resultado = {
             'Total Deportistas':total_deportistas
