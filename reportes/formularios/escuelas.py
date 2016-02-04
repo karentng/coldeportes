@@ -15,4 +15,4 @@ class EscuelasForm(forms.Form):
 
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     municipios = forms.ModelMultipleChoiceField(queryset=Ciudad.objects.all(), required=False)
-    visualizacion = forms.ChoiceField()
+    visualizacion = forms.ChoiceField(label='Visualización')
