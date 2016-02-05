@@ -76,7 +76,12 @@ def desactivar_ccf(request, ccf_id):
     estado_actual = ccf.estado
     ccf.estado = not(estado_actual)
     ccf.save()
-    messages.warning(request, "CCF cambiada de estado correctamente.")
+
+    if estado_actual==0:
+        messages.warning(request, "CCF desactivada correctamente.")
+    elif estado_actual==1:
+        messages.warning(request, "CCF activada correctamente.")
+
     return redirect('listar_ccfs')
 
 @login_required
