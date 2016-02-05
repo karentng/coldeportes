@@ -29,7 +29,7 @@ def sumar_datos_diccionario(datos, choices):
         valores_choices = ['Comodin'] + valores_choices
 
     for temp_dict in datos:
-        if temp_dict['descripcion']:
+        if temp_dict['descripcion'] != None:
             diccionario_inicial[temp_dict['descripcion']] += temp_dict['cantidad']
         else:
             diccionario_inicial['nr'] += temp_dict['cantidad']

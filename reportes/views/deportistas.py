@@ -275,10 +275,10 @@ def reporte_lgtbi(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],genero__in=%s).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2]).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('lgtbi')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('lgtbi')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],genero__in=%s).annotate(descripcion=F('lgtbi')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2]).annotate(descripcion=F('lgtbi')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         lgtbi = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -298,7 +298,7 @@ def reporte_lgtbi(request):
         return JsonResponse(lgtbi)
 
     else:
-        lgtbi = list(tabla.objects.filter(estado__in=[0,2]).annotate(descripcion=F('lgtbi')).values('descripcion').annotate(cantidad=Count('id',distinct=True)))
+        lgtbi = list(tabla.objects.filter(estado__in=[0,2]).annotate(descripcion=F('lgtbi')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
         lgtbi = tipoTenant.ajustar_resultado(lgtbi)
         if True in lgtbi:
             lgtbi['PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[True]
@@ -344,17 +344,17 @@ def reporte_doping(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas_con_doping = [
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).exclude(fecha_doping=None).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s).exclude(fecha_doping=None).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],genero__in=%s).exclude(fecha_doping=None).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2]).exclude(fecha_doping=None).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).exclude(fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s).exclude(fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],genero__in=%s).exclude(fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2]).exclude(fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         consultas_sin_doping = [
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],fecha_doping=None,ciudad_residencia__departamento__id__in=%s,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],fecha_doping=None,ciudad_residencia__departamento__id__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],fecha_doping=None,genero__in=%s).order_by('id').distinct('id'))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2], fecha_doping=None).order_by('id').distinct('id'))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],fecha_doping=None,ciudad_residencia__departamento__id__in=%s,genero__in=%s).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],fecha_doping=None,ciudad_residencia__departamento__id__in=%s).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],fecha_doping=None,genero__in=%s).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2], fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         doping = {}
@@ -365,8 +365,8 @@ def reporte_doping(request):
 
     else:
         doping = {}
-        doping['DEPORTISTAS CON REPORTES DE DOPING'] = len(tabla.objects.filter(estado__in=[0,2]).exclude(fecha_doping=None).order_by('id').distinct('id'))
-        doping['DEPORTISTAS SIN REPORTES DE DOPING'] = len(tabla.objects.filter(estado__in=[0,2], fecha_doping=None).order_by('id').distinct('id'))
+        doping['DEPORTISTAS CON REPORTES DE DOPING'] = len(tabla.objects.filter(estado__in=[0,2]).exclude(fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))
+        doping['DEPORTISTAS SIN REPORTES DE DOPING'] = len(tabla.objects.filter(estado__in=[0,2], fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))
 
     visualizaciones = [1, 2, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
@@ -400,11 +400,11 @@ def reporte_cantidad_total_deportistas(request):
         departamentos = None if request.GET['departamentos'] == 'null' else ast.literal_eval(request.GET['departamentos'])
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
-        consultas = [
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+        consultas = [            
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2],ciudad_residencia__departamento__id__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2],genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in = [0,2]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         total_deportistas = len(ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant))
@@ -416,7 +416,7 @@ def reporte_cantidad_total_deportistas(request):
         return JsonResponse(resultado)
 
     else:
-        total_deportistas = len(tabla.objects.filter(estado__in=[0,2]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))
+        total_deportistas = len(tabla.objects.filter(estado__in = [0,2]).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))
 
         resultado = {
             'Total Deportistas':total_deportistas

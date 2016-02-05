@@ -15,4 +15,4 @@ class NacionalidadForm(forms.Form):
 
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     genero = forms.MultipleChoiceField(choices=(('HOMBRE','MASCULINO'),('MUJER','FEMENINO'),), required=False, label="Género")
-    visualizacion = forms.ChoiceField()
+    visualizacion = forms.ChoiceField(label='Visualización')

@@ -34,3 +34,22 @@ def nueva_entrada(request):
     return render(request, 'nueva_entrada.html', {
         'form': articulo_form,
     })
+
+@login_required
+def ver_articulo(request):
+    """
+    Enero 28 / 2016
+    Autor: Karent Narvaez Grisales
+    
+    Ver artículos de manual de usuario.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
+    articulos = Articulo.objects.all()
+    mensaje = "No hay artísulos registrados."
+
+    return render(request, 'listado.html', {
+        'articulos': articulos,
+        'mensaje': mensaje,
+    })

@@ -1,16 +1,7 @@
 {# El identificador del grupo de la galeria es: 4 #}
-{% comment %}
-{% with 4 as id %}
-
-{% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="IMG1" titulo="Bubble" descripcion="Ejemplo bubble" url_reporte="ejemplo_bubble" %}
-
-{% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="IMG1" titulo="Motion" descripcion="Ejemplo motion" url_reporte="ejemplo_motion" %}
-
-{% endwith %}
-{% endcomment %}
 
 {% with 4 as id %}
 
-{% include "publico/item.html" with id=id imagen="/static/img/reportes/nacionalidaddirigentes.png" nombre_imagen="DIRIGENTES" titulo="Nacionalidad" color="rgba(58,146,171,0.6)" descripcion="Visualización de la cantidad de dirigentes por nacionalidad." url_reporte="reportes_nacionalidad_dirigentes" %}
+{% include "publico/item.html" with id=id imagen="/static/img/reportes/nacionalidaddirigentes.png" nombre_imagen="DIRIGENTES" titulo="NACIONALIDAD" color="rgba(58,146,171,0.6)" descripcion="Visualización de la cantidad de dirigentes por nacionalidad." url_reporte="reportes_nacionalidad_dirigentes" %}
 
 {% endwith %}
