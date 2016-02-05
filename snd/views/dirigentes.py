@@ -366,7 +366,7 @@ def activar_desactivar(request, dirigente_id):
         message = "Dirigente activado correctamente."
     else:
         message = "Dirigente desactivado correctamente."
-    messages.warning(request, message)
+    messages.success(request, message)
     return redirect('dirigentes_listar')
 
 @login_required

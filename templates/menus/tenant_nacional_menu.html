@@ -1,36 +1,25 @@
-<li class="has-sub {% if 'caf' in request.path %} active {% endif %}">
-    <a href="{% url 'listar_cafs_nacionales' %}">
-        <i class="fa fa-bicycle"></i>
-        <span class="colorMenu">Centros de Acondicionamiento nacionales</span>
+<li class="{% if 'caf' in request.path %} active {% endif %}">
+    <a href="{% url 'listar_cafs' %}">
+        <span class="colorMenu">Listado de centros de acondicionamiento nacionales</span>
     </a>
 </li>
-<li class="has-sub {% if 'cajas-compensacion' in request.path %} active {% endif %}">
-    <a href="{% url 'listar_cajas_nacionales' %}">
-        <i class="ion-ios-color-filter-outline fa-2x"></i>
-        <span class="colorMenu">Cajas de Compensación nacionales</span>
+<li class="{% if 'deportistas' in request.path %} active {% endif %}">
+    <a href="{% url 'deportista_listar' %}">
+        <span span class="colorMenu">Listado de deportistas nacionales</span>
     </a>
 </li>
-<li class="has-sub {% if 'deportistas' in request.path %} active {% endif %}">
-    <a href="{% url 'listar_deportistas_nacionales' %}">
-        <i class="ion-ribbon-a fa-2x"></i>
-        <span span class="colorMenu">Deportistas nacionales</span>
+<li class="{% if 'dirigentes' in request.path %} active {% endif %}">
+    <a href="{% url 'dirigentes_listar' %}">
+        <span class="colorMenu">Listado de dirigentes nacionales</span>
     </a>
 </li>
-<li class="has-sub {% if 'dirigentes' in request.path %} active {% endif %}">
-    <a href="{% url 'listar_dirigentes_nacionales' %}">
-        <i class="fa fa-futbol-o"></i>
-        <span class="colorMenu">Dirigentes nacionales</span>
+<li class="{% if 'personal-apoyo' in request.path %} active {% endif %}">
+    <a href="{% url 'personal_apoyo_listar' %}">
+        <span class="colorMenu">Listado de personal de apoyo nacional</span>
     </a>
 </li>
-<li class="has-sub {% if 'personal-apoyo' in request.path %} active {% endif %}">
-    <a href="{% url 'listar_personal_apoyo_nacionales' %}">
-        <i class="ion-ios-baseball fa-2x"></i>
-        <span class="colorMenu">Personal de apoyo nacional</span>
-    </a>
-</li>
-<li class="has-sub {% if 'escenarios' in request.path %} active {% endif %}">
-    <a href="{% url 'listar_escenarios_nacionales' %}">
-        <i class="ion-ios-americanfootball fa-2x"></i>
-        <span class="colorMenu">Escenarios nacionales</span>
+<li class="{% if 'escenarios' in request.path %} active {% endif %}">
+    <a href="{% url 'listar_escenarios' %}">
+        <span class="colorMenu">Listado de escenarios nacionales</span>
     </a>
 </li>

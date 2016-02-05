@@ -1,4 +1,4 @@
-from snd.models import *
+from entidades.modelos_vistas_reportes import *
 
 '''
 (
@@ -29,39 +29,39 @@ from snd.models import *
 
 MODELOS_DE_DATOS = (
     (   #Numero de modelo 0
-        PersonalApoyo,
-        ['nombres','apellidos','actividad', 'entidad', 'correo_electronico'],
-        ['Nombres','Apellidos','Actividad Desempeñada', 'Entidad', 'Correo electrónico'],
+        PublicPersonalApoyoView,
+        ['nombres','apellidos','actividad', 'ciudad', 'entidad'],
+        ['Nombres','Apellidos','Actividad Desempeñada', 'Ciudad', 'Entidad'],
         None,
         [
             [
                 "Ver más",
                 'ver_personal_apoyo_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
         ],
     ),
     (   #Numero de modelo 1
-        Dirigente,
-        ['nombres','apellidos', 'entidad', 'cargo', 'email'],
-        ['Nombres','Apellidos', 'Entidad', 'Cargo', 'Correo Electrónico'],
+        PublicDirigenteView,
+        ['nombres','apellidos', 'ciudad', 'entidad'],
+        ['Nombres','Apellidos', 'Ciudad', 'Entidad'],
         None,
         [
             [
                 "Ver más",
                 'ver_dirigente_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id'],
                 'fa-eye',
                 None
             ],
         ],
     ),
     (   #Numero de modelo 2
-        Escenario,
-        ['nombre','ciudad', 'entidad', 'estrato'],
-        ['Nombre','Ciudad(Departamento)', 'Entidad', 'Estrato'],
+        PublicEscenarioView,
+        ['nombre','ciudad', 'entidad'],
+        ['Nombre','Ciudad(Departamento)', 'Entidad'],
         None,
         [
             [
@@ -75,44 +75,29 @@ MODELOS_DE_DATOS = (
     ),
     
     (   #Numero de modelo 3
-        Deportista,
-        ['nombres','apellidos', 'entidad', 'ciudad_residencia','disciplinas'],
-        ['Nombres','Apellidos', 'Entidad', 'Ciudad(Departamento) Residencia', 'Disciplinas'],
+        PublicDeportistaView,
+        ['nombres','apellidos', 'ciudad_residencia', 'entidad'],
+        ['Nombres','Apellidos', 'Ciudad(Departamento) Residencia', 'Entidad'],
         None,
         [
             [
                 "Ver más",
                 'ver_deportista_tenantnacional',
-                ['id','entidad'],
+                ['id','entidad.id','estado'],
                 'fa-eye',
                 None
             ],
         ],
     ),
     (   #Numero de modelo 4
-        CentroAcondicionamiento,
-        ['nombre', 'ciudad', 'entidad', 'telefono', 'email', 'web'],
-        ['Nombre', 'Ciudad', 'Entidad', 'Teléfono', 'Email', 'Página Web'],
+        PublicCafView,
+        ['nombre', 'ciudad', 'telefono', 'email', 'web', 'entidad'],
+        ['Nombre', 'Ciudad', 'Teléfono', 'Email', 'Página Web', 'Entidad'],
         None,
         [
             [
                 "Ver más",
                 'ver_caf_tenantnacional',
-                ['id','entidad'],
-                'fa-eye',
-                None
-            ],
-        ],
-    ),
-    (   #Numero de modelo 5
-        CajaCompensacion,
-        ['nombre', 'publico', 'clasificacion', 'region'],
-        ['Nombre', 'Público', 'Clasificación', 'Región'],
-        None,
-        [
-            [
-                "Ver más",
-                'ver_caja_tenantnacional',
                 ['id','entidad.id'],
                 'fa-eye',
                 None

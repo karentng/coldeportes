@@ -1,0 +1,17 @@
+<li class="has-sub {% if '/manual/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-gavel"></i>
+        <span class="colorMenu">MANUAL</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.manual.add_articulo %}
+            <li {% if "/manual/nueva-entrada" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'nueva_entrada_manual' %}">Registrar Artículo</a>
+            </li>
+        {% endif %} 
+        <li {% if "" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'ver_articulo_manual' %}">Listar</a>
+        </li>
+    </ul>
+</li>

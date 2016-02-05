@@ -4,36 +4,6 @@ from snd.modelos.escenarios import *
 
 
 class TenantEscenarioView(models.Model):
-    ACCESOS = (
-        ('pr', 'Privado'),
-        ('dul', 'De Uso Libre'),
-        ('pcp', 'Público Con Pago'),
-    )
-    ESTADOS_FISICOS = (
-        ('bu', 'Bueno'),
-        ('re', 'Regular'),
-        ('ma', 'Malo'),
-    )
-    PROPIETARIOS = (
-        ('of', 'Oficial'),
-        ('pr', 'Privado'),
-    )
-    DIVISIONES = (
-        ('CP','Centro Poblado'),
-        ('ZR','Zona Rural'),
-        ('ZU','Zona Urbana'),
-    )
-    PERIODICIDADES = (
-        ('di', 'Diaria'),
-        ('se', 'Semanal'),
-        ('qu', 'Quincenal'),
-        ('me', 'Mensual'),
-        ('bm', 'Bimestral'),
-        ('tm', 'Trimestral'),
-        ('sm', 'Semestral'),
-        ('an', 'Anual'),
-    )
-
     class Meta:
         managed = False
     #campos modelo escenario
@@ -49,16 +19,19 @@ class TenantEscenarioView(models.Model):
     nombre_administrador = models.CharField(max_length=50, null=True)
     entidad = models.ForeignKey(Entidad)
     estado = models.IntegerField()
-    division_territorial = models.CharField(choices=DIVISIONES, max_length=2)
+    division_territorial = models.CharField(max_length=2)
     descripcion_escenario = models.CharField(max_length=1024, null=True)
     fecha_creacion_escenario = models.DateTimeField()
     #campos modelo caracterizacion
     tipo_escenario = models.ForeignKey(TipoEscenario)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    estado_fisico = models.CharField(choices=ESTADOS_FISICOS, max_length=2)
+    estado_fisico = models.CharField(max_length=2)
     tiposuperficie = models.ForeignKey(TipoSuperficie)
-    tipo_propietario = models.CharField(max_length=2, choices=PROPIETARIOS)
+    tipo_propietario = models.CharField(max_length=2)
     clase_acceso = models.CharField(max_length=3)
+    capacidad_espectadores = models.CharField(max_length=50, verbose_name='capacidad de zona espectadores')
+    caracteristicaescenario = models.ForeignKey(CaracteristicaEscenario)
+
 
     #campos modelo contacto
     nombre_contacto =  models.CharField(max_length=50)
@@ -74,10 +47,10 @@ class TenantEscenarioView(models.Model):
     #campos modelo Foto
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
     #campos mantenimiento
-    periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)
+    periodicidad = models.CharField(max_length=2, null=True, blank=True)
 
 
-class TenantEscenarioEstratoView(models.Model):
+'''class TenantEscenarioEstratoView(models.Model):
     
     class Meta:
         managed = False
@@ -87,30 +60,58 @@ class TenantEscenarioEstratoView(models.Model):
     estrato = models.CharField(max_length=1)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     cantidad = models.PositiveIntegerField()
-    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")
+    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")'''
 
 
 class TenantCafView(models.Model):
-	class Meta:
-		managed = False
-
-	ciudad = models.ForeignKey(Ciudad)
-	comuna = models.PositiveIntegerField()
-	estrato = models.PositiveIntegerField()
-	latitud = models.FloatField()
-	longitud = models.FloatField()
-	altura = models.PositiveIntegerField()
-	estado = models.IntegerField()
-	entidad = models.ForeignKey(Entidad)
-	fecha_creacion = models.DateTimeField()
-	nombre_clase = models.CharField(max_length=255)
-	nombre_servicio = models.CharField(max_length=255)
-
-class TenantPersonalApoyoView(models.Model):
     class Meta:
         managed = False
 
-    actividad = models.IntegerField()
+    nombre =  models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100, verbose_name="dirección")
+    telefono = models.CharField(max_length=50, verbose_name="teléfono")
+    ciudad = models.ForeignKey(Ciudad)
+    comuna = models.PositiveIntegerField()
+    estrato = models.PositiveIntegerField()
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    email = models.EmailField()
+    web = models.URLField(verbose_name="página web")
+    altura = models.PositiveIntegerField()
+    estado = models.IntegerField()
+    entidad = models.ForeignKey(Entidad)
+    fecha_creacion = models.DateTimeField()
+    nombre_clase = models.CharField(max_length=255)
+    nombre_servicio = models.CharField(max_length=255)
+
+class TenantPersonalApoyoView(models.Model):
+    ACTIVIDADES = (
+        (0,'MÉDICO DEPORTÓLOGO'),
+        (1,'FISIOTERAPEUTA'),
+        (2,'PSICÓLOGO DEPORTIVO'),
+        (3,'NUTRICIONISTA'),
+        (4,'QUINESIÓLOGO'),
+        (5,'QUIROPRÁCTICO'),
+        (6,'PREPARADOR FÍSICO'),
+        (7,'TRABAJADOR SOCIAL'),
+        (8,'FISIÓLOGO'),
+        (9,'BIOMECÁNICO'),
+        (10,'METODÓLOGO'),
+        (11,'ENTRENADOR'),
+        (12,'MONITOR'),
+        (13,'ENTRENADOR PERSONALIZADO'),
+        (14,'ANIMADOR SOCIOCULTURAL'),
+        (15,'RECREADOR'),
+        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+    )
+
+    class Meta:
+        managed = False
+
+    actividad = models.IntegerField(choices=ACTIVIDADES)
+    nombres = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=50)
+    entidad = models.ForeignKey(Entidad)
     genero = models.CharField(max_length=11)
     tipo_id = models.CharField(max_length=5)
     fecha_nacimiento = models.DateField()
@@ -126,20 +127,23 @@ class TenantPersonalApoyoView(models.Model):
     creacion_formacion = models.DateField()
 
 class TenantDeportistaView(models.Model):
+
     class Meta:
         managed = False
 
     #campos modelo deportista
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
-    disciplinas = models.ForeignKey(TipoDisciplinaDeportiva)
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
     fecha_nacimiento = models.DateField()
     fecha_creacion = models.DateTimeField()
     lgtbi = models.BooleanField()
     etnia = models.CharField(max_length=20)
     nacionalidad = models.ForeignKey(Nacionalidad)
     estado = models.IntegerField()
-
+    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
+    entidad = models.ForeignKey(Entidad)
     #campos historial deportivo
     tipo_participacion = models.CharField(max_length=100)
     estado_participacion = models.CharField(max_length=50)
@@ -158,3 +162,29 @@ class TenantDeportistaView(models.Model):
 
     #campos doping
     fecha_doping = models.DateField()
+
+class TenantDirigenteView(models.Model):
+
+    class Meta:
+        managed = False
+
+    fecha_creacion = models.DateTimeField()
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    entidad = models.ForeignKey(Entidad)
+    estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+    genero = models.CharField(max_length=11)
+
+class TenantEscuelaView(models.Model):
+
+    class Meta:
+        managed = False
+
+    fecha_creacion = models.DateTimeField()
+    estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+    estrato = models.PositiveIntegerField()
+    entidad = models.ForeignKey(Entidad)
+    nombre_servicio = models.CharField(max_length=255)

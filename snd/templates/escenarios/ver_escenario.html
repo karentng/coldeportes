@@ -25,18 +25,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'listar_escenarios' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             {{escenario.nombre}}
@@ -72,29 +61,33 @@
                             <div class="tab-pane fade active in" id="nav-tab2-12">
                                 <div class="invoice">
                                     <div class="invoice-company">
-                                        {{escenario.nombre}}
+                                        <b>{{escenario.nombre}}</b>
                                     </div>
                                     <div class="invoice-header">
                                         <div class="invoice-from">
                                             <address class="m-t-5 m-b-5">
-                                                <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br />
-                                                {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br />
-                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br />
+                                                <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br/>
+                                                {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br/>
+                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br/>
                                                 Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
                                                 Nombre del Administrador: {{escenario.nombre_administrador}}
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                             </div>
-                                        </div>                    
+                                        </div>
+                                        <h5 class="m-t-10"><strong>Descripción:</strong></h5>
+                                        <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% endif %}</p>
                                     </div>
-                                    <h5 class="m-t-10">Descripción:</h5>
-                                    <p>{{escenario.descripcion}}</p>
+
                                 </div>
                             </div>
                             
                             <div class="tab-pane fade" id="nav-tab2-13">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if caracteristicas %}
                                     {% for caracteristica in caracteristicas %}
                                     <div class="invoice-header">
@@ -112,9 +105,9 @@
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                             </div>
                                         </div>
+                                        <h5 class="m-t-10"><b>Descripción:</b></h5>
+                                        <p>{{caracteristica.descripcion}}</p>
                                     </div>
-                                    <h5 class="m-t-10">Descripción:</h5>
-                                    <p>{{caracteristica.descripcion}}</p>
                                     {% endfor %}
                                 {% else %}
                                     <p>No hay características disponibles</p>
@@ -124,6 +117,9 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-14">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if horarios %}
                                     
                                     <div class="invoice-content">
@@ -159,6 +155,9 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-15">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if historicos %}
                                     <div class="invoice-content">
                                         <div class="table-responsive">
@@ -190,9 +189,11 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-16">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if fotos %}
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}:<small> galería de fotos</small></h1>
+
                                     <!-- end page-header -->
                                     
                                     <!-- begin superbox -->
@@ -210,9 +211,11 @@
                             </div>
                             <div class="tab-pane fade" id="nav-tab2-17">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if videos %} 
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}</h1>
+
                                     <!-- end page-header -->
                                     <div class="table-responsive">
                                         <table class="table table-invoice">
@@ -221,6 +224,7 @@
                                                     <th>VISUALIZACION</th>
                                                     <th>URL</th>
                                                     <th>DESCRIPCIÓN</th>
+                                                    <th>VER VÍDEO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -229,6 +233,27 @@
                                                     <td align="center" class="col-md-3"><iframe width="150" height="75" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
                                                     <td align="center" ><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
                                                     <td>{{video.descripcion}}</td>
+                                                    <td>
+                                                        <a class="btn btn-md btn-info" href="#modal-video" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
+                                                        <div class="modal fade" id="modal-video">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                        <h4 class="modal-title">VIDEO DEL ESCENARIO {{ escenario.nombre }}:</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div align="center">
+                                                                            <iframe  width="500" height="400" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
                                                 </tr> 
                                                 {% endfor %}                               
                                             </tbody>
@@ -242,9 +267,10 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-19">
                                 <div class="invoice">
-                                {% if mantenimientos %}  
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}</h1>
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if mantenimientos %}
                                     <!-- end page-header -->
                                     <div class="table-responsive">
                                         <table class="table table-invoice">
@@ -260,11 +286,11 @@
                                             <tbody>
                                                 {% for matenimiento in mantenimientos %}
                                                 <tr> 
-                                                    <td>{{matenimiento.fecha_ultimo_mantenimiento}}</td>
-                                                    <td>{{matenimiento.descripcion_ultimo_mantenimiento}}</td>
-                                                    <td>{{matenimiento.get_periodicidad_display}}</td>
+                                                    <td>{% if matenimiento.fecha_ultimo_mantenimiento %}{{matenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{matenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.get_periodicidad_display %}{{matenimiento.get_periodicidad_display}}{% endif %}</td>
                                                     <td>{% if matenimiento.tiene_planos %} Sí {% else %} No {% endif %}</td>
-                                                    <td>{{matenimiento.razones_no_mantenimiento}}</td>
+                                                    <td>{% if mantenimiento.razones_no_mantenimiento %}{{matenimiento.razones_no_mantenimiento}}{% endif %}</td>
                                                 </tr> 
                                                 {% endfor %}                               
                                             </tbody>
@@ -277,9 +303,10 @@
                             </div>
                             <div class="tab-pane fade" id="nav-tab2-18">
                                 <div class="invoice">
-                                {% if contactos %}  
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}</h1>
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if contactos %}
                                     <!-- end page-header -->
                                     <div class="table-responsive">
                                         <table class="table table-invoice">

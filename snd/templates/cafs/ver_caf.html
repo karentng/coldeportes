@@ -11,11 +11,7 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% if request.tenant.schema_name == 'public' %}
-                    {% url 'listar_cafs_nacionales' %}
-                 {% else %}
-                    {% url 'listar_cafs' %}
-                 {% endif %}">CAF</a></li>
+    <li><a href="{% url 'listar_cafs' %}">CAF</a></li>
     <li class="active">Visualizar</li>
 {% endblock %}
 
@@ -28,15 +24,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="" style="margin-left:0px">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="" style="margin-left:0px">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'listar_cafs' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             {{centro.nombre}}
@@ -112,28 +100,29 @@
                                             <p><b>Comuna</b>: {{centro.comuna}}</p>
                                         </address>
 
-                                        <div align="right">
-                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
-                                        </div>
-                                    </div>                    
+                                    </div>
+                                    <h5 class="m-t-10"><b>Información de contacto:</b></h5>
+                                    <p><b>Teléfono</b>: {{centro.telefono}}</p>
+                                    <p><b>Email</b>: {{centro.email}}</p>
+                                    <p><b>Nombre del Administrador</b>:
+                                        {% if centro.nombre_administrador %}
+                                            {{centro.nombre_administrador}}
+                                        {% else %}
+                                            No definido
+                                        {% endif %}
+                                    </p>
+                                    <p><b>Página Web</b>:
+                                        {% if centro.web %}
+                                            {{centro.web}}
+                                        {% else %}
+                                            No definida
+                                        {% endif %}
+                                    </p>
+                                    <div align="right">
+                                        <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                    </div>
                                 </div>
-                                <h5 class="m-t-10">Información de contacto:</h5>
-                                <p><b>Teléfono</b>: {{centro.telefono}}</p>
-                                <p><b>Email</b>: {{centro.email}}</p>
-                                <p><b>Nombre del Administrador</b>: 
-                                    {% if centro.nombre_administrador %}
-                                        {{centro.nombre_administrador}}
-                                    {% else %}
-                                        No definido
-                                    {% endif %}
-                                </p>
-                                <p><b>Página Web</b>: 
-                                    {% if centro.web %}
-                                        {{centro.web}}
-                                    {% else %}
-                                        No definida
-                                    {% endif %}
-                                </p>
+
                             </div>
                         </div>
                         

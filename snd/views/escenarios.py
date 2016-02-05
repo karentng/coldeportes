@@ -77,7 +77,12 @@ def desactivar_escenario(request, escenario_id):
     estado_actual = escenario.estado
     escenario.estado = not(estado_actual)
     escenario.save()
-    messages.warning(request, "Escenario cambiado de estado correctamente.")
+
+    if estado_actual == 0:
+        messages.warning(request, "Escenario desactivado correctamente.")
+    elif estado_actual == 1:
+        messages.warning(request, "Escenario activado correctamente.")  
+        
     return redirect('listar_escenarios')
 
 @login_required

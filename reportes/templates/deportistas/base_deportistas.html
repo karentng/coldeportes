@@ -1,0 +1,71 @@
+{% extends "base_reportes.html" %}
+{% load bootstrap3 %}
+
+
+
+{% block filtros %}
+    <script type="text/javascript">
+        nombreReporte = "{{nombre_reporte}}";
+        visualizaciones = {{visualizaciones|safe}};
+        nombres_columnas = {{nombres_columnas|safe}};
+        datos = {{datos|safe}};
+
+        $(document).ready(function(){
+            columnas = [nombres_columnas[0], "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla", columnas);
+            tablaDeDatos.setDatos(datos);
+            $('#loading').modal('show');
+            url = "{% url url_data %}";
+            realizarConsulta = function realizarConsulta(){
+                var departamentos = JSON.stringify($("#id_departamento").val());
+                var genero = JSON.stringify($("#id_genero").val());
+                var reporte = JSON.stringify($("#id_reporte").val());
+                $('#loading').modal('show');
+                $.ajax({
+                    url: url,
+                    data: {'departamentos': departamentos, 'genero':genero, 'reporte':reporte},
+                    dataType: 'json',
+                    success: function(data) {
+                        {% if agrupado %}
+                            Reportes.modificarDatos(data,$("#id_reporte option:selected").text());
+                            id = $("#id_reporte").prop('selectedIndex');
+                            tablaDeDatos.setDatos(data);
+                            tablaDeDatos.verificarActualizacion();
+                        {% else %}
+                            Reportes.modificarDatos(data,nombreReporte);
+                            id = 0;
+                            tablaDeDatos.setDatos(data);
+                            tablaDeDatos.verificarActualizacion();
+                        {% endif %}
+                        $('#loading').modal('hide');
+                    },
+                    error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
+                    }
+                });
+
+            };
+            $("#id_genero").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_departamento").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_reporte").on("change", function(){
+                realizarConsulta();
+
+                var titulo =  $("#id_reporte option:selected").text();
+                $(".titulo").html(titulo);
+            });
+        });
+
+    </script>
+{% endblock %}
+{% block tam_bloque %}
+    {% if agrupado %}
+        <div class="col-md-3">
+    {% else %}
+        <div class="col-md-4">
+    {% endif %}
+{%endblock %}

@@ -32,18 +32,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'deportista_listar' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             Información del deportista: {{deportista.nombres}} {{deportista.apellidos}}
@@ -115,12 +104,14 @@
                                                     {% else %}
                                                         <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
                                                     {% endif %}</p>
-                                                {% ifequal deportista.estado 3 %}
-                                                    <p><b>Estado:</b> {{deportista.get_estado_display}} A {{ deportista.entidad | upper  }}</p>
-                                                {% else %}
-                                                    <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
-                                                {% endifequal %}
-                                                    <p><b>Género:</b> {{deportista.genero}}</p>
+                                                    {% if request.tenant.schema_name != 'public' %}
+                                                        {% ifequal deportista.estado 3 %}
+                                                            <p><b>Estado:</b> {{deportista.get_estado_display}} A {{ deportista.entidad | upper  }}</p>
+                                                        {% else %}
+                                                            <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
+                                                        {% endifequal %}
+                                                    {% endif %}
+                                                    <p><b>Género:</b> {{deportista.get_genero_display}}</p>
                                                     <p><b>Edad:</b> {{ deportista.edad }}</p>
                                                     <p><b>Disciplinas:</b> {{ deportista.disciplinas_deportivas }}</p>
                                                     <p><b>Etnia:</b>
@@ -134,7 +125,7 @@
                                                     <p><b>Ciudad (Departamento) de Residencia:</b> {{ deportista.ciudad_residencia}}</p>
                                                     <p><b>Club Deportivo Actual:</b> {{ deportista.entidad }}</p>
                                                 </div>
-                                            {% if perms.snd.change_deportista %}
+                                            {% if perms.snd.change_deportista and request.tenant.schema_name != 'public' %}
                                                 <p><strong>Contacto:</strong></p>
                                                 <p><b>Teléfono:</b> {{deportista.telefono}}</p>
                                                 <p><b>Dirección:</b> {{deportista.direccion}}</p>
@@ -197,14 +188,16 @@
                                                     <p><strong>Composicion Corporal:</strong></p>
                                                     <p><b>Camisa:</b> {{ composicion.talla_camisa }}</p>
                                                     <p><b>Pantaloneta:</b> {{ composicion.talla_pantaloneta }}<p/>
-                                                    <p><b>Zapato:</b>{{ composicion.talla_zapato }}</p>
+                                                    <p><b>Zapato:</b> {{ composicion.talla_zapato | upper}}</p>
                                                     <p><b>Indice de Masa Corporal:</b> {{composicion.imc}} kg/m^2</p>
                                                     <p><b>Porcentaje Grasa:</b> {{ composicion.porcentaje_grasa }}% </p>
                                                     <p><b>Masa Muscular Magra:</b> {{ composicion.masa_corporal_magra }} kg </p>
-                                                    <p><b>EPS:</b> {{composicion.eps}}</p>
-                                                    <p><b>RH:</b> {{composicion.RH}}</p>
-                                                    <p><b>Estatura:</b> {{composicion.estatura}}</p>
-                                                    <p><b>Peso:</b> {{composicion.peso}}</p>
+                                                    {% if request.tenant.schema_name != 'public' %}
+                                                        <p><b>EPS:</b> {{composicion.eps}}</p>
+                                                        <p><b>RH:</b> {{composicion.RH}}</p>
+                                                    {% endif %}
+                                                    <p><b>Estatura:</b> {{composicion.estatura}} Cm</p>
+                                                    <p><b>Peso:</b> {{composicion.peso}} Kg</p>
                                                 </div>
                                             </address>
                                         </div>
@@ -421,7 +414,8 @@
                                                             <tr>
                                                                 <td>{{historial.fecha}}</td>
                                                                 <td>{{historial.evento}}</td>
-                                                                <td>{{historial.tipo_identidad_delegado}}:{{historial.identificacion_delegado}}, {{ historial.nombre_delegado }}</td>
+                                                                <td>{% if request.tenant.schema_name != 'public' %}{{historial.tipo_identidad_delegado}}:{{historial.identificacion_delegado}}
+                                                                    ,{% endif %} {{ historial.nombre_delegado }}</td>
                                                                 <td>{{historial.observaciones}}</td>
                                                             </tr>
                                                         {% endfor %}

@@ -40,31 +40,6 @@ def add_visualizacion(field, visualizaciones_definidas):
                 visualizaciones += (i,)
         field.choices = visualizaciones
 
-class FiltrosDeportistasForm(forms.Form):
-    """
-    Formulario para filtros de deportistas
-    """
-    def __init__(self, *args, **kwargs):
-        visualizaciones_definidas = kwargs.pop('visualizaciones', None)
-        super(FiltrosDeportistasForm, self).__init__(*args, **kwargs)
-        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'many')
-        self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
-        self.fields['genero'] = adicionarClase(self.fields['genero'], 'many')
-        #self.fields['disciplina'] = adicionarClase(self.fields['disciplina'],'many')
-
-        visualizaciones = tuple()
-        if visualizaciones_definidas:
-            for i in self.fields['visualizacion'].choices:
-                if i[0] in visualizaciones_definidas:
-                    visualizaciones += (i,)
-            self.fields['visualizacion'].choices = visualizaciones
-
-    departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
-    genero = forms.MultipleChoiceField(choices=(('HOMBRE','HOMBRE'),('MUJER','MUJER'),),required=False, label="Genero")
-    #disciplina = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all(), required=False)
-    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
-
-
 class FiltrosPersonalApoyoForm(forms.Form):
     """
     Formulario para filtros de personal de apoyo
@@ -84,6 +59,6 @@ class FiltrosPersonalApoyoForm(forms.Form):
             self.fields['visualizacion'].choices = visualizaciones
 
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
-    genero = forms.MultipleChoiceField(choices=(('HOMBRE','HOMBRE'),('MUJER','MUJER'),),required=False, label="Genero")
-    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+    genero = forms.MultipleChoiceField(choices=(('HOMBRE','MASCULINO'),('MUJER','FEMENINO'),),required=False, label="Género")
+    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES, label="Visualización")
 

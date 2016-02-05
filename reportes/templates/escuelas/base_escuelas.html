@@ -1,0 +1,53 @@
+{% extends "base_reportes.html" %}
+{% load bootstrap3 %}
+
+{% block filtros %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            columnas = [nombre_columna, "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla",columnas);
+            tablaDeDatos.setDatos(datos);
+            $('#loading').modal('show');
+            url = "{% url url_data %}";
+            realizarConsulta = function realizarConsulta(){
+                var departamentos = JSON.stringify($("#id_departamentos").val());
+                var municipios = JSON.stringify($("#id_municipios").val());
+
+                $.ajax({
+                    url: url,
+                    data: {'departamentos': departamentos,'municipios':municipios},
+                    dataType: 'json',
+                    success: function(data) {
+                        Reportes.modificarDatos(data, '{{ nombre_reporte }}');
+                        tablaDeDatos.setDatos(data);
+                        tablaDeDatos.verificarActualizacion();
+                        $('#loading').modal('hide');
+                    }, 
+                    error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
+                    }
+                });
+
+            }
+            $("#id_departamentos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_municipios").on("change", function(){
+                realizarConsulta();
+            });
+
+        });
+        nombreReporte = "{{ nombre_reporte }}";
+        visualizaciones = {{visualizaciones|safe}};
+        nombre_columna = "{{nombre_columna}}";
+        datos = {{datos|safe}};
+
+    </script>
+
+{% endblock %}
+
+
+{% block tam_bloque %}
+    <div class="col-md-4">
+{%endblock %}

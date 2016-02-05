@@ -16,8 +16,8 @@ class Dirigente(models.Model):
         return ruta
 
     TIPO_GENERO = (
-        ('HOMBRE','HOMBRE'),
-        ('MUJER','MUJER'),
+        ('HOMBRE','MASCULINO'),
+        ('MUJER','FEMENINO'),
     )
     TIPO_IDENTIFICACION = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
@@ -59,24 +59,6 @@ class Dirigente(models.Model):
         self.nombres = self.nombres.upper()
         self.apellidos = self.apellidos.upper()
         super(Dirigente, self).save(*args, **kwargs)
-
-    def obtenerAtributos(self):
-
-        imagen = None
-        if self.foto:
-            imagen = ("%s%s")%(settings.MEDIA_URL, self.foto)
-        else:
-            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/DirigenteView.PNG")
-        atributos = [
-            ["Identificación", self.tipo_identificacion+" "+self.identificacion],
-            ["Nombre", self.nombres+" "+self.apellidos],
-            ["Género", self.genero],
-            ["Ciudad Residencia", self.ciudad_residencia.nombre],
-            ["Correo electrónico", self.email],
-            ["Teléfono", self.telefono_fijo],
-        ]
-
-        return [imagen, atributos, None, None, "Dirigentes!"]
 
 class DirigenteCargo(models.Model):
     nombre = models.CharField(max_length=100, verbose_name="Nombre del cargo")

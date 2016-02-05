@@ -2,109 +2,85 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    {{ nombre_reporte }} - {{ actor }}
+    {{ actor }}
 {% endblock %}
 
 {% block titulo_contenido %}
-    {{ nombre_reporte }} - {{ actor }}
+   {{ actor }}
 {% endblock %}
 
 {% block css %}
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
-    <style>
-        #filtros{
-            position: absolute;
-            top: 0;
-            left: 10px;
-            z-index: 100;
-            background-color: transparent;
-        }
-
-        #filtros .well{
-            background-color: rgba(255,255,255,0.4);
-            border: 1px solid #00acac;
-        }
-    </style>
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css">
 {% endblock %}
 
 {% block js %}
-	<script type="text/javascript">
-        $(document).ready(function(){
-            url = "{% url url_data %}";
-            realizarConsulta = function realizarConsulta(){
-                var departamentos = JSON.stringify($("#id_departamento").val());
-                var genero = JSON.stringify($("#id_genero").val());
-
-                $.ajax({
-                    url: url,
-                    data: {'departamentos': departamentos, 'genero':genero},
-                    dataType: 'json',
-                    success: function(data) {
-                        Reportes.modificarDatos(data);
-                    }
-                });
-
-            }
-            $("#id_genero").on("change", function(){
-                realizarConsulta();
-            });
-            $("#id_departamento").on("change", function(){
-                realizarConsulta();
-            });
-        });
-        nombreReporte = "{{ nombre_reporte }}";
-        visualizaciones = {{visualizaciones|safe}};
-        datos = {{datos|safe}};
-
-	</script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
-    <script>
-        $(document).ready(function(){
-           $("#filtros").css("display","none");
-           $('#contenido').hover(
-                function() {
-                    $("#filtros").css("display","block");
-                }, function() {
-                    $("#filtros").css("display","none");
-                }
-            );
+    <script src="{{STATIC_URL}}amcharts/tabla_de_datos.js"></script>
 
-        });
-    </script>
+    {% block filtros %}
+
+    {% endblock %}
+
+    <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
 {% endblock %}
+
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'reportes_publico_tipos' %}">Reportes</a></li>
-    <li><a href="{% url 'inicio' %}">{{ actor }}</a></li>
-    <li><a href="{% url 'inicio' %}">{{ nombre_reporte }}</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">{{ actor }}</a></li>
+    <li><a href="{% url 'reportes_publico_tipos' %}">{% if nombre_generador %}{{ nombre_generador }}{% else %}{{ nombre_reporte }} {% endif %}</a></li>
 {% endblock %}
 
-{% block titulo_panel %}
-    {{ nombre_reporte }}
-{% endblock %}
 
 {% block botones_panel %}
     <a href="{% url 'reportes_publico_tipos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
 {% endblock %}
 
+{% block titulo_panel %}
+    <label class="titulo" style="color:white;"> {% if nombre_generador %}{{ nombre_generador }}{% else %}{{ nombre_reporte }} {% endif %}</label>
+{% endblock %}
+
+
 {% block contenido_panel %}
-	<div class="row" id="contenido">
-		<div class="col-md-3" id="filtros">
-            <div class="well">
-                <fieldset>
-                <legend class="pull-left width-full">Filtros</legend>
-                {% for i in form %}
-                    {% bootstrap_field i layout="vertical" %}
-                {% endfor %}
-                </fieldset>
+    <div class="row" id="contenido">
+        <div class="col-md-12">       
+        {% for field in form %}
+            {% block tam_bloque %}
+            <div class="{% if nombre_generador %}col-md-2{% else %}col-md-3{% endif %}">
+            {% endblock %}
+                {% bootstrap_field field layout="vertical" %}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    {% include "loading.html" %}
+
+    <ul class="nav nav-pills">
+        <li class="active" onclick="tablaDeDatos.cambioDiv(0)"><a href="#nav-pills-tab-1" data-toggle="tab">Gráficas</a></li>
+        <li onclick="tablaDeDatos.cambioDiv(1)"><a href="#nav-pills-tab-2" data-toggle="tab">Tabla de Datos</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="nav-pills-tab-1">
+            <div class="row" id="contenido">
+                <div class="col-md-12">
+                    <br>
+                    {% for i in visualizaciones %}
+                        <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
+                    {% endfor %}
+                </div>
+                <h6 align="right">Consultado: <b>{{fecha_generado}}</b></h6>
             </div>
         </div>
-        <div class="col-md-12">
-            {% for i in visualizaciones %}
-                <div id="chartdiv{{i}}" style="width:100%; height:500px"></div>
-            {% endfor %}
+        <div class="tab-pane fade" id="nav-pills-tab-2">
+            <table id="tabla" class="table table-bordered table-hover">
+                <h5 align="center"><b class="titulo">{{ nombre_reporte }}</b></h5><br>
+                <thead>
+                </thead>
+            </table>
         </div>
-	</div>
-
+    </div>
 {% endblock %}

@@ -343,7 +343,11 @@ def desactivar_deportista(request,id_depor):
         estado_actual = deportista.estado
         deportista.estado = not estado_actual
         deportista.save()
-        messages.warning(request, "Deportista desactivado/activado correctamente.")
+        if estado_actual:
+            message = "Deportista activado correctamente."
+        else:
+            message = "Deportista desactivado correctamente."
+        messages.warning(request, message)
         return redirect('deportista_listar')
     except:
         messages.error(request, "Error: No existe el deportista solicitado")
@@ -451,40 +455,40 @@ def finalizar_deportista(request,opcion):
 
 def existencia_deportista(datos):
     #Verificación de existencia dentro del tenant actual
+    try:
+        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+    except Exception:
+        deportista = None
+
+    if deportista:
+        #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
+        return deportista,None,True
+
+    if not deportista:
+        #Si no se encuentra en el tenant actual se debe verificar en otros tenants
+        #Verificación de existencia en otros tenants
+        #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+        existencia = False
+        tenant_existencia = None
+        tenant_actual = connection.tenant
+        entidades = Entidad.objects.all()
+        for entidad in entidades:
+            connection.set_tenant(entidad)
+            ContentType.objects.clear_cache()
             try:
                 deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+                existencia = True
+                tenant_existencia = entidad
+                break
             except Exception:
-                deportista = None
+                pass
 
-            if deportista:
-                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
-                return deportista,None,True
+        connection.set_tenant(tenant_actual)
 
-            if not deportista:
-                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
-                #Verificación de existencia en otros tenants
-                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
-                existencia = False
-                tenant_existencia = None
-                tenant_actual = connection.tenant
-                entidades = Entidad.objects.all()
-                for entidad in entidades:
-                    connection.set_tenant(entidad)
-                    ContentType.objects.clear_cache()
-                    try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-                        existencia = True
-                        tenant_existencia = entidad
-                        break
-                    except Exception:
-                        pass
-
-                connection.set_tenant(tenant_actual)
-
-                if existencia:
-                    return deportista,tenant_existencia,True
-                else:
-                    return None,None,False
+        if existencia:
+            return deportista,tenant_existencia,True
+        else:
+            return None,None,False
 
 @login_required
 #@tenant_required

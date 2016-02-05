@@ -1,5 +1,7 @@
 *.pyc
 .gitignore
+.gitignore~
+.idea/
 Thumbs.db
 coldeportes/settings.py
 snd/pendiente/
@@ -7,9 +9,10 @@ media/
 snd/migrations
 directorio/migrations
 normograma/migrations
+manual/migrations
 noticias/migrations
 reportes/migrations
 entidades/migrations
 transferencias/migrations
 gestion_usuarios/migrations
-.idea
+

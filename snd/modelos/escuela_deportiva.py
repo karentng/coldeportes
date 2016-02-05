@@ -6,7 +6,7 @@ import os
 class EscuelaDeportiva(models.Model):
 
     def file_name(instance, filename):
-    
+
         ruta = 'aval_escuelas/' + instance.nombre.strip().replace(" ","") + filename[-4:]
         ruta_delete = settings.MEDIA_ROOT + "/" + ruta
         if(os.path.exists(ruta_delete)):
@@ -58,19 +58,3 @@ class EscuelaDeportiva(models.Model):
         self.nombre_administrador = self.nombre_administrador.upper()
         super(EscuelaDeportiva, self).save(*args, **kwargs)
 
-    def obtenerAtributos(self):
-        atributos = [
-            ["Nombre", self.nombre],
-            ["Teléfono", self.telefono_fijo],
-            ["Correo electrónico", self.email],
-            ["Página Web", self.web],
-            ["Ciudad", self.ciudad],
-            ["Dirección", self.direccion],
-            ["Barrio", self.barrio],
-            ["Comuna", self.comuna],
-            ["Estrato", self.estrato],
-            ["Administrador", self.nombre_administrador],
-            ["Teléfono Administrador", self.telefono_celular],
-        ]
-
-        return [None, atributos, None, None, "EFD!"]

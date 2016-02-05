@@ -1,0 +1,67 @@
+{% extends "base_reportes.html" %}
+{% load bootstrap3 %}
+
+{% block filtros %}
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            columnas = [nombres_columnas[0], "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla", columnas);
+            tablaDeDatos.setDatos(datos);
+            $('#loading').modal('show');
+            url = "{% url url_data %}";
+            realizarConsulta = function realizarConsulta(){
+                var departamentos = JSON.stringify($("#id_departamentos").val());
+                var municipios = JSON.stringify($("#id_municipios").val());
+                if (municipios == '""'){
+                    municipios = null;
+                }
+                var disciplinas = JSON.stringify($("#id_disciplinas").val());
+                var reporte = JSON.stringify($("#id_reporte").val());
+                $('#loading').modal('show');
+                $.ajax({
+                    url: url,
+                    data: {'departamentos': departamentos,'municipios':municipios, 'disciplinas':disciplinas, 'reporte':reporte},
+                    dataType: 'json',
+                    success: function(data) {
+                        Reportes.modificarDatos(data,  $("#id_reporte option:selected").text());
+                        id = $("#id_reporte").prop('selectedIndex');
+                        tablaDeDatos.setDatos(data);
+                        tablaDeDatos.verificarActualizacion();
+                        $('#loading').modal('hide');
+                    }, error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
+                    }
+                });
+                $('#loading').modal('hide');
+                
+
+            }
+            $("#id_departamentos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_municipios").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_disciplinas").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_reporte").on("change", function(){
+                realizarConsulta();
+
+                var titulo =  $("#id_reporte option:selected").text();
+                $(".titulo").html(titulo); 
+            });
+
+              
+        });
+
+        nombreReporte = "{{ nombre_reporte }}";
+        visualizaciones = {{visualizaciones|safe}};
+        nombres_columnas = {{nombres_columnas|safe}};
+        datos = {{datos|safe}};
+
+    </script>
+    
+{% endblock %}

@@ -17,8 +17,10 @@
     </li>
     {% if user.is_authenticated %}
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path and 'reportes' not in request.path %}
+            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
+                {% if 'reportes' not in request.path %}
                 active
+                {% endif %}
             {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
@@ -60,16 +62,8 @@
         {% endif %}
     {% endif %}
     {%comment%}Cualquiera puede buscar normas y buscar en el directorio, no requiere validar permiso de lectura{%endcomment%}
-    <li class="has-sub {% if 'directorio' in request.path %} active {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-phone-square"></i>
-            <span class="colorMenu">DIRECTORIOS</span>
-        </a>
-        <ul class="sub-menu">
-            {% include "menus/aplicacion/directorio.html" %}
-        </ul>
-    </li>
+    
+    {% include "menus/aplicacion/directorio.html" %}
     {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/reportes.html" %}
 
@@ -77,9 +71,12 @@
 {% if request.tenant.schema_name == 'public' %}
     {% if user.is_authenticated and user.is_superuser %}
         {% include "menus/aplicacion/entidades.html" %}
-        {% include "menus/tenant_nacional_menu.html" %}
         {% include "menus/aplicacion/noticias.html" %}
+        {% include "menus/aplicacion/directorio.html" %}
         {% include "menus/aplicacion/normograma.html" %}
-        <li><a href="{% url "permisos" %}">Permisos</a></li>
+        {% include "menus/aplicacion/manual.html" %}
+
+        {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
+        {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
 {% endif %}

@@ -2,25 +2,9 @@
 
 {% with 2 as id %}
 
-{% include "publico/item.html" with id=id imagen="http://www.armenia.gov.co/imagenesBD/ESTADIO.jpg" nombre_imagen="ESCENARIOS" titulo="Estrato" color="rgba(245,132,19,0.6)" descripcion="Escenarios por estrato" url_reporte="reportes_escenarios_estrato" %}
+{% include "publico/item.html" with id=id imagen="/static/img/reportes/generador_escenario.png" nombre_imagen="ESCENARIOS" titulo="CARACTERÍSTICAS" color="rgba(245,132,19,0.6)" descripcion="Visualización de la cantidad de escenarios por diferentes tipos de características." url_reporte="reportes_caracteristicas_escenarios" %}
 
-{% include "publico/item.html" with id=id imagen="https://cdn1.iconfinder.com/data/icons/customicondesign-office-shadow/256/Sport-track.png" nombre_imagen="ESCENARIOS" titulo="Tipos de Escenario" color="rgba(245,132,19,0.6)" descripcion="Visualización de la cantidad hay de los diferentes tipos de escenarios por departamento o municipio." url_reporte="reportes_escenarios_tipos" %}
+{% include "publico/item.html" with id=id imagen="https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/chart.png" nombre_imagen="ESCENARIOS" titulo="CANTIDAD DE ESPECTADORES" color="rgba(245,132,19,0.6)" descripcion="Cantidad de espectadores de los escenarios categorizados por rangos de tamaño." url_reporte="reporte_cantidad_espectadores" %}
 
-{% include "publico/item.html" with id=id imagen="https://cdn0.iconfinder.com/data/icons/Pry_Black_png/256/Sports_Black.png" nombre_imagen="ESCENARIOS" titulo="Estado Físico" color="rgba(245,132,19,0.6)" descripcion="Agrupación de escenarios según su estado físico por departamento o municipio o disciplinas." url_reporte="reportes_escenarios_estado_fisico" %}
-
-{% include "publico/item.html" with id=id imagen="https://cdn4.iconfinder.com/data/icons/Iconshock_soccer/png/256/soccer_4.png" nombre_imagen="ESCENARIOS" titulo="Tipo de Superficie" color="rgba(245,132,19,0.6)" descripcion="Agrupación de escenarios según el tipo de superficie por departamento o municipio o disciplinas." url_reporte="reportes_escenarios_tipo_superficie" %}
-
-
-{% include "publico/item.html" with id=id imagen="https://cdn4.iconfinder.com/data/icons/Iconshock_soccer/png/256/soccer_4.png" nombre_imagen="ESCENARIOS" titulo="Tipo de Propietario" color="rgba(245,132,19,0.6)" descripcion="Agrupación de escenarios según el tipo de propietario por departamento o municipio o disciplinas." url_reporte="reportes_escenarios_tipo_propietario" %}
-
-{% include "publico/item.html" with id=id imagen="https://cdn4.iconfinder.com/data/icons/Iconshock_soccer/png/256/soccer_4.png" nombre_imagen="ESCENARIOS" titulo="Periodicidad de mantennimiento" color="rgba(245,132,19,0.6)" descripcion="Agrupación de escenarios según el tipo de periodicidad de mantenimiento por departamento o municipio o disciplinas." url_reporte="reportes_escenarios_periodicidad_mantenimiento" %}
-
-
-{% include "publico/item.html" with id=id imagen="https://cdn4.iconfinder.com/data/icons/Iconshock_soccer/png/256/soccer_4.png" nombre_imagen="ESCENARIOS" titulo="División Territorial" color="rgba(245,132,19,0.6)" descripcion="Agrupación de escenarios según su departamento, municipio o disciplinas." url_reporte="reportes_escenarios_division_territorial" %}
-
-
-{% include "publico/item.html" with id=id imagen="https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/football-128.png" nombre_imagen="ESCENARIOS" titulo="Clase de acceso" color="rgba(245,132,19,0.6)" descripcion="Clase de acceso a los escenarios por departamento o municipio o disciplinas." url_reporte="reportes_acceso_escenarios" %}
-
-{% include "publico/item.html" with id=id imagen="https://cdn3.iconfinder.com/data/icons/ballicons-free/128/clock.png" nombre_imagen="ESCENARIOS" titulo="Disponibilidad de los escenarios" color="rgba(245,132,19,0.6)" descripcion="Disponibilidad en días de los escenarios por departamento o municipio o disciplinas." url_reporte="reportes_disponibilidad_escenarios" %}
 
 {% endwith %}

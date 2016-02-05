@@ -200,7 +200,7 @@
                           <div class="carousel-inner" role="listbox">
                             {% for noticia in noticias %}
                                 <div class="item {% if forloop.first %}active{% endif %}">
-                                  <img style="height:300px;margin:0 auto;" src="{{ noticia.foto.url }}" alt="imagen-noticia">
+                                  <img style="height:400px;margin:0 auto;" src="{{ noticia.foto.url }}" alt="imagen-noticia">
                                     <div class="carousel-caption">
                                       <h3 style="color:lightslategray;">{{ noticia.titulo }}</h3>
                                       <p>{{ noticia.cuerpo_noticia|truncatewords:10 }}... <a href="javascript:;" data-target="#modal-noticia-{{ noticia.id }}" data-toggle="modal">Leer más <i class="fa fa-search"></i></a></p>
@@ -233,11 +233,21 @@
     <hr>
 
     <div class="row">
-        <div class="col-md-12 panel-title" align="center">
-            <h4><b>Georreferenciación de Escenarios Deportivos y Centros de Acondicionamiento</b></h4>
-        </div>
-        <div class="col-md-12">
-            <div id="mapa"></div>
-        </div>
+        <div class="panel panel-success animated fadeInRightBig">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">
+                    Georreferenciación de Escenarios Deportivos
+                </h4>
+            </div>
+            <div class="panel-body"style="padding:0;">
+                <div id="mapa"></div>
+            </div>
+        </div>  
     </div>
 {% endblock %}

@@ -1,17 +1,29 @@
 from django.db import connection
 
-def crear_vista_reportes_tenant_escenario():
+def eliminar_vista_reportes_public_escenario():
     sql_tenant = """
-    CREATE MATERIALIZED VIEW reportes_tenantescenarioview AS 
+        DROP MATERIALIZED VIEW IF EXISTS public.entidades_publicescenarioview;
+    """
+
+    cursor = connection.cursor()
+    r=''
+    r=cursor.execute(sql_tenant)
+    r=connection.commit()
+    return r
+
+def crear_vista_reportes_tenant_escenario():
+
+    sql_tenant = """
+    CREATE OR REPLACE VIEW reportes_tenantescenarioview AS 
     SELECT  E.id, E.nombre,
-            E.direccion, E.latitud,         
-            E.longitud, E.altura,       
-            E.ciudad_id, E.comuna,      
-            E.barrio, E.estrato,        
+            E.direccion, E.latitud,
+            E.longitud, E.altura,
+            E.ciudad_id, E.comuna,
+            E.barrio, E.estrato,
             E.nombre_administrador,
             E.division_territorial,
             E.descripcion as descripcion_escenario,
-            E.fecha_creacion,         
+            E.fecha_creacion,
             E.entidad_id, E.estado,
             E.fecha_creacion as fecha_creacion_escenario,
 
@@ -25,23 +37,23 @@ def crear_vista_reportes_tenant_escenario():
             CE.descripcion as descripcion_caracterizacion,
             CE.fecha_creacion as fecha_creacion_caracterizacion_escenario,
 
-            CEC.caracteristicaescenario_id,
+            CEC.caracteristicaescenario_id as caracteristicas_id,
             CTJ.tiposuperficie_id,
             CTD.tipodisciplinadeportiva_id,
             CCU.tipousoescenario_id,
 
-            C.nombre as nombre_contacto,        
-            C.telefono as telefono_contacto,        
-            C.email as email_contacto,      
+            C.nombre as nombre_contacto,
+            C.telefono as telefono_contacto,
+            C.email as email_contacto,
             C.descripcion as descripcion_contacto,
             C.fecha_creacion as fecha_creacion_contacto,
 
-            H.id as horario_id,      
-            H.hora_inicio,      
-            H.hora_fin,                 
-            H.descripcion as descripcion_horario,  
-            H.fecha_creacion as fecha_creacion_horario_disponibilidad,     
-            HD.dias_id,    
+            H.id as horario_id,
+            H.hora_inicio,
+            H.hora_fin,
+            H.descripcion as descripcion_horario,
+            H.fecha_creacion as fecha_creacion_horario_disponibilidad,
+            HD.dias_id,
 
             F.foto,
             F.titulo,
@@ -84,7 +96,7 @@ def crear_vista_reportes_tenant_escenario():
         r=cursor.execute(sql_tenant)
         r=connection.commit()
         return r
-    except Exception:
+    except Exception as e:
         pass
 
 
@@ -104,19 +116,14 @@ def generar_vista_escenario(nuevo_tenant=None):
 
     if nuevo_tenant:
         connection.set_tenant(nuevo_tenant)
-        #creación vistas escenario
+        #creación vistas escenario para cada tenant
         crear_vista_reportes_tenant_escenario()
 
-
-    cont = 0
     for entidad in entidades:
         connection.set_tenant(entidad)
-        print (cont)
-        cont += 1
         if not nuevo_tenant:
-            #creación vistas escenario
+            #creación vistas escenario 
             crear_vista_reportes_tenant_escenario()
-            crear_vista_reportes_tenant_escenario_estrato()
 
         aux = ("""
                 SELECT * FROM %s.reportes_tenantescenarioview E
@@ -130,6 +137,8 @@ def generar_vista_escenario(nuevo_tenant=None):
 
     public = Entidad.objects.get(schema_name='public')
     connection.set_tenant(public)
+
+    eliminar_vista_reportes_public_escenario()
         
     sql = ("%s %s")%(sql, ";")
     cursor = connection.cursor()

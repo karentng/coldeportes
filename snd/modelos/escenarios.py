@@ -5,12 +5,12 @@ from django.db import models
 
 class Escenario(models.Model):
     estratos = (
-        ('1', 'Uno'),
-        ('2', 'Dos'),
-        ('3', 'Tres'),
-        ('4', 'Cuatro'),
-        ('5', 'Cinco'),
-        ('6', 'Seis'),
+        ('1', 'UNO'),
+        ('2', 'DOS'),
+        ('3', 'TRES'),
+        ('4', 'CUATRO'),
+        ('5', 'CINCO'),
+        ('6', 'SEIS'),
     )
     ESTADOS = (
         (0,'ACTIVO'),
@@ -19,16 +19,15 @@ class Escenario(models.Model):
         (3,'TRANSFERIDO'),
     )
     DIVISIONES = (
-        ('CP','Centro Poblado'),
-        ('ZR','Zona Rural'),
-        ('ZU','Zona Urbana'),
+        ('CP','CENTRO POBLADO'),
+        ('ZR','ZONA RURAL'),
+        ('ZU','ZONA URBANA'),
     )
     nombre =  models.CharField(max_length=100,unique=True)
     direccion = models.CharField(max_length=100, verbose_name='dirección')
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
     altura = models.PositiveIntegerField(null=True, blank=True)
-    nombre_administrador = models.CharField(max_length=50, null=True)
     comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)
     nombre_administrador = models.CharField(max_length=50, null=True)
@@ -79,20 +78,21 @@ class Escenario(models.Model):
 
         return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
 
+
 class CaracterizacionEscenario(models.Model):   
     ACCESOS = (
-        ('pr', 'Privado'),
-        ('dul', 'De Uso Libre'),
-        ('pcp', 'Público Con Pago'),
+        ('pr', 'PRIVADO'),
+        ('dul', 'DE USO LIBRE'),
+        ('pcp', 'PÚBLICO CON PAGO'),
     )
     ESTADOS_FISICOS = (
-        ('bu', 'Bueno'),
-        ('re', 'Regular'),
-        ('ma', 'Malo'),
+        ('bu', 'BUENO'),
+        ('re', 'REGULAR'),
+        ('ma', 'MALO'),
     )
     PROPIETARIOS = (
-        ('of', 'Oficial'),
-        ('pr', 'Privado'),
+        ('of', 'OFICIAL'),
+        ('pr', 'PRIVADO'),
     )
     escenario = models.ForeignKey(Escenario)
     metros_construidos = models.CharField(max_length=50, verbose_name='metros cuadrados construídos')
@@ -137,14 +137,14 @@ class Video(models.Model):
 class Mantenimiento(models.Model):
 
     PERIODICIDADES = (
-        ('di', 'Diaria'),
-        ('se', 'Semanal'),
-        ('qu', 'Quincenal'),
-        ('me', 'Mensual'),
-        ('bm', 'Bimestral'),
-        ('tm', 'Trimestral'),
-        ('sm', 'Semestral'),
-        ('an', 'Anual'),
+        ('di', 'DIARIA'),
+        ('se', 'SEMANAL'),
+        ('qu', 'QUINCENAL'),
+        ('me', 'MENSUAL'),
+        ('bm', 'BIMESTRAL'),
+        ('tm', 'TRIMESTRAL'),
+        ('sm', 'SEMESTRAL'),
+        ('an', 'ANUAL'),
     )
     escenario = models.ForeignKey(Escenario)
     fecha_ultimo_mantenimiento = models.DateField( verbose_name="fecha del último mantenimiento", null=True, blank=True)

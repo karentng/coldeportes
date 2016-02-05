@@ -78,6 +78,53 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
                 print(e)
 
 
+"""
+Autor: Milton Lenis
+Fecha: 3 Febrero 2016
+
+
+NOTA: En esta vista se crea un fix para los actores de aquellas entidades que se crearon antes de crear la funcionalidad
+de permisos que hizo Cristian, NO ES NECESARIO QUE LA USEN PARA SUS ENTORNOS DE DESARROLLO LOCALES ES SOLO PARA ACOMODAR
+LOS SERVIDORES.
+"""
+def fix_actores_entidades(request):
+    entidades = Entidad.objects.exclude(schema_name='public')
+    for entidad in entidades:
+        entidad = entidad.obtenerTenant()
+        if entidad.tipo == 5:
+            tipo_sub_entidad = entidad.tipo_ente
+        elif entidad.tipo == 6:
+            tipo_sub_entidad = entidad.tipo_comite
+        else:
+            tipo_sub_entidad = 0
+
+        tipo_entidad = entidad.tipo
+
+        permisos = Permisos.objects.get(tipo=tipo_sub_entidad,entidad=tipo_entidad)
+        print(permisos.get_actores('--'))
+        for actor_false in permisos.get_actores('--'):
+            #setattr(entidad.actores,actor_false,True)
+            #entidad.save()
+            print (getattr(entidad.actores,actor_false))
+
+        """connection.set_tenant(entidad)
+        try:
+            #si llegan a editar el nombre del grupo, tendremos un error
+            digitador = Group.objects.get(name="Digitador")
+            lectura = Group.objects.get(name='Solo lectura')
+        except Group.DoesNotExist:
+            pass
+        if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
+            asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+            asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
+            asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
+            asignarPermisosGrupoLectura(request, lectura, PERMISOS_LECTURA)
+        connection.set_schema_to_public()
+        """
+"""
+------------------------------------------------------------------------------------------------------------------------
+"""
+
 def inicio(request):
     schema_name = request.tenant.schema_name
 
@@ -164,17 +211,17 @@ def inicio_public(request):
     ubicaciones = []
 
     for i in entidades:
-        connection.set_tenant(i)
-        escenarios = Escenario.objects.filter(entidad=i)
-        cantidad_escenarios += escenarios.count()
-        for escenario in escenarios:
-            ubicaciones.append(escenario.obtenerAtributos())
+        try:
+            connection.set_tenant(i)
+            escenarios = Escenario.objects.filter(entidad=i)
+            cantidad_escenarios += escenarios.count()
+            for escenario in escenarios:
+                ubicaciones.append(escenario.obtenerAtributos())
 
-        cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
-        
-        centros = CentroAcondicionamiento.objects.filter(entidad=i)
-        for centro in centros:
-            ubicaciones.append(centro.obtenerAtributos())
+            cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
+        except Exception:
+            cantidad_escenarios += 0
+            cantidad_deportistas += 0
 
     connection.set_tenant(public)
 
@@ -221,6 +268,7 @@ def inicio_tenant(request):
     #Inicio consulta de transferencias
     transferencias = Transferencia.objects.filter(estado='Pendiente')
     transfer_personas = []
+
     for t in transferencias:
         connection.set_tenant(t.entidad)
         ContentType.objects.clear_cache()
@@ -237,15 +285,13 @@ def inicio_tenant(request):
     actoresAsociados = request.tenant.cantidadActoresAsociados()
 
     tipoTenant = request.tenant.obtenerTenant()
-    ubicaciones = tipoTenant.atributos_cafs()
-    ubicaciones += tipoTenant.atributos_escenarios()
+    ubicaciones = tipoTenant.atributos_escenarios()
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
 
     entidad = tipoTenant.obtener_datos_entidad()
-
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
         if len(noticias_todas)>5:
@@ -254,11 +300,10 @@ def inicio_tenant(request):
             noticias = noticias_todas
     except Exception:
         noticias = []
-
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
         'actoresAsociados': actoresAsociados,
-        'actoresAsociadosJSON': json.dumps(actoresAsociados),
+        #'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
         'noticias':noticias,
@@ -408,7 +453,6 @@ def grupos_modificar(request, idGrupo):
 @superuser_only
 def datos_basicos_entidad(request):
     from entidades.views import obtenerTenant, obtenerFormularioTenant
-    from entidades.forms import ActoresForm
 
     entidad = request.tenant
     try:

@@ -10,8 +10,8 @@ class Deportista(models.Model):
     #Datos personales
         #Identificacion
     tipo_sexo = (
-        ('HOMBRE','HOMBRE'),
-        ('MUJER','MUJER'),
+        ('HOMBRE','MASCULINO'),
+        ('MUJER','FEMENINO'),
     )
     TIPO_IDENTIDAD = (
         ('CC', 'CÉDULA DE CIUDADANÍA'),
@@ -98,19 +98,6 @@ class Deportista(models.Model):
         self.direccion = self.direccion.upper()
         super(Deportista, self).save(*args, **kwargs)
 
-    def obtenerAtributos(self):
-
-        atributos = [
-            ["Nombre", self.nombres+" "+self.apellidos],
-            ["Ciudad Residencia", self.ciudad_residencia.nombre],
-            ["Género", self.genero],
-            ["Identificación", self.tipo_id+" "+self.identificacion],
-            ["E-mail", self.email],
-            ["Teléfono", self.telefono],
-            ["Dirección", self.direccion],
-        ]
-
-        return [self.foto, atributos, None, None, "Deportista!"]
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):

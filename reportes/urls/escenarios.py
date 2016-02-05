@@ -2,15 +2,7 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('reportes.views.escenarios',
-    url(r'^estrato-escenario$', 'estrato_escenarios', name='reportes_escenarios_estrato'),
-    url(r'^tipo-escenario$', 'tipos_escenarios', name='reportes_escenarios_tipos'),
-    url(r'^estado-fisico$', 'estado_fisico', name='reportes_escenarios_estado_fisico'),
-    url(r'^tipo-superficie$', 'tipo_superficie', name='reportes_escenarios_tipo_superficie'),
+    url(r'^caracteristicas-escenarios$', 'caracteristicas_escenarios', name='reportes_caracteristicas_escenarios'),
 
-    url(r'^tipo-propietario$', 'propietarios_escenarios', name='reportes_escenarios_tipo_propietario'),
-    url(r'^periodicidad-mantenimiento$', 'periodicidad_mantenimiento', name='reportes_escenarios_periodicidad_mantenimiento'),
-    url(r'^division-territorial$', 'division_territorial', name='reportes_escenarios_division_territorial'),
-    
-    url(r'^acceso-escenario$', 'acceso_escenarios', name='reportes_acceso_escenarios'),
-    url(r'^disponibilidad-escenario$', 'disponibilidad_escenarios', name='reportes_disponibilidad_escenarios'),
+    url(r'^cantidad-espectadores','cantidad_espectadores',name='reporte_cantidad_espectadores')
 )

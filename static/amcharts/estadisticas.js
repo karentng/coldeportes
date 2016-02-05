@@ -16,6 +16,53 @@ $(".nav a").on("shown.bs.tab", function () {
     tamanoAmcharts();
 });
 
+
+//FUNCIÓN AUXILIAR PARA VALIDAR EL NO_DATA EN LOS ARCHIVOS GENERADOS POR LA FUNCIÓN SUMAR_DATOS_INICIALES DE PYTHON
+function valoresEnCero(datos){
+    for(i=0;i<datos.length;i++){
+        if(datos[i].valor){
+            return false;
+        }
+    }
+    return true;
+}
+
+
+AmCharts.checkEmptyData = function (chart) {
+    console.log(valoresEnCero(chart.dataProvider));
+    if ( 0 == chart.dataProvider.length || valoresEnCero(chart.dataProvider)) {
+        // set min/max on the value axis
+        try{
+            chart.valueAxes[0].minimum = 0;
+            chart.valueAxes[0].maximum = 100;
+        }catch(e){
+
+        }
+        // add dummy data point
+        var dataPoint = {
+            dummyValue: 0
+        };
+        dataPoint[chart.categoryField] = '';
+        chart.dataProvider = [dataPoint];
+        
+        // add label
+        try{
+            chart.addLabel(0, '50%', 'No hay datos para el reporte especificado', 'center', 19, "#00acac");
+        }catch(e){
+
+        }
+        
+        
+        // set opacity of the chart div
+        chart.chartDiv.style.opacity = 0.75;
+        
+    }else{
+        chart.allLabels = [];
+    }
+    chart.validateNow();
+}
+
+
 function ClaseReportes(){
     /* Generar las gráficas */
     function generarComparativa(datos, nombreDiv, nombreGrafica){
@@ -69,12 +116,7 @@ function ClaseReportes(){
         chartCursor.cursorPosition = "mouse";
         chartCursor.zoomable = false;
         chartCursor.cursorAlpha = 0;
-        chart.addChartCursor(chartCursor);                
-    
-        // LEGEND
-        var legend = new AmCharts.AmLegend();
-        legend.useGraphSettings = true;
-        chart.addLegend(legend);
+        chart.addChartCursor(chartCursor);
 
         chart.exportConfig = exportConfig();
     
@@ -104,7 +146,7 @@ function ClaseReportes(){
         chart.exportConfig = exportConfig();
 
         // WRITE
-        chart.write(nombreDiv);
+        chart.write(nombreDiv); 
         charts.push([chart, nombreDiv]);
     }
 
@@ -152,10 +194,6 @@ function ClaseReportes(){
         graph1.fillAlphas = 1;
         graph1.colorField = "color";
         chart.addGraph(graph1);
-
-        // LEGEND
-        var legend = new AmCharts.AmLegend();
-        chart.addLegend(legend);
 
         chart.creditsPosition = "top-right";
 
@@ -379,10 +417,6 @@ function ClaseReportes(){
         graph1.topRadius = 1;
         chart.addGraph(graph1);
 
-        // LEGEND
-        var legend = new AmCharts.AmLegend();
-        chart.addLegend(legend);
-
         chart.creditsPosition = "top-right";
 
         chart.exportConfig = exportConfig();
@@ -507,7 +541,6 @@ function ClaseReportes(){
         }
         
         var chart;
-        var legend;
         if (AmCharts.isReady){
             generarTorta(datos, nombreDiv, nombreGrafica);
         }else{
@@ -669,9 +702,10 @@ function ClaseReportes(){
                     radar(resultado, nombreDiv, nombreGrafica);
                     break;
             }
+            AmCharts.checkEmptyData(charts[charts.length-1][0]);
         },
 
-        modificarDatos: function(datos){
+        modificarDatos: function(datos, nombreNuevoReporte){
             var nuevosDatos = [];
             var cont = 0;
             for (i in datos){
@@ -700,8 +734,13 @@ function ClaseReportes(){
                     }
                 }else{
                     chartSeleccionado.dataProvider = nuevosDatos;
+                    chartSeleccionado.titles = [{
+                        "text": nombreNuevoReporte,
+                        "size": 16
+                    }];
                     chartSeleccionado.validateData();
                     chartSeleccionado.animateAgain();
+                    AmCharts.checkEmptyData(chartSeleccionado);
                 }
             }
         },
