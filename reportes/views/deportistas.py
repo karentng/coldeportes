@@ -569,7 +569,7 @@ def nacionalidad(request):
         return JsonResponse(nacionalidades)
 
     else:
-        nacionalidades = list(tabla.objects.filter(estado__in=[0,2]).annotate(descripcion=F('nacionalidad__nombre')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
+        nacionalidades = list(tabla.objects.filter(estado__in=[0,2]).annotate(descripcion=F('nacionalidad__nombre')).values('nombres','id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
         nacionalidades = tipoTenant.ajustar_resultado(nacionalidades)
 
     return nacionalidades
