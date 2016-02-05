@@ -36,7 +36,7 @@ def nueva_entrada(request):
     })
 
 @login_required
-def ver_articulo(request):
+def ver_articulos(request):
     """
     Enero 28 / 2016
     Autor: Karent Narvaez Grisales
@@ -51,5 +51,27 @@ def ver_articulo(request):
 
     return render(request, 'listado.html', {
         'articulos': articulos,
+        'mensaje': mensaje,
+    })
+
+@login_required
+def ver_articulo(request, articulo_id):
+    """
+    Enero 28 / 2016
+    Autor: Karent Narvaez Grisales
+    
+    Ver el detalle de un artículo de manual de usuario.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param articulo_id:   Petición realizada
+    :type articulo_id:    String
+    """
+    
+    try:
+        articulo = Articulo.objects.get(id=articulo_id)
+
+    return render(request, 'nueva_entrada.html', {
+        'articulo': articulo,
         'mensaje': mensaje,
     })
