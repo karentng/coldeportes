@@ -1213,7 +1213,7 @@ INSERT INTO "entidades_tipodisciplinadeportiva" ("id", "descripcion") VALUES
 (20,'Ciclismo en pista'),
 (21,'Ciclismo en ruta'),
 (22,'Deportes acuáticos'),
-(23,'Actividades Subacuaticas'),
+(23,'Actividades Subacuáticas'),
 (24,'Clavados'),
 (25,'Nado sincronizado'),
 (27,'Natación en aguas abiertas'),
