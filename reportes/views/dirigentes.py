@@ -21,16 +21,16 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, genero, t
     """
     from reportes.utilities import sumar_datos_diccionario
     if departamentos and genero:
-        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,genero__in=genero).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,genero__in=genero).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Departamentos
     elif departamentos:
-        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        dirigentes = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Genero
     elif genero:
-        dirigentes = tabla.objects.filter(estado=0,genero__in=genero).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        dirigentes = tabla.objects.filter(estado=0,genero__in=genero).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Disciplina
     else:
-        dirigentes =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        dirigentes =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
 
     if choices:
         dirigentes = sumar_datos_diccionario(dirigentes, choices)
@@ -74,7 +74,7 @@ def nacionalidad_dirigentes(request):
     else:
         tabla = TenantDirigenteView
     
-    cantidad = 'nacionalidad'
+    cantidad = 'id'
     categoria = 'nacionalidad__nombre'
     dirigentes = generador_reporte_dirigentes(request, tabla, cantidad, categoria, choices=None)
     
