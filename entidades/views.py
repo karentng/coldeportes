@@ -220,7 +220,7 @@ def appMovilObtenerActores(request):
         entidad = request.GET.get('entidad')
         entidad = Entidad.objects.get(schema_name=entidad)
         connection.set_tenant(entidad)
-        centros = CentroAcondicionamiento.objects.all()
+        centros = CentroAcondicionamiento.objects.all().order_by("nombre")
         
         for i in centros:
             dato = {
@@ -233,7 +233,7 @@ def appMovilObtenerActores(request):
             }
             datos['cafs'].append(dato)
 
-        escenarios = Escenario.objects.all()
+        escenarios = Escenario.objects.all().order_by("nombre")
         for i in escenarios:
             dato = {
                 'id': i.id,
