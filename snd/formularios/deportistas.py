@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 import datetime
-from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo
+from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo,extraer_codigo_video
 
 class VerificarExistenciaForm(forms.Form):
     TIPO_IDENTIDAD = (
@@ -51,6 +51,12 @@ class DeportistaForm(ModelForm):
         if fecha_nacimiento > datetime.date.today():
                 msg = "La fecha de nacimiento no puede ser mayor al día de hoy"
                 self.add_error('fecha_nacimiento', msg)
+        video = self.cleaned_data['video']
+        if video:
+            try:
+                extraer_codigo_video(video)
+            except Exception:
+                self.add_error('video','Digite una url valida de un video de YouTube')
         return self.cleaned_data
 
     class Meta:
