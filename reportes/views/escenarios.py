@@ -75,29 +75,29 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos,municipios
 
     #Departamentos, municipios y disciplinas
     if departamentos and municipios and disciplinas:
-        escenarios = tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__in=municipios,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios = tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__in=municipios,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
     #Departamentos, municipios
     elif departamentos and municipios:
-        escenarios = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
     #Departamentos, disciplinas
     elif departamentos and disciplinas:
-        escenarios = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
     #Municipios y disciplinas
     elif municipios and disciplinas:
-        escenarios = tabla.objects.filter(estado=0,ciudad__in=municipios,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios = tabla.objects.filter(estado=0,ciudad__in=municipios,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
     #Departamentos
     elif departamentos:
-        escenarios = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
 
     #Municipios
     elif municipios:
-        escenarios = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
     #Disciplina
     elif disciplinas:
-        escenarios = tabla.objects.filter(estado=0,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios = tabla.objects.filter(estado=0,tipodisciplinadeportiva__in=disciplinas).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
     #Sin filtros
     else:
-        escenarios =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion').annotate(cantidad=Count(cantidad, distinct=True))
+        escenarios =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion','entidad').annotate(cantidad=Count(cantidad, distinct=True))
 
     if choices:
         escenarios = sumar_datos_diccionario(escenarios,choices)
@@ -162,13 +162,13 @@ def caracteristicas_escenarios(request):
     else:
         tabla = TenantEscenarioView
 
-    cantidad = 'tipo_escenario'
+    cantidad = 'id'
     escenarios = generador_reporte_escenario(request, tabla, cantidad)
     
 
     if request.is_ajax():
         return JsonResponse(escenarios)
-        
+
     visualizaciones = [1, 5 , 6]
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario", "Periodicidad", "Día"]

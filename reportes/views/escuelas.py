@@ -21,26 +21,22 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipio
     from reportes.utilities import sumar_datos_diccionario#, convert_choices_to_array, crear_diccionario_inicial
 
     if departamentos and municipios:
-        escuelas = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        escuelas = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Departamentos, disciplinas
     elif departamentos:
-        escuelas = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        escuelas = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Municipios
     elif municipios:
-        escuelas = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        escuelas = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Disciplina
     else:
         try:
-            escuelas =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+            escuelas =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
         except Exception as e:
             print(e)
 
-    print(escuelas.query)
     if choices:
-        print("Escuelas antes de sumar ", escuelas)
         escuelas = sumar_datos_diccionario(escuelas, choices)
-        print("Escuelas despues de sumar")
-        print(escuelas)
         return escuelas
 
     escuelas = tipoTenant.ajustar_resultado(escuelas)
@@ -59,9 +55,9 @@ def generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=None
     
     escuelas = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
 
-    if '' in escuelas:
-        escuelas['Ninguna'] = escuelas['']
-        del escuelas['']
+    if None in escuelas:
+        escuelas['Ninguna'] = escuelas[None]
+        del escuelas[None]
 
     return escuelas
 
@@ -79,7 +75,7 @@ def estrato_escuelas(request):
     else:
         tabla = TenantEscuelaView
     
-    cantidad = 'estrato'
+    cantidad = 'id'
     categoria = 'estrato'
     escuelas = generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=EscuelaDeportiva.ESTRATOS)
     
@@ -113,7 +109,7 @@ def servicios_escuelas(request):
     else:
         tabla = TenantEscuelaView
     
-    cantidad = 'nombre_servicio'
+    cantidad = 'id'
     categoria = 'nombre_servicio'
     escuelas = generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=None)
     
