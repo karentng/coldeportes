@@ -77,3 +77,21 @@ def crear_diccionario_inicial(tuple):
     for numero,cadena in tuple:
         temp_dict[numero] = 0
     return temp_dict
+
+
+"""
+    Febrero 8, 2016
+    Autor: Milton Lenis
+
+    Método auxiliar para obtener los datos necesarios para georreferenciación de los escenarios y caf (Aunque funciona de manera genérica)
+    de las vistas de un determinado tenant
+
+    :param view = Vista de donde se extraerán los objetos
+
+"""
+def atributos_actor_vista(view):
+    todos_actores = view.objects.filter(estado=0).order_by('id','entidad').distinct('id','entidad')
+    actores = []
+    for actor in todos_actores:
+        actores.append(actor.obtener_atributos())
+    return actores
