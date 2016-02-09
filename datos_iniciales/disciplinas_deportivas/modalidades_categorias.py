@@ -97,22 +97,22 @@ categorias = {
     ],
     'Aeromodelismo': [
         {
-            'nombre': 'Clase 101 Planeadores (F1A) ',
+            'nombre': 'Clase 101 Planeadores (F1A)',
             'descripcion': '',
             'general': '100 Vuelo Libre'
         },
         {
-            'nombre': 'Clase 102 Planeadores con motor extensible (F1B) ',
+            'nombre': 'Clase 102 Planeadores con motor extensible (F1B)',
             'descripcion': '',
             'general': '100 Vuelo Libre'
         },
         {
-            'nombre': 'Clase 103 Aeromodelos Indoor (F1D) ',
+            'nombre': 'Clase 103 Aeromodelos Indoor (F1D)',
             'descripcion': '',
             'general': '100 Vuelo Libre'
         },
         {
-            'nombre': 'Clase 104 Planeadores con dirección automática (F1E) ',
+            'nombre': 'Clase 104 Planeadores con dirección automática (F1E)',
             'descripcion': '',
             'general': '100 Vuelo Libre'
         },
@@ -125,6 +125,16 @@ categorias = {
             'nombre': 'Clase 106 Aeromodelos eléctricos (F1Q)',
             'descripcion': '',
             'general': '100 Vuelo Libre'
+        },
+        {
+            'nombre': 'Clase 201 Acrobacia (F2B)',
+            'descripcion': '',
+            'general': '200 Control de Línea'
+        },
+        {
+            'nombre': 'Clase 210 Combate aéreo (F2D)',
+            'descripcion': '',
+            'general': '200 Control de Línea'
         },
     ],
 }
