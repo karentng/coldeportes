@@ -1,7 +1,8 @@
 from django import forms
 from entidades.models import Departamento, Ciudad
 from coldeportes.utilities import adicionarClase
-from reportes.forms import add_visualizacion
+from reportes.utilities import add_visualizacion
+
 
 class NacionalidadForm(forms.Form):
     def __init__(self, *args, **kwargs):

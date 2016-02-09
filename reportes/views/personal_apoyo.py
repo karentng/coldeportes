@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from entidades.modelos_vistas_reportes import PublicPersonalApoyoView
 from reportes.models import TenantPersonalApoyoView
-from reportes.forms import FiltrosPersonalApoyoForm
+from reportes.formularios.personal_apoyo import FiltrosPersonalApoyoForm
 from django.db.models import F, Count
 from reportes.utilities import sumar_datos_diccionario, convert_choices_to_array, crear_diccionario_inicial
 from snd.models import PersonalApoyo

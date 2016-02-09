@@ -1,7 +1,7 @@
 from django import forms
 from entidades.models import Departamento,TipoDisciplinaDeportiva, Ciudad
 from coldeportes.utilities import adicionarClase
-from reportes.forms import add_visualizacion
+from reportes.utilities import add_visualizacion
 
 VISUALIZACIONES = (
     (1, "Dona"),
