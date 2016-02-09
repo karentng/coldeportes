@@ -4,6 +4,9 @@
 
     Esta funcion permite conocer la fecha de nacimiento maxima dada una edad y el dia en curso
 """
+from reportes.forms import VISUALIZACIONES
+
+
 def fecha_nacimiento_maxima(edades):
     from datetime import date
     hoy = date.today()
@@ -95,3 +98,12 @@ def atributos_actor_vista(view):
     for actor in todos_actores:
         actores.append(actor.obtener_atributos())
     return actores
+
+
+def add_visualizacion(field, visualizaciones_definidas):
+    visualizaciones = tuple()
+    if visualizaciones_definidas:
+        for i in VISUALIZACIONES:
+            if i[0] in visualizaciones_definidas:
+                visualizaciones += (i,)
+        field.choices = visualizaciones

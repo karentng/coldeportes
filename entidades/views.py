@@ -16,6 +16,7 @@ from snd.modelos.dirigentes import *
 from coldeportes.utilities import calculate_age, add_actores, superuser_only
 from reportes.crear_vistas_actores import *
 from django.forms import modelformset_factory, modelform_factory
+from django.http import HttpResponse
 
 @login_required
 def tipo(request):
@@ -89,6 +90,7 @@ def obtenerTenant(request, idEntidad, tipo):
 def generar_vistas_actores(request):
     from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
     generar_vistas()
+    return HttpResponse("Vistas actualizadas correctamente")
 
 @login_required
 def registro(request, tipo, tipoEnte=None):
