@@ -64,7 +64,7 @@ def participaciones_deportivas(request):
 
     else:
         #Traer la cantidad de hisotriales ordenados por tipo
-        participaciones = list(tabla.objects.filter(estado__in=[0,2],estado_participacion="Aprobado").annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad').annotate(cantidad=Count('tipo_participacion')))
+        participaciones = list(tabla.objects.filter(estado__in=[0,2],estado_participacion="Aprobado").annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad').annotate(cantidad=Count('id')))
         participaciones = tipoTenant.ajustar_resultado(participaciones)
 
     visualizaciones = [1, 2, 3, 5, 6, 7]
