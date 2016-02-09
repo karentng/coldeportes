@@ -1,6 +1,7 @@
 from coldeportes.utilities import adicionarClase
 from entidades.models import Departamento
 from reportes.forms import VISUALIZACIONES
+from django import forms
 
 
 class FiltrosPersonalApoyoForm(forms.Form):
