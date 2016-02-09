@@ -10,14 +10,17 @@ def seleccion_datos_cafs(tenant=''):
         CAF.altura, CAF.estado,
         CAF.email, CAF.web,
         CAF.entidad_id, CAF.fecha_creacion,
-        CLASE.nombre as nombre_clase, SERVICIO.nombre as nombre_servicio
+        CAF.barrio,
+        CLASE.nombre as nombre_clase, SERVICIO.nombre as nombre_servicio,
+        F.foto
     FROM
     %ssnd_centroacondicionamiento CAF
     LEFT JOIN %ssnd_centroacondicionamiento_clases CLASES ON CLASES.centroacondicionamiento_id = CAF.id
     LEFT JOIN public.entidades_caclase CLASE ON CLASE.id = CLASES.caclase_id
     LEFT JOIN %ssnd_centroacondicionamiento_servicios SERVICIOS ON SERVICIOS.centroacondicionamiento_id = CAF.id
-    LEFT JOIN public.entidades_caservicio SERVICIO ON SERVICIO.id = SERVICIOS.caservicio_id 
-    """)%(tenant, tenant, tenant)
+    LEFT JOIN public.entidades_caservicio SERVICIO ON SERVICIO.id = SERVICIOS.caservicio_id
+    LEFT JOIN %ssnd_cafoto F on F.centro_id=CAF.id
+    """)%(tenant, tenant, tenant, tenant)
 
 def seleccion_datos_escenarios(tenant=''):
     if tenant != '':

@@ -17,6 +17,7 @@ from coldeportes.utilities import permisosPermitidos
 from directorio.models import *
 from noticias.models import Noticia
 from entidades.models import Entidad
+from reportes.utilities import atributos_actor_vista
 
 from django.http import HttpResponse
 
@@ -194,36 +195,18 @@ def inicio(request):
     else:
         return redirect('inicio_tenant')
 
+
 def inicio_public(request):
-    from django.db import connection
+    from entidades.modelos_vistas_reportes import PublicDeportistaView, PublicEscenarioView
+    from reportes.utilities import atributos_actor_vista
     from django.db.models import Count
 
     import json
 
-    from snd.models import Deportista, CentroAcondicionamiento
-    from entidades.models import TIPOS
 
-    public = request.tenant
-    entidades = Entidad.objects.exclude(schema_name='public')
-    cantidad_deportistas = 0
-    cantidad_escenarios = 0
-
-    ubicaciones = []
-
-    for i in entidades:
-        try:
-            connection.set_tenant(i)
-            escenarios = Escenario.objects.filter(entidad=i)
-            cantidad_escenarios += escenarios.count()
-            for escenario in escenarios:
-                ubicaciones.append(escenario.obtenerAtributos())
-
-            cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
-        except Exception:
-            cantidad_escenarios += 0
-            cantidad_deportistas += 0
-
-    connection.set_tenant(public)
+    ubicaciones = atributos_actor_vista(PublicEscenarioView)
+    cantidad_deportistas = PublicDeportistaView.objects.filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad').count()
+    cantidad_escenarios = PublicEscenarioView.objects.filter(estado=0).order_by('id','entidad').distinct('id','entidad').count()
 
     cantidad_entes = list(Entidad.objects.exclude(schema_name='public').values('tipo').order_by().annotate(Count('tipo')))
     for i in range(0, len(cantidad_entes)):
@@ -285,7 +268,15 @@ def inicio_tenant(request):
     actoresAsociados = request.tenant.cantidadActoresAsociados()
 
     tipoTenant = request.tenant.obtenerTenant()
-    ubicaciones = tipoTenant.atributos_escenarios()
+
+    #Mejorado con uso de vistas
+    from reportes.models import TenantEscenarioView
+    from reportes.models import TenantCafView
+
+    ubicaciones = atributos_actor_vista(TenantEscenarioView)
+    ubicaciones = ubicaciones + atributos_actor_vista(TenantCafView)
+    #--------------------------
+
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     connection.set_tenant(request.tenant)

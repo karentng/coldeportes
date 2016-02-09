@@ -725,8 +725,12 @@ def eliminar_contacto(request, escenario_id, contacto_id):
 @login_required
 def georreferenciacion_escenario(request):
     import json
+    from reportes.utilities import atributos_actor_vista
+    from reportes.models import TenantEscenarioView
+
     tipoTenant = request.tenant.obtenerTenant()
-    escenarios = tipoTenant.atributos_escenarios()
+    #Mejorado con uso de vista
+    escenarios = atributos_actor_vista(TenantEscenarioView)
     posicionInicial = tipoTenant.posicionInicialMapa()
     
     return render(request, 'escenarios/georreferenciacion.html', {

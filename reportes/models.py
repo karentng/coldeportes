@@ -49,19 +49,27 @@ class TenantEscenarioView(models.Model):
     #campos mantenimiento
     periodicidad = models.CharField(max_length=2, null=True, blank=True)
 
+    def obtener_atributos(self):
+        from django.conf import settings
+        imagen = None
+        if self.foto != None:
+            imagen = ("%s%s")%(settings.MEDIA_URL, self.foto.__str__())
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/EscenarioView.PNG")
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Comuna", self.comuna],
+            ["Barrio", self.barrio],
+            ["Estrato", self.estrato],
+            ["Dirección", self.direccion],
+            ["Latitud", self.latitud],
+            ["Longitud", self.longitud],
+        ]
+        return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
 
-'''class TenantEscenarioEstratoView(models.Model):
-    
-    class Meta:
-        managed = False
-            
-    ciudad = models.ForeignKey(Ciudad)
-    fecha_creacion = models.DateTimeField()    
-    estrato = models.CharField(max_length=1)
-    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    cantidad = models.PositiveIntegerField()
-    estado = models.IntegerField(choices=Escenario.ESTADOS, verbose_name="estado del Escenario")'''
-
+def ruta_fotos_cafs(instance, filename):
+    return "snd/fotos/cafs/%s-%s"%(instance.id, filename.encode('ascii','ignore').decode('ascii'))
 
 class TenantCafView(models.Model):
     class Meta:
@@ -83,6 +91,30 @@ class TenantCafView(models.Model):
     fecha_creacion = models.DateTimeField()
     nombre_clase = models.CharField(max_length=255)
     nombre_servicio = models.CharField(max_length=255)
+    foto = models.ImageField(upload_to=ruta_fotos_cafs, null=True, blank=True)
+    barrio = models.CharField(max_length=20)
+
+    def obtener_atributos(self):
+        from django.conf import settings
+        imagen = None
+        if self.foto != None:
+            imagen = ("%s%s")%(settings.MEDIA_URL, self.foto.__str__())
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/CAFView.PNG")
+
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Comuna", self.comuna],
+            ["Barrio", self.barrio],
+            ["Estrato", self.estrato],
+            ["Dirección", self.direccion],
+            ["Teléfono", self.telefono],
+            ["Latitud", self.latitud],
+            ["Longitud", self.longitud],
+        ]
+
+        return [imagen, atributos, self.latitud, self.longitud, "CAF!"]
 
 class TenantPersonalApoyoView(models.Model):
     ACTIVIDADES = (
