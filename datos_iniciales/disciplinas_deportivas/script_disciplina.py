@@ -3,14 +3,15 @@ from datos_iniciales.disciplinas_deportivas.modalidades_categorias import *
 from django.db import connection
 
 deportes = [
-    'Parapentismo', 'Aeromodelismo', 'Ala delta ', 'Ultralivianos', 'Planeadores', 'Globos aerostáticos', 'Apnea',
+    'Parapentismo', 'Aeromodelismo', 'Ala delta', 'Ultralivianos', 'Planeadores', 'Globos aerostáticos', 'Apnea',
     'Natación con aletas', 'Buceo', 'Hockey subacuático', 'Rugby subacuático', 'Pesca submarina', 'Orientación',
     'Automovilismo deportivo', '(Automovilismo deportivo) - Rallies colombiano','(Automovilismo deportivo) - Rallie Cross',
     '(Automovilismo deportivo) - Camper Cross', '(Automovilismo deportivo) - Velocidad', 'Ajedrez', 'Arquería', 'Bolos',
     'Ecuestre', 'Esgrima', 'Esquí Náutico', 'Futbol de salón', 'Golf', 'Hapkido', 'Karts', 'Motociclismo','Motonáutica Squash',
     'Softbol', 'Tenis de mesa', 'Voleibol', 'Deportes Fuerzas Armadas', 'Deporte montaña y escalada','Coleo', 'Billar',
     'Nado sincronizado', 'Waterpolo', 'Bádminton', 'Baloncesto', 'Canotaje', 'Balonmano', 'Hockey', 'Pentatlón moderno',
-    'Vela', 'Tejo','Tiro y caza', 'Trampolín', 'Triatlón'
+    'Vela', 'Tejo','Tiro y caza', 'Trampolín', 'Triatlón','Boccia', 'Baloncesto en Silla de Ruedas', 'Ciclismo Tandem',
+    'Slalom', 'Tenis De Campo en Silla de Ruedas', 'Goalball', 'Ecuestres'
 ]
 
 def insertar_actualizar_deportes():
@@ -34,6 +35,7 @@ def insertar_actualizar_deportes():
     asa = TipoDisciplinaDeportiva.objects.get(descripcion='Actividades Subacuaticas')
     asa.descripcion = 'Actividades Subacuáticas'
     asa.save()
+    print('Deportes actualizados correctamente')
 
 
 def insertar_modalidades_categorias():
@@ -59,3 +61,4 @@ def insertar_modalidades_categorias():
             cat = []
         for c in cat:
             CategoriaDisciplinaDeportiva(nombre=c['nombre'], descripcion=c['descripcion'], general=c['general'],deporte=depor).save()
+    print('Modalidades y categorias insertadas exitosamente')
