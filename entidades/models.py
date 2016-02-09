@@ -171,7 +171,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
-        todosEscenarios = Escenario.objects.filter(entidad=self)
+        todosEscenarios = Escenario.objects.filter(estado=0,entidad=self)
         return len(todosEscenarios)
 
     def atributos_cafs(self):
@@ -181,7 +181,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_deportistas(self):
         from snd.modelos.deportistas import Deportista
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
         return len(todos_deportistas)
 
     def atributos_personales_apoyo(self):
@@ -206,7 +206,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_escuelas_deportivas(self):
         from snd.modelos.escuela_deportiva import EscuelaDeportiva
-        todos_escuelas = EscuelaDeportiva.objects.filter(entidad=self)
+        todos_escuelas = EscuelaDeportiva.objects.filter(estado=0,entidad=self)
         return len(todos_escuelas)
 
     def atributosDeSusActores(self):
@@ -524,7 +524,7 @@ class Federacion(ResolucionReconocimiento):
 
         deportistas = 0
 
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
 
         deportistas += len(todos_deportistas)
 
@@ -603,7 +603,7 @@ class Liga(ResolucionReconocimiento):
 
         deportistas = 0
 
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
 
         deportistas += len(todos_deportistas)
 
