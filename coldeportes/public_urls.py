@@ -22,4 +22,5 @@ urlpatterns = patterns('',
     url(r'^reportes/', include('reportes.urls.publico')),
     url(r'^buscador/', include('buscador.urls')),
     url(r'^fix-actores-entidades$', 'gestion_usuarios.views.fix_actores_entidades', name='fix_actores_entidades'),
+    url(r'^api-int/', include('api_interoperable.urls', namespace='rest_framework'))
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
