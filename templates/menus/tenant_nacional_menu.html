@@ -23,3 +23,13 @@
         <span class="colorMenu">Listado de escenarios nacionales</span>
     </a>
 </li>
+<li class="{% if 'escuelas' in request.path %} active {% endif %}">
+    <a href="{% url 'escuela_deportiva_listar' %}">
+        <span class="colorMenu">Listado de escuelas de formación deportiva nacionales</span>
+    </a>
+</li>
+<li class="{% if 'cajas' in request.path %} active {% endif %}">
+    <a href="{% url 'listar_ccfs' %}">
+        <span class="colorMenu">Listado de cajas de compensación familiar nacionales</span>
+    </a>
+</li>
