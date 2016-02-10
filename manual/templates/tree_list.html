@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Manual</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Directorio
+{% endblock %}
+
+{% block contenido %}
+<div class="col-md-4">
+    <div class="panel panel-success" data-sortable-id="tree-view-1">
+        <div class="panel-heading">
+            <h4 class="panel-title">Manual de Usuario - Listado de Archivos</h4>
+        </div>
+        <div class="panel-body">
+            <div id="jstree-default">
+                <ul>
+                    {% for item in items %}
+                    <li>
+                        {{item.1}}
+                        
+                        {% for entrada in articulos %}
+                            {% if entrada.modulo == item.0 %}
+                            <ul>
+                                <li data-jstree='{ "icon" : "fa fa-book fa-lg text-primary"}'>
+
+                                    <a href="{% url 'listar_articulo_manual' entrada.id %}">{{entrada.titulo}}</a>
+
+                                </li>
+                            </ul>
+                            {% endif %}
+                        {% endfor %}
+
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-8">
+    <div class="panel panel-success" data-sortable-id="tree-view-1">
+        <div class="panel-heading">
+            <h4 class="panel-title">Visualizando{% if articulo %}: {{articulo.titulo}} {% endif %}</h4>
+        </div>
+        <div class="panel-body">
+            {% if articulo %}
+            <fieldset>
+                <div class="well row">
+                    <h3>{{articulo.titulo}}</h3>
+                    <br>
+                    <h4>{{articulo.subtitulo}}:</h4>
+                    <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5><br>
+                    <div class="col-md-8">
+                        <p align="justify">{{articulo.contenido}}</p>
+                    </div>
+                    <div class="col-md-4">
+                        {% if articulo.imagen %}<img src="{{STATIC_URL}}{{articulo.imagen}}">{% endif %}
+                    </div>
+                </div>
+            </fieldset>
+            {% else %}
+                <br><br><br><br><br><br><br>
+                <h5 align="center">Seleccione un artículo para ver.</h5>
+                <br><br><br><br><br><br><br>
+
+            {% endif %}
+        
+        </div>
+    </div>    
+</div>
+
+
+{% endblock %}
+{% block css %}
+    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+    <link href="{{STATIC_URL}}plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL STYLE ================== -->
+    
+{% endblock %}
+
+{% block js %}
+    
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src="{{STATIC_URL}}plugins/jstree/dist/jstree.min.js"></script>
+    <script src="{{STATIC_URL}}js/ui-tree.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+    <!-- ================== END PAGE LEVEL JS ================== --> 
+    
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            TreeView.init();
+        });
+    </script>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
