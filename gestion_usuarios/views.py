@@ -65,7 +65,7 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
     try:
         actores = Permisos.objects.get(entidad=tipo,tipo=tipoEnte).get_actores('%')
     except Permisos.DoesNotExist:
-        messages.error(request,'Ha ocurrido un error al obtener los permisos de lectura')
+        messages.error(request,'La entidad actual no tiene permisos de lectura')
     else:
         permitidos = []
         for permiso,actor in permisos:
