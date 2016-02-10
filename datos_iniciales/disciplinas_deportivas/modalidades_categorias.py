@@ -1,4 +1,135 @@
 modalidades = {
+    'Orientación' : [
+        {
+            'nombre': 'Sprint',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Carrera media',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Relevos',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Natación con aletas':[
+        {
+            'nombre': '100 metros superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '100 metros bialetas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '400 metros superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '4X50 metros superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '100 metros inmersión ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '1500 metros superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '200 metros bialetas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '200 metros superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '4x50 apneas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '50 metros superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '50 metros bialetas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '400 metros inmersión',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '4x200 superficies ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '50 metros apnea',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '800 metros superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '4x100 superficies',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '4x3000 superficie',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '6km',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': '20km',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Apnea': [
+        {
+            'nombre': 'Apnea Estática (Varones, damas)',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Apnea Dinámica sin aletas (Varones, damas)',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Apnea con aletas (Varones, damas)',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
     'Ajedrez' : [
         {
             'nombre': 'Blitz',
@@ -138,6 +269,103 @@ modalidades = {
 }
 
 categorias = {
+    'Orientación' : [
+        {
+            'nombre': 'Femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Masculino',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Pesca submarina' : [
+        {
+            'nombre': 'Categoría abierta',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Rugby subacuático': [
+        {
+            'nombre': 'Elite Varones-Damas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Ascenso Varones-Damas',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Hockey subacuático' : [
+        {
+            'nombre': 'Sub 19',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 23',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Elite',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Master',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Buceo' : [
+        {
+            'nombre': 'Buceo libre o en apnea',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Buceo autónomo o con escafandra autónoma',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Natación con aletas':[
+        {
+            'nombre': 'Infantil d 12-13',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil c 14-15',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil b 16-17',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Master v1, master v2',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Abierta',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
     'Ajedrez' : [
         {
             'nombre': 'De 2200 en adelante Categoría de Maestros Nacionales',
