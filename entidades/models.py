@@ -46,7 +46,7 @@ class TipoDisciplinaDeportiva(models.Model):
 class ModalidadDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    descripcion = models.TextField(verbose_name='descripción', blank=True)
     general = models.TextField(verbose_name='general', blank=True)
 
     def __str__(self):
@@ -57,7 +57,7 @@ class ModalidadDisciplinaDeportiva(models.Model):
 class CategoriaDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    descripcion = models.TextField(verbose_name='descripción', blank=True)
     general = models.TextField(verbose_name='general', blank=True)
 
     def __str__(self):
