@@ -22,7 +22,6 @@ from entidades.modelos_vistas_reportes import *
                 ] | None
             ]+ | []
         ],
-        False | True            -> Se consulta en todos los tenants o no
     ),
 )
 '''

@@ -46,7 +46,7 @@ class TipoDisciplinaDeportiva(models.Model):
 class ModalidadDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    descripcion = models.TextField(verbose_name='descripción', blank=True)
     general = models.TextField(verbose_name='general', blank=True)
 
     def __str__(self):
@@ -57,7 +57,7 @@ class ModalidadDisciplinaDeportiva(models.Model):
 class CategoriaDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    descripcion = models.TextField(verbose_name='descripción', blank=True)
     general = models.TextField(verbose_name='general', blank=True)
 
     def __str__(self):
@@ -171,7 +171,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
-        todosEscenarios = Escenario.objects.filter(entidad=self)
+        todosEscenarios = Escenario.objects.filter(estado=0,entidad=self)
         return len(todosEscenarios)
 
     def atributos_cafs(self):
@@ -181,7 +181,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_deportistas(self):
         from snd.modelos.deportistas import Deportista
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
         return len(todos_deportistas)
 
     def atributos_personales_apoyo(self):
@@ -206,7 +206,7 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_escuelas_deportivas(self):
         from snd.modelos.escuela_deportiva import EscuelaDeportiva
-        todos_escuelas = EscuelaDeportiva.objects.filter(entidad=self)
+        todos_escuelas = EscuelaDeportiva.objects.filter(estado=0,entidad=self)
         return len(todos_escuelas)
 
     def atributosDeSusActores(self):
@@ -426,6 +426,7 @@ class ClubParalimpico(ResolucionReconocimiento):
         (5,'Limitación Intelectual'),
     )
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,blank=True)
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
 
     def obtener_padre(self):
@@ -524,7 +525,7 @@ class Federacion(ResolucionReconocimiento):
 
         deportistas = 0
 
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
 
         deportistas += len(todos_deportistas)
 
@@ -603,7 +604,7 @@ class Liga(ResolucionReconocimiento):
 
         deportistas = 0
 
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
 
         deportistas += len(todos_deportistas)
 
