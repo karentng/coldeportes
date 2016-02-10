@@ -57,6 +57,9 @@
                         <div class="col-lg-6">
                             {% bootstrap_field form.periodo_rehabilitacion layout="vertical" %}
                         </div>
+                        <div class="col-lg-6">
+                            {% bootstrap_field form.segmento_corporal layout="vertical" %}
+                        </div>
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
                     </div>
                 </div>
@@ -71,6 +74,7 @@
                                 <th>Tipo lesión</th>
                                 <th>Fecha lesión</th>
                                 <th>Periodo rehabilitación</th>
+                                <th>Segmento corporal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,6 +83,11 @@
                                 <td>{{historico.get_tipo_lesion_display}}</td>
                                 <td>{{historico.fecha_lesion}}</td>
                                 <td>{{historico.get_periodo_rehabilitacion_display}}</td>
+                                {% if historico.segmento_corporal %}
+                                    <td>{{historico.get_segmento_corporal_display}}</td>
+                                {% else %}
+                                    <td>No Aplica</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

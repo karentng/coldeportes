@@ -137,6 +137,7 @@ class HistorialLesionesForm(ModelForm):
         super(HistorialLesionesForm, self).__init__(*args, **kwargs)
         self.fields['tipo_lesion'] = adicionarClase(self.fields['tipo_lesion'], 'one')
         self.fields['periodo_rehabilitacion'] = adicionarClase(self.fields['periodo_rehabilitacion'], 'one')
+        self.fields['segmento_corporal'] = adicionarClase(self.fields['segmento_corporal'],'one')
 
     class Meta:
         model = HistorialLesiones
