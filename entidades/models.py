@@ -426,6 +426,7 @@ class ClubParalimpico(ResolucionReconocimiento):
         (5,'Limitación Intelectual'),
     )
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,blank=True)
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
 
     def obtener_padre(self):
