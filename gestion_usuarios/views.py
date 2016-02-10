@@ -105,19 +105,16 @@ def fix_actores_entidades(request):
         tipo_entidad = entidad.tipo
 
         permisos = Permisos.objects.get(tipo=tipo_sub_entidad,entidad=tipo_entidad)
-        if entidad.tipo == 1:
-            print(permisos.get_actores('--'))
-            print(entidad, entidad.actores.resumen(), permisos.get_actores('--'))
+
         for actor_false in permisos.get_actores('--'):
             setattr(entidad.actores,actor_false,False)
             entidad.save()
             entidad.actores.save()
-            #if entidad.tipo == 1:
-            #    print (getattr(entidad.actores,actor_false), actor_false)
 
 
         modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
         connection.set_tenant(entidad)
+        request.tenant = entidad
         for modelo in modelos_a_borrar:
             try:
                 modelo.objects.all().delete()
@@ -130,13 +127,16 @@ def fix_actores_entidades(request):
             lectura = Group.objects.get(name='Solo lectura')
         except Group.DoesNotExist:
             pass
+
         if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
+            print(entidad)
             asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
             asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
             asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
             asignarPermisosGrupoLectura(request, lectura, PERMISOS_LECTURA)
 
         connection.set_schema_to_public()
+        request.tenant = Entidad.objects.get(schema_name='public')
 
     return HttpResponse("Se han actualizado las entidades del servidor correctamente")
 
