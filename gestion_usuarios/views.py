@@ -18,6 +18,7 @@ from directorio.models import *
 from noticias.models import Noticia
 from entidades.models import Entidad
 from reportes.utilities import atributos_actor_vista
+from django.http import HttpResponse
 
 from django.http import HttpResponse
 
@@ -89,6 +90,8 @@ de permisos que hizo Cristian, NO ES NECESARIO QUE LA USEN PARA SUS ENTORNOS DE 
 LOS SERVIDORES.
 """
 def fix_actores_entidades(request):
+    from coldeportes.utilities import obtener_modelo_actor
+
     entidades = Entidad.objects.exclude(schema_name='public')
     for entidad in entidades:
         entidad = entidad.obtenerTenant()
@@ -102,13 +105,25 @@ def fix_actores_entidades(request):
         tipo_entidad = entidad.tipo
 
         permisos = Permisos.objects.get(tipo=tipo_sub_entidad,entidad=tipo_entidad)
-        print(permisos.get_actores('--'))
+        if entidad.tipo == 1:
+            print(permisos.get_actores('--'))
+            print(entidad, entidad.actores.resumen(), permisos.get_actores('--'))
         for actor_false in permisos.get_actores('--'):
-            #setattr(entidad.actores,actor_false,True)
-            #entidad.save()
-            print (getattr(entidad.actores,actor_false))
+            setattr(entidad.actores,actor_false,False)
+            entidad.save()
+            entidad.actores.save()
+            #if entidad.tipo == 1:
+            #    print (getattr(entidad.actores,actor_false), actor_false)
 
-        """connection.set_tenant(entidad)
+
+        modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
+        connection.set_tenant(entidad)
+        for modelo in modelos_a_borrar:
+            try:
+                modelo.objects.all().delete()
+            except Exception as e:
+                print(e)
+
         try:
             #si llegan a editar el nombre del grupo, tendremos un error
             digitador = Group.objects.get(name="Digitador")
@@ -120,8 +135,11 @@ def fix_actores_entidades(request):
             asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
             asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
             asignarPermisosGrupoLectura(request, lectura, PERMISOS_LECTURA)
+
         connection.set_schema_to_public()
-        """
+
+    return HttpResponse("Se han actualizado las entidades del servidor correctamente")
+
 """
 ------------------------------------------------------------------------------------------------------------------------
 """
