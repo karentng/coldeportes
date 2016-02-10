@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from coldeportes.utilities import all_permission_required
@@ -35,25 +35,51 @@ def nueva_entrada(request):
         'form': articulo_form,
     })
 
-"""
 @login_required
-def ver_articulo(request, articulo_id):
+def listar_articulo(request, articulo_id):
     """
-"""   Enero 28 / 2016
+    Enero 28 / 2016
     Autor: Karent Narvaez Grisales
     
-    Ver el detalle de un artículo de manual de usuario.
+    Ver artículos de manual de usuario.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
-    :param articulo_id:   Petición realizada
-    :type articulo_id:    String
     """
-    
-""""   try:
-        articulo = Articulo.objects.get(id=articulo_id)
+    articulo = get_object_or_404(Articulo,id=articulo_id)
 
-    return render(request, 'nueva_entrada.html', {
-        'articulo': articulo,
+    items_manual = Articulo.MODULOS
+    articulos = Articulo.objects.all()
+
+    mensaje = "No hay artísulos registrados."
+
+    return render(request, 'listar_articulo.html', {
+        'articulos': articulos,
         'mensaje': mensaje,
-    })"""
+        'items': items_manual,
+        'articulo': articulo,
+
+    })
+
+@login_required
+def listar(request):
+    """
+    Febrero 9 / 2016
+    Autor: Karent Narvaez Grisales
+    
+    Listar tree list para manual sin ningún manual en especial seleccionado.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
+    items_manual = Articulo.MODULOS
+    articulos = Articulo.objects.all()
+
+    mensaje = "No hay artísulos registrados."
+
+    return render(request, 'tree_list.html', {
+        'articulos': articulos,
+        'mensaje': mensaje,
+        'items': items_manual,
+
+    })
