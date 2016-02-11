@@ -93,6 +93,11 @@ def generar_vistas_actores(request):
     return HttpResponse("Vistas actualizadas correctamente")
 
 @login_required
+def cambiar_tipo_campo(request):
+    from reportes.crear_vistas_actores.creacion_vistas import alter_campo_escenarios
+    alter_campo_escenarios()
+
+@login_required
 def registro(request, tipo, tipoEnte=None):
     nombre, form = obtenerFormularioTenant(tipo)
 

@@ -5,7 +5,7 @@ from django.forms import ModelForm
 from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
 from datetimewidget.widgets import TimeWidget, DateWidget
-from coldeportes.utilities import adicionarClase, MyDateWidget
+from coldeportes.utilities import adicionarClase, MyDateWidget, extraer_codigo_video
 
 
 class IdentificacionForm(forms.ModelForm):
@@ -119,7 +119,7 @@ class FotoEscenarioForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(FotoEscenarioForm, self).__init__(*args, **kwargs)
-        self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['descripcion_foto'].widget.attrs['rows'] = 3
 
     class Meta:
         model = Foto
@@ -144,6 +144,16 @@ class MantenimientoEscenarioForm(ModelForm):
 
 class VideoEscenarioForm(ModelForm):
     required_css_class = 'required'
+
+    def clean(self):
+        cleaned_data = super(VideoEscenarioForm, self).clean()
+        video = self.cleaned_data['url']
+        if video:
+            try:
+                extraer_codigo_video(video)
+            except Exception:
+                self.add_error('url','Digite una url valida de un video de YouTube')
+        return self.cleaned_data
 
     class Meta:
         model = Video
