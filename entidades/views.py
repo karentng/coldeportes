@@ -95,7 +95,11 @@ def generar_vistas_actores(request):
 @login_required
 def cambiar_tipo_campo(request):
     from reportes.crear_vistas_actores.creacion_vistas import alter_campo_escenarios
-    alter_campo_escenarios()
+    tenants_falla = alter_campo_escenarios()
+    return render(request, 'escenarios/alter_campo_escenarios.html', {
+        'tenants' : tenants_falla,
+
+    })
 
 @login_required
 def registro(request, tipo, tipoEnte=None):
