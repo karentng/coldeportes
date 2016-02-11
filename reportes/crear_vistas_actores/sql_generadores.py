@@ -38,7 +38,6 @@ def seleccion_datos_escenarios(tenant=''):
             CE.tipo_escenario_id,
             CE.clase_acceso,
             CE.estado_fisico,
-            CE.capacidad_espectadores,
             CE.espectadores_habituales,
             CE.tipo_propietario,
             CE.descripcion as descripcion_caracterizacion,
