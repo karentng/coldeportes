@@ -1,6 +1,32 @@
+#encoding:utf-8
+from django.shortcuts import render
 from entidades.models import *
 
 CONSULTA, TENANT, PUBLIC = [None, None, None]
+
+    
+def alter_campo_escenarios():
+    from django.db import connection
+    from reportes.crear_vistas_actores.sql_generadores import COMANDOS_GENERADORES_DE_VISTAS_ACTORES
+
+    def ejecutar_sql(sql):
+        cursor = connection.cursor()
+        r=''
+        r=cursor.execute(sql)
+        r=connection.commit()
+        return r
+
+    todos_los_tenants = Entidad.objects.exclude(schema_name='public').order_by('id')
+    tenants_falla = []
+
+    for tenant in todos_los_tenants:
+        sql = ("ALTER TABLE %s.snd_caracterizacionescenario ALTER COLUMN capacidad_espectadores TYPE integer USING (capacidad_espectadores::integer);")%(tenant.schema_name)
+        try:
+            ejecutar_sql(sql)
+        except Exception:
+            tenants_falla.append(tenant.schema_name)
+
+    return tenants_falla
 
 def generar_vistas(nuevo_tenant=None, padre=None):
     from django.db import connection

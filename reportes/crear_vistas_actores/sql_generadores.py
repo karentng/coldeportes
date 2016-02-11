@@ -42,11 +42,11 @@ def seleccion_datos_escenarios(tenant=''):
             CE.tipo_escenario_id,
             CE.clase_acceso,
             CE.estado_fisico,
-            CE.capacidad_espectadores,
             CE.espectadores_habituales,
             CE.tipo_propietario,
             CE.descripcion as descripcion_caracterizacion,
             CE.fecha_creacion as fecha_creacion_caracterizacion_escenario,
+            CE.capacidad_espectadores,
 
             CEC.caracteristicaescenario_id,
             CTJ.tiposuperficie_id,
@@ -68,11 +68,11 @@ def seleccion_datos_escenarios(tenant=''):
 
             F.foto,
             F.titulo,
-            F.descripcion as descripcion_foto,
+            F.descripcion_foto,
             F.fecha_creacion as fecha_creacion_foto,
 
             V.url,
-            V.descripcion as descripcion_video,
+            V.descripcion_video,
             V.fecha_creacion as fecha_creacion_video,
 
             M.fecha_ultimo_mantenimiento,
@@ -174,14 +174,33 @@ def seleccion_datos_escuelas(tenant=''):
     return (
         """
         SELECT
-            ESCUELA.id, ESCUELA.estrato,
-            ESCUELA.estado, ESCUELA.ciudad_id,
+            ESCUELA.id, ESCUELA.estrato, ESCUELA.nombre,
+            ESCUELA.estado, ESCUELA.ciudad_id, ESCUELA.telefono_fijo,
+            ESCUELA.email, ESCUELA.web,
             ESCUELA.entidad_id, ESCUELA.fecha_creacion,
             SERVICIO.nombre as nombre_servicio
         FROM
         {0}snd_escueladeportiva ESCUELA
         LEFT JOIN {0}snd_escueladeportiva_servicios SERVICIOS ON SERVICIOS.escueladeportiva_id = ESCUELA.id
         LEFT JOIN public.entidades_escueladeportivaservicio SERVICIO ON SERVICIO.id = SERVICIOS.escueladeportivaservicio_id
+    """.format(tenant))
+
+def seleccion_datos_cajas(tenant=''):
+    if tenant != '':
+        tenant = ("%s.")%(tenant)
+    return (
+        """
+        SELECT
+            CAJA.id, CAJA.nombre,
+            CAJA.estado, CAJA.ciudad_id,
+            CAJA.email, CAJA.clasificacion,
+            CAJA.entidad_id,
+            SERVICIO.categoria,
+            SERVICIO.descripcion
+        FROM
+        {0}snd_cajacompensacion CAJA
+        LEFT JOIN {0}snd_cajacompensacion_servicios SERVICIOS ON SERVICIOS.cajacompensacion_id = CAJA.id
+        LEFT JOIN public.entidades_tiposerviciocajacompensacion SERVICIO ON SERVICIO.id = SERVICIOS.cajacompensacion_id
     """.format(tenant))
 
 COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
@@ -219,5 +238,10 @@ COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [
         seleccion_datos_escuelas,
         "reportes_tenantescuelaview",
         "public.entidades_publicescuelaview"
-    ]
+    ],
+    [
+        seleccion_datos_cajas,
+        "reportes_tenantcajasview",
+        "public.entidades_publiccajasview"
+    ],
 ]

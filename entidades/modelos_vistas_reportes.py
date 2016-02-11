@@ -246,9 +246,28 @@ class PublicEscuelaView(models.Model):
     class Meta:
         managed = False
 
+    nombre = models.CharField(max_length=100)
+    telefono_fijo = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    web = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField()
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     estrato = models.PositiveIntegerField()
     entidad = models.ForeignKey(Entidad)
     nombre_servicio = models.CharField(max_length=255)
+
+
+class PublicCajasView(models.Model):
+
+    class Meta:
+        managed = False
+
+    nombre = models.CharField(max_length=100)
+    estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+    email = models.CharField(max_length=100)
+    clasificacion = models.CharField(max_length=100)
+    entidad = models.ForeignKey(Entidad)
+    categoria = models.CharField(max_length=255)
+    descripcion = models.CharField(max_length=255)
