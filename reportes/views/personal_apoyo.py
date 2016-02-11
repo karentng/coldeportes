@@ -83,7 +83,7 @@ def reporte_actividades_personal(request):
         datos = sumar_datos_diccionario(datos, PersonalApoyo.ACTIVIDADES)
 
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request,'personal_apoyo/base_personal_apoyo.html',{
         'nombre_reporte' : 'Actividades que desempeña el personal de apoyo',
@@ -146,7 +146,7 @@ def reporte_formacion_academica_personal(request):
         sin_formacion = len(tabla.objects.filter(estado=0,nivel_formacion=None))
         formaciones['Sin Formación'] = sin_formacion
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Formación académica del personal de apoyo',
@@ -199,7 +199,7 @@ def reporte_cantidad_total_personal_apoyo(request):
             'Total Personal de Apoyo':total_personal
         }
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Cantidad total de personal de apoyo',
@@ -259,7 +259,7 @@ def reporte_lgtbi(request):
             lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
             del lgtbi[False]
 
-    visualizaciones = [1, 2, 3, 5, 6]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
 
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
@@ -315,7 +315,7 @@ def reporte_etnias(request):
             etnias['NO ESPECIFICADA'] = etnias['']
             del etnias['']
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Etnias del personal de apoyo',

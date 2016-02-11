@@ -242,7 +242,7 @@ def reporte_uso_centros_biomedicos(request):
                     del usa_centros[False]
 
 
-    visualizaciones = [1, 2, 3, 5, 6]
+    visualizaciones = [1, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Cantidad de deportistas que usan centros biomédicos',
@@ -311,7 +311,7 @@ def reporte_lgtbi(request):
                 lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[None]
                 del lgtbi[None]
 
-    visualizaciones = [1, 2, 3, 5, 6]
+    visualizaciones = [1, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Cantidad de deportistas que pertenecen a la comunidad LGTBI',
@@ -368,7 +368,7 @@ def reporte_doping(request):
         doping['DEPORTISTAS CON REPORTES DE DOPING'] = len(tabla.objects.filter(estado__in=[0,2]).exclude(fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))
         doping['DEPORTISTAS SIN REPORTES DE DOPING'] = len(tabla.objects.filter(estado__in=[0,2], fecha_doping=None).values('id','fecha_doping','entidad').annotate(cantidad=Count('id',distinct=True)))
 
-    visualizaciones = [1, 2, 3, 5, 6]
+    visualizaciones = [1, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Cantidad de deportistas con reportes de doping',
@@ -422,7 +422,7 @@ def reporte_cantidad_total_deportistas(request):
             'Total Deportistas':total_deportistas
         }
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Cantidad total de deportistas',
