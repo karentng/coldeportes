@@ -1,4 +1,147 @@
 modalidades = {
+    'Ciclismo en ruta' : [
+        {
+            'nombre': 'Contrarreloj individual',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Por equipos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Ruta individual',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Ciclismo en pista' : [
+        {
+            'nombre': 'Velocidad individual',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Velocidad por equipos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Kilómetro contrarreloj',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Persecución individual',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Persecución por equipos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Carrera por puntos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Keirin',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Ómnium',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Madison',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Bolos' : [
+        {
+            'nombre': 'Sencillos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles por ramas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles mixtos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Equipos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Equipos mixtos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Ternas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Quintas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Final master',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Todo evento',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Arquería' :[
+        {
+            'nombre': 'Individual',
+            'descripcion': '',
+            'general': 'Arco Recurvo'
+        },
+        {
+            'nombre': 'Equipo',
+            'descripcion': '',
+            'general': 'Arco Recurvo'
+        },
+        {
+            'nombre': 'Equipo mixto',
+            'descripcion': '',
+            'general': 'Arco Recurvo'
+        },
+        {
+            'nombre': 'Individual',
+            'descripcion': '',
+            'general': 'Arco Compuesto'
+        },
+        {
+            'nombre': 'Equipo',
+            'descripcion': '',
+            'general': 'Arco Compuesto'
+        },
+        {
+            'nombre': 'Equipo mixto',
+            'descripcion': '',
+            'general': 'Arco Compuesto'
+        },
+    ],
     'Orientación' : [
         {
             'nombre': 'Sprint',
@@ -269,6 +412,380 @@ modalidades = {
 }
 
 categorias = {
+    'Ciclismo' : [
+        {
+            'nombre': 'Principiantes',
+            'descripcion': 'de 9 a 10 años',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Pre infantil',
+            'descripcion': 'de 11 a 12 años',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Infantiles',
+            'descripcion': 'de 13 a 14 años',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Cadetes o pre-juvenil',
+            'descripcion': 'de 15 a 16 años; ',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Juvenil',
+            'descripcion': 'de 17 a 18 años',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Sub 23',
+            'descripcion': 'inferiores a 23 años',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Élite',
+            'descripcion': 'más de 23 años',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Ciclismo máster',
+            'descripcion': 'superior a 30 años, con más de tres años de inactividad en la élite y que quieran tomar esta condición.',
+            'general': 'Fed Col de ciclismo'
+        },
+        {
+            'nombre': 'Elite',
+            'descripcion': '23 años en adelante',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Sub 23',
+            'descripcion': '19 a 22 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Junior',
+            'descripcion': '17 y 18 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Pre – juveniles',
+            'descripcion': '15 y 16 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Infantiles',
+            'descripcion': '13 y 14 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Pre – infantiles',
+            'descripcion': '11 y 12 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Master A',
+            'descripcion': '30 a 40 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Master B',
+            'descripcion': '40 a 50 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Master C',
+            'descripcion': '50 a 60 años',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Master D',
+            'descripcion': '60 años y más',
+            'general': 'Fedeciclismo 2014'
+        },
+        {
+            'nombre': 'Elite Hombres',
+            'descripcion': '19 años y más',
+            'general': 'UCI-Bicicleta Estándar'
+        },
+        {
+            'nombre': 'Elite Damas',
+            'descripcion': '19 años y más',
+            'general': 'UCI-Bicicleta Estándar'
+        },
+        {
+            'nombre': 'Junior Hombres',
+            'descripcion': '17 y 18 años',
+            'general': 'UCI-Bicicleta Estándar'
+        },
+        {
+            'nombre': 'Junior Damas',
+            'descripcion': '17 y 18 años',
+            'general': 'UCI-Bicicleta Estándar'
+        },
+        {
+            'nombre': '5 y 6 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '7 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '8 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '9 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '10 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '11 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '12 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '13 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '14 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '15 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '16 años',
+            'descripcion': '',
+            'general': 'UCI-Niños Estándar'
+        },
+        {
+            'nombre': '5 y 7 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '8 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '9 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '10 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '11 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '12 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '13 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '14 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '15 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '16 años',
+            'descripcion': '',
+            'general': 'UCI-Niñas Estándar'
+        },
+        {
+            'nombre': '17 años y más (1 categoría)',
+            'descripcion': '',
+            'general': 'UCI-Damas Estándar'
+        },
+        {
+            'nombre': '17 – 24 años',
+            'descripcion': '',
+            'general': 'UCI-Hombres Estándar'
+        },
+        {
+            'nombre': '25 – 29 años',
+            'descripcion': '',
+            'general': 'UCI-Hombres Estándar'
+        },
+        {
+            'nombre': '30 años y más. (3 categorías)',
+            'descripcion': '',
+            'general': 'UCI-Hombres Estándar'
+        },
+        {
+            'nombre': 'Elite Hombres 19 años y más',
+            'descripcion': '',
+            'general': 'UCI-Crucero'
+        },
+        {
+            'nombre': 'Elite Damas 19 años y más ',
+            'descripcion': '',
+            'general': 'UCI-Crucero'
+        },
+        {
+            'nombre': 'Junior Hombres 17 y 18 años',
+            'descripcion': '',
+            'general': 'UCI-Crucero'
+        },
+        {
+            'nombre': 'Junior Damas 17 y 18 años',
+            'descripcion': '',
+            'general': 'UCI-Crucero'
+        },
+        {
+            'nombre': 'Master 30 años y más, rin 20” y/o 24” (1ª categoría)',
+            'descripcion': '',
+            'general': 'UCI-Crucero'
+        },
+    ],
+    'Ciclismo BMX' : [
+        {
+            'nombre': 'Junior damas y varones',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Elite damas y varones.',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Bolos' : [
+        {
+            'nombre': 'Sub-12',
+            'descripcion': '',
+            'general': 'Menores'
+        },
+        {
+            'nombre': 'Sub-14',
+            'descripcion': '',
+            'general': 'Menores'
+        },
+        {
+            'nombre': 'Sub-16',
+            'descripcion': '',
+            'general': 'Juvenil'
+        },
+        {
+            'nombre': 'Sub 18',
+            'descripcion': '',
+            'general': 'Juvenil'
+        },
+        {
+            'nombre': 'Sub-21',
+            'descripcion': '',
+            'general': 'Juvenil'
+        },
+        {
+            'nombre': 'Sub-35',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+        {
+            'nombre': 'Segunda Fuerza',
+            'descripcion': 'categoría sin límite de edad',
+            'general': ''
+        },
+        {
+            'nombre': 'Primera Categoría',
+            'descripcion': 'categoría sin límite de edad. Son deportistas de primera, todos aquellos que cumplan con el proceso establecido para esta categoría en el presente reglamento. Igualmente, los deportistas que hayan clasificado entre los veinticuatro (24) primeros hombres en la modalidad todo evento, o las dieciséis (16) primeras damas de la modalidad todo evento, en alguno de los dos (2) Campeonatos Nacionales de Primera Categoría o Juegos Deportivos Nacionales inmediatamente anteriores.',
+            'general': ''
+        },
+        {
+            'nombre': 'Rama Masculina',
+            'descripcion': 'deportista no menor de cuarenta y nueve (49) años',
+            'general': 'Sénior'
+        },
+        {
+            'nombre': 'Rama Femenina',
+            'descripcion': 'deportista no menor de cuarenta y cuatro (44) años',
+            'general': 'Sénior'
+        },
+        {
+            'nombre': 'Rama Masculina',
+            'descripcion': 'deportista no menor de cincuenta y nueve (59) años',
+            'general': 'Súper Sénior'
+        },
+        {
+            'nombre': 'Rama Femenina',
+            'descripcion': 'deportista no menor de cincuenta y cuatro (54) años',
+            'general': 'Súper Sénior'
+        },
+    ],
+    'Arquería' :[
+        {
+            'nombre': 'Veteranos',
+            'descripcion': 'Cuando el torneo se realiza en el año que cumplen 50 años.',
+            'general': 'World Archery'
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': 'Sin límite de edad.',
+            'general': 'World Archery'
+        },
+        {
+            'nombre': 'Juveniles',
+            'descripcion': 'Hasta el año en que cumplen 20 años.',
+            'general': 'World Archery'
+        },
+        {
+            'nombre': 'Cadetes',
+            'descripcion': 'Hasta el año en que cumplen 17 años.',
+            'general': 'World Archery'
+        },
+        {
+            'nombre': 'Novatos A',
+            'descripcion': 'Hasta el año en que cumplen 20 años y que no hayan participado en torneos de la Federación.',
+            'general': 'Fedearco'
+        },
+        {
+            'nombre': 'Novatos B',
+            'descripcion': 'Hasta el año en el que cumplen 17 años, que no disparen distancias mayores a las de esta categoría y que no hayan participado en torneos de la Federación.',
+            'general': 'Fedearco'
+        },
+        {
+            'nombre': 'Infantiles',
+            'descripcion': 'Hasta el año en que cumplen 14 años.',
+            'general': 'Fedearco'
+        },
+
+    ],
     'Orientación' : [
         {
             'nombre': 'Femenino',
