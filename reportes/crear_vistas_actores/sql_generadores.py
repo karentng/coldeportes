@@ -46,6 +46,7 @@ def seleccion_datos_escenarios(tenant=''):
             CE.tipo_propietario,
             CE.descripcion as descripcion_caracterizacion,
             CE.fecha_creacion as fecha_creacion_caracterizacion_escenario,
+            CE.capacidad_espectadores,
 
             CEC.caracteristicaescenario_id,
             CTJ.tiposuperficie_id,
@@ -67,11 +68,11 @@ def seleccion_datos_escenarios(tenant=''):
 
             F.foto,
             F.titulo,
-            F.descripcion as descripcion_foto,
+            F.descripcion_foto,
             F.fecha_creacion as fecha_creacion_foto,
 
             V.url,
-            V.descripcion as descripcion_video,
+            V.descripcion_video,
             V.fecha_creacion as fecha_creacion_video,
 
             M.fecha_ultimo_mantenimiento,
