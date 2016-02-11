@@ -51,10 +51,10 @@ def participaciones_deportivas(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado',ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado',ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado',genero__in=%s).annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado').annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))"
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado',ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad','fecha_participacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado',ciudad_residencia__departamento__id__in=%s).annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad','fecha_participacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado',genero__in=%s).annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad','fecha_participacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado__in=[0,2],estado_participacion='Aprobado').annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad','fecha_participacion').annotate(cantidad=Count('id',distinct=True)))"
         ]
 
         participaciones = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -64,7 +64,7 @@ def participaciones_deportivas(request):
 
     else:
         #Traer la cantidad de hisotriales ordenados por tipo
-        participaciones = list(tabla.objects.filter(estado__in=[0,2],estado_participacion="Aprobado").annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
+        participaciones = list(tabla.objects.filter(estado__in=[0,2],estado_participacion="Aprobado").annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad','fecha_participacion').annotate(cantidad=Count('id',distinct=True)))
         participaciones = tipoTenant.ajustar_resultado(participaciones)
 
     visualizaciones = [1, 2, 3, 5, 6, 7]

@@ -316,3 +316,47 @@ def refresh_public():
         r=connection.commit()
     except Exception as e:
         print (("%s %s")%("Error en refresh_public (coldeportes.utilities.py): ", e))
+
+
+
+"""
+    Autor: Milton Lenis
+    Fecha: Febrero 9 de 2016
+
+    Función que toma el nombre de un actor y retorna el modelo del snd que lo representa.
+"""
+
+def obtener_modelo_actor(actor):
+    from snd.modelos.cafs import CentroAcondicionamiento
+    from snd.modelos.escenarios import Escenario
+    from snd.modelos.deportistas import Deportista
+    from snd.modelos.personal_apoyo import PersonalApoyo
+    from snd.modelos.cajas_compensacion import CajaCompensacion
+    from snd.modelos.selecciones import Seleccion
+    from snd.modelos.centro_biomedico import CentroBiomedico
+    from snd.modelos.escuela_deportiva import EscuelaDeportiva
+    from normograma.models import Norma
+    from noticias.models import Noticia
+
+    if actor =='centros':
+        return CentroAcondicionamiento
+    elif actor=='escenarios':
+        return Escenario
+    elif actor=='deportistas':
+        return Deportista
+    elif actor=='personal_apoyo':
+        return PersonalApoyo
+    elif actor=='dirigentes':
+        return Dirigente
+    elif actor=='cajas':
+        return CajaCompensacion
+    elif actor=='selecciones':
+        return Seleccion
+    elif actor=='centros_biomedicos':
+        return CentroBiomedico
+    elif actor=='normas':
+        return Norma
+    elif actor=='escuelas_deportivas':
+        return EscuelaDeportiva
+    elif actor=='noticias':
+        return Noticia
