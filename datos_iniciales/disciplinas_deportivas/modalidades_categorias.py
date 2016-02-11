@@ -1,4 +1,365 @@
 modalidades = {
+    'Badminton' : [
+        {
+            'nombre': 'Individuales',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles Mixtos',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Deporte montaña y escalada': [
+        {
+            'nombre': 'Modalidad Bloque',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Modalidad Dificultad',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Modalidad Velocidad',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Deportes Fuerzas Armadas':[
+        {
+            'nombre': 'Atletismo',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Ciclismo',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Ajedrez',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Esgrima',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Boxeo',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Ecuestre',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Tiro deportivo',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Tenis de campo',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Orientación',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pentatlón militar',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Natación',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Futbol',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Baloncesto',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Voleibol',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Taekwondo',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Atletismo discapacidad',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Paravoleibol',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Levantamiento de pesas',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Voleibol' : [
+        {
+            'nombre': 'Voleibol de coliseo',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Voleibol Playa',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Voleibol sentado',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Tenis de mesa': [
+        {
+            'nombre': 'Individual masculino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Individual femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles masculino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles mixtos',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Tenis' : [
+        {
+            'nombre': 'Sencillos masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dobles mixto',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Equipos masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Squash' : [
+        {
+            'nombre': 'Individual Masculino',
+            'descripcion': '',
+            'general': 'Individuales'
+        },
+        {
+            'nombre': 'Individual Femenino',
+            'descripcion': '',
+            'general': 'Individuales'
+        },
+        {
+            'nombre': 'Equipos Masculinos',
+            'descripcion': '',
+            'general': 'Equipos'
+        },
+        {
+            'nombre': 'Equipos Femeninos',
+            'descripcion': '',
+            'general': 'Equipos'
+        },
+        {
+            'nombre': 'Equipos Mixtos',
+            'descripcion': '',
+            'general': 'Equipos'
+        },
+        {
+            'nombre': 'Dobles Masculino',
+            'descripcion': '',
+            'general': 'Dobles'
+        },
+        {
+            'nombre': 'Dobles Femenino',
+            'descripcion': '',
+            'general': 'Dobles'
+        },
+        {
+            'nombre': 'Dobles Mixtos',
+            'descripcion': '',
+            'general': 'Dobles'
+        },
+    ],
+    'Motonautica' : [
+        {
+            'nombre': 'Carreras en circuito',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Botes rígidos y semirrígidos',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Motociclismo' : [
+        {
+            'nombre': 'Velocidad',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Motocross',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Enduro FIM',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Hare scramble',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Golf': [
+        {
+            'nombre': 'Medal Play o stroke play',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Stableford',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Match Play',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Esquí Náutico': [
+        {
+            'nombre': 'Slalom',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Figuras',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Salto',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Wakeboard',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Esgrima' : [
+        {
+            'nombre': 'Sable',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Florete',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Espada',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Ecuestre' : [
+        {
+            'nombre': 'Salto',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Rienda',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'La Prueba Completa',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'El Adiestramiento',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'El Enduro ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'El Vaulting',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Paracuestre',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
     'Ciclismo en ruta' : [
         {
             'nombre': 'Contrarreloj individual',
@@ -409,9 +770,1239 @@ modalidades = {
             'general': ''
         }
     ],
+    'Billar':[
+        {
+            'nombre': 'Carambola a tres bandas: individual y por equipos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pool bola 9 - masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Carambola libre - masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Billar artístico',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Nado sincronizado':[
+        {
+            'nombre': 'Solos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Duetos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Equipos ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Combos',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Canotaje' : [
+        {
+            'nombre': 'K1',
+            'descripcion': 'kayak individual',
+            'general': ''
+        },
+        {
+            'nombre': 'K2',
+            'descripcion': 'equipo dos tripulantes',
+            'general': ''
+        },
+        {
+            'nombre': 'K4',
+            'descripcion': 'equipo de 4 tripulantes',
+            'general': ''
+        },
+        {
+            'nombre': 'C1',
+            'descripcion': 'individual diestro o zurdo',
+            'general': ''
+        },
+        {
+            'nombre': 'C2',
+            'descripcion': 'equipos 2 palistas diestro y zurdo',
+            'general': ''
+        },
+        {
+            'nombre': 'C4',
+            'descripcion': '4 palistas intercalados 2 diestros y 2 zurdos',
+            'general': ''
+        },
+        {
+            'nombre': 'Aguas tranquilas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Competencias en K1',
+            'descripcion': '',
+            'general': 'Slalom en aguas bravas'
+        },
+        {
+            'nombre': 'Competencias en C1',
+            'descripcion': '',
+            'general': 'Slalom en aguas bravas'
+        },
+        {
+            'nombre': 'Competencias en C2',
+            'descripcion': '',
+            'general': 'Slalom en aguas bravas'
+        },
+    ],
 }
 
 categorias = {
+    'Canotaje' : [
+        {
+            'nombre': 'Canoa hombre',
+            'descripcion': '1000-500-200 mtrs hombres',
+            'general': ''
+        },
+        {
+            'nombre': 'Canoa mujeres',
+            'descripcion': '500 mts mujeres',
+            'general': ''
+        },
+        {
+            'nombre': 'Kayak ',
+            'descripcion': '1000-500-200 metros hombres y mujeres',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil',
+            'descripcion': 'menor de 12 años',
+            'general': ''
+        },
+        {
+            'nombre': 'Benjamín',
+            'descripcion': '1 y 2 años',
+            'general': ''
+        },
+        {
+            'nombre': 'Alevín',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Junior',
+            'descripcion': '16-18 años',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sénior',
+            'descripcion': 'mayor a 18 años',
+            'general': ''
+        },
+        {
+            'nombre': '3000 metros',
+            'descripcion': '',
+            'general': 'Cadete 12-15 años'
+        },
+        {
+            'nombre': '2000 metros',
+            'descripcion': '',
+            'general': 'Cadete 12-15 años'
+        },
+        {
+            'nombre': '1000 metros',
+            'descripcion': '',
+            'general': 'Cadete 12-15 años'
+        },
+        {
+            'nombre': '500 metros',
+            'descripcion': '',
+            'general': 'Cadete 12-15 años'
+        },
+    ],
+    'Baloncesto' : [
+        {
+            'nombre': 'Menores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '18 a 39 años varones - damas',
+            'general': ''
+        },
+        {
+            'nombre': 'Sénior',
+            'descripcion': '40 años en adelante varones - damas',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil',
+            'descripcion': '13 y 14 años',
+            'general': 'Mini baloncesto'
+        },
+        {
+            'nombre': 'júnior',
+            'descripcion': '15 y 16 años',
+            'general': 'Mini baloncesto'
+        },
+    ],
+    'Waterpolo' : [
+        {
+            'nombre': 'Sub 11',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub13',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 15',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 17',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 18',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 20',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Nado sincronizado':[
+        {
+            'nombre': 'Novatas de 11-12',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Novatas de 9-10 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Novatas de 7-8 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil B',
+            'descripcion': '',
+            'general': 'Nadadoras de 11-12 años'
+        },
+        {
+            'nombre': 'Juvenil A',
+            'descripcion': '',
+            'general': 'Nadadoras de 13,14 y 15 años'
+        },
+        {
+            'nombre': 'Junior',
+            'descripcion': '',
+            'general': 'Nadadoras de 15, 16, 17 y 18 años'
+        },
+        {
+            'nombre': 'Abierta',
+            'descripcion': '',
+            'general': 'Nadadoras que desde el 1 de enero del año en curso cumplen 15 de edad, más aquellas que desde el año anterior, con la edad adelantada en el segundo semestre, ingresan a dicha categoría.'
+        },
+    ],
+    'Billar':[
+        {
+            'nombre': 'Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Primera categoría',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Segunda categoría',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Coleo':[
+        {
+            'nombre': 'Sub-9',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub-12',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub-14',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub-16',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub-18',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub-21',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Coleadores categoría Elite',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+        {
+            'nombre': 'coleadores categoría aficionados',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+        {
+            'nombre': 'coleadores categoría Veteranos recreativos',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+    ],
+    'Deporte montaña y escalada': [
+        {
+            'nombre': 'Juvenil A',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil B',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil C',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Junior ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Libre',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Voleibol' : [
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juveniles',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Menores',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Tenis de mesa': [
+        {
+            'nombre': 'Sub-11',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'sub-13',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'sub-15',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'sub-18',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub-21',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'sénior-master',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Tenis' : [
+        {
+            'nombre': 'HASTA 12 AÑOS',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'HASTA 14 AÑOS',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'HASTA 16 AÑOS',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'HASTA 18 AÑOS',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Profesionales',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores de 35 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 40 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 45 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 50 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 55 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 60 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 65 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 70 año',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 75 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 80 años',
+            'descripcion': '',
+            'general': 'Sénior-Hombres'
+        },
+        {
+            'nombre': 'Mayores de 35 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+        {
+            'nombre': 'Mayores de 40 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+        {
+            'nombre': 'Mayores de 45 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+        {
+            'nombre': 'Mayores de 50 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+        {
+            'nombre': 'Mayores de 55 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+        {
+            'nombre': 'Mayores de 60 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+        {
+            'nombre': 'Mayores de 65 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+        {
+            'nombre': 'Mayores de 70 años',
+            'descripcion': '',
+            'general': 'Sénior-Mujeres'
+        },
+    ],
+    'Softbol': [
+        {
+            'nombre': 'Niñas Júnior “FP” 16 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO RÁPIDO'
+        },
+        {
+            'nombre': 'Niñas Júnior “FP” 19 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO RÁPIDO'
+        },
+        {
+            'nombre': 'Niños Júnior “FP” 16 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO RÁPIDO'
+        },
+        {
+            'nombre': 'Niños Júnior “FP” 19 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO RÁPIDO'
+        },
+        {
+            'nombre': 'Femenino “FP”',
+            'descripcion': '',
+            'general': 'LANZAMIENTO RÁPIDO'
+        },
+        {
+            'nombre': 'Masculino “FP”',
+            'descripcion': '',
+            'general': 'LANZAMIENTO RÁPIDO'
+        },
+
+        {
+            'nombre': 'Niñas Júnior “SP” 16 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO LENTO'
+        },
+        {
+            'nombre': 'Niñas Júnior “SP” 19 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO LENTO'
+        },
+        {
+            'nombre': 'Niños Júnior “SP” 16 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO LENTO'
+        },
+        {
+            'nombre': 'Niños Júnior “SP” 19 y menores',
+            'descripcion': '',
+            'general': 'LANZAMIENTO LENTO'
+        },
+        {
+            'nombre': 'Femenino”SP”',
+            'descripcion': '',
+            'general': 'LANZAMIENTO LENTO'
+        },
+        {
+            'nombre': 'Masculino “SP”',
+            'descripcion': '',
+            'general': 'LANZAMIENTO LENTO'
+        },
+        {
+            'nombre': 'Mixto “COED” “SP”',
+            'descripcion': '',
+            'general': 'LANZAMIENTO LENTO'
+        },
+    ],
+    'Squash' : [
+        {
+            'nombre': 'Primera',
+            'descripcion': '',
+            'general': 'MASCULINO'
+        },
+        {
+            'nombre': 'Segunda',
+            'descripcion': '',
+            'general': 'MASCULINO'
+        },
+        {
+            'nombre': 'Tercera',
+            'descripcion': '',
+            'general': 'MASCULINO'
+        },
+        {
+            'nombre': 'Cuarta',
+            'descripcion': '',
+            'general': 'MASCULINO'
+        },
+        {
+            'nombre': 'Quinta',
+            'descripcion': '',
+            'general': 'MASCULINO'
+        },
+        {
+            'nombre': 'Primera',
+            'descripcion': '',
+            'general': 'FEMENINO'
+        },
+        {
+            'nombre': 'Segunda',
+            'descripcion': '',
+            'general': 'FEMENINO'
+        },
+        {
+            'nombre': 'Tercera',
+            'descripcion': '',
+            'general': 'FEMENINO'
+        },
+        {
+            'nombre': 'Primera',
+            'descripcion': '',
+            'general': 'SENIOR MASCULINO'
+        },
+        {
+            'nombre': 'Segunda',
+            'descripcion': '',
+            'general': 'SENIOR MASCULINO'
+        },
+        {
+            'nombre': 'Tercera',
+            'descripcion': '',
+            'general': 'SENIOR MASCULINO'
+        },
+        {
+            'nombre': 'Cuarta',
+            'descripcion': '',
+            'general': 'SENIOR MASCULINO'
+        },
+        {
+            'nombre': 'Sub -19',
+            'descripcion': '',
+            'general': 'JUVENIL-Masculino'
+        },
+        {
+            'nombre': 'Sub-17',
+            'descripcion': '',
+            'general': 'JUVENIL-Masculino'
+        },
+        {
+            'nombre': 'Sub-15',
+            'descripcion': '',
+            'general': 'JUVENIL-Masculino'
+        },
+        {
+            'nombre': 'Sub-13',
+            'descripcion': '',
+            'general': 'JUVENIL-Masculino'
+        },
+        {
+            'nombre': 'Sub-11',
+            'descripcion': '',
+            'general': 'JUVENIL-Masculino'
+        },
+        {
+            'nombre': 'Infantil Sub- 9',
+            'descripcion': '',
+            'general': 'JUVENIL-Masculino'
+        },
+        {
+            'nombre': 'Sub -19',
+            'descripcion': '',
+            'general': 'JUVENIL-Femenino'
+        },
+        {
+            'nombre': 'Sub-17',
+            'descripcion': '',
+            'general': 'JUVENIL-Femenino'
+        },
+        {
+            'nombre': 'Sub-15',
+            'descripcion': '',
+            'general': 'JUVENIL-Femenino'
+        },
+        {
+            'nombre': 'Sub-13',
+            'descripcion': '',
+            'general': 'JUVENIL-Femenino'
+        },
+        {
+            'nombre': 'Sub-11',
+            'descripcion': '',
+            'general': 'JUVENIL-Femenino'
+        },
+        {
+            'nombre': 'Infantil Sub- 9',
+            'descripcion': '',
+            'general': 'JUVENIL-Femenino'
+        },
+    ],
+    'Natación':[
+        {
+            'nombre': 'Categoría 7 años, Damas y Varones',
+            'descripcion': '',
+            'general': 'Festivales Menores Ligas y Clubes'
+        },
+        {
+            'nombre': 'Categoría 8 años, Damas y Varones',
+            'descripcion': '',
+            'general': 'Festivales Menores Ligas y Clubes'
+        },
+        {
+            'nombre': 'Categoría 9 años, Damas y Varones',
+            'descripcion': '',
+            'general': 'Festivales Menores Ligas y Clubes'
+        },
+        {
+            'nombre': 'Categoría 10 años, Varones',
+            'descripcion': '',
+            'general': 'Festivales Menores Ligas y Clubes'
+        },
+        {
+            'nombre': '10 años, Damas',
+            'descripcion': '',
+            'general': 'Festivales Nacionales Infantiles y Torneos Infantiles Ligas'
+        },
+        {
+            'nombre': '11 años, Damas',
+            'descripcion': '',
+            'general': 'Festivales Nacionales Infantiles y Torneos Infantiles Ligas'
+        },
+        {
+            'nombre': '11 años, Varones',
+            'descripcion': '',
+            'general': 'Festivales Nacionales Infantiles y Torneos Infantiles Ligas'
+        },
+        {
+            'nombre': '12 años, Varones',
+            'descripcion': '',
+            'general': 'Festivales Nacionales Infantiles y Torneos Infantiles Ligas'
+        },
+        {
+            'nombre': '12 años, Damas',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL I'
+        },
+        {
+            'nombre': '13 años, Damas',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL I'
+        },
+        {
+            'nombre': '13 años, Varones',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL I'
+        },
+        {
+            'nombre': '14 años, Varones',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL I'
+        },
+        {
+            'nombre': '14 años, Damas 15 años, Varones',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+        {
+            'nombre': '15 años, Damas 16 años, Varones',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+        {
+            'nombre': '16 y 17 años, Damas',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+        {
+            'nombre': '17-18 años, Varones',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+        {
+            'nombre': '8 y Mayores, Damas',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+        {
+            'nombre': '19 y Mayores, Varones',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+        {
+            'nombre': 'Categoría Abierta, Damas',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+        {
+            'nombre': 'Categoría Abierta, Varones',
+            'descripcion': '',
+            'general': 'Interclubes e Interligas-JUVENIL II y MAYORES'
+        },
+    ],
+    'Motonautica' : [
+        {
+            'nombre': 'Categorías sport',
+            'descripcion': '',
+            'general': 'Motos acuáticas'
+        },
+        {
+            'nombre': 'Categoría 1000 cc',
+            'descripcion': '',
+            'general': 'Motos acuáticas'
+        },
+        {
+            'nombre': 'Categoría 1500 cc Elite',
+            'descripcion': '',
+            'general': 'Motos acuáticas'
+        },
+        {
+            'nombre': '3.000cc',
+            'descripcion': '',
+            'general': 'Botes de Velocidad'
+        },
+        {
+            'nombre': '2.000cc',
+            'descripcion': '',
+            'general': 'Botes de Velocidad'
+        },
+    ],
+    'Karts':[
+        {
+            'nombre': 'CATEGORIA BABYROK',
+            'descripcion': 'Pilotos entre 4 años y 6 años. (MOTOR COMMER 50 CHASIS OTK O PRAGA). Edad: 4 A 6 Y Años y 365 días',
+            'general': 'CATEGORIA ROK CUP VORTEX'
+        },
+        {
+            'nombre': 'CATEGORIA ROK ASCENSO',
+            'descripcion': 'MINI ROK ASCENSO. (MOTOR MINI ROK). Edad: de 6 a 9 años y 365 días (Licencia expedida por FCK)',
+            'general': 'CATEGORIA ROK CUP VORTEX'
+        },
+        {
+            'nombre': 'CATEGORIA MINI ROK',
+            'descripcion': 'MINI ROK (MOTOR MINI ROK). Edad: de 9 a 12 años y 365 días (Licencia expedida FCK)',
+            'general': 'CATEGORIA ROK CUP VORTEX'
+        },
+        {
+            'nombre': 'CATEGORIA JUNIOR ROK',
+            'descripcion': 'JUNIOR ROK (MOTOR ROK GP CON RESTRICTOR). Edad: de 12 a 15 años y 365 días (Licencia expedida FCK)',
+            'general': 'CATEGORIA ROK CUP VORTEX'
+        },
+        {
+            'nombre': 'CATEGORIA ROK',
+            'descripcion': 'SUPER ROK (MOTOR ROK GP SIN RESTRICTOR Edad: de 15 años en adelante (Licencia expedida FCK) ',
+            'general': 'CATEGORIA ROK CUP VORTEX'
+        },
+        {
+            'nombre': 'CATEGORIA SUPER ROK',
+            'descripcion': 'SUPER ROK (MOTOR ROK GP SIN RESTRICTOR). Edad: de 15 años en adelante (Licencia expedida FCK).',
+            'general': 'CATEGORIA ROK CUP VORTEX'
+        },
+        {
+            'nombre': 'CATEGORIA ROK SHIFTER',
+            'descripcion': 'SHIFTER ROK (MOTOR ROK SHIFTER SIN RESTRICTOR). Edad: de 15 años en adelante (Licencia expedida FCK)',
+            'general': 'CATEGORIA ROK CUP VORTEX'
+        },
+        {
+            'nombre': 'Baby max',
+            'descripcion': '',
+            'general': 'CATEGORIA ROTAX MAX'
+        },
+        {
+            'nombre': 'Micro max',
+            'descripcion': '',
+            'general': 'CATEGORIA ROTAX MAX'
+        },
+        {
+            'nombre': 'Mini max',
+            'descripcion': '',
+            'general': 'CATEGORIA ROTAX MAX'
+        },
+        {
+            'nombre': '125 max',
+            'descripcion': '',
+            'general': 'CATEGORIA ROTAX MAX'
+        },
+        {
+            'nombre': 'Junior max ',
+            'descripcion': '',
+            'general': 'CATEGORIA ROTAX MAX'
+        },
+        {
+            'nombre': 'DD2 master',
+            'descripcion': '',
+            'general': 'CATEGORIA ROTAX MAX'
+        },
+        {
+            'nombre': 'DD2 senior',
+            'descripcion': '',
+            'general': 'CATEGORIA ROTAX MAX'
+        },
+        {
+            'nombre': 'BABY EASYTRAING 50 C.C',
+            'descripcion': '',
+            'general': 'CATEGORIAS EASYKART'
+        },
+        {
+            'nombre': 'INFANTIL EASY ',
+            'descripcion': '',
+            'general': 'CATEGORIAS EASYKART'
+        },
+        {
+            'nombre': 'JUNIOR EASY',
+            'descripcion': '',
+            'general': 'CATEGORIAS EASYKART'
+        },
+        {
+            'nombre': 'LIGHT EASY',
+            'descripcion': '',
+            'general': 'CATEGORIAS EASYKART'
+        },
+        {
+            'nombre': 'HEAVY EASY',
+            'descripcion': '',
+            'general': 'CATEGORIAS EASYKART'
+        },
+    ],
+    'Hapkido' : [
+        {
+            'nombre': 'Junior',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sénior',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Master 1',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Master 2',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Golf': [
+        {
+            'nombre': 'Jugador Profesional',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+        {
+            'nombre': 'Jugador Profesional Condicional',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+        {
+            'nombre': 'Jugador Profesional Sénior',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+        {
+            'nombre': 'Instructor de golf',
+            'descripcion': '',
+            'general': 'Mayores'
+        },
+        {
+            'nombre': 'Sénior',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Menores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 6 varones',
+            'descripcion': '',
+            'general': 'Infantil'
+        },
+        {
+            'nombre': 'Sub 7 varones y damas',
+            'descripcion': '',
+            'general': 'Infantil'
+        },
+        {
+            'nombre': 'Sub 8 varones y damas',
+            'descripcion': '',
+            'general': 'Infantil'
+        },
+        {
+            'nombre': 'Sub 9 varones y damas',
+            'descripcion': '',
+            'general': 'Infantil'
+        },
+        {
+            'nombre': 'Sub 10 varones y damas',
+            'descripcion': '',
+            'general': 'Infantil'
+        },
+        {
+            'nombre': 'Sub 11 varones y damas',
+            'descripcion': '',
+            'general': 'Infantil'
+        },
+        {
+            'nombre': 'Sub 12 varones y damas',
+            'descripcion': '',
+            'general': 'Infantil'
+        },
+        {
+            'nombre': 'Aficionado',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Futbol De Salon' : [
+        {
+            'nombre': 'Categoría Benjamín',
+            'descripcion': 'nacidos a partir del 1 de enero de 2002',
+            'general': ''
+        },
+        {
+            'nombre': 'Categoría Pre infantil',
+            'descripcion': 'nacidos a partir del 1 de enero de 200',
+            'general': ''
+        },
+        {
+            'nombre': 'Categoría Infantil',
+            'descripcion': 'nacidos a partir del 1 de enero de 199',
+            'general': ''
+        },
+        {
+            'nombre': 'Categoría Junior',
+            'descripcion': 'nacidos a partir del 1 de enero de 1996',
+            'general': ''
+        },
+        {
+            'nombre': 'Categoría Juvenil',
+            'descripcion': 'nacidos a partir del 1 de enero de 1994',
+            'general': ''
+        },
+        {
+            'nombre': 'Categoría Ascenso',
+            'descripcion': 'nacidos a partir del 1 de enero de 1991',
+            'general': ''
+        },
+        {
+            'nombre': 'Categoría Primera',
+            'descripcion': 'edad libre',
+            'general': ''
+        },
+        {
+            'nombre': 'Rama Femenina',
+            'descripcion': 'edad libre',
+            'general': ''
+        },
+    ],
+    'Fútbol': [
+        {
+            'nombre': 'Teteros',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Benjamín ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Baby',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Gorrión',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre infantil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 15-sub 17',
+            'descripcion': '',
+            'general': 'Juvenil'
+        },
+        {
+            'nombre': 'Sub 20',
+            'descripcion': '',
+            'general': 'Juvenil'
+        },
+        {
+            'nombre': 'Sub 23',
+            'descripcion': '',
+            'general': 'Juvenil'
+        },
+
+    ],
+    'Esquí Náutico': [
+        {
+            'nombre': 'Promocional',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil',
+            'descripcion': '',
+            'general': ''
+        },
+         {
+            'nombre': 'Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub-21',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Open ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Esgrima' : [
+        {
+            'nombre': 'Pre párvulos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pupilos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Menores',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil ',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
     'Ciclismo' : [
         {
             'nombre': 'Principiantes',

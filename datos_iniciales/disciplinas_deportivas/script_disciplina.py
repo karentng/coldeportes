@@ -7,11 +7,12 @@ deportes = [
     'Natación con aletas', 'Buceo', 'Hockey subacuático', 'Rugby subacuático', 'Pesca submarina', 'Orientación',
     'Automovilismo deportivo','(Automovilismo deportivo) - Rallies colombiano','(Automovilismo deportivo) - Rallie Cross',
     '(Automovilismo deportivo) - Camper Cross', '(Automovilismo deportivo) - Velocidad', 'Ajedrez', 'Arquería', 'Bolos',
-    'Ecuestre', 'Esgrima', 'Esquí Náutico', 'Futbol de salón', 'Golf', 'Hapkido', 'Karts', 'Motociclismo','Motonáutica Squash',
+    'Ecuestre', 'Esgrima', 'Esquí Náutico', 'Futbol De Salon', 'Golf', 'Hapkido', 'Karts', 'Motociclismo','Motonautica', 'Squash',
     'Softbol', 'Tenis de mesa', 'Voleibol', 'Deportes Fuerzas Armadas', 'Deporte montaña y escalada','Coleo', 'Billar',
-    'Nado sincronizado', 'Waterpolo', 'Bádminton', 'Baloncesto', 'Canotaje', 'Balonmano', 'Hockey', 'Pentatlón moderno',
+    'Nado sincronizado', 'Waterpolo', 'Badminton', 'Baloncesto', 'Canotaje', 'Balonmano', 'Hockey', 'Pentatlón moderno',
     'Vela', 'Tejo','Tiro y caza', 'Trampolín', 'Triatlón','Boccia', 'Baloncesto en Silla de Ruedas', 'Ciclismo Tandem',
-    'Slalom', 'Tenis De Campo en Silla de Ruedas', 'Goalball', 'Powerlifting', 'Paracycling', 'Voleibol Sentado', 'Tenis en Silla de Ruedas'
+    'Slalom', 'Tenis De Campo en Silla de Ruedas', 'Goalball', 'Powerlifting', 'Paracycling', 'Tenis en Silla de Ruedas',
+    'Ciclismo','Ciclismo BMX','Ciclismo de montaña','Ciclismo en pista','Ciclismo en ruta','Fútbol','Natación','Tenis'
 ]
 
 def insertar_actualizar_deportes():
