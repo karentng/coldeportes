@@ -103,4 +103,34 @@ MODELOS_DE_DATOS = (
             ],
         ],
     ),
+    (   #Numero de modelo 5
+        PublicEscuelaView,
+        ['nombre', 'ciudad', 'telefono_fijo', 'email', 'web', 'estrato','entidad'],
+        ['Nombre', 'Ciudad', 'Teléfono', 'Email', 'Página Web', 'Estrato', 'Entidad'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_escuelas_tenantnacional',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+        ],
+    ),
+    (   #Numero de modelo 6
+        PublicCajasView,
+        ['nombre', 'ciudad', 'clasificacion','email','entidad'],
+        ['Nombre', 'Ciudad', 'Clasificación','Email','Entidad'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_cajas_tenantnacional',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+        ],
+    ),
 )
