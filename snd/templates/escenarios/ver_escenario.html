@@ -90,7 +90,7 @@
                                         <div class="invoice-from">
                                             <address class="m-t-5 m-b-5">
                                                 <strong>{{caracteristica.tipo_escenario.descripcion}}</strong><br />
-                                                Capacidad de zona espectadores: {{caracteristica.capacidad_espectadores}}, Metros construídos: {{caracteristica.metros_construidos}}<br />
+                                                Capacidad de zona espectadores: {{caracteristica.capacidad_espectadores}}<br>Metros construídos: {{caracteristica.metros_construidos}}<br />
                                                 Disciplinas: {% for disciplina in caracteristica.tipo_disciplinas.all %} {{disciplina.descripcion}}, {% endfor %}<br />
                                                 Tipo de Superficie: {% for superficie in caracteristica.tipo_superficie_juego.all %} {{superficie.descripcion}}, {% endfor %}<br/>
                                                 Clase de Acceso: {{caracteristica.get_clase_acceso_display}} <br/>
