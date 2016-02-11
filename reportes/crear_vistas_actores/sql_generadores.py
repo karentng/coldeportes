@@ -137,6 +137,7 @@ def seleccion_datos_deportistas(tenant=''):
             DE.nombres, DE.apellidos, DE.entidad_id,
             NAL.nacionalidad_id,DE.estado,
             HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
+            HD.fecha_inicial as fecha_participacion,
             IA.nivel as nivel_formacion, IA.estado as estado_formacion,
             ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
             HL.tipo_lesion,HL.periodo_rehabilitacion, IFD.fecha as fecha_doping

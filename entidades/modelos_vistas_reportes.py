@@ -211,6 +211,7 @@ class PublicDeportistaView(models.Model):
 
     #campos doping
     fecha_doping = models.DateField()
+    fecha_participacion = models.DateField()
 
     def return_display_lesion(self,dic,is_tipo):
         ids = [id for id in dic]
