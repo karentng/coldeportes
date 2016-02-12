@@ -139,8 +139,11 @@ def seleccion_datos_deportistas(tenant=''):
             HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
             HD.fecha_inicial as fecha_participacion,
             IA.nivel as nivel_formacion, IA.estado as estado_formacion,
+            IA.fecha_finalizacion,
             ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
-            HL.tipo_lesion,HL.periodo_rehabilitacion, IFD.fecha as fecha_doping
+            HL.tipo_lesion,HL.periodo_rehabilitacion, HL.fecha_lesion,
+            HL.segmento_corporal,
+            IFD.fecha as fecha_doping
         FROM
         %ssnd_deportista DE
         LEFT JOIN %ssnd_deportista_nacionalidad NAL ON NAL.deportista_id = DE.id

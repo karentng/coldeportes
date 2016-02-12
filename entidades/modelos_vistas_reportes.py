@@ -200,6 +200,7 @@ class PublicDeportistaView(models.Model):
     #campos informacion academica
     nivel_formacion = models.CharField(max_length=20)
     estado_formacion = models.CharField(max_length=20)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True)
 
     #campos informacion adicional
     usa_centros_biomedicos = models.BooleanField()
@@ -208,6 +209,8 @@ class PublicDeportistaView(models.Model):
     #campos historial lesiones
     tipo_lesion = models.IntegerField()
     periodo_rehabilitacion = models.IntegerField()
+    fecha_lesion = models.DateField()
+    segmento_corporal = models.IntegerField()
 
     #campos doping
     fecha_doping = models.DateField()
