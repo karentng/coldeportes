@@ -21,4 +21,5 @@ urlpatterns = patterns('',
     url(r'^manual/',include('manual.urls')),
     url(r'^reportes/', include('reportes.urls.publico')),
     url(r'^buscador/', include('buscador.urls')),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

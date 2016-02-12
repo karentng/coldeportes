@@ -10,31 +10,7 @@ from manual.models import Articulo
 class ArticuloForm(forms.ModelForm):
     #required_css_class = 'required'
 
-    """def __init__(self, *args, **kwargs):
-        super(NormaForm, self).__init__(*args, **kwargs)
-        self.fields['sectores'] = adicionarClase(self.fields['sectores'], 'many')
-        self.fields['anio'] = adicionarClase(self.fields['anio'], 'one')
-        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
-        self.fields['jurisdiccion'] = adicionarClase(self.fields['jurisdiccion'], 'one')
-        self.fields['descripcion'].widget.attrs['rows'] = 3
-        self.fields['palabras_clave'].widget.attrs['rows'] = 3"""
-
     class Meta:
         model = Articulo
         fields = '__all__'
-
-"""
-
-class NormogramaBusquedaForm(forms.Form):
-    JURISDICCIONES = (('D', 'Departamental'), ('M', 'Municipal'), ('N', 'Nacional'))
-    SECTORES = ((1, 'Educación Física'), (2, 'Deporte'), (3, 'Recreación'))
-
-    texto_a_buscar = forms.CharField(required=False, label="Título de Norma / Palabras Clave / Año", widget=forms.TextInput(attrs={'placeholder': 'Ingrese nombre de norma, año y/o palabras claves'}))
-    sector = forms.MultipleChoiceField(label="Sector", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Sector'}), choices=SECTORES)
-    jurisdiccion = forms.MultipleChoiceField(label="Jurisdicción", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Jurisdicción'}), choices=JURISDICCIONES)
-    
-    def __init__(self, *args, **kwargs):
-        super(NormogramaBusquedaForm, self).__init__(*args, **kwargs)
-        self.fields['sector'] = adicionarClase(self.fields['sector'], 'many')
-        self.fields['jurisdiccion'] = adicionarClase(self.fields['jurisdiccion'], 'many')
-"""
+        #exclude = ['contenido']
