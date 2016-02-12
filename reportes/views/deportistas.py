@@ -11,7 +11,16 @@ from django.http import JsonResponse
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
 from reportes.utilities import sumar_datos_diccionario,fecha_nacimiento_maxima
-
+'''
+Reportes:
+    1. Dona
+    2. Comparativa Horizontal
+    3. Comparativa Vertical
+    4. Tree Map
+    5. Gráfica de cilindros
+    6. Gráfica de cono
+    7. Gráfica de radar
+'''
 def ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant):
     """
     Noviembre 13, 2015
@@ -67,7 +76,7 @@ def participaciones_deportivas(request):
         participaciones = list(tabla.objects.filter(estado__in=[0,2],estado_participacion="Aprobado").annotate(descripcion=F('tipo_participacion')).values('id','descripcion','entidad','fecha_participacion').annotate(cantidad=Count('id',distinct=True)))
         participaciones = tipoTenant.ajustar_resultado(participaciones)
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'PARTICIPACIONES DEPORTIVAS POR TIPO DE CAMPEONATO',
@@ -154,7 +163,7 @@ def beneficiario_programa_apoyo(request):
                     beneficiados['DEPORTISTAS NO BENEFICIADOS'] = beneficiados[False]
                     del beneficiados[False]
 
-    visualizaciones = [1, 2, 3, 5, 6]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'DEPORTISTAS BENEFICIADOS POR PROGRAMAS DE APOYO',
@@ -478,7 +487,7 @@ def etinias_deportistas(request):
             etnias['NO APLICA'] = etnias['']
             del etnias['']
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Etnias de los deportistas',
@@ -525,7 +534,7 @@ def formacion_academica(request):
         formaciones = list(tabla.objects.filter(estado__in=[0,2],estado_formacion='Finalizado').annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))
         formaciones = tipoTenant.ajustar_resultado(formaciones)
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte' : 'Formación académica de los deportistas',
@@ -639,7 +648,7 @@ def extranjeros_vs_nacionalidad(request):
     else:
         datos = nacionalidad(request) if reporte == 'NA' else extranjeros(request)
 
-    visualizaciones = [1, 2, 3,5,6,7]
+    visualizaciones = [1, 3, 5, 6]
     TIPO_REPORTE = (
         ('NA', 'Número de deportistas por Nacionalidad'),
         ('EX', 'Número de deportistas Colombianos vs Extranjeros'),
@@ -702,7 +711,7 @@ def lesiones_deportivas(request):
         lesiones = sumar_datos_diccionario(lesiones,HistorialLesiones.TIPOS_LESION)
 
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 3, 5]
     TIPO_REPORTE = (
         ('TL', 'Tipo de lesión'),
         ('PL', 'Periodo de lesión'),
@@ -779,7 +788,7 @@ def edad_deportistas(request):
         edades = ordenar_edades_rangos(deportistas)
         edades = tipoTenant.ajustar_resultado(edades)
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 3, 5]
     form = FiltrosDeportistasForm(visualizaciones=visualizaciones)
     return render(request, 'deportistas/base_deportistas.html', {
         'nombre_reporte': 'Edades de los deportistas',
