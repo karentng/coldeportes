@@ -39,10 +39,6 @@ def insertar_actualizar_deportes():
             dep = TipoDisciplinaDeportiva(descripcion=d,id=last_id)
             dep.save()
             last_id+=1
-    asa = TipoDisciplinaDeportiva.objects.get(descripcion='Actividades Subacuaticas')
-    asa.descripcion = 'Actividades Subacuáticas'
-    asa.save()
-    
     print('Deportes actualizados correctamente')
 
 
