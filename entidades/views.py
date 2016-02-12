@@ -685,4 +685,4 @@ def refresh_public(request):
 def cambio_disciplinas(request):
     insertar_actualizar_deportes()
     insertar_modalidades_categorias()
-    return HttpResponse(status=200)
+    return HttpResponse("Deportes, modalidades y categorias insertados en base de datos")

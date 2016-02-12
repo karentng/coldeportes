@@ -676,13 +676,14 @@ def lesiones_deportivas(request):
         tabla = TenantDeportistaView
 
     categoria = 'tipo_lesion'
-
+    listas_categorias = {'TL':'tipo_lesion','PL':'periodo_rehabilitacion','SG':'segmento_corporal'}
+    listas_tipo = {'TL':HistorialLesiones.TIPOS_LESION,'PL':HistorialLesiones.PERIODOS_REHABILITACION,'SG':HistorialLesiones.SEGMENTOS}
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
         reporte = None if request.GET['reporte'] == 'null'  else ast.literal_eval(request.GET['reporte'])
-        categoria = 'tipo_lesion' if reporte == 'TL' else 'periodo_rehabilitacion'
-        tipo = HistorialLesiones.TIPOS_LESION if reporte == 'TL' else HistorialLesiones.PERIODOS_REHABILITACION
+        categoria = listas_categorias[reporte]
+        tipo = listas_tipo[reporte]
 
         consultas = [
             "list("+tabla.__name__+".objects.filter(estado__in=[0,2],ciudad_residencia__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('"+categoria+"')).values('id','descripcion','entidad','fecha_lesion').annotate(cantidad=Count('id',distinct=True)))",
@@ -705,6 +706,7 @@ def lesiones_deportivas(request):
     TIPO_REPORTE = (
         ('TL', 'Tipo de lesión'),
         ('PL', 'Periodo de lesión'),
+        ('SG', 'Segmento Corporal')
     )
     form = FiltrosDeportistasCategoriaForm(visualizaciones=visualizaciones,TIPO_REPORTE=TIPO_REPORTE)
     return render(request, 'deportistas/base_deportistas.html', {
@@ -717,7 +719,7 @@ def lesiones_deportivas(request):
         'actor': 'Deportistas',
         'fecha_generado': datetime.now(),
         'agrupado': True,
-        'nombres_columnas':["Tipo de lesión","Periodo de rehabilitación"]
+        'nombres_columnas':["Tipo de lesión","Periodo de rehabilitación","Segmento Corporal"]
     })
 
 def ordenar_edades_rangos(deportistas):
