@@ -103,7 +103,7 @@
                                         </div>
                                     </div>
                                     <h5 class="m-t-10">Descripción:</h5>
-                                    <p>{{caracteristica.descripcion}}</p>
+                                    <p>{% if caracteristica.descripcion %}{{caracteristica.descripcion}}{% endif %}</p>
                                     {% endfor %}
                                 {% else %}
                                     <p>No hay características disponibles</p>
