@@ -18,6 +18,7 @@ from coldeportes.utilities import calculate_age, add_actores, superuser_only
 from reportes.crear_vistas_actores import *
 from django.forms import modelformset_factory, modelform_factory
 from django.http import HttpResponse
+from datos_iniciales.disciplinas_deportivas.script_disciplina import *
 
 @login_required
 def tipo(request):
@@ -678,3 +679,10 @@ def permisos(request):
 def refresh_public(request):
     from coldeportes.utilities import refresh_public
     refresh_public()
+
+
+@login_required
+def cambio_disciplinas(request):
+    insertar_actualizar_deportes()
+    insertar_modalidades_categorias()
+    return HttpResponse(status=200)

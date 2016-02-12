@@ -345,7 +345,7 @@ modalidades = {
             'general': ''
         },
         {
-            'nombre': 'El Enduro ',
+            'nombre': 'El Enduro',
             'descripcion': '',
             'general': ''
         },
@@ -542,7 +542,7 @@ modalidades = {
             'general': ''
         },
         {
-            'nombre': '100 metros inmersión ',
+            'nombre': '100 metros inmersión',
             'descripcion': '',
             'general': ''
         },
@@ -582,7 +582,7 @@ modalidades = {
             'general': ''
         },
         {
-            'nombre': '4x200 superficies ',
+            'nombre': '4x200 superficies',
             'descripcion': '',
             'general': ''
         },
@@ -745,7 +745,7 @@ modalidades = {
             'general': ''
         },
         {
-            'nombre': 'Radio Control Parkflyers ',
+            'nombre': 'Radio Control Parkflyers',
             'descripcion': '',
             'general': ''
         },
@@ -804,7 +804,7 @@ modalidades = {
             'general': ''
         },
         {
-            'nombre': 'Equipos ',
+            'nombre': 'Equipos',
             'descripcion': '',
             'general': ''
         },
@@ -866,9 +866,784 @@ modalidades = {
             'general': 'Slalom en aguas bravas'
         },
     ],
+    'Balonmano':[
+        {
+            'nombre': 'Balonmano Sala o Piso',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Balonmano Playa',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Balonmano Adaptado',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Hockey' : [
+        {
+            'nombre': 'Hockey en línea',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Hockey sobre patines',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Pentatlón moderno' : [
+        {
+            'nombre': 'Esgrima',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Natación',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Equitación',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Tiro-Carrera',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Rugby' : [
+        {
+            'nombre': 'Rugby 7´S',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Rugby 15´S',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Rugby Playa',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Vela' : [
+        {
+            'nombre': 'Vela competitiva',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Tabla vela',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Kite Surf',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Vela crucero',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Radio control',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Vela sobre ruedas',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Vela sobre patines',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Vela recreativa',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Tejo' : [
+        {
+            'nombre': 'Individual',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Equipos',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Duplas',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Tiro Y Caza' : [
+        {
+            'nombre': 'Trap-Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Doble Trap-Masculino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Skeet-Masculino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Fosa universal-Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Trap automático-Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Rifle Aire-Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Rifle tendido-Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Rifle 3 posiciones-Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pistola aire-Masculino y femenino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pistola libre-Masculino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pistola standard-Masculino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Tiro rápido-Masculino',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pistola deportiva–Femenino',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Trampolín' : [
+        {
+            'nombre': 'Tumbling',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Doble mini-tramp',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Cama elástica',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
 }
 
 categorias = {
+    'Motociclismo' : [
+        {
+            'nombre': 'Infantil',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'SCOOTER',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': '115 Expertos',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': '115 Novatos',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 150',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 200 Aire – 200 Agua',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 200 4T Aire',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Supermoto',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': '115 Expertos',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': '115 Novatos',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 150',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 200 Aire',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 200 Agua',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 200 4T Aire',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Hasta 200 4T Agua',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'Supermoto',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'TOURING MOTOS DE CALLE',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'SUPER SPORT',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': 'SUPER BIKE',
+            'descripcion': '',
+            'general': 'Velocidad'
+        },
+        {
+            'nombre': '50cc',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': '65cc',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': '85cc Mini',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': 'Femenina',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': '85cc A',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': '125 2T',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': 'MX2',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': 'MX3',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': 'OPEN',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': 'VETERANOS OPEN',
+            'descripcion': '',
+            'general': 'Motocross'
+        },
+        {
+            'nombre': '50cc',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': '65cc',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': '85cc',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': 'Femenina',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': '125 2T',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': 'MX2',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': 'MX3',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': 'OPEN',
+            'descripcion': '',
+            'general': 'Supercross'
+        },
+        {
+            'nombre': 'PROFESIONALES',
+            'descripcion': '',
+            'general': 'Hare Scramble'
+        },
+        {
+            'nombre': 'JUNIOR',
+            'descripcion': '',
+            'general': 'Hare Scramble'
+        },
+        {
+            'nombre': 'ENDURO 1',
+            'descripcion': '',
+            'general': 'Hare Scramble'
+        },
+        {
+            'nombre': 'ENDURO 2',
+            'descripcion': '',
+            'general': 'Hare Scramble'
+        },
+        {
+            'nombre': 'ENDURO 3',
+            'descripcion': '',
+            'general': 'Hare Scramble'
+        },
+        {
+            'nombre': 'MASTER',
+            'descripcion': '',
+            'general': 'Hare Scramble'
+        },
+        {
+            'nombre': 'INICIACION',
+            'descripcion': '',
+            'general': 'Hare Scramble'
+        },
+        {
+            'nombre': 'E1',
+            'descripcion': 'Hasta 125 cc 2 tiempos - hasta 250 cc 4 tiempos',
+            'general': 'Enduro'
+        },
+        {
+            'nombre': 'E2',
+            'descripcion': 'De 175 cc a 250 cc 2 tiempos - 251cc a 450cc 4 tiempos',
+            'general': 'Enduro'
+        },
+        {
+            'nombre': 'E3',
+            'descripcion': 'Más de 250cc 2 tiempos - Más de 450cc 4 tiempos',
+            'general': 'Enduro'
+        },
+        {
+            'nombre': 'JUNIOR',
+            'descripcion': 'Pilotos con menos de 23 años, sin restricción de cilindrada.',
+            'general': 'Enduro'
+        },
+        {
+            'nombre': 'MASTER',
+            'descripcion': 'Pilotos con 38 años cumplidos en adelante sin restricción de cilindrada (Open).',
+            'general': 'Enduro'
+        },
+    ],
+    'Triatlón' : [
+        {
+            'nombre': 'Festivales: 8-12 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre infantil A:  8 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre infantil B: 9 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre infantil C: 7 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil A: 12 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil B: 11 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil C: 10 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Junior A: 18- 19 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Junior B: 16- 17 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Menores A: 15 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Menores B: 14 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Menores C: 13 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 23',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Elite',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Promocional',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Grupos por Edad',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Tiro Y Caza' : [
+        {
+            'nombre': 'Mayor',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Pre-Juvenil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sénior',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Dama',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Vela' : [
+        {
+            'nombre': 'Infantil',
+            'descripcion': 'Navegantes que al competir tengan una edad máxima de 12 años.',
+            'general': 'Optimist'
+        },
+        {
+            'nombre': 'Femenino',
+            'descripcion': '',
+            'general': 'Optimist'
+        },
+        {
+            'nombre': 'Novatos',
+            'descripcion': 'Navegantes que no han participado por segunda vez en un campeonato nacional (categoría 1) o en dos copas (categoría 2).',
+            'general': 'Optimist'
+        },
+        {
+            'nombre': 'Timoneles',
+            'descripcion': 'Navegantes que han participado en 2 campeonatos (categoría 1 y /o 2) y/o que por decisión de sus entrenadores puedan participar en esta categoría.',
+            'general': 'Optimist'
+        },
+        {
+            'nombre': 'Noveles',
+            'descripcion': 'Quienes estén participando por primera vez en una regata y/o que requieren de apoyo de sus entrenadores para completar una competencia. En esta categoría, los instructores podrán asistir a sus alumnos siempre y cuando no afecten a otros competidores.',
+            'general': 'Optimist'
+        },
+        {
+            'nombre': 'Radial',
+            'descripcion': '',
+            'general': 'Laser'
+        },
+        {
+            'nombre': 'Estándar',
+            'descripcion': '',
+            'general': 'Laser'
+        },
+        {
+            'nombre': 'Categoría Blanca',
+            'descripcion': 'Barcos cuyos patrones han participado en regatas internacionales o Juegos Nacionales oficiales en cualquier clase como patrón o tripulante.',
+            'general': 'Snipe'
+        },
+        {
+            'nombre': 'Categoría Tricolor',
+            'descripcion': 'Barcos cuyos patrones no han participado en regatas internacionales o Juegos Nacionales en cualquier clase como patrón o tripulante.',
+            'general': 'Snipe'
+        },
+        {
+            'nombre': 'Intermedios',
+            'descripcion': '',
+            'general': 'Slalom'
+        },
+        {
+            'nombre': 'Avanzados MASCULINO y FEMENINO',
+            'descripcion': '',
+            'general': 'Slalom'
+        },
+    ],
+    'Rugby' : [
+        {
+            'nombre': 'Menores de 19 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Sub 19',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores de 19 años',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
+    'Hockey' : [
+        {
+            'nombre': 'Sub 9 mixta',
+            'descripcion': '',
+            'general': 'Línea-Menores'
+        },
+        {
+            'nombre': 'Sub 8',
+            'descripcion': '',
+            'general': 'Línea-Menores'
+        },
+        {
+            'nombre': 'Sub 10',
+            'descripcion': '',
+            'general': 'Línea-Menores'
+        },
+        {
+            'nombre': 'Sub 12 mixta',
+            'descripcion': '',
+            'general': 'Línea-Menores'
+        },
+        {
+            'nombre': 'Sub 14 mixta',
+            'descripcion': '',
+            'general': 'Línea-Menores'
+        },
+        {
+            'nombre': 'Sub 15 mixta',
+            'descripcion': '',
+            'general': 'Línea-Menores'
+        },
+        {
+            'nombre': 'Sub 16 Masculina',
+            'descripcion': '',
+            'general': 'Línea-Menores'
+        },
+        {
+            'nombre': 'SUB 18: 18 años o menos',
+            'descripcion': '',
+            'general': 'Línea-Mayores'
+        },
+        {
+            'nombre': 'Sub 19: Varones',
+            'descripcion': '',
+            'general': 'Línea-Mayores'
+        },
+        {
+            'nombre': 'FEMENINO: 14 años o más',
+            'descripcion': '',
+            'general': 'Línea-Mayores'
+        },
+        {
+            'nombre': 'MAYORES: 19 años o más',
+            'descripcion': '',
+            'general': 'Línea-Mayores'
+        },
+        {
+            'nombre': 'Sub 15: 12 – 14 años',
+            'descripcion': '',
+            'general': 'Patines-Masculino'
+        },
+        {
+            'nombre': 'Sub 17: 13- 16 años',
+            'descripcion': '',
+            'general': 'Patines-Masculino'
+        },
+        {
+            'nombre': 'Sub 20: 14-19 años',
+            'descripcion': '',
+            'general': 'Patines-Masculino'
+        },
+        {
+            'nombre': 'Sub 23: 15-22 años',
+            'descripcion': '',
+            'general': 'Patines-Masculino'
+        },
+        {
+            'nombre': 'Sénior:  mayor o igual a 14 años',
+            'descripcion': '',
+            'general': 'Patines-Masculino'
+        },
+        {
+            'nombre': 'Sub 18: 13- 17 años',
+            'descripcion': '',
+            'general': 'Patines-Femenino'
+        },
+        {
+            'nombre': 'Sénior: mayor o igual a 14 años',
+            'descripcion': '',
+            'general': 'Patines-Femenino'
+        },
+    ],
+    'Balonmano':[
+        {
+            'nombre': 'Pre- mini: 8 y 9 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mini: 10,11 y 12 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Infantil: 13 y 14 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Cadetes: 15 y 16 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Juvenil: 17, 18 y 19 años',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Junior: 20 y 21',
+            'descripcion': '',
+            'general': ''
+        },
+        {
+            'nombre': 'Mayores: 22 años en adelante',
+            'descripcion': '',
+            'general': ''
+        },
+    ],
     'Canotaje' : [
         {
             'nombre': 'Canoa hombre',
@@ -881,7 +1656,7 @@ categorias = {
             'general': ''
         },
         {
-            'nombre': 'Kayak ',
+            'nombre': 'Kayak',
             'descripcion': '1000-500-200 metros hombres y mujeres',
             'general': ''
         },
@@ -1118,7 +1893,7 @@ categorias = {
             'general': ''
         },
         {
-            'nombre': 'Junior ',
+            'nombre': 'Junior',
             'descripcion': '',
             'general': ''
         },
@@ -1641,7 +2416,7 @@ categorias = {
         },
         {
             'nombre': 'CATEGORIA ROK',
-            'descripcion': 'SUPER ROK (MOTOR ROK GP SIN RESTRICTOR Edad: de 15 años en adelante (Licencia expedida FCK) ',
+            'descripcion': 'SUPER ROK (MOTOR ROK GP SIN RESTRICTOR Edad: de 15 años en adelante (Licencia expedida FCK)',
             'general': 'CATEGORIA ROK CUP VORTEX'
         },
         {
@@ -1675,7 +2450,7 @@ categorias = {
             'general': 'CATEGORIA ROTAX MAX'
         },
         {
-            'nombre': 'Junior max ',
+            'nombre': 'Junior max',
             'descripcion': '',
             'general': 'CATEGORIA ROTAX MAX'
         },
@@ -1695,7 +2470,7 @@ categorias = {
             'general': 'CATEGORIAS EASYKART'
         },
         {
-            'nombre': 'INFANTIL EASY ',
+            'nombre': 'INFANTIL EASY',
             'descripcion': '',
             'general': 'CATEGORIAS EASYKART'
         },
@@ -1878,7 +2653,7 @@ categorias = {
             'general': ''
         },
         {
-            'nombre': 'Benjamín ',
+            'nombre': 'Benjamín',
             'descripcion': '',
             'general': ''
         },
@@ -1956,7 +2731,7 @@ categorias = {
             'general': ''
         },
         {
-            'nombre': 'Open ',
+            'nombre': 'Open',
             'descripcion': '',
             'general': ''
         },
@@ -1993,7 +2768,7 @@ categorias = {
             'general': ''
         },
         {
-            'nombre': 'Juvenil ',
+            'nombre': 'Juvenil',
             'descripcion': '',
             'general': ''
         },
@@ -2021,7 +2796,7 @@ categorias = {
         },
         {
             'nombre': 'Cadetes o pre-juvenil',
-            'descripcion': 'de 15 a 16 años; ',
+            'descripcion': 'de 15 a 16 años;',
             'general': 'Fed Col de ciclismo'
         },
         {
@@ -2245,7 +3020,7 @@ categorias = {
             'general': 'UCI-Crucero'
         },
         {
-            'nombre': 'Elite Damas 19 años y más ',
+            'nombre': 'Elite Damas 19 años y más',
             'descripcion': '',
             'general': 'UCI-Crucero'
         },
@@ -2563,7 +3338,7 @@ categorias = {
             'general': ''
         },
         {
-            'nombre': 'Súper Turismo: 0-1.200 C.C. ',
+            'nombre': 'Súper Turismo: 0-1.200 C.C.',
             'descripcion': '',
             'general': ''
         },
@@ -2573,7 +3348,7 @@ categorias = {
             'general': ''
         },
         {
-            'nombre': '1.2001-1.600 C.C. 16 Válvulas. ',
+            'nombre': '1.2001-1.600 C.C. 16 Válvulas.',
             'descripcion': '',
             'general': ''
         },
@@ -2626,7 +3401,7 @@ categorias = {
         },
         {
             'nombre': 'Grupo N3',
-            'descripcion': 'más de 1600cc y hasta 2000cc inclusive. Tracción simple ',
+            'descripcion': 'más de 1600cc y hasta 2000cc inclusive. Tracción simple',
             'general': ''
         },
         {
@@ -2641,12 +3416,12 @@ categorias = {
         },
         {
             'nombre': 'Grupo R (Internacional)',
-            'descripcion': 'más de 1600cc y hasta 2000cc inclusive. ',
+            'descripcion': 'más de 1600cc y hasta 2000cc inclusive.',
             'general': ''
         },
         {
             'nombre': 'Mecánica Nacional A',
-            'descripcion': 'de 0cc hasta 1600cc inclusive. Tracción simple. ',
+            'descripcion': 'de 0cc hasta 1600cc inclusive. Tracción simple.',
             'general': ''
         },
         {
@@ -2747,7 +3522,7 @@ categorias = {
             'general': '300 Radio Control Acrobáticos'
         },
         {
-            'nombre': 'Clase 311 Balístico (1980 – 2000) ',
+            'nombre': 'Clase 311 Balístico (1980 – 2000)',
             'descripcion': '',
             'general': '300 Radio Control Acrobáticos'
         },

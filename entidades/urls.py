@@ -38,4 +38,5 @@ urlpatterns = patterns('entidades.views',
     url(r'^actualizar-todas-las-vistas$', 'generar_vistas_actores', name='actualizar_todas_las_vistas'),
     url(r'^cambiar-campo-espectadores$', 'cambiar_tipo_campo', name='cambiar_tipo_campo'),
     url(r'^refresh-public$', 'refresh_public', name='refresh_public'),
+    url(r'^cambio-disciplinas$', 'cambio_disciplinas', name='cambio_disciplinas'),
 )

@@ -4,15 +4,15 @@ from django.db import connection
 
 deportes = [
     'Parapentismo', 'Aeromodelismo', 'Ala delta', 'Ultralivianos', 'Planeadores', 'Globos aerostáticos', 'Apnea',
-    'Natación con aletas', 'Buceo', 'Hockey subacuático', 'Rugby subacuático', 'Pesca submarina', 'Orientación',
+    'Natación con aletas', 'Buceo', 'Hockey subacuático', 'Rugby subacuático', 'Pesca submarina', 'Orientacion',
     'Automovilismo deportivo','(Automovilismo deportivo) - Rallies colombiano','(Automovilismo deportivo) - Rallie Cross',
     '(Automovilismo deportivo) - Camper Cross', '(Automovilismo deportivo) - Velocidad', 'Ajedrez', 'Arquería', 'Bolos',
     'Ecuestre', 'Esgrima', 'Esquí Náutico', 'Futbol De Salon', 'Golf', 'Hapkido', 'Karts', 'Motociclismo','Motonautica', 'Squash',
     'Softbol', 'Tenis de mesa', 'Voleibol', 'Deportes Fuerzas Armadas', 'Deporte montaña y escalada','Coleo', 'Billar',
     'Nado sincronizado', 'Waterpolo', 'Badminton', 'Baloncesto', 'Canotaje', 'Balonmano', 'Hockey', 'Pentatlón moderno',
-    'Vela', 'Tejo','Tiro y caza', 'Trampolín', 'Triatlón','Boccia', 'Baloncesto en Silla de Ruedas', 'Ciclismo Tandem',
+    'Vela', 'Tejo','Tiro Y Caza', 'Trampolín', 'Triatlón','Boccia', 'Baloncesto en Silla de Ruedas', 'Ciclismo Tandem',
     'Slalom', 'Tenis De Campo en Silla de Ruedas', 'Goalball', 'Powerlifting', 'Paracycling', 'Tenis en Silla de Ruedas',
-    'Ciclismo','Ciclismo BMX','Ciclismo de montaña','Ciclismo en pista','Ciclismo en ruta','Fútbol','Natación','Tenis'
+    'Ciclismo','Ciclismo BMX','Ciclismo de montaña','Ciclismo en pista','Ciclismo en ruta','Fútbol','Natación','Tenis','Rugby'
 ]
 
 def insertar_actualizar_deportes():
@@ -35,9 +35,8 @@ def insertar_actualizar_deportes():
         try:
             TipoDisciplinaDeportiva.objects.get(descripcion=d)
         except Exception as e:
-            print(e)
             print(d)
-            dep,created = TipoDisciplinaDeportiva(descripcion=d,id=last_id)
+            dep = TipoDisciplinaDeportiva(descripcion=d,id=last_id)
             dep.save()
             last_id+=1
     asa = TipoDisciplinaDeportiva.objects.get(descripcion='Actividades Subacuaticas')
@@ -64,12 +63,10 @@ def insertar_modalidades_categorias():
             mod = []
         for m in mod:
             ModalidadDisciplinaDeportiva(nombre=m['nombre'], descripcion=m['descripcion'], general=m['general'],deporte=depor).save()
-            print('guardada mod')
         try:
             cat = categorias[d]
         except:
             cat = []
         for c in cat:
             CategoriaDisciplinaDeportiva(nombre=c['nombre'], descripcion=c['descripcion'], general=c['general'],deporte=depor).save()
-            print('guardad cat')
     print('Modalidades y categorias insertadas exitosamente')
