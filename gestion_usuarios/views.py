@@ -51,7 +51,7 @@ def asignarPermisosGrupo(request, grupo, permisos):
         try:
             grupo.permissions.add(permiso)
         except Exception:
-            messages.error(request,'Ha ocurrido un error al actulizar los permisos de escritura')
+            print('Ha ocurrido un error al actulizar los permisos de escritura')
 
 def asignarPermisosGrupoLectura(request, grupo, permisos):
     #agrega los permisos de lectura que son obligatorios, tenga o no el actor
@@ -76,7 +76,7 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
             try:
                 grupo.permissions.add(permiso)
             except Exception as e:
-                messages.error(request,'Ha ocurrido un error al actualizar los permisos de lectura')
+                print('Ha ocurrido un error al actualizar los permisos de lectura')
                 print(e)
 
 

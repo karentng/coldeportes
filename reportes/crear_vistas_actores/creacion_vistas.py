@@ -23,7 +23,8 @@ def alter_campo_escenarios():
         sql = ("ALTER TABLE %s.snd_caracterizacionescenario ALTER COLUMN capacidad_espectadores TYPE integer USING (capacidad_espectadores::integer);")%(tenant.schema_name)
         try:
             ejecutar_sql(sql)
-        except Exception:
+        except Exception as e:
+            print(e)
             tenants_falla.append(tenant.schema_name)
 
     return tenants_falla
