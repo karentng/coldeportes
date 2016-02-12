@@ -27,9 +27,12 @@ def insertar_actualizar_deportes():
     all_dis = TipoDisciplinaDeportiva.objects.all().order_by('id')
     last_id = all_dis[len(all_dis)-1].id + 1
 
-    autom = TipoDisciplinaDeportiva.objects.get(descripcion='Automovilismo')
-    autom.descripcion = 'Automovilismo deportivo'
-    autom.save()
+    try:
+        autom = TipoDisciplinaDeportiva.objects.get(descripcion='Automovilismo')
+        autom.descripcion = 'Automovilismo deportivo'
+        autom.save()
+    except Exception:
+        pass
 
     for d in deportes:
         try:
