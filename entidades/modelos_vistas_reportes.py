@@ -200,6 +200,7 @@ class PublicDeportistaView(models.Model):
     #campos informacion academica
     nivel_formacion = models.CharField(max_length=20)
     estado_formacion = models.CharField(max_length=20)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True)
 
     #campos informacion adicional
     usa_centros_biomedicos = models.BooleanField()
@@ -208,9 +209,12 @@ class PublicDeportistaView(models.Model):
     #campos historial lesiones
     tipo_lesion = models.IntegerField()
     periodo_rehabilitacion = models.IntegerField()
+    fecha_lesion = models.DateField()
+    segmento_corporal = models.IntegerField()
 
     #campos doping
     fecha_doping = models.DateField()
+    fecha_participacion = models.DateField()
 
     def return_display_lesion(self,dic,is_tipo):
         ids = [id for id in dic]
@@ -245,9 +249,28 @@ class PublicEscuelaView(models.Model):
     class Meta:
         managed = False
 
+    nombre = models.CharField(max_length=100)
+    telefono_fijo = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    web = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField()
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     estrato = models.PositiveIntegerField()
     entidad = models.ForeignKey(Entidad)
     nombre_servicio = models.CharField(max_length=255)
+
+
+class PublicCajasView(models.Model):
+
+    class Meta:
+        managed = False
+
+    nombre = models.CharField(max_length=100)
+    estado = models.IntegerField()
+    ciudad = models.ForeignKey(Ciudad)
+    email = models.CharField(max_length=100)
+    clasificacion = models.CharField(max_length=100)
+    entidad = models.ForeignKey(Entidad)
+    categoria = models.CharField(max_length=255)
+    descripcion = models.CharField(max_length=255)

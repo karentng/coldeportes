@@ -18,6 +18,7 @@ from directorio.models import *
 from noticias.models import Noticia
 from entidades.models import Entidad
 from reportes.utilities import atributos_actor_vista
+from django.http import HttpResponse
 
 from django.http import HttpResponse
 
@@ -50,7 +51,7 @@ def asignarPermisosGrupo(request, grupo, permisos):
         try:
             grupo.permissions.add(permiso)
         except Exception:
-            messages.error(request,'Ha ocurrido un error al actulizar los permisos de escritura')
+            print('Ha ocurrido un error al actulizar los permisos de escritura')
 
 def asignarPermisosGrupoLectura(request, grupo, permisos):
     #agrega los permisos de lectura que son obligatorios, tenga o no el actor
@@ -64,7 +65,7 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
     try:
         actores = Permisos.objects.get(entidad=tipo,tipo=tipoEnte).get_actores('%')
     except Permisos.DoesNotExist:
-        messages.error(request,'Ha ocurrido un error al obtener los permisos de lectura')
+        messages.error(request,'La entidad actual no tiene permisos de lectura')
     else:
         permitidos = []
         for permiso,actor in permisos:
@@ -75,7 +76,7 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
             try:
                 grupo.permissions.add(permiso)
             except Exception as e:
-                messages.error(request,'Ha ocurrido un error al actualizar los permisos de lectura')
+                print('Ha ocurrido un error al actualizar los permisos de lectura')
                 print(e)
 
 
@@ -89,6 +90,8 @@ de permisos que hizo Cristian, NO ES NECESARIO QUE LA USEN PARA SUS ENTORNOS DE 
 LOS SERVIDORES.
 """
 def fix_actores_entidades(request):
+    from coldeportes.utilities import obtener_modelo_actor
+
     entidades = Entidad.objects.exclude(schema_name='public')
     for entidad in entidades:
         entidad = entidad.obtenerTenant()
@@ -102,26 +105,41 @@ def fix_actores_entidades(request):
         tipo_entidad = entidad.tipo
 
         permisos = Permisos.objects.get(tipo=tipo_sub_entidad,entidad=tipo_entidad)
-        print(permisos.get_actores('--'))
-        for actor_false in permisos.get_actores('--'):
-            #setattr(entidad.actores,actor_false,True)
-            #entidad.save()
-            print (getattr(entidad.actores,actor_false))
 
-        """connection.set_tenant(entidad)
+        for actor_false in permisos.get_actores('--'):
+            setattr(entidad.actores,actor_false,False)
+            entidad.save()
+            entidad.actores.save()
+
+
+        modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
+        connection.set_tenant(entidad)
+        request.tenant = entidad
+        for modelo in modelos_a_borrar:
+            try:
+                modelo.objects.all().delete()
+            except Exception as e:
+                print(e)
+
         try:
             #si llegan a editar el nombre del grupo, tendremos un error
             digitador = Group.objects.get(name="Digitador")
             lectura = Group.objects.get(name='Solo lectura')
         except Group.DoesNotExist:
             pass
+
         if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
+            print(entidad)
             asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
             asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
             asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
             asignarPermisosGrupoLectura(request, lectura, PERMISOS_LECTURA)
+
         connection.set_schema_to_public()
-        """
+        request.tenant = Entidad.objects.get(schema_name='public')
+
+    return HttpResponse("Se han actualizado las entidades del servidor correctamente")
+
 """
 ------------------------------------------------------------------------------------------------------------------------
 """

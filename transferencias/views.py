@@ -33,9 +33,9 @@ def generar_transferencia(request,id):
     entidad_solicitante = request.tenant
 
     if entidad_solicitante.tipo == 3:
-        entidades = Entidad.objects.filter(tipo=3).exclude(nombre__in=['publico',entidad_solicitante.nombre])
+        entidades = Entidad.objects.filter(tipo=3).exclude(nombre=entidad_solicitante.nombre).exclude(schema_name='public')
     elif entidad_solicitante.tipo == 9:
-        entidades = Entidad.objects.filter(tipo=9).exclude(nombre__in=['publico',entidad_solicitante.nombre])
+        entidades = Entidad.objects.filter(tipo=9).exclude(nombre=entidad_solicitante.nombre).exclude(schema_name='public')
     else:
         messages.error(request,'Usted se encuentra en una seccion que no le corresponde')
         return redirect('inicio_tenant')
@@ -370,9 +370,10 @@ def cancelar_transferencia(request,id_objeto):
         return redirect('deportista_listar')
 
     entidad_solicitante = request.tenant
-    entidades = Entidad.objects.exclude(nombre__in=['publico',entidad_solicitante.nombre])
+    entidades = Entidad.objects.exclude(nombre=entidad_solicitante.nombre).exclude(schema_name='public')
 
     for ent in entidades:
+        print(ent)
         connection.set_tenant(ent)
         ContentType.objects.clear_cache()
         trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')

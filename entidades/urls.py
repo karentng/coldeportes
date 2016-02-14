@@ -25,6 +25,10 @@ urlpatterns = patterns('entidades.views',
 	url(r'^dirigentes/ver/(\d+)/(\d+)$', 'ver_dirigente_tenantnacional', name='ver_dirigente_tenantnacional'),
 	url(r'^cafs$', 'listar_cafs_nacionales', name='listar_cafs'),
 	url(r'^cafs/ver/(\d+)/(\d+)$', 'ver_caf_tenantnacional', name='ver_caf_tenantnacional'),
+	url(r'^escuelas$', 'listar_escuelas_nacionales', name='escuela_deportiva_listar'),
+	url(r'^escuelas/ver/(\d+)/(\d+)$', 'ver_escuelas_tenantnacional', name='ver_escuelas_tenantnacional'),
+	url(r'^cajas$', 'listar_cajas_nacionales', name='listar_ccfs'),
+	url(r'^cajas/ver/(\d+)/(\d+)$','ver_cajas_tenantnacional', name='ver_cajas_tenantnacional'),
     url(r'^cargar-columnas/(\d+)$', 'cargar_columnas_tenantnacional', name='cargar_columnas_tenantnacional'),
     url(r'^cargar-datos/(\d+)$', 'cargar_datos_tenantnacional', name='cargar_datos_tenantnacional'),
 
@@ -32,5 +36,7 @@ urlpatterns = patterns('entidades.views',
 
     # funciones especiales
     url(r'^actualizar-todas-las-vistas$', 'generar_vistas_actores', name='actualizar_todas_las_vistas'),
+    url(r'^cambiar-campo-espectadores$', 'cambiar_tipo_campo', name='cambiar_tipo_campo'),
     url(r'^refresh-public$', 'refresh_public', name='refresh_public'),
+    url(r'^cambio-disciplinas$', 'cambio_disciplinas', name='cambio_disciplinas'),
 )

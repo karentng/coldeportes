@@ -83,7 +83,7 @@ def reporte_actividades_personal(request):
         datos = sumar_datos_diccionario(datos, PersonalApoyo.ACTIVIDADES)
 
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request,'personal_apoyo/base_personal_apoyo.html',{
         'nombre_reporte' : 'Actividades que desempeña el personal de apoyo',
@@ -146,7 +146,7 @@ def reporte_formacion_academica_personal(request):
         sin_formacion = len(tabla.objects.filter(estado=0,nivel_formacion=None))
         formaciones['Sin Formación'] = sin_formacion
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Formación académica del personal de apoyo',
@@ -199,7 +199,7 @@ def reporte_cantidad_total_personal_apoyo(request):
             'Total Personal de Apoyo':total_personal
         }
 
-    visualizaciones = [1, 2, 3, 5, 6, 7]
+    visualizaciones = [1]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Cantidad total de personal de apoyo',
@@ -259,7 +259,7 @@ def reporte_lgtbi(request):
             lgtbi['NO PERTENECE A LA COMUNIDAD LGTBI'] = lgtbi[False]
             del lgtbi[False]
 
-    visualizaciones = [1, 2, 3, 5, 6]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
 
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
@@ -292,10 +292,10 @@ def reporte_etnias(request):
         genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('etnia')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s).annotate(descripcion=F('etnia')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('etnia')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('etnia')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('etnia')).values('id','descripcion','entidad','ano_final_formacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s).annotate(descripcion=F('etnia')).values('id','descripcion','entidad','ano_final_formacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('etnia')).values('id','descripcion','entidad','ano_final_formacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('etnia')).values('id','descripcion','entidad','ano_final_formacion').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         etnias = ejecutar_casos_recursivos(consultas,departamentos,genero,tipoTenant)
@@ -308,14 +308,14 @@ def reporte_etnias(request):
         return JsonResponse(etnias)
 
     else:
-        etnias = list(tabla.objects.filter(estado=0).annotate(descripcion=F('etnia')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))
+        etnias = list(tabla.objects.filter(estado=0).annotate(descripcion=F('etnia')).values('id','descripcion','entidad','ano_final_formacion').annotate(cantidad=Count('id',distinct=True)))
         etnias = tipoTenant.ajustar_resultado(etnias)
 
         if '' in etnias:
             etnias['NO ESPECIFICADA'] = etnias['']
             del etnias['']
 
-    visualizaciones = [1, 2, 3, 5]
+    visualizaciones = [1, 3, 5, 6]
     form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
     return render(request, 'personal_apoyo/base_personal_apoyo.html', {
         'nombre_reporte' : 'Etnias del personal de apoyo',
