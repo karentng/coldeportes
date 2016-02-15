@@ -155,7 +155,7 @@ class TenantPersonalApoyoView(models.Model):
     estado = models.IntegerField()
     nivel_formacion = models.CharField(max_length=20)
     estado_formacion = models.CharField(max_length=20)
-    ano_final_formacion = models.IntegerField()
+    fecha_finalizacion = models.IntegerField()
 
 class TenantDeportistaView(models.Model):
 
