@@ -10,7 +10,7 @@ def create_log_deportivo():
 	Permite crear un log con la informacion de los historiales deportivos y limpiar su informacion en la db
 	"""
 	file = open('datos_iniciales/disciplinas_deportivas/log_deportivo.txt', 'w+')
-	entidades = Entidad.objects.exclude(schema_name='publico')
+	entidades = Entidad.objects.exclude(schema_name='public')
 	for e in entidades:
 		connection.set_tenant(e)
 		historiales = HistorialDeportivo.objects.all()
@@ -33,5 +33,3 @@ def create_log_deportivo():
 			h.save()
 	file.close()
 	print('log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt')
-
-create_log_deportivo()
