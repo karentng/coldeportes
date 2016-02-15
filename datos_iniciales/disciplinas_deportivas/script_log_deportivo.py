@@ -27,9 +27,5 @@ def create_log_deportivo():
 					'\n Modalidad:' + str(h.modalidad) +
 					'\n Categoria:' + str(h.categoria) +
 					'}\n \n')
-			h.modalidad = ''
-			h.categoria = ''
-			h.prueba = ''
-			h.save()
 	file.close()
 	print('log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt')
