@@ -111,6 +111,9 @@ class HistorialDeportivoForm(ModelForm):
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
+        self.fields['modalidad'] = adicionarClase(self.fields['modalidad'], 'one')
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+        self.fields['categoria'] = adicionarClase(self.fields['categoria'], 'one')
 
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_inicial']
