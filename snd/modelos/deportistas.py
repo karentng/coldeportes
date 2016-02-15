@@ -165,7 +165,7 @@ class HistorialDeportivo(models.Model):
     modalidad = models.CharField(max_length=100,blank=True,verbose_name='Modalidad de competencia')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
-    categoria = models.CharField(max_length=100,verbose_name='Categoría en la que participó')
+    categoria = models.CharField(max_length=100,blank=True,verbose_name='Categoría en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
