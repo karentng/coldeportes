@@ -47,7 +47,11 @@ PERMISOS_DIGITADOR = [
 
     ['add_escueladeportiva', 'escuelas_deportivas'],
     ['change_escueladeportiva', 'escuelas_deportivas'],
-    ['view_escueladeportiva', 'escuelas_deportivas']
+    ['view_escueladeportiva', 'escuelas_deportivas'],
+
+    ['add_clasificado', 'publicidad'],
+    ['change_clasificado', 'publicidad'],
+    ['view_clasificado', 'publicidad'],
 ]
 
 PERMISOS_LECTURA = [
@@ -61,5 +65,6 @@ PERMISOS_LECTURA = [
     ['view_centrobiomedico', 'centros_biomedicos'],
     ['view_norma', 'normas'],
     ['view_noticia', 'noticias'],
-    ['view_escueladeportiva', 'escuelas_deportivas']
+    ['view_escueladeportiva', 'escuelas_deportivas'],
+    ['view_clasificado', 'publicidad'],
 ]

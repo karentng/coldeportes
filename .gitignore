@@ -17,3 +17,4 @@ transferencias/migrations
 gestion_usuarios/migrations
 publicidad/migrations
 buscador/migrations
+registro_resultados/migrations

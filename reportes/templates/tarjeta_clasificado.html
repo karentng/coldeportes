@@ -1,0 +1,56 @@
+{% for clasificado_filtrado in clasificados_filtrados %}
+    <div class="card
+                {% if clasificado_filtrado.clase_inclinacion == 1 %}
+                    inclinacionIzq
+                {% elif clasificado_filtrado.clase_inclinacion == 2 %}
+                    inclinacionDer
+                {% endif %} " >
+        <span class="folded-corner add-tooltip" data-toggle="modal" data-target="#myModal{{ forloop.counter }}"  title="Ver más"><i class="fa fa-hand-o-up fa-3x"></i></span>
+        <img src="{{STATIC_URL}}img/chinche-1.png" class="chincheImg">
+        <img class="img-responsive" src="{{ MEDIA_URL }}{{ clasificado_filtrado.foto }}">
+        <div class="descripcionCla">
+            <div class="edicion-clasificados">
+                <a href="{% url 'editar_clasificado' clasificado_filtrado.id %}"><i class="fa fa-pencil-square-o fa-2x add-tooltip" title="Editar Clasificado"></i></a>
+                <i  class="fa fa-trash fa-2x text-danger add-tooltip" data-toggle="modal" data-target="#modal-eliminar" title="Eliminar Clasificado"  data-id="{{ clasificado_filtrado.id }}"></i>
+            </div>
+            <h3>{{ clasificado_filtrado.titulo }}</h3>
+            <p>{{ clasificado_filtrado.descripcion|slice:":150"}}...</p>
+        </div>
+        <div class="modal fade" id="myModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h2 class="modal-title" id="myModalLabel">{{ clasificado_filtrado.titulo }}</h2>
+                    </div>
+                    <div class="modal-body">
+                        <img src="{{ MEDIA_URL }}{{ clasificado_filtrado.foto }}" class="img-responsive">
+                        <p class="datos-clasificado">
+                            <b>Fecha Publicación:</b><br>
+                            <i>{{ clasificado_filtrado.fecha_publicacion }}</i><br><br>
+                            <b>Categoria:</b><br>
+                            <i>{{ clasificado_filtrado.categoria }}</i><br><br>
+                            <b>Contacto:</b><br>
+                            <i>{{ clasificado_filtrado.contacto }}</i><br><br>
+                            {% if clasificado_filtrado.valor %}
+                                <b>Valor, precio o salario:</b><br>
+                                <i>{{ clasificado_filtrado.valor }}</i>
+                            {% endif %}
+                        </p>
+                        <hr>
+                        <p class="descripcion-clasificado">
+                            {{ clasificado_filtrado.descripcion }}
+                        </p>
+                        <p class="palabras-claves">
+                            <b>Palabras Claves:</b><br>
+                            {{ clasificado_filtrado.etiquetas }}
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

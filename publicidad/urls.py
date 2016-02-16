@@ -6,5 +6,5 @@ urlpatterns = patterns('publicidad.views',
     url(r'^editar/(\d+)$', 'editar_clasificado', name='editar_clasificado'),
     url(r'^eliminar/(\d+)$', 'eliminar_clasificado', name='eliminar_clasificado'),
     url(r'^crop-pic$','crop_pic',name='crop_pic'),
-    url(r'^filtrar$','filtro_clasificados',name='filtro_clasificados'),
+    url(r'^filtrar$','filtro_clasificados', name='filtro_clasificados'),
 )

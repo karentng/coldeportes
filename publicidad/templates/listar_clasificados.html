@@ -21,29 +21,32 @@
                 $grid.masonry({
                     // options...
                     itemSelector: '.card',
-                    columnWidth: 300
+                    columnWidth: 300,
+                    transitionDuration: '0.8s'
                 });
             });
 
-            $(".edicion-clasificados > i").click(function(){
+            $(document).on("click",".edicion-clasificados > i",function(){
                 var id = $(this).attr("data-id");
                 $("#eliminar-clasificado").attr("href","eliminar/"+id);
             });
 
             $('.add-tooltip').tooltip();
 
-            $("#id-categoria").on('change',function(){
-                var seleccion = JSON.stringify($(this).val());
+            $("#id_categoria").on('change',function(){
+                var seleccion = $(this).val();
 
-                $.post("{% url 'filtro_clasificados' %}",{seleccion : seleccion})
+                $.post("{% url 'filtro_clasificados' %}",{seleccion : seleccion,'csrfmiddlewaretoken': '{{ csrf_token }}'})
 
                         .success(function(result){
                             var elements = $grid.masonry('getItemElements');
-                            $grid.masonry("remove",elements);
-                            for(clasificado in result){
-                                var item = $("")
-                            }
-                        })
+                            console.log(elements);
+                            var $items = $(result);
+                            $grid.masonry("remove",elements).masonry('layout');
+                            $grid.append($items).imagesLoaded( function(){
+                                $grid.masonry( 'appended',$items);
+                            });
+                        });
             });
         });
 
@@ -86,39 +89,39 @@
                     <h3>{{ clasificado.titulo }}</h3>
                     <p>{{ clasificado.descripcion|slice:":150"}}...</p>
                 </div>
-            </div>
-            <div class="modal fade" id="myModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content modal-lg">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">{{ clasificado.titulo }}</h2>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ MEDIA_URL }}{{ clasificado.foto }}" class="img-responsive">
-                            <p class="datos-clasificado">
-                                <b>Fecha Publicación:</b><br>
-                                <i>{{ clasificado.fecha_publicacion }}</i><br><br>
-                                <b>Categoria:</b><br>
-                                <i>{{ clasificado.categoria }}</i><br><br>
-                                <b>Contacto:</b><br>
-                                <i>{{ clasificado.contacto }}</i><br><br>
-                                {% if clasificado.valor %}
-                                    <b>Valor, precio o salario:</b><br>
-                                    <i>{{ clasificado.valor }}</i>
-                                {% endif %}
-                            </p>
-                            <hr>
-                            <p class="descripcion-clasificado">
-                                {{ clasificado.descripcion }}
-                            </p>
-                            <p class="palabras-claves">
-                                <b>Palabras Claves:</b><br>
-                                {{ clasificado.etiquetas }}
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                <div class="modal fade" id="myModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content modal-lg">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h2 class="modal-title" id="myModalLabel">{{ clasificado.titulo }}</h2>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ MEDIA_URL }}{{ clasificado.foto }}" class="img-responsive">
+                                <p class="datos-clasificado">
+                                    <b>Fecha Publicación:</b><br>
+                                    <i>{{ clasificado.fecha_publicacion }}</i><br><br>
+                                    <b>Categoria:</b><br>
+                                    <i>{{ clasificado.categoria }}</i><br><br>
+                                    <b>Contacto:</b><br>
+                                    <i>{{ clasificado.contacto }}</i><br><br>
+                                    {% if clasificado.valor %}
+                                        <b>Valor, precio o salario:</b><br>
+                                        <i>{{ clasificado.valor }}</i>
+                                    {% endif %}
+                                </p>
+                                <hr>
+                                <p class="descripcion-clasificado">
+                                    {{ clasificado.descripcion }}
+                                </p>
+                                <p class="palabras-claves">
+                                    <b>Palabras Claves:</b><br>
+                                    {{ clasificado.etiquetas }}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

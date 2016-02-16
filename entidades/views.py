@@ -646,7 +646,6 @@ def ver_escuelas_tenantnacional(request,id_escuela,id_entidad):
 @superuser_only
 def permisos(request):
     PermisosFormSet = modelformset_factory(Permisos, form = PermisosForm, max_num=1)
-
     if request.method == 'POST':
         formset = PermisosFormSet(request.POST)
         if formset.is_valid():

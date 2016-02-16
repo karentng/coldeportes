@@ -5,7 +5,7 @@ from .forms import ClasificadoForm
 from .forms import CropForm
 from .models import Clasificado
 from django.http import JsonResponse
-
+import random
 
 import datetime
 from PIL import Image
@@ -15,7 +15,7 @@ import re
 
 # Create your views here.
 @login_required
-# @permission_required('publicidad.add_clasificado')
+@permission_required('publicidad.add_clasificado')
 def registrar_clasificado(request):
 
     if request.method == 'POST':
@@ -37,7 +37,6 @@ def registrar_clasificado(request):
 
 
 def listar_clasificados(request):
-    import random
 
     clasificados = Clasificado.objects.filter(estado=1).order_by("-fecha_publicacion").all()
 
@@ -50,7 +49,7 @@ def listar_clasificados(request):
 
 
 @login_required
-# @permission_required('publicidad.change_clasificado')
+@permission_required('publicidad.change_clasificado')
 def editar_clasificado(request,id_clasificado):
     try:
         clasificado = Clasificado.objects.get(id=id_clasificado)
@@ -77,7 +76,7 @@ def editar_clasificado(request,id_clasificado):
 
 
 @login_required
-# @permission_required('publicidad.change_clasificado')
+@permission_required('publicidad.change_clasificado')
 def eliminar_clasificado(request,id_clasificado):
     try:
         clasificado = Clasificado.objects.get(id=id_clasificado)
@@ -151,4 +150,16 @@ def crop_pic(request):
 
 @login_required()
 def filtro_clasificados(request):
-    return
+    if request.is_ajax():
+        try:
+            categoria = request.POST.get("seleccion")
+            clasificados = Clasificado.objects.filter(categoria=categoria,estado=1)
+
+
+            for clasificado in clasificados:
+                clasificado.clase_inclinacion = random.randint(1,3)
+
+            return render(request,'tarjeta_clasificado.html',{"clasificados_filtrados":clasificados})
+        except Exception as e:
+            print(e)
+            return render(request,'tarjeta_clasificado.html',{"clasificados_filtrados":clasificados})
