@@ -1,4 +1,8 @@
-<li class="has-sub {% if '/entidades/' in request.path %} active {% endif %}">
+<li class="has-sub {% if '/entidades/' in request.path %}
+                        {% if "/entidades/tipo" in request.path or "/entidades/registro" in request.path or "/entidades/listar" in request.path %}
+                        active
+                        {% endif %}
+                   {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="fa fa-building"></i>
