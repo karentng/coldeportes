@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Listado de Competencias</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de Competencias
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de Competencias
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-entidades";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Nombre</th>
+                            <th>Año</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for competencia in competencias %}
+                        <tr>
+                            <td align="center">
+                                {% if competencia.imagen == "" or competencia.imagen == None %}
+                                    <img src="{{STATIC_URL}}img/competencia.jpg" height='150' width='150'>
+                                {% else %}
+                                    <img src="{{MEDIA_URL}}{{competencia.imagen}}" height='150' width='150'>
+                                {% endif %}
+                            </td>
+                            <td>{{competencia.nombre}}</td>
+                            <td>{{competencia.anno}}</td>
+                            <td>{{competencia.get_tipo_competencia_display}}</td>
+                            <td>{{competencia.descripcion}}</td>
+                            <td>
+                                <a href='{% url 'acceder_competencia' competencia.id %}' class="btn btn-primary">
+                                    <i class="fa fa-check"></i> Acceder
+                                </a>
+                                <a href='{% url 'datos_competencia' competencia.id %}' class="btn btn-warning">
+                                    <i class="fa fa-edit"></i> Modificar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

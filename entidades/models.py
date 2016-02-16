@@ -77,6 +77,7 @@ class Actores(models.Model):
     normas = models.BooleanField(verbose_name="Normograma", default=False)
     escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva", default=False)
     noticias = models.BooleanField(verbose_name="Noticias", default=False)
+    publicidad = models.BooleanField(verbose_name="Publicidad", default=True)
 
     def resumen(self):
         actores = []
@@ -897,6 +898,7 @@ class Permisos(models.Model):
     normas = models.IntegerField(choices=ACTORES, default=1)
     escuelas_deportivas = models.IntegerField(choices=ACTORES, default=1)
     noticias = models.IntegerField(choices=ACTORES, default=1)
+    publicidad = models.IntegerField(choices=ACTORES, default=2)
 
     class Meta:
         unique_together = ('entidad','tipo',)
@@ -912,7 +914,7 @@ class Permisos(models.Model):
             opcion = [1,5]
 
         actores_seleccionados = []
-        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']
+        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias','publicidad']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
