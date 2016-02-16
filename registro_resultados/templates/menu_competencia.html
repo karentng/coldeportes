@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Menú de Competencia</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Menú de Competencia
+{% endblock %}
+
+{% block titulo_panel %}
+    Menú de Competencia
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-entidades";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            {% for titulo in titulos %}
+                                <th>{{titulo}}</th>
+                            {% endfor %}
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if competencia.tipos_participantes == 1 %}
+                            {% for dato in datos %}
+                            <tr>
+                                <td>{{dato.nombres}}</td>
+                                <td>{{dato.apellidos}}</td>
+                                <td>{{dato.get_genero_display}}</td>
+                                <td>{{dato.categoria}}</td>
+                                <td>{{dato.departamento}}</td>
+                                <td>{{dato.posicion}}</td>
+                                <td>
+                                    {% if dato.tiempo != None %}
+                                        {{dato.tiempo}}
+                                    {% else %}
+                                        No definido
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href='{% url 'datos_participante' dato.id %}' class="btn btn-warning">
+                                        <i class="fa fa-edit"></i> Modificar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            {% for dato in datos %}
+                            <tr>
+                                <td>{{dato.nombre}}</td>
+                                <td>{{dato.departamento}}</td>
+                                <td>{{dato.posicion}}</td>
+                                <td>
+                                    <a href='{% url 'datos_equipo' dato.id %}' class="btn btn-warning">
+                                        <i class="fa fa-edit"></i> Modificar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
