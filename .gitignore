@@ -15,3 +15,4 @@ reportes/migrations
 entidades/migrations
 transferencias/migrations
 gestion_usuarios/migrations
+registro_resultados/migrations
