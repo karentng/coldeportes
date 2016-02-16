@@ -28,3 +28,16 @@
     background: rgba(0, 0, 0, 0.7) none repeat scroll 0% 0%;
     color: #999;
 }
+
+.display-none{
+    display: none;
+}
+
+.fadeInDown{
+    display: inline-block;
+}
+
+ul.tagit{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}

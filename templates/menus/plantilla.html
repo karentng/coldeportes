@@ -57,9 +57,6 @@
         {%if perms.snd.view_seleccion %}
             {% include "menus/aplicacion/selecciones.html" %}
         {%endif%}
-        {% if perms.noticias.view_noticia %}
-            {% include "menus/aplicacion/noticias.html" %}
-        {% endif %}
     {% endif %}
 
 
@@ -68,6 +65,7 @@
     {% include "menus/aplicacion/directorio.html" %}
     {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/reportes.html" %}
+    {% include "menus/aplicacion/publicidad.html" %}
 
 {% endif %}
 {% if request.tenant.schema_name == 'public' %}

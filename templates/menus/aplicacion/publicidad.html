@@ -1,0 +1,16 @@
+<li class="has-sub {% if 'noticias' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-newspaper-o"></i>
+        <span class="colorMenu">PUBLICIDAD</span>
+    </a>
+    <ul class="sub-menu">
+
+        <li {% if "/clasificados/registrar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'registrar_clasificado' %}">Registrar clasificado</a>
+        </li>
+        <li {% if "/clasificados/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_clasificados' %}">Listar clasificados</a>
+        </li>
+    </ul>
+</li>

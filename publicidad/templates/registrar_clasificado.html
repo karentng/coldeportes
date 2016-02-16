@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Clasificados</a>
+    <li class="active">Registrar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} clasificado
+{% endblock %}
+
+{% block titulo_panel %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} clasificado
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/validaciones/noticias/clasificados-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script >
+        var csrftoken = '{{ csrf_token }}';
+        var urlCrop = "{% url 'crop_pic' %}";
+        var buttonReset = "#reset-crop";
+        var picture = "";
+        {% if edicion %}
+            picture = "{{ MEDIA_URL }}{{ foto }}"
+        {% endif %}
+
+        $("#check-mostrar-valor").click(function(){
+            $("#valor-mostrar").toggleClass("fadeInDown");
+            $("#id_valor").val("");
+        });
+
+        $("#id_etiquetas").tagit({
+            singleField:true,
+            singleFieldDelimiter: ",",
+        });
+
+        $('#submit-crop').click(function(event){
+            event.preventDefault();
+
+            {% if edicion %}
+                if($("#modalTrigger2").hasClass("btn-default") && $('.cropControls.cropControlsCrop').length){
+                    document.getElementById("clasificado-form").submit();
+                    return false;
+                }else {
+
+                    $("#clasificado-form").bootstrapValidator('validate');
+
+                    if(!$('.cropControls.cropControlsCrop').length || $("div.form-group").hasClass("has-error")){
+                        alert("Debes cargar la imagen");
+                    }else {
+                        console.log("Cortando");
+                        $('.cropControlCrop').click();
+                    }
+                }
+            {% endif %}
+
+            $("#clasificado-form").bootstrapValidator('validate');
+
+            if(!$('.cropControls.cropControlsCrop').length || $("div.form-group").hasClass("has-error")){
+                alert("Debes cargar la imagen");
+            }else {
+                console.log("Cortando");
+                $('.cropControlCrop').click();
+            }
+        });
+
+
+    </script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic-conf.js"></script>
+{% endblock %}
+
+{% block css %}
+
+    <link href="{{STATIC_URL}}plugins/croppic/croppic.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/croppic/estilos_personalizados.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <form id="clasificado-form" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="form-group">
+                    <div id="modalTrigger2" class="btn {% if edicion %}btn-info{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                    <label class="control-label" for="modalTrigger2"></label>
+                    {% include 'modal_clasificado.html' %}
+                </div>
+                {% for field in form %}
+                    {% if field.name == 'valor' %}
+                        <div class="control-personalizado form-group">
+                            <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
+                            Desea incluir algún valor, precio, salario en su clasificado?
+                        </div>
+                        <div class="{% if not edicion %}display-none {% endif %} animated" id="valor-mostrar">
+                            {% bootstrap_field field %}
+                        </div>
+                    {% else %}
+                        {% bootstrap_field field %}
+                    {% endif %}
+                {% endfor %}
+
+                <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
+
+
+            </form>
+            <button class="btn btn-primary pull-right" style="margin-left:5px;" id="submit-crop">
+                {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+            </button>
+        </div>
+    </div>
+{% endblock %}
