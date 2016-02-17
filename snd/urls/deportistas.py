@@ -32,4 +32,8 @@ urlpatterns = patterns('snd.views.deportistas',
     url(r'^avalar-record$','avalar_logros_deportivos',name='avalar_logros_deportivos'),
     url(r'^avalar-record/aceptar/(\d+)/(\d+)$','aceptar_logros_deportivos',name='aceptar_logros_deportivos'),
     url(r'^avalar-record/rechazar/(\d+)/(\d+)$','rechazar_logros_deportivos',name='rechazar_logros_deportivos'),
+
+    #Urls ajax para categoria y modalidad
+    url(r'^modalidades/get/(\d+)$','get_modalidades',name='get_modalidades'),
+    url(r'^categorias/get/(\d+)$','get_categorias',name='get_categorias'),
 )
