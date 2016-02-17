@@ -12,14 +12,14 @@ def create_log_deportivo():
 	"""
     # file = open('datos_iniciales/disciplinas_deportivas/log_deportivo.txt', 'w+')
     entidades = Entidad.objects.exclude(schema_name='public')
-    array = []
+    array = {}
+    i = 0
     for e in entidades:
         connection.set_tenant(e)
         historiales = HistorialDeportivo.objects.all()
         for h in historiales:
             if h.modalidad or h.prueba or h.categoria:
-                array.append(
-                        {'Entidad': str(e.nombre),
+                array[i] = {'Entidad': str(e.nombre),
                         'Id Entidad' : str(e.id) ,
                         'Deportista' : str(h.deportista.full_name()) ,
                         'Id Deportista' : str(h.deportista.id) ,
@@ -28,7 +28,8 @@ def create_log_deportivo():
                         'Prueba' : str(h.prueba) ,
                         'Modalidad' :str(h.modalidad) ,
                         'Categoria' : str(h.categoria)
-                        })
+                        }
+                i+=1
     #file.close()
     print('log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt')
     return array
