@@ -108,9 +108,18 @@ class HistorialDeportivoForm(ModelForm):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
+        deporte_id = kwargs.pop('deporte_id',None)
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
+        self.fields['modalidad'] = adicionarClase(self.fields['modalidad'], 'one')
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+        self.fields['categoria'] = adicionarClase(self.fields['categoria'], 'one')
+        self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.none()
+        self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.none()
+        if deporte_id:
+            self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id)
+            self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id)
 
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_inicial']
