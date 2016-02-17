@@ -690,5 +690,6 @@ def cambio_disciplinas(request):
 
 @login_required
 def log_disciplinas(request):
-    create_log_deportivo()
-    return HttpResponse("Log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt")
+    j = create_log_deportivo()
+    return JsonResponse(j)
+    #return HttpResponse("Log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt")
