@@ -13,6 +13,7 @@ from io import BytesIO
 import base64
 import re
 
+
 # Create your views here.
 @login_required
 @permission_required('publicidad.add_clasificado')
@@ -38,14 +39,14 @@ def registrar_clasificado(request):
 
 def listar_clasificados(request):
 
-    clasificados = Clasificado.objects.filter(estado=1).order_by("-fecha_publicacion").all()
+    clasificados = Clasificado.objects.filter(estado=1).order_by("-fecha_publicacion")
 
     for clasificado in clasificados:
         clasificado.clase_inclinacion = random.randint(1,3)
 
     form = ClasificadoForm()
 
-    return render(request,'listar_clasificados.html',{'clasificados':clasificados,"form":form})
+    return render(request, 'listar_clasificados.html', {'clasificados': clasificados, "form": form})
 
 
 @login_required
@@ -59,7 +60,7 @@ def editar_clasificado(request,id_clasificado):
 
     form = ClasificadoForm(instance=clasificado)
     foto = clasificado.foto
-    if request.method=='POST':
+    if request.method == 'POST':
         nueva_foto = request.POST.get("imagen-crop")
         form = ClasificadoForm(request.POST,instance=clasificado)
         if form.has_changed or nueva_foto != "No":
@@ -71,8 +72,8 @@ def editar_clasificado(request,id_clasificado):
 
                 messages.success(request,'El clasificado se ha editado correctamente')
                 return redirect('listar_clasificados')
-    return render(request,'registrar_clasificado.html',{'form':form,
-                                               'edicion':True, "foto":foto})
+    return render(request,'registrar_clasificado.html',{'form': form,
+                                                        'edicion': True, "foto": foto})
 
 
 @login_required
@@ -97,10 +98,8 @@ def crop_pic(request):
     response_data = {"status":"error", 'message':'Only Post Accepted'}
     if request.method == 'POST':
 
-
         form = CropForm(request.POST)
         if form.is_valid():
-
 
             try:
                 # get the url of the working image i.e. www.example.com/media/pictures/uploaded_image.png
@@ -126,40 +125,45 @@ def crop_pic(request):
                 x2 = int(form.cleaned_data['cropW']) + x1
                 y2 = int(form.cleaned_data['cropH']) + y1
 
-                newim = newim.crop((x1,y1,x2,y2))
+                newim = newim.crop((x1, y1, x2, y2))
 
-                nombreTiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S");
+                nombre_tiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S");
 
-                newim.save("media/clasificados/"+str(nombreTiempo)+".png","PNG")
+                newim.save("media/clasificados/"+str(nombre_tiempo)+".png", "PNG")
 
                 response_data = {
-                    "status":"success",
-                    "url":"clasificados/"+str(nombreTiempo)+".png",
-                    "message":"ok",
+                    "status": "success",
+                    "url": "clasificados/"+str(nombre_tiempo)+".png",
+                    "message": "ok",
                     }
 
             except Exception as e:
                 print(e)
         else:
-            response_data = {"status":"error", 'message':form.errors}
+            response_data = {"status": "error", 'message': form.errors}
 
     # Croppic will parse the information returned into json. content_type needs
     # to be set as 'text/plain'
     print(response_data)
     return JsonResponse(response_data)
 
-@login_required()
+
 def filtro_clasificados(request):
+    from django.db.models import Q
     if request.is_ajax():
         try:
             categoria = request.POST.get("seleccion")
-            clasificados = Clasificado.objects.filter(categoria=categoria,estado=1)
+            palabra = request.POST.get("palabra").upper()
 
+            clasificados = Clasificado.objects.filter(Q(etiquetas__contains=palabra) | Q(descripcion__icontains=palabra) | Q(titulo__icontains=palabra),categoria__contains=categoria , estado=1)
 
             for clasificado in clasificados:
-                clasificado.clase_inclinacion = random.randint(1,3)
+                clasificado.clase_inclinacion = random.randint(1, 3)
 
-            return render(request,'tarjeta_clasificado.html',{"clasificados_filtrados":clasificados})
+            return render(request,'tarjeta_clasificado.html', {"clasificados_filtrados": clasificados})
         except Exception as e:
             print(e)
-            return render(request,'tarjeta_clasificado.html',{"clasificados_filtrados":clasificados})
+            messages.error(request, 'Ocurrió un error en el filtro de clasificados')
+            return redirect("listar_clasificados")
+    else:
+        return render(request, "403.html", {})

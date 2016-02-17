@@ -1,5 +1,6 @@
 from django import forms
 from .models import Clasificado
+from django.utils.translation import ugettext_lazy as _
 
 
 class ClasificadoForm(forms.ModelForm):
@@ -7,7 +8,12 @@ class ClasificadoForm(forms.ModelForm):
 
     class Meta:
         model = Clasificado
-        fields = [ 'categoria','titulo','descripcion','contacto','valor','etiquetas']
+        fields = ('categoria','titulo','descripcion','contacto','valor','etiquetas')
+        labels = {
+            'titulo': _('Título'),
+            'descripcion': _('Descripción'),
+            'categoria': _('Categoria del clasificado'),
+        }
 
 
 
