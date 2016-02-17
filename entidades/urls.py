@@ -39,4 +39,5 @@ urlpatterns = patterns('entidades.views',
     url(r'^cambiar-campo-espectadores$', 'cambiar_tipo_campo', name='cambiar_tipo_campo'),
     url(r'^refresh-public$', 'refresh_public', name='refresh_public'),
     url(r'^cambio-disciplinas$', 'cambio_disciplinas', name='cambio_disciplinas'),
+    url(r'^log-disciplinas$', 'log_disciplinas', name='log_disciplinas'),
 )
