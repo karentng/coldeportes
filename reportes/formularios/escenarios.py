@@ -20,6 +20,7 @@ class FiltrosEscenariosDMDForm(forms.Form):
         ('PM', 'Periodicidad de Mantenimiento de los Escenarios'),
         ('DIS', 'Días de Disponibilidad de los Escenarios'),
     )
+    
     def __init__(self, *args, **kwargs):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
         eliminar = kwargs.pop('eliminar', None)
@@ -27,8 +28,7 @@ class FiltrosEscenariosDMDForm(forms.Form):
         self.fields['departamentos'] = adicionarClase(self.fields['departamentos'], 'many')
         self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'], 'many')
         self.fields['municipios'] = adicionarClase(self.fields['municipios'], 'many')
-        self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
-        self.fields['reporte'] = adicionarClase(self.fields['reporte'], 'one')
+        #self.fields['reporte'] = adicionarClase(self.fields['reporte'], 'one')
 
         if eliminar:
             del self.fields[eliminar]
