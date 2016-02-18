@@ -19,6 +19,7 @@ from reportes.crear_vistas_actores import *
 from django.forms import modelformset_factory, modelform_factory
 from django.http import HttpResponse
 from datos_iniciales.disciplinas_deportivas.script_disciplina import *
+from datos_iniciales.disciplinas_deportivas.script_log_deportivo import *
 
 @login_required
 def tipo(request):
@@ -686,3 +687,9 @@ def cambio_disciplinas(request):
     insertar_actualizar_deportes()
     insertar_modalidades_categorias()
     return HttpResponse("Deportes, modalidades y categorias insertados en base de datos")
+
+@login_required
+def log_disciplinas(request):
+    j = create_log_deportivo()
+    return JsonResponse(j)
+    #return HttpResponse("Log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt")

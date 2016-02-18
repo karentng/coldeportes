@@ -19,6 +19,8 @@ Reportes:
     6. Gráfica de cono
     7. Gráfica de radar
 '''
+
+
 def verificar_seleccion_reporte(opcion_reporte):
     categoria = 'clase_acceso'
     if opcion_reporte == 'ES':
@@ -140,6 +142,12 @@ def generador_reporte_escenario(request, tabla, cantidad, categoria=None, choice
             auxiliar_escenarios[("%s %s")%("Comuna ", key)] = value
         escenarios = auxiliar_escenarios
 
+    #verifica si es el reporte de Características o por Departamentos para asignarles una visualización diferente
+    #if reporte == 'CE' or reporte == 'DT':
+    #    escenarios['visualizaciones'] = [1]
+    #else:
+    #    escenarios['visualizaciones'] = [1, 5, 6]
+
     if '' in escenarios:
         escenarios['Ninguna'] = escenarios['']
         del escenarios['']
@@ -164,12 +172,14 @@ def caracteristicas_escenarios(request):
 
     cantidad = 'id'
     escenarios = generador_reporte_escenario(request, tabla, cantidad)
+    visualizaciones = [1, 5, 6, 7]
     
 
     if request.is_ajax():
         return JsonResponse(escenarios)
 
-    visualizaciones = [1, 5 , 6]
+
+        
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario", "Periodicidad", "Día"]
     return render(request, 'escenarios/reporte_generador.html', {

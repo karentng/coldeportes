@@ -78,8 +78,7 @@
                                         </div>
                                         <h5 class="m-t-10"><strong>Descripción:</strong></h5>
                                         <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% endif %}</p>
-                                    </div>
-
+                                    </div>                                   
                                 </div>
                             </div>
                             
@@ -98,16 +97,22 @@
                                                 Disciplinas: {% for disciplina in caracteristica.tipo_disciplinas.all %} {{disciplina.descripcion}}, {% endfor %}<br />
                                                 Tipo de Superficie: {% for superficie in caracteristica.tipo_superficie_juego.all %} {{superficie.descripcion}}, {% endfor %}<br/>
                                                 Clase de Acceso: {{caracteristica.get_clase_acceso_display}} <br/>
-                                                Características del escenario: {% for caracteristica in caracteristica.caracteristicas.all %} {{caracteristica.descripcion}}, {% endfor %} <br/>
-                                                Clases de uso: {% for uso in caracteristica.clase_uso.all %} {{uso.descripcion}}, {% endfor %}                    
+                                                Características del escenario: 
+                                                {% for caracteristica in caracteristica.caracteristicas.all %}  
+                                                    {{caracteristica.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %} <br/>
+                                                Clases de uso: 
+                                                {% for uso in caracteristica.clase_uso.all %}  
+                                                    {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %}                    
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                             </div>
                                         </div>
-                                        <h5 class="m-t-10"><b>Descripción:</b></h5>
-                                        <p>{{caracteristica.descripcion}}</p>
-                                    </div>
+                                        <h5 class="m-t-10">Descripción:</h5>
+                                        <p>{% if caracteristica.descripcion %}{{caracteristica.descripcion}}{% endif %}</p>
+                                    </div>                                    
                                     {% endfor %}
                                 {% else %}
                                     <p>No hay características disponibles</p>
