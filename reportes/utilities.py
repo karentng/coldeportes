@@ -130,7 +130,7 @@ def puede_ver_reporte(actor):
                 permisos_text = []
                 for permiso in permisos:
                     permisos_text.append(permiso.codename)
-                if 'view_'+actor in permisos_text:
+                if 'view_'+actor in permisos_text or request.tenant.schema_name == 'public':
                     return a_view(request, *args, **kwargs)
                 else:
                     raise PermissionDenied
