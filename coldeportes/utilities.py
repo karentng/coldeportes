@@ -360,3 +360,5 @@ def obtener_modelo_actor(actor):
         return EscuelaDeportiva
     elif actor=='noticias':
         return Noticia
+    else:
+        return None
