@@ -87,6 +87,14 @@ class Actores(models.Model):
                 actores.append(i.verbose_name)
         return actores
 
+    def resumen_nombre_atributos(self):
+        actores = []
+        campos = self._meta.fields
+        for i in campos:
+            if getattr(self, i.name) == True and i.name != 'id':
+                actores.append(i.name)
+        return actores
+
 class Entidad(TenantMixin): # Entidad deportiva
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255, verbose_name="dirección")

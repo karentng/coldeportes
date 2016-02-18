@@ -62,38 +62,62 @@
             <a href="#show-all" class="btn btn-default dim active btn-sm btn-outline" data-option-value="*">
                 Todos
             </a>
-            <a href="#gallery-group-1" class="btn btn-info dim btn-sm" data-option-value=".gallery-group-1">
-                <i class="fa fa-bicycle"></i>
-                Centros de Acondicionamiento
-            </a>
-            <a href="#gallery-group-2" class="btn btn-warning dim btn-sm" data-option-value=".gallery-group-2">
-                <i class="fa fa-globe"></i>
-                Escenarios
-            </a>
-            <a href="#gallery-group-3" class="btn btn-primary dim btn-sm" data-option-value=".gallery-group-3">
-                <i class="fa fa-futbol-o"></i>
-                Deportistas
-            </a>
-            <a href="#gallery-group-4" class="btn btn-success dim btn-sm" data-option-value=".gallery-group-4">
-                <i class="ion-person-stalker"></i>
-                Dirigentes
-            </a>
-            <a href="#gallery-group-5" class="btn btn-danger dim btn-sm" data-option-value=".gallery-group-5">
-                <i class="ion-ios-basketball-outline"></i>
-                Personal de Apoyo
-            </a>
-            <a href="#gallery-group-6" class="btn btn-personal dim btn-sm" data-option-value=".gallery-group-6">
-                <i class="ion-ribbon-a"></i>
-                Escuelas Deportivas
-            </a>
+            {% if 'centros' in actores_permitidos_reportes %}
+                <a href="#gallery-group-1" class="btn btn-info dim btn-sm" data-option-value=".gallery-group-1">
+                    <i class="fa fa-bicycle"></i>
+                    Centros de Acondicionamiento
+                </a>
+            {% endif %}
+            {% if 'escenarios' in actores_permitidos_reportes %}
+                <a href="#gallery-group-2" class="btn btn-warning dim btn-sm" data-option-value=".gallery-group-2">
+                    <i class="fa fa-globe"></i>
+                    Escenarios
+                </a>
+            {% endif %}
+            {% if 'deportistas' in actores_permitidos_reportes %}
+                <a href="#gallery-group-3" class="btn btn-primary dim btn-sm" data-option-value=".gallery-group-3">
+                    <i class="fa fa-futbol-o"></i>
+                    Deportistas
+                </a>
+            {% endif %}
+            {% if 'dirigentes' in actores_permitidos_reportes %}
+                <a href="#gallery-group-4" class="btn btn-success dim btn-sm" data-option-value=".gallery-group-4">
+                    <i class="ion-person-stalker"></i>
+                    Dirigentes
+                </a>
+            {% endif %}
+            {% if 'personal_apoyo' in actores_permitidos_reportes %}
+                <a href="#gallery-group-5" class="btn btn-danger dim btn-sm" data-option-value=".gallery-group-5">
+                    <i class="ion-ios-basketball-outline"></i>
+                    Personal de Apoyo
+                </a>
+            {% endif %}
+            {% if 'escuelas_deportivas' in actores_permitidos_reportes %}
+                <a href="#gallery-group-6" class="btn btn-personal dim btn-sm" data-option-value=".gallery-group-6">
+                    <i class="ion-ribbon-a"></i>
+                    Escuelas Deportivas
+                </a>
+            {% endif %}
         </span>
     </div>
     <div id="gallery" class="gallery">
-        {% include "publico/cafs.html" %}
-        {% include "publico/deportistas.html" %}
-        {% include "publico/dirigentes.html" %}
-        {% include "publico/escenarios.html" %}
-        {% include "publico/personal_apoyo.html" %}
-        {% include "publico/escuelas.html" %}
+        {% if 'centros' in actores_permitidos_reportes %}
+            {% include "publico/cafs.html" %}
+        {% endif %}
+        {% if 'deportistas' in actores_permitidos_reportes %}
+            {% include "publico/deportistas.html" %}
+        {% endif %}
+        {% if 'dirigentes' in actores_permitidos_reportes %}
+            {% include "publico/dirigentes.html" %}
+        {% endif %}
+        {% if 'escenarios' in actores_permitidos_reportes %}
+            {% include "publico/escenarios.html" %}
+        {% endif %}
+        {% if 'personal_apoyo' in actores_permitidos_reportes %}
+            {% include "publico/personal_apoyo.html" %}
+        {% endif %}
+        {% if 'escuelas_deportivas' in actores_permitidos_reportes %}
+            {% include "publico/escuelas.html" %}
+        {% endif %}
     </div>
 {% endblock %}
