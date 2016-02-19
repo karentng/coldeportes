@@ -37,26 +37,26 @@ class PersonalApoyo(models.Model):
         ('PALENQUERO','PALENQUERO'),
         ('RAIZAL','RAIZAL'),
     )
-
     ACTIVIDADES = (
-        (0,'MÉDICO DEPORTÓLOGO'),
+        (14,'ANIMADOR SOCIOCULTURAL'),
+        (9,'BIOMECÁNICO'),
+        (11,'ENTRENADOR'),
+        (13,'ENTRENADOR PERSONALIZADO'),
+        (8,'FISIÓLOGO'),
         (1,'FISIOTERAPEUTA'),
-        (2,'PSICÓLOGO DEPORTIVO'),
+        (0,'MÉDICO DEPORTÓLOGO'),
+        (10,'METODÓLOGO'),
+        (12,'MONITOR'),
         (3,'NUTRICIONISTA'),
+        (6,'PREPARADOR FÍSICO'),
+        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+        (2,'PSICÓLOGO DEPORTIVO'),
         (4,'QUINESIÓLOGO'),
         (5,'QUIROPRÁCTICO'),
-        (6,'PREPARADOR FÍSICO'),
-        (7,'TRABAJADOR SOCIAL'),
-        (8,'FISIÓLOGO'),
-        (9,'BIOMECÁNICO'),
-        (10,'METODÓLOGO'),
-        (11,'ENTRENADOR'),
-        (12,'MONITOR'),
-        (13,'ENTRENADOR PERSONALIZADO'),
-        (14,'ANIMADOR SOCIOCULTURAL'),
         (15,'RECREADOR'),
-        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+        (7,'TRABAJADOR SOCIAL'),
     )
+
     actividad = models.IntegerField(choices=ACTIVIDADES,verbose_name='Actividad a desempeñar')
     estado = models.IntegerField(choices=ESTADOS, default=0)
     nombres = models.CharField(max_length=50)
