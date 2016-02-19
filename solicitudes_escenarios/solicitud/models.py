@@ -3,7 +3,9 @@ from snd.models import Escenario
 from entidades.models import Entidad
 # Create your models here.
 class SolicitudEscenario(models.Model):
-    TIPOS= ()
+    TIPOS= (
+        (0,'INFRAESTRUCTURA'),
+    )
     PRIORIDADES = (
         (0,'BAJA'),
         (1,'MEDIA'),
@@ -41,7 +43,3 @@ class DiscucionSolicitud(models.Model):
     estado_actual = models.IntegerField(choices=ESTADOS)
     descripcion = models.TextField()
     solicitud = models.ForeignKey(SolicitudEscenario)
-
-class ListaSolicitudes(models.Model):
-    entidad_solicitante = models.ForeignKey(Entidad)
-    solicitud = models.PositiveIntegerField()
