@@ -67,12 +67,12 @@ $(document).ready(function(){
         var categoria = $this.attr("data-categoria");
         var etiquetas = $this.attr("data-etiquetas");
 
-        $("#titulo-modal").html(titulo);
+        $("#titulo-modal").text(titulo).html();
         $("#id-foto").attr("src",media+foto);
-        $("#fecha-pub").html(fecha);
-        $("#categoria").html(categoria);
-        $("#contacto").html(contacto);
-        $("#descripcion").html(descripcion);
+        $("#fecha-pub").text(fecha).html();
+        $("#categoria").text(categoria).html();
+        $("#contacto").text(contacto).html();
+        $("#descripcion").text(descripcion).html();
         $("#etiquetas").append(etiquetas);
         if(valor !="None"){
             $(".ver").show();

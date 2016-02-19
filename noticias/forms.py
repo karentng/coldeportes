@@ -1,16 +1,15 @@
 from django import forms
 from .models import Noticia
-from coldeportes.utilities import verificar_tamano_archivo
+from django.utils.translation import ugettext_lazy as _
 
 
 class NoticiaForm(forms.ModelForm):
     required_css_class = 'required'
 
-    def clean(self):
-        cleaned_data = super(NoticiaForm, self).clean()
-        self = verificar_tamano_archivo(self, cleaned_data, "foto")
-        return self.cleaned_data
-
     class Meta:
         model = Noticia
-        fields = '__all__'
+        fields = ('titulo','fecha_expiracion','autor','cuerpo_noticia','etiquetas')
+        labels = {
+            'titulo': _('Título'),
+            'fecha_expiracion': _('Fecha Expiración'),
+        }

@@ -53,8 +53,8 @@
     <div class="contenedorClasificados" id="card-container">
         {% for clasificado in clasificados %}
             <div class="card {% if clasificado.clase_inclinacion == 1 %}inclinacionIzq{% elif clasificado.clase_inclinacion == 2 %}inclinacionDer{% endif %}" >
-                <span class="folded-corner add-tooltip" data-toggle="modal" data-target="#modal-vermas" title="Ver más" data-titulo="{{ clasificado.titulo }}" data-descripcion="{{ clasificado.descripcion }}" data-valor="{{ clasificado.valor }}"
-                    data-categoria="{{ clasificado.get_categoria_display }}" data-foto="{{ clasificado.foto }}" data-contacto="{{ clasificado.contacto }}" data-fecha="{{ clasificado.fecha_publicacion }}" data-etiquetas="{{ clasificado.etiquetas }}">
+                <span class="folded-corner add-tooltip" data-toggle="modal" data-target="#modal-vermas" title="Ver más" data-titulo="{{ clasificado.titulo|force_escape }}" data-descripcion="{{ clasificado.descripcion|force_escape }}" data-valor="{{ clasificado.valor }}"
+                    data-categoria="{{ clasificado.get_categoria_display }}" data-foto="{{ clasificado.foto }}" data-contacto="{{ clasificado.contacto|force_escape }}" data-fecha="{{ clasificado.fecha_publicacion }}" data-etiquetas="{{ clasificado.etiquetas|force_escape }}">
                     <i class="fa fa-hand-o-up fa-3x"></i>
                 </span>
                 <img src="{{STATIC_URL}}img/chinche-1.png" class="chincheImg">
@@ -66,15 +66,15 @@
                             <i  class="fa fa-trash fa-2x text-danger add-tooltip" data-toggle="modal" data-target="#modal-eliminar" title="Eliminar Clasificado"  data-id="{{ clasificado.id }}"></i>
                         </div>
                     {% endif %}
-                    <h3>{{ clasificado.titulo }}</h3>
-                    <p>{{ clasificado.descripcion|slice:":150"}}...</p>
+                    <h3>{{ clasificado.titulo|force_escape }}</h3>
+                    <p>{{ clasificado.descripcion|force_escape|slice:":150"}}...</p>
                 </div>
             </div>
         {% endfor %}
         {% if clasificados|length == 0 %}
             <div class="card" id="clasificados-vacio">
-                <div class="descripcionCla">
-                    <p>No hay clasificados disponibles en la base de datos</p>
+                <div class="descripcionCla" style="text-align: center !important;">
+                    <h3>No hay clasificados disponibles en la base de datos</h3>
                 </div>
             </div>
         {% endif %}

@@ -49,23 +49,34 @@
 
                     $("#clasificado-form").bootstrapValidator('validate');
 
-                    if(!$('.cropControls.cropControlsCrop').length || $("div.form-group").hasClass("has-error")){
-                        alert("Debes cargar la imagen");
+                    if($("div.form-group").hasClass("has-error")){
+
                     }else {
+                        if($('.cropControls.cropControlsCrop').length) {
+                            console.log("Cortando");
+                            $('.cropControlCrop').click();
+                        }else{
+                            document.getElementById("clasificado-form").submit();
+                            return false;
+                        }
+                    }
+                }
+            {% else %}
+
+                $("#clasificado-form").bootstrapValidator('validate');
+
+                if($("div.form-group").hasClass("has-error")){
+                    return false;
+                }else {
+                    if($('.cropControls.cropControlsCrop').length) {
                         console.log("Cortando");
                         $('.cropControlCrop').click();
+                    }else{
+                        document.getElementById("clasificado-form").submit();
+                        return false;
                     }
                 }
             {% endif %}
-
-            $("#clasificado-form").bootstrapValidator('validate');
-
-            if(!$('.cropControls.cropControlsCrop').length || $("div.form-group").hasClass("has-error")){
-                alert("Debes cargar la imagen");
-            }else {
-                console.log("Cortando");
-                $('.cropControlCrop').click();
-            }
         });
 
 

@@ -65,6 +65,7 @@
     {% include "menus/aplicacion/directorio.html" %}
     {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/reportes.html" %}
+    {% include "menus/aplicacion/noticias.html" %}
     {% include "menus/aplicacion/publicidad.html" %}
 
 {% endif %}
@@ -72,6 +73,7 @@
     {% if user.is_authenticated and user.is_superuser %}
         {% include "menus/aplicacion/entidades.html" %}
         {% include "menus/aplicacion/noticias.html" %}
+        {% include "menus/aplicacion/publicidad.html" %}
         {% include "menus/aplicacion/directorio.html" %}
         {% include "menus/aplicacion/normograma.html" %}
         {% include "menus/aplicacion/manual.html" %}

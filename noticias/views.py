@@ -19,11 +19,10 @@ def registrar_noticia(request):
     return render(request,'registrar_noticia.html',{'form':form})
 
 
-@login_required
 def listar_noticias(request):
     noticias = Noticia.objects.all()
 
-    return render(request,'listar_noticia.html',{'noticias':noticias})
+    return render(request, 'listar_noticias.html', {'noticias': noticias})
 
 
 @login_required

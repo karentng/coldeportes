@@ -23,9 +23,15 @@ def registrar_clasificado(request):
         form = ClasificadoForm(request.POST)
         if form.is_valid():
             clasificado = form.save(commit=False)
+            nueva_foto = request.POST.get('imagen-crop')
 
             clasificado.titulo=clasificado.titulo.upper()
-            clasificado.foto = request.POST.get('imagen-crop')
+
+            if nueva_foto == "No":
+                clasificado.foto = "clasificados/clasificados-default.png"
+            else:
+                clasificado.foto = nueva_foto
+
             clasificado.fecha_expiracion = datetime.datetime.now() + datetime.timedelta(days=30)
             clasificado.etiquetas = clasificado.etiquetas.upper()
             form.save()
@@ -39,7 +45,7 @@ def registrar_clasificado(request):
 
 def listar_clasificados(request):
 
-    clasificados = Clasificado.objects.filter(estado=1).order_by("-fecha_publicacion")
+    clasificados = Clasificado.objects.filter(estado=1, fecha_expiracion__gte=datetime.date.today()).order_by("-fecha_publicacion")
 
     for clasificado in clasificados:
         clasificado.clase_inclinacion = random.randint(1,3)
@@ -51,7 +57,7 @@ def listar_clasificados(request):
 
 @login_required
 @permission_required('publicidad.change_clasificado')
-def editar_clasificado(request,id_clasificado):
+def editar_clasificado(request, id_clasificado):
     try:
         clasificado = Clasificado.objects.get(id=id_clasificado)
     except Exception:
@@ -72,7 +78,7 @@ def editar_clasificado(request,id_clasificado):
 
                 messages.success(request,'El clasificado se ha editado correctamente')
                 return redirect('listar_clasificados')
-    return render(request,'registrar_clasificado.html',{'form': form,
+    return render(request,'registrar_clasificado.html', {'form': form,
                                                         'edicion': True, "foto": foto})
 
 
@@ -82,20 +88,20 @@ def eliminar_clasificado(request,id_clasificado):
     try:
         clasificado = Clasificado.objects.get(id=id_clasificado)
     except Exception:
-        messages.error(request,'El clasificado que está intentando eliminar no existe')
+        messages.error(request, 'El clasificado que está intentando eliminar no existe')
         return redirect('listar_clasificados')
 
     clasificado.estado = 0
     clasificado.save()
 
-    messages.success(request,'Se ha eliminado el clasificado correctamente')
+    messages.success(request, 'Se ha eliminado el clasificado correctamente')
     return redirect('listar_clasificados')
 
 
 @login_required
 def crop_pic(request):
     import os
-    response_data = {"status":"error", 'message':'Only Post Accepted'}
+    response_data = {"status": "error", 'message': 'Only Post Accepted'}
     if request.method == 'POST':
 
         form = CropForm(request.POST)
