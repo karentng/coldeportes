@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Adecuación Escenarios - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Solicitudes de adecuación de escenarios
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li>Adecuación Escenarios</li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Solicitudes de adecuación de escenarios
+{% endblock %}
+
+{% block contenido_panel %}
+    <!-- begin vertical-box -->
+		    <div class="vertical-box">
+
+		        <div class="vertical-box-column bg-white">
+
+		            <!-- begin wrapper -->
+                    <div  class="wrapper bg-silver-lighter clearfix">
+                        <a href="{% url 'cancelar_solicitud' sol_id %}" class="btn btn-warning p-l-40 p-r-40 btn-sm">
+                            Cancelar
+                        </a>
+                        <div class="pull-right">
+                            <div class="btn-group btn-toolbar">
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+                            </div>
+                            <div class="btn-group m-l-5">
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+
+                    <div class="wrapper">
+
+                        <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitud de adecuación de escenario</h4>
+                        {% include 'wizard/_wizard.html' %}
+                        <form action="" method="POST" id="form-solicitud-escenario">
+                            {% csrf_token %}
+                            <h4><strong>Archivos Adjuntos</strong></h4>
+                            <fieldset>
+                                <legend></legend>
+
+                                <div class="col-md-6">
+                                    {% bootstrap_field form.archivo layout="verical" %}
+                                </div>
+
+                                <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <hr>
+                                        <a href="{% url 'generar_solicitud' sol_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+                                        <a href="{% url 'finalizar_solicitud' sol_id %}" class="btn btn-primary pull-right">
+                                            <i class="fa fa-save"></i>Finalizar
+                                        </a>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <br><br><br>
+                    </div>
+		            <!-- end wrapper -->
+		            <!-- begin wrapper -->
+                    <div class="wrapper bg-silver-lighter text-right clearfix">
+                        Solicitudes de adecuación de escenarios, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+                    </div>
+		            <!-- end wrapper -->
+		        </div>
+		        <!-- end vertical-box-column -->
+		    </div>
+		    <!-- end vertical-box -->
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+{% endblock %}
+
+{% block script %}
+	<script>
+		$(document).ready(function() {
+			App.init();
+			FormWizard.init();
+		});
+	</script>
+{% endblock %}

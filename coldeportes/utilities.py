@@ -50,7 +50,7 @@ def verificar_tamano_archivo(self, datos, campo):
                     from django.forms.util import ErrorList
                     if not campo in self._errors:
                         self._errors[campo] = ErrorList()
-                    self._errors[campo].append("El tamaño de la foto no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
+                    self._errors[campo].append("El tamaño del archivo no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
             except Exception:
                 pass
         else:
