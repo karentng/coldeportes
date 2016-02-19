@@ -23,6 +23,7 @@ class SolicitudEscenario(models.Model):
     prioridad = models.IntegerField(choices=PRIORIDADES)
     descripcion = models.TextField()
     para_quien = models.ForeignKey(Entidad)
+    fecha = models.DateTimeField(auto_now=True)
 
     def codigo_unico(self):
         return ("AD-%s-%s")%(self.para_quien.id,self.id)
