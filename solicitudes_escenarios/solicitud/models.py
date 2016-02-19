@@ -28,10 +28,6 @@ class SolicitudEscenario(models.Model):
     def codigo_unico(self):
         return ("AD-%s-%s")%(self.para_quien.id,self.id)
 
-class AdjuntoSolicitud(models.Model):
-    solicitud = models.ForeignKey(SolicitudEscenario)
-    archivo = models.FileField(upload_to="solicitudes_escenarios")
-
 class DiscucionSolicitud(models.Model):
     ESTADOS = (
         (0,'ESPERANDO RESPUESTA'),
@@ -44,3 +40,9 @@ class DiscucionSolicitud(models.Model):
     estado_actual = models.IntegerField(choices=ESTADOS)
     descripcion = models.TextField()
     solicitud = models.ForeignKey(SolicitudEscenario)
+
+class AdjuntoSolicitud(models.Model):
+    solicitud = models.ForeignKey(SolicitudEscenario)
+    archivo = models.FileField(upload_to="solicitudes_escenarios")
+    discucion = models.ForeignKey(DiscucionSolicitud,null=True,blank=True)
+

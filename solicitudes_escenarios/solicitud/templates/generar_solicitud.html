@@ -21,22 +21,14 @@
 {% block contenido_panel %}
     <!-- begin vertical-box -->
 		    <div class="vertical-box">
-		        <!-- begin vertical-box-column -->
-		        <div class="vertical-box-column width-250">
+
+		        <div class="vertical-box-column bg-white">
+
 		            <!-- begin wrapper -->
-                    <div class="wrapper bg-silver text-center">
-                        <a href="{% url 'listar_solicitudes' %}" class="btn btn-success p-l-40 p-r-40 btn-sm">
+                    <div  class="wrapper bg-silver-lighter clearfix">
+                        <a href="{% url 'listar_solicitudes' %}" class="btn btn-warning p-l-40 p-r-40 btn-sm">
                             Cancelar
                         </a>
-                    </div>
-		            <!-- end wrapper -->
-		        </div>
-		        <!-- end vertical-box-column -->
-		        <!-- begin vertical-box-column -->
-		        <div class="vertical-box-column bg-white">
-		            <!-- begin wrapper -->
-                    <div class="wrapper bg-silver-lighter clearfix">
-
                         <div class="pull-right">
                             <div class="btn-group btn-toolbar">
                                 <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
@@ -64,29 +56,37 @@
                                 </div>
                             </li>
 						</ul>
-                        <strong>Datos de la solicitud</strong><br/><br/>
+                        <h4><strong>Datos de la solicitud</strong></h4>
                         <!-- begin email form -->
-                        <form action="" method="POST" id="form-solicitud-escenario">
-                            {% csrf_token %}
-                            <div class="col-md-12">
-								{% bootstrap_field form.escenarios layout="verical" %}
-							</div>
-                            <div class="col-md-12">
-								{% bootstrap_field form.tipo layout="verical" %}
-							</div>
-                            <div class="col-md-12">
-								{% bootstrap_field form.prioridad layout="verical" %}
-							</div>
-                            <div class="col-md-12">
-								{% bootstrap_field form.descripcion layout="verical" %}
-							</div>
-                            <div class="col-md-12">
-								{% bootstrap_field form.para_quien layout="verical" %}
-							</div>
-                        </form>
+                        <fieldset>
+                            <legend></legend>
+                            <form action="" method="POST" id="form-solicitud-escenario">
+                                {% csrf_token %}
 
+                                <div class="col-md-6">
+                                    {% bootstrap_field form.tipo layout="verical" %}
+                                </div>
+                                <div class="col-md-6">
+                                    {% bootstrap_field form.escenarios layout="verical" %}
+                                </div>
+                                <div class="col-md-6">
+                                    {% bootstrap_field form.prioridad layout="verical" %}
+                                </div>
+                                <div class="col-md-6">
+                                    {% bootstrap_field form.para_quien layout="verical" %}
+                                </div>
+                                <div class="col-md-6">
+                                    {% bootstrap_field form.descripcion layout="verical" %}
+                                </div>
+                                <div class="pull-right">
+                                    <button type="submit" for="form-solicitud-escenario" class="btn btn-primary p-l-40 p-r-40 pull-rigth">Enviar</button>
+                                </div>
+                            </form>
+                        </fieldset>
+                        <h4><strong>Archivos Adjuntos</strong></h4>
+                        <fieldset>
+                            <legend></legend>
                          <ul class="attached-document clearfix">
-                            <strong>Archivos Adjuntos</strong><br/><br/>
                             {%if objeto.fotos%}
                                 {% for f in objeto.fotos %}
                                     {%if f%}
@@ -117,16 +117,9 @@
                                 </li>
                             {%endif%}
                          </ul>
-                        <p class="f-s-12 text-inverse">
-                            Coordialmente,<br />
-                            {{request.tenant}}.<br />
-                            Entidad del SND,<br />
-                            Coldeportes<br />
-                        </p>
-                        <button type="submit" for="form-solicitud-escenario" class="btn btn-primary p-l-40 p-r-40">Enviar</button>
-                        <!-- end email form -->
-                        <br />
-                        <br />
+                        </fieldset>
+
+                        <br><br><br>
                     </div>
 		            <!-- end wrapper -->
 		            <!-- begin wrapper -->

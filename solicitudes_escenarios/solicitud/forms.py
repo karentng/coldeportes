@@ -3,6 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from solicitudes_escenarios.solicitud.models import SolicitudEscenario,Escenario
 from coldeportes.utilities import adicionarClase
+from entidades.models import Entidad
 
 class SolicitudEscenarioForm(ModelForm):
     required_css_class = 'required'
@@ -13,6 +14,8 @@ class SolicitudEscenarioForm(ModelForm):
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['prioridad'] = adicionarClase(self.fields['prioridad'], 'one')
         self.fields['para_quien'] = adicionarClase(self.fields['para_quien'], 'one')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['para_quien'].queryset = Entidad.objects.filter(tipo__in=[0,5])
 
     def clean(self):
         cleaned_data = super(SolicitudEscenarioForm, self).clean()
