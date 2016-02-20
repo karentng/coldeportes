@@ -22,7 +22,7 @@ class SolicitudEscenario(models.Model):
     escenarios = models.ManyToManyField(Escenario)
     #tipo = models.IntegerField(choices=TIPOS)
     prioridad = models.IntegerField(choices=PRIORIDADES)
-    estado = models.IntegerField(choices=ESTADOS)
+    estado = models.IntegerField(choices=ESTADOS,default=0)
     descripcion = models.TextField()
     para_quien = models.ForeignKey(Entidad)
     fecha = models.DateTimeField(auto_now=True)
@@ -57,7 +57,6 @@ class AdjuntoSolicitud(models.Model):
 
     def icon_extension(self):
         name, extension = os.path.splitext(self.archivo.name)
-        print(extension)
         if extension in ['.pdf','.PDF']:
             return 'pdf'
         if extension in ['.doc','.docx', '.DOC','.DOCX']:

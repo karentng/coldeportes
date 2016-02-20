@@ -16,10 +16,9 @@ class SolicitudEscenarioForm(ModelForm):
         self.fields['descripcion'].widget.attrs['rows'] = 3
         self.fields['para_quien'].queryset = Entidad.objects.filter(tipo__in=[0,5])
 
-
     class Meta:
         model = SolicitudEscenario
-        exclude = ('fecha',)
+        exclude = ('fecha','estado',)
 
 class AdjuntoSolicitudForm(ModelForm):
     required_css_class = 'required'

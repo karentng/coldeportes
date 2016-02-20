@@ -31,7 +31,6 @@ def generar_solicitud(request,id=None):
             ListaSolicitudes.objects.create(solicitud=nueva_solicitud.id,entidad_solicitante=entidad).save()
             connection.set_tenant(entidad)
             return redirect('adjuntar_archivo_solicitud',nueva_solicitud.id)
-
     return render(request,'wizard/wizard_solicitud.html',{
         'form': form,
         'wizard_stage': 1

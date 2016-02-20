@@ -2,7 +2,9 @@
     <li role="tab" {% if wizard_stage == 1 %} aria-selected="true" class="active" {% endif %} style="z-index: 7;">
         <span class="label badge-inverse">1</span>
         <a class="hidden-phone">
-            Solicitud <small>Datos de la solicitud de adecuación de escenarios</small>
+            <a {% if wizard_stage == 2 %} href="{% url 'generar_solicitud' sol_id %}" style="cursor:pointer;"{% endif %}>
+                Solicitud <small>Datos de la solicitud de adecuación de escenarios</small>
+            </a>
         </a>
     </li>
     <li role="tab"  {% if wizard_stage == 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 6;">
