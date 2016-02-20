@@ -24,11 +24,6 @@ class SolicitudEscenarioForm(ModelForm):
 class AdjuntoSolicitudForm(ModelForm):
     required_css_class = 'required'
 
-    def clean(self):
-        cleaned_data = super(AdjuntoSolicitudForm, self).clean()
-        self = verificar_tamano_archivo(self, cleaned_data, "archivo")
-        return self.cleaned_data
-
     class Meta:
         model = AdjuntoSolicitud
         exclude = ('solicitud','discucion',)

@@ -1,6 +1,7 @@
 from django.db import models
 from snd.models import Escenario
 from entidades.models import Entidad
+import os
 # Create your models here.
 class SolicitudEscenario(models.Model):
     #TIPOS= (
@@ -48,6 +49,26 @@ class DiscucionSolicitud(models.Model):
 
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudEscenario)
-    archivo = models.FileField(upload_to="solicitudes_escenarios")
+    archivo = models.FileField(upload_to="adjuntos_adecuacion_escenarios",verbose_name='Archivo a adjuntar')
     discucion = models.ForeignKey(DiscucionSolicitud,null=True,blank=True)
+
+    def nombre_archivo(self):
+        return os.path.basename(self.archivo.name)
+
+    def icon_extension(self):
+        name, extension = os.path.splitext(self.archivo.name)
+        print(extension)
+        if extension in ['.pdf','.PDF']:
+            return 'pdf'
+        if extension in ['.doc','.docx', '.DOC','.DOCX']:
+            return 'word'
+        if extension in ['.xls','.xlsx','.XLS','.XLSX']:
+            return 'excel'
+        if extension in ['.zip','.rar','.ZIP','.RAR']:
+            return 'zip'
+        if extension in ['.jpg','.jpeg','.png','.gif','.JPG','.JPEG','.PNG','.GIF']:
+            return 'picture'
+        if extension in ['.ppt','.pptx','.PPT','.PPTX']:
+            return 'powerpoint'
+        return 'file'
 

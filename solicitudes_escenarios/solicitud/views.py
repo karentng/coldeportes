@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from solicitudes_escenarios.solicitud.forms import SolicitudEscenarioForm,AdjuntoSolicitudForm
 from solicitudes_escenarios.respuesta.models import ListaSolicitudes
-from solicitudes_escenarios.solicitud.models import SolicitudEscenario
+from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud
 from django.db import connection
 from django.contrib import messages
 # Create your views here.
@@ -48,19 +48,31 @@ def adjuntar_archivo_solicitud(request,id):
     form = AdjuntoSolicitudForm()
 
     if request.method == 'POST':
-        form = AdjuntoSolicitudForm(request.POST)
+        form = AdjuntoSolicitudForm(request.POST,request.FILES)
         if form.is_valid():
             ad = form.save(commit=False)
             ad.solicitud = solicitud
             ad.save()
             return redirect('adjuntar_archivo_solicitud',solicitud.id)
-
     return render(request,'wizard/wizard_adjuntos.html',{
         'form' : form,
         'sol_id': id,
         'wizard_stage': 2,
         'adjuntos': solicitud.adjuntos()
     })
+
+@login_required
+def borrar_adjunto(request,id_sol,id_adj):
+    try:
+        adjunto = AdjuntoSolicitud.objects.get(id=id_adj,solicitud=id_sol)
+    except Exception:
+        messages.error(request,'No existe el archivo adjunto, no se ha realizado ninguna accion')
+        return redirect('adjuntar_archivo_solicitud',id_sol)
+
+    adjunto.delete()
+    messages.success(request,'Archivo adjunto eliminado satisfactoriamente')
+    return redirect('adjuntar_archivo_solicitud',id_sol)
+
 
 @login_required
 def finalizar_solicitud(request,id):
