@@ -16,7 +16,8 @@ class SolicitudEscenario(models.Model):
         (0,'ESPERANDO RESPUESTA'),
         (1,'INCOMPLETA'),
         (2,'APROBADA'),
-        (3,'ANULADA')
+        (3,'ANULADA'),
+        (4,'CANCELADA POR ENTIDAD'),
     )
 
     escenarios = models.ManyToManyField(Escenario)
@@ -32,6 +33,9 @@ class SolicitudEscenario(models.Model):
 
     def adjuntos(self):
         return AdjuntoSolicitud.objects.filter(solicitud=self)
+
+    def escenarios_str(self):
+        return ','.join([e.nombre for e in self.escenarios.all()])
 
 class DiscucionSolicitud(models.Model):
     ESTADOS = (

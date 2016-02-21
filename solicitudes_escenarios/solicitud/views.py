@@ -133,7 +133,10 @@ def finalizar_solicitud(request,id):
 
 @login_required
 def listar_solicitudes(request):
-    return HttpResponse('Hola mundo')
+    solicitudes = SolicitudEscenario.objects.all()
+    return render(request,'lista_mis_solicitudes.html',{
+        'solicitudes': solicitudes
+    })
 
 @login_required
 def cancelar_solicitud(request, id=None):
