@@ -1,6 +1,6 @@
 from django import forms
 from .models import Noticia
-from django.utils.translation import ugettext_lazy as _
+from coldeportes.utilities import MyDateWidget
 
 
 class NoticiaForm(forms.ModelForm):
@@ -8,8 +8,9 @@ class NoticiaForm(forms.ModelForm):
 
     class Meta:
         model = Noticia
-        fields = ('titulo','fecha_expiracion','autor','cuerpo_noticia','etiquetas')
-        labels = {
-            'titulo': _('Título'),
-            'fecha_expiracion': _('Fecha Expiración'),
+        fields = ('titulo', 'fecha_inicio', 'fecha_expiracion', 'autor', 'cuerpo_noticia', 'etiquetas')
+
+        widgets = {
+            'fecha_inicio': MyDateWidget(),
+            'fecha_expiracion': MyDateWidget()
         }

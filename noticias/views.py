@@ -9,14 +9,14 @@ from .models import Noticia
 @permission_required('noticias.add_noticia')
 def registrar_noticia(request):
     if request.method == 'POST':
-        form = NoticiaForm(request.POST,request.FILES)
+        form = NoticiaForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request,'Se ha registrado la noticia correctamente')
             return redirect('listar_noticias')
     else:
         form = NoticiaForm()
-    return render(request,'registrar_noticia.html',{'form':form})
+    return render(request, 'registrar_noticia.html', {'form':form})
 
 
 def listar_noticias(request):

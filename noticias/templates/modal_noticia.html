@@ -9,10 +9,10 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <img style="width:100%;height:auto;" src="{{ noticia.foto.url }}" alt="foto-noticia"/>
+                        <img style="width:100%;height:auto;" src="" alt="foto-noticia"/>
                     </div>
                     <div class="col-md-8">
-                        <p>{{ noticia.cuerpo_noticia }}</p>
+                        <p>{{ noticia.cuerpo_noticia|safe }}</p>
                     </div>
                 </div>
 

@@ -44,7 +44,7 @@
                                 <td>{{noticia.titulo}}</td>
                                 <td>{{noticia.fecha_publicacion}}</td>
                                 <td>
-                                    <a href="javascript:;" data-target='#modal-noticia-{{ noticia.id }}' data-toggle="modal">
+                                    <a href="" data-target='#modal-noticia-{{ noticia.id }}' data-toggle="modal">
                                         <i class="fa fa-eye"></i> Vista previa
                                     </a>
                                     <br/>
@@ -60,9 +60,9 @@
                                             <i class="fa fa-trash-o"></i> Eliminar
                                         </a>
                                     {% endif %}
+                                    {% include 'modal_noticia.html' %}
                                 </td>
                             </tr>
-                            {% include 'modal_noticia.html' %}
                         {% endfor %}
                     </tbody>
                 </table>
