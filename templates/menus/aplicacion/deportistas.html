@@ -13,9 +13,11 @@
             <a href="{% url 'deportista_listar' %}">Listar deportistas</a>
         </li>
         {%if request.tenant.avalable %}
-            <li {% if "/deportistas/avalar-record" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'avalar_logros_deportivos' %}">Avalar historial deportivo</a>
-            </li>
+            {% if perms.snd.add_deportista %}
+                <li {% if "/deportistas/avalar-record" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'avalar_logros_deportivos' %}">Avalar historial deportivo</a>
+                </li>
+            {% endif %}
         {% endif %}
     </ul>
 </li>
