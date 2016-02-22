@@ -424,7 +424,7 @@ MODELOS_DE_DATOS = (
                 'fa-gear',
                 [
                     [
-                        ['entidad'],
+                        'snd.add_escenario',
                     ]
                 ]
             ],

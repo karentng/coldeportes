@@ -83,6 +83,7 @@ class ComposicionCorporalForm(ModelForm):
         self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
         self.fields['imc'].widget.attrs['readonly'] = 1
         self.fields['masa_corporal_magra'].widget.attrs['readonly'] = 1
+        self.fields['eps'].queryset = EPS.objects.all().order_by('nombre')
 
     def clean(self):
         porcentaje_grasa = self.cleaned_data['porcentaje_grasa']
@@ -117,9 +118,10 @@ class HistorialDeportivoForm(ModelForm):
         self.fields['categoria'] = adicionarClase(self.fields['categoria'], 'one')
         self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.none()
         self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.none()
+        self.fields['deporte'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
         if deporte_id:
-            self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id)
-            self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id)
+            self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+            self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
 
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_inicial']
