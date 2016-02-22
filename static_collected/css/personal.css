@@ -1,0 +1,30 @@
+.required label:after{
+    content: ' *';
+}
+
+.form-control-feedback{
+    top: -10px !important;
+}
+
+.contenido-footer{
+    padding: 8px 40px;
+    font-size: 11px;
+    z-index: 20;
+    font-weight: 300;
+    line-height: 140%;
+}
+
+.item-footer{
+    padding-right:40px;
+}
+
+.contact-footer{
+    vertical-align:middle;
+    font-weight: bold;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#footer{
+    background: rgba(0, 0, 0, 0.7) none repeat scroll 0% 0%;
+    color: #999;
+}

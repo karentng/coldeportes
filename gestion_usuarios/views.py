@@ -20,7 +20,6 @@ from entidades.models import Entidad
 from reportes.utilities import atributos_actor_vista
 from django.http import HttpResponse
 
-from django.http import HttpResponse
 
 def cambiarNombreDePermisos():
     permisos = Permission.objects.filter(
@@ -111,15 +110,24 @@ def fix_actores_entidades(request):
             entidad.save()
             entidad.actores.save()
 
+        for actor_true in permisos.get_actores('O'):
+            setattr(entidad.actores,actor_true,True)
+            entidad.save()
+            entidad.actores.save()
 
-        modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
+        #Se comenta para que no se siga intentando borrar ya que no es necesario
+        #modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
         connection.set_tenant(entidad)
         request.tenant = entidad
+
+        ##Se comenta para que no se siga intentando borrar ya que no es necesario
+        """
         for modelo in modelos_a_borrar:
             try:
                 modelo.objects.all().delete()
             except Exception as e:
                 print(e)
+        """
 
         try:
             #si llegan a editar el nombre del grupo, tendremos un error

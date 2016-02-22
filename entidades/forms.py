@@ -288,11 +288,11 @@ class PermisosForm(forms.ModelForm):
         ([1,0], 'Liga'),
         ([3,0], 'Club'),
         ([6,2], 'Comité Paralímpico Colombiano'),
-        ([7,0],'Federación Paralimpica'),
-        ([8,0],'Liga Paralimpica'),
-        ([9,0],'Club Paralimpico'),
+        ([7,0], 'Federación Paralimpica'),
+        ([8,0], 'Liga Paralimpica'),
+        ([9,0], 'Club Paralimpico'),
         ([4,0], 'Cajas de Compensación'),
-        ([10,0],'Centro de Acondicionamiento'),
+        ([10,0], 'Centro de Acondicionamiento'),
         ([11,0], 'Escuela de Formación Deportiva'),
     )
 

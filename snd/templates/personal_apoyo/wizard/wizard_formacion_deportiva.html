@@ -79,8 +79,8 @@
                                 <td align="center">{% if historico.fecha_finalizacion %} {{historico.fecha_finalizacion}} {%else%} Actual {%endif%}</td>
                                 <td align="center">{{historico.estado}}</td>
                                 <td align="center">
-                                    <a href="#modal-desactivate" data-toggle="modal"><i class="fa fa-trash"></i></a>
-                                    <div class="modal fade" id="modal-desactivate">
+                                    <a href="#modal-desactivate-{{ historico.id }}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                    <div class="modal fade" id="modal-desactivate-{{ historico.id }}">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
