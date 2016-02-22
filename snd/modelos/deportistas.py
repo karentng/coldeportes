@@ -164,7 +164,7 @@ class HistorialDeportivo(models.Model):
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
     modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad de competencia')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
-    deporte = models.ForeignKey(TipoDisciplinaDeportiva,null=True,blank=True,verbose_name='Deporte en el que participó')
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Deporte en el que participó')
     categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
@@ -254,11 +254,11 @@ class InformacionAdicional(models.Model):
 
 class HistorialLesiones(models.Model):
     TIPOS_LESION = (
+        (5,'ESGUINCE'),
         (1,'FRACTURA'),
+        (4,'LESIÓN MENISCAL'),
         (2,'LUXACIÓN'),
         (3,'RUPTURA'),
-        (4,'LESIÓN MENISCAL'),
-        (5,'ESGUINCE'),
     )
     PERIODOS_REHABILITACION = (
         (1,'MENOR A 1 MES'),
@@ -267,10 +267,10 @@ class HistorialLesiones(models.Model):
         (4,'MAYOR A 6 MESES'),
     )
     SEGMENTOS = (
-        (1,'EXTREMIDADES SUPERIORES'),
-        (2,'EXTREMIDADES INFERIORES'),
         (3,'CABEZA'),
         (4,'CUELLO'),
+        (2,'EXTREMIDADES INFERIORES'),
+        (1,'EXTREMIDADES SUPERIORES'),
         (5,'PELVIS'),
     )
     deportista = models.ForeignKey(Deportista)
