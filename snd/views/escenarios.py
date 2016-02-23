@@ -200,15 +200,15 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
-    identificacion_form = IdentificacionForm(instance=escenario)
+    identificacion_form = IdentificacionEditarForm(instance=escenario)
 
     if request.method == 'POST':
 
-        identificacion_form = IdentificacionForm(request.POST, instance=escenario)
+        identificacion_form = IdentificacionEditarForm(request.POST, instance=escenario)
 
         if identificacion_form.is_valid():
             escenario = identificacion_form.save(commit=False)
-            escenario.entidad =  request.tenant
+            escenario.entidad =  request.tenant            
             escenario.nombre = escenario.nombre.upper()
             escenario.direccion = escenario.direccion.upper()
             escenario.barrio = escenario.barrio.upper()
