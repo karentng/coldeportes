@@ -11,6 +11,10 @@ fields = {
         validators: {
             notEmpty: {
                 message: "El cuerpo de la noticia no puede ser vacío"
+            },
+            stringLength:{
+                message: "El tamaño del cuerpo de la noticia debe ser menor a 3 MB",
+                max: 3000000
             }
         }
     },
@@ -61,8 +65,10 @@ $(document).ready(function(){
         })
             .editor
                 // To use the 'change' event, use CKEditor 4.2 or later
-                .on('change', function() {
+                .on('change', function(evt) {
                     // Revalidate the bio field
                     $('#form-noticia').bootstrapValidator('revalidateField', 'cuerpo_noticia');
+                    console.log(evt.editor.getData().length);
                 });
+
 });

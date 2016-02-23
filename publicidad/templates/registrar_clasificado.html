@@ -23,6 +23,8 @@
         var csrftoken = '{{ csrf_token }}';
         var urlCrop = "{% url 'crop_pic' %}";
         var buttonReset = "#reset-crop";
+        var formId = "clasificado-form";
+        var urlMedia = "clasificados/";
         var picture = "";
         {% if edicion %}
             picture = "{{ MEDIA_URL }}{{ foto }}"
@@ -43,27 +45,25 @@
 
             {% if edicion %}
                 if($("#modalTrigger2").hasClass("btn-default") && $('.cropControls.cropControlsCrop').length){
-                    document.getElementById("clasificado-form").submit();
+                    document.getElementById(formId).submit();
                     return false;
                 }else {
-
-                    $("#clasificado-form").bootstrapValidator('validate');
-
+                    $("#"+formId).bootstrapValidator('validate');
                     if($("div.form-group").hasClass("has-error")){
-
+                        return false;
                     }else {
                         if($('.cropControls.cropControlsCrop').length) {
                             console.log("Cortando");
                             $('.cropControlCrop').click();
                         }else{
-                            document.getElementById("clasificado-form").submit();
+                            document.getElementById(formId).submit();
                             return false;
                         }
                     }
                 }
             {% else %}
 
-                $("#clasificado-form").bootstrapValidator('validate');
+                $("#"+formId).bootstrapValidator('validate');
 
                 if($("div.form-group").hasClass("has-error")){
                     return false;
@@ -72,7 +72,7 @@
                         console.log("Cortando");
                         $('.cropControlCrop').click();
                     }else{
-                        document.getElementById("clasificado-form").submit();
+                        document.getElementById(formId).submit();
                         return false;
                     }
                 }
@@ -99,7 +99,7 @@
                 <div class="form-group">
                     <div id="modalTrigger2" class="btn {% if edicion %}btn-info{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
                     <label class="control-label" for="modalTrigger2"></label>
-                    {% include 'modal_clasificado.html' %}
+                    {% include 'modal_croppic.html' %}
                 </div>
                 {% for field in form %}
                     {% if field.name == 'valor' %}

@@ -36,7 +36,7 @@ def registrar_clasificado(request):
             clasificado.etiquetas = clasificado.etiquetas.upper()
             form.save()
 
-            messages.success(request,'Se ha registrado el clasiificado correctamente')
+            messages.success(request, 'Se ha registrado el clasiificado correctamente')
             return redirect('listar_clasificados')
     else:
         form = ClasificadoForm()
@@ -84,7 +84,7 @@ def editar_clasificado(request, id_clasificado):
 
 @login_required
 @permission_required('publicidad.change_clasificado')
-def eliminar_clasificado(request,id_clasificado):
+def eliminar_clasificado(request, id_clasificado):
     try:
         clasificado = Clasificado.objects.get(id=id_clasificado)
     except Exception:
@@ -132,14 +132,14 @@ def crop_pic(request):
                 y2 = int(form.cleaned_data['cropH']) + y1
 
                 newim = newim.crop((x1, y1, x2, y2))
-
                 nombre_tiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S");
-
-                newim.save("media/clasificados/"+str(nombre_tiempo)+".png", "PNG")
+                url_media = request.POST.get("url_media")
+                print(url_media)
+                newim.save("media/"+url_media+str(nombre_tiempo)+".png", "PNG")
 
                 response_data = {
                     "status": "success",
-                    "url": "clasificados/"+str(nombre_tiempo)+".png",
+                    "url": url_media+str(nombre_tiempo)+".png",
                     "message": "ok",
                     }
 
@@ -166,7 +166,7 @@ def filtro_clasificados(request):
             for clasificado in clasificados:
                 clasificado.clase_inclinacion = random.randint(1, 3)
 
-            return render(request,'tarjeta_clasificado.html', {"clasificados_filtrados": clasificados})
+            return render(request, 'tarjeta_clasificado.html', {"clasificados_filtrados": clasificados})
         except Exception as e:
             print(e)
             messages.error(request, 'Ocurrió un error en el filtro de clasificados')

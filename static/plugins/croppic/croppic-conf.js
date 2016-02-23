@@ -16,6 +16,7 @@ $(document).ready(function(){
         cropUrl:urlCrop,
         cropData:{
             "csrfmiddlewaretoken":csrftoken,
+            "url_media": urlMedia
         },
         loadPicture:picture,
         onBeforeImgCrop:function(){},
@@ -26,11 +27,11 @@ $(document).ready(function(){
 
             console.log(mns);
 
-            document.getElementById("clasificado-form").submit();
+            document.getElementById(formId).submit();
 
         },
         onError: function(err){console.log(err);}
-    }
+    };
 
     cropperHeader = new Croppic('image-upload', cropperOptions);
 
@@ -41,6 +42,13 @@ $(document).ready(function(){
         cropperHeader = new Croppic('image-upload', cropperOptions);
     });
 
+
+    $(window).keydown(function(event){
+        if(event.keyCode == 13 || event.which == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 
     $("#UploadImg").click(function(){
         if($('.cropControlUpload').is(':visible')){

@@ -10,13 +10,27 @@ from .models import Noticia
 def registrar_noticia(request):
     if request.method == 'POST':
         form = NoticiaForm(request.POST, request.FILES)
+
         if form.is_valid():
+
+            noticia = form.save(commit=False)
+            nueva_foto = request.POST.get('imagen-crop')
+
+            if nueva_foto == "No":
+                noticia.foto = ""
+            else:
+                noticia.foto = nueva_foto
+
+            if noticia.video:
+                noticia.video = noticia.video.replace("watch?v=", "embed/")
+
+            noticia.etiquetas = noticia.etiquetas.upper()
             form.save()
-            messages.success(request,'Se ha registrado la noticia correctamente')
+            messages.success(request, 'Se ha registrado la noticia correctamente')
             return redirect('listar_noticias')
     else:
         form = NoticiaForm()
-    return render(request, 'registrar_noticia.html', {'form':form})
+    return render(request, 'registrar_noticia.html', {'form': form})
 
 
 def listar_noticias(request):
@@ -27,7 +41,7 @@ def listar_noticias(request):
 
 @login_required
 @permission_required('noticias.change_noticia')
-def editar_noticia(request,id_noticia):
+def editar_noticia(request, id_noticia):
     try:
         noticia = Noticia.objects.get(id=id_noticia)
     except Exception:

@@ -8,7 +8,7 @@ class NoticiaForm(forms.ModelForm):
 
     class Meta:
         model = Noticia
-        fields = ('titulo', 'fecha_inicio', 'fecha_expiracion', 'autor', 'cuerpo_noticia', 'etiquetas')
+        fields = ('titulo', 'fecha_inicio', 'fecha_expiracion', 'autor', 'video', 'cuerpo_noticia', 'etiquetas')
 
         widgets = {
             'fecha_inicio': MyDateWidget(),
