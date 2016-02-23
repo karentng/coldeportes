@@ -24,6 +24,22 @@ class IdentificacionForm(forms.ModelForm):
         model = Escenario
         exclude = ('entidad', 'fecha_creacion')
 
+
+class IdentificacionEditarForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    descripcion = forms.CharField(widget=forms.Textarea, required=False, label="Descripción")
+    def __init__(self, *args, **kwargs):
+        super(IdentificacionEditarForm, self).__init__(*args, **kwargs)
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+        self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
+        self.fields['division_territorial'] = adicionarClase(self.fields['division_territorial'], 'one')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
+    class Meta:
+        model = Escenario
+        exclude = ('entidad', 'estado', 'fecha_creacion')
+
 class CaracterizacionForm(forms.ModelForm):
     required_css_class = 'required'
 

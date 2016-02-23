@@ -38,6 +38,7 @@ class CajaCompensacion(models.Model):
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField(choices=tipo_estado)
     descripcion = models.TextField(verbose_name='descripción', null=True, blank=True)
+    #fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         permissions = (
