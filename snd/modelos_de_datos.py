@@ -208,6 +208,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_personalapoyo',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -251,6 +256,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_personalapoyo',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -294,6 +304,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_dirigente',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -338,6 +353,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_dirigente',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -604,6 +624,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_escueladeportiva',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
