@@ -226,10 +226,10 @@
                                         <table class="table table-invoice">
                                             <thead>
                                                 <tr>
-                                                    <th>VISUALIZACION</th>
-                                                    <th>URL</th>
-                                                    <th>DESCRIPCIÓN</th>
-                                                    <th>VER VÍDEO</th>
+                                                    <th style="text-align:center">VISUALIZACION</th>
+                                                    <th style="text-align:center">URL</th>
+                                                    <th style="text-align:center">DESCRIPCIÓN</th>
+                                                    <th style="text-align:center">VER VÍDEO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -239,8 +239,8 @@
                                                     <td align="center" ><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
                                                     <td>{{video.descripcion}}</td>
                                                     <td>
-                                                        <a class="btn btn-md btn-info" href="#modal-video" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
-                                                        <div class="modal fade" id="modal-video">
+                                                        <a class="btn btn-md btn-info" href="#modal-{{video.id}}" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
+                                                        <div class="modal fade" id="modal-{{video.id}}">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">

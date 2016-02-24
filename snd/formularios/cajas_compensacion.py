@@ -25,6 +25,24 @@ class CajaCompensacionForm(ModelForm):
         model = CajaCompensacion
         exclude = ('entidad',)
 
+class CajaCompensacionEditarForm(ModelForm):
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs):
+        super(CajaCompensacionEditarForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['clasificacion'] = adicionarClase(self.fields['clasificacion'], 'one')
+        self.fields['region'] = adicionarClase(self.fields['region'], 'one')
+        self.fields['publico'] = adicionarClase(self.fields['publico'], 'one')
+        self.fields['infraestructura'] = adicionarClase(self.fields['infraestructura'], 'one')
+        self.fields['tipo_institucion'] = adicionarClase(self.fields['tipo_institucion'], 'one')
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+        self.fields['servicios'] = adicionarClase(self.fields['servicios'], 'many')
+
+    class Meta:
+        model = CajaCompensacion
+        exclude = ('entidad', 'estado')
+
 
 class HorariosDisponibleCajasForm(ModelForm):
     required_css_class = 'required'
