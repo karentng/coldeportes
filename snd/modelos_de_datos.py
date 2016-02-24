@@ -607,6 +607,22 @@ MODELOS_DE_DATOS = (
                     ]
                 ]
             ],
+            [
+                "A/I",
+                'escuela_deportiva_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        'snd.change_escueladeportiva',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
+                    ]
+                ]
+            ],
         ],
     ),
 )
