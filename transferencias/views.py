@@ -370,7 +370,7 @@ def cancelar_transferencia(request,id_objeto):
         return redirect('deportista_listar')
 
     entidad_solicitante = request.tenant
-    entidades = Entidad.objects.exclude(nombre=entidad_solicitante.nombre).exclude(schema_name='public')
+    entidades = Entidad.objects.exclude(schema_name=entidad_solicitante.schema_name).exclude(schema_name='public')
 
     for ent in entidades:
         print(ent)
