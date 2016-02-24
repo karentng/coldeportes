@@ -56,27 +56,6 @@ class Escenario(models.Model):
     def tipo_escenario(self):
         return self.caracteristicas().tipo_escenario
 
-    def obtenerAtributos(self):
-        from django.conf import settings
-        imagen = None
-        fotos = Foto.objects.filter(escenario=self)
-        if len(fotos) > 0:
-            imagen = ("%s%s")%(settings.MEDIA_URL, fotos[0].foto.__str__())
-        else:
-            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/EscenarioView.PNG")
-
-        atributos = [
-            ["Nombre", self.nombre],
-            ["Ciudad", self.ciudad.nombre],
-            ["Comuna", self.comuna],
-            ["Barrio", self.barrio],
-            ["Estrato", self.estrato],
-            ["Dirección", self.direccion],
-            ["Latitud", self.latitud],
-            ["Longitud", self.longitud],
-        ]
-
-        return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
 
 class CaracterizacionEscenario(models.Model):   
     ACCESOS = (

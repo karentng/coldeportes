@@ -46,7 +46,6 @@ class FiltrosDeportistasCategoriaForm(forms.Form):
     def __init__(self, *args, **kwargs):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
         self.TIPO_REPORTE = kwargs.pop('TIPO_REPORTE', None)
-        print(self.TIPO_REPORTE)
         super(FiltrosDeportistasCategoriaForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'many')
         self.fields['visualizacion'] = adicionarClase(self.fields['visualizacion'], 'one')
@@ -64,7 +63,7 @@ class FiltrosDeportistasCategoriaForm(forms.Form):
         self.fields['reporte'].choices = self.TIPO_REPORTE
 
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
-    genero = forms.MultipleChoiceField(choices=(('HOMBRE','MASCULINO'),('MUJER','FEMENINO'),),required=False, label="Genero")
+    genero = forms.MultipleChoiceField(choices=(('HOMBRE','MASCULINO'),('MUJER','FEMENINO'),),required=False, label="Género")
     #disciplina = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all(), required=False)
-    reporte = forms.ChoiceField(label="Clasificar por",required=False,choices=TIPO_REPORTE)
-    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES)
+    reporte = forms.ChoiceField(label="Clasificar por:",required=False,choices=TIPO_REPORTE)
+    visualizacion = forms.ChoiceField(choices=VISUALIZACIONES,label='Visualización')

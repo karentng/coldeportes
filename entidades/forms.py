@@ -214,6 +214,7 @@ class ClubParalimpicoForm(forms.ModelForm):
         self.fields['pagina'] = adicionarClase(self.fields['pagina'], 'form-control')
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['liga'] = adicionarClase(self.fields['liga'], 'one')
+        self.fields['disciplinas'] = adicionarClase(self.fields['disciplinas'],'many')
 
         if instancia != None:
             del self.fields['pagina']
@@ -230,7 +231,7 @@ class ClubParalimpicoForm(forms.ModelForm):
     class Meta:
         model = ClubParalimpico
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad','liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo',)
+        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'discapacidad','liga', 'direccion', 'telefono', 'descripcion', 'resolucion', 'fecha_resolucion', 'fecha_vencimiento', 'archivo','disciplinas',)
         widgets = {
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),

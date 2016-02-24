@@ -10,11 +10,11 @@ TIPOS = (
     (4, 'Cajas Compensación'),
     (5, 'Ente (Municipal y Departamental)'),
     (6, 'Comité'),
-    (7,'Federación Paralimpica'),
-    (8,'Liga Paralimpica'),
-    (9,'Club Paralimpico'),
+    (7, 'Federación Paralimpica'),
+    (8, 'Liga Paralimpica'),
+    (9, 'Club Paralimpico'),
     (10,'Centro Acondicionamiento'),
-    (11, 'Escuela Formación Deportiva'),
+    (11,'Escuela Formación Deportiva'),
 )
 
 class Departamento(models.Model):
@@ -44,19 +44,25 @@ class TipoDisciplinaDeportiva(models.Model):
         return self.descripcion
 
 class ModalidadDisciplinaDeportiva(models.Model):
-    tipo = models.ForeignKey(TipoDisciplinaDeportiva)
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    descripcion = models.TextField(verbose_name='descripción', blank=True)
+    general = models.TextField(verbose_name='general', blank=True)
 
     def __str__(self):
+        if self.general:
+            return '('+self.general+')-'+self.nombre
         return self.nombre
 
 class CategoriaDisciplinaDeportiva(models.Model):
-    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva)
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
-    descripcion = models.CharField(max_length=50, verbose_name='descripción', blank=True)
+    descripcion = models.TextField(verbose_name='descripción', blank=True)
+    general = models.TextField(verbose_name='general', blank=True)
 
     def __str__(self):
+        if self.general:
+            return '('+self.general+')-'+self.nombre
         return self.nombre
 
 class Actores(models.Model):
@@ -165,75 +171,43 @@ class Entidad(TenantMixin): # Entidad deportiva
 
     def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
-        todosEscenarios = Escenario.objects.filter(entidad=self)
-        escenarios = []
-        for i in todosEscenarios:
-            escenarios.append(i.obtenerAtributos())
-        
-        return escenarios
+        todosEscenarios = Escenario.objects.filter(estado=0,entidad=self)
+        return len(todosEscenarios)
 
     def atributos_cafs(self):
         from snd.modelos.cafs import CentroAcondicionamiento
         todosCentros = CentroAcondicionamiento.objects.filter(estado=0, entidad=self)
-        centros = []
-        for i in todosCentros:
-            centros.append(i.obtenerAtributos())
-        
-        return centros
+        return len(todosCentros)
 
     def atributos_deportistas(self):
         from snd.modelos.deportistas import Deportista
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
-        deportistas = []
-        for i in todos_deportistas:
-            deportistas.append(i.obtenerAtributos())
-
-        return deportistas
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
+        return len(todos_deportistas)
 
     def atributos_personales_apoyo(self):
         from snd.modelos.personal_apoyo import PersonalApoyo
         todos_personales_apoyo = PersonalApoyo.objects.filter(estado=0, entidad=self)
-        personales_apoyo = []
-        for i in todos_personales_apoyo:
-            personales_apoyo.append(i.obtenerAtributos())
-
-        return personales_apoyo
+        return len(todos_personales_apoyo)
 
     def atributos_dirigentes(self):
         from snd.modelos.dirigentes import Dirigente
         todos_dirigentes = Dirigente.objects.filter(estado=0, entidad=self)
-        dirigentes = []
-        for dirigente in todos_dirigentes:
-            dirigentes.append(dirigente.obtenerAtributos())
-
-        return dirigentes
+        return len(todos_dirigentes)
 
     def atributos_cajas(self):
         from snd.modelos.cajas_compensacion import CajaCompensacion
         todas_cajas = CajaCompensacion.objects.filter(estado=0, entidad=self)
-        cajas = []
-        for caja in todas_cajas:
-            cajas.append(caja.obtenerAtributos())
-
-        return cajas
+        return len(todas_cajas)
 
     def atributos_centros_biomedicos(self):
         from snd.modelos.centro_biomedico import CentroBiomedico
         todos_centros = CentroBiomedico.objects.filter(estado=0, entidad=self)
-        centros = []
-        for centro in todos_centros:
-            centros.append(centro.obtenerAtributos())
-
-        return centros
+        return len(todos_centros)
 
     def atributos_escuelas_deportivas(self):
         from snd.modelos.escuela_deportiva import EscuelaDeportiva
-        todos_escuelas = EscuelaDeportiva.objects.filter(entidad=self)
-        escuelas = []
-        for escuela in todos_escuelas:
-            escuelas.append(escuela.obtenerAtributos())
-
-        return escuelas
+        todos_escuelas = EscuelaDeportiva.objects.filter(estado=0,entidad=self)
+        return len(todos_escuelas)
 
     def atributosDeSusActores(self):
         from django.db import connection
@@ -246,7 +220,6 @@ class Entidad(TenantMixin): # Entidad deportiva
         tenant = self.obtenerTenant()
         #actores = tenant.actores
         perms = [x.codename for x in Group.objects.get(name='Solo lectura').permissions.all()]
-
         datos = {}
         datos = agregarActor(datos, 'view_centroacondicionamiento', "caf", tenant.atributos_cafs, perms)
         datos = agregarActor(datos, 'view_escenario', "escenarios", tenant.atributos_escenarios, perms)
@@ -270,18 +243,18 @@ class Entidad(TenantMixin): # Entidad deportiva
         return datos
 
     def cantidadActoresAsociados(self):
-        atributosActores = self.atributosDeSusActores()
 
+        atributosActores = self.atributosDeSusActores()
         def definirElementosDashBoard(datos, identificador, nombre, color, url,icono):
             try:
-                cantidad = len(atributosActores[identificador])
+                cantidad = atributosActores[identificador]
                 datos += [[nombre, color, cantidad, url,icono]]
             except KeyError:
                 pass
             return datos
         
         datos = []
-        
+
         definirElementosDashBoard(datos, "ligas", "Ligas", "black", "inicio_tenant","fa-building-o")
         definirElementosDashBoard(datos, "clubes", "Clubes", "black", "inicio_tenant","fa-building-o")
         definirElementosDashBoard(datos, "caf", "CAFs", "red", "listar_cafs","ion-android-bicycle")
@@ -292,7 +265,6 @@ class Entidad(TenantMixin): # Entidad deportiva
         definirElementosDashBoard(datos, "cajas", "Cajas de Compensación", "black", "listar_ccfs","fa-building-o")
         definirElementosDashBoard(datos, "centros_biomedicos", "Centros Biomédicos ", "blue", "centro_biomedico_listar","ion-ios-body")
         definirElementosDashBoard(datos, "escuelas_deportivas", "Escuelas de Formación Deportiva ", "orange", "escuela_deportiva_listar","ion-ios-body")
-
         return datos
 
     def posicionInicialMapa(self):
@@ -454,6 +426,7 @@ class ClubParalimpico(ResolucionReconocimiento):
         (5,'Limitación Intelectual'),
     )
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
+    disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,blank=True)
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
 
     def obtener_padre(self):
@@ -507,17 +480,16 @@ class Federacion(ResolucionReconocimiento):
 
     def ligas_asociadas(self):
         ligas = Liga.objects.filter(federacion=self)
-        return ligas
+        return len(ligas)
 
     def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
         from django.db import connection
-        escenarios = []
+        escenarios = 0
 
         todosEscenarios = Escenario.objects.filter(estado=0, entidad=self)
         
-        for i in todosEscenarios:
-            escenarios.append(i.obtenerAtributos())
+        escenarios += len(todosEscenarios)
 
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
@@ -532,12 +504,11 @@ class Federacion(ResolucionReconocimiento):
         from snd.modelos.cafs import CentroAcondicionamiento
         from django.db import connection
 
-        centros = []
+        centros = 0
 
         todos_cafs = CentroAcondicionamiento.objects.filter(estado=0, entidad=self)
         
-        for i in todos_cafs:
-            centros.append(i.obtenerAtributos())
+        centros += len(todos_cafs)
 
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
@@ -552,12 +523,11 @@ class Federacion(ResolucionReconocimiento):
         from snd.modelos.deportistas import Deportista
         from django.db import connection
 
-        deportistas = []
+        deportistas = 0
 
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
 
-        for i in todos_deportistas:
-            deportistas.append(i.obtenerAtributos())
+        deportistas += len(todos_deportistas)
 
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
@@ -572,12 +542,11 @@ class Federacion(ResolucionReconocimiento):
         from snd.modelos.personal_apoyo import PersonalApoyo
         from django.db import connection
 
-        personales_apoyo = []
+        personales_apoyo = 0
 
         todos_personales_apoyo = PersonalApoyo.objects.filter(estado=0, entidad=self)
 
-        for i in todos_personales_apoyo:
-            personales_apoyo.append(i.obtenerAtributos())
+        personales_apoyo += len(todos_personales_apoyo)
 
         ligas = Liga.objects.filter(federacion=self)
         for i in ligas:
@@ -592,12 +561,11 @@ class Federacion(ResolucionReconocimiento):
         from snd.modelos.dirigentes import Dirigente
         from django.db import connection
 
-        dirigentes = []
+        dirigentes = 0
 
         todosDirigentes = Dirigente.objects.filter(estado=0, entidad=self)
 
-        for dirigente in todosDirigentes:
-            dirigentes.append(dirigente.obtenerAtributos())
+        dirigentes += len(todosDirigentes)
 
         ligas = Liga.objects.filter(federacion=self)
         for liga in ligas:
@@ -634,12 +602,11 @@ class Liga(ResolucionReconocimiento):
         from snd.modelos.deportistas import Deportista
         from django.db import connection
 
-        deportistas = []
+        deportistas = 0
 
-        todos_deportistas = Deportista.objects.filter(estado=0, entidad=self)
+        todos_deportistas = Deportista.objects.filter(estado__in=[0,2], entidad=self)
 
-        for i in todos_deportistas:
-            deportistas.append(i.obtenerAtributos())
+        deportistas += len(todos_deportistas)
 
         clubes = Club.objects.filter(liga=self)
         for i in clubes:
@@ -652,17 +619,16 @@ class Liga(ResolucionReconocimiento):
 
     def clubes_asociados(self):
         clubes = Club.objects.filter(liga=self)
-        return clubes
+        return len(clubes)
 
     def atributos_escenarios(self):
         from snd.modelos.escenarios import Escenario
         from django.db import connection
-        escenarios = []
+        escenarios = 0
 
         todos_escenarios = Escenario.objects.filter(estado=0, entidad=self)
-        
-        for i in todos_escenarios:
-            escenarios.append(i.obtenerAtributos())
+
+        escenarios += len(todos_escenarios)
 
         clubes = Club.objects.filter(liga=self)
         for i in clubes:
@@ -677,12 +643,11 @@ class Liga(ResolucionReconocimiento):
         from snd.modelos.cafs import CentroAcondicionamiento
         from django.db import connection
 
-        centros = []
+        centros = 0
 
         todos_cafs = CentroAcondicionamiento.objects.filter(estado=0, entidad=self)
         
-        for i in todos_cafs:
-            centros.append(i.obtenerAtributos())
+        centros += len(todos_cafs)
 
         clubes = Club.objects.filter(liga=self)
         for i in clubes:
@@ -697,12 +662,11 @@ class Liga(ResolucionReconocimiento):
         from snd.modelos.personal_apoyo import PersonalApoyo
         from django.db import connection
 
-        personales_apoyo = []
+        personales_apoyo = 0
 
         todos_personales_apoyo = PersonalApoyo.objects.filter(estado=0, entidad=self)
 
-        for i in todos_personales_apoyo:
-            personales_apoyo.append(i.obtenerAtributos())
+        personales_apoyo += len(todos_personales_apoyo)
 
         clubes = Club.objects.filter(liga=self)
         for i in clubes:
@@ -717,12 +681,11 @@ class Liga(ResolucionReconocimiento):
         from snd.modelos.dirigentes import Dirigente
         from django.db import connection
 
-        dirigentes = []
+        dirigentes = 0
 
         todosDirigentes = Dirigente.objects.filter(estado=0, entidad=self)
 
-        for dirigente in todosDirigentes:
-            dirigentes.append(dirigente.obtenerAtributos())
+        dirigentes += len(todosDirigentes)
 
         clubes = Club.objects.filter(liga=self)
         for club in clubes:
@@ -945,6 +908,8 @@ class Permisos(models.Model):
             opcion = [3,4]
         elif opcion == '%':
             opcion = [4,5]
+        elif opcion == '--':
+            opcion = [1,5]
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias']

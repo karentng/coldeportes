@@ -33,8 +33,8 @@
                         {% if tenant_existencia %}
                                 <h4 class="text-warning"><i class="fa fa-warning"></i>¡Personal de apoyo encontrado!</h4>
                                 <p>
-                                    Se ha encontrado al personal de apoyo {{ personal_apoyo.nombre }} registrado en la entidad {{ tenant_existencia.nombre }}, por favor pongase en contacto
-                                    con la entidad para solicitar una transferencia de este personal de apoyo o intente con otro número de identificación si así lo desea
+                                    Se ha encontrado al personal de apoyo <b>{{ personal_apoyo.nombres}} {{ personal_apoyo.apellidos}}</b> registrado en la entidad <b>{{ tenant_existencia.nombre |upper }}</b>, por favor pongase en contacto
+                                    con la entidad para aclarar la situación o intente con otro número de identificación si así lo desea
                                     <div class="p-t-5 pull-right">
                                         <a href="{% url 'verificar_personal_apoyo' %}" class="btn btn-warning btn-sm m-r-5"><i class="fa fa-arrow-left"></i> Intentar con otra identificación</a>
                                     </div>

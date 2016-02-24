@@ -138,41 +138,11 @@ def permisosPermitidos(request, permisos):
             if valor:
                 permitidos.append(i[0])
         except Exception as e:
-            print (e)
+            print (e, "Excepción en función permisosPermitidos, coldeportes.utilities")
             pass
     return permitidos
 
-'''def tenant_actor(actor):
-    """
-    Agosto 05 / 2015
-    Autor: Andrés Serna
 
-    Función que verifica si el tenant tiene tiene acceso al actor especificado
-    :param actor:  Actor que se verificará
-    :type actor:   String
-    :returns:      Redirección al inicio (No tenía permisos) o a la página deseada (Si tenía permisos)
-    :rtype:        HttpResponseRedirect
-    """
-    def decorator(a_view):
-        def _wrapped_view(request, *args, **kwargs):
-            try:
-                valor = hasattr(request.tenant.actores, actor)
-                if valor == True:
-                    valor = getattr(request.tenant.actores, actor)
-                    if valor == True:
-                        return a_view(request, *args, **kwargs)
-                    else:
-                        print ("No tiene los permisos para el actor: %s"%(actor))
-                        return render(request,'403.html',{})
-                else:
-                    print ("Actor %s no existente"%(actor))
-                    return render(request,'403.html',{})
-            except Exception as e:
-                return a_view(request, *args, **kwargs)
-            return a_view(request, *args, **kwargs)
-        return _wrapped_view
-    return decorator
-'''
 def tenant_actor(actor):
     """
     Noviembre 14 / 2015
@@ -339,6 +309,8 @@ def refresh_public():
         REFRESH MATERIALIZED VIEW entidades_publicescenarioview;
         REFRESH MATERIALIZED VIEW entidades_publicpersonalapoyoview;
         REFRESH MATERIALIZED VIEW entidades_publicdeportistaview;
+        REFRESH MATERIALIZED VIEW entidades_publicdirigenteview;
+        REFRESH MATERIALIZED VIEW entidades_publicescuelaview;
     """
     try:
         cursor = connection.cursor()
@@ -347,3 +319,47 @@ def refresh_public():
         r=connection.commit()
     except Exception as e:
         print (("%s %s")%("Error en refresh_public (coldeportes.utilities.py): ", e))
+
+
+
+"""
+    Autor: Milton Lenis
+    Fecha: Febrero 9 de 2016
+
+    Función que toma el nombre de un actor y retorna el modelo del snd que lo representa.
+"""
+
+def obtener_modelo_actor(actor):
+    from snd.modelos.cafs import CentroAcondicionamiento
+    from snd.modelos.escenarios import Escenario
+    from snd.modelos.deportistas import Deportista
+    from snd.modelos.personal_apoyo import PersonalApoyo
+    from snd.modelos.cajas_compensacion import CajaCompensacion
+    from snd.modelos.selecciones import Seleccion
+    from snd.modelos.centro_biomedico import CentroBiomedico
+    from snd.modelos.escuela_deportiva import EscuelaDeportiva
+    from normograma.models import Norma
+    from noticias.models import Noticia
+
+    if actor =='centros':
+        return CentroAcondicionamiento
+    elif actor=='escenarios':
+        return Escenario
+    elif actor=='deportistas':
+        return Deportista
+    elif actor=='personal_apoyo':
+        return PersonalApoyo
+    elif actor=='dirigentes':
+        return Dirigente
+    elif actor=='cajas':
+        return CajaCompensacion
+    elif actor=='selecciones':
+        return Seleccion
+    elif actor=='centros_biomedicos':
+        return CentroBiomedico
+    elif actor=='normas':
+        return Norma
+    elif actor=='escuelas_deportivas':
+        return EscuelaDeportiva
+    elif actor=='noticias':
+        return Noticia

@@ -45,15 +45,6 @@ class CajaCompensacion(models.Model):
                 ("view_cajacompensacion", "Permite ver caja compensacion"),
             )
 
-    def obtenerAtributos(self):
-        atributos = [
-            ["Nombre", self.nombre],
-            ["Ciudad", self.ciudad.nombre],
-            ["Región", self.tipo_region],
-            ["E-mail", self.email],
-        ]
-
-        return [self.foto, atributos, None, None, "Cajas!"]
 
 class HorarioDisponibilidadCajas(models.Model):
     caja_compensacion = models.ForeignKey(CajaCompensacion)

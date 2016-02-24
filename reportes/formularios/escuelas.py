@@ -1,7 +1,8 @@
 from django import forms
 from entidades.models import Departamento, Ciudad
 from coldeportes.utilities import adicionarClase
-from reportes.forms import add_visualizacion
+from reportes.utilities import add_visualizacion
+
 
 class EscuelasForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -15,4 +16,4 @@ class EscuelasForm(forms.Form):
 
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     municipios = forms.ModelMultipleChoiceField(queryset=Ciudad.objects.all(), required=False)
-    visualizacion = forms.ChoiceField()
+    visualizacion = forms.ChoiceField(label='Visualización')

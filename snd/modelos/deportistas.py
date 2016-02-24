@@ -98,19 +98,6 @@ class Deportista(models.Model):
         self.direccion = self.direccion.upper()
         super(Deportista, self).save(*args, **kwargs)
 
-    def obtenerAtributos(self):
-
-        atributos = [
-            ["Nombre", self.nombres+" "+self.apellidos],
-            ["Ciudad Residencia", self.ciudad_residencia.nombre],
-            ["Género", self.genero],
-            ["Identificación", self.tipo_id+" "+self.identificacion],
-            ["E-mail", self.email],
-            ["Teléfono", self.telefono],
-            ["Dirección", self.direccion],
-        ]
-
-        return [self.foto, atributos, None, None, "Deportista!"]
 
 #Composicion corporal
 class ComposicionCorporal(models.Model):
@@ -178,7 +165,7 @@ class HistorialDeportivo(models.Model):
     modalidad = models.CharField(max_length=100,blank=True,verbose_name='Modalidad de competencia')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
-    categoria = models.CharField(max_length=100,verbose_name='Categoría en la que participó')
+    categoria = models.CharField(max_length=100,blank=True,verbose_name='Categoría en la que participó')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -282,11 +269,19 @@ class HistorialLesiones(models.Model):
         (3,'ENTRE 3 y 6 MESES'),
         (4,'MAYOR A 6 MESES'),
     )
+    SEGMENTOS = (
+        (1,'EXTREMIDADES SUPERIORES'),
+        (2,'EXTREMIDADES INFERIORES'),
+        (3,'CABEZA'),
+        (4,'CUELLO'),
+        (5,'PELVIS'),
+    )
     deportista = models.ForeignKey(Deportista)
     fecha_lesion = models.DateField(verbose_name='Fecha de la lesión')
     tipo_lesion = models.IntegerField(choices=TIPOS_LESION,verbose_name='Tipo de lesión')
     periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    segmento_corporal = models.IntegerField(verbose_name='Segmento Corporal', choices=SEGMENTOS,blank=True,null=True)
 
 class HistorialDoping(models.Model):
     TIPO_IDENTIDAD = (

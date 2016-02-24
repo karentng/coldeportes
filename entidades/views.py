@@ -12,10 +12,14 @@ from snd.modelos.escenarios import *
 from snd.modelos.deportistas import *
 from snd.modelos.cafs import *
 from snd.modelos.cajas_compensacion import *
+from snd.modelos.escuela_deportiva import *
 from snd.modelos.dirigentes import *
 from coldeportes.utilities import calculate_age, add_actores, superuser_only
 from reportes.crear_vistas_actores import *
 from django.forms import modelformset_factory, modelform_factory
+from django.http import HttpResponse
+from datos_iniciales.disciplinas_deportivas.script_disciplina import *
+from datos_iniciales.disciplinas_deportivas.script_log_deportivo import *
 
 @login_required
 def tipo(request):
@@ -89,6 +93,7 @@ def obtenerTenant(request, idEntidad, tipo):
 def generar_vistas_actores(request):
     from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
     generar_vistas()
+    return HttpResponse("Vistas actualizadas correctamente")
 
 @login_required
 def cambiar_tipo_campo(request):
@@ -343,6 +348,14 @@ def listar_cafs_nacionales(request):
     return render(request,'tenant_nacional/cafs_listar.html',{})
 
 
+def listar_escuelas_nacionales(request):
+    return render(request,'tenant_nacional/escuelas_listar.html',{})
+
+
+def listar_cajas_nacionales(request):
+    return render(request,'tenant_nacional/cajas_listar.html',{})
+
+
 def ver_personal_apoyo_tenantnacional(request,id_personal_apoyo,id_entidad):
     """
     Junio 23 /2015
@@ -562,6 +575,73 @@ def ver_caf_tenantnacional(request,idCAF,id_entidad):
     })
 
 
+def ver_cajas_tenantnacional(request,ccf_id,id_entidad):
+    """
+    Febrero 9 / 2016
+    Autor: Juan Diego García
+
+    ver cafas de compensación
+
+    Se obtienen toda la información registrada de la caja de compensación dado y se muestra.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param ccf_id:   Identificador del escenario
+    :type ccf_id:    String
+    """
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
+
+    try:
+        ccf = CajaCompensacion.objects.get(id=ccf_id)
+        horarios = HorarioDisponibilidadCajas.objects.filter(caja_compensacion=ccf_id)
+        tarifas = Tarifa.objects.filter(caja_compensacion=ccf_id)
+    except Exception:
+        return redirect('listar_ccfs')
+
+    return render(request, 'cajas_compensacion/ver_ccf.html', {
+        'ccf': ccf,
+        'horarios': horarios,
+        'tarifas': tarifas,
+    })
+
+
+def ver_escuelas_tenantnacional(request,id_escuela,id_entidad):
+    """
+    Junio 23 / 2015
+    Autor: Andrés Serna
+
+    Ver CAF
+
+    Se obtienen toda la información registrada del CAF dado y se muestra.
+
+    Edición: Septiembre 1 /2015
+    NOTA: Para esta funcionalidad se empezó a pedir la entidad para conectarse y obtener la información de un objeto
+    desde la entidad correcta, esto para efectos de consulta desde una liga o una federación.
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param escenario_id:   Identificador del CAF
+    :type escenario_id:    String
+    :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
+    :type id_entidad: String
+    """
+    tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
+    connection.set_tenant(tenant)
+    ContentType.objects.clear_cache()
+    try:
+        escuela = EscuelaDeportiva.objects.get(id=id_escuela)
+    except Exception as e:
+        print(e)
+        return redirect('escuela_deportiva_listar')
+
+    return render(request, 'escuela_deportiva/escuela_deportiva_ver.html', {
+        'escuela': escuela,
+        'contenidoSinPadding': True,
+    })
+
+
 @login_required
 @superuser_only
 def permisos(request):
@@ -600,3 +680,16 @@ def permisos(request):
 def refresh_public(request):
     from coldeportes.utilities import refresh_public
     refresh_public()
+
+
+@login_required
+def cambio_disciplinas(request):
+    insertar_actualizar_deportes()
+    insertar_modalidades_categorias()
+    return HttpResponse("Deportes, modalidades y categorias insertados en base de datos")
+
+@login_required
+def log_disciplinas(request):
+    j = create_log_deportivo()
+    return JsonResponse(j)
+    #return HttpResponse("Log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt")
