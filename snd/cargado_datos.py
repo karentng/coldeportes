@@ -29,7 +29,6 @@ def obtenerAtributosModelo(modelo):
     configuracionDespliegue = MODELOS_DE_DATOS[modelo][3]
     urlsOpciones = MODELOS_DE_DATOS[modelo][4]
     modelo = MODELOS_DE_DATOS[modelo][0]
-
     if atributos == None:
         nombreDeColumnas = []
         atributos = modelo._meta.get_all_field_names()

@@ -50,16 +50,6 @@
 			</a>
 		</div>
 		<div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
-			<a href="{% url 'entidad_registro' 4 %}">
-				<button class="btn btn-lg btn-warning" style="width:100%">
-                    <i class="fa fa-child fa-2x"></i><br/>
-					CDC<br />
-					<small>Cajas de Compensación</small>
-				</button>
-			</a>
-		</div>
-
-		<div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
 			<a href="{% url 'entidad_registro' 10 %}">
 				<button class="btn btn-lg btn-success" style="width:100%">
                     <i class="fa fa-bicycle fa-2x"></i><br/>
@@ -96,13 +86,37 @@
 				</button>
 			</a>
 		</div>
-
-
-
-
 	</div>
+
+
+	<div class="row">
+        <div class="col-sm-12 p-t-15"><p><b>Entidades de recreación y actividad física:</b></p></div>
+	</div>
+	<div class="row">
+        <div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
+			<a href="{% url 'entidad_registro' 4 %}">
+				<button class="btn btn-lg btn-warning" style="width:100%">
+                    <i class="fa fa-child fa-2x"></i><br/>
+					CDC<br />
+					<small>Cajas de Compensación</small>
+				</button>
+			</a>
+		</div>
+		<div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
+			<a href="#">
+				<button class="btn btn-lg btn-info" style="width:100%">
+                    <i class="fa fa-child fa-2x"></i><br/>
+					Otras<br />
+					<small>Otras Entidades Recreativas</small>
+				</button>
+			</a>
+		</div>
+    </div>
+
     <div class="row">
-        <div class="col-sm-12 p-t-15"><p>Entidades de deporte adaptado:</p></div>
+        <div class="col-sm-12 p-t-15"><p><b>Entidades de deporte adaptado:</b></p></div>
+	</div>
+	<div class="row">
         <div class="col-sm-6 col-md-3" style="margin-top:5px" align="center">
 			<a href="{% url 'entidad_registro' 7  %}">
 				<button class="btn btn-lg btn-danger" style="width:100%">

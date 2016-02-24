@@ -114,7 +114,7 @@ def datos_equipo(request, idEquipo=None):
             obj.save()
             messages.success(request, "Equipo registrado correctamente.")
             return redirect('menu_competencia')
-    return render(request, 'datos_equipo.html', {
+    return render(request, 'registrar_equipo.html', {
         "form": form,
     })
 

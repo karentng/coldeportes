@@ -1,4 +1,4 @@
-<li class="has-sub {% if 'reportes' in request.path or 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path  %} active {% endif %}">
+<li class="has-sub {% if 'reportes' in request.path or 'reportes/depor' in request.path or 'reportes/dirigentes' in request.path or 'reportes/deportistas' in request.path or 'reportes/escenarios' in request.path or 'reportes/caf' in request.path or 'reportes/personal-apoyo' in request.path or 'reportes/ccf' in request.path or 'reportes/centro-biomedico' in request.path or 'reportes/escuela' in request.path or 'entidades/dirigentes' in request.path or 'entidades/deportistas' in request.path or 'entidades/escenarios' in request.path or 'entidades/caf' in request.path or 'entidades/personal-apoyo' in request.path or 'entidades/ccf' in request.path or 'entidades/centro-biomedico' in request.path or 'entidades/escuela' in request.path %} active {% endif %}">
   <a href="javascript:;">
     <b class="caret pull-right"></b>
     <i class="fa fa-area-chart"></i>
@@ -12,7 +12,7 @@
     </li>
     {% if request.tenant.schema_name == 'public' %}
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
+            {% if 'entidades/dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
                 {% if 'reportes' not in request.path %}
                 active
                 {% endif %}

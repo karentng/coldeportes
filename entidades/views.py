@@ -144,6 +144,7 @@ def registro(request, tipo, tipoEnte=None):
                     return redirect('entidad_registro', tipo)
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
+                #return HttpResponse(e)
                 actores.delete()
 
     return render(request, 'entidad_registro.html', {
@@ -646,7 +647,6 @@ def ver_escuelas_tenantnacional(request,id_escuela,id_entidad):
 @superuser_only
 def permisos(request):
     PermisosFormSet = modelformset_factory(Permisos, form = PermisosForm, max_num=1)
-
     if request.method == 'POST':
         formset = PermisosFormSet(request.POST)
         if formset.is_valid():

@@ -116,7 +116,7 @@ def seleccion_datos_personal_apoyo(tenant=''):
             PA.lgtbi, PA.fecha_creacion,
             PA.estado, PA.entidad_id,
             FD.nivel as nivel_formacion, FD.estado as estado_formacion,
-            FD.fecha_finalizacion as ano_final_formacion, FD.fecha_creacion as creacion_formacion
+            FD.fecha_finalizacion
         FROM
         %ssnd_personalapoyo PA
         LEFT JOIN %ssnd_formaciondeportiva FD ON FD.personal_apoyo_id = PA.id

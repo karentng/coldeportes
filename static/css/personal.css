@@ -25,6 +25,10 @@
 }
 
 #footer{
-    background: rgba(0, 0, 0, 0.7) none repeat scroll 0% 0%;
-    color: #999;
+    background: rgba(132, 132, 132, 0.7) none repeat scroll 0% 0%;
+    color: #444;
+}
+
+#logo-coldeportes{
+    margin-top: 25px;
 }

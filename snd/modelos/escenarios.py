@@ -56,6 +56,9 @@ class Escenario(models.Model):
     def tipo_escenario(self):
         return self.caracteristicas().tipo_escenario
 
+    def __str__(self):
+        return self.nombre
+
 
 class CaracterizacionEscenario(models.Model):   
     ACCESOS = (
