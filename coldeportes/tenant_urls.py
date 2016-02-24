@@ -26,7 +26,8 @@ urlpatterns = patterns('',
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
 
     url(r'^reportes/', include('reportes.urls.publico')),
-    url(r'^solicitudes-escenarios/', include('solicitudes_escenarios.solicitud.urls')),
+    url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
+    url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

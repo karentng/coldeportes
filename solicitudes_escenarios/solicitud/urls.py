@@ -10,5 +10,6 @@ urlpatterns = patterns('solicitudes_escenarios.solicitud.views',
     url(r'^cancelar$', 'cancelar_solicitud', name='cancelar_solicitud'),
     url(r'^cancelar/(\d+)$', 'cancelar_solicitud', name='cancelar_solicitud'),
     url(r'^finalizar/(\d+)$', 'finalizar_solicitud', name='finalizar_solicitud'),
+    url(r'^imprimir/(\d+)$', 'imprimir_solicitud', name='imprimir_solicitud'),
 
 )

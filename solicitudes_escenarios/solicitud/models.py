@@ -50,6 +50,7 @@ class DiscucionSolicitud(models.Model):
     estado_actual = models.IntegerField(choices=ESTADOS)
     descripcion = models.TextField()
     solicitud = models.ForeignKey(SolicitudEscenario)
+    fecha = models.DateTimeField(auto_now=True)
 
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudEscenario)

@@ -158,3 +158,9 @@ def cancelar_solicitud(request, id=None):
         solicitud.save()
     messages.warning(request,'Solicitud cancelada correctamente')
     return redirect('listar_solicitudes')
+
+@login_required
+def imprimir_solicitud(request,id):
+    return render(request,'solicitud_imprimir.html',{
+
+    })
