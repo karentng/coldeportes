@@ -134,6 +134,8 @@ def finalizar_solicitud(request,id):
 @login_required
 def listar_solicitudes(request):
     solicitudes = SolicitudEscenario.objects.all()
+    for s in solicitudes:
+        s.codigo = s.codigo_unico(request.tenant)
     return render(request,'lista_mis_solicitudes.html',{
         'solicitudes': solicitudes
     })

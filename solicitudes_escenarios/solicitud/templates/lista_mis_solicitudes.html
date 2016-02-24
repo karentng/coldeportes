@@ -44,6 +44,7 @@
             <table id="tabla-solicitudes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                 <thead>
                     <tr>
+                        <th>Codigo Unico</th>
                         <th>Escenarios</th>
                         <th>Prioridad</th>
                         <th>Estado</th>
@@ -55,6 +56,7 @@
                 <tbody>
                     {% for s in solicitudes %}
                     <tr>
+                        <td><strong>{{ s.codigo }}</strong></td>
                         <td>{{s.escenarios_str}}</td>
                         <td>{{s.get_prioridad_display}}</td>
                         <td>{{s.get_estado_display}}</td>
