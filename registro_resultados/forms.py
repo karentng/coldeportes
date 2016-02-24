@@ -1,17 +1,27 @@
 # -*- encoding: utf-8 -*-
 from django import forms
 from registro_resultados.models import *
-from coldeportes.utilities import adicionarClase
+from coldeportes.utilities import adicionarClase, MyDateTimeWidget
 
 class CompetenciaForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    TIPOS_REGISTROS = (
+        (1, "Tiempos"),
+        (2, "Puntos"),
+    )
+    tipo_registro = forms.ChoiceField(widget=forms.RadioSelect, choices=TIPOS_REGISTROS)
 
     def __init__(self, *args, **kwargs):
         super(CompetenciaForm, self).__init__(*args, **kwargs)
-        self.fields['categorias'] = adicionarClase(self.fields['categorias'], 'many')
+        self.fields['disciplina_deportiva'] = adicionarClase(self.fields['disciplina_deportiva'], 'one')
 
     class Meta:
         model = Competencia
         exclude = ()
+        widgets = {
+            'fecha_competencia': MyDateTimeWidget(),
+        }
 
 class ParticipanteForm(forms.ModelForm):
 

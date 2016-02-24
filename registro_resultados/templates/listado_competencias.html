@@ -35,7 +35,8 @@
                         <tr>
                             <th>Logo</th>
                             <th>Nombre</th>
-                            <th>Año</th>
+                            <th>Deporte</th>
+                            <th>Fecha</th>
                             <th>Tipo</th>
                             <th>Descripción</th>
                             <th>Opciones</th>
@@ -52,7 +53,8 @@
                                 {% endif %}
                             </td>
                             <td>{{competencia.nombre}}</td>
-                            <td>{{competencia.anno}}</td>
+                            <td>{{competencia.disciplina_deportiva}}</td>
+                            <td>{{competencia.fecha_competencia}}</td>
                             <td>{{competencia.get_tipo_competencia_display}}</td>
                             <td>{{competencia.descripcion}}</td>
                             <td>

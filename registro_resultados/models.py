@@ -1,5 +1,5 @@
 from django.db import models
-from entidades.models import CategoriaDisciplinaDeportiva, Departamento
+from entidades.models import CategoriaDisciplinaDeportiva, Departamento, TipoDisciplinaDeportiva
 
 def ruta_competencias_imagenes(instance, filename):
     return "competencias/imagenes/%s"%(filename.encode('ascii','ignore').decode('ascii'))
@@ -13,15 +13,16 @@ class Competencia(models.Model):
         (1, "Olímpica"),
         (2, "Paralímpica"),
     )
+    
     nombre = models.CharField(max_length=255, verbose_name='nombre')
-    anno = models.PositiveIntegerField(verbose_name="año de la competencia")
+    fecha_competencia = models.DateTimeField(verbose_name="Fecha de la compentencia")
     tipo_competencia = models.IntegerField(choices=TIPOS_COMPETENCIAS, verbose_name="tipo de competencia")
-    categorias = models.ManyToManyField(CategoriaDisciplinaDeportiva, verbose_name="Seleccione todas las modalidades que estarán presentes en la competencia")
     tipos_participantes = models.IntegerField(choices=TIPOS_PARTICIPANTES, verbose_name="tipo de participantes")
-    tiempos = models.BooleanField(verbose_name="¿Requiere el registro de tiempos?")
-    imagen = models.FileField(upload_to=ruta_competencias_imagenes, blank=True, null=True, verbose_name="imagen representativa de la competencia")
-    descripcion = models.TextField()
-    creado = models.DateTimeField(auto_now_add=True)
+    disciplina_deportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+    tipo_registro = models.IntegerField(verbose_name='Tipo de Registros')
+    sets = models.BooleanField(verbose_name="¿Requiere el registro de varios sets?")
+    descripcion = models.TextField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.nombre
