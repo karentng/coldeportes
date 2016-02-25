@@ -1,0 +1,30 @@
+{% for clasificado_filtrado in clasificados_filtrados %}
+    <div class="card {% if clasificado_filtrado.clase_inclinacion == 1 %}inclinacionIzq{% elif clasificado_filtrado.clase_inclinacion == 2 %}inclinacionDer{% endif %} " >
+        <span class="folded-corner add-tooltip" data-toggle="modal" data-target="#modal-vermas" title="Ver más" data-titulo="{{ clasificado_filtrado.titulo|safe }}" data-descripcion="{{ clasificado_filtrado.descripcion|safe }}" data-valor="{{ clasificado_filtrado.valor }}"
+                    data-categoria="{{ clasificado_filtrado.get_categoria_display }}" data-foto="{{ clasificado_filtrado.foto }}" data-contacto="{{ clasificado_filtrado.contacto|safe }}" data-fecha="{{ clasificado_filtrado.fecha_publicacion }}" data-etiquetas="{{ clasificado_filtrado.etiquetas|safe }}">
+            <i class="fa fa-hand-o-up fa-3x"></i>
+        </span>
+        <img src="{{STATIC_URL}}img/chinche-1.png" class="chincheImg">
+        <img class="img-responsive" src="{{ MEDIA_URL }}{{ clasificado_filtrado.foto }}">
+        <div class="descripcionCla">
+
+            {% if perms.publicidad.change_clasificado %}
+                <div class="edicion-clasificados">
+                    <a href="{% url 'editar_clasificado' clasificado_filtrado.id %}"><i class="fa fa-pencil-square-o fa-2x add-tooltip" title="Editar Clasificado"></i></a>
+                    <i  class="fa fa-trash fa-2x text-danger add-tooltip" data-toggle="modal" data-target="#modal-eliminar" title="Eliminar Clasificado"  data-id="{{ clasificado_filtrado.id }}"></i>
+                </div>
+            {% endif %}
+
+            <h3>{{ clasificado_filtrado.titulo|safe }}</h3>
+            <p>{{ clasificado_filtrado.descripcion|slice:":150"}}...</p>
+        </div>
+    </div>
+{% endfor %}
+
+{% if clasificados_filtrados|length == 0 %}
+    <div class="card" id="clasificados-vacio">
+        <div class="descripcionCla" style="text-align: center !important;">
+            <h3>No hay clasificados disponibles en la base de datos</h3>
+        </div>
+    </div>
+{% endif %}

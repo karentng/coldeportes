@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li xmlns="http://www.w3.org/1999/html"><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Clasificados</a>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de clasificados
+{% endblock %}
+
+{% block js %}
+    <script src="{{ STATIC_URL }}plugins/masonry/imagesloaded.pkgd.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/masonry/masonry.pkgd.min.js"></script>
+    <script type="text/javascript">
+        var media = {{ MEDIA_URL }};
+        var filtro_url = "{% url 'filtro_clasificados' %}";
+        var csrf_token = "{{ csrf_token }}";
+    </script>
+    <script src="{{ STATIC_URL }}js/clasificados/clasificados.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/noticias/clasificados.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+    <div class="filter-container col-sm-12">
+        <div class="col-sm-4 col-lg-3">
+            {% for field in form %}
+                {% if field.name == "categoria" %}
+                    {% bootstrap_field field %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-sm-4 col-lg-3">
+            <div class="form-group">
+                <label class="control-label" for="buscador">Búsqueda por palabra</label>
+                <input type="text" class="form-control" id="buscador" maxlength="150" name="buscador" placeholder="Escribe aquí...">
+            </div>
+        </div>
+        <div class="col-sm-2 col-lg-1" style="text-align: center;">
+            <label for="refrescar">Limpiar Filtros</label>
+            <i class="fa fa-refresh fa-2x" id="refrescar" style="display: block;"></i>
+        </div>
+    </div>
+</div>
+<div class="row tablero-clasificados">
+    <div class="contenedorClasificados" id="card-container">
+        {% for clasificado in clasificados %}
+            <div class="card {% if clasificado.clase_inclinacion == 1 %}inclinacionIzq{% elif clasificado.clase_inclinacion == 2 %}inclinacionDer{% endif %}" >
+                <span class="folded-corner add-tooltip" data-toggle="modal" data-target="#modal-vermas" title="Ver más" data-titulo="{{ clasificado.titulo|force_escape }}"  data-valor="{{ clasificado.valor }}" data-etiquetas="{{ clasificado.etiquetas|force_escape }}"
+                    data-categoria="{{ clasificado.get_categoria_display }}" data-foto="{{ clasificado.foto }}" data-contacto="{{ clasificado.contacto|force_escape }}" data-fecha="{{ clasificado.fecha_publicacion }}"  data-descripcion="{{ clasificado.descripcion }}">
+                    <i class="fa fa-hand-o-up fa-3x"></i>
+                </span>
+                <img src="{{STATIC_URL}}img/chinche-1.png" class="chincheImg">
+                <img class="img-responsive" src="{{ MEDIA_URL }}{{ clasificado.foto }}">
+                <div class="descripcionCla">
+                    <h3>{{ clasificado.titulo|force_escape }}</h3>
+                    <p>{{ clasificado.descripcion|force_escape|slice:":150"}}...</p>
+                </div>
+            </div>
+        {% endfor %}
+        {% if clasificados|length == 0 %}
+            <div class="card" id="clasificados-vacio">
+                <div class="descripcionCla" style="text-align: center !important;">
+                    <h3>No hay clasificados disponibles en la base de datos</h3>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+<div class="modal fade" id="modal-vermas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="titulo-modal"></h2>
+            </div>
+            <div class="modal-body">
+                <img src="" id="id-foto" class="img-responsive">
+                <p class="datos-clasificado">
+                    <b>Fecha Publicación:</b><br>
+                    <i id="fecha-pub"></i><br><br>
+                    <b>Categoria:</b><br>
+                    <i id="categoria"></i><br><br>
+                    <b>Contacto:</b><br>
+                    <i id="contacto"></i><br><br>
+                    <!-- If del valor -->
+                    <b class="display-none ver">Valor:</b><br>
+                    <i class="display-none ver" id='valor'></i>
+                </p>
+                <hr>
+                <p class="descripcion-clasificado" id="descripcion">
+
+                </p>
+                <p class="palabras-claves" id="etiquetas">
+                    <b>Palabras Claves:</b><br>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modal-eliminar">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>¿Está seguro que desea eliminar este clasificado?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <a href="" type="button" class="btn btn-primary" id="eliminar-clasificado" >Si</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
