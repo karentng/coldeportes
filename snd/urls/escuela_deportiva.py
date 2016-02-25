@@ -10,6 +10,7 @@ urlpatterns = patterns('snd.views.escuela_deportiva',
     url(r'^listar$', 'listar', name='escuela_deportiva_listar'),
     url(r'^finalizar/(?P<edicion>\d+)$', 'finalizar', name='escuela_deportiva_finalizar'),
     url(r'^ver/(\d+)/(\d+)$', 'ver', name='escuela_deportiva_ver'),
+    url(r'^desactivar/(\d+)$', 'desactivar_escuela_deportiva', name='escuela_deportiva_desactivar'),
 
     #urls wizard
     url(r'^crear_editar/(?P<paso>\w+)/(?P<edicion>\d+)$', 'crear_editar', name='escuela_deportiva_crear_editar'),
