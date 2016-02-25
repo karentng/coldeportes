@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Clasificados</a>
+    <li class="active">Gestionar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de clasificados
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de clasificados
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-noticias";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/noticias/clasificados.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-clasificados" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Fecha de publicación</th>
+                            <th>Fecha de expiración</th>
+                            <th>Palabras clave</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for clasificado in clasificados %}
+                            <tr>
+                                <td>{{clasificado.titulo}}</td>
+                                <td>{{clasificado.fecha_publicacion}}</td>
+                                <td>{{clasificado.fecha_expiracion}}</td>
+                                <td>{{clasificado.etiquetas}}</td>
+                                <td>
+                                    {% if clasificado.estado == 1 %}
+                                        <label class="label-success label label-table">Activo</label>
+                                    {% else %}
+                                        <label class="label-danger label label-table">Inactivo</label>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="" data-toggle="modal" data-target="#modal-clasificado-{{ clasificado.id }}">
+                                        <i class="fa fa-eye"></i> Ver más
+                                    </a>
+                                    <br/>
+                                    <a href='{% url 'editar_clasificado' clasificado.id %}'>
+                                        <i class="fa fa-edit"></i> Editar
+                                    </a>
+                                    <br/>
+                                    <a href='{% url 'cambiar_estado_clasificado' clasificado.id %}'>
+                                        <i class="fa fa-trash-o"></i> Cambiar Estado
+                                    </a>
+                                </td>
+                            </tr>
+                            {% include 'modal_clasificado.html' %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

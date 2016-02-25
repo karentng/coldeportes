@@ -242,21 +242,21 @@ def inicio_public(request):
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
-        if len(noticias_todas)>5:
-            noticias = noticias_todas[:5]
+        noticias_todas = Noticia.objects.order_by('-fecha_inicio')
+        if len(noticias_todas) > 5:
+            noticias = noticias_todas[:7]
         else:
             noticias = noticias_todas
     except Exception:
         noticias = []
 
-    return render(request,'index_public.html',{
+    return render(request, 'index_public.html', {
         'deportistas': cantidad_deportistas,
         'escenarios': cantidad_escenarios,
         'cantidad_entes': json.dumps(cantidad_entes),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias,
+        'noticias': noticias,
     })
 
 

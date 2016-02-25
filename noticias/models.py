@@ -10,6 +10,7 @@ class Noticia(models.Model):
     fecha_expiracion = models.DateField(verbose_name="Fecha de finalización")
     autor = models.CharField(max_length=40)
     cuerpo_noticia = models.TextField(verbose_name="Cuerpo de la noticia")
+    previsualizacion = models.TextField()
     etiquetas = models.CharField(max_length=255, null=True, blank=True)
     video = models.CharField(max_length=255, null=True, blank=True)
     estado = models.IntegerField(default=1)
