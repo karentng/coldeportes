@@ -6,6 +6,35 @@ from django.template import RequestContext
 from registro_resultados.models import *
 from registro_resultados.forms import *
 
+
+@login_required
+def registrar_juego(request, juego_id=None):
+    try:
+        juego = Juego.objects.get(id=juego_id)
+    except Exception:
+        juego = None
+
+    form = JuegoForm(instance=juego)
+
+    if request.method == "POST":
+        
+        form = JuegoForm(request.POST, request.FILES, instance=juego)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Juego registrado correctamente.")
+            return redirect('listar_juegos')
+    return render(request, 'registro_juego.html', {
+        "form": form,
+    })
+
+@login_required
+def listar_juegos(request):
+    juegos = Juego.objects.all()
+    return render(request, 'listado_juegos.html', {
+        "juegos": juegos,
+    })
+
 @login_required
 def obtener_competencia_session(request):
     try:
@@ -16,30 +45,44 @@ def obtener_competencia_session(request):
         return None
 
 @login_required
-def datos_competencia(request, idCompetencia=None):
+def datos_competencia(request, juego_id, competencia_id=None):
     try:
-        competencia = Competencia.objects.get(id=idCompetencia)
+        juego = Juego.objects.get(id=juego_id)
+        competencia = Competencia.objects.get(id=competencia_id)
     except Exception:
         competencia = None
 
     form = CompetenciaForm(instance=competencia)
+
     if request.method == "POST":
         d_id = request.POST['disciplina_deportiva']
         form = CompetenciaForm(request.POST, request.FILES, deporte_id=d_id, instance=competencia)
+
         if form.is_valid():
-            form.save()
+            nueva_competencia = form.save(commit=False)
+            nueva_competencia.juego = juego.id
             messages.success(request, "Competencia registrada correctamente.")
             return redirect('listado_competencias')
     return render(request, 'registro_competencia.html', {
         "form": form,
+        'wizard_stage': 1,
     })
 
 @login_required
-def listado_competencias(request):
-    competencias = Competencia.objects.all()
+def listado_competencias(request, juego_id):
+    competencias = Competencia.objects.filter(juego=juego_id)
     return render(request, 'listado_competencias.html', {
+        'juego_id': juego_id,
         "competencias": competencias,
     })
+
+@login_required
+def eliminar_competencia(request, juego_id, competencia_id):
+    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+    competencia.delete()
+    messages.warning(request, "Competencia eliminada correctamente.")
+    return redirect('listado_competencias')
+
 
 @login_required
 def acceder_competencia(request, idCompetencia):

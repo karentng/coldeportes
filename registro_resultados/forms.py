@@ -3,6 +3,19 @@ from django import forms
 from registro_resultados.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
 
+class JuegoForm(forms.ModelForm):
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs):
+        super(JuegoForm, self).__init__(*args, **kwargs)
+        self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
+
+    class Meta:
+        model = Juego
+        exclude = ()
+
 class CompetenciaForm(forms.ModelForm):
     required_css_class = 'required'
 
@@ -20,13 +33,15 @@ class CompetenciaForm(forms.ModelForm):
         self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.none()
         self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.none()
         self.fields['disciplina_deportiva'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
         if deporte_id:
             self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
             self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
 
     class Meta:
         model = Competencia
-        exclude = ()
+        exclude = ('juego',)
         widgets = {
             'fecha_competencia': MyDateWidget(),
         }

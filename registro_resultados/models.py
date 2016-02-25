@@ -1,8 +1,20 @@
 from django.db import models
 from entidades.models import *
 
-def ruta_competencias_imagenes(instance, filename):
-    return "competencias/imagenes/%s"%(filename.encode('ascii','ignore').decode('ascii'))
+def ruta_juegos_imagenes(instance, filename):
+    return "juegos/imagenes/%s"%(filename.encode('ascii','ignore').decode('ascii'))
+
+
+class Juego(models.Model):
+    nombre = models.CharField(max_length=255, verbose_name='nombre')
+    anio = models.PositiveIntegerField(verbose_name="Año")
+    imagen = models.FileField(upload_to=ruta_juegos_imagenes, blank=True, null=True, verbose_name="imagen o logo del juego")
+    pais = models.ForeignKey(Nacionalidad, default=52, verbose_name="País")
+    descripcion = models.TextField(null=True, blank=True)
+
+    
+    def __str__(self):
+        return self.nombre
 
 class Competencia(models.Model):
     TIPOS_PARTICIPANTES = (
@@ -25,6 +37,7 @@ class Competencia(models.Model):
     modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad de competencia')
     sets = models.BooleanField(verbose_name="¿Requiere el registro de varios sets?")
     descripcion = models.TextField(null=True, blank=True)
+    juego = models.ForeignKey(Juego)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
