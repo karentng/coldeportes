@@ -34,15 +34,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="" style="margin-left:0px">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="" style="margin-left:0px">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'escuela_deportiva_listar' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             {{escuela.nombre}}
@@ -86,22 +78,24 @@
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
-                                            <p>{{escuela.direccion}}, Barrio {{escuela.barrio}}</p>
-                                            <p>{{escuela.ciudad}}</p>
-                                            <p>Estrato {{escuela.estrato}}, Comuna {{escuela.comuna}}</p>
+                                            <p><b>Dirección:</b> {{escuela.direccion}}</p>
+                                            <p><b>Barrio:</b> {{escuela.barrio}}</p>
+                                            <p><b>Ciudad:</b> {{escuela.ciudad}}</p>
+                                            <p><b>Estrato:</b> {{escuela.estrato}}, <b>Comuna:</b> {{escuela.comuna}}</p>
                                         </address>
-
+                                        <br/>
+                                        <h5 class="m-t-10">Información de contacto:</h5>
+                                        <p><b>Teléfono:</b> {{escuela.telefono_fijo}}</p>
+                                        <p><b>Teléfono Celular:</b> {{escuela.telefono_celular}}</p>
+                                        <p><b>Email:</b> {{escuela.email}}</p>
+                                        <p><b>Página web:</b> {{escuela.web}}</p>
+                                        <p><b>Nombre del Administrador:</b> {{escuela.nombre_administrador}}</p>
                                         <div align="right">
                                             <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                         </div>
                                     </div>
                                 </div>
-                                <h5 class="m-t-10">Información de contacto:</h5>
-                                <p>Teléfono: {{escuela.telefono_fijo}}</p>
-                                <p>Teléfono Celular: {{escuela.telefono_celular}}</p>
-                                <p>Email: {{escuela.email}}</p>
-                                <p>Página web: {{escuela.web}}</p>
-                                <p>Nombre del Administrador: {{escuela.nombre_administrador}}</p>
+
                             </div>
                         </div>
                         

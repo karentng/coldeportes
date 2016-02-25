@@ -1,5 +1,4 @@
 from django.contrib.contenttypes.models import ContentType
-from django.core.serializers import json
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -13,7 +12,7 @@ from snd.models import *
 from entidades.models import *
 from django.contrib import messages
 from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required,tenant_required
-
+from django.http import JsonResponse,HttpResponse
 
 @login_required
 #@tenant_required
@@ -190,7 +189,8 @@ def wizard_historia_deportiva(request,id_depor):
     hist_depor_form = HistorialDeportivoForm()
 
     if request.method == 'POST':
-        hist_depor_form = HistorialDeportivoForm(request.POST)
+        d_id = request.POST['deporte']
+        hist_depor_form = HistorialDeportivoForm(request.POST,deporte_id=d_id)
 
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
@@ -210,6 +210,40 @@ def wizard_historia_deportiva(request,id_depor):
         'edicion':True
     })
 
+#Ajax para modalidad y categoria historia deportiva
+@login_required
+@all_permission_required('snd.add_deportista')
+def get_modalidades(request,id_depor):
+    modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=id_depor)
+    if modalidades:
+        data = []
+        for m in modalidades:
+            dic = {}
+            dic['id'] = m.id
+            dic['text'] = m.nombre
+            data.append(dic)
+    else:
+        return HttpResponse('Modalidades no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
+
+@login_required
+@all_permission_required('snd.add_deportista')
+def get_categorias(request,id_depor):
+    categorias = CategoriaDisciplinaDeportiva.objects.filter(deporte=id_depor)
+    if categorias:
+        data = []
+        for c in categorias:
+            dic = {}
+            dic['id'] = c.id
+            dic['text'] = c.nombre
+            data.append(dic)
+    else:
+        return HttpResponse('Categorias no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
 #Eliminacion Historia Deportiva
 @login_required
 #@tenant_required
@@ -343,7 +377,11 @@ def desactivar_deportista(request,id_depor):
         estado_actual = deportista.estado
         deportista.estado = not estado_actual
         deportista.save()
-        messages.warning(request, "Deportista desactivado/activado correctamente.")
+        if estado_actual:
+            message = "Deportista activado correctamente."
+        else:
+            message = "Deportista desactivado correctamente."
+        messages.warning(request, message)
         return redirect('deportista_listar')
     except:
         messages.error(request, "Error: No existe el deportista solicitado")
@@ -451,40 +489,40 @@ def finalizar_deportista(request,opcion):
 
 def existencia_deportista(datos):
     #Verificación de existencia dentro del tenant actual
+    try:
+        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+    except Exception:
+        deportista = None
+
+    if deportista:
+        #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
+        return deportista,None,True
+
+    if not deportista:
+        #Si no se encuentra en el tenant actual se debe verificar en otros tenants
+        #Verificación de existencia en otros tenants
+        #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
+        existencia = False
+        tenant_existencia = None
+        tenant_actual = connection.tenant
+        entidades = Entidad.objects.all()
+        for entidad in entidades:
+            connection.set_tenant(entidad)
+            ContentType.objects.clear_cache()
             try:
                 deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
+                existencia = True
+                tenant_existencia = entidad
+                break
             except Exception:
-                deportista = None
+                pass
 
-            if deportista:
-                #Si se encuentra el deportista se carga el template con la existe=True para desplegar el aviso al usuario
-                return deportista,None,True
+        connection.set_tenant(tenant_actual)
 
-            if not deportista:
-                #Si no se encuentra en el tenant actual se debe verificar en otros tenants
-                #Verificación de existencia en otros tenants
-                #Estas dos variables son para ver si existe en otro tenant (True, False) y saber en cual Tenant se encontró
-                existencia = False
-                tenant_existencia = None
-                tenant_actual = connection.tenant
-                entidades = Entidad.objects.all()
-                for entidad in entidades:
-                    connection.set_tenant(entidad)
-                    ContentType.objects.clear_cache()
-                    try:
-                        deportista = Deportista.objects.get(identificacion=datos['identificacion'],tipo_id=datos['tipo_id'])
-                        existencia = True
-                        tenant_existencia = entidad
-                        break
-                    except Exception:
-                        pass
-
-                connection.set_tenant(tenant_actual)
-
-                if existencia:
-                    return deportista,tenant_existencia,True
-                else:
-                    return None,None,False
+        if existencia:
+            return deportista,tenant_existencia,True
+        else:
+            return None,None,False
 
 @login_required
 #@tenant_required

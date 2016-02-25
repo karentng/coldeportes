@@ -61,7 +61,9 @@
             {% include "menus/aplicacion/noticias.html" %}
         {% endif %}
     {% endif %}
-    {%comment%}Cualquiera puede buscar normas y buscar en el directorio, no requiere validar permiso de lectura{%endcomment%}
+
+
+    {#  Cualquiera puede buscar normas y buscar en el directorio, no requiere validar permiso de lectura #}
     
     {% include "menus/aplicacion/directorio.html" %}
     {% include "menus/aplicacion/normograma.html" %}
@@ -75,24 +77,10 @@
         {% include "menus/aplicacion/directorio.html" %}
         {% include "menus/aplicacion/normograma.html" %}
         {% include "menus/aplicacion/manual.html" %}
+        {% include "menus/aplicacion/reportes.html" %}
         {% include "menus/aplicacion/registro_resultados.html" %}
 
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
-    <li class="has-sub
-        {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
-            {% if 'reportes' not in request.path %}
-            active
-            {% endif %}
-        {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="ion-android-people"></i>
-            <span class="colorMenu">ACTORES NACIONALES</span>
-        </a>
-        <ul class="sub-menu">
-            {% include "menus/tenant_nacional_menu.html" %}
-        </ul>
-    </li>
 {% endif %}

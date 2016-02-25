@@ -1,5 +1,5 @@
 from django.db import models
-from entidades.models import CategoriaDisciplinaDeportiva, Departamento, TipoDisciplinaDeportiva
+from entidades.models import *
 
 def ruta_competencias_imagenes(instance, filename):
     return "competencias/imagenes/%s"%(filename.encode('ascii','ignore').decode('ascii'))
@@ -15,11 +15,14 @@ class Competencia(models.Model):
     )
     
     nombre = models.CharField(max_length=255, verbose_name='nombre')
-    fecha_competencia = models.DateTimeField(verbose_name="Fecha de la compentencia")
+    fecha_competencia = models.DateField(verbose_name="Fecha de la compentencia")
     tipo_competencia = models.IntegerField(choices=TIPOS_COMPETENCIAS, verbose_name="tipo de competencia")
+    tipo_registro = models.IntegerField()
+    lugar = models.CharField(max_length=150)
     tipos_participantes = models.IntegerField(choices=TIPOS_PARTICIPANTES, verbose_name="tipo de participantes")
     disciplina_deportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    tipo_registro = models.IntegerField(verbose_name='Tipo de Registros')
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría')
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad de competencia')
     sets = models.BooleanField(verbose_name="¿Requiere el registro de varios sets?")
     descripcion = models.TextField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)

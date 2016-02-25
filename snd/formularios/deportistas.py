@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from snd.models import *
 import datetime
-from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo
+from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo,extraer_codigo_video
 
 class VerificarExistenciaForm(forms.Form):
     TIPO_IDENTIDAD = (
@@ -46,11 +46,16 @@ class DeportistaForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(DeportistaForm, self).clean()
-        self = verificar_tamano_archivo(self, cleaned_data, "foto")
         fecha_nacimiento = self.cleaned_data['fecha_nacimiento']
         if fecha_nacimiento > datetime.date.today():
                 msg = "La fecha de nacimiento no puede ser mayor al día de hoy"
                 self.add_error('fecha_nacimiento', msg)
+        video = self.cleaned_data['video']
+        if video:
+            try:
+                extraer_codigo_video(video)
+            except Exception:
+                self.add_error('video','Digite una url valida de un video de YouTube')
         return self.cleaned_data
 
     class Meta:
@@ -77,6 +82,7 @@ class ComposicionCorporalForm(ModelForm):
         self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
         self.fields['imc'].widget.attrs['readonly'] = 1
         self.fields['masa_corporal_magra'].widget.attrs['readonly'] = 1
+        self.fields['eps'].queryset = EPS.objects.all().order_by('nombre')
 
     def clean(self):
         porcentaje_grasa = self.cleaned_data['porcentaje_grasa']
@@ -102,9 +108,19 @@ class HistorialDeportivoForm(ModelForm):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
+        deporte_id = kwargs.pop('deporte_id',None)
         super(HistorialDeportivoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
+        self.fields['modalidad'] = adicionarClase(self.fields['modalidad'], 'one')
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+        self.fields['categoria'] = adicionarClase(self.fields['categoria'], 'one')
+        self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.none()
+        self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.none()
+        self.fields['deporte'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+        if deporte_id:
+            self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+            self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
 
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_inicial']
@@ -131,6 +147,7 @@ class HistorialLesionesForm(ModelForm):
         super(HistorialLesionesForm, self).__init__(*args, **kwargs)
         self.fields['tipo_lesion'] = adicionarClase(self.fields['tipo_lesion'], 'one')
         self.fields['periodo_rehabilitacion'] = adicionarClase(self.fields['periodo_rehabilitacion'], 'one')
+        self.fields['segmento_corporal'] = adicionarClase(self.fields['segmento_corporal'],'one')
 
     class Meta:
         model = HistorialLesiones

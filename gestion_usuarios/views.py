@@ -17,8 +17,9 @@ from coldeportes.utilities import permisosPermitidos
 from directorio.models import *
 from noticias.models import Noticia
 from entidades.models import Entidad
-
+from reportes.utilities import atributos_actor_vista
 from django.http import HttpResponse
+
 
 def cambiarNombreDePermisos():
     permisos = Permission.objects.filter(
@@ -49,7 +50,7 @@ def asignarPermisosGrupo(request, grupo, permisos):
         try:
             grupo.permissions.add(permiso)
         except Exception:
-            messages.error(request,'Ha ocurrido un error al actulizar los permisos de escritura')
+            print('Ha ocurrido un error al actulizar los permisos de escritura')
 
 def asignarPermisosGrupoLectura(request, grupo, permisos):
     #agrega los permisos de lectura que son obligatorios, tenga o no el actor
@@ -63,7 +64,7 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
     try:
         actores = Permisos.objects.get(entidad=tipo,tipo=tipoEnte).get_actores('%')
     except Permisos.DoesNotExist:
-        messages.error(request,'Ha ocurrido un error al obtener los permisos de lectura')
+        messages.error(request,'La entidad actual no tiene permisos de lectura')
     else:
         permitidos = []
         for permiso,actor in permisos:
@@ -74,9 +75,82 @@ def asignarPermisosGrupoLectura(request, grupo, permisos):
             try:
                 grupo.permissions.add(permiso)
             except Exception as e:
-                messages.error(request,'Ha ocurrido un error al actualizar los permisos de lectura')
+                print('Ha ocurrido un error al actualizar los permisos de lectura')
                 print(e)
 
+
+"""
+Autor: Milton Lenis
+Fecha: 3 Febrero 2016
+
+
+NOTA: En esta vista se crea un fix para los actores de aquellas entidades que se crearon antes de crear la funcionalidad
+de permisos que hizo Cristian, NO ES NECESARIO QUE LA USEN PARA SUS ENTORNOS DE DESARROLLO LOCALES ES SOLO PARA ACOMODAR
+LOS SERVIDORES.
+"""
+def fix_actores_entidades(request):
+    from coldeportes.utilities import obtener_modelo_actor
+
+    entidades = Entidad.objects.exclude(schema_name='public')
+    for entidad in entidades:
+        entidad = entidad.obtenerTenant()
+        if entidad.tipo == 5:
+            tipo_sub_entidad = entidad.tipo_ente
+        elif entidad.tipo == 6:
+            tipo_sub_entidad = entidad.tipo_comite
+        else:
+            tipo_sub_entidad = 0
+
+        tipo_entidad = entidad.tipo
+
+        permisos = Permisos.objects.get(tipo=tipo_sub_entidad,entidad=tipo_entidad)
+
+        for actor_false in permisos.get_actores('--'):
+            setattr(entidad.actores,actor_false,False)
+            entidad.save()
+            entidad.actores.save()
+
+        for actor_true in permisos.get_actores('O'):
+            setattr(entidad.actores,actor_true,True)
+            entidad.save()
+            entidad.actores.save()
+
+        #Se comenta para que no se siga intentando borrar ya que no es necesario
+        #modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
+        connection.set_tenant(entidad)
+        request.tenant = entidad
+
+        ##Se comenta para que no se siga intentando borrar ya que no es necesario
+        """
+        for modelo in modelos_a_borrar:
+            try:
+                modelo.objects.all().delete()
+            except Exception as e:
+                print(e)
+        """
+
+        try:
+            #si llegan a editar el nombre del grupo, tendremos un error
+            digitador = Group.objects.get(name="Digitador")
+            lectura = Group.objects.get(name='Solo lectura')
+        except Group.DoesNotExist:
+            pass
+
+        if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
+            print(entidad)
+            asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
+            asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
+            asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
+            asignarPermisosGrupoLectura(request, lectura, PERMISOS_LECTURA)
+
+        connection.set_schema_to_public()
+        request.tenant = Entidad.objects.get(schema_name='public')
+
+    return HttpResponse("Se han actualizado las entidades del servidor correctamente")
+
+"""
+------------------------------------------------------------------------------------------------------------------------
+"""
 
 def inicio(request):
     schema_name = request.tenant.schema_name
@@ -147,32 +221,18 @@ def inicio(request):
     else:
         return redirect('inicio_tenant')
 
+
 def inicio_public(request):
-    from django.db import connection
+    from entidades.modelos_vistas_reportes import PublicDeportistaView, PublicEscenarioView
+    from reportes.utilities import atributos_actor_vista
     from django.db.models import Count
 
     import json
 
-    from snd.models import Deportista, CentroAcondicionamiento
-    from entidades.models import TIPOS
 
-    public = request.tenant
-    entidades = Entidad.objects.exclude(schema_name='public')
-    cantidad_deportistas = 0
-    cantidad_escenarios = 0
-
-    ubicaciones = []
-
-    for i in entidades:
-        connection.set_tenant(i)
-        escenarios = Escenario.objects.filter(entidad=i)
-        cantidad_escenarios += escenarios.count()
-        for escenario in escenarios:
-            ubicaciones.append(escenario.obtenerAtributos())
-
-        cantidad_deportistas += Deportista.objects.filter(entidad=i).count()
-
-    connection.set_tenant(public)
+    ubicaciones = atributos_actor_vista(PublicEscenarioView)
+    cantidad_deportistas = PublicDeportistaView.objects.filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad').count()
+    cantidad_escenarios = PublicEscenarioView.objects.filter(estado=0).order_by('id','entidad').distinct('id','entidad').count()
 
     cantidad_entes = list(Entidad.objects.exclude(schema_name='public').values('tipo').order_by().annotate(Count('tipo')))
     for i in range(0, len(cantidad_entes)):
@@ -217,6 +277,7 @@ def inicio_tenant(request):
     #Inicio consulta de transferencias
     transferencias = Transferencia.objects.filter(estado='Pendiente')
     transfer_personas = []
+
     for t in transferencias:
         connection.set_tenant(t.entidad)
         ContentType.objects.clear_cache()
@@ -233,14 +294,21 @@ def inicio_tenant(request):
     actoresAsociados = request.tenant.cantidadActoresAsociados()
 
     tipoTenant = request.tenant.obtenerTenant()
-    ubicaciones = tipoTenant.atributos_escenarios()
+
+    #Mejorado con uso de vistas
+    from reportes.models import TenantEscenarioView
+    from reportes.models import TenantCafView
+
+    ubicaciones = atributos_actor_vista(TenantEscenarioView)
+    ubicaciones = ubicaciones + atributos_actor_vista(TenantCafView)
+    #--------------------------
+
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
 
     entidad = tipoTenant.obtener_datos_entidad()
-
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
         if len(noticias_todas)>5:
@@ -249,11 +317,10 @@ def inicio_tenant(request):
             noticias = noticias_todas
     except Exception:
         noticias = []
-
     return render(request,'index_tenant.html',{
         'transfer_persona' : transfer_personas,
         'actoresAsociados': actoresAsociados,
-        'actoresAsociadosJSON': json.dumps(actoresAsociados),
+        #'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
         'noticias':noticias,

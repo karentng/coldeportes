@@ -310,7 +310,11 @@ def desactivar_personal_apoyo(request,id_personal_apoyo):
     estado_actual = personal_apoyo.estado
     personal_apoyo.estado = not(estado_actual)
     personal_apoyo.save()
-    messages.warning(request, "Personal de apoyo desactivado correctamente.")
+    if(estado_actual):
+        message = "Personal de apoyo activado correctamente."
+    else:
+        message = "Personal de apoyo desactivado correctamente."
+    messages.success(request, message)
     return redirect('personal_apoyo_listar')
 
 @login_required

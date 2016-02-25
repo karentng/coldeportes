@@ -29,7 +29,6 @@ def obtenerAtributosModelo(modelo):
     configuracionDespliegue = MODELOS_DE_DATOS[modelo][3]
     urlsOpciones = MODELOS_DE_DATOS[modelo][4]
     modelo = MODELOS_DE_DATOS[modelo][0]
-
     if atributos == None:
         nombreDeColumnas = []
         atributos = modelo._meta.get_all_field_names()
@@ -96,7 +95,6 @@ def evaluarCondiciones(objeto, condiciones, request):
         condicion_es_actor_propio = type(condiciones[0][0] is list) and condiciones[0][0][0] == 'entidad'
     except Exception:
         condicion_es_actor_propio = False
-
 
     if condiciones == None:
         return True
@@ -233,7 +231,7 @@ def obtener_objetos_por_tenant(request,modelo):
             for club in clubes:
                 connection.set_tenant(club)
                 ContentType.objects.clear_cache()
-                qs = modelo.objects.filter(estado=0)
+                qs = modelo.objects.filter(estado__in=[0,2])
                 for objeto in qs:
                     objetos.append(objeto)
             connection.set_tenant(tenant_actual)
@@ -259,7 +257,7 @@ def obtener_objetos_por_tenant(request,modelo):
                 #saco los objetos de cada una de las ligas pertenecientes a la federación
                 connection.set_tenant(liga)
                 ContentType.objects.clear_cache()
-                qs = modelo.objects.filter(estado=0)
+                qs = modelo.objects.filter(estado__in=[0,2])
                 for objeto in qs:
                     objetos.append(objeto)
                 #obtengo los clubes de cada liga y saco los objetos de cada uno
@@ -267,7 +265,7 @@ def obtener_objetos_por_tenant(request,modelo):
                 for club in clubes:
                     connection.set_tenant(club)
                     ContentType.objects.clear_cache()
-                    qs = modelo.objects.filter(estado=0)
+                    qs = modelo.objects.filter(estado__in=[0,2])
                     for objeto in qs:
                         objetos.append(objeto)
             connection.set_tenant(tenant_actual)
@@ -298,7 +296,7 @@ def obtener_objetos_por_tenant(request,modelo):
                 #saco los objetos de cada una de las federaciones pertenecientes al comité
                 connection.set_tenant(federacion)
                 ContentType.objects.clear_cache()
-                qs = modelo.objects.filter(estado=0)
+                qs = modelo.objects.filter(estado__in=[0,2])
                 for objeto in qs:
                     objetos.append(objeto)
                 #obtengo las ligas de cada federación y saco los objetos de cada uno
@@ -311,7 +309,7 @@ def obtener_objetos_por_tenant(request,modelo):
                 for liga in ligas:
                     connection.set_tenant(liga)
                     ContentType.objects.clear_cache()
-                    qs = modelo.objects.filter(estado=0)
+                    qs = modelo.objects.filter(estado__in=[0,2])
                     for objeto in qs:
                         objetos.append(objeto)
                     #obtengo los clubes de cada liga y saco los objetos de cada uno.
@@ -325,7 +323,7 @@ def obtener_objetos_por_tenant(request,modelo):
                     for club in clubes:
                         connection.set_tenant(club)
                         ContentType.objects.clear_cache()
-                        qs = modelo.objects.filter(estado=0)
+                        qs = modelo.objects.filter(estado__in=[0,2])
                         for objeto in qs:
                             objetos.append(objeto)
             connection.set_tenant(tenant_actual)
@@ -351,7 +349,7 @@ def obtener_objetos_por_tenant(request,modelo):
                 #saco los objetos de cada una de las ligas pertenecientes a la federación
                 connection.set_tenant(liga)
                 ContentType.objects.clear_cache()
-                qs = modelo.objects.filter(estado=0)
+                qs = modelo.objects.filter(estado__in=[0,2])
                 for objeto in qs:
                     objetos.append(objeto)
                 #obtengo los clubes de cada liga y saco los objetos de cada uno
@@ -359,7 +357,7 @@ def obtener_objetos_por_tenant(request,modelo):
                 for club in clubes:
                     connection.set_tenant(club)
                     ContentType.objects.clear_cache()
-                    qs = modelo.objects.filter(estado=0)
+                    qs = modelo.objects.filter(estado__in=[0,2])
                     for objeto in qs:
                         objetos.append(objeto)
             connection.set_tenant(tenant_actual)
@@ -383,7 +381,7 @@ def obtener_objetos_por_tenant(request,modelo):
             for club in clubes:
                 connection.set_tenant(club)
                 ContentType.objects.clear_cache()
-                qs = modelo.objects.filter(estado=0)
+                qs = modelo.objects.filter(estado__in=[0,2])
                 for objeto in qs:
                     objetos.append(objeto)
             connection.set_tenant(tenant_actual)
@@ -463,14 +461,14 @@ def ejecutar_busqueda(modeloTipo,atributos,busqueda,tenant_conectar,tenant_actua
                         if mismo_tenant:
                             objeto = modeloTipo.objects.filter(**query)
                         else:
-                            objeto = modeloTipo.objects.filter(**query).filter(estado=0)
+                            objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
                     except Exception:
                         instruccion = "%s__icontains" % elementoAtributo
                         query = {instruccion : palabra}
                         if mismo_tenant:
                             objeto = modeloTipo.objects.filter(**query)
                         else:
-                            objeto = modeloTipo.objects.filter(**query).filter(estado=0)
+                            objeto = modeloTipo.objects.filter(**query).filter(estado__in=[0,2])
                     finally:
                         objetos = objetos | objeto
     return objetos

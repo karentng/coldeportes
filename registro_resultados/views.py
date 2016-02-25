@@ -24,7 +24,8 @@ def datos_competencia(request, idCompetencia=None):
 
     form = CompetenciaForm(instance=competencia)
     if request.method == "POST":
-        form = CompetenciaForm(request.POST, request.FILES, instance=competencia)
+        d_id = request.POST['disciplina_deportiva']
+        form = CompetenciaForm(request.POST, request.FILES, deporte_id=d_id, instance=competencia)
         if form.is_valid():
             form.save()
             messages.success(request, "Competencia registrada correctamente.")

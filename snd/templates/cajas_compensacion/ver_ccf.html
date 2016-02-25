@@ -25,18 +25,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_pinteres.png" alt="pinteres">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'listar_ccfs' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             {{ccf.nombre}}
@@ -73,40 +62,35 @@
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
-                                            <b>Clasificación de CCF: {{ccf.get_clasificacion_display}}<br/>
-                                            Región: {{ccf.get_region_display}}</b><br /><br/>
-                                            Público: {{ccf.get_publico_display}}, Tipo de Infraestructura: {{ccf.get_infraestructura_display}}<br />        
-                                            Nombre de Contacto: {{ccf.nombre_contacto}}, Teléfono: {{ccf.telefono_contacto}} <br />
-                                            Correo electrónico: {{ccf.email}}<br/>
-                                            Tipo de Institución: {{ccf.get_tipo_institucion_display}}
+                                            <b>Clasificación de CCF:</b> {{ccf.get_clasificacion_display}}<br/>
+                                            <b>Región:</b> {{ccf.get_region_display}}<br /><br/>
+                                            <b>Público:</b> {{ccf.get_publico_display}}, Tipo de Infraestructura: {{ccf.get_infraestructura_display}}<br />
+                                            <b>Nombre de Contacto:</b> {{ccf.nombre_contacto}}, Teléfono: {{ccf.telefono_contacto}} <br />
+                                            <b>Correo electrónico:</b> {{ccf.email}}<br/>
+                                            <b>Tipo de Institución:</b> {{ccf.get_tipo_institucion_display}}
                                         </address>
+                                        <br/>
+                                        <h5 class="m-t-10">Servicios:</h5>
+                                        <ul>
+                                        {% for servicio in ccf.servicios.all %}
+                                        <li>{{servicio.descripcion}}</li>
+                                        {% endfor %}
+                                        </ul>
                                         <div align="right">
                                             <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                         </div>
-                                    </div>                    
+                                    </div>
+
                                 </div>
-                                <h5 class="m-t-10">Servicios:</h5>
-                                <ul>
-                                {% for servicio in ccf.servicios.all %}
-                                <li>{{servicio.descripcion}}</li>
-                                {% endfor %}
-                                </ul>
+
                             </div>
                         </div>                        
                         <div class="tab-pane fade" id="nav-tab2-14">
                             {% if horarios %}
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    <span class="pull-right hidden-print">
-                                    <a href="{% if tenant_nacional %}
-                                                    {% url 'listar_cajas_nacionales' %}
-                                                 {% else %}
-                                                    {% url 'listar_ccfs' %}
-                                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                    </span>
-                                    Horarios
+                                    {{ccf.nombre}}
                                 </div>
-                                <h1 class="page-header">{{ccf.nombre}}</h1>
                                 <div class="invoice-content">
                                     <div class="table-responsive">
                                         <table class="table table-invoice">
@@ -140,16 +124,8 @@
                             {% if tarifas %}                            
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    <span class="pull-right hidden-print">
-                                    <a href="{% if tenant_nacional %}
-                                                    {% url 'listar_cajas_nacionales' %}
-                                                 {% else %}
-                                                    {% url 'listar_ccfs' %}
-                                                 {% endif %}" class="btn btn-sm btn-primary m-b-10"><i class="fa fa-chevron-left m-r-5"></i> Volver</a>
-                                    </span>
-                                    Tarifas
+                                    {{ccf.nombre}}
                                 </div>
-                                <h1 class="page-header">{{ccf.nombre}}</h1>
                                 <div class="invoice-content">
                                     <div class="table-responsive">
                                         <table class="table table-invoice">

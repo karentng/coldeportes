@@ -2,7 +2,8 @@ from django.forms import *
 from django import forms
 from entidades.models import Departamento, Ciudad, TipoDisciplinaDeportiva
 from coldeportes.utilities import adicionarClase
-from reportes.forms import add_visualizacion
+from reportes.utilities import add_visualizacion
+
 
 class FiltrosEscenariosDMDForm(forms.Form):
     

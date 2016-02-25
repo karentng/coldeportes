@@ -1,4 +1,4 @@
-from snd.models import *
+from entidades.modelos_vistas_reportes import *
 
 '''
 (
@@ -22,16 +22,15 @@ from snd.models import *
                 ] | None
             ]+ | []
         ],
-        False | True            -> Se consulta en todos los tenants o no
     ),
 )
 '''
 
 MODELOS_DE_DATOS = (
     (   #Numero de modelo 0
-        PersonalApoyo,
-        ['nombres','apellidos','actividad', 'entidad'],
-        ['Nombres','Apellidos','Actividad Desempeñada', 'Entidad'],
+        PublicPersonalApoyoView,
+        ['nombres','apellidos','actividad', 'ciudad', 'entidad'],
+        ['Nombres','Apellidos','Actividad Desempeñada', 'Ciudad', 'Entidad'],
         None,
         [
             [
@@ -44,9 +43,9 @@ MODELOS_DE_DATOS = (
         ],
     ),
     (   #Numero de modelo 1
-        Dirigente,
-        ['nombres','apellidos', 'entidad', 'cargo'],
-        ['Nombres','Apellidos', 'Entidad', 'Cargo'],
+        PublicDirigenteView,
+        ['nombres','apellidos', 'ciudad', 'entidad'],
+        ['Nombres','Apellidos', 'Ciudad', 'Entidad'],
         None,
         [
             [
@@ -59,7 +58,7 @@ MODELOS_DE_DATOS = (
         ],
     ),
     (   #Numero de modelo 2
-        Escenario,
+        PublicEscenarioView,
         ['nombre','ciudad', 'entidad'],
         ['Nombre','Ciudad(Departamento)', 'Entidad'],
         None,
@@ -75,9 +74,9 @@ MODELOS_DE_DATOS = (
     ),
     
     (   #Numero de modelo 3
-        Deportista,
-        ['nombres','apellidos', 'entidad', 'ciudad_residencia','disciplinas'],
-        ['Nombres','Apellidos', 'Entidad', 'Ciudad(Departamento) Residencia', 'Disciplinas'],
+        PublicDeportistaView,
+        ['nombres','apellidos', 'ciudad_residencia', 'entidad'],
+        ['Nombres','Apellidos', 'Ciudad(Departamento) Residencia', 'Entidad'],
         None,
         [
             [
@@ -90,14 +89,44 @@ MODELOS_DE_DATOS = (
         ],
     ),
     (   #Numero de modelo 4
-        CentroAcondicionamiento,
-        ['nombre', 'ciudad', 'entidad', 'telefono', 'email', 'web'],
-        ['Nombre', 'Ciudad', 'Entidad', 'Teléfono', 'Email', 'Página Web'],
+        PublicCafView,
+        ['nombre', 'ciudad', 'telefono', 'email', 'web', 'entidad'],
+        ['Nombre', 'Ciudad', 'Teléfono', 'Email', 'Página Web', 'Entidad'],
         None,
         [
             [
                 "Ver más",
                 'ver_caf_tenantnacional',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+        ],
+    ),
+    (   #Numero de modelo 5
+        PublicEscuelaView,
+        ['nombre', 'ciudad', 'telefono_fijo', 'email', 'web', 'estrato','entidad'],
+        ['Nombre', 'Ciudad', 'Teléfono', 'Email', 'Página Web', 'Estrato', 'Entidad'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_escuelas_tenantnacional',
+                ['id','entidad.id'],
+                'fa-eye',
+                None
+            ],
+        ],
+    ),
+    (   #Numero de modelo 6
+        PublicCajasView,
+        ['nombre', 'ciudad', 'clasificacion','email','entidad'],
+        ['Nombre', 'Ciudad', 'Clasificación','Email','Entidad'],
+        None,
+        [
+            [
+                "Ver más",
+                'ver_cajas_tenantnacional',
                 ['id','entidad.id'],
                 'fa-eye',
                 None

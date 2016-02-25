@@ -61,29 +61,32 @@
                             <div class="tab-pane fade active in" id="nav-tab2-12">
                                 <div class="invoice">
                                     <div class="invoice-company">
-                                        {{escenario.nombre}}
+                                        <b>{{escenario.nombre}}</b>
                                     </div>
                                     <div class="invoice-header">
                                         <div class="invoice-from">
                                             <address class="m-t-5 m-b-5">
-                                                <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br />
-                                                {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br />
-                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br />
+                                                <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br/>
+                                                {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br/>
+                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br/>
                                                 Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
                                                 Nombre del Administrador: {{escenario.nombre_administrador}}
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                             </div>
-                                        </div>                    
-                                    </div>
-                                    <h5 class="m-t-10">Descripción:</h5>
-                                    <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% endif %}</p>
+                                        </div>
+                                        <h5 class="m-t-10"><strong>Descripción:</strong></h5>
+                                        <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% endif %}</p>
+                                    </div>                                   
                                 </div>
                             </div>
                             
                             <div class="tab-pane fade" id="nav-tab2-13">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if caracteristicas %}
                                     {% for caracteristica in caracteristicas %}
                                     <div class="invoice-header">
@@ -107,9 +110,9 @@
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                             </div>
                                         </div>
-                                    </div>
-                                    <h5 class="m-t-10">Descripción:</h5>
-                                    <p>{% if caracteristica.descripcion %}{{caracteristica.descripcion}}{% endif %}</p>
+                                        <h5 class="m-t-10">Descripción:</h5>
+                                        <p>{% if caracteristica.descripcion %}{{caracteristica.descripcion}}{% endif %}</p>
+                                    </div>                                    
                                     {% endfor %}
                                 {% else %}
                                     <p>No hay características disponibles</p>
@@ -119,6 +122,9 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-14">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if horarios %}
                                     
                                     <div class="invoice-content">
@@ -154,6 +160,9 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-15">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if historicos %}
                                     <div class="invoice-content">
                                         <div class="table-responsive">
@@ -185,9 +194,11 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-16">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if fotos %}
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}:</h1>
+
                                     <!-- end page-header -->
                                     
                                     <!-- begin superbox -->
@@ -205,15 +216,17 @@
                             </div>
                             <div class="tab-pane fade" id="nav-tab2-17">
                                 <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
                                 {% if videos %} 
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}</h1>
+
                                     <!-- end page-header -->
                                     <div class="table-responsive">
                                         <table class="table table-invoice">
                                             <thead>
                                                 <tr>
-                                                    <th style="text-align:center">VISUALIZACION</th>
+                                                    <th style="text-align:center">VISUALIZACIÓN</th>
                                                     <th style="text-align:center">URL</th>
                                                     <th style="text-align:center">DESCRIPCIÓN</th>
                                                     <th style="text-align:center">VER VÍDEO</th>
@@ -259,9 +272,10 @@
                             
                             <div class="tab-pane fade" id="nav-tab2-19">
                                 <div class="invoice">
-                                {% if mantenimientos %}  
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}</h1>
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if mantenimientos %}
                                     <!-- end page-header -->
                                     <div class="table-responsive">
                                         <table class="table table-invoice">
@@ -294,9 +308,10 @@
                             </div>
                             <div class="tab-pane fade" id="nav-tab2-18">
                                 <div class="invoice">
-                                {% if contactos %}  
-                                    
-                                    <h1 class="page-header">{{escenario.nombre}}</h1>
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if contactos %}
                                     <!-- end page-header -->
                                     <div class="table-responsive">
                                         <table class="table table-invoice">

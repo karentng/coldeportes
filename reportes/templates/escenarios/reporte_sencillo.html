@@ -4,6 +4,9 @@
 {% block filtros %}
     <script type="text/javascript">
         $(document).ready(function(){
+            columnas = [nombres_columnas[0], "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla",columnas);
+            tablaDeDatos.setDatos(datos);
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamentos").val());
@@ -18,6 +21,8 @@
                     dataType: 'json',
                     success: function(data) {
                         Reportes.modificarDatos(data, "{{ nombre_reporte}}");
+                        tablaDeDatos.setDatos(data);
+                        tablaDeDatos.verificarActualizacion();
                         $('#loading').modal('hide');
                     }, 
                     error: function(err){
@@ -42,15 +47,10 @@
         });
         nombreReporte = "{{ nombre_reporte }}";
         visualizaciones = {{visualizaciones|safe}};
+        nombres_columnas = {{nombres_columnas|safe}};
         datos = {{datos|safe}};
 
     </script>
     <script src="{{STATIC_URL}}amcharts/ejecutar_estadisticas.js"></script>
-    <script>
-        $(document).ready(function(){
-           $("#filtros").css("display","none");
-           
-        });
-    </script>
     
 {% endblock %}

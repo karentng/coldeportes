@@ -100,28 +100,29 @@
                                             <p><b>Comuna</b>: {{centro.comuna}}</p>
                                         </address>
 
-                                        <div align="right">
-                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
-                                        </div>
-                                    </div>                    
+                                    </div>
+                                    <h5 class="m-t-10"><b>Información de contacto:</b></h5>
+                                    <p><b>Teléfono</b>: {{centro.telefono}}</p>
+                                    <p><b>Email</b>: {{centro.email}}</p>
+                                    <p><b>Nombre del Administrador</b>:
+                                        {% if centro.nombre_administrador %}
+                                            {{centro.nombre_administrador}}
+                                        {% else %}
+                                            No definido
+                                        {% endif %}
+                                    </p>
+                                    <p><b>Página Web</b>:
+                                        {% if centro.web %}
+                                            {{centro.web}}
+                                        {% else %}
+                                            No definida
+                                        {% endif %}
+                                    </p>
+                                    <div align="right">
+                                        <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                    </div>
                                 </div>
-                                <h5 class="m-t-10">Información de contacto:</h5>
-                                <p><b>Teléfono</b>: {{centro.telefono}}</p>
-                                <p><b>Email</b>: {{centro.email}}</p>
-                                <p><b>Nombre del Administrador</b>: 
-                                    {% if centro.nombre_administrador %}
-                                        {{centro.nombre_administrador}}
-                                    {% else %}
-                                        No definido
-                                    {% endif %}
-                                </p>
-                                <p><b>Página Web</b>: 
-                                    {% if centro.web %}
-                                        {{centro.web}}
-                                    {% else %}
-                                        No definida
-                                    {% endif %}
-                                </p>
+
                             </div>
                         </div>
                         

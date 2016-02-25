@@ -23,7 +23,8 @@ def alter_campo_escenarios():
         sql = ("ALTER TABLE %s.snd_caracterizacionescenario ALTER COLUMN capacidad_espectadores TYPE integer USING (capacidad_espectadores::integer);")%(tenant.schema_name)
         try:
             ejecutar_sql(sql)
-        except Exception:
+        except Exception as e:
+            print(e)
             tenants_falla.append(tenant.schema_name)
 
     return tenants_falla
@@ -63,11 +64,11 @@ def generar_vistas(nuevo_tenant=None, padre=None):
         eliminar_vista_materializada_public()
         ejecutar_sql(sql)
 
-    def generar_vista_caf_nuevo_tenant(nuevo_tenant):
+    def generar_vista_nuevo_tenant(nuevo_tenant):
         connection.set_tenant(nuevo_tenant)
         ejecutar_sql(("CREATE OR REPLACE VIEW %s AS %s")%(TENANT, CONSULTA()))
 
-    def generar_vista_caf_padre_nuevo_tenant(padre):
+    def generar_vista_padre_nuevo_tenant(padre):
         def obtener_parametros_generacion_vista(padre):
             tipo = padre.tipo
             if tipo == 1: # Liga
@@ -103,16 +104,15 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                     sql,
                     ("SELECT * FROM %s.%s E")%(no_dependiente.schema_name, TENANT)
                 )
-            print(sql)
             ejecutar_sql(sql)
 
-    def generar_vista_caf_independientes():
+    def generar_vista_independientes():
         entidades = Entidad.objects.filter(tipo__in=[3, 4, 5, 9, 10, 11])
         for entidad in entidades:
             connection.set_tenant(entidad)
             ejecutar_sql(("CREATE OR REPLACE VIEW %s AS %s")%(TENANT, CONSULTA()))
 
-    def generar_vista_caf_dependientes(modelo_tipo, modelo_dependiente, campo_asociamiento):
+    def generar_vista_dependientes(modelo_tipo, modelo_dependiente, campo_asociamiento):
         def obtener_entidades_del_tipo_de_modelo(modelo_tipo, modelo_dependiente):
             if modelo_tipo == Comite:
                 if modelo_dependiente[1] == Federacion:
@@ -147,8 +147,6 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                 ejecutar_sql(sql)
             except Exception as e:
                 print(e)
-        #sql = ("DROP MATERIALIZED VIEW %s")%(public)
-        #ejecutar_sql(sql)
 
     def inicio_generacion(nuevo_tenant, padre):
         def acomodar_comandos(comandos):
@@ -160,21 +158,22 @@ def generar_vistas(nuevo_tenant=None, padre=None):
         for i in COMANDOS_GENERADORES_DE_VISTAS_ACTORES:
             acomodar_comandos(i)
             if nuevo_tenant: # Solo se actualiza el padre del creado si existe
-                generar_vista_caf_nuevo_tenant(nuevo_tenant)
-                generar_vista_caf_padre_nuevo_tenant(nuevo_tenant.obtener_padre())
-                generar_vista_caf_padre_nuevo_tenant(padre)
+                generar_vista_nuevo_tenant(nuevo_tenant)
+                generar_vista_padre_nuevo_tenant(nuevo_tenant.obtener_padre())
+                generar_vista_padre_nuevo_tenant(padre)
             else: # se deben actualizar todos
                 eliminar_vistas_actuales(TENANT, PUBLIC)
                 # Clubes, Cafs, Escuelas, Cajas, Entes
-                generar_vista_caf_independientes() 
+                generar_vista_independientes()
                 # Ligas, Federaciones, Comites
-                generar_vista_caf_dependientes(Liga, (3, Club), "liga") # Ligas
-                generar_vista_caf_dependientes(LigaParalimpica, (9, ClubParalimpico), "liga") # Ligas paralimpicas
-                generar_vista_caf_dependientes(Federacion, (1, Liga), "federacion") # Federaciones
-                generar_vista_caf_dependientes(FederacionParalimpica, (8, LigaParalimpica), "federacion") # Federaciones paralimpicas
-                generar_vista_caf_dependientes(Comite, (2, Federacion), "comite") # Comite Olimpico
-                generar_vista_caf_dependientes(Comite, (7, FederacionParalimpica), "comite") # Comite Paralimpico
+                generar_vista_dependientes(Liga, (3, Club), "liga") # Ligas
+                generar_vista_dependientes(LigaParalimpica, (9, ClubParalimpico), "liga") # Ligas paralimpicas
+                generar_vista_dependientes(Federacion, (1, Liga), "federacion") # Federaciones
+                generar_vista_dependientes(FederacionParalimpica, (8, LigaParalimpica), "federacion") # Federaciones paralimpicas
+                generar_vista_dependientes(Comite, (2, Federacion), "comite") # Comite Olimpico
+                generar_vista_dependientes(Comite, (7, FederacionParalimpica), "comite") # Comite Paralimpico
 
             generar_vista_materializada_public()
+
 
     inicio_generacion(nuevo_tenant, padre)

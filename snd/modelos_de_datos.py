@@ -225,6 +225,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_personalapoyo',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -268,6 +273,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_personalapoyo',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -311,6 +321,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_dirigente',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -355,6 +370,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_dirigente',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -441,7 +461,7 @@ MODELOS_DE_DATOS = (
                 'fa-gear',
                 [
                     [
-                        ['entidad'],
+                        'snd.add_escenario',
                     ]
                 ]
             ],
@@ -621,6 +641,27 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_escueladeportiva',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+            ],
+            [
+                "A/I",
+                'escuela_deportiva_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        'snd.change_escueladeportiva',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
             ],

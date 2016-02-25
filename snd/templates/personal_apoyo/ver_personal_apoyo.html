@@ -88,12 +88,13 @@
                                                 </div>
                                             </div>
                                             <div class="profile-right">
-                                            <p>{% if perms.snd.change_personalapoyo and request.tenant.schema_name != 'public' %}
-                                                <b>{{personal_apoyo.get_tipo_id_display | title}} </b>: {{personal_apoyo.identificacion}}<br />
+                                            {% if perms.snd.change_personalapoyo and request.tenant.schema_name != 'public' %}
+                                                <p><b>{{personal_apoyo.get_tipo_id_display | title}} </b>: {{personal_apoyo.identificacion}}<br /></p>
+                                                <p><b>Estado:</b> {{personal_apoyo.get_estado_display}}</p>
                                             {% else %}
-                                                <b>Entidad:</b> {{ personal_apoyo.entidad | upper}}<br/>
-                                            {% endif %}</p>
-                                            <p><b>Estado:</b> {{personal_apoyo.get_estado_display}}</p>
+                                                <p> <b>Entidad:</b> {{ personal_apoyo.entidad | upper}}<br/> </p>
+                                            {% endif %}
+
                                             <p><b>Actividad:</b> {{personal_apoyo.get_actividad_display}}</p>
                                             <p><b>Género:</b> {{personal_apoyo.get_genero_display}}</p>
                                             <p><b>Edad:</b> {{ personal_apoyo.edad }}</p>

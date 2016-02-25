@@ -30,16 +30,16 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipio
     from reportes.utilities import sumar_datos_diccionario#, convert_choices_to_array, crear_diccionario_inicial
 
     if departamentos and municipios:
-        cafs = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        cafs = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Departamentos, disciplinas
     elif departamentos:
-        cafs = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        cafs = tabla.objects.filter(estado=0,ciudad__departamento__id__in=departamentos).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Municipios
     elif municipios:
-        cafs = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        cafs = tabla.objects.filter(estado=0,ciudad__in=municipios).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
     #Disciplina
     else:
-        cafs =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).exclude(descripcion=None).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
+        cafs =  tabla.objects.filter(estado=0).annotate(descripcion=F(categoria)).values('id','descripcion', 'entidad_id').annotate(cantidad=Count(cantidad, distinct=True))
 
     if choices:
         cafs = sumar_datos_diccionario(cafs, choices)
@@ -88,9 +88,9 @@ def generador_reporte_caf(request, tabla, cantidad,choices=None):
 
     cafs = ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipios, tipoTenant, tabla, choices)
 
-    if '' in cafs:
-        cafs['Ninguna'] = cafs['']
-        del cafs['']
+    if None in cafs:
+        cafs['Ninguna'] = cafs[None]
+        del cafs[None]
 
     return cafs
 
