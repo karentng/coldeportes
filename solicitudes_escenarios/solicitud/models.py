@@ -4,9 +4,11 @@ from entidades.models import Entidad
 import os
 # Create your models here.
 class SolicitudEscenario(models.Model):
-    #TIPOS= (
-        #(0,'INFRAESTRUCTURA'),
-    #)
+    TIPOS= (
+        (0,'ADECUACIÓN'),
+        (1,'DOTACIÓN'),
+        (2,'CONSTRUCCIÓN'),
+    )
     PRIORIDADES = (
         (0,'BAJA'),
         (1,'MEDIA'),
@@ -21,11 +23,12 @@ class SolicitudEscenario(models.Model):
     )
 
     escenarios = models.ManyToManyField(Escenario)
-    #tipo = models.IntegerField(choices=TIPOS)
+    tipo = models.IntegerField(choices=TIPOS)
     prioridad = models.IntegerField(choices=PRIORIDADES)
     estado = models.IntegerField(choices=ESTADOS,default=0)
     descripcion = models.TextField()
     para_quien = models.ForeignKey(Entidad)
+    estado_actual_escenario = models.CharField(max_length=150)
     fecha = models.DateTimeField(auto_now=True)
 
     def codigo_unico(self,entidad):

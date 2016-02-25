@@ -14,7 +14,7 @@ class SolicitudEscenarioForm(ModelForm):
         self.fields['prioridad'] = adicionarClase(self.fields['prioridad'], 'one')
         self.fields['para_quien'] = adicionarClase(self.fields['para_quien'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
-        self.fields['para_quien'].queryset = Entidad.objects.filter(tipo__in=[0,5])
+        self.fields['para_quien'].queryset = Entidad.objects.filter(tipo=5)
 
     class Meta:
         model = SolicitudEscenario
