@@ -360,6 +360,38 @@ def desactivarCAF(request, idCAF):
 '''
 
 @login_required
+def desactivar_caf(request, idCAF):
+    """
+    Feb 24 / 2015
+    Autor: Andres Camilo Serna
+    
+    desactivar caf
+
+    Se obtienen el estado actual del escenario y se invierte.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del caf
+    :type escenario_id:    String
+    """
+    try:
+        caf = CentroAcondicionamiento.objects.get(id=idCAF)
+    except ObjectDoesNotExist:
+        messages.warning(request, "El centro de acondicionamiento que intenta acceder no existe.")
+        return redirect('listar_cafs')
+
+    estado_actual = caf.estado
+    caf.estado = not(estado_actual)
+    caf.save()
+
+    if estado_actual == 0:
+        messages.warning(request, "Centro de acondicionamiento desactivado correctamente.")
+    elif estado_actual == 1:
+        messages.warning(request, "Centro de acondicionamiento activado correctamente.")  
+        
+    return redirect('listar_cafs')
+
+@login_required
 def georreferenciacion_caf(request):
     import json
 

@@ -50,8 +50,25 @@ MODELOS_DE_DATOS = (
                     [
                         'snd.add_centroacondicionamiento',
                     ],
+                    [
+                        ['estado'],
+                        ['Activo'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
                 ]
             ],
+            [
+                "A/I",
+                'desactivar_caf',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        'snd.add_centroacondicionamiento',
+                    ]
+                ]
+
+            ]
         ],
     ),
     #MODELO DE DATOS CAF PARA LIGAS Y FEDERACIONES

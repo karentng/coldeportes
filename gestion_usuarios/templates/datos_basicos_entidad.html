@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block css %}
+	<link href="{{STATIC_URL}}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
 	{{form.media}}
 {% endblock %}
 
@@ -19,6 +20,10 @@
 
 {% block titulo_panel %}
     Modificar Datos de la Entidad
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/validaciones/entidad/editar_entidad.js"></script>
 {% endblock %}
 
 {% block contenido_panel %}
