@@ -244,7 +244,7 @@ def inicio_public(request):
     try:
         noticias_todas = Noticia.objects.order_by('-fecha_inicio')
         if len(noticias_todas) > 5:
-            noticias = noticias_todas[:7]
+            noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
     except Exception:
@@ -310,8 +310,8 @@ def inicio_tenant(request):
 
     entidad = tipoTenant.obtener_datos_entidad()
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
-        if len(noticias_todas)>5:
+        noticias_todas = Noticia.objects.order_by('-fecha_inicio')
+        if len(noticias_todas) > 5:
             noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
@@ -323,8 +323,8 @@ def inicio_tenant(request):
         #'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias,
-        'entidad':entidad
+        'noticias': noticias,
+        'entidad': entidad
 
     })
 
