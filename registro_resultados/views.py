@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.template import RequestContext
-
+from entidades.models import *
+from django.http import JsonResponse,HttpResponse
 from registro_resultados.models import *
 from registro_resultados.forms import *
 
@@ -55,17 +56,51 @@ def datos_competencia(request, juego_id, competencia_id=None):
     form = CompetenciaForm(instance=competencia)
 
     if request.method == "POST":
-        d_id = request.POST['disciplina_deportiva']
-        form = CompetenciaForm(request.POST, request.FILES, deporte_id=d_id, instance=competencia)
+        deporte_id = request.POST['deporte']
+        form = CompetenciaForm(request.POST, request.FILES, deporte_id=deporte_id, instance=competencia)
 
         if form.is_valid():
             nueva_competencia = form.save(commit=False)
-            nueva_competencia.juego = juego.id
+            nueva_competencia.juego = juego
+            nueva_competencia.save()
             messages.success(request, "Competencia registrada correctamente.")
-            return redirect('listado_competencias')
+            return redirect('listado_competencias', juego_id)
     return render(request, 'registro_competencia.html', {
         "form": form,
-        'wizard_stage': 1,
+        'juego_id': juego_id,
+    })
+
+#Ajax para modalidad y categoria historia deportiva
+@login_required
+def get_modalidades(request,deporte_id):
+    modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id)
+    if modalidades:
+        data = []
+        for m in modalidades:
+            dic = {}
+            dic['id'] = m.id
+            dic['text'] = m.nombre
+            data.append(dic)
+    else:
+        return HttpResponse('Modalidades no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
+
+@login_required
+def get_categorias(request,deporte_id):
+    categorias = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id)
+    if categorias:
+        data = []
+        for c in categorias:
+            dic = {}
+            dic['id'] = c.id
+            dic['text'] = c.nombre
+            data.append(dic)
+    else:
+        return HttpResponse('Categorias no encontradas',status=404)
+    return JsonResponse({
+        'data': data
     })
 
 @login_required
@@ -73,7 +108,7 @@ def listado_competencias(request, juego_id):
     competencias = Competencia.objects.filter(juego=juego_id)
     return render(request, 'listado_competencias.html', {
         'juego_id': juego_id,
-        "competencias": competencias,
+        'competencias': competencias,
     })
 
 @login_required
@@ -115,13 +150,11 @@ def menu_competencia(request):
     })
 
 @login_required
-def datos_participante(request, idParticipante=None):
-    competencia = obtener_competencia_session(request)
-    if not competencia:
-        return redirect('listado_competencias')
-
+def datos_participante(request, juego_id, competencia_id, participante_id=None):
+    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+    
     try:
-        participante = Participante.objects.get(id=idParticipante)
+        participante = Participante.objects.get(id=participante_id)
     except Exception:
         participante = None
 
@@ -136,16 +169,17 @@ def datos_participante(request, idParticipante=None):
             return redirect('menu_competencia')
     return render(request, 'registrar_participante.html', {
         "form": form,
+        'wizard_stage': 1,
+        
     })
 
 @login_required
-def datos_equipo(request, idEquipo=None):
-    competencia = obtener_competencia_session(request)
-    if not competencia:
-        return redirect('listado_competencias')
+def datos_equipo(request, juego_id, competencia_id, equipo_id=None):
+    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+    
 
     try:
-        equipo = Equipo.objects.get(id=idEquipo)
+        equipo = Equipo.objects.get(id=equipo_id)
     except Exception:
         equipo = None
 
@@ -153,22 +187,22 @@ def datos_equipo(request, idEquipo=None):
     if request.method == "POST":
         form = EquipoForm(request.POST, instance=equipo)
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.competencia = competencia
-            obj.save()
+            equipo_nuevo = form.save(commit=False)
+            equipo_nuevo.competencia = competencia
+            equipo_nuevo.save()
             messages.success(request, "Equipo registrado correctamente.")
             return redirect('menu_competencia')
-    return render(request, 'registrar_equipo.html', {
+    return render(request, 'wizard_info_juego/wizard_participantes.html', {
         "form": form,
+        'wizard_stage': 1,
+
     })
 
 @login_required
-def crear_participante(request):
-    competencia = obtener_competencia_session(request)
-    if not competencia:
-        return redirect('listado_competencias')
-
+def crear_participante(request, juego_id, competencia_id):
+    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+    
     if competencia.tipos_participantes == 1:
-        return redirect('datos_participante')
+        return redirect('datos_participante', juego_id, competencia_id)
     else:
-        return redirect('datos_equipo')
+        return redirect('datos_equipo', juego_id, competencia_id)

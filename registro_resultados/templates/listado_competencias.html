@@ -20,10 +20,15 @@
         idTabla = "tabla-entidades";
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    
 {% endblock %}
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'datos_competencia' juego_id %}" class="btn btn-warning btn-xs "><i class="fa fa-plus"></i> Nueva Competencia</a>
 {% endblock %}
 
 {% block contenido_panel %}
@@ -37,7 +42,8 @@
                             <th>Nombre</th>
                             <th>Deporte</th>
                             <th>Fecha</th>
-                            <th>Tipo</th>
+                            <th>Categoría</th>
+                            <th>Modalidad</th>
                             <th>Descripción</th>
                             <th>Opciones</th>
                         </tr>
@@ -53,13 +59,14 @@
                                 {% endif %}
                             </td>
                             <td>{{competencia.nombre}}</td>
-                            <td>{{competencia.disciplina_deportiva}}</td>
+                            <td>{{competencia.deporte}}</td>
                             <td>{{competencia.fecha_competencia}}</td>
-                            <td>{{competencia.get_tipo_competencia_display}}</td>
+                            <td>{%if competencia.categoria %}{{competencia.categoria}}{% else %}No registra{% endif %}</td>
+                            <td>{%if competencia.modalidad %}{{competencia.modalidad}}{% else %}No registra{% endif %}</td>
                             <td>{{competencia.descripcion}}</td>
                             <td>
-                                <a href='{% url 'acceder_competencia' competencia.id %}'>
-                                    <i class="fa fa-check"></i> Acceder
+                                <a href='{% url 'crear_participante' juego_id competencia.id %}'>
+                                    <i class="fa fa-check"></i> Ingresar Resultados
                                 </a><br>
                                 <a href='{% url 'datos_competencia' juego_id competencia.id %}'>
                                     <i class="fa fa-edit"></i> Modificar

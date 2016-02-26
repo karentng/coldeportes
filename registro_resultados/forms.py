@@ -28,11 +28,8 @@ class CompetenciaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         deporte_id = kwargs.pop('deporte_id',None)
         super(CompetenciaForm, self).__init__(*args, **kwargs)
-        self.fields['disciplina_deportiva'] = adicionarClase(self.fields['disciplina_deportiva'], 'one')
-        self.fields['categoria'] = adicionarClase(self.fields['categoria'], 'one')
-        self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.none()
-        self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.none()
-        self.fields['disciplina_deportiva'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+        self.fields['deporte'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
         if deporte_id:

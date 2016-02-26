@@ -2,7 +2,7 @@ $(document).ready(function() {
     $("#id_categoria").prop("disabled", true);
     $("#id_modalidad").prop("disabled", true);
 });
-$("#id_disciplina_deportiva").on('change',function(){
+$("#id_deporte").on('change',function(){
     var val_depor = $(this).val();
     ajax_modalidades(val_depor);
     ajax_categorias(val_depor);
@@ -10,7 +10,7 @@ $("#id_disciplina_deportiva").on('change',function(){
 function ajax_modalidades(depor){
     $("#id_modalidad").empty();
     $.ajax({
-        url: '/deportistas/modalidades/get/'+depor,
+        url: '/registro-resultados/modalidades/get/'+depor,
         dataType: 'json',
         success: function(response) {
             $("#id_modalidad").prop("disabled", false);
@@ -32,7 +32,7 @@ function ajax_modalidades(depor){
 function ajax_categorias(depor){
     $("#id_categoria").empty();
     $.ajax({
-        url: '/deportistas/categorias/get/'+depor,
+        url: '/registro-resultados/categorias/get/'+depor,
         dataType: 'json',
         success: function(response) {
             $("#id_categoria").prop("disabled", false);

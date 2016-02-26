@@ -16,15 +16,19 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/funciones_calculos/registro_resultados/registro_competencia.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
 {% endblock %}
 
 {% block css %}
-
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block contenido_panel %}
+    {% include 'wizard_info_juego/_wizard.html' %}
+
     <fieldset>
         <form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="well row">
