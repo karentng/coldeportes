@@ -156,6 +156,7 @@ def generar_vistas(nuevo_tenant=None, padre=None):
             CONSULTA, TENANT, PUBLIC = comandos
 
         for i in COMANDOS_GENERADORES_DE_VISTAS_ACTORES:
+
             acomodar_comandos(i)
             if nuevo_tenant: # Solo se actualiza el padre del creado si existe
                 generar_vista_nuevo_tenant(nuevo_tenant)
@@ -172,8 +173,8 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                 generar_vista_dependientes(FederacionParalimpica, (8, LigaParalimpica), "federacion") # Federaciones paralimpicas
                 generar_vista_dependientes(Comite, (2, Federacion), "comite") # Comite Olimpico
                 generar_vista_dependientes(Comite, (7, FederacionParalimpica), "comite") # Comite Paralimpico
-
             generar_vista_materializada_public()
+
 
 
     inicio_generacion(nuevo_tenant, padre)
