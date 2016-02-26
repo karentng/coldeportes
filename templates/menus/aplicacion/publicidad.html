@@ -1,0 +1,22 @@
+<li class="has-sub {% if 'clasificados' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-list-alt"></i>
+        <span class="colorMenu">PUBLICIDAD</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.publicidad.add_clasificado %}
+            <li {% if "/clasificados/registrar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'registrar_clasificado' %}">Registrar clasificados</a>
+            </li>
+        {% endif %}
+        {% if perms.publicidad.change_clasificado %}
+            <li {% if "/clasificados/gestionar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'gestionar_clasificados' %}">Gestionar clasificado</a>
+            </li>
+        {% endif %}
+        <li {% if "/clasificados/listar" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_clasificados' %}">Listar clasificados</a>
+        </li>
+    </ul>
+</li>

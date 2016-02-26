@@ -1,0 +1,21 @@
+
+#image-upload {
+    display: inline-block;
+    width: 540px;
+    height: 400px;
+    background-color:#888;
+    position:relative; /* or fixed or absolute */
+    margin-bottom: 10px;
+}
+.cropControlCrop{
+    position: absolute;
+    visibility: hidden;
+}
+.cropControlsUpload{
+    left: 0 !important;
+    right: inherit;
+}
+#cropContainerHeader{
+    text-align: center;
+    overflow:hidden;
+}

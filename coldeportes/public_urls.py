@@ -7,7 +7,6 @@ from django.conf.urls.static import static
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	
     url(r'^$', 'gestion_usuarios.views.inicio', name='inicio'),
     url(r'^inicio$', 'gestion_usuarios.views.inicio_public', name='inicio_public'),
     url(r'^inicio$', 'gestion_usuarios.views.inicio_tenant', name='inicio_tenant'), #Url para redireccion al index del tenant
@@ -15,13 +14,13 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': 'login'}, name='logout'),
     url(r'^cambiar-pass/$', 'django.contrib.auth.views.password_change', {'template_name':'cambiar-pass.html', 'post_change_redirect':'inicio'}, name='cambiar_pass'),
     url(r'^entidades/', include('entidades.urls')),
-    url(r'^noticias/',include('noticias.urls')),
+    url(r'^clasificados/',include('publicidad.urls')),
+    url(r'^noticias/',include('noticias.urls')),#urls del modulo de noticias
     url(r'^directorio-publico/',include('directorio.publico_urls')),
     url(r'^normograma/',include('normograma.urls')),
     url(r'^manual/',include('manual.urls')),
     url(r'^reportes/', include('reportes.urls.publico')),
     url(r'^buscador/', include('buscador.urls')),
-
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^registro-resultados/juegos/', include('registro_resultados.urls.juegos')),
     url(r'^fix-actores-entidades$', 'gestion_usuarios.views.fix_actores_entidades', name='fix_actores_entidades'),

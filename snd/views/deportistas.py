@@ -220,7 +220,7 @@ def get_modalidades(request,id_depor):
         for m in modalidades:
             dic = {}
             dic['id'] = m.id
-            dic['text'] = m.nombre
+            dic['text'] = m.__str__()
             data.append(dic)
     else:
         return HttpResponse('Modalidades no encontradas',status=404)
@@ -237,7 +237,7 @@ def get_categorias(request,id_depor):
         for c in categorias:
             dic = {}
             dic['id'] = c.id
-            dic['text'] = c.nombre
+            dic['text'] = c.__str__()
             data.append(dic)
     else:
         return HttpResponse('Categorias no encontradas',status=404)

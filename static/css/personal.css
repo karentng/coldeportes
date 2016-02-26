@@ -32,3 +32,16 @@
 #logo-coldeportes{
     margin-top: 25px;
 }
+
+.display-none{
+    display: none;
+}
+
+.fadeInDown{
+    display: block;
+}
+
+ul.tagit{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}

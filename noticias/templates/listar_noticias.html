@@ -35,6 +35,11 @@
                         <tr>
                             <th>Título</th>
                             <th>Fecha de publicación</th>
+                            <th>Fecha de expiración</th>
+                            <th>Palabras clave</th>
+                            {% if perms.publicidad.change_clasificado %}
+                                <th>Estado</th>
+                            {% endif %}
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -42,27 +47,36 @@
                         {% for noticia in noticias %}
                             <tr>
                                 <td>{{noticia.titulo}}</td>
-                                <td>{{noticia.fecha_publicacion}}</td>
+                                <td>{{noticia.fecha_inicio}}</td>
+                                <td>{{noticia.fecha_expiracion}}</td>
+                                <td>{{noticia.etiquetas}}</td>
+                                {% if perms.publicidad.change_clasificado %}
+                                    <td>
+                                        {% if noticia.estado == 1 %}
+                                            <label class="label-success label label-table">Activo</label>
+                                        {% else %}
+                                            <label class="label-danger label label-table">Inactivo</label>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
                                 <td>
-                                    <a href="javascript:;" data-target='#modal-noticia-{{ noticia.id }}' data-toggle="modal">
-                                        <i class="fa fa-eye"></i> Vista previa
+                                    <a href="{% url 'detalles_noticia' noticia.id %}">
+                                        <i class="fa fa-eye"></i> Ver más
                                     </a>
-                                    <br/>
                                     {% if 'noticias.change_noticia' in perms %}
                                         <br/>
                                         <a href='{% url 'editar_noticia' noticia.id %}'>
                                             <i class="fa fa-edit"></i> Editar
                                         </a>
                                     {% endif %}
-                                    {% if 'noticias.delete_noticia' in perms %}
+                                    {% if 'noticias.change_noticia' in perms %}
                                         <br/>
-                                        <a href='{% url 'eliminar_noticia' noticia.id %}'>
-                                            <i class="fa fa-trash-o"></i> Eliminar
+                                        <a href='{% url 'cambiar_estado_noticia' noticia.id %}'>
+                                            <i class="fa fa-trash-o"></i> Cambiar estado
                                         </a>
                                     {% endif %}
                                 </td>
                             </tr>
-                            {% include 'modal_noticia.html' %}
                         {% endfor %}
                     </tbody>
                 </table>

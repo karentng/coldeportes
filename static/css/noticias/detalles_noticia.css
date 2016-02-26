@@ -1,0 +1,22 @@
+.img-right{
+    margin-bottom: 15px;
+    margin-left: 15px;
+    float: right !important;
+    max-width: 50%;
+    overflow: hidden;
+}
+.social-container{
+    float: left;
+    height: 30px;
+}
+.social-container > span{
+    position: relative;
+    display: inline-block;
+}
+.stButton .stButton_gradient {
+height: 24px !important;
+}
+
+.stButton .stFb, .stButton .stTwbutton, .stButton .stMainServices {
+height: 24px !important;
+}
