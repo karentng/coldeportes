@@ -13,15 +13,14 @@ urlpatterns = patterns('registro_resultados.views',
     
     url(r'^(\d+)/competencia/(\d+)/crear-participante/', 'crear_participante', name='crear_participante'),
 
-    url(r'^(\d+)/competencia/(\d+)/datos-participante$', 'datos_participante', name='datos_participante'),
-    url(r'^(\d+)/competencia/(\d+)/datos-participante/(\d+)$', 'datos_participante', name='datos_participante'),
+    url(r'^competencia/(\d+)/datos-participante$', 'datos_participante', name='datos_participante'),
+    url(r'^competencia/(\d+)/datos-participante/(\d+)$', 'datos_participante', name='datos_participante'),
 
-    url(r'^(\d+)/competencia/(\d+)/datos-equipo$', 'datos_equipo', name='datos_equipo'),
-    url(r'^(\d+)/competencia/(\d+)/datos-equipo/(\d+)$', 'datos_equipo', name='datos_equipo'),
+    url(r'^competencia/(\d+)/datos-equipo$', 'datos_equipo', name='datos_equipo'),
+    url(r'^competencia/(\d+)/datos-equipo/(\d+)$', 'datos_equipo', name='datos_equipo'),
     #ajax para modalidades y categorías
     url(r'^modalidades/get/(\d+)$','get_modalidades',name='registro_get_modalidades'),
     url(r'^categorias/get/(\d+)$','get_categorias',name='registro_get_categorias'),
 
     url(r'^acceder-competencia/(\d+)$', 'acceder_competencia', name='acceder_competencia'),
-    url(r'^menu-competencia$', 'menu_competencia', name='menu_competencia'),
 )

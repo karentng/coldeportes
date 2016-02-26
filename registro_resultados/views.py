@@ -106,6 +106,7 @@ def get_categorias(request,deporte_id):
 @login_required
 def listado_competencias(request, juego_id):
     competencias = Competencia.objects.filter(juego=juego_id)
+
     return render(request, 'listado_competencias.html', {
         'juego_id': juego_id,
         'competencias': competencias,
@@ -131,51 +132,47 @@ def acceder_competencia(request, idCompetencia):
         return redirect('listado_competencias')
 
 @login_required
-def menu_competencia(request):
-    competencia = obtener_competencia_session(request)
-    if not competencia:
-        return redirect('listado_competencias')
-
-    if competencia.tipos_participantes == 1: # Individual
-        titulos = ["Nombres", "Apellidos", "Género", "Categoría", "Departamento", "Posición", "Tiempo"]
-        datos = Participante.objects.filter(competencia=competencia)
+def crear_participante(request, juego_id, competencia_id):
+    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+    
+    if competencia.tipos_participantes == 1:
+        return redirect('datos_participante', juego_id, competencia_id)
     else:
-        titulos = ["Nombres", "Departamento", "Posición"]
-        datos = Equipo.objects.filter(competencia=competencia)
-
-    return render(request, 'menu_competencia.html', {
-        "competencia": competencia,
-        "titulos": titulos,
-        "datos": datos,
-    })
+        return redirect('datos_equipo', juego_id, competencia_id)
 
 @login_required
-def datos_participante(request, juego_id, competencia_id, participante_id=None):
-    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+def datos_participante(request, competencia_id, participante_id=None):
+    competencia = Competencia.objects.get(id=competencia_id)
+    participantes = Participante.objects.filter(competencia=competencia_id)
     
     try:
         participante = Participante.objects.get(id=participante_id)
     except Exception:
         participante = None
 
+
     form = ParticipanteForm(competencia=competencia, instance=participante)
     if request.method == "POST":
         form = ParticipanteForm(request.POST, competencia=competencia, instance=participante)
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.competencia = competencia
-            obj.save()
+            participante_nuevo = form.save(commit=False)
+            participante_nuevo.competencia = competencia
+            participante_nuevo.save()
             messages.success(request, "Participante registrado correctamente.")
-            return redirect('menu_competencia')
+            return redirect('datos_participante', competencia_id)
+            
     return render(request, 'registrar_participante.html', {
         "form": form,
         'wizard_stage': 1,
+        'participantes': participantes,
+        'individual': True,
         
     })
 
 @login_required
-def datos_equipo(request, juego_id, competencia_id, equipo_id=None):
-    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+def datos_equipo(request, competencia_id, equipo_id=None):
+    competencia = Competencia.objects.get(id=competencia_id)
+    equipos = Equipo.objects.filter(competencia=competencia_id) or None
     
 
     try:
@@ -184,25 +181,22 @@ def datos_equipo(request, juego_id, competencia_id, equipo_id=None):
         equipo = None
 
     form = EquipoForm(instance=equipo)
+
     if request.method == "POST":
         form = EquipoForm(request.POST, instance=equipo)
+
         if form.is_valid():
             equipo_nuevo = form.save(commit=False)
             equipo_nuevo.competencia = competencia
             equipo_nuevo.save()
             messages.success(request, "Equipo registrado correctamente.")
-            return redirect('menu_competencia')
+
+            return redirect('datos_equipo', competencia_id)
+
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
-        "form": form,
+        'form': form,
         'wizard_stage': 1,
+        'participantes': equipos,
+
 
     })
-
-@login_required
-def crear_participante(request, juego_id, competencia_id):
-    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
-    
-    if competencia.tipos_participantes == 1:
-        return redirect('datos_participante', juego_id, competencia_id)
-    else:
-        return redirect('datos_equipo', juego_id, competencia_id)

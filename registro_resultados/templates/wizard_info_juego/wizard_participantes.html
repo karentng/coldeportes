@@ -16,36 +16,91 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
-    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+  <script type="text/javascript">
+    idTabla = "tabla-entidades";
+  </script>
+  <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+  <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+  <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+
 {% endblock %}
 
 {% block css %}
-    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-    
-    {{form.media}} {# js y css para datetime #}
+  <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+  <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+  
+  {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block contenido_panel %}
-    {% include 'wizard_info_juego/_wizard.html' %}
-
-    <fieldset>
-        <form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class="well row">
-                <div class="col-xs-12">
-                    <h3>{{titulo}}</h3>
-                    
-                    {% for field in form %}
-                        <div class="col-md-6">
-                            
-                            {% bootstrap_field field layout="vertical" %}
-                        </div>
-                    {% endfor %}
-                </div>
+  {% include 'wizard_info_juego/_wizard.html' %}
+  <div class="row">
+    <div class="col-md-4">
+      <fieldset>
+        <form id="form-wizard-participantes" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+          <div class="well row">
+            <div class="col-xs-12">
+              <h3>{{titulo}}</h3>
+              
+              {% for field in form %}
+                  <div class="col-md-6">
+                      
+                      {% bootstrap_field field layout="vertical" %}
+                  </div>
+              {% endfor %}
             </div>
-            <hr>
-            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
+          </div>
+          <hr>
+          <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
         </form>
-    </fieldset>                        
+      </fieldset>
+    </div>
+    <div class="col-md-8">
+      <fieldset>
+        <div class="well row">
+          <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Departamento</th>
+                            <th>Posición</th>
+                            {% if individual %}<th>Club</th>{% endif %}
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participante in participantes %}
+                        <tr>
+                            <td>{{participante.nombre}}</td>
+                            <td>{{participante.departamento}}</td>
+                            <td>{{participante.posicion}}</td>
+                            {% if individual %}<td>{{participante.club}}</td>{% endif %}
+                            <td>
+                              {% if not individual %}
+                                <a href=''>
+                                    <i class="fa fa-check"></i> Registrar Integrantes
+                                </a><br>
+                              {% endif %}
+                                <a href=''>
+                                    <i class="fa fa-edit"></i> Modificar
+                                </a><br>
+                                <a href=''>
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </a><br>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </fieldset>
+        
+    </div>
+
+  </div>
+                            
                     
 {% endblock %}
