@@ -63,7 +63,7 @@
                         <td>{{ s.para_quien }}</td>
                         <td>{{ s.fecha }}</td>
                         <td>
-                            <a href=''>
+                            <a href='{% url 'ver_solicitud' s.id %}'>
                                 <i class="fa fa-eye"></i> Ver mas
                             </a>
                             <br/>

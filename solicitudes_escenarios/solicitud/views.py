@@ -163,6 +163,27 @@ def cancelar_solicitud(request, id=None):
 
 @login_required
 def imprimir_solicitud(request,id):
-    return render(request,'solicitud_imprimir.html',{
+    try:
+        solicitud = SolicitudEscenario.objects.get(id=id)
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes')
 
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+
+    return render(request,'solicitud_imprimir.html',{
+        'solicitud' : solicitud
+    })
+
+def ver_solicitud(request,id):
+    try:
+        solicitud = SolicitudEscenario.objects.get(id=id)
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes')
+
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+
+    return render(request,'ver_solicitud.html',{
+        'solicitud' : solicitud
     })
