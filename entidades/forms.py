@@ -306,3 +306,30 @@ class PermisosForm(forms.ModelForm):
     class Meta:
         model = Permisos
         exclude = ('entidad','tipo')
+
+#####TEMPORAL REGISTRO DE MODALIDADES Y CATEOGORIAS####
+class ModalidadForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ModalidadForm, self).__init__(*args, **kwargs)
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+
+    class Meta:
+        model = ModalidadDisciplinaDeportiva
+        exclude = ('',)
+
+class CategoriaForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CategoriaForm, self).__init__(*args, **kwargs)
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+
+    class Meta:
+        model = CategoriaDisciplinaDeportiva
+        exclude = ('',)
+
+class DeporteForm(ModelForm):
+
+    class Meta:
+        model = TipoDisciplinaDeportiva
+        exclude = ('',)

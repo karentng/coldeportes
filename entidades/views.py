@@ -693,3 +693,88 @@ def log_disciplinas(request):
     j = create_log_deportivo()
     return JsonResponse(j)
     #return HttpResponse("Log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt")
+
+#TEMPORAL MODALIDADES CATEGORIAS
+@login_required
+def listar_modalidades(request):
+    modal = ModalidadDisciplinaDeportiva.objects.all()
+    return render(request,'modalidades_categorias/listar.html',{
+        'listado': modal,
+        'url': 'crear_editar_mod'
+    })
+
+@login_required
+def listar_categorias(request):
+    categ = CategoriaDisciplinaDeportiva.objects.all()
+    return render(request,'modalidades_categorias/listar.html',{
+        'listado': categ,
+        'url': 'crear_editar_cat'
+    })
+
+@login_required
+def crear_editar_mod(request,id=None):
+    mod = None
+    if id:
+        mod = ModalidadDisciplinaDeportiva.objects.get(id=id)
+
+    form = ModalidadForm(instance=mod)
+
+    if request.method == 'POST':
+        form = ModalidadForm(request.POST,instance=mod)
+        form.save()
+        messages.success(request,'creado/editado correctamente')
+        return redirect('listar_modalidades')
+
+    return render(request,'modalidades_categorias/registro.html',{
+        'form':form,
+        'nombre': 'MODALIDADES',
+        'url' : 'listar_modalidades'
+    })
+
+@login_required
+def crear_editar_cat(request,id=None):
+    cat = None
+    if id:
+        cat = CategoriaDisciplinaDeportiva.objects.get(id=id)
+
+    form = CategoriaForm(instance=cat)
+
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST,instance=cat)
+        form.save()
+        messages.success(request,'creado/editado correctamente')
+        return redirect('listar_categorias')
+
+    return render(request,'modalidades_categorias/registro.html',{
+        'form':form,
+        'nombre': 'CATEGORIAS',
+        'url' : 'listar_categorias'
+    })
+
+@login_required
+def listar_deportes(request):
+    dep = TipoDisciplinaDeportiva.objects.all()
+    return render(request,'modalidades_categorias/listar_dep.html',{
+        'listado': dep,
+        'url': 'crear_editar_dep'
+    })
+
+@login_required
+def crear_editar_dep(request,id=None):
+    dep = None
+    if id:
+        dep = TipoDisciplinaDeportiva.objects.get(id=id)
+
+    form = DeporteForm(instance=dep)
+
+    if request.method == 'POST':
+        form = DeporteForm(request.POST,instance=dep)
+        form.save()
+        messages.success(request,'creado/editado correctamente')
+        return redirect('listar_deportes')
+
+    return render(request,'modalidades_categorias/registro.html',{
+        'form':form,
+        'nombre': 'DEPORTES',
+        'url' : 'listar_deportes'
+    })
