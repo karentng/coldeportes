@@ -179,7 +179,8 @@ def caracteristicas_escenarios(request):
         return JsonResponse(escenarios)
 
 
-        
+    visualizaciones = [1, 5 , 6]
+
     form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
     nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario", "Periodicidad", "Día"]
     return render(request, 'escenarios/reporte_generador.html', {
