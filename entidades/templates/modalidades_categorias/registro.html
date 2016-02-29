@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block titulo_contenido %}
+    registro {{ nombre }}
+{% endblock %}
+
+{% block titulo_panel %}
+    registro {{ nombre }}
+{% endblock %}
+
+{% block js %}
+    <!--script type="text/javascript">
+        idTabla = "tabla-modalidades";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script-->
+{% endblock %}
+
+{% block css %}
+    <!--link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" /-->
+{% endblock %}
+{% block botones_panel %}
+    <a href='{% url url %}' class="btn btn-info btn-xs">
+        REGRESAR A LISTAR
+    </a>
+{% endblock %}
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <form action="" method="post">{% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
