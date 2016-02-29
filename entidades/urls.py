@@ -47,4 +47,7 @@ urlpatterns = patterns('entidades.views',
     url(r'^categorias$', 'listar_categorias', name='listar_categorias'),
     url(r'^categorias/crear$', 'crear_editar_cat', name='crear_editar_cat'),
     url(r'^categorias/editar/(\d+)$', 'crear_editar_cat', name='crear_editar_cat'),
+    url(r'^deportes$', 'listar_deportes', name='listar_deportes'),
+    url(r'^deportes/crear$', 'crear_editar_dep', name='crear_editar_dep'),
+    url(r'^deportes/editar/(\d+)$', 'crear_editar_dep', name='crear_editar_dep'),
 )

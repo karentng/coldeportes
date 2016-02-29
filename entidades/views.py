@@ -750,3 +750,31 @@ def crear_editar_cat(request,id=None):
         'nombre': 'CATEGORIAS',
         'url' : 'listar_categorias'
     })
+
+@login_required
+def listar_deportes(request):
+    dep = TipoDisciplinaDeportiva.objects.all()
+    return render(request,'modalidades_categorias/listar_dep.html',{
+        'listado': dep,
+        'url': 'crear_editar_dep'
+    })
+
+@login_required
+def crear_editar_dep(request,id=None):
+    dep = None
+    if id:
+        dep = TipoDisciplinaDeportiva.objects.get(id=id)
+
+    form = DeporteForm(instance=dep)
+
+    if request.method == 'POST':
+        form = DeporteForm(request.POST,instance=dep)
+        form.save()
+        messages.success(request,'creado/editado correctamente')
+        return redirect('listar_deportes')
+
+    return render(request,'modalidades_categorias/registro.html',{
+        'form':form,
+        'nombre': 'DEPORTES',
+        'url' : 'listar_deportes'
+    })

@@ -12,7 +12,7 @@
 
 {% block js %}
     <script type="text/javascript">
-        idTabla = "tabla-modalidades";
+        idTabla = "tabla-dep";
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
@@ -31,25 +31,17 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="table-responsive">
-                <table id="tabla-modalidades" class="table table-bordered table-hover">
+                <table id="tabla-dep" class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>DEPORTE</th>
-                            <th>NOMBRE</th>
-                            <th>DESCRIPCION</th>
-                            <th>GENERAL</th>
-                            <th>COMO SE VE EN EL SELECTOR</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for e in listado %}
                         <tr>
-                            <td>{{e.deporte}}</td>
-                            <td>{{e.nombre}}</td>
                             <td>{{e.descripcion}}</td>
-                            <td>{{ e.general }}</td>
-                            <td>{{ e }}</td>
                             <td>
                                 <a href='{% url url e.id %}' class="btn btn-primary">
                                     <i class="fa fa-edit"></i> Editar
