@@ -67,6 +67,9 @@
                             <th>Departamento</th>
                             <th>Posición</th>
                             {% if individual %}<th>Club</th>{% endif %}
+                            {% if puntos %}<th>Puntos</th>{% endif %}
+                            {% if not puntos %}<th>Marca</th>{% endif %}
+                            {% if not puntos %}<th>Tiempo</th>{% endif %}
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -77,13 +80,23 @@
                             <td>{{participante.departamento}}</td>
                             <td>{{participante.posicion}}</td>
                             {% if individual %}<td>{{participante.club}}</td>{% endif %}
+                            {% if puntos %}<td>{{participante.puntos}}</td>{% endif %}
+
+                            {% if not puntos %}
+                              {% if participante.marca %}
+                                <td>{{participante.marca}}</td>
+                              {% else %}
+                                <td> -- </td>
+                              {% endif %}
+                            {% endif %}
+                            {% if not puntos %}<td>{{participante.tiempo}}</td>{% endif %}
                             <td>
                               {% if not individual %}
                                 <a href=''>
                                     <i class="fa fa-check"></i> Registrar Integrantes
                                 </a><br>
                               {% endif %}
-                                <a href=''>
+                                <a href='{% url 'equipo_tiempos' competencia_id participante.id %}'>
                                     <i class="fa fa-edit"></i> Modificar
                                 </a><br>
                                 <a href=''>
