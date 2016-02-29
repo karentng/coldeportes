@@ -228,7 +228,7 @@ def inicio_public(request):
     from django.db.models import Count
 
     import json
-
+    import datetime
 
     ubicaciones = atributos_actor_vista(PublicEscenarioView)
     cantidad_deportistas = PublicDeportistaView.objects.filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad').count()
@@ -242,7 +242,9 @@ def inicio_public(request):
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_inicio')
+        noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
+                                                Q(fecha_expiracion__gte=datetime.date.today()),
+                                                estado=1).order_by("-fecha_inicio")
         if len(noticias_todas) > 5:
             noticias = noticias_todas[:5]
         else:
@@ -262,6 +264,7 @@ def inicio_public(request):
 
 def inicio_tenant(request):
     import json
+    import datetime
     """
     Julio 14 / 2015
     Autor: Daniel Correa
@@ -310,17 +313,19 @@ def inicio_tenant(request):
 
     entidad = tipoTenant.obtener_datos_entidad()
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_inicio')
+        noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
+                                                Q(fecha_expiracion__gte=datetime.date.today()),
+                                                estado=1).order_by("-fecha_inicio")
         if len(noticias_todas) > 5:
             noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
     except Exception:
         noticias = []
-    return render(request,'index_tenant.html',{
-        'transfer_persona' : transfer_personas,
+    return render(request, 'index_tenant.html', {
+        'transfer_persona': transfer_personas,
         'actoresAsociados': actoresAsociados,
-        #'actoresAsociadosJSON': json.dumps(actoresAsociados),
+        # 'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
         'noticias': noticias,
