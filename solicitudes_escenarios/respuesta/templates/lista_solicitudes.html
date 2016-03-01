@@ -59,10 +59,13 @@
                         <td>{{ s.entidad_solicitante }}</td>
                         <td>{{ s.fecha }}</td>
                         <td>
-
+                            <a href='{% url 'ver_solicitud_respuesta' s.id s.entidad_solicitante.id %}'>
+                                <i class="fa fa-eye"></i> Ver mas
+                            </a>
+                            <br/>
                             {% if s.estado == 0 %}
                                 <a href="#">
-                                    <i class="fa fa-save"></i> Procesar solicitud
+                                    <i class="fa fa-send"></i> Procesar solicitud
                                 </a>
                                 <br/>
                             {% endif %}

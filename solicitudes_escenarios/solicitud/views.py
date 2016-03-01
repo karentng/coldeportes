@@ -159,11 +159,24 @@ def cancelar_solicitud(request, id=None):
             messages.error(request,'No existe la solicitud, proceso no realizado')
         solicitud.estado = 4
         solicitud.save()
+
+    try:
+        del request.session['identidad']
+    except Exception:
+        pass
+
     messages.warning(request,'Solicitud cancelada correctamente')
     return redirect('listar_solicitudes')
 
 @login_required
 def imprimir_solicitud(request,id):
+    """
+    Febrero 25, 2016
+    Autor: Daniel Correa
+
+    Permite renderizar el html imprimible de la solicitud
+
+    """
     try:
         solicitud = SolicitudEscenario.objects.get(id=id)
     except:
@@ -177,6 +190,13 @@ def imprimir_solicitud(request,id):
     })
 
 def ver_solicitud(request,id):
+    """
+    Febrero 25, 2016
+    Autor: Daniel Correa
+
+    Permite tener el detalle de una solicitud
+
+    """
     try:
         solicitud = SolicitudEscenario.objects.get(id=id)
     except:
@@ -190,6 +210,13 @@ def ver_solicitud(request,id):
     })
 
 def descargar_adjunto(request,id_sol,id_adj):
+    """
+    Marzo 1, 2016
+    Autor: Daniel Correa
+
+    Permite descargar algun archivo adjunto de una solicitud
+
+    """
     try:
         adj = AdjuntoSolicitud.objects.get(solicitud=id_sol,id=id_adj)
     except:
