@@ -2,10 +2,24 @@
     {% include "menus/aplicacion/usuarios.html" %}
     {% if request.tenant.schema_name != 'public' %}
         <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
-            <a href="{% url 'datos_basicos_entidad' %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
                 <i class="fa fa-desktop"></i>
-                <span class="colorMenu">MODIFICAR DATOS BÁSICOS DE LA ENTIDAD</span>
+                <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
             </a>
+            <ul class="sub-menu">
+                <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
+                    <a href="{% url 'datos_basicos_entidad' %}"><span class="colorMenu">Modificar datos básicos de la entidad</span></a>
+                </li>
+                {% if request.tenant.tipo == 3 %}
+                    <li class="has-sub">
+                        <a href="#"><span class="colorMenu">Gestionar asociados del club</span></a>
+                    </li>
+                    <li class="has-sub">
+                        <a href="#"><span class="colorMenu">Gestionar planes de costos del club</span></a>
+                    </li>
+                {% endif %}
+            </ul>
         </li>
     {% endif %}
 {% else %}
