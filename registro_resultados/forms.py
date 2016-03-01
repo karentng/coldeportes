@@ -59,11 +59,20 @@ class ParticipanteForm(forms.ModelForm):
         model = Participante
         exclude = ("competencia",)
 
-class EquipoForm(forms.ModelForm):
+class EquipoTiempoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(EquipoForm, self).__init__(*args, **kwargs)
+        super(EquipoTiempoForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
 
     class Meta:
         model = Equipo
-        exclude = ("competencia",)
+        exclude = ("competencia", 'puntos')
+
+class EquipoPuntosForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EquipoPuntosForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+
+    class Meta:
+        model = Equipo
+        exclude = ("competencia", 'tiempo', 'marca')

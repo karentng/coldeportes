@@ -45,10 +45,15 @@ class Competencia(models.Model):
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
-    competencia = models.ForeignKey(Competencia)
-    posicion = models.IntegerField(default=0)
+    tiempo = models.TimeField(blank=True, null=True)
     departamento = models.ForeignKey(Departamento)
+    marca = models.TimeField(blank=True, null=True)
+    posicion = models.IntegerField(default=0)    
     creado = models.DateTimeField(auto_now_add=True)
+    competencia = models.ForeignKey(Competencia)
+
+
+    puntos = models.IntegerField(default=0, null=True)
 
 class Participante(models.Model):
     GENEROS = (
@@ -65,7 +70,9 @@ class Participante(models.Model):
     peso = models.PositiveIntegerField(verbose_name='peso (kg)')
 
     posicion = models.IntegerField(default=0)
+    puntos = models.IntegerField(default=0, null=True)
     tiempo = models.TimeField(blank=True, null=True)
-    creado = models.DateTimeField(auto_now_add=True)
+    marca = models.TimeField(blank=True, null=True)
     equipo = models.ForeignKey(Equipo, null=True, blank=True)
+    creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia, null=True, blank=True)

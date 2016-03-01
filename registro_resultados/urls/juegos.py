@@ -17,7 +17,9 @@ urlpatterns = patterns('registro_resultados.views',
     url(r'^competencia/(\d+)/datos-participante/(\d+)$', 'datos_participante', name='datos_participante'),
 
     url(r'^competencia/(\d+)/datos-equipo$', 'datos_equipo', name='datos_equipo'),
-    url(r'^competencia/(\d+)/datos-equipo/(\d+)$', 'datos_equipo', name='datos_equipo'),
+    url(r'^competencia/(\d+)/equipo-tiempos$', 'equipo_tiempos', name='equipo_tiempos'),
+    url(r'^competencia/(\d+)/equipo-tiempos/(\d+)$', 'equipo_tiempos', name='equipo_tiempos'),
+    
     #ajax para modalidades y categorías
     url(r'^modalidades/get/(\d+)$','get_modalidades',name='registro_get_modalidades'),
     url(r'^categorias/get/(\d+)$','get_categorias',name='registro_get_categorias'),

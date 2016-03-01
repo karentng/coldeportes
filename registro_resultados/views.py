@@ -136,9 +136,10 @@ def crear_participante(request, juego_id, competencia_id):
     competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
     
     if competencia.tipos_participantes == 1:
-        return redirect('datos_participante', juego_id, competencia_id)
+        return redirect('datos_participante', competencia_id)
     else:
-        return redirect('datos_equipo', juego_id, competencia_id)
+        return redirect('datos_equipo', competencia_id)
+
 
 @login_required
 def datos_participante(request, competencia_id, participante_id=None):
@@ -170,20 +171,32 @@ def datos_participante(request, competencia_id, participante_id=None):
     })
 
 @login_required
-def datos_equipo(request, competencia_id, equipo_id=None):
+def datos_equipo(request, competencia_id):
     competencia = Competencia.objects.get(id=competencia_id)
-    equipos = Equipo.objects.filter(competencia=competencia_id) or None
+    
+    if competencia.tipo_registro == 1:
+        return redirect('equipo_tiempos', competencia_id)
+    elif competencia.tipo_registro == 2:
+        return redirect('equipo_puntos', competencia_id)
+        
     
 
+
+@login_required
+def equipo_tiempos(request, competencia_id, equipo_id=None):
+    equipos = Equipo.objects.filter(competencia=competencia_id) or None
+    competencia = Competencia.objects.get(id=competencia_id)
+    
     try:
         equipo = Equipo.objects.get(id=equipo_id)
     except Exception:
         equipo = None
 
-    form = EquipoForm(instance=equipo)
+
+    form = EquipoTiempoForm(instance=equipo)
 
     if request.method == "POST":
-        form = EquipoForm(request.POST, instance=equipo)
+        form = EquipoTiempoForm(request.POST, instance=equipo)
 
         if form.is_valid():
             equipo_nuevo = form.save(commit=False)
@@ -197,6 +210,7 @@ def datos_equipo(request, competencia_id, equipo_id=None):
         'form': form,
         'wizard_stage': 1,
         'participantes': equipos,
+        'competencia_id': competencia_id
 
 
     })
