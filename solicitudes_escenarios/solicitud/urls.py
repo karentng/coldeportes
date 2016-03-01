@@ -12,5 +12,6 @@ urlpatterns = patterns('solicitudes_escenarios.solicitud.views',
     url(r'^finalizar/(\d+)$', 'finalizar_solicitud', name='finalizar_solicitud'),
     url(r'^ver/(\d+)$', 'ver_solicitud', name='ver_solicitud'),
     url(r'^imprimir/(\d+)$', 'imprimir_solicitud', name='imprimir_solicitud'),
+    url(r'^descargar/(\d+)/(\d+)$', 'descargar_adjunto', name='descargar_adjunto'),
 
 )

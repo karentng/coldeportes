@@ -110,6 +110,7 @@
                                         <tr>
                                             <th align="center">Nombre</th>
                                             <th align="center">Tipo</th>
+                                            <th align="center">Descargar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -117,6 +118,7 @@
                                         <tr>
                                             <td>{{ad.nombre_archivo}}</td>
                                             <td ><i class="fa fa-2x fa-{% if  ad.icon_extension != 'file' %}file-{% endif %}{{ ad.icon_extension }}-o"></i></td>
+                                            <td><a href="{% url  'descargar_adjunto' solicitud.id ad.id %}"><i class="fa fa-download"></i> Descargar</a></td>
                                         </tr>
                                     {% endfor %}
 

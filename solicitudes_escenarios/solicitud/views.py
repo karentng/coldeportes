@@ -6,6 +6,7 @@ from solicitudes_escenarios.respuesta.models import ListaSolicitudes
 from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud
 from django.db import connection
 from django.contrib import messages
+from django.utils.encoding import smart_str
 # Create your views here.
 
 @login_required
@@ -187,3 +188,16 @@ def ver_solicitud(request,id):
     return render(request,'ver_solicitud.html',{
         'solicitud' : solicitud
     })
+
+def descargar_adjunto(request,id_sol,id_adj):
+    try:
+        adj = AdjuntoSolicitud.objects.get(solicitud=id_sol,id=id_adj)
+    except:
+        messages.error(request,'No existe el archivo adjunto solicitado')
+        return redirect('listar_solicitudes')
+
+    response = HttpResponse(adj.archivo.read(),content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adj.nombre_archivo())
+    response['X-Sendfile'] = smart_str(adj.archivo)
+    return response
+
