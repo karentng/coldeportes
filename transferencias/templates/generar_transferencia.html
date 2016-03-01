@@ -126,7 +126,7 @@
                                 </li>
                             {%endif%}
                         </ul>
-                        <strong>Descripcion</strong> <br/><br/>
+                        <strong>Descripción</strong> <br/><br/>
                         <p class="f-s-12 text-inverse">
                             {% if objeto.descripcion %}
                                 {{ objeto.descripcion }}
@@ -137,15 +137,15 @@
                         <strong>Sobre la transferencia</strong><br/><br/>
                         <p class="f-s-12 text-inverse">
                             Esta es una solicitud de transferencia, al aceptarla usted accede a renunciar sobre la responsabilidad <br />
-                            como entidad sobre esta persona y delega dichos deberes a la entidad a transferir
+                            como entidad sobre esta persona y delega dichos deberes a la entidad a transferir.
                         </p>
                         <strong>Nota Legal</strong><br/><br/>
                         <p class="f-s-12 text-inverse">
                             Aceptando esta solicitud usted accede a que la entidad que usted elija tenga acceso COMPLETO <br />
                             a la información del {{ objeto.tipo_objeto }} a transferir durante y después de la transferencia.
-                            Usted no tendrá acceso a la información de este deportista mientras este pendiente de transferencia y una vez haya sido transferido
+                            Usted no tendrá acceso a la información de este deportista mientras este pendiente de transferencia y una vez haya sido transferido.
                         </p>
-                        <strong>Seleccion de Entidad</strong><br/><br/>
+                        <strong>Selección de Entidad</strong><br/><br/>
                         <!-- begin email form -->
                         <form action="" method="POST">{% csrf_token %}
                             <!-- begin email subject -->
@@ -165,7 +165,7 @@
 
                                 Coordialmente,<br />
                                 {{objeto.entidad}}.<br />
-                                Entidad del SND,<br />
+                                Entidad del SIND,<br />
                                 Coldeportes<br />
                             </p>
                             <button type="submit" class="btn btn-primary p-l-40 p-r-40">Enviar</button>
@@ -177,7 +177,7 @@
 		            <!-- end wrapper -->
 		            <!-- begin wrapper -->
                     <div class="wrapper bg-silver-lighter text-right clearfix">
-                        Transferencias entre entidades suscritas al <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+                        Transferencias entre entidades suscritas al <strong>SISTEMA DE INFORMACIÓN NACIONAL DEL DEPORTE</strong>
                     </div>
 		            <!-- end wrapper -->
 		        </div>
