@@ -154,6 +154,7 @@
             </div>
         </div>
 
+
         <div class="col-md-5">
             {% if noticias %}
                 <div class="row">
@@ -169,7 +170,7 @@
                                 Noticias
                             </h4>
                         </div>
-                        <div class="panel-body"style="padding:0;">
+                        <div class="panel-body" style="padding:0;">
                             <div id="carrusel-noticias" class="carousel slide" data-ride="carousel">
                           <!-- Indicators -->
                           <ol class="carousel-indicators">
@@ -182,10 +183,12 @@
                           <div class="carousel-inner" role="listbox">
                             {% for noticia in noticias %}
                                 <div class="item {% if forloop.first %}active{% endif %}">
-                                  <img style="height:300px;margin:0 auto;" src="{{ noticia.foto.url }}" alt="imagen-noticia">
+                                  <img class="img-responsive" style="width: 100%" src="{% if noticia.foto != "" %}{{ MEDIA_URL }}{{ noticia.foto }}{% else %}{{ MEDIA_URL }}clasificados/clasificados-default.png{% endif %}"
+                                       alt="imagen-noticia">
                                     <div class="carousel-caption">
                                       <h3 style="color:lightslategray;">{{ noticia.titulo }}</h3>
-                                      <p>{{ noticia.cuerpo_noticia|truncatewords:10 }}... <a href="javascript:;" data-target="#modal-noticia-{{ noticia.id }}" data-toggle="modal">Leer más <i class="fa fa-search"></i></a></p>
+                                      <p>{{ noticia.previsualizacion }}...</p>
+                                        <a href="{% url 'detalles_noticia' noticia.id %}">Leer más <i class="fa fa-search"></i></a>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -205,9 +208,6 @@
                     </div>
 
                 </div>
-                {% for noticia in noticias %}
-                    {% include 'modal_croppic.html' %}
-                {% endfor %}
             {% endif %}
             <!--
                 <div class="row">
