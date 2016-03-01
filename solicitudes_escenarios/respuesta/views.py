@@ -107,7 +107,7 @@ def ver_solicitud(request,id,id_ent):
         'solicitud' : solicitud
     })
 
-def descargar_adjunto(request,id_sol,id_adj):
+def descargar_adjunto(request,id_sol,id_adj,id_ent):
     """
     Marzo 1, 2016
     Autor: Daniel Correa
@@ -115,6 +115,16 @@ def descargar_adjunto(request,id_sol,id_adj):
     Permite descargar algun archivo adjunto de una solicitud recibida
 
     """
+    try:
+        lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id_sol))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_respuesta')
+
+    yo = request.tenant
+    entidad = lista.entidad_solicitante
+    connection.set_tenant(entidad)
+
     try:
         adj = AdjuntoSolicitud.objects.get(solicitud=id_sol,id=id_adj)
     except:
@@ -124,4 +134,6 @@ def descargar_adjunto(request,id_sol,id_adj):
     response = HttpResponse(adj.archivo.read(),content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adj.nombre_archivo())
     response['X-Sendfile'] = smart_str(adj.archivo)
+
+    connection.set_tenant(yo)
     return response

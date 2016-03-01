@@ -118,7 +118,7 @@
                                         <tr>
                                             <td>{{ad.nombre_archivo}}</td>
                                             <td ><i class="fa fa-2x fa-{% if  ad.icon_extension != 'file' %}file-{% endif %}{{ ad.icon_extension }}-o"></i></td>
-                                            <td><a href="{% url  'descargar_adjunto' solicitud.id ad.id %}"><i class="fa fa-download"></i> Descargar</a></td>
+                                            <td><a href="{% url  'descargar_adjunto_respuesta' solicitud.id ad.id solicitud.entidad_solicitante.id %}"><i class="fa fa-download"></i> Descargar</a></td>
                                         </tr>
                                     {% endfor %}
 
