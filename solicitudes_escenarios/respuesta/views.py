@@ -29,7 +29,7 @@ def listar_solicitudes(request):
     })
 
 @login_required
-def imprimir_solicitud(request,id):
+def imprimir_solicitud(request,id,id_ent):
     """
     Marzo 1, 2016
     Autor: Daniel Correa
@@ -38,37 +38,17 @@ def imprimir_solicitud(request,id):
 
     """
     try:
-
-        solicitud = SolicitudEscenario.objects.get(id=id)
-    except:
-        messages.error(request,'No existe la solicitud')
-        return redirect('listar_solicitudes')
-
-    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
-
-    return render(request,'solicitud_imprimir.html',{
-        'solicitud' : solicitud
-    })
-
-def ver_solicitud(request,id,id_ent):
-    """
-    Marzo 1, 2016
-    Autor: Daniel Correa
-
-    Permite tener el detalle de una solicitud recibida
-
-    """
-    try:
         lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id))
     except:
         messages.error(request,'No existe la solicitud')
-        return redirect('listar_solicitudes')
+        return redirect('listar_solicitudes_respuesta')
 
     yo = request.tenant
     entidad = lista.entidad_solicitante
     connection.set_tenant(entidad)
 
     solicitud = SolicitudEscenario.objects.get(id=id)
+    solicitud.entidad_solicitante = entidad
     solicitud.codigo_unico = solicitud.codigo_unico(entidad)
     solicitud.escenarios_str = solicitud.escenarios_str()
     adjuntos = solicitud.adjuntos()
@@ -84,7 +64,46 @@ def ver_solicitud(request,id,id_ent):
 
     connection.set_tenant(yo)
 
-    return render(request,'ver_solicitud.html',{
+    return render(request,'solicitud_imprimir_respuesta.html',{
+        'solicitud' : solicitud
+    })
+
+def ver_solicitud(request,id,id_ent):
+    """
+    Marzo 1, 2016
+    Autor: Daniel Correa
+
+    Permite tener el detalle de una solicitud recibida
+
+    """
+    try:
+        lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_respuesta')
+
+    yo = request.tenant
+    entidad = lista.entidad_solicitante
+    connection.set_tenant(entidad)
+
+    solicitud = SolicitudEscenario.objects.get(id=id)
+    solicitud.entidad_solicitante = entidad
+    solicitud.codigo_unico = solicitud.codigo_unico(entidad)
+    solicitud.escenarios_str = solicitud.escenarios_str()
+    adjuntos = solicitud.adjuntos()
+    array = []
+    for ad in adjuntos:
+        dic={
+            'nombre_archivo' : ad.nombre_archivo(),
+            'icon_extension' : ad.icon_extension(),
+            'id' : ad.id
+        }
+        array.append(dic)
+    solicitud.adjuntos = array
+
+    connection.set_tenant(yo)
+
+    return render(request,'ver_solicitud_respuesta.html',{
         'solicitud' : solicitud
     })
 

@@ -58,7 +58,7 @@
                                 <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
                             </div>
                             <div class="btn-group m-l-5">
-                                <a href="{% url 'imprimir_solicitud' solicitud.id %}" target="_blank" class="btn btn-warning p-l-40 p-r-40 btn-sm pull-right">
+                                <a href="{% url 'imprimir_solicitud_respuesta' solicitud.id solicitud.entidad_solicitante.id  %}" target="_blank" class="btn btn-warning p-l-40 p-r-40 btn-sm pull-right">
                                     <i class="fa fa-print"></i> Imprimir
                                 </a>
                             </div>
@@ -75,7 +75,7 @@
                                 </a>
                                 <div class="media-body">
                                     <span class="email-from text-inverse f-w-600">
-                                        Solicitud Para: {{ solicitud.para_quien }}
+                                        Solicitud de: {{ solicitud.entidad_solicitante }}
 
                                     </span><span class="text-muted m-l-5"><i class="fa fa-clock-o fa-fw"></i> {{ solicitud.fecha }}</span><br />
                                 </div>
