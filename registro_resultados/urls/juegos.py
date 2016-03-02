@@ -14,11 +14,18 @@ urlpatterns = patterns('registro_resultados.views',
     url(r'^(\d+)/competencia/(\d+)/crear-participante/', 'crear_participante', name='crear_participante'),
 
     url(r'^competencia/(\d+)/datos-participante$', 'datos_participante', name='datos_participante'),
-    url(r'^competencia/(\d+)/datos-participante/(\d+)$', 'datos_participante', name='datos_participante'),
+    url(r'^competencia/(\d+)/participante-tiempos$', 'participante_tiempos', name='participante_tiempos'),
+    url(r'^competencia/(\d+)/participante-tiempos/(\d+)$', 'participante_tiempos', name='participante_tiempos'),
+    url(r'^competencia/(\d+)/participantes-puntos$', 'participante_puntos', name='participante_puntos'),
+    url(r'^competencia/(\d+)/participantes-puntos/(\d+)$', 'participante_puntos', name='participante_puntos'),
+    url(r'^competencia/(\d+)/eliminar-participante/(\d+)$', 'eliminar_participante', name='eliminar_participante'),
 
     url(r'^competencia/(\d+)/datos-equipo$', 'datos_equipo', name='datos_equipo'),
     url(r'^competencia/(\d+)/equipo-tiempos$', 'equipo_tiempos', name='equipo_tiempos'),
     url(r'^competencia/(\d+)/equipo-tiempos/(\d+)$', 'equipo_tiempos', name='equipo_tiempos'),
+    url(r'^competencia/(\d+)/equipo-puntos$', 'equipo_puntos', name='equipo_puntos'),
+    url(r'^competencia/(\d+)/equipo-puntos/(\d+)$', 'equipo_puntos', name='equipo_puntos'),
+    url(r'^competencia/(\d+)/eliminar-equipo/(\d+)$', 'eliminar_equipo', name='eliminar_equipo'),
     
     #ajax para modalidades y categorías
     url(r'^modalidades/get/(\d+)$','get_modalidades',name='registro_get_modalidades'),

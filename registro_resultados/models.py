@@ -46,6 +46,7 @@ class Competencia(models.Model):
 class Equipo(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     tiempo = models.TimeField(blank=True, null=True)
+    puntos = models.IntegerField(default=0, null=True)
     departamento = models.ForeignKey(Departamento)
     marca = models.TimeField(blank=True, null=True)
     posicion = models.IntegerField(default=0)    
@@ -53,7 +54,6 @@ class Equipo(models.Model):
     competencia = models.ForeignKey(Competencia)
 
 
-    puntos = models.IntegerField(default=0, null=True)
 
 class Participante(models.Model):
     GENEROS = (

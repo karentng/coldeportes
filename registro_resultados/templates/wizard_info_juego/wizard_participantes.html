@@ -50,9 +50,8 @@
                   </div>
               {% endfor %}
             </div>
+            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-save"></i> Guardar</button>
           </div>
-          <hr>
-          <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
         </form>
       </fieldset>
     </div>
@@ -96,12 +95,36 @@
                                     <i class="fa fa-check"></i> Registrar Integrantes
                                 </a><br>
                               {% endif %}
-                                <a href='{% url 'equipo_tiempos' competencia_id participante.id %}'>
-                                    <i class="fa fa-edit"></i> Modificar
-                                </a><br>
-                                <a href=''>
+
+                              {% if not indiviual %}
+                                {% if puntos %}
+                                  <a href='{% url "participante_puntos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% else %}
+                                  <a href='{% url "participante_tiempos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% endif %}
+                                <a href='{% url "eliminar_participante" competencia_id participante.id %}'>
                                     <i class="fa fa-trash"></i> Eliminar
                                 </a><br>
+
+                              {% else %}
+                                {% if puntos %}
+                                  <a href='{% url "equipo_puntos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% else %}
+                                  <a href='{% url "equipo_tiempos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% endif %}
+                                <a href='{% url "eliminar_equipo" competencia_id participante.id %}'>
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </a><br>
+                              {% endif %}
+
                             </td>
                         </tr>
                         {% endfor %}
@@ -112,7 +135,6 @@
       </fieldset>
         
     </div>
-
   </div>
                             
                     
