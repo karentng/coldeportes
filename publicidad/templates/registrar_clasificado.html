@@ -105,7 +105,7 @@
                     {% if field.name == 'valor' %}
                         <div class="control-personalizado form-group">
                             <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
-                            Desea incluir algún valor, precio, salario en su clasificado?
+                            ¿Desea incluir algún valor, precio o salario en su clasificado?
                         </div>
                         <div class="{% if not edicion %}display-none {% endif %} animated" id="valor-mostrar">
                             {% bootstrap_field field %}
@@ -119,7 +119,12 @@
 
 
             </form>
-            <button class="btn btn-primary pull-right" style="margin-left:5px;" id="submit-crop">
+            {% if edicion %}
+                <a type="button" class="btn btn-primary pull-right" href="{% url 'gestionar_clasificados'%}">
+                    Cancelar
+                </a>
+            {% endif %}
+            <button class="btn btn-primary pull-right" style="margin-right:15px;" id="submit-crop">
                 {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
             </button>
         </div>
