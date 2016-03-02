@@ -7,14 +7,6 @@
         <img src="{{STATIC_URL}}img/chinche-1.png" class="chincheImg">
         <img class="img-responsive" src="{{ MEDIA_URL }}{{ clasificado_filtrado.foto }}">
         <div class="descripcionCla">
-
-            {% if perms.publicidad.change_clasificado %}
-                <div class="edicion-clasificados">
-                    <a href="{% url 'editar_clasificado' clasificado_filtrado.id %}"><i class="fa fa-pencil-square-o fa-2x add-tooltip" title="Editar Clasificado"></i></a>
-                    <i  class="fa fa-trash fa-2x text-danger add-tooltip" data-toggle="modal" data-target="#modal-eliminar" title="Eliminar Clasificado"  data-id="{{ clasificado_filtrado.id }}"></i>
-                </div>
-            {% endif %}
-
             <h3>{{ clasificado_filtrado.titulo|safe }}</h3>
             <p>{{ clasificado_filtrado.descripcion|slice:":150"}}...</p>
         </div>
