@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from solicitudes_escenarios.respuesta.models import ListaSolicitudes
-from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud
+from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud,DiscucionSolicitud
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
@@ -137,3 +137,46 @@ def descargar_adjunto(request,id_sol,id_adj,id_ent):
 
     connection.set_tenant(yo)
     return response
+
+def responder_solicitud(request,id,id_ent):
+    try:
+        lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_respuesta')
+
+    yo = request.tenant
+    entidad = lista.entidad_solicitante
+    connection.set_tenant(entidad)
+
+    solicitud = SolicitudEscenario.objects.get(id=id)
+    solicitud.entidad_solicitante = entidad
+    solicitud.codigo_unico = solicitud.codigo_unico(entidad)
+    solicitud.escenarios_str = solicitud.escenarios_str()
+    adjuntos = solicitud.adjuntos()
+    array = []
+    for ad in adjuntos:
+        dic={
+            'nombre_archivo' : ad.nombre_archivo(),
+            'icon_extension' : ad.icon_extension(),
+            'id' : ad.id
+        }
+        array.append(dic)
+    solicitud.adjuntos = array
+
+    discusiones = DiscucionSolicitud.objects.filter(solicitud=id)
+    """
+    discusiones = [{
+        'estado_actual' : 'APROBADA',
+        'descripcion' : 'aprobada por que si o k ase',
+        'fecha' : ' 26 de enero de 2015 a las 6:09pm',
+        'entidad': 'indervalle',
+        'respuesta' : False
+    }]
+    """
+    connection.set_tenant(yo)
+
+    return render(request,'ver_solicitud_respuesta.html',{
+        'solicitud' : solicitud,
+        'discusiones': discusiones
+    })

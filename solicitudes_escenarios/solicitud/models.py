@@ -46,7 +46,6 @@ class DiscucionSolicitud(models.Model):
         (1,'INCOMPLETA'),
         (2,'APROBADA'),
         (3,'RECHAZADA'),
-        (4,'CANCELADA POR ENTIDAD'),
     )
 
     estado_anterior = models.IntegerField(choices=ESTADOS)
@@ -54,6 +53,7 @@ class DiscucionSolicitud(models.Model):
     descripcion = models.TextField()
     solicitud = models.ForeignKey(SolicitudEscenario)
     fecha = models.DateTimeField(auto_now=True)
+    entidad = models.ForeignKey(Entidad)
 
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudEscenario)

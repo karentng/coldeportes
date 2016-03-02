@@ -64,8 +64,8 @@
                             </a>
                             <br/>
                             {% if s.estado == 0 %}
-                                <a href="#">
-                                    <i class="fa fa-send"></i> Procesar solicitud
+                                <a href="{% url 'responder_solicitud' s.id s.entidad_solicitante.id %}">
+                                    <i class="fa fa-send"></i> Responder solicitud
                                 </a>
                                 <br/>
                             {% endif %}
