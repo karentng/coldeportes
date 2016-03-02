@@ -105,7 +105,29 @@
                     </div>
                 </div>
                 <div class="row">
-                    <h5><strong>Discuciones</strong></h5><br/>
+                    <h5><strong>Discuciones</strong></h5>
+                    {% for d in discusiones %}
+                    <ul class="media-list media-list-with-divider result-list">
+                        <li class="media media-sm">
+                            <div class="media-left">
+                                <i class="fa fa-{% if d.respuesta %}send{% else %}envelope{% endif %} fa-3x" style="color: #00acac;"></i>
+                            </div>
+                            <div class="media-body">
+                                <h5>Enviado por: {{ d.entidad }}</h5>
+                                <p class="location">{{ d.fecha }}</p>
+                                <p class="desc">
+                                    {{ d.descripcion }}
+                                </p>
+                                <div class="btn-row">
+                                    <a data-toggle="tooltip" data-container="body" data-title="Estado actual"><i class="fa fa-fw fa-tags"></i></a>
+                                    Cambio de estado a: {{ d.estado_actual }}
+                                </div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <p> No hay discusiones al momento</p>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
             <!-- end wrapper -->

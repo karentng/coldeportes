@@ -158,6 +158,22 @@
                                 {% endfor %}
 							</ul>
                         </div>
+                        {% if responder %}
+                        <div class="row">
+                            <h5><strong>Responder</strong></h5>
+                            <form action="" method="post">
+
+                                <div class="input-group">
+                                    {% bootstrap_form form_comentarios %}
+                                    <span class="pull-right">
+                                        <br>
+                                        <button class="btn btn-primary" type="submit"><i class="fa fa-pencil"></i> Enviar</button>
+                                    </span>
+                                </div>
+
+                            </form>
+                        </div>
+                        {% endif %}
                     </div>
 		            <!-- end wrapper -->
 		            <!-- begin wrapper -->

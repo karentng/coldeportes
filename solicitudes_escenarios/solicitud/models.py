@@ -49,7 +49,7 @@ class DiscucionSolicitud(models.Model):
     )
 
     estado_anterior = models.IntegerField(choices=ESTADOS)
-    estado_actual = models.IntegerField(choices=ESTADOS)
+    estado_actual = models.IntegerField(choices=ESTADOS, verbose_name='Cambiar estado a')
     descripcion = models.TextField()
     solicitud = models.ForeignKey(SolicitudEscenario)
     fecha = models.DateTimeField(auto_now=True)

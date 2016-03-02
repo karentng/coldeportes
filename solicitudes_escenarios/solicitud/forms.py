@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django import forms
 from django.forms import ModelForm
-from solicitudes_escenarios.solicitud.models import SolicitudEscenario,Escenario,AdjuntoSolicitud
+from solicitudes_escenarios.solicitud.models import SolicitudEscenario,Escenario,AdjuntoSolicitud,DiscucionSolicitud
 from coldeportes.utilities import adicionarClase,verificar_tamano_archivo
 from entidades.models import Entidad
 
@@ -27,3 +27,23 @@ class AdjuntoSolicitudForm(ModelForm):
     class Meta:
         model = AdjuntoSolicitud
         exclude = ('solicitud','discucion',)
+
+class DiscusionForm(ModelForm):
+    required_css_class = 'required'
+
+    ESTADOS = (
+        (2,'APROBADA'),
+        (1,'INCOMPLETA'),
+        (3,'RECHAZADA'),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(DiscusionForm, self).__init__(*args, **kwargs)
+        self.fields['estado_actual'] = adicionarClase(self.fields['estado_actual'], 'one')
+        self.fields['estado_actual'].choices = self.ESTADOS
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['descripcion'].widget.attrs['style'] = 'resize:none;'
+
+    class Meta:
+        model = DiscucionSolicitud
+        exclude = ('solicitud','estado_anterior','fecha','entidad')
