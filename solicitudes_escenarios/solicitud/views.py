@@ -28,9 +28,10 @@ def generar_solicitud(request,id=None):
         form = SolicitudEscenarioForm(request.POST,instance=sol)
         if form.is_valid():
             nueva_solicitud = form.save()
-            connection.set_tenant(nueva_solicitud.para_quien)
-            ListaSolicitudes.objects.create(solicitud=nueva_solicitud.id,entidad_solicitante=entidad).save()
-            connection.set_tenant(entidad)
+            if not sol:
+                connection.set_tenant(nueva_solicitud.para_quien)
+                ListaSolicitudes.objects.create(solicitud=nueva_solicitud.id,entidad_solicitante=entidad).save()
+                connection.set_tenant(entidad)
             request.session['identidad'] = {
                 'id_solicitud': nueva_solicitud.id,
                 'id_entidad': entidad.id,

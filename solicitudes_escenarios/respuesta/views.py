@@ -32,7 +32,7 @@ def listar_solicitudes(request):
 def obtener_datos_solicitud(request,id,id_ent):
     try:
         lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id))
-    except:
+    except Exception:
         messages.error(request,'No existe la solicitud')
         return False,redirect('listar_solicitudes_respuesta')
 

@@ -30,7 +30,7 @@
 		        <div class="vertical-box-column width-250">
 		            <!-- begin wrapper -->
                     <div class="wrapper bg-silver text-center">
-                        <a href="{% url 'listar_solicitudes' %}" class="btn btn-success p-l-40 p-r-40 btn-sm">
+                        <a href="{% url 'listar_solicitudes_respuesta' %}" class="btn btn-success p-l-40 p-r-40 btn-sm">
                             Regresar
                         </a>
                     </div>
@@ -158,7 +158,7 @@
                                 {% endfor %}
 							</ul>
                         </div>
-                        {% if responder %}
+                        {% if responder and solicitud.estado == 0 %}
                         <div class="row">
                             <h5><strong>Responder</strong></h5>
                             <form action="" method="post">
