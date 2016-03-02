@@ -96,22 +96,26 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <form id="clasificado-form" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <div class="form-group">
-                    <div id="modalTrigger2" class="btn {% if edicion %}btn-info{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
-                    <label class="control-label" for="modalTrigger2"></label>
-                    {% include 'modal_croppic.html' %}
-                </div>
                 {% for field in form %}
-                    {% if field.name == 'valor' %}
-                        <div class="control-personalizado form-group">
-                            <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
-                            ¿Desea incluir algún valor, precio o salario en su clasificado?
+                    {% if field.name == 'descripcion' %}
+                        <div class="form-group">
+                            <div id="modalTrigger2" class="btn {% if edicion %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <label class="control-label" for="modalTrigger2"></label>
+                            {% include 'modal_croppic.html' %}
                         </div>
-                        <div class="{% if not edicion %}display-none {% endif %} animated" id="valor-mostrar">
-                            {% bootstrap_field field %}
-                        </div>
-                    {% else %}
                         {% bootstrap_field field %}
+                    {% else %}
+                        {% if field.name == 'valor' %}
+                            <div class="control-personalizado form-group">
+                                <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
+                                ¿Desea incluir algún valor, precio o salario en su clasificado?
+                            </div>
+                            <div class="{% if not edicion %}display-none {% endif %} animated" id="valor-mostrar">
+                                {% bootstrap_field field %}
+                            </div>
+                        {% else %}
+                            {% bootstrap_field field %}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
 
