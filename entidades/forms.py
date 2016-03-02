@@ -333,3 +333,12 @@ class DeporteForm(ModelForm):
     class Meta:
         model = TipoDisciplinaDeportiva
         exclude = ('',)
+
+#Formulario Planes de Costo de un club.
+#Autor: Yalile Bermudes
+#Fecha: 02/03/2016
+class PlanDeCostoForm(ModelForm):
+
+    class Meta:
+        model = PlanesDeCostoClub
+        exclude = ('estado', )

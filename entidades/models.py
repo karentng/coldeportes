@@ -727,6 +727,20 @@ class Liga(ResolucionReconocimiento):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
 
+class PlanesDeCostoClub(models.Model):
+    ESTADO = (
+        (1, 'Activo'),
+        (0, 'Inactivo')
+    )
+    nombre=models.CharField(max_length=200)
+    precio=models.IntegerField()
+    descripcion = models.CharField(max_length=600)
+    estado =models.IntegerField(choices=ESTADO, default=1)
+
+    def __str__(self):
+        return self.nombre
+
+
 class Club(ResolucionReconocimiento):
     TIPOS_CLUBES = (
         (1, "Deportivo"),
@@ -736,6 +750,7 @@ class Club(ResolucionReconocimiento):
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+    planes_de_costo = models.ManyToManyField(PlanesDeCostoClub, blank=True)
 
     def obtener_padre(self):
         return self.liga

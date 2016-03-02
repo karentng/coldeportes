@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="">Club</a>
+	<li class="active">Planes</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block titulo_panel%}
+    Planes de Costo
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-6" >
+            <form class="form-horizontal" method="post" action="">{% csrf_token %}
+                <div class="col-md-10 col-md-offset-1">
+                    {% if edicion %}
+                        <h3 >Editar Plan</h3>
+                    {% else %}
+                    <h3 >Registrar Plan</h3>
+                    {% endif %}
+                    {% bootstrap_form form layout="vertical" %}
+                    <button class="pull-right btn btn-primary" type="submit"><i class="fa fa-plus"></i> Añadir</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <div class="col-md-6">
+            <h3 >Planes Registrados</h3>
+            <div class="table-responsive">
+                <table id="tabla-plan-costo" class="table table-bordered table-striped" cellspacing="0" width="100%">
+                    <thead>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Opciones</th>
+                    </thead>
+                    <tbody>
+                        {% for plan in planes %}
+                            <tr>
+                                <td>{{ plan.nombre }}</td>
+                                <td>{{ plan.precio }}</td>
+                                <td>{{ plan.descripcion }}</td>
+
+                                {% if plan.estado == 0 %}
+                                    <td><span class="label label-danger">{{ plan.get_estado_display }}</span></td>
+                                {% else %}
+                                    <td><span class="label label-primary">{{ plan.get_estado_display }}</span></td>
+                                {% endif %}
+
+                                <td>
+                                    <div class="btn-group">
+                                        <button data-toggle="dropdown" class="btn btn-success dropdown-toggle">Acción <span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            {% if user.is_authenticated %}
+                                                <li><a href="{% url 'editar_plan_de_costo' plan.id %}">Editar</a></li>
+                                                <li><a data-toggle="modal" data-target="#modal-estado{{ plan.id }}" href="" class="font-bold">Cambiar estado</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Modal -->
+
+                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modal-estado{{ plan.id }}">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>¿Está seguro que desea cambiar de estado a este plan?</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                                    <a href="{% url 'cambiar_estado_plan_costo' plan.id %}" type="button" class="btn btn-primary" id="estado-plan" >Si</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

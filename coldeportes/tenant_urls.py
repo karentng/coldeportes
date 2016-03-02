@@ -31,6 +31,11 @@ urlpatterns = patterns('',
     url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
     url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
 
+    #GESTION PLANES DE COSTOS
+    url(r'^planes$', 'entidades.views.crear_plan_de_costo', name='crear_plan_de_costo'),
+    url(r'^cambiar/(\d+)$', 'entidades.views.cambiar_estado_plan_costo', name='cambiar_estado_plan_costo'),
+    url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
+
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += required(

@@ -778,3 +778,100 @@ def crear_editar_dep(request,id=None):
         'nombre': 'DEPORTES',
         'url' : 'listar_deportes'
     })
+
+@login_required
+def crear_plan_de_costo(request):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Registrar Plan
+
+    Se almacena la informacion requerida para un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+    club_actual = request.tenant.obtenerTenant()
+    planes = club_actual.planes_de_costo.all()
+
+    if request.method == 'POST':
+        planesForm = PlanDeCostoForm(request.POST)
+        if planesForm.is_valid():
+            plan = planesForm.save()
+            club_actual.planes_de_costo.add(plan)
+
+            messages.success(request, "Plan registrado")
+            return redirect('crear_plan_de_costo')
+        else:
+            render(request, 'planes_costo.html', {'form': planesForm,'planes': planes})
+    else:
+        planesForm = PlanDeCostoForm()
+        return render(request, 'planes_costo.html', {'form': planesForm,'planes': planes})
+
+
+@login_required
+def editar_plan_de_costo(request, id):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Editar Plan
+
+    Se almacena la informacion editada para un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param id:             Identificador Plan de costo
+    :type id:              String
+    """
+    club_actual = request.tenant.obtenerTenant()
+    planes = club_actual.planes_de_costo.all()
+    try:
+        plan = PlanesDeCostoClub.objects.get(id=id)
+        planForm = PlanDeCostoForm(instance=plan)
+        if request.method == 'POST':
+            planForm = PlanDeCostoForm(request.POST, instance=plan)
+            if planForm.is_valid():
+                planForm.save()
+                messages.success(request, "Datos del plan de costo guardados correctamente.")
+                return redirect('crear_plan_de_costo')
+            else:
+                planForm = PlanDeCostoForm(instance=plan)
+    except Exception:
+        messages.success(request, "El plan que desea editar no fue encontrado")
+        return redirect('crear_plan_de_costo')
+
+    return render(request, 'planes_costo.html', {'form': planForm, 'planes': planes, 'edicion': True})
+
+
+@login_required
+def cambiar_estado_plan_costo(request, id):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Cambiar estado del Plan
+
+    Se almacena el cambio del estado de un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param id:             Identificador Plan de costo
+    :type id:              String
+    """
+    try:
+        plan = PlanesDeCostoClub.objects.get(id=id)
+        if plan.estado == 0:
+            plan.estado = 1
+            plan.save()
+            messages.success(request, "Estado de plan cambiado")
+            return redirect('crear_plan_de_costo')
+        else:
+            plan.estado = 0
+            plan.save()
+            messages.success(request, "Estado de plan cambiado")
+            return redirect('crear_plan_de_costo')
+    except Exception:
+        messages.success(request, "Plan no encontrado")
+        return redirect('crear_plan_de_costo')
