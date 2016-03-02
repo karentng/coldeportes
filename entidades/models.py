@@ -727,6 +727,27 @@ class Liga(ResolucionReconocimiento):
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
 
 
+class SocioClub(models.Model):
+
+    TIPO_IDENTIDAD = (
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
+    )
+
+    tipo_documento = models.CharField(max_length=5, choices=TIPO_IDENTIDAD, verbose_name="Tipo de identificación")
+    numero_documento = models.CharField(max_length=20, verbose_name="Número de Documento", unique=True)
+    nombre = models.CharField(max_length=255, verbose_name="Nombre")
+    apellido = models.CharField(max_length=255, verbose_name="Apellido")
+    correo = models.EmailField(max_length=255, blank=True, verbose_name="Correo electrónico")
+    ciudad = models.ForeignKey(Ciudad)
+    empresa = models.CharField(max_length=255, blank=True, verbose_name="Empresa")
+    estado = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nombre + self.apellido
+
+
 class Club(ResolucionReconocimiento):
     TIPOS_CLUBES = (
         (1, "Deportivo"),
@@ -736,6 +757,7 @@ class Club(ResolucionReconocimiento):
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+    socios = models.ManyToManyField(SocioClub, blank=True);
 
     def obtener_padre(self):
         return self.liga

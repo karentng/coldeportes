@@ -333,3 +333,9 @@ class DeporteForm(ModelForm):
     class Meta:
         model = TipoDisciplinaDeportiva
         exclude = ('',)
+
+class SocioClubForm(ModelForm):
+
+    class Meta:
+        model = SocioClub
+        exclude = ('estado',)

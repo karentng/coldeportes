@@ -16,7 +16,7 @@
                 {% endif %}
                 {% if request.tenant.tipo == 3 %}
                     <li class="has-sub">
-                        <a href="#"><span class="colorMenu">Gestionar asociados del club</span></a>
+                        <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
                     </li>
                     <li class="has-sub">
                         <a href="#"><span class="colorMenu">Gestionar planes de costos del club</span></a>

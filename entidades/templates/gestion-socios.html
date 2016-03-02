@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li>Club</li>
+	<li class="active">Socios</li>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block titulo_panel %}
+	Socios del club
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <fieldset class="col-md-6" >
+            <form id="" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>Registrar Nuevo Socio</h3>
+                        {% for i in form %}
+                            <div class="col-lg-12">
+                                {% bootstrap_field i layout="vertical" %}
+                            </div>
+                        {% endfor %}
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i>Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </fieldset>
+        <div class="col-md-6">
+            <h4>Socios Actuales:</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th align="center">Nombre</th>
+                            <th align="center">Apellido</th>
+                            <th align="center">Estado</th>
+                            <th align="center">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for socio in lista_socios %}
+                        <tr>
+                            <td>{{socio.nombre}}</td>
+                            <td>{{socio.apellido}}</td>
+                            {% if socio.estado %}
+                                <td><span class="label label-primary">Activo</span></td>
+                            {% else %}
+                                <td><span class="label label-danger">Inactivo</span></td>
+                            {% endif %}
+                            <td>
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Acción <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                            <li><a href="">Editar</a></li>
+                                            <li><a data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal">Cambiar estado</i> </a></li>
+                                            <li class="divider"></li>
+                                        <li><a data-target="#modal-consultar-{{socio.id}}" data-toggle="modal">Vista Previa</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="modal fade" id="modal-desactivar-{{socio.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Cambiar estado</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea cambiar el estado de este socio?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
+                                                <a href="{% url 'desactivar_socio' socio.id %}" class="btn btn-sm btn-danger">Si</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="modal-consultar-{{socio.id}}" class="modal fade" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Socio</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <b>Nombre completo: </b>{{socio.nombre}} {{ socio.apellido }}<br>
+                                                <b>Tipo documento: </b> {{socio.tipo_documento}}<br>
+                                                <b>Numero de documento: </b> {{socio.numero_documento}}<br>
+                                                <b>Correo electrónico: </b> {{socio.correo}}<br>
+                                                <b>Ciudad: </b> {{ socio.ciudad }}<br>
+                                                <b>Empresa: </b> {{ socio.empresa }}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            {% empty %}
+                            <tr>
+                            	<td colspan="4" align="center">
+                            		<b>No hay socios registrados</b>
+                            	</td>
+                            </tr>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

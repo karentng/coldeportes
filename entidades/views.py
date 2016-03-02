@@ -778,3 +778,63 @@ def crear_editar_dep(request,id=None):
         'nombre': 'DEPORTES',
         'url' : 'listar_deportes'
     })
+
+def mostrar_gestion_socios(request):
+    """
+    Marzo 02 / 2016
+    Autor: Diego Monsalve
+
+    Gestion de socios
+
+    Se permite crear un nuevo socio y se muestran los socios que ya se han registrado en el club.
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+
+    if request.method == 'POST':
+        form = SocioClubForm(request.POST)
+        if form.is_valid():
+            socio = form.save()
+            club = request.tenant.obtenerTenant()
+            club.socios.add(socio)
+            messages.success(request, "Socio registrado correctamente.")
+            return redirect('gestion_socios')
+        else:
+            club = request.tenant.obtenerTenant()
+            lista_socios = club.socios.all()
+            return render(request, 'gestion-socios.html', {'form':form, 'lista_socios':lista_socios})
+    else:
+        club = request.tenant.obtenerTenant()
+        lista_socios = club.socios.all()
+        form = SocioClubForm()
+        return render(request, 'gestion-socios.html', {'form':form, 'lista_socios':lista_socios})
+
+
+def desactivar_socio(request, id_socio):
+    """
+    Marzo 02 / 2016
+    Autor: Diego Monsalve
+
+    Desactivar o activar socio
+
+    Permite cambiar el estado de un socio
+
+    :param request:     Petición realizada
+    :type request:      WSGIRequest
+    :param id_socio:    Identificador del socio
+    :type id_socio:     String
+    """
+    try:
+        socio = SocioClub.objects.get(id=id_socio)
+        if socio.estado:
+            socio.estado = False
+            messages.success(request, ("El socio %s ha sido desactivado")%(socio.nombre))
+        else:
+            socio.estado = True
+            messages.success(request, ("El socio %s ha sido activado")%(socio.nombre))
+        socio.save()
+
+        return redirect('gestion_socios')
+    except Exception:
+        return redirect('gestion_socios')
