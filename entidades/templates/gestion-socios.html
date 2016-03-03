@@ -7,9 +7,6 @@
 	<li class="active">Socios</li>
 {% endblock %}
 
-{% block js %}
-{% endblock %}
-
 {% block css %}
 {% endblock %}
 
@@ -20,16 +17,24 @@
 {% block contenido_panel %}
     <div class="row">
         <fieldset class="col-md-6" >
-            <form id="" action="" method="post">{% csrf_token %}
+            <form id="formulario-socio" action="" method="post">{% csrf_token %}
                 <div class="well row">
                     <div class="col-xs-12">
-                        <h3>Registrar Nuevo Socio</h3>
+                        {% if edicion %}
+                            <h3>Editar Socio</h3>
+                        {% else %}
+                            <h3>Registrar Nuevo Socio</h3>
+                        {% endif %}
                         {% for i in form %}
                             <div class="col-lg-12">
                                 {% bootstrap_field i layout="vertical" %}
                             </div>
                         {% endfor %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i>Guardar</button>
+                        {% if edicion %}
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-pencil-square"></i> Guardar Cambios</button>
+                        {% else %}
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus-square"></i> Registrar</button>
+                        {% endif %}
                     </div>
                 </div>
             </form>
@@ -60,8 +65,8 @@
                                 <div class="btn-group">
                                     <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Acción <span class="caret"></span></button>
                                     <ul class="dropdown-menu">
-                                            <li><a href="">Editar</a></li>
-                                            <li><a data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal">Cambiar estado</i> </a></li>
+                                            <li><a href="{% url 'editar_socio' socio.id %}">Editar</a></li>
+                                            <li><a data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal">Cambiar estado</a></li>
                                             <li class="divider"></li>
                                         <li><a data-target="#modal-consultar-{{socio.id}}" data-toggle="modal">Vista Previa</a></li>
                                     </ul>
@@ -120,4 +125,17 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block js %}
+
+    <script src="{{ STATIC_URL }}js/validaciones/entidad/validaciones-socios.js"></script>
+
+    {% if edicion %}
+        <script>
+            $(document).ready(function(){
+                $("select").css("pointer-events", "none");
+            });
+        </script>
+    {% endif %}
 {% endblock %}

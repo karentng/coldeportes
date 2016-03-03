@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
     url(r'^gestion-socios$', 'entidades.views.mostrar_gestion_socios', name='gestion_socios'),
     url(r'^desactivar-socio/(\d+)$', 'entidades.views.desactivar_socio', name='desactivar_socio'),
-    #url(r'^editar-socio/(\d+)$', 'entidades.views.editar_socio', name='editar_socio'),
+    url(r'^editar-socio/(\d+)$', 'entidades.views.editar_socio', name='editar_socio'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

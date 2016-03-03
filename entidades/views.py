@@ -826,7 +826,8 @@ def desactivar_socio(request, id_socio):
     :type id_socio:     String
     """
     try:
-        socio = SocioClub.objects.get(id=id_socio)
+        club = request.tenant.obtenerTenant()
+        socio = club.socios.get(id=id_socio)
         if socio.estado:
             socio.estado = False
             messages.success(request, ("El socio %s ha sido desactivado")%(socio.nombre))
@@ -838,3 +839,25 @@ def desactivar_socio(request, id_socio):
         return redirect('gestion_socios')
     except Exception:
         return redirect('gestion_socios')
+
+
+def editar_socio(request, id_socio):
+    try:
+        club = request.tenant.obtenerTenant()
+        socio = club.socios.get(id=id_socio)
+    except:
+        return redirect('gestion_socios')
+
+    form = SocioClubForm(instance=socio)
+
+    if request.method=='POST':
+        form = SocioClubForm(request.POST, instance=socio)
+        if form.has_changed():
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Datos actualizados correctamente.")
+                return redirect('gestion_socios')
+        else:
+            return redirect('gestion_socios')
+    lista_socios = club.socios.all()
+    return render(request, 'gestion-socios.html', {'form':form, 'edicion':True, 'lista_socios':lista_socios})
