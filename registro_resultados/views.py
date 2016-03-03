@@ -132,8 +132,8 @@ def acceder_competencia(request, idCompetencia):
         return redirect('listado_competencias')
 
 @login_required
-def crear_participante(request, juego_id, competencia_id):
-    competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
+def crear_participante(request, competencia_id):
+    competencia = Competencia.objects.get(id=competencia_id)
     
     if competencia.tipos_participantes == 1:
         return redirect('datos_participante', competencia_id)
@@ -155,17 +155,54 @@ def eliminar_participante(request, competencia_id, participante_id):
     participante = Participante.objects.get(id=participante_id, competencia=competencia_id)
     participante.delete()
 
-    if request.session['puntos']:
+    if request.session['puntos']==0:
         return redirect('participante_puntos', competencia_id)
-    else:
+    elif request.session['puntos']==1:
         return redirect('participante_tiempos', competencia_id)
+    else:
+        return redirect('participante_equipo', competencia_id)
 
+
+@login_required
+def participante_equipo(request, competencia_id, equipo_id, participante_id=None):
+    competencia = Competencia.objects.get(id=competencia_id)
+    equipo = Equipo.objects.get(id=equipo_id)
+    participantes = Participante.objects.filter(competencia=competencia_id, equipo=equipo_id)
+
+    try:
+        participante = Participante.objects.get(id=participante_id)
+    except Exception:
+        participante = None
+
+
+    form = ParticipanteEquipoForm(competencia=competencia, instance=participante)
+
+    if request.method == "POST":
+
+        form = ParticipanteEquipoForm(request.POST, competencia=competencia, instance=participante)
+        if form.is_valid():
+            participante_nuevo = form.save(commit=False)
+            participante_nuevo.competencia = competencia
+            participante_nuevo.equipo = equipo
+            participante_nuevo.save()
+            messages.success(request, "Participante registrado correctamente.")
+            return redirect('participante_equipo', competencia_id, equipo_id)
+            
+    return render(request, 'wizard_info_juego/wizard_participantes_equipo.html', {
+        "form": form,
+        'wizard_stage': 1,
+        'participantes': participantes,
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id,
+        'equipo': equipo
+        
+    })
 
 @login_required
 def participante_puntos(request, competencia_id, participante_id=None):
     competencia = Competencia.objects.get(id=competencia_id)
     participantes = Participante.objects.filter(competencia=competencia_id)
-    request.session['puntos']=True
+    request.session['puntos']=0
 
     try:
         participante = Participante.objects.get(id=participante_id)
@@ -183,9 +220,9 @@ def participante_puntos(request, competencia_id, participante_id=None):
             participante_nuevo.competencia = competencia
             participante_nuevo.save()
             messages.success(request, "Participante registrado correctamente.")
-            return redirect('datos_participante', competencia_id)
+            return redirect('listar_individual', competencia_id)
             
-    return render(request, 'wizard_info_juego/wizard_participantes.html', {
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         "form": form,
         'wizard_stage': 1,
         'participantes': participantes,
@@ -199,8 +236,7 @@ def participante_puntos(request, competencia_id, participante_id=None):
 @login_required
 def participante_tiempos(request, competencia_id, participante_id=None):
     competencia = Competencia.objects.get(id=competencia_id)
-    participantes = Participante.objects.filter(competencia=competencia_id)
-    request.session['puntos']=False
+    request.session['puntos']=1
 
     try:
         participante = Participante.objects.get(id=participante_id)
@@ -218,23 +254,27 @@ def participante_tiempos(request, competencia_id, participante_id=None):
             participante_nuevo.competencia = competencia
             participante_nuevo.save()
             messages.success(request, "Participante registrado correctamente.")
-            return redirect('datos_participante', competencia_id)
+            return redirect('listar_individual', competencia_id)
             
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         "form": form,
         'wizard_stage': 1,
-        'participantes': participantes,
-        'individual': True,
-        'puntos': False,        
+        'individual': True,  
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id
         
     })
 
+
 @login_required
 def eliminar_equipo(request, competencia_id, participante_id):
-    Equipo.objects.get(id=participante_id, competencia=competencia_id)
-    participante.delete()
+    equipo = Equipo.objects.get(id=participante_id, competencia=competencia_id)
+    equipo.delete()
+
+    if request.session['puntos']:
+        return redirect('equipo_puntos', competencia_id)
+    else:
+        return redirect('equipo_tiempos', competencia_id)
 
 @login_required
 def datos_equipo(request, competencia_id):
@@ -245,47 +285,51 @@ def datos_equipo(request, competencia_id):
     elif competencia.tipo_registro == 2:
         return redirect('equipo_puntos', competencia_id)
         
-    
+
 @login_required
-def equipo_tiempos(request, competencia_id, equipo_id=None):
-    equipos = Equipo.objects.filter(competencia=competencia_id) or None
+def listar_participantes(request, competencia_id):
     competencia = Competencia.objects.get(id=competencia_id)
-    request.session['puntos']=False
     
-    try:
-        equipo = Equipo.objects.get(id=equipo_id)
-    except Exception:
-        equipo = None
+    if competencia.tipos_participantes == 1:
+        return redirect('listar_individual', competencia_id)
+    else:
+        return redirect('listar_equipos', competencia_id)
 
-
-    form = EquipoTiempoForm(instance=equipo)
-
-    if request.method == "POST":
-        form = EquipoTiempoForm(request.POST, instance=equipo)
-
-        if form.is_valid():
-            equipo_nuevo = form.save(commit=False)
-            equipo_nuevo.competencia = competencia
-            equipo_nuevo.save()
-            messages.success(request, "Equipo registrado correctamente.")
-
-            return redirect('datos_equipo', competencia_id)
+@login_required
+def listar_individual(request, competencia_id):
+    participantes = Participante.objects.filter(competencia=competencia_id) or None
+    competencia = Competencia.objects.get(id=competencia_id)
 
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
-        'form': form,
         'wizard_stage': 1,
-        'participantes': equipos,
+        'participantes': participantes,
         'competencia_id': competencia_id,
-        'juego_id': competencia.juego.id
+        'juego_id': competencia.juego.id,
+        'individual': True
 
 
     })
 
 @login_required
+def listar_equipos(request, competencia_id):
+    equipos = Equipo.objects.filter(competencia=competencia_id) or None
+    competencia = Competencia.objects.get(id=competencia_id)
+
+    return render(request, 'wizard_info_juego/wizard_participantes.html', {
+        'wizard_stage': 1,
+        'participantes': equipos,
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id,
+
+
+    })
+
+
+@login_required
 def equipo_puntos(request, competencia_id, equipo_id=None):
     equipos = Equipo.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
-    request.session['puntos']=True
+    request.session['puntos']=0
     
     try:
         equipo = Equipo.objects.get(id=equipo_id)
@@ -304,13 +348,46 @@ def equipo_puntos(request, competencia_id, equipo_id=None):
             equipo_nuevo.save()
             messages.success(request, "Equipo registrado correctamente.")
 
-            return redirect('datos_equipo', competencia_id)
+            return redirect('listar_equipos', competencia_id)
 
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         'form': form,
         'wizard_stage': 1,
         'puntos': True,
         'participantes': equipos,
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id
+
+
+    })
+    
+@login_required
+def equipo_tiempos(request, competencia_id, equipo_id=None):
+    competencia = Competencia.objects.get(id=competencia_id)
+    request.session['puntos']=1
+    
+    try:
+        equipo = Equipo.objects.get(id=equipo_id)
+    except Exception:
+        equipo = None
+
+
+    form = EquipoTiempoForm(instance=equipo)
+
+    if request.method == "POST":
+        form = EquipoTiempoForm(request.POST, instance=equipo)
+
+        if form.is_valid():
+            equipo_nuevo = form.save(commit=False)
+            equipo_nuevo.competencia = competencia
+            equipo_nuevo.save()
+            messages.success(request, "Equipo registrado correctamente.")
+
+            return redirect('listar_equipos', competencia_id)
+
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
+        'form': form,
+        'wizard_stage': 1,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id
 

@@ -11,7 +11,11 @@ urlpatterns = patterns('registro_resultados.views',
     url(r'(\d+)/competencia/(\d+)/eliminar$', 'eliminar_competencia', name='eliminar_competencia'),
     url(r'(\d+)/listado-competencias$', 'listado_competencias', name='listado_competencias'),
     
-    url(r'^(\d+)/competencia/(\d+)/crear-participante/', 'crear_participante', name='crear_participante'),
+    url(r'^competencia/(\d+)/crear-participante/', 'crear_participante', name='crear_participante'),
+    url(r'^competencia/(\d+)/listar-participantes/', 'listar_participantes', name='listar_participantes'),
+
+    url(r'^competencia/(\d+)/listar-individual/', 'listar_individual', name='listar_individual'),
+    url(r'^competencia/(\d+)/listar-equipos/', 'listar_equipos', name='listar_equipos'),
 
     url(r'^competencia/(\d+)/datos-participante$', 'datos_participante', name='datos_participante'),
     url(r'^competencia/(\d+)/participante-tiempos$', 'participante_tiempos', name='participante_tiempos'),
@@ -32,4 +36,9 @@ urlpatterns = patterns('registro_resultados.views',
     url(r'^categorias/get/(\d+)$','get_categorias',name='registro_get_categorias'),
 
     url(r'^acceder-competencia/(\d+)$', 'acceder_competencia', name='acceder_competencia'),
+
+    
+    url(r'^competencia/(\d+)/equipo/(\d+)/participantes$', 'participante_equipo', name='participante_equipo'),
+
+    url(r'^competencia/(\d+)/equipo/(\d+)/participantes(\d+)$', 'participante_equipo', name='participante_equipo'),
 )

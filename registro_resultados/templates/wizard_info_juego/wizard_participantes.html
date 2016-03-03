@@ -35,27 +35,18 @@
 {% block contenido_panel %}
   {% include 'wizard_info_juego/_wizard.html' %}
   <div class="row">
-    <div class="col-md-4">
-      <fieldset>
-        <form id="form-wizard-participantes" action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-          <div class="well row">
-            <div class="col-xs-12">
-              <h4>{% if individual %}Ingrese Datos del Participante {% else %}Ingrese Datos del Equipo {% endif %}</h4>
-              <br>
-              {% for field in form %}
-                  <div class="col-md-6">
-                      
-                      {% bootstrap_field field layout="vertical" %}
-                  </div>
-              {% endfor %}
-            </div>
-            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-save"></i> Guardar</button>
-          </div>
-        </form>
-      </fieldset>
+    <div class="email-btn-row col-md-12">      
+      <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-inverse pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
+
+      <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-plus m-r-5"></i>{% if not individual %} Crear Equipo {% else %} Crear Participante{% endif %}</a>
+
+      <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-inverse pull-right"><i class="fa fa-arrow-right m-r-5"></i> Siguiente</a>
+      
     </div>
-    <div class="col-md-8">
+  </div>
+  <br>  
+  <div class="row">    
+    <div class="col-md-12">
       <fieldset>
         <div class="well row">
           <div class="table-responsive">
@@ -91,12 +82,12 @@
                             {% if not puntos %}<td>{{participante.tiempo}}</td>{% endif %}
                             <td>
                               {% if not individual %}
-                                <a href=''>
+                                <a href='{% url "participante_equipo" competencia_id participante.id  %}'>
                                     <i class="fa fa-check"></i> Registrar Integrantes
                                 </a><br>
                               {% endif %}
 
-                              {% if not indiviual %}
+                              {% if indiviual %}
                                 {% if puntos %}
                                   <a href='{% url "participante_puntos" competencia_id participante.id %}'>
                                       <i class="fa fa-edit"></i> Modificar

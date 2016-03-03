@@ -71,6 +71,20 @@ class ParticipantePuntosForm(forms.ModelForm):
             'fecha_nacimiento': MyDateWidget(),
         }
 
+class ParticipanteEquipoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        competencia = kwargs.pop('competencia')
+        super(ParticipanteEquipoForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+    
+    class Meta:
+        model = Participante
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'puntos', 'posicion')
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
+
 class EquipoTiempoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EquipoTiempoForm, self).__init__(*args, **kwargs)
