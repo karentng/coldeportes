@@ -7,6 +7,10 @@ from solicitudes_escenarios.solicitud.forms import DiscusionForm
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
+import zipfile
+from io import StringIO
+import os
+from coldeportes.settings import MEDIA_ROOT
 
 # Create your views here.
 @login_required
@@ -190,3 +194,39 @@ def enviar_respuesta(request,id,id_ent):
         connection.set_tenant(yo)
         messages.error(request,'Tu respuesta no se ha podido enviar por un error en el formulario, intenta de nuevo')
         return redirect('responder_solicitud',solicitud.id,entidad.id)
+
+def descargar_todos_adjuntos(request,id_sol,id_ent):
+    try:
+        lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id_sol))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_respuesta')
+
+    yo = request.tenant
+    entidad = lista.entidad_solicitante
+    connection.set_tenant(entidad)
+
+    adj = AdjuntoSolicitud.objects.filter(solicitud=id_sol)
+    zip = comprimir_archivos(adj)
+
+    response = HttpResponse(zip,content_type="application/x-zip-compressed")
+    response['Content-Disposition'] = 'attachment; filename=zip_adj.zip'
+    response['X-Sendfile'] = 'zip_adj.zip'
+    #borrar archivo zip
+
+    connection.set_tenant(yo)
+
+    return response
+
+
+def comprimir_archivos(query):
+    s = StringIO()
+    #zip_file = zipfile.ZipFile(s, 'w') #Se crea el archivo .zip
+    zip_file = zipfile.ZipFile(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/zip_adj.zip', 'w') #Se crea el archivo .zip
+    for f in query:
+        #zip_file.write(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/'+f.nombre_archivo(),os.path.join('zip', f.nombre_archivo()))
+        zip_file.write(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/'+f.nombre_archivo())
+
+    zip_file.close()
+    return zip_file
+    #return s

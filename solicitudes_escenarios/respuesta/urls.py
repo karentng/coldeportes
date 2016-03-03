@@ -8,6 +8,6 @@ urlpatterns = patterns('solicitudes_escenarios.respuesta.views',
     url(r'^descargar/(\d+)/(\d+)/(\d+)$', 'descargar_adjunto', name='descargar_adjunto_respuesta'),
     url(r'^responder/(\d+)/(\d+)$', 'responder_solicitud', name='responder_solicitud'),
     url(r'^comentar/(\d+)/(\d+)$', 'enviar_respuesta', name='enviar_respuesta'),
-
+    url(r'^descargar-todos/(\d+)/(\d+)$', 'descargar_todos_adjuntos', name='descargar_todos_adjuntos_respuesta'),
 
 )
