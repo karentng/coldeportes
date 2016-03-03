@@ -729,13 +729,14 @@ class Liga(ResolucionReconocimiento):
 
 class Club(ResolucionReconocimiento):
     TIPOS_CLUBES = (
-        (1, "Deportivo"),
-        (2, "Promotor"),
-        (3, "Profesional"),
+        (0, "Deportivo"),
+        (1, "Promotor"),
+        (2, "Profesional"),
     )
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
+    tipo_club = models.IntegerField(choices=TIPOS_CLUBES, default=0)
 
     def obtener_padre(self):
         return self.liga
