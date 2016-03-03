@@ -770,7 +770,8 @@ class Club(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'disponible_para_transferencias' : self.disponible_para_transferencias(),
+            'planes_de_costo': self.planes_de_costo.all()
         }
         return entidad
 
