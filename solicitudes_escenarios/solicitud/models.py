@@ -60,6 +60,9 @@ class AdjuntoSolicitud(models.Model):
     archivo = models.FileField(upload_to="adjuntos_adecuacion_escenarios",verbose_name='Archivo a adjuntar')
     discucion = models.ForeignKey(DiscucionSolicitud,null=True,blank=True)
 
+    def __str__(self):
+        return self.nombre_archivo()
+
     def nombre_archivo(self):
         return os.path.basename(self.archivo.name)
 

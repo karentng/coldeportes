@@ -15,9 +15,42 @@
     <li>Ver</li>
 {% endblock %}
 
+{% block css %}
+    <!--link href="{{ STATIC_URL }}plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" /-->
+    {{ form_comentarios.media }}
+{% endblock %}
+
 {% block js %}
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <!--script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/vendor/tmpl.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/vendor/load-image.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/vendor/canvas-to-blob.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/blueimp-gallery/jquery.blueimp-gallery.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.fileupload-audio.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.fileupload-video.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
+    <script src="{{ STATIC_URL }}plugins/jquery-file-upload/js/jquery.fileupload-ui.js"></script>
+    <script src="{{ STATIC_URL }}js/form-multiple-upload.demo.min.js"></script-->
+
+
 {% endblock %}
+{% comment %}
+{% block script %}
+    <!--script>
+		$(document).ready(function() {
+			App.init();
+			FormMultipleUpload.init();
+		});
+	</script-->
+{% endblock %}
+{% endcomment %}
 
 {% block titulo_panel %}
     Solicitud Escenarios
@@ -161,9 +194,14 @@
                         {% if responder and solicitud.estado == 0 %}
                         <div class="row">
                             <h5><strong>Responder</strong></h5>
-                            <form action="" method="post">
-
+                            <form action="{% url 'enviar_respuesta' solicitud.id solicitud.entidad_solicitante.id  %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
                                 <div class="input-group">
+                                    <div class="form-group">
+                                        <label class="control-label" for="adjuntos">Adjuntar archivos: </label>
+                                        <input type="file" name="adjuntos" id="adjuntos" multiple><br>
+                                        <p><strong>Nota:</strong> Puede seleccionar varios archivos.</p>
+                                    </div>
                                     {% bootstrap_form form_comentarios %}
                                     <span class="pull-right">
                                         <br>

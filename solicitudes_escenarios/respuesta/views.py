@@ -121,7 +121,7 @@ def descargar_adjunto(request,id_sol,id_adj,id_ent):
         adj = AdjuntoSolicitud.objects.get(solicitud=id_sol,id=id_adj)
     except:
         messages.error(request,'No existe el archivo adjunto solicitado')
-        return redirect('listar_solicitudes')
+        return redirect('listar_solicitudes_respuesta')
 
     response = HttpResponse(adj.archivo.read(),content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adj.nombre_archivo())
@@ -134,7 +134,9 @@ def descargar_adjunto(request,id_sol,id_adj,id_ent):
 def responder_solicitud(request,id,id_ent):
     """
     Marzo 2, 2016
-    Autor: Permite cargar la plantilla de respuestas de solicitudes
+    Autor:Daniel Correa
+
+    Permite cargar la plantilla de respuestas de solicitudes
 
     """
     solicitud,discusiones = obtener_datos_solicitud(request,id,id_ent)
@@ -149,3 +151,42 @@ def responder_solicitud(request,id,id_ent):
         'form_comentarios' : form,
         'responder' : True
     })
+
+@login_required
+def enviar_respuesta(request,id,id_ent):
+    """
+    Marzo 2, 2016
+    Autor: Daniel Correa
+
+    Permite enviar la respuesta de una solicitud
+    """
+    if request.method == 'POST':
+
+        try:
+            lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id))
+        except:
+            messages.error(request,'No existe la solcitud')
+            return redirect('listar_solicitudes_respuesta')
+
+        yo = request.tenant
+        entidad = lista.entidad_solicitante
+        connection.set_tenant(entidad)
+        solicitud = SolicitudEscenario.objects.get(id=id)
+        form = DiscusionForm(request.POST)
+        if form.is_valid():
+            dis = form.save(commit=False)
+            dis.solicitud = solicitud
+            dis.estado_anterior = solicitud.estado
+            dis.entidad = yo
+            dis.save()
+            for afile in request.FILES.getlist('adjuntos'):
+                 AdjuntoSolicitud(solicitud = solicitud,archivo=afile,discucion = dis).save()
+            solicitud.estado = dis.estado_actual
+            solicitud.save()
+            connection.set_tenant(yo)
+            messages.success(request,'Su respuesta ha sido enviada con exito')
+            return redirect('ver_solicitud_respuesta',solicitud.id,entidad.id)
+
+        connection.set_tenant(yo)
+        messages.error(request,'Tu respuesta no se ha podido enviar por un error en el formulario, intenta de nuevo')
+        return redirect('responder_solicitud',solicitud.id,entidad.id)
