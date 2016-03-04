@@ -108,6 +108,7 @@ def cambiar_estado_clasificado(request, id_clasificado):
 @login_required
 def crop_pic(request):
     import os
+    from django.conf import settings
     response_data = {"status": "error", 'message': 'Only Post Accepted'}
     if request.method == 'POST':
 
@@ -122,10 +123,9 @@ def crop_pic(request):
                     image_path = re.sub('^data:image/.+;base64,', '', image_url)
                     original = Image.open(BytesIO(base64.b64decode(image_path)))
                 else:
-                    image_path = image_url
-                    script_dir = os.path.dirname(os.path.abspath(__file__))
-                    print(script_dir)
-                    original = Image.open(script_dir+"/.."+image_path)
+                    image_path = image_url.replace("media/", "")
+
+                    original = Image.open(settings.MEDIA_ROOT+image_path)
 
                 newim = original.resize(
                             (int(form.cleaned_data['imgW']), int(form.cleaned_data['imgH'])),
@@ -141,12 +141,13 @@ def crop_pic(request):
                 newim = newim.crop((x1, y1, x2, y2))
                 nombre_tiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S");
                 url_media = request.POST.get("url_media")
-                print(url_media)
-                newim.save("media/"+url_media+str(nombre_tiempo)+".png", "PNG")
+                print(settings.MEDIA_ROOT)
+                nombre_imagen = url_media+str(nombre_tiempo)+".png"
+                newim.save(settings.MEDIA_ROOT+nombre_imagen, "PNG")
 
                 response_data = {
                     "status": "success",
-                    "url": url_media+str(nombre_tiempo)+".png",
+                    "url": nombre_imagen,
                     "message": "ok",
                     }
 
