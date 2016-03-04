@@ -335,6 +335,7 @@ class DeporteForm(ModelForm):
         exclude = ('',)
 
 class SocioClubForm(ModelForm):
+    required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
         super(SocioClubForm, self).__init__(*args, **kwargs)

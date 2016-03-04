@@ -803,12 +803,12 @@ def mostrar_gestion_socios(request):
         else:
             club = request.tenant.obtenerTenant()
             lista_socios = club.socios.all()
-            return render(request, 'gestion-socios.html', {'form':form, 'lista_socios':lista_socios})
+            return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
     else:
         club = request.tenant.obtenerTenant()
         lista_socios = club.socios.all()
         form = SocioClubForm()
-        return render(request, 'gestion-socios.html', {'form':form, 'lista_socios':lista_socios})
+        return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
 
 
 def desactivar_socio(request, id_socio):
@@ -860,4 +860,4 @@ def editar_socio(request, id_socio):
         else:
             return redirect('gestion_socios')
     lista_socios = club.socios.all()
-    return render(request, 'gestion-socios.html', {'form':form, 'edicion':True, 'lista_socios':lista_socios})
+    return render(request, 'gestion_socios.html', {'form':form, 'edicion':True, 'lista_socios':lista_socios})
