@@ -10,7 +10,7 @@
                 <a href="{% url 'nueva_entrada_manual' %}">Registrar Artículo</a>
             </li>
         {% endif %} 
-        <li {% if "" in request.path %} class="active" {% endif %}>
+        <li {% if "/manual/listar" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_manual' %}">Listar</a>
         </li>
     </ul>
