@@ -60,6 +60,10 @@ def obtener_datos_solicitud(request,id,id_ent):
     solicitud.adjuntos = array
 
     discusiones = DiscucionSolicitud.objects.filter(solicitud=id)
+    for d in discusiones:
+        d.estado_actual = d.get_estado_actual_display()
+        d.entidad_nombre = d.entidad.nombre
+    discusiones = [d.__dict__ for d in discusiones]
     connection.set_tenant(yo)
 
     return solicitud,discusiones
@@ -182,6 +186,7 @@ def enviar_respuesta(request,id,id_ent):
             dis.solicitud = solicitud
             dis.estado_anterior = solicitud.estado
             dis.entidad = yo
+            dis.respuesta = True
             dis.save()
             for afile in request.FILES.getlist('adjuntos'):
                  AdjuntoSolicitud(solicitud = solicitud,archivo=afile,discucion = dis).save()

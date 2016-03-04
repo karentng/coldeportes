@@ -54,6 +54,7 @@ class DiscucionSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudEscenario)
     fecha = models.DateTimeField(auto_now=True)
     entidad = models.ForeignKey(Entidad)
+    respuesta = models.BooleanField()
 
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudEscenario)
