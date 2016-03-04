@@ -1,5 +1,6 @@
 from django.db import models
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
+from entidades.models import TIPOS
 # Create your models here.
 class Articulo(models.Model):
 
@@ -25,8 +26,8 @@ class Articulo(models.Model):
 
     titulo =  models.CharField(max_length=100,unique=True, verbose_name="título del artículo")
     orden = models.FloatField()
-    subtitulo = models.CharField(max_length=100, verbose_name="subtítulo del artículo")
     palabras_clave = models.CharField(max_length=1024, verbose_name='palabras clave')
-    modulo = models.CharField(choices=MODULOS, max_length=2)
+    modulo = models.CharField(choices=MODULOS, max_length=2, verbose_name="módulo")
+    entidad = models.IntegerField(choices=TIPOS)
     usuario = models.CharField(choices=USUARIOS, max_length=2)
-    contenido = RichTextField(config_name='default', verbose_name=" ")
+    contenido = RichTextUploadingField(config_name='default', verbose_name=" ")
