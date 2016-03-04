@@ -84,7 +84,11 @@
                             </div>
                             <div class="result-info">
                                 <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>
-                                <a href="" data-target="#modal-socios" data-toggle="modal" class="pull-right"> <i class="fa fa-group"></i> Ver socios del club</a>
+                                {% if entidad.tipo_tenant == "Club" %}
+                                    <a href="" data-target="#modal-socios" data-toggle="modal" class="pull-right"> <i class="fa fa-group"></i> Ver socios del club</a>                                
+                                    <a data-toggle="modal" data-target="#modal-planes" class="pull-right" href=""><i class="fa fa-money"></i> Ver planes de costos</a>
+                                {% endif %}
+
                                 <p class="location">{{ entidad.tipo_tenant }} {% if entidad.disciplina %} de {{ entidad.disciplina }}{% endif %}</p>
                                 <p class="desc">
                                     {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
@@ -109,6 +113,45 @@
                 </div>
             </div>
         </div>
+        {% if entidad.tipo_tenant == "Club" %}
+            <!-- Modal información planes de costos del club -->
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modal-planes">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Planes de costos de {{ entidad.nombre | upper }}</h4>
+                        </div>
+                        <div >
+                            <div class="table-responsive col-md-10 col-md-offset-1 p-t-15">
+                                <table id="tabla-plan-costo" class="table table-bordered table-striped" cellspacing="0" width="100%">
+                                    <thead>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Descripción</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for plan in entidad.planes_de_costo %}
+                                            {% if plan.estado == 1 %}
+                                                <tr>
+                                                    <td>{{ plan.nombre }}</td>
+                                                    <td>{{ plan.precio }}</td>
+                                                    <td>{{ plan.descripcion }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
     {% endif %}
 
     <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->

@@ -346,3 +346,17 @@ class SocioClubForm(ModelForm):
     class Meta:
         model = SocioClub
         exclude = ('estado',)
+        
+        
+#Formulario Planes de Costo de un club.
+#Autor: Yalile Bermudes
+#Fecha: 02/03/2016
+class PlanDeCostoForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(PlanDeCostoForm, self).__init__(*args, **kwargs)
+        self.fields['precio'].widget.attrs.update({'min':0})
+
+    class Meta:
+        model = PlanesDeCostoClub
+        exclude = ('estado', )
