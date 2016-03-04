@@ -3,8 +3,8 @@
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="">Registro de Resultados</a>
-    <li class="active">Registro de Competencia</li>
+    <li><a href="{% url 'listado_competencias' juego_id %}">Listado de Competencias</a>
+    <li class="active">Registro de Resultados</li>
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -16,36 +16,114 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
-    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+  <script type="text/javascript">
+    idTabla = "tabla-entidades";
+  </script>
+  <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+  <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+  <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+
 {% endblock %}
 
 {% block css %}
-    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-    
-    {{form.media}} {# js y css para datetime #}
+  <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+  <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+  
+  {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block contenido_panel %}
-    {% include 'wizard_info_juego/_wizard.html' %}
+  {% include 'wizard_info_juego/_wizard.html' %}
+  <div class="row">
+    <div class="email-btn-row col-md-12">      
+      <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-inverse pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
 
-    <fieldset>
-        <form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class="well row">
-                <div class="col-xs-12">
-                    <h3>{{titulo}}</h3>
-                    
-                    {% for field in form %}
-                        <div class="col-md-6">
-                            
-                            {% bootstrap_field field layout="vertical" %}
-                        </div>
-                    {% endfor %}
-                </div>
+      <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-plus m-r-5"></i>{% if not individual %} Crear Equipo {% else %} Crear Participante{% endif %}</a>
+
+      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-inverse pull-right"><i class="fa fa-arrow-right m-r-5"></i> Siguiente</a>
+      
+    </div>
+  </div>
+  <br>  
+  <div class="row">    
+    <div class="col-md-12">
+      <fieldset>
+        <div class="well row">
+          <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Departamento</th>
+                            <th>Posición</th>
+                            {% if individual %}<th>Club</th>{% endif %}
+                            {% if puntos %}<th>Puntos</th>{% endif %}
+                            {% if not puntos %}<th>Marca</th>{% endif %}
+                            {% if not puntos %}<th>Tiempo</th>{% endif %}
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participante in participantes %}
+                        <tr>
+                            <td>{{participante.nombre}}</td>
+                            <td>{{participante.departamento}}</td>
+                            <td>{{participante.posicion}}</td>
+                            {% if individual %}<td>{{participante.club}}</td>{% endif %}
+                            {% if puntos %}<td>{{participante.puntos}}</td>{% endif %}
+
+                            {% if not puntos %}
+                              {% if participante.marca %}
+                                <td>{{participante.marca}}</td>
+                              {% else %}
+                                <td> -- </td>
+                              {% endif %}
+                            {% endif %}
+                            {% if not puntos %}<td>{{participante.tiempo}}</td>{% endif %}
+                            <td>
+                              {% if indiviual %}
+                                {% if puntos %}
+                                  <a href='{% url "participante_puntos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% else %}
+                                  <a href='{% url "participante_tiempos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% endif %}
+                                <a href='{% url "eliminar_participante" competencia_id participante.id %}'>
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </a><br>
+
+                              {% else %}
+                                <a href='{% url "participante_equipo" competencia_id participante.id  %}'>
+                                    <i class="fa fa-check"></i> Registrar Integrantes
+                                </a><br>
+                                {% if puntos %}
+                                  <a href='{% url "equipo_puntos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% else %}
+                                  <a href='{% url "equipo_tiempos" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                {% endif %}
+                                <a href='{% url "eliminar_equipo" competencia_id participante.id %}'>
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </a><br>
+                              {% endif %}
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <hr>
-            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
-        </form>
-    </fieldset>                        
+        </div>
+      </fieldset>
+        
+    </div>
+  </div>
+                            
                     
 {% endblock %}

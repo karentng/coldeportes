@@ -27,11 +27,14 @@
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
 {% endblock %}
 
-{% block botones_panel %}
-    <a href="{% url 'datos_competencia' juego_id %}" class="btn btn-warning btn-xs "><i class="fa fa-plus"></i> Nueva Competencia</a>
-{% endblock %}
-
 {% block contenido_panel %}
+<div class="row">
+    <div class="email-btn-row col-md-12">
+
+      <a href="{% url 'datos_competencia' juego_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-plus m-r-5"></i> Nueva Competencia</a>
+      
+    </div>
+</div>
     <div class="row">
         <div class="col-sm-12">
             <div class="table-responsive">
@@ -65,7 +68,7 @@
                             <td>{%if competencia.modalidad %}{{competencia.modalidad}}{% else %}No registra{% endif %}</td>
                             <td>{{competencia.descripcion}}</td>
                             <td>
-                                <a href='{% url 'crear_participante' juego_id competencia.id %}'>
+                                <a href='{% url 'listar_participantes' competencia.id %}'>
                                     <i class="fa fa-check"></i> Ingresar Resultados
                                 </a><br>
                                 <a href='{% url 'datos_competencia' juego_id competencia.id %}'>
