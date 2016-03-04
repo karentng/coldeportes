@@ -734,7 +734,7 @@ class PlanesDeCostoClub(models.Model):
     )
     nombre=models.CharField(max_length=200)
     precio=models.IntegerField()
-    descripcion = models.CharField(max_length=600)
+    descripcion = models.TextField(max_length=600, verbose_name="Descripción")
     estado =models.IntegerField(choices=ESTADO, default=1)
 
     def __str__(self):

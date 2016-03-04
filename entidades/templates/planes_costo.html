@@ -12,29 +12,33 @@
 {% endblock %}
 
 {% block titulo_panel%}
-    Planes de Costo
+    Planes de costo
 {% endblock %}
 
 {% block contenido_panel %}
     <div class="row">
-        <div class="col-md-6" >
-            <form class="form-horizontal" method="post" action="">{% csrf_token %}
+        <div class="col-md-3" >
+
+            <form class="form-horizontal" method="post" action="" id="plan-de-costo-form">{% csrf_token %}
                 <div class="col-md-10 col-md-offset-1">
                     {% if edicion %}
-                        <h3 >Editar Plan</h3>
+                        <h3 >Editar plan de costo</h3>
                     {% else %}
-                    <h3 >Registrar Plan</h3>
+                        <h3 >Registrar plan de costo</h3>
                     {% endif %}
+
                     {% bootstrap_form form layout="vertical" %}
+
                     <button class="pull-right btn btn-primary" type="submit"><i class="fa fa-plus"></i> Añadir</button>
                 </div>
             </form>
+
         </div>
         <br>
-        <div class="col-md-6">
-            <h3 >Planes Registrados</h3>
+        <div class="col-md-9">
+            <h3 >Planes registrados</h3>
             <div class="table-responsive">
-                <table id="tabla-plan-costo" class="table table-bordered table-striped" cellspacing="0" width="100%">
+                <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                     <thead>
                         <th>Nombre</th>
                         <th>Precio</th>
@@ -56,15 +60,14 @@
                                 {% endif %}
 
                                 <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="dropdown" class="btn btn-success dropdown-toggle">Acción <span class="caret"></span></button>
-                                        <ul class="dropdown-menu">
-                                            {% if user.is_authenticated %}
-                                                <li><a href="{% url 'editar_plan_de_costo' plan.id %}">Editar</a></li>
-                                                <li><a data-toggle="modal" data-target="#modal-estado{{ plan.id }}" href="" class="font-bold">Cambiar estado</a></li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
+
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'editar_plan_de_costo' plan.id %}"><i class="fa fa-gear"></i> Modificar</a>
+                                        <br>
+                                        <a data-toggle="modal" data-target="#modal-estado{{ plan.id }}" href="" ><i class="fa fa-refresh"></i> Activar/Desactivar</a>
+                                    {% endif %}
+
+
                                 </td>
                             </tr>
                             <!-- Modal -->
@@ -90,4 +93,21 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block js %}
+    <script src="{{ STATIC_URL }}js/validaciones/entidad/validacion-plan-costo.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
+    <script type="text/javascript">
+        if ($('#data-table').length !== 0) {
+            $('#data-table').DataTable({
+                dom: 'T<"clear">lfrtip',
+                tableTools: {
+                    "sSwfPath": "{{STATIC_URL}}"+"plugins/DataTables/swf/copy_csv_xls_pdf.swf"
+                }
+            });
+        }
+
+    </script>
 {% endblock %}
