@@ -35,8 +35,7 @@ class Competencia(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Disciplina Deportiva')
     categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría')
     modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad de competencia')
-    sets = models.BooleanField(verbose_name="¿Requiere el registro de varios sets?")
-    descripcion = models.TextField(null=True, blank=True)
+    descripcion = models.TextField(null=True, blank=True, verbose_name='descripción')
     juego = models.ForeignKey(Juego)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
