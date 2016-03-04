@@ -890,7 +890,7 @@ def editar_socio(request, id_socio):
         return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
     
     
-    @login_required
+@login_required
 @user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
 def crear_plan_de_costo(request):
     """
