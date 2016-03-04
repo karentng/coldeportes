@@ -10,14 +10,14 @@
         <a class="hidden-phone">
             <a {% if escenario_id %} href="{% url 'wizard_caracterizacion' escenario_id %}" style="cursor:pointer;"{% endif %}>
                 
-                Resultados<small>Marcas, Tiempos, Posiciones, Puntos, etc.</small>
+                Medallería <small>Medallería final de la competencia</small>                
             </a>
         </a>
     </li>
     <li role="tab"  {% if wizard_stage >= 3 %} aria-selected="true" class="active" {% endif %} style="z-index: 5;"><span class="label">3</span>
         <a class="hidden-phone">
             <a {% if escenario_id %}href="{% url 'wizard_horarios' escenario_id %}" style="cursor:pointer;" {% endif %}>
-                Medallería <small>Medallería final de la competencia</small>
+                Cargar Archivos<small>Registrar datos masivamente</small>
             </a>
         </a>
     </li>
