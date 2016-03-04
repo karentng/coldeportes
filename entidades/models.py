@@ -736,9 +736,9 @@ class SocioClub(models.Model):
     )
 
     tipo_documento = models.CharField(max_length=5, choices=TIPO_IDENTIDAD, verbose_name="Tipo de identificación")
-    numero_documento = models.CharField(max_length=20, verbose_name="Número de Documento", unique=True)
-    nombre = models.CharField(max_length=255, verbose_name="Nombre")
-    apellido = models.CharField(max_length=255, verbose_name="Apellido")
+    numero_documento = models.CharField(max_length=20, verbose_name="Número de documento", unique=True)
+    nombre = models.CharField(max_length=255, verbose_name="Nombres")
+    apellido = models.CharField(max_length=255, verbose_name="Apellidos")
     correo = models.EmailField(max_length=255, blank=True, verbose_name="Correo electrónico")
     ciudad = models.ForeignKey(Ciudad)
     empresa = models.CharField(max_length=255, blank=True, verbose_name="Empresa")

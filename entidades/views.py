@@ -1,5 +1,5 @@
 import os
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from entidades.models import *
 from entidades.forms import *
@@ -779,6 +779,8 @@ def crear_editar_dep(request,id=None):
         'url' : 'listar_deportes'
     })
 
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
 def mostrar_gestion_socios(request):
     """
     Marzo 02 / 2016
@@ -791,7 +793,6 @@ def mostrar_gestion_socios(request):
     :param request:        Petición realizada
     :type request:         WSGIRequest
     """
-
     if request.method == 'POST':
         form = SocioClubForm(request.POST)
         if form.is_valid():
@@ -801,6 +802,7 @@ def mostrar_gestion_socios(request):
             messages.success(request, "Socio registrado correctamente.")
             return redirect('gestion_socios')
         else:
+            messages.error(request, 'Algunos datos no son válidos.')
             club = request.tenant.obtenerTenant()
             lista_socios = club.socios.all()
             return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
@@ -811,6 +813,8 @@ def mostrar_gestion_socios(request):
         return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
 
 
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
 def desactivar_socio(request, id_socio):
     """
     Marzo 02 / 2016
@@ -828,36 +832,59 @@ def desactivar_socio(request, id_socio):
     try:
         club = request.tenant.obtenerTenant()
         socio = club.socios.get(id=id_socio)
-        if socio.estado:
-            socio.estado = False
-            messages.success(request, ("El socio %s ha sido desactivado")%(socio.nombre))
-        else:
-            socio.estado = True
-            messages.success(request, ("El socio %s ha sido activado")%(socio.nombre))
-        socio.save()
-
-        return redirect('gestion_socios')
-    except Exception:
+    except:
+        messages.error(request, 'No se pudo encontrar el socio.')
         return redirect('gestion_socios')
 
+    if socio.estado:
+        socio.estado = False
+        messages.success(request, ("El socio %s ha sido desactivado.")%(socio.nombre+" "+socio.apellido))
+    else:
+        socio.estado = True
+        messages.success(request, ("El socio %s ha sido activado.")%(socio.nombre+" "+socio.apellido))
+    socio.save()
+    return redirect('gestion_socios')
 
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
 def editar_socio(request, id_socio):
+    """
+    Marzo 03 / 2016
+    Autor: Diego Monsalve
+
+    Editar información de un socio
+
+    Permite actualizar la información de un socio
+
+    :param request:     Petición realizada
+    :type request:      WSGIRequest
+    :param id_socio:    Identificador del socio
+    :type id_socio:     String
+    """
     try:
         club = request.tenant.obtenerTenant()
         socio = club.socios.get(id=id_socio)
     except:
+        messages.error(request, 'No se pudo encontrar el socio.')
         return redirect('gestion_socios')
 
-    form = SocioClubForm(instance=socio)
 
-    if request.method=='POST':
+    if request.method == 'POST':
         form = SocioClubForm(request.POST, instance=socio)
         if form.has_changed():
             if form.is_valid():
                 form.save()
                 messages.success(request, "Datos actualizados correctamente.")
                 return redirect('gestion_socios')
+            else:
+                messages.error(request, 'Algunos datos no son válidos.')
+                club = request.tenant.obtenerTenant()
+                lista_socios = club.socios.all()
+                return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
         else:
             return redirect('gestion_socios')
-    lista_socios = club.socios.all()
-    return render(request, 'gestion_socios.html', {'form':form, 'edicion':True, 'lista_socios':lista_socios})
+    else:
+        form = SocioClubForm(instance=socio)
+        lista_socios = club.socios.all()
+        return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
