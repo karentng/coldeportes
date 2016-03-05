@@ -46,4 +46,16 @@ class DiscusionForm(ModelForm):
 
     class Meta:
         model = DiscucionSolicitud
-        exclude = ('solicitud','estado_anterior','fecha','entidad')
+        exclude = ('solicitud','estado_anterior','fecha','entidad','respuesta',)
+
+class EditarForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(EditarForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['descripcion'].widget.attrs['style'] = 'resize:none;'
+
+    class Meta:
+        model = DiscucionSolicitud
+        exclude = ('solicitud','estado_anterior','fecha','entidad','estado_actual','respuesta',)

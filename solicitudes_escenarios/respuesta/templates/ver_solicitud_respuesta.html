@@ -131,14 +131,16 @@
                                     {% endfor %}
 
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td><a href="{% url 'descargar_todos_adjuntos_respuesta' solicitud.id solicitud.entidad_solicitante.id %}"><i class="fa fa-cloud-download"></i> Descargar todos los adjuntos</a></td>
-                                        </tr>
+                                    {% if solicitud.adjuntos %}
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td><a href="{% url 'descargar_todos_adjuntos_respuesta' solicitud.id solicitud.entidad_solicitante.id %}"><i class="fa fa-cloud-download"></i> Descargar todos los adjuntos</a></td>
+                                            </tr>
 
-                                    </tfoot>
+                                        </tfoot>
+                                    {% endif %}
                                 </table>
                                 {% if not solicitud.adjuntos %}
                                     <p align="center">No hay adjuntos registrados</p>

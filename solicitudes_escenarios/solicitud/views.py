@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from solicitudes_escenarios.solicitud.forms import SolicitudEscenarioForm,AdjuntoSolicitudForm
+from solicitudes_escenarios.solicitud.forms import SolicitudEscenarioForm,AdjuntoSolicitudForm,EditarForm
 from solicitudes_escenarios.respuesta.models import ListaSolicitudes
 from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud,DiscucionSolicitud
 from django.db import connection
@@ -233,3 +233,64 @@ def descargar_adjunto(request,id_sol,id_adj):
     response['X-Sendfile'] = smart_str(adj.archivo)
     return response
 
+@login_required
+def editar_solicitud(request,id):
+    """
+    Marzo 5, 2016
+    Autor:Daniel Correa
+
+    Permite cargar la plantilla de edicion de solicitudes
+
+    """
+    try:
+        solicitud = SolicitudEscenario.objects.get(id=id)
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes')
+
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
+    form = EditarForm()
+
+    return render(request,'ver_solicitud.html',{
+        'solicitud' : solicitud,
+        'discusiones' : discusiones,
+        'form_comentarios' : form,
+        'responder' : True
+    })
+
+@login_required
+def enviar_comentario(request,id):
+    """
+    Marzo 5, 2016
+    Autor: Daniel Correa
+
+    Permite volver a enviar la solicitud completa
+    """
+    if request.method == 'POST':
+
+        try:
+            solicitud = SolicitudEscenario.objects.get(id=id)
+        except:
+            messages.error(request,'No existe la solcitud')
+            return redirect('listar_solicitudes')
+
+
+        form = EditarForm(request.POST)
+        if form.is_valid():
+            dis = form.save(commit=False)
+            dis.solicitud = solicitud
+            dis.estado_anterior = solicitud.estado
+            dis.estado_actual = 0
+            dis.entidad = request.tenant
+            dis.respuesta = False
+            dis.save()
+            for afile in request.FILES.getlist('adjuntos'):
+                 AdjuntoSolicitud(solicitud = solicitud,archivo=afile,discucion = dis).save()
+            solicitud.estado = dis.estado_actual
+            solicitud.save()
+            messages.success(request,'La solicitud se ha reenviado con exito')
+            return redirect('ver_solicitud',solicitud.id)
+
+        messages.error(request,'La solicitud no se ha podido reenviar por un error en el formulario, intentalo de nuevo')
+        return redirect('editar_solicitud',solicitud.id)

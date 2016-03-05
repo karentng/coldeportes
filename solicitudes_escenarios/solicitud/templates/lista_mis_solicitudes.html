@@ -73,6 +73,12 @@
                                 </a>
                                 <br/>
                             {% endif %}
+                            {% if s.estado == 1 %}
+                                <a href="{% url 'editar_solicitud' s.id %}">
+                                    <i class="fa fa-envelope"></i> Completar solicitud
+                                </a>
+                                <br/>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
