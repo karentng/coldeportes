@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from solicitudes_escenarios.solicitud.forms import SolicitudEscenarioForm,AdjuntoSolicitudForm
 from solicitudes_escenarios.respuesta.models import ListaSolicitudes
-from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud
+from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud,DiscucionSolicitud
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
@@ -185,9 +185,11 @@ def imprimir_solicitud(request,id):
         return redirect('listar_solicitudes')
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
 
     return render(request,'solicitud_imprimir.html',{
-        'solicitud' : solicitud
+        'solicitud' : solicitud,
+        'discusiones' : discusiones
     })
 
 def ver_solicitud(request,id):
@@ -205,9 +207,11 @@ def ver_solicitud(request,id):
         return redirect('listar_solicitudes')
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
 
     return render(request,'ver_solicitud.html',{
-        'solicitud' : solicitud
+        'solicitud' : solicitud,
+        'discusiones' : discusiones
     })
 
 def descargar_adjunto(request,id_sol,id_adj):
