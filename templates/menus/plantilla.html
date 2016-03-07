@@ -24,7 +24,7 @@
         <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'gestion-socios' in request.path or 'planes' in request.path%} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
-                <i class="fa fa-desktop"></i>
+                <i class="fa fa-cogs"></i>
                 <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
             </a>
             <ul class="sub-menu">
@@ -94,28 +94,30 @@
             {% include "menus/aplicacion/selecciones.html" %}
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
+
+
     {% endif %}
 
-
+    {% include "menus/aplicacion/reportes.html" %}
     {% include "menus/aplicacion/normograma.html" %}
+    {% include "menus/aplicacion/noticias.html" %}
+    {% include "menus/aplicacion/publicidad.html" %}
 
 {% endif %}
-
 
 {% if request.tenant.schema_name == 'public' %}
     {% if user.is_superuser %}
         {% include "menus/aplicacion/entidades.html" %}
+        {% include "menus/aplicacion/reportes.html" %}
         {% include "menus/aplicacion/normograma.html" %}
-        {% include "menus/aplicacion/manual.html" %}
         {% include "menus/servicios/registro_resultados.html" %}
+        {% include "menus/aplicacion/noticias.html" %}
+        {% include "menus/aplicacion/publicidad.html" %}
+        {% include "menus/aplicacion/manual.html" %}
 
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
 {% endif %}
 
-
 {% include "menus/aplicacion/directorio.html" %}
-{% include "menus/aplicacion/reportes.html" %}
-{% include "menus/aplicacion/noticias.html" %}
-{% include "menus/aplicacion/publicidad.html" %}
