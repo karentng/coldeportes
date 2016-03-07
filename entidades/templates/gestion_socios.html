@@ -42,7 +42,7 @@
         <div class="col-md-8">
             <h3>Socios registrados actualmente:</h3>
 
-            {% if socios %}
+            {% if lista_socios %}
                 <table id="data-table-socios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -59,7 +59,7 @@
                                 <td>{{ socio.numero_documento }}</td>
                                 <td>{{socio.nombre}}</td>
                                 <td>{{socio.apellido}}</td>
-                                {% if socio.estado %}
+                                {% if socio.estado == 0 %}
                                     <td><span class="label label-primary">Activo</span></td>
                                 {% else %}
                                     <td><span class="label label-danger">Inactivo</span></td>

@@ -303,7 +303,10 @@ def inicio_tenant(request):
     ContentType.objects.clear_cache()
 
     entidad = tipoTenant.obtener_datos_entidad()
-    entidad['socios'] = entidad['socios'].filter(estado=True)
+
+    if request.tenant.tipo == 3:
+        entidad['socios'] = entidad['socios'].filter(estado=0)
+
     try:
         noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
                                                 Q(fecha_expiracion__gte=datetime.date.today()),
