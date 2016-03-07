@@ -353,6 +353,7 @@ class SocioClubForm(ModelForm):
 #Autor: Yalile Bermudes
 #Fecha: 02/03/2016
 class PlanDeCostoForm(ModelForm):
+    required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
         super(PlanDeCostoForm, self).__init__(*args, **kwargs)

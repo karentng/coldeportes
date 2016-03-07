@@ -4,7 +4,6 @@ from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
 from coldeportes.utilities import *
-from entidades.views import mostrar_gestion_socios
 
 admin.autodiscover()
 
