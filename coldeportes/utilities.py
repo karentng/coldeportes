@@ -365,3 +365,5 @@ def obtener_modelo_actor(actor):
         return Noticia
     else:
         return None
+
+

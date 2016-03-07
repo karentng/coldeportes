@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="">Club</a>
+	<li class="active">Planes</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block titulo_panel%}
+    Planes de costo
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-3" >
+
+            <form class="form-horizontal" method="post" action="" id="plan-de-costo-form">{% csrf_token %}
+                <div class="col-md-10 col-md-offset-1">
+                    {% if edicion %}
+                        <h3 >Editar plan de costo</h3>
+                    {% else %}
+                        <h3 >Registrar plan de costo</h3>
+                    {% endif %}
+
+                    {% bootstrap_form form layout="vertical" %}
+
+                    <button class="pull-right btn btn-primary" type="submit">{% if edicion %}<i class="fa fa-check"></i> Guardar cambios {% else %}<i class="fa fa-plus"></i> Añadir{% endif %}</button>
+                </div>
+            </form>
+
+        </div>
+        <br>
+        <div class="col-md-9">
+            <h3 >Planes registrados actualmente</h3>
+            <div class="table-responsive">
+                <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                    <thead>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Opciones</th>
+                    </thead>
+                    <tbody>
+                        {% for plan in planes %}
+                            <tr>
+                                <td>{{ plan.nombre }}</td>
+                                <td>{{ plan.precio }}</td>
+                                <td>{{ plan.descripcion }}</td>
+
+                                {% if plan.estado == 0 %}
+                                    <td><span class="label label-danger">{{ plan.get_estado_display }}</span></td>
+                                {% else %}
+                                    <td><span class="label label-primary">{{ plan.get_estado_display }}</span></td>
+                                {% endif %}
+
+                                <td>
+
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'editar_plan_de_costo' plan.id %}"><i class="fa fa-gear"></i> Modificar</a>
+                                        <br>
+                                        <a data-toggle="modal" data-target="#modal-estado{{ plan.id }}" href="" ><i class="fa fa-refresh"></i> Activar/Desactivar</a>
+                                    {% endif %}
+
+
+                                </td>
+                            </tr>
+                            <!-- Modal -->
+
+                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modal-estado{{ plan.id }}">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>¿Está seguro que desea cambiar de estado a este plan?</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                                    <a href="{% url 'cambiar_estado_plan_costo' plan.id %}" type="button" class="btn btn-primary" id="estado-plan" >Si</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        {% empty %}
+                            No hay planes de costo registrados
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{ STATIC_URL }}js/validaciones/entidad/validacion-plan-costo.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
+    <script type="text/javascript">
+        if ($('#data-table').length !== 0) {
+            $('#data-table').DataTable({
+                dom: 'T<"clear">lfrtip',
+                tableTools: {
+                    "sSwfPath": "{{STATIC_URL}}"+"plugins/DataTables/swf/copy_csv_xls_pdf.swf"
+                }
+            });
+        }
+
+    </script>
+{% endblock %}

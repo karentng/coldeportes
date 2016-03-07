@@ -748,16 +748,32 @@ class SocioClub(models.Model):
         return self.nombre + self.apellido
 
 
+class PlanesDeCostoClub(models.Model):
+    ESTADO = (
+        (1, 'Activo'),
+        (0, 'Inactivo')
+    )
+    nombre=models.CharField(max_length=200)
+    precio=models.IntegerField()
+    descripcion = models.TextField(max_length=600, verbose_name="Descripción")
+    estado =models.IntegerField(choices=ESTADO, default=1)
+
+    def __str__(self):
+        return self.nombre
+
+
 class Club(ResolucionReconocimiento):
     TIPOS_CLUBES = (
-        (1, "Deportivo"),
-        (2, "Promotor"),
-        (3, "Profesional"),
+        (0, "Deportivo"),
+        (1, "Promotor"),
+        (2, "Profesional"),
     )
 
     liga = models.ForeignKey(Liga, null=True, blank=True)
     disciplina = models.ForeignKey(TipoDisciplinaDeportiva)
     socios = models.ManyToManyField(SocioClub, blank=True);
+    planes_de_costo = models.ManyToManyField(PlanesDeCostoClub, blank=True)
+    tipo_club = models.IntegerField(choices=TIPOS_CLUBES, default=0)
 
     def obtener_padre(self):
         return self.liga
@@ -778,7 +794,8 @@ class Club(ResolucionReconocimiento):
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
             'disponible_para_transferencias' : self.disponible_para_transferencias(),
-            'socios': self.socios.all()
+            'socios': self.socios.all(),
+            'planes_de_costo': self.planes_de_costo.all()
         }
         return entidad
 

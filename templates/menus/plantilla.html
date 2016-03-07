@@ -1,30 +1,32 @@
+{% load has_group %}
+
 {% if request.user.is_superuser %}
     {% include "menus/aplicacion/usuarios.html" %}
 {% endif %}
-    {% if request.tenant.schema_name != 'public' %}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'gestion-socios' in request.path%} active {% endif %}">
-            <a href="javascript:;">
-                <b class="caret pull-right"></b>
-                <i class="fa fa-desktop"></i>
-                <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
-            </a>
-            <ul class="sub-menu">
-                {% if request.user.is_superuser %}
-                    <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
-                        <a href="{% url 'datos_basicos_entidad' %}"><span class="colorMenu">Modificar datos básicos de la entidad</span></a>
-                    </li>
-                {% endif %}
-                {% if request.tenant.tipo == 3 and request.user.is_authenticated  and perms.entidades.change_club %}
-                    <li class="has-sub {% if 'gestion-socios' in request.path %} active {% endif %}">
-                        <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
-                    </li>
-                    <li class="has-sub">
-                        <a href="#"><span class="colorMenu">Gestionar planes de costos del club</span></a>
-                    </li>
-                {% endif %}
-            </ul>
-        </li>
-    {% endif %}
+{% if request.tenant.schema_name != 'public' %}
+    <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'gestion-socios' in request.path%} active {% endif %}">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <i class="fa fa-desktop"></i>
+            <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
+        </a>
+        <ul class="sub-menu">
+            {% if request.user.is_superuser %}
+                <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
+                    <a href="{% url 'datos_basicos_entidad' %}"><span class="colorMenu">Modificar datos básicos de la entidad</span></a>
+                </li>
+            {% endif %}
+            {% if request.tenant.tipo == 3 and request.user.is_authenticated  and request.user|has_group:"Digitador" %}
+                <li class="has-sub {% if 'gestion-socios' in request.path %} active {% endif %}">
+                    <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
+                </li>
+                <li class="has-sub">
+                    <a href="{% url 'crear_plan_de_costo' %}"><span class="colorMenu">Gestionar planes de costos del club</span></a>
+                </li>
+            {% endif %}
+        </ul>
+    </li>
+{% endif %}
 {% if not request.user.is_superuser %}
     <li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
         <a href="{% url 'inicio_tenant' %}">

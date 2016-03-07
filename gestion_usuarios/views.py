@@ -314,6 +314,8 @@ def inicio_tenant(request):
             noticias = noticias_todas
     except Exception:
         noticias = []
+
+
     return render(request, 'index_tenant.html', {
         'transfer_persona': transfer_personas,
         'actoresAsociados': actoresAsociados,

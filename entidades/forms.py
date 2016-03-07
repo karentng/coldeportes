@@ -72,6 +72,7 @@ class ClubForm(forms.ModelForm):
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['liga'] = adicionarClase(self.fields['liga'], 'one')
         self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
+        self.fields['tipo_club'] = adicionarClase(self.fields['tipo_club'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
@@ -88,7 +89,7 @@ class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina','liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        fields = ('nombre', 'tipo_club', 'pagina', 'pagina_web', 'ciudad', 'disciplina','liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
         widgets = {
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),
@@ -346,3 +347,17 @@ class SocioClubForm(ModelForm):
     class Meta:
         model = SocioClub
         exclude = ('estado',)
+        
+        
+#Formulario Planes de Costo de un club.
+#Autor: Yalile Bermudes
+#Fecha: 02/03/2016
+class PlanDeCostoForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(PlanDeCostoForm, self).__init__(*args, **kwargs)
+        self.fields['precio'].widget.attrs.update({'min':0})
+
+    class Meta:
+        model = PlanesDeCostoClub
+        exclude = ('estado', )
