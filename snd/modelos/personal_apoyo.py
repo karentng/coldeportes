@@ -10,6 +10,16 @@ from coldeportes.utilities import calculate_age
 
 
 class PersonalApoyo(models.Model):
+
+    def foto_name(instance, filename):
+        #el nombre de la imagen es la identificación del personal de apoyo, filename[-4:] indica la extensión del archivo
+        #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
+        ruta = 'fotos_personal_apoyo/' + instance.identificacion + filename[-4:]
+        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        if(os.path.exists(ruta_delete)):
+            os.remove(ruta_delete)
+        return ruta
+
     ESTADOS = (
         (0, "ACTIVO"),
         (1, "INACTIVO"),
@@ -62,7 +72,7 @@ class PersonalApoyo(models.Model):
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
-    foto = models.ImageField(upload_to='fotos_personal_apoyo', null=True, blank=True)
+    foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
     tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD)
     identificacion = models.CharField(max_length=100,verbose_name='Número de identificación', unique=True)
     telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
