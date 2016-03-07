@@ -28,18 +28,19 @@
 {% endblock %}
 
 {% block contenido_panel %}
+<div class="row">   
     <div class="container">
-        <div class="row">
-            <div class="col-md-10">
-                <form id="noticia" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-                    {% bootstrap_form form %}
-                    <button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">
-                        {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
-                    </button>
-                </form>
-            </div>
+        <div class="col-md-10">
+            <form id="noticia" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                {% bootstrap_form form %}
+                <button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">
+                    <i class="fa fa-save"></i> {% if edicion %}Guardar{% else %}Registrar{% endif %}
+                </button>
+            </form>
         </div>
     </div>
+</div>
 
 
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from coldeportes.utilities import all_permission_required
 from manual.models import Articulo
 from manual.forms import ArticuloForm
+from entidades.models import TIPOS
 
 # Create your views here.
 @login_required
@@ -36,6 +37,39 @@ def nueva_entrada(request):
     })
 
 @login_required
+@all_permission_required('manual.add_articulo')
+def editar_articulo(request, articulo_id):
+    """
+    Enero 28 / 2016
+    Autor: Karent Narvaez Grisales
+    
+    Edición de la información de un artículo en el manual de usuario.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param articulo_id: Identificador del artículo
+    :type articulo_id: String
+    """
+    articulo_edicion =  Articulo.objects.get(id=articulo_id)
+    articulo_form = ArticuloForm(instance=articulo_edicion)
+
+    if request.method == 'POST':
+
+        articulo_form = ArticuloForm(request.POST, request.FILES, instance=articulo_edicion)
+
+        if articulo_form.is_valid():
+            articulo_form.save()
+            messages.success(request, ("Artículo registrado correctamente."))
+            
+            return redirect('listar_manual')
+
+
+    return render(request, 'nueva_entrada.html', {
+        'form': articulo_form,
+        'edicion': True
+    })
+
+@login_required
 def listar_articulo(request, articulo_id):
     """
     Enero 28 / 2016
@@ -50,6 +84,8 @@ def listar_articulo(request, articulo_id):
 
     items_manual = Articulo.MODULOS
     articulos = Articulo.objects.all()
+    entidades = TIPOS
+
 
     mensaje = "No hay artísulos registrados."
 
@@ -58,6 +94,7 @@ def listar_articulo(request, articulo_id):
         'mensaje': mensaje,
         'items': items_manual,
         'articulo': articulo,
+        'entidades': entidades
 
     })
 
@@ -74,6 +111,7 @@ def listar(request):
     """
     items_manual = Articulo.MODULOS
     articulos = Articulo.objects.all()
+    entidades = TIPOS
 
     mensaje = "No hay artísulos registrados."
 
@@ -81,5 +119,6 @@ def listar(request):
         'articulos': articulos,
         'mensaje': mensaje,
         'items': items_manual,
+        'entidades': entidades
 
     })

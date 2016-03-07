@@ -27,7 +27,7 @@ class Articulo(models.Model):
     titulo =  models.CharField(max_length=100,unique=True, verbose_name="título del artículo")
     orden = models.FloatField()
     palabras_clave = models.CharField(max_length=1024, verbose_name='palabras clave')
-    modulo = models.CharField(choices=MODULOS, max_length=2, verbose_name="módulo")
     entidad = models.IntegerField(choices=TIPOS)
+    modulo = models.CharField(choices=MODULOS, max_length=2, verbose_name="módulo")
     usuario = models.CharField(choices=USUARIOS, max_length=2)
     contenido = RichTextUploadingField(config_name='default', verbose_name=" ")
