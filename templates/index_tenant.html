@@ -138,6 +138,8 @@
                                                     <td>{{ plan.descripcion }}</td>
                                                 </tr>
                                             {% endif %}
+                                        {% empty %}
+                                            No hay planes de costo activos
                                         {% endfor %}
 
                                     </tbody>
