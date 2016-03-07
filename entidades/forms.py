@@ -335,6 +335,9 @@ class DeporteForm(ModelForm):
         model = TipoDisciplinaDeportiva
         exclude = ('',)
 
+#Formulario Socio de un club
+#Autor: Diego Monsalve
+#Fecha: 02/03/2016
 class SocioClubForm(ModelForm):
     required_css_class = 'required'
 

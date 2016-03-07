@@ -22,9 +22,9 @@
                 <div class="well row">
                     <div class="col-xs-12">
                         {% if edicion %}
-                            <h3>Modificar Socio</h3>
+                            <h3>Modificar socio</h3>
                         {% else %}
-                            <h3>Registrar Nuevo Socio</h3>
+                            <h3>Registrar socio</h3>
                         {% endif %}
                         {% for i in form %}
                             {% bootstrap_field i layout="vertical" %}
@@ -126,7 +126,7 @@
     {% if edicion %}
         <script>
             $(document).ready(function(){
-                $("select").css("pointer-events", "none");
+                $("#id_tipo_documento").css("pointer-events", "none");
             });
         </script>
     {% endif %}

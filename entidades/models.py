@@ -742,7 +742,7 @@ class SocioClub(models.Model):
 
     club_id = models.IntegerField()
     tipo_documento = models.CharField(max_length=5, choices=TIPO_IDENTIDAD, verbose_name="Tipo de identificación")
-    numero_documento = models.CharField(max_length=20, verbose_name="Número de documento")
+    numero_documento = models.CharField(max_length=20, verbose_name="Número de identificación")
     nombre = models.CharField(max_length=255, verbose_name="Nombres")
     apellido = models.CharField(max_length=255, verbose_name="Apellidos")
     correo = models.EmailField(max_length=255, blank=True, verbose_name="Correo electrónico")

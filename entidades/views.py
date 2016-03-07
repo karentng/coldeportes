@@ -803,8 +803,8 @@ def mostrar_gestion_socios(request):
             num_doc = socio.numero_documento
 
             if club.socios.filter(club_id = club_id, numero_documento = num_doc).count() > 0:
-                messages.warning(request, "Error: Ya existe un socio registrado con el mismo número de documento.")
                 lista_socios = club.socios.all()
+                form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
                 return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
             else:
                 socio.club_id = club.id
