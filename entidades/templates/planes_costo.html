@@ -29,14 +29,14 @@
 
                     {% bootstrap_form form layout="vertical" %}
 
-                    <button class="pull-right btn btn-primary" type="submit"><i class="fa fa-plus"></i> Añadir</button>
+                    <button class="pull-right btn btn-primary" type="submit">{% if edicion %}<i class="fa fa-check"></i> Guardar cambios {% else %}<i class="fa fa-plus"></i> Añadir{% endif %}</button>
                 </div>
             </form>
 
         </div>
         <br>
         <div class="col-md-9">
-            <h3 >Planes registrados</h3>
+            <h3 >Planes registrados actualmente</h3>
             <div class="table-responsive">
                 <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                     <thead>
@@ -85,6 +85,8 @@
                             </div>
                         </div>
                     </div>
+                        {% empty %}
+                            No hay planes de costo registrados
                         {% endfor %}
 
                     </tbody>
