@@ -780,7 +780,7 @@ def crear_editar_dep(request,id=None):
     })
 
 @login_required()
-@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
+@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
 def mostrar_gestion_socios(request):
     """
     Marzo 02 / 2016
@@ -814,7 +814,7 @@ def mostrar_gestion_socios(request):
 
 
 @login_required()
-@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
+@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
 def desactivar_socio(request, id_socio):
     """
     Marzo 02 / 2016
@@ -847,7 +847,7 @@ def desactivar_socio(request, id_socio):
 
 
 @login_required()
-@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
+@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
 def editar_socio(request, id_socio):
     """
     Marzo 03 / 2016
@@ -891,7 +891,7 @@ def editar_socio(request, id_socio):
     
     
 @login_required
-@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
+@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
 def crear_plan_de_costo(request):
     """
     Marzo 01 / 2016
@@ -924,7 +924,7 @@ def crear_plan_de_costo(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
+@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
 def editar_plan_de_costo(request, id):
     """
     Marzo 01 / 2016
@@ -963,7 +963,7 @@ def editar_plan_de_costo(request, id):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or u.has_perm('entidades.change_club'))
+@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
 def cambiar_estado_plan_costo(request, id):
     """
     Marzo 01 / 2016
