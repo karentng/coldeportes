@@ -346,7 +346,7 @@ class SocioClubForm(ModelForm):
 
     class Meta:
         model = SocioClub
-        exclude = ('estado',)
+        exclude = ('estado','club_id')
         
         
 #Formulario Planes de Costo de un club.

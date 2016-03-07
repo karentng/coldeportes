@@ -305,7 +305,7 @@ def inicio_tenant(request):
 
     if request.tenant.tipo == 3:
         entidad['planes_de_costo']= entidad['planes_de_costo'].filter(estado=1)
-        entidad['socios'] = entidad['socios'].filter(estado=True)
+        entidad['socios'] = entidad['socios'].filter(estado=0)
     try:
         noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
                                                 Q(fecha_expiracion__gte=datetime.date.today()),
