@@ -760,8 +760,8 @@ class SocioClub(models.Model):
 
 class PlanesDeCostoClub(models.Model):
     ESTADO = (
-        (1, 'Activo'),
-        (0, 'Inactivo')
+        (0,'ACTIVO'),
+        (1,'INACTIVO'),
     )
     nombre=models.CharField(max_length=200)
     precio=models.IntegerField()
