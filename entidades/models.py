@@ -748,6 +748,7 @@ class SocioClub(models.Model):
         return self.nombre + self.apellido
 
 
+
 class PlanesDeCostoClub(models.Model):
     ESTADO = (
         (1, 'Activo'),
