@@ -43,27 +43,62 @@ class CompetenciaForm(forms.ModelForm):
             'fecha_competencia': MyDateWidget(),
         }
 
-class ParticipanteForm(forms.ModelForm):
+class ParticipanteTiempoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         competencia = kwargs.pop('competencia')
-        super(ParticipanteForm, self).__init__(*args, **kwargs)
+        super(ParticipanteTiempoForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
-        if competencia.tiempos != True:
-            del self.fields['tiempo']
-
-        if competencia.tipos_participantes == 1:
-            del self.fields['equipo']
-
+    
     class Meta:
         model = Participante
-        exclude = ("competencia",)
+        exclude = ("competencia", 'puntos', 'equipo')
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
 
-class EquipoForm(forms.ModelForm):
+class ParticipantePuntosForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
-        super(EquipoForm, self).__init__(*args, **kwargs)
+        competencia = kwargs.pop('competencia')
+        super(ParticipantePuntosForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+    
+    class Meta:
+        model = Participante
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo')
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
+
+class ParticipanteEquipoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        competencia = kwargs.pop('competencia')
+        super(ParticipanteEquipoForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+    
+    class Meta:
+        model = Participante
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'puntos', 'posicion')
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
+
+class EquipoTiempoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EquipoTiempoForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
 
     class Meta:
         model = Equipo
-        exclude = ("competencia",)
+        exclude = ("competencia", 'puntos')
+
+class EquipoPuntosForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EquipoPuntosForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+
+    class Meta:
+        model = Equipo
+        exclude = ("competencia", 'tiempo', 'marca')

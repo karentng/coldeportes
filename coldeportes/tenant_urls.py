@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
 from coldeportes.utilities import *
+from entidades.views import mostrar_gestion_socios
 
 admin.autodiscover()
 
@@ -30,6 +31,9 @@ urlpatterns = patterns('',
     url(r'^reportes/', include('reportes.urls.publico')),
     url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
     url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
+    url(r'^gestion-socios$', 'entidades.views.mostrar_gestion_socios', name='gestion_socios'),
+    url(r'^desactivar-socio/(\d+)$', 'entidades.views.desactivar_socio', name='desactivar_socio'),
+    url(r'^editar-socio/(\d+)$', 'entidades.views.editar_socio', name='editar_socio'),
 
     #GESTION PLANES DE COSTOS
     url(r'^planes$', 'entidades.views.crear_plan_de_costo', name='crear_plan_de_costo'),
@@ -43,7 +47,6 @@ urlpatterns += required(
     patterns('',
         url(r'^selecciones/', include('snd.urls.selecciones')), #urls de cafs
     ),
-
 )
 
 urlpatterns += required(

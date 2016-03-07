@@ -50,13 +50,14 @@ $(document).ready(function(){
         }
     });
 
-    $("#UploadImg").click(function(){
-        if($('.cropControlUpload').is(':visible')){
+    $("#myModalCrop").bind('hidden.bs.modal',function(){
+        if(!$('.cropControls.cropControlsCrop').length){
 
-            $("#modalTrigger2").removeClass("btn-danger").addClass("btn-default").html("Cargar Imagen");
+            $("#modalTrigger2").removeClass("btn-success").addClass("btn-primary").html("Cargar Imagen");
             $("#labelImg").html("");
         }else{
-            $("#modalTrigger2").removeClass("btn-default").addClass("btn-danger").html("Cambiar Imagen");
+
+            $("#modalTrigger2").removeClass("btn-primary").addClass("btn-success").html("Cambiar Imagen");
             $("#labelImg").html("Imagen lista para subir");
         }
     });

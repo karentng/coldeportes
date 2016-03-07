@@ -7,7 +7,7 @@
     <meta property="og:type" content="Noticias" />
     <meta property="fb:admins" content="juandiego.garcia.374549"/>
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:image" content="{% if noticia.foto != "" %}{{ noticia.foto }}{% else %}{{ MEDIA_URL }}/clasificados/clasificados-default.png{% endif %}" />
+    <meta property="og:image" content="http://{% if noticia.foto != "" %}{{ request.get_host }}{{ MEDIA_URL }}{{ noticia.foto }}{% else %}{{ MEDIA_URL }}/clasificados/clasificados-default.png{% endif %}" />
     <meta property="og:description" content="{{ noticia.previsualizacion }}" />
     <meta property="og:site_name" content="Coldeportes" />
 {% endblock %}
@@ -62,7 +62,7 @@
                 <span class='st_linkedin_hcount' displayText='LinkedIn'></span>
                 <span class='st_googleplus_hcount' displayText='Google +'></span>
             </div>
-            <p style="float:right;">Fecha de Publicación: {{ noticia.fecha_inicio }}</p>
+            <p style="text-align:right;">Fecha de Publicación: {{ noticia.fecha_inicio }}</p>
             <br><br>
             {% if noticia.video  %}
                 <div class="embed-responsive embed-responsive-16by9" style="margin-top: 30px;">

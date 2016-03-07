@@ -52,8 +52,6 @@ PERMISOS_DIGITADOR = [
     ['add_clasificado', 'publicidad'],
     ['change_clasificado', 'publicidad'],
     ['view_clasificado', 'publicidad'],
-
-    ['change_club', 'entidades'],
 ]
 
 PERMISOS_LECTURA = [

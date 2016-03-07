@@ -334,6 +334,20 @@ class DeporteForm(ModelForm):
         model = TipoDisciplinaDeportiva
         exclude = ('',)
 
+class SocioClubForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(SocioClubForm, self).__init__(*args, **kwargs)
+        if self.instance.pk != None:
+            self.fields['tipo_documento'].widget.attrs['readonly'] = 1
+            self.fields['numero_documento'].widget.attrs['readonly'] = 1
+
+    class Meta:
+        model = SocioClub
+        exclude = ('estado',)
+        
+        
 #Formulario Planes de Costo de un club.
 #Autor: Yalile Bermudes
 #Fecha: 02/03/2016
