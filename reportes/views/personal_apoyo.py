@@ -273,6 +273,7 @@ def reporte_lgtbi(request):
         'nombre_columna':'Descripción'
     })
 
+
 def reporte_etnias(request):
     """
     Enero 23, 2016
@@ -326,4 +327,58 @@ def reporte_etnias(request):
         'actor': 'Personal de Apoyo',
         'fecha_generado': datetime.now(),
         'nombres_columna':'Etnia'
+    })
+
+
+def reportes_nacionalidad_personal_apoyo(request):
+    tipo_tenant = request.tenant.obtenerTenant()
+
+    if tipo_tenant.schema_name == 'public':
+        tabla = PublicPersonalApoyoView
+    else:
+        tabla = TenantPersonalApoyoView
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null' else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null' else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+        ]
+
+        nacionalidades = ejecutar_casos_recursivos(consultas, departamentos, genero, tipo_tenant)
+        nacionalidades = tipo_tenant.ajustar_resultado(nacionalidades)
+
+        if '' in nacionalidades:
+            nacionalidades['NO ESPECIFICADA'] = nacionalidades['']
+            del nacionalidades['']
+
+        return JsonResponse(nacionalidades)
+
+    else:
+        print("fa")
+
+        nacionalidades = list(tabla.objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre'))
+                              .values('id', 'descripcion', 'entidad').annotate(cantidad=Count('id', distinct=True)))
+
+        nacionalidades = tipo_tenant.ajustar_resultado(nacionalidades)
+
+        if '' in nacionalidades:
+            nacionalidades['NO ESPECIFICADA'] = nacionalidades['']
+            del nacionalidades['']
+
+    visualizaciones = [1, 5, 6]
+    form = FiltrosPersonalApoyoForm(visualizaciones=visualizaciones)
+    return render(request, 'personal_apoyo/base_personal_apoyo.html', {
+        'nombre_reporte': 'Nacionalidades del personal de apoyo',
+        'url_data': 'reportes_nacionalidad_personal_apoyo',
+        'datos': nacionalidades,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Personal de Apoyo',
+        'fecha_generado': datetime.now(),
+        'nombres_columna': 'Nacionalidad'
     })
