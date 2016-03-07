@@ -12,7 +12,7 @@ class ClasificadoForm(forms.ModelForm):
         labels = {
             'titulo': _('Título'),
             'descripcion': _('Descripción'),
-            'categoria': _('Categoria del clasificado'),
+            'categoria': _('Categoría del clasificado'),
             'contacto': _('Información de contacto')
         }
 

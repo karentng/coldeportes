@@ -60,8 +60,7 @@ $.getScript(base+"js/validaciones/validations-base.js");
 $(document).ready(function(){
     $("#id_cuerpo_noticia")
         .ckeditor({
-            language: 'es',
-            uiColor: '#008A8A'
+            language: 'es'
         })
             .editor
                 // To use the 'change' event, use CKEditor 4.2 or later

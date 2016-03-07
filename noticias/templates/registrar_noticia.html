@@ -26,7 +26,7 @@
         var urlCrop = "{% url 'crop_pic' %}";
         var buttonReset = "#reset-crop";
         var formId = "form-noticia";
-        var urlMedia = "fotos_noticias/";
+        var urlMedia = "/fotos_noticias/";
         var picture = "";
         {% if edicion %}
             picture = "{{ MEDIA_URL }}{{ foto }}";
@@ -53,7 +53,7 @@
                     $("#previsualizacion").val(str.substring(0, 150));
                 }
                 {% if edicion %}
-                    if($("#modalTrigger2").hasClass("btn-default") && $('.cropControls.cropControlsCrop').length){
+                    if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
                         document.getElementById(formId).submit();
                         return false;
                     }else {
@@ -115,7 +115,7 @@
                             {% bootstrap_field field %}
                         </div>
                         <div class="form-group">
-                            <div id="modalTrigger2" class="btn {% if edicion %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
                             <label class="control-label" for="modalTrigger2"></label>
                             {% include 'modal_croppic.html' %}
                         </div>
