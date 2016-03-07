@@ -38,7 +38,7 @@
                         <li class="has-sub {% if 'gestion-socios' in request.path %} active {% endif %}">
                             <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
                         </li>
-                        <li class="has-sub">
+                        <li class="has-sub" {% if 'planes' in request.path %} active {% endif %}>
                             <a href="{% url 'crear_plan_de_costo' %}"><span class="colorMenu">Gestionar planes de costos del club</span></a>
                         </li>
                     {% endif %}

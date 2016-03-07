@@ -85,7 +85,8 @@
                             <div class="result-info">
                                 <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>
                                 {% if entidad.tipo_tenant == "Club" %}
-                                    <a href="" data-target="#modal-socios" data-toggle="modal" class="pull-right"> <i class="fa fa-group"></i> Ver socios del club</a>                                
+                                    <a href="" data-target="#modal-socios" data-toggle="modal" class="pull-right"> <i class="fa fa-group"></i> Ver socios del club</a>
+                                    <br>
                                     <a data-toggle="modal" data-target="#modal-planes" class="pull-right" href=""><i class="fa fa-money"></i> Ver planes de costos</a>
                                 {% endif %}
 
@@ -113,46 +114,6 @@
                 </div>
             </div>
         </div>
-        {% if entidad.tipo_tenant == "Club" %}
-            <!-- Modal información planes de costos del club -->
-            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modal-planes">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4>Planes de costos de {{ entidad.nombre | upper }}</h4>
-                        </div>
-                        <div >
-                            <div class="table-responsive col-md-10 col-md-offset-1 p-t-15">
-                                <table id="tabla-plan-costo" class="table table-bordered table-striped" cellspacing="0" width="100%">
-                                    <thead>
-                                        <th>Nombre</th>
-                                        <th>Precio</th>
-                                        <th>Descripción</th>
-                                    </thead>
-                                    <tbody>
-                                        {% for plan in entidad.planes_de_costo %}
-                                            {% if plan.estado == 1 %}
-                                                <tr>
-                                                    <td>{{ plan.nombre }}</td>
-                                                    <td>{{ plan.precio }}</td>
-                                                    <td>{{ plan.descripcion }}</td>
-                                                </tr>
-                                            {% endif %}
-                                        {% empty %}
-                                            No hay planes de costo activos
-                                        {% endfor %}
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
 
     {% endif %}
 
@@ -308,4 +269,45 @@
             </div>
         </div>
     </div>
+        <!-- Modal información planes de costos del club -->
+        <div class="modal fade" id="modal-planes">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Planes de costos</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% if entidad.planes_de_costo %}
+                            <table id="tabla-plan-costo" class="table table-bordered table-striped table-hover" >
+                                <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Descripción</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plan in entidad.planes_de_costo %}
+                                        <tr class="gradeX">
+                                            <td>{{ plan.nombre }}</td>
+                                            <td>{{ plan.precio }}</td>
+                                            <td>{{ plan.descripcion }}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="alert alert-warning fade in m-b-15">
+                                No se encuentran planes de costo registrados o activos
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-sm btn-white" data-dismiss="modal">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 {% endblock %}
