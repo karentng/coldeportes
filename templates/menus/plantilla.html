@@ -1,3 +1,5 @@
+{% load has_group %}
+
 {% if request.user.is_superuser %}
     {% include "menus/aplicacion/usuarios.html" %}
 {% endif %}
