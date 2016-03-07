@@ -37,15 +37,6 @@ def listar_juegos(request):
     })
 
 @login_required
-def obtener_competencia_session(request):
-    try:
-        idCompetencia = request.session['competencia_seleccionada_id']
-        competencia = Competencia.objects.get(id=idCompetencia)
-        return competencia
-    except Exception:
-        return None
-
-@login_required
 def datos_competencia(request, juego_id, competencia_id=None):
     try:
         juego = Juego.objects.get(id=juego_id)
@@ -70,38 +61,6 @@ def datos_competencia(request, juego_id, competencia_id=None):
         'juego_id': juego_id,
     })
 
-#Ajax para modalidad y categoria historia deportiva
-@login_required
-def get_modalidades(request,deporte_id):
-    modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id)
-    if modalidades:
-        data = []
-        for m in modalidades:
-            dic = {}
-            dic['id'] = m.id
-            dic['text'] = m.nombre
-            data.append(dic)
-    else:
-        return HttpResponse('Modalidades no encontradas',status=404)
-    return JsonResponse({
-        'data': data
-    })
-
-@login_required
-def get_categorias(request,deporte_id):
-    categorias = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id)
-    if categorias:
-        data = []
-        for c in categorias:
-            dic = {}
-            dic['id'] = c.id
-            dic['text'] = c.nombre
-            data.append(dic)
-    else:
-        return HttpResponse('Categorias no encontradas',status=404)
-    return JsonResponse({
-        'data': data
-    })
 
 @login_required
 def listado_competencias(request, juego_id):
@@ -117,19 +76,8 @@ def eliminar_competencia(request, juego_id, competencia_id):
     competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
     competencia.delete()
     messages.warning(request, "Competencia eliminada correctamente.")
-    return redirect('listado_competencias')
+    return redirect('listado_competencias', juego_id)
 
-
-@login_required
-def acceder_competencia(request, idCompetencia):
-    try:
-        Competencia.objects.get(id=idCompetencia)
-        request.session['competencia_seleccionada_id'] = idCompetencia
-        messages.success(request, "Competencia seleccionada correctamente.")
-        return redirect('menu_competencia')
-    except Exception:
-        messages.success(request, "La Competencia indicada no existe por favor seleccione una del listado.")
-        return redirect('listado_competencias')
 
 @login_required
 def crear_participante(request, competencia_id):
@@ -267,13 +215,38 @@ def participante_tiempos(request, competencia_id, participante_id=None):
 
 
 @login_required
+def medalleria_por_competencia(request, competencia_id):
+    competencia = Competencia.objects.get(id=competencia_id)
+
+    if request.session['puntos']==0:
+        resultados1 = Participante.objects.filter(competencia=competencia_id, posicion=1)
+        resultados2 = Participante.objects.filter(competencia=competencia_id, posicion=2)
+        resultados3 = Participante.objects.filter(competencia=competencia_id, posicion=3)
+    elif request.session['puntos']==1:
+        resultados1 = Equipo.objects.filter(competencia=competencia_id, posicion=1)
+        resultados2 = Equipo.objects.filter(competencia=competencia_id, posicion=2)
+        resultados3 = Equipo.objects.filter(competencia=competencia_id, posicion=3)
+
+    return render(request, 'wizard_info_juego/wizard_medalleria.html', {
+        'wizard_stage': 2,
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id,
+        'individual': True,
+        'resultados1': resultados1,
+        'resultados2':resultados2,
+        'resultados3': resultados3
+
+
+    })
+
+@login_required
 def eliminar_equipo(request, competencia_id, participante_id):
     equipo = Equipo.objects.get(id=participante_id, competencia=competencia_id)
     equipo.delete()
 
-    if request.session['puntos']:
+    if request.session['puntos']==0:
         return redirect('equipo_puntos', competencia_id)
-    else:
+    elif request.session['puntos']==1:
         return redirect('equipo_tiempos', competencia_id)
 
 @login_required
@@ -289,7 +262,7 @@ def datos_equipo(request, competencia_id):
 @login_required
 def listar_participantes(request, competencia_id):
     competencia = Competencia.objects.get(id=competencia_id)
-    
+
     if competencia.tipos_participantes == 1:
         return redirect('listar_individual', competencia_id)
     else:
@@ -300,12 +273,18 @@ def listar_individual(request, competencia_id):
     participantes = Participante.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
 
+    if competencia.tipo_registro == 1:
+        puntos = False
+    elif competencia.tipo_registro == 2:
+        puntos = True
+
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         'wizard_stage': 1,
         'participantes': participantes,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id,
-        'individual': True
+        'individual': True,
+        'puntos': puntos
 
 
     })
@@ -315,11 +294,17 @@ def listar_equipos(request, competencia_id):
     equipos = Equipo.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
 
+    if competencia.tipo_registro == 1:
+        puntos = False
+    elif competencia.tipo_registro == 2:
+        puntos = True
+
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         'wizard_stage': 1,
         'participantes': equipos,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id,
+        'puntos': puntos
 
 
     })
@@ -327,7 +312,6 @@ def listar_equipos(request, competencia_id):
 
 @login_required
 def equipo_puntos(request, competencia_id, equipo_id=None):
-    equipos = Equipo.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
     request.session['puntos']=0
     
@@ -350,11 +334,10 @@ def equipo_puntos(request, competencia_id, equipo_id=None):
 
             return redirect('listar_equipos', competencia_id)
 
-    return render(request, 'wizard_info_juego/wizard_participantes.html', {
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         'form': form,
         'wizard_stage': 1,
         'puntos': True,
-        'participantes': equipos,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id
 
@@ -392,4 +375,39 @@ def equipo_tiempos(request, competencia_id, equipo_id=None):
         'juego_id': competencia.juego.id
 
 
+    })
+
+
+
+#Ajax para modalidad y categoria historia deportiva
+@login_required
+def get_modalidades(request,deporte_id):
+    modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id)
+    if modalidades:
+        data = []
+        for m in modalidades:
+            dic = {}
+            dic['id'] = m.id
+            dic['text'] = m.nombre
+            data.append(dic)
+    else:
+        return HttpResponse('Modalidades no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
+
+@login_required
+def get_categorias(request,deporte_id):
+    categorias = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id)
+    if categorias:
+        data = []
+        for c in categorias:
+            dic = {}
+            dic['id'] = c.id
+            dic['text'] = c.nombre
+            data.append(dic)
+    else:
+        return HttpResponse('Categorias no encontradas',status=404)
+    return JsonResponse({
+        'data': data
     })
