@@ -304,7 +304,7 @@ def inicio_tenant(request):
     entidad = tipoTenant.obtener_datos_entidad()
 
     if request.tenant.tipo == 3:
-        entidad['planes_de_costo']= entidad['planes_de_costo'].filter(estado=1)
+        entidad['planes_de_costo']= entidad['planes_de_costo'].filter(estado=0)
 
     try:
         noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &

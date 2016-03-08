@@ -750,13 +750,13 @@ class SocioClub(models.Model):
 
 class PlanesDeCostoClub(models.Model):
     ESTADO = (
-        (1, 'Activo'),
-        (0, 'Inactivo')
+        (0, 'Activo'),
+        (1, 'Inactivo')
     )
     nombre=models.CharField(max_length=200)
     precio=models.IntegerField()
     descripcion = models.TextField(verbose_name="descripción")
-    estado =models.IntegerField(choices=ESTADO, default=1)
+    estado =models.IntegerField(choices=ESTADO, default=0)
 
     def __str__(self):
         return self.nombre
