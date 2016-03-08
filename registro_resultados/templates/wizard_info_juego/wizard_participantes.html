@@ -40,7 +40,7 @@
 
       <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-plus m-r-5"></i>{% if not individual %} Crear Equipo {% else %} Crear Participante{% endif %}</a>
 
-      <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-inverse pull-right"><i class="fa fa-arrow-right m-r-5"></i> Siguiente</a>
+      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-inverse pull-right"><i class="fa fa-arrow-right m-r-5"></i> Siguiente</a>
       
     </div>
   </div>
@@ -81,12 +81,6 @@
                             {% endif %}
                             {% if not puntos %}<td>{{participante.tiempo}}</td>{% endif %}
                             <td>
-                              {% if not individual %}
-                                <a href='{% url "participante_equipo" competencia_id participante.id  %}'>
-                                    <i class="fa fa-check"></i> Registrar Integrantes
-                                </a><br>
-                              {% endif %}
-
                               {% if indiviual %}
                                 {% if puntos %}
                                   <a href='{% url "participante_puntos" competencia_id participante.id %}'>
@@ -102,6 +96,9 @@
                                 </a><br>
 
                               {% else %}
+                                <a href='{% url "participante_equipo" competencia_id participante.id  %}'>
+                                    <i class="fa fa-check"></i> Registrar Integrantes
+                                </a><br>
                                 {% if puntos %}
                                   <a href='{% url "equipo_puntos" competencia_id participante.id %}'>
                                       <i class="fa fa-edit"></i> Modificar

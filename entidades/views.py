@@ -780,7 +780,7 @@ def crear_editar_dep(request,id=None):
     })
 
 @login_required()
-@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def mostrar_gestion_socios(request):
     """
     Marzo 02 / 2016
@@ -796,13 +796,24 @@ def mostrar_gestion_socios(request):
     if request.method == 'POST':
         form = SocioClubForm(request.POST)
         if form.is_valid():
-            socio = form.save()
+            socio = form.save(commit=False)
             club = request.tenant.obtenerTenant()
-            club.socios.add(socio)
-            messages.success(request, "Socio registrado correctamente.")
-            return redirect('gestion_socios')
+
+            club_id = club.id
+            num_doc = socio.numero_documento
+
+            if club.socios.filter(club_id = club_id, numero_documento = num_doc).count() > 0:
+                lista_socios = club.socios.all()
+                form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
+                return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
+            else:
+                socio.club_id = club.id
+                socio = form.save()
+                club.socios.add(socio)
+                messages.success(request, "Los datos del socio fueron registrados correctamente.")
+                return redirect('gestion_socios')
         else:
-            messages.error(request, 'Algunos datos no son válidos.')
+            messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
             club = request.tenant.obtenerTenant()
             lista_socios = club.socios.all()
             return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
@@ -814,7 +825,7 @@ def mostrar_gestion_socios(request):
 
 
 @login_required()
-@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def desactivar_socio(request, id_socio):
     """
     Marzo 02 / 2016
@@ -836,18 +847,18 @@ def desactivar_socio(request, id_socio):
         messages.error(request, 'No se pudo encontrar el socio.')
         return redirect('gestion_socios')
 
-    if socio.estado:
-        socio.estado = False
+    if socio.estado == 0:
+        socio.estado = 1
         messages.success(request, ("El socio %s ha sido desactivado.")%(socio.nombre+" "+socio.apellido))
     else:
-        socio.estado = True
+        socio.estado = 0
         messages.success(request, ("El socio %s ha sido activado.")%(socio.nombre+" "+socio.apellido))
     socio.save()
     return redirect('gestion_socios')
 
 
 @login_required()
-@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def editar_socio(request, id_socio):
     """
     Marzo 03 / 2016
@@ -875,10 +886,10 @@ def editar_socio(request, id_socio):
         if form.has_changed():
             if form.is_valid():
                 form.save()
-                messages.success(request, "Datos actualizados correctamente.")
+                messages.success(request, "Los datos del socio fueron actualizados correctamente.")
                 return redirect('gestion_socios')
             else:
-                messages.error(request, 'Algunos datos no son válidos.')
+                messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
                 club = request.tenant.obtenerTenant()
                 lista_socios = club.socios.all()
                 return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
@@ -891,7 +902,7 @@ def editar_socio(request, id_socio):
     
     
 @login_required
-@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def crear_plan_de_costo(request):
     """
     Marzo 01 / 2016
@@ -924,7 +935,7 @@ def crear_plan_de_costo(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def editar_plan_de_costo(request, id):
     """
     Marzo 01 / 2016
@@ -963,7 +974,7 @@ def editar_plan_de_costo(request, id):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or True if u.groups.filter(name="Digitador").count() else False)
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def cambiar_estado_plan_costo(request, id):
     """
     Marzo 01 / 2016

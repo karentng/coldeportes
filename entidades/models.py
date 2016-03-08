@@ -735,14 +735,23 @@ class SocioClub(models.Model):
         ('PS', 'PASAPORTE'),
     )
 
+    ESTADO = (
+        (0,'ACTIVO'),
+        (1,'INACTIVO'),
+    )
+
+    club_id = models.IntegerField()
     tipo_documento = models.CharField(max_length=5, choices=TIPO_IDENTIDAD, verbose_name="Tipo de identificación")
-    numero_documento = models.CharField(max_length=20, verbose_name="Número de documento", unique=True)
+    numero_documento = models.CharField(max_length=20, verbose_name="Número de identificación")
     nombre = models.CharField(max_length=255, verbose_name="Nombres")
     apellido = models.CharField(max_length=255, verbose_name="Apellidos")
     correo = models.EmailField(max_length=255, blank=True, verbose_name="Correo electrónico")
     ciudad = models.ForeignKey(Ciudad)
     empresa = models.CharField(max_length=255, blank=True, verbose_name="Empresa")
-    estado = models.BooleanField(default=True)
+    estado = models.IntegerField(choices=ESTADO, default=0)
+
+    class Meta:
+        unique_together = ("numero_documento", "club_id")
 
     def __str__(self):
         return self.nombre + self.apellido
@@ -750,8 +759,8 @@ class SocioClub(models.Model):
 
 class PlanesDeCostoClub(models.Model):
     ESTADO = (
-        (0, 'Activo'),
-        (1, 'Inactivo')
+        (0,'ACTIVO'),
+        (1,'INACTIVO'),
     )
     nombre=models.CharField(max_length=200)
     precio=models.IntegerField()

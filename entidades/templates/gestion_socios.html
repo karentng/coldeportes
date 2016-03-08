@@ -22,9 +22,9 @@
                 <div class="well row">
                     <div class="col-xs-12">
                         {% if edicion %}
-                            <h3>Modificar Socio</h3>
+                            <h3>Modificar socio</h3>
                         {% else %}
-                            <h3>Registrar Nuevo Socio</h3>
+                            <h3>Registrar socio</h3>
                         {% endif %}
                         {% for i in form %}
                             {% bootstrap_field i layout="vertical" %}
@@ -41,32 +41,35 @@
 
         <div class="col-md-8">
             <h3>Socios registrados actualmente:</h3>
-            <table id="data-table-socios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>Identificación</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Estado</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for socio in lista_socios %}
+
+            {% if lista_socios %}
+                <table id="data-table-socios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                    <thead>
                         <tr>
-                            <td>{{ socio.numero_documento }}</td>
-                            <td>{{socio.nombre}}</td>
-                            <td>{{socio.apellido}}</td>
-                            {% if socio.estado %}
-                                <td><span class="label label-primary">Activo</span></td>
-                            {% else %}
-                                <td><span class="label label-danger">Inactivo</span></td>
-                            {% endif %}
-                            <td>
-                                <a href="#" data-target="#modal-consultar-{{socio.id}}" data-toggle="modal"><i class="fa fa-eye"> Vista previa </i></a><br>
-                                <a href="{% url 'editar_socio' socio.id %}"><i class="fa fa-gear"> Modificar </i></a><br>
-                                <a href="#" data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal"><i class="fa fa-refresh"> Activar/Desactivar </i></a>
-                            </td>
+                            <th>Identificación</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for socio in lista_socios %}
+                            <tr>
+                                <td>{{ socio.numero_documento }}</td>
+                                <td>{{socio.nombre}}</td>
+                                <td>{{socio.apellido}}</td>
+                                {% if socio.estado == 0 %}
+                                    <td><span class="label label-primary">Activo</span></td>
+                                {% else %}
+                                    <td><span class="label label-danger">Inactivo</span></td>
+                                {% endif %}
+                                <td>
+                                    <a href="#" data-target="#modal-consultar-{{socio.id}}" data-toggle="modal"><i class="fa fa-eye"> Vista previa </i></a><br>
+                                    <a href="{% url 'editar_socio' socio.id %}"><i class="fa fa-gear"> Modificar </i></a><br>
+                                    <a href="#" data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal"><i class="fa fa-refresh"> Activar/Desactivar </i></a>
+                                </td>
+                            </tr>
 
                             <!-- modales -->
                             <div class="modal fade" id="modal-desactivar-{{socio.id}}">
@@ -108,17 +111,12 @@
                                     </div>
                                 </div>
                             </div>
-
-                            {% empty %}
-                                <tr>
-                                    <td colspan="4" align="center">
-                                        <b>No hay socios registrados</b>
-                                    </td>
-                                </tr>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="alert alert-warning fade in m-b-15"><strong>No hay socios registrados</strong></div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -128,7 +126,7 @@
     {% if edicion %}
         <script>
             $(document).ready(function(){
-                $("select").css("pointer-events", "none");
+                $("#id_tipo_documento").css("pointer-events", "none");
             });
         </script>
     {% endif %}

@@ -335,6 +335,9 @@ class DeporteForm(ModelForm):
         model = TipoDisciplinaDeportiva
         exclude = ('',)
 
+#Formulario Socio de un club
+#Autor: Diego Monsalve
+#Fecha: 02/03/2016
 class SocioClubForm(ModelForm):
     required_css_class = 'required'
 
@@ -346,7 +349,7 @@ class SocioClubForm(ModelForm):
 
     class Meta:
         model = SocioClub
-        exclude = ('estado',)
+        exclude = ('estado','club_id')
         
         
 #Formulario Planes de Costo de un club.
