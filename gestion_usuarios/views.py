@@ -301,10 +301,10 @@ def inicio_tenant(request):
 
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
-    entidad = tipoTenant.obtener_datos_entidad()   
+    entidad = tipoTenant.obtener_datos_entidad()
 
     if request.tenant.tipo == 3:
-        entidad['planes_de_costo']= entidad['planes_de_costo'].filter(estado=1)
+        entidad['planes_de_costo']= entidad['planes_de_costo'].filter(estado=0)
         entidad['socios'] = entidad['socios'].filter(estado=0)
     try:
         noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
