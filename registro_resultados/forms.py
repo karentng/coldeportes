@@ -102,3 +102,6 @@ class EquipoPuntosForm(forms.ModelForm):
     class Meta:
         model = Equipo
         exclude = ("competencia", 'tiempo', 'marca')
+
+class CompetenciasBaseDeDatos(forms.Form):
+    archivo = forms.FileField(label="Archivo de competencias")
