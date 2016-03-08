@@ -2,7 +2,7 @@
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="fa fa-list-alt"></i>
-        <span class="colorMenu">PUBLICIDAD</span>
+        <span class="colorMenu">CLASIFICADOS</span>
     </a>
     <ul class="sub-menu">
         {% if perms.publicidad.add_clasificado %}
@@ -16,7 +16,7 @@
             </li>
         {% endif %}
         <li {% if "/clasificados/listar" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'listar_clasificados' %}">Listar clasificados</a>
+            <a href="{% url 'listar_clasificados' %}">Ver clasificados</a>
         </li>
     </ul>
 </li>

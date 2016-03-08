@@ -110,7 +110,7 @@
                                 <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
                                 ¿Desea incluir algún valor, precio o salario en su clasificado?
                             </div>
-                            <div class="{% if not edicion %}display-none {% endif %} animated" id="valor-mostrar">
+                            <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
                                 {% bootstrap_field field %}
                             </div>
                         {% else %}
