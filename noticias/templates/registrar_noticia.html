@@ -52,6 +52,7 @@
                 }else {
                     $("#previsualizacion").val(str.substring(0, 150));
                 }
+                console.log($("#previsualizacion").val());
                 {% if edicion %}
                     if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
                         document.getElementById(formId).submit();

@@ -87,6 +87,7 @@ def editar_noticia(request, id_noticia):
                 if noticia.video:
                     noticia.video = noticia.video.replace("watch?v=", "embed/")
 
+                noticia.previsualizacion = request.POST.get("previsualizacion")
                 noticia.etiquetas = noticia.etiquetas.upper()
                 form.save()
 
