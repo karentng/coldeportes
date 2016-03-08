@@ -44,9 +44,11 @@
                             <th>Logo</th>
                             <th>Nombre</th>
                             <th>Deporte</th>
+                            <th>Tipos de Participantes</th>
                             <th>Fecha</th>
                             <th>Categoría</th>
                             <th>Modalidad</th>
+                            <th>Tipo de Registros</th>
                             <th>Descripción</th>
                             <th>Opciones</th>
                         </tr>
@@ -63,17 +65,21 @@
                             </td>
                             <td>{{competencia.nombre}}</td>
                             <td>{{competencia.deporte}}</td>
+                            <td>{{competencia.get_tipos_participantes_display}}</td>
                             <td>{{competencia.fecha_competencia}}</td>
                             <td>{%if competencia.categoria %}{{competencia.categoria}}{% else %}No registra{% endif %}</td>
                             <td>{%if competencia.modalidad %}{{competencia.modalidad}}{% else %}No registra{% endif %}</td>
+                            <td>{{competencia.get_tipo_registro_display}}</td>
                             <td>{{competencia.descripcion}}</td>
                             <td>
                                 <a href='{% url 'listar_participantes' competencia.id %}'>
                                     <i class="fa fa-check"></i> Ingresar Resultados
                                 </a><br>
+                                {% comment %}
                                 <a href='{% url 'datos_competencia' juego_id competencia.id %}'>
                                     <i class="fa fa-edit"></i> Modificar
                                 </a><br>
+                                {% endcomment %}
                                 <a href='{% url 'eliminar_competencia' juego_id competencia.id %}'>
                                     <i class="fa fa-trash"></i> Eliminar
                                 </a><br>

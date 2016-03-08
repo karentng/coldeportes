@@ -8,7 +8,7 @@ from manual.models import Articulo
 
 
 class ArticuloForm(forms.ModelForm):
-    #required_css_class = 'required'
+    required_css_class = 'required'
 
     class Meta:
         model = Articulo

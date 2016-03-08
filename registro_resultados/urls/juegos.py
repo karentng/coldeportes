@@ -7,7 +7,7 @@ urlpatterns = patterns('registro_resultados.views',
     url(r'listar$', 'listar_juegos', name='listar_juegos'),
 
     url(r'(\d+)/datos-competencia$', 'datos_competencia', name='datos_competencia'),
-    url(r'(\d+)/datos-competencia/(\d+)$', 'datos_competencia', name='datos_competencia'),
+    #url(r'(\d+)/datos-competencia/(\d+)$', 'datos_competencia', name='datos_competencia'),
     url(r'(\d+)/competencia/(\d+)/eliminar$', 'eliminar_competencia', name='eliminar_competencia'),
     url(r'(\d+)/listado-competencias$', 'listado_competencias', name='listado_competencias'),
     
@@ -23,6 +23,8 @@ urlpatterns = patterns('registro_resultados.views',
     url(r'^competencia/(\d+)/participante-tiempos/(\d+)$', 'participante_tiempos', name='participante_tiempos'),
     url(r'^competencia/(\d+)/participantes-puntos$', 'participante_puntos', name='participante_puntos'),
     url(r'^competencia/(\d+)/participantes-puntos/(\d+)$', 'participante_puntos', name='participante_puntos'),
+    url(r'^competencia/(\d+)/participantes-metros$', 'participante_metros', name='participante_metros'),
+    url(r'^competencia/(\d+)/participantes-metros/(\d+)$', 'participante_metros', name='participante_metros'),
     url(r'^competencia/(\d+)/eliminar-participante/(\d+)$', 'eliminar_participante', name='eliminar_participante'),
 
     url(r'^competencia/(\d+)/datos-equipo$', 'datos_equipo', name='datos_equipo'),
@@ -30,6 +32,8 @@ urlpatterns = patterns('registro_resultados.views',
     url(r'^competencia/(\d+)/equipo-tiempos/(\d+)$', 'equipo_tiempos', name='equipo_tiempos'),
     url(r'^competencia/(\d+)/equipo-puntos$', 'equipo_puntos', name='equipo_puntos'),
     url(r'^competencia/(\d+)/equipo-puntos/(\d+)$', 'equipo_puntos', name='equipo_puntos'),
+    url(r'^competencia/(\d+)/equipo-metros$', 'equipo_metros', name='equipo_metros'),
+    url(r'^competencia/(\d+)/equipo-metros/(\d+)$', 'equipo_metros', name='equipo_metros'),
     url(r'^competencia/(\d+)/eliminar-equipo/(\d+)$', 'eliminar_equipo', name='eliminar_equipo'),
     
     #ajax para modalidades y categorías

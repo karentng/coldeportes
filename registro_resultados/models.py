@@ -25,11 +25,16 @@ class Competencia(models.Model):
         (1, "Olímpica"),
         (2, "Paralímpica"),
     )
+    TIPOS_REGISTROS = (
+        (1, "Tiempos"),
+        (2, "Puntos"),
+        (3, "Metros"),
+    )
     
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     fecha_competencia = models.DateField(verbose_name="Fecha de la compentencia")
     tipo_competencia = models.IntegerField(choices=TIPOS_COMPETENCIAS, verbose_name="tipo de competencia")
-    tipo_registro = models.IntegerField()
+    tipo_registro = models.IntegerField(choices=TIPOS_REGISTROS)
     lugar = models.CharField(max_length=150)
     tipos_participantes = models.IntegerField(choices=TIPOS_PARTICIPANTES, verbose_name="tipo de participantes")
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Disciplina Deportiva')
@@ -46,6 +51,7 @@ class Equipo(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     tiempo = models.TimeField(blank=True, null=True)
     puntos = models.IntegerField(default=0, null=True)
+    metros = models.IntegerField(default=0, null=True)
     departamento = models.ForeignKey(Departamento)
     marca = models.TimeField(blank=True, null=True)
     posicion = models.IntegerField(default=0)    
@@ -63,15 +69,16 @@ class Participante(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     genero = models.CharField(max_length=11, choices=GENEROS, verbose_name='Género del deportista')
     departamento = models.ForeignKey(Departamento)
-    club = models.CharField(max_length=100, verbose_name='Club de Registro')
-    fecha_nacimiento = models.DateField()
-    estatura = models.PositiveIntegerField(verbose_name='estatura (cm)')
-    peso = models.PositiveIntegerField(verbose_name='peso (kg)')
+    club = models.CharField(max_length=100, verbose_name='Club de Registro', null=True, blank=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    estatura = models.PositiveIntegerField(verbose_name='estatura (cm)', null=True, blank=True)
+    peso = models.PositiveIntegerField(verbose_name='peso (kg)', null=True, blank=True)
 
     posicion = models.IntegerField(default=0)
+    metros = models.DecimalField(default=0, null=True, max_digits=3, decimal_places=2)
     puntos = models.IntegerField(default=0, null=True)
-    tiempo = models.TimeField(blank=True, null=True)
-    marca = models.TimeField(blank=True, null=True)
-    equipo = models.ForeignKey(Equipo, null=True, blank=True)
+    tiempo = models.TimeField(null=True)
+    marca = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=3)
+    equipo = models.ForeignKey(Equipo, null=True)
     creado = models.DateTimeField(auto_now_add=True)
-    competencia = models.ForeignKey(Competencia, null=True, blank=True)
+    competencia = models.ForeignKey(Competencia, null=True)
