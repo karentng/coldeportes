@@ -89,7 +89,9 @@ class CaracterizacionEscenario(models.Model):
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
     descripcion = models.TextField(verbose_name='descripción',  max_length=1024, null=True)
     tiene_planos = models.BooleanField(verbose_name='¿se cuenta con los planos del escenario?', default=False)
-    plano_archivo = models.FileField(upload_to="planos_escenarios/", verbose_name="Plano del escenario", null=True, blank=True)
+    plano_archivo = models.FileField(upload_to="archivos_escenarios/", verbose_name="Plano del escenario (opcional)", null=True, blank=True)
+    ficha_catastral = models.FileField(upload_to="archivos_escenarios/", verbose_name="Ficha catastral (opcional)", null=True, blank=True)
+    certificado_tradicio_libertad = models.FileField(upload_to="archivos_escenarios/", verbose_name="Certificado de tradición y libertad (opcional)", null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HorarioDisponibilidad(models.Model):
