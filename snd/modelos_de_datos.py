@@ -418,6 +418,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_escenario',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -597,6 +602,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_cajacompensacion',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],

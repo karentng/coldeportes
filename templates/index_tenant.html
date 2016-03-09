@@ -20,7 +20,7 @@
     <script src="{{STATIC_URL}}amcharts/exporting/amexport.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/canvg.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
-    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>    
+    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
     <script type="text/javascript">
         datosMostrar = "{{ubicaciones}}";
         posicionInicial = "{{posicionInicial}}";
@@ -80,7 +80,7 @@
                     <ul class="result-list">
                         <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">
                             <div class="result-image">
-                                <img src="{{ STATIC_URL }}img/info-tenant-imagen.png" alt=""/>
+                                <img src="{{ STATIC_URL }}img/info-tenant-imagen.png" alt="Info Tenant"/>
                             </div>
                             <div class="result-info">
                                 <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>
@@ -89,7 +89,7 @@
                                     {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
                                 </p>
                                 <div class="m-b-10">
-                                    {% if entidad.tipo_tenant == "Club" %}
+                                    {% if entidad.tipo_tenant == "Club" and user.is_authenticated %}
                                         <a href="" data-target="#modal-socios" data-toggle="modal" style="margin-right: 10px;"> <i class="fa fa-group"></i> Ver socios del club</a>
                                         <a data-toggle="modal" data-target="#modal-planes"  href=""><i class="fa fa-money"></i> Ver planes de costos</a>
                                     {% endif %}

@@ -86,7 +86,7 @@ class HorariosDisponibleForm(ModelForm):
 class DatoHistoricoForm(ModelForm):
     required_css_class = 'required'
     
-    fecha_fin = forms.DateField(widget=MyDateWidget(), required=False)
+    fecha_fin = forms.DateField(widget=MyDateWidget(), required=False, label="Fecha fin del suceso histórico del escenario")
     def __init__(self, *args, **kwargs):
         super(DatoHistoricoForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3

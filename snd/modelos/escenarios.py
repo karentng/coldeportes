@@ -56,6 +56,38 @@ class Escenario(models.Model):
     def tipo_escenario(self):
         return self.caracteristicas().tipo_escenario
 
+    def posicionInicialMapa(self):
+        if self.latitud != None and self.longitud != None:
+            coordenadas = [self.latitud, self.longitud]
+        else:
+            try:
+                ciudad = self.ciudad
+            except Exception:
+                ciudad = Ciudad.objects.get(nombre="Bogotá D.C.")
+
+            coordenadas = [ciudad.latitud, ciudad.longitud]
+
+        return coordenadas
+
+    def obtener_atributos(self):
+        from django.conf import settings
+        imagen = None
+        if len(self.fotos()) != 0:
+            imagen = ("%s%s")%(settings.MEDIA_URL, self.fotos()[0].__str__())
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/EscenarioView.PNG")
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Comuna", self.comuna],
+            ["Barrio", self.barrio],
+            ["Estrato", self.estrato],
+            ["Dirección", self.direccion],
+            ["Latitud", self.latitud],
+            ["Longitud", self.longitud],
+        ]
+        return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
+
     def __str__(self):
         return self.nombre
 
@@ -88,6 +120,10 @@ class CaracterizacionEscenario(models.Model):
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
     descripcion = models.TextField(verbose_name='descripción',  max_length=1024, null=True)
+    tiene_planos = models.BooleanField(verbose_name='¿se cuenta con los planos del escenario?', default=False)
+    plano_archivo = models.FileField(upload_to="archivos_escenarios/", verbose_name="Plano del escenario (opcional)", null=True, blank=True)
+    ficha_catastral = models.FileField(upload_to="archivos_escenarios/", verbose_name="Ficha catastral (opcional)", null=True, blank=True)
+    certificado_tradicio_libertad = models.FileField(upload_to="archivos_escenarios/", verbose_name="Certificado de tradición y libertad (opcional)", null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HorarioDisponibilidad(models.Model):
@@ -137,9 +173,9 @@ class Mantenimiento(models.Model):
 
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
-    fecha_inicio = models.DateField()
+    fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico del escenario")
     fecha_fin = models.DateField(null=True, blank=True)
-    descripcion = models.TextField(max_length=1024, verbose_name="descripción")
+    descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico del escenario")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class Contacto(models.Model):

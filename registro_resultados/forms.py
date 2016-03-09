@@ -22,6 +22,7 @@ class CompetenciaForm(forms.ModelForm):
     TIPOS_REGISTROS = (
         (1, "Tiempos"),
         (2, "Puntos"),
+        (3, "Metros"),
     )
     tipo_registro = forms.ChoiceField(widget=forms.RadioSelect, choices=TIPOS_REGISTROS, label='Registros De Competencia')
 
@@ -44,6 +45,7 @@ class CompetenciaForm(forms.ModelForm):
         }
 
 class ParticipanteTiempoForm(forms.ModelForm):
+    required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
         competencia = kwargs.pop('competencia')
@@ -58,6 +60,8 @@ class ParticipanteTiempoForm(forms.ModelForm):
         }
 
 class ParticipantePuntosForm(forms.ModelForm):
+    required_css_class = 'required'
+
 
     def __init__(self, *args, **kwargs):
         competencia = kwargs.pop('competencia')
@@ -71,7 +75,25 @@ class ParticipantePuntosForm(forms.ModelForm):
             'fecha_nacimiento': MyDateWidget(),
         }
 
+class ParticipanteMetrosForm(forms.ModelForm):
+    required_css_class = 'required'
+
+
+    def __init__(self, *args, **kwargs):
+        competencia = kwargs.pop('competencia')
+        super(ParticipanteMetrosForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+    
+    class Meta:
+        model = Participante
+        exclude = ("competencia", 'tiempo', 'equipo', 'puntos')
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
+
 class ParticipanteEquipoForm(forms.ModelForm):
+    required_css_class = 'required'
+
 
     def __init__(self, *args, **kwargs):
         competencia = kwargs.pop('competencia')
@@ -86,6 +108,8 @@ class ParticipanteEquipoForm(forms.ModelForm):
         }
 
 class EquipoTiempoForm(forms.ModelForm):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(EquipoTiempoForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
@@ -95,6 +119,8 @@ class EquipoTiempoForm(forms.ModelForm):
         exclude = ("competencia", 'puntos')
 
 class EquipoPuntosForm(forms.ModelForm):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(EquipoPuntosForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
@@ -102,3 +128,14 @@ class EquipoPuntosForm(forms.ModelForm):
     class Meta:
         model = Equipo
         exclude = ("competencia", 'tiempo', 'marca')
+
+class EquipoMetrosForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(EquipoMetrosForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+
+    class Meta:
+        model = Equipo
+        exclude = ("competencia", 'tiempo', 'puntos')

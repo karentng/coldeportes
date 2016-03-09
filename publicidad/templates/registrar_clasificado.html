@@ -27,7 +27,7 @@
         var urlMedia = "/clasificados/";
         var picture = "";
         {% if edicion %}
-            picture = "{{ MEDIA_URL }}{{ foto }}"
+            picture = "{{ MEDIA_URL }}{{ foto }}";
         {% endif %}
 
         $("#check-mostrar-valor").click(function(){
@@ -37,7 +37,7 @@
 
         $("#id_etiquetas").tagit({
             singleField:true,
-            singleFieldDelimiter: ",",
+            singleFieldDelimiter: ","
         });
 
         $('#submit-crop').click(function(event){

@@ -25,7 +25,7 @@ def registrar_clasificado(request):
             clasificado = form.save(commit=False)
             nueva_foto = request.POST.get('imagen-crop')
 
-            clasificado.titulo=clasificado.titulo.upper()
+            clasificado.titulo = clasificado.titulo.upper()
 
             if nueva_foto == "No":
                 clasificado.foto = "clasificados/clasificados-default.png"
@@ -55,6 +55,7 @@ def listar_clasificados(request):
     return render(request, 'listar_clasificados.html', {'clasificados': clasificados, "form": form})
 
 
+@login_required
 def gestionar_clasificados(request):
 
     clasificados = Clasificado.objects.all()
@@ -81,12 +82,12 @@ def editar_clasificado(request, id_clasificado):
                 clasificado_form = form.save(commit=False)
                 if nueva_foto != "No":
                     clasificado_form.foto = nueva_foto
-                form.save()
 
-                messages.success(request,'El clasificado se ha editado correctamente')
+                clasificado_form.titulo = clasificado_form.titulo.upper()
+                form.save()
+                messages.success(request, 'El clasificado se ha editado correctamente')
                 return redirect('listar_clasificados')
-    return render(request,'registrar_clasificado.html', {'form': form,
-                                                        'edicion': True, "foto": foto})
+    return render(request, 'registrar_clasificado.html', {'form': form, 'edicion': True, "foto": foto})
 
 
 @login_required
@@ -139,7 +140,7 @@ def crop_pic(request):
                 y2 = int(form.cleaned_data['cropH']) + y1
 
                 newim = newim.crop((x1, y1, x2, y2))
-                nombre_tiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S");
+                nombre_tiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
                 url_media = request.POST.get("url_media")
                 print(settings.MEDIA_ROOT)
                 nombre_imagen = url_media+str(nombre_tiempo)+".png"
@@ -152,7 +153,7 @@ def crop_pic(request):
                     }
 
             except Exception as e:
-                print(e)
+                response_data = {"status": "error", 'message': str(e)}
         else:
             response_data = {"status": "error", 'message': form.errors}
 
