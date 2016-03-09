@@ -23,7 +23,10 @@ $(document).ready(function(){
         onAfterImgCrop: function(mns){
 
             var img = mns["url"];
-            $("#imagen-hidden").val(img);
+            var status = mns["status"];
+            if(status != "error"){
+                $("#imagen-hidden").val(img);
+            }
 
             console.log(mns);
 
