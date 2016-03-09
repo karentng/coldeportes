@@ -746,8 +746,9 @@ class SocioClub(models.Model):
     nombre = models.CharField(max_length=255, verbose_name="Nombres")
     apellido = models.CharField(max_length=255, verbose_name="Apellidos")
     correo = models.EmailField(max_length=255, blank=True, verbose_name="Correo electrónico")
-    ciudad = models.ForeignKey(Ciudad)
-    empresa = models.CharField(max_length=255, blank=True, verbose_name="Empresa")
+    fecha_incorporacion = models.DateField(verbose_name="Fecha de incorporación")
+    ciudad = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
+    direccion = models.CharField(max_length=255, verbose_name="Dirección de residencia", blank=True)
     estado = models.IntegerField(choices=ESTADO, default=0)
 
     class Meta:

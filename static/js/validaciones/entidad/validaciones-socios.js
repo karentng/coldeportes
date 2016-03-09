@@ -43,10 +43,14 @@ fields = {
             }
         }
     },
-    ciudad: {
+    fecha_incorporacion: {
         validators: {
             notEmpty: {
-                message: "La ciudad no puede ser vacía"
+                message: "La fecha de incorporación no puede ser vacía"
+            },
+            date: {
+                format: "YYYY-MM-DD",
+                message: "La fecha no es válida"
             }
         }
     }
