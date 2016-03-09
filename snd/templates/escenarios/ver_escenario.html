@@ -104,7 +104,25 @@
                                                 Clases de uso: 
                                                 {% for uso in caracteristica.clase_uso.all %}  
                                                     {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
-                                                {% endfor %}                    
+                                                {% endfor %} <br>
+                                                Planos escenarios:
+                                                {% if caracteristica.plano_archivo %}
+                                                    <a href="{{ MEDIA_URL }}{{ caracteristica.plano_archivo }}" target="_blank">{{ caracteristica.plano_archivo.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}<br>
+                                                Ficha catastral:
+                                                {% if caracteristica.ficha_catastral %}
+                                                    <a href="{{ MEDIA_URL }}{{ caracteristica.ficha_catastral }}" target="_blank">{{ caracteristica.ficha_catastral.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}<br>
+                                                Certificado de tradicion de libertad:
+                                                {% if caracteristica.certificado_tradicio_libertad %}
+                                                    <a href="{{ MEDIA_URL }}{{ caracteristica.certificado_tradicio_libertad }}" target="_blank">{{ caracteristica.certificado_tradicio_libertad.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
@@ -284,7 +302,6 @@
                                                     <th>FECHA ÚLTIMO MANTENIMIENTO</th>
                                                     <th>DESCRIPCIÓN ÚLTIMO MANTENIMIENTO</th>
                                                     <th>PERIODICIDAD</th>
-                                                    <th>¿TIENE PLANOS?</th>
                                                     <th>RAZONES NO MANTENIMIENTO</th>
                                                 </tr>
                                             </thead>
@@ -294,7 +311,6 @@
                                                     <td>{% if matenimiento.fecha_ultimo_mantenimiento %}{{matenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
                                                     <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{matenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
                                                     <td>{% if mantenimiento.get_periodicidad_display %}{{matenimiento.get_periodicidad_display}}{% endif %}</td>
-                                                    <td>{% if matenimiento.tiene_planos %} Sí {% else %} No {% endif %}</td>
                                                     <td>{% if mantenimiento.razones_no_mantenimiento %}{{matenimiento.razones_no_mantenimiento}}{% endif %}</td>
                                                 </tr> 
                                                 {% endfor %}                               
