@@ -137,7 +137,7 @@ class Mantenimiento(models.Model):
 
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
-    fecha_inicio = models.DateField(help_text="Esto es otra prueba")
+    fecha_inicio = models.DateField()
     fecha_fin = models.DateField(null=True, blank=True)
     descripcion = models.TextField(max_length=1024, verbose_name="descripción", help_text="Esto es una prueba")
     fecha_creacion = models.DateTimeField(auto_now_add=True)

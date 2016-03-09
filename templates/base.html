@@ -303,6 +303,20 @@
     <!-- ================== END PAGE LEVEL JS ================== -->
     <script src="{{STATIC_URL}}js/select2.min.js"></script> 
     <script src="{{STATIC_URL}}js/jquery.datetimepicker.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script>
+        $(document).ready(function(){
+            var helpTexts = $(".help-block");
+
+            $.each($(".help-block"),function(){
+                var bloqueActual = $(this);
+                nuevoElemento = bloqueActual.siblings("label");
+                nuevoElemento.after(" <span style='font-size:14px;color: #0044cc;'><i class='fa fa-question-circle add-tooltip' data-placement='right' data-toggle='tooltip' data-original-title='"+bloqueActual.text()+"'></i></span>");
+                bloqueActual.remove();
+            });
+        });
+    </script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             $('[data-toggle=tooltip]').tooltip();
@@ -338,14 +352,6 @@
         {% endfor %}
     </script>
 
-    <script>
-        $(document).ready(function(){
-            var helpTexts = $(".help-block");
-            for(i=0;i<helpTexts.length;i++){
-                console.log(helpTexts[i].innerText);
-            }
-        });
-    </script>
 
     {% block js %}
     {% endblock %}
