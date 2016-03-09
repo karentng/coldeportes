@@ -11,13 +11,13 @@
         <span class="colorMenu">INICIO</span>
     </a>
 </li>
-<!-- ----------------------------------------------- -->
+<!-- =============================================== -->
 
 <!-- CUANDO EL USUARIO ES SUPER USUARIO Y NO HAY RESTRICCIÓN DE TENANT -->
 {% if request.user.is_superuser %}
     {% include "menus/aplicacion/usuarios.html" %}
 {% endif %}
-<!-- ----------------------------------------------- -->
+<!-- =============================================== -->
 
 {% if request.tenant.schema_name != 'public' %}
     {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo == 3%}
