@@ -263,7 +263,7 @@ def wizard_caracterizacion(request, escenario_id):
     
     if request.method == 'POST':
         
-        caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
+        caracterizacion_form = CaracterizacionForm(request.POST, request.FILES, instance=caracteristicas)
 
         if caracterizacion_form.is_valid():
             caracteristicas = caracterizacion_form.save(commit=False)
