@@ -337,6 +337,16 @@
             });
         {% endfor %}
     </script>
+
+    <script>
+        $(document).ready(function(){
+            var helpTexts = $(".help-block");
+            for(i=0;i<helpTexts.length;i++){
+                console.log(helpTexts[i].innerText);
+            }
+        });
+    </script>
+
     {% block js %}
     {% endblock %}
     {% block script %}
