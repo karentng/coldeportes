@@ -20,24 +20,33 @@
         <div class="panel-body">
             <div id="jstree-default">
                 <ul>
-                    {% for item in items %}
-                    <li {% if articulo.modulo == item.0 %} data-jstree='{"opened":true}' {% endif %}>
-                        {{item.1}}
-                        
-                        {% for entrada in articulos %}
-                            {% if entrada.modulo == item.0 %}
-                            <ul>
-                                <li {% if entrada.id == articulo.id %} data-jstree='{"opened":true, "selected":true, "icon" : "fa fa-book fa-lg text-primary" }' {% else %} data-jstree='{ "icon" : "fa fa-book fa-lg text-primary"}' {% endif %}>
+                    {% for entidad in entidades %}
+                    <li> {{entidad.1}}
+                        <ul>
+                            {% for item in items %}
+                            <li {% if articulo.modulo == item.0 %} data-jstree='{"opened":true}' {% endif %}>
+                                {{item.1}}
+                                
+                                {% for entrada in articulos %}
+                                    {% if entrada.modulo == item.0 %}
+                                        {% if entrada.entidad == entidad.0 %}
 
-                                    <a href="{% url 'listar_articulo_manual' entrada.id %}">{{entrada.titulo}}</a>
+                                        <ul>
+                                            <li {% if entrada.id == articulo.id %} data-jstree='{"opened":true, "selected":true, "icon" : "fa fa-book fa-lg text-primary" }' {% else %} data-jstree='{ "icon" : "fa fa-book fa-lg text-primary"}' {% endif %}>
 
-                                </li>
-                            </ul>
-                            {% endif %}
-                        {% endfor %}
+                                                <a href="{% url 'listar_articulo_manual' entrada.id %}">{{entrada.titulo}}</a>
 
+                                            </li>
+                                        </ul>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </li>
-                    {% endfor %}
+                    {% endfor %}            
                 </ul>
             </div>
         </div>
@@ -49,17 +58,30 @@
             <h4 class="panel-title">Visualizando{% if articulo %}: {{articulo.titulo}} {% endif %}</h4>
         </div>
         <div class="panel-body">
-            <fieldset>
-                <div class="well row">
-                    <h3>{{articulo.titulo}}</h3>
-                    <br>
-                    <h4>{{articulo.subtitulo}}:</h4>
-                    <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5><br>
-                    <div class="col-md-12">
-                        <p align="justify">{{articulo.contenido|safe}}</p>
-                    </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {% if articulo %}
+                    <button class="btn btn-sm btn-info pull-right" href="{% url 'editar_articulo_manual' articulo.id %}" >
+                    <i class=""></i>  Editar
+                    </button><br><br>
+                    {% endif %}
                 </div>
-            </fieldset>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <div class="well row">
+                            <h3>{{articulo.titulo}}</h3>
+                            <br>
+                            <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5><br>
+                            <div class="col-md-12">
+                                <p align="justify">{{articulo.contenido|safe}}</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>    
+            </div>
         </div>
     </div>    
 </div>

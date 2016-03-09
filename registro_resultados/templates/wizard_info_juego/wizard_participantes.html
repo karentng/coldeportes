@@ -59,7 +59,8 @@
                             {% if individual %}<th>Club</th>{% endif %}
                             {% if puntos %}<th>Puntos</th>{% endif %}
                             {% if not puntos %}<th>Marca</th>{% endif %}
-                            {% if not puntos %}<th>Tiempo</th>{% endif %}
+                            {% if not puntos %}{% if not metros %}<th>Tiempo</th>{% endif %}{% endif %}
+                            {% if metros %}<th>Metros</th>{% endif %}
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -78,18 +79,29 @@
                               {% else %}
                                 <td> -- </td>
                               {% endif %}
+                              {% if metros %}
+                              <td>{{participante.metros}}</td>
+                              {% else %}
+                              <td>{{participante.tiempo}}</td>
+                              {% endif %}
                             {% endif %}
-                            {% if not puntos %}<td>{{participante.tiempo}}</td>{% endif %}
                             <td>
-                              {% if indiviual %}
+                              {% if individual %}
                                 {% if puntos %}
                                   <a href='{% url "participante_puntos" competencia_id participante.id %}'>
                                       <i class="fa fa-edit"></i> Modificar
                                   </a><br>
                                 {% else %}
+
+                                  {% if metros %}
+                                  <a href='{% url "participante_metros" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                  {% else %}
                                   <a href='{% url "participante_tiempos" competencia_id participante.id %}'>
                                       <i class="fa fa-edit"></i> Modificar
                                   </a><br>
+                                  {% endif %}
                                 {% endif %}
                                 <a href='{% url "eliminar_participante" competencia_id participante.id %}'>
                                     <i class="fa fa-trash"></i> Eliminar
@@ -104,9 +116,15 @@
                                       <i class="fa fa-edit"></i> Modificar
                                   </a><br>
                                 {% else %}
+                                  {% if metros %}
+                                  <a href='{% url "equipo_metros" competencia_id participante.id %}'>
+                                      <i class="fa fa-edit"></i> Modificar
+                                  </a><br>
+                                  {% else %}
                                   <a href='{% url "equipo_tiempos" competencia_id participante.id %}'>
                                       <i class="fa fa-edit"></i> Modificar
                                   </a><br>
+                                  {% endif %}
                                 {% endif %}
                                 <a href='{% url "eliminar_equipo" competencia_id participante.id %}'>
                                     <i class="fa fa-trash"></i> Eliminar

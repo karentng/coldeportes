@@ -97,16 +97,21 @@ def datos_participante(request, competencia_id):
         return redirect('participante_tiempos', competencia_id)
     elif competencia.tipo_registro == 2:
         return redirect('participante_puntos', competencia_id)
+    elif competencia.tipo_registro == 3:
+        return redirect('participante_metros', competencia_id)
     
 @login_required
 def eliminar_participante(request, competencia_id, participante_id):
+    competencia = Competencia.objects.get(id=competencia_id)
     participante = Participante.objects.get(id=participante_id, competencia=competencia_id)
     participante.delete()
 
-    if request.session['puntos']==0:
+    if competencia.tipo_registro == 1:
+        return redirect('participante_tiempos', competencia_id)        
+    elif competencia.tipo_registro == 2:
         return redirect('participante_puntos', competencia_id)
-    elif request.session['puntos']==1:
-        return redirect('participante_tiempos', competencia_id)
+    elif competencia.tipo_registro == 3:
+        return redirect('participante_metros', competencia_id)
     else:
         return redirect('participante_equipo', competencia_id)
 
@@ -149,8 +154,6 @@ def participante_equipo(request, competencia_id, equipo_id, participante_id=None
 @login_required
 def participante_puntos(request, competencia_id, participante_id=None):
     competencia = Competencia.objects.get(id=competencia_id)
-    participantes = Participante.objects.filter(competencia=competencia_id)
-    request.session['puntos']=0
 
     try:
         participante = Participante.objects.get(id=participante_id)
@@ -184,7 +187,6 @@ def participante_puntos(request, competencia_id, participante_id=None):
 @login_required
 def participante_tiempos(request, competencia_id, participante_id=None):
     competencia = Competencia.objects.get(id=competencia_id)
-    request.session['puntos']=1
 
     try:
         participante = Participante.objects.get(id=participante_id)
@@ -192,11 +194,11 @@ def participante_tiempos(request, competencia_id, participante_id=None):
         participante = None
 
 
-    form = ParticipanteTiempoForm(competencia=competencia, instance=participante)
+    form = ParticipanteTiempoForm(competencia=competencia_id, instance=participante)
 
     if request.method == "POST":
 
-        form = ParticipanteTiempoForm(request.POST, competencia=competencia, instance=participante)
+        form = ParticipanteTiempoForm(request.POST, competencia=competencia_id, instance=participante)
         if form.is_valid():
             participante_nuevo = form.save(commit=False)
             participante_nuevo.competencia = competencia
@@ -215,14 +217,48 @@ def participante_tiempos(request, competencia_id, participante_id=None):
 
 
 @login_required
+def participante_metros(request, competencia_id, participante_id=None):
+    competencia = Competencia.objects.get(id=competencia_id)
+
+    try:
+        participante = Participante.objects.get(id=participante_id)
+    except Exception:
+        participante = None
+
+
+    form = ParticipanteMetrosForm(competencia=competencia, instance=participante)
+
+    if request.method == "POST":
+
+        form = ParticipanteMetrosForm(request.POST, competencia=competencia, instance=participante)
+        if form.is_valid():
+            participante_nuevo = form.save(commit=False)
+            participante_nuevo.competencia = competencia
+            participante_nuevo.save()
+            messages.success(request, "Participante registrado correctamente.")
+            return redirect('listar_individual', competencia_id)
+            
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
+        "form": form,
+        'wizard_stage': 1,
+        'individual': True,
+        'metros': True,        
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id
+        
+    })
+
+
+
+@login_required
 def medalleria_por_competencia(request, competencia_id):
     competencia = Competencia.objects.get(id=competencia_id)
 
-    if request.session['puntos']==0:
+    if competencia.tipos_participantes == 1:
         resultados1 = Participante.objects.filter(competencia=competencia_id, posicion=1)
         resultados2 = Participante.objects.filter(competencia=competencia_id, posicion=2)
         resultados3 = Participante.objects.filter(competencia=competencia_id, posicion=3)
-    elif request.session['puntos']==1:
+    elif competencia.tipos_participantes == 2:
         resultados1 = Equipo.objects.filter(competencia=competencia_id, posicion=1)
         resultados2 = Equipo.objects.filter(competencia=competencia_id, posicion=2)
         resultados3 = Equipo.objects.filter(competencia=competencia_id, posicion=3)
@@ -244,10 +280,13 @@ def eliminar_equipo(request, competencia_id, participante_id):
     equipo = Equipo.objects.get(id=participante_id, competencia=competencia_id)
     equipo.delete()
 
-    if request.session['puntos']==0:
-        return redirect('equipo_puntos', competencia_id)
-    elif request.session['puntos']==1:
+    if competencia.tipo_registro == 1:
         return redirect('equipo_tiempos', competencia_id)
+    elif competencia.tipo_registro == 2:
+        return redirect('equipo_puntos', competencia_id)
+    elif competencia.tipo_registro == 3:
+        return redirect('equipo_metros', competencia_id)
+
 
 @login_required
 def datos_equipo(request, competencia_id):
@@ -257,6 +296,8 @@ def datos_equipo(request, competencia_id):
         return redirect('equipo_tiempos', competencia_id)
     elif competencia.tipo_registro == 2:
         return redirect('equipo_puntos', competencia_id)
+    elif competencia.tipo_registro == 3:
+        return redirect('equipo_metros', competencia_id)
         
 
 @login_required
@@ -272,19 +313,23 @@ def listar_participantes(request, competencia_id):
 def listar_individual(request, competencia_id):
     participantes = Participante.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
+    puntos = False
+    metros = None
 
     if competencia.tipo_registro == 1:
         puntos = False
     elif competencia.tipo_registro == 2:
         puntos = True
-
+    elif competencia.tipo_registro == 3:
+        metros = True
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         'wizard_stage': 1,
         'participantes': participantes,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id,
         'individual': True,
-        'puntos': puntos
+        'puntos': puntos,
+        'metros': metros
 
 
     })
@@ -293,18 +338,23 @@ def listar_individual(request, competencia_id):
 def listar_equipos(request, competencia_id):
     equipos = Equipo.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
+    puntos = False
+    metros = None
 
     if competencia.tipo_registro == 1:
         puntos = False
     elif competencia.tipo_registro == 2:
         puntos = True
+    elif competencia.tipo_registro == 3:
+        metros = True
 
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         'wizard_stage': 1,
         'participantes': equipos,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id,
-        'puntos': puntos
+        'puntos': puntos,
+        'metros': metros
 
 
     })
@@ -313,7 +363,6 @@ def listar_equipos(request, competencia_id):
 @login_required
 def equipo_puntos(request, competencia_id, equipo_id=None):
     competencia = Competencia.objects.get(id=competencia_id)
-    request.session['puntos']=0
     
     try:
         equipo = Equipo.objects.get(id=equipo_id)
@@ -347,7 +396,6 @@ def equipo_puntos(request, competencia_id, equipo_id=None):
 @login_required
 def equipo_tiempos(request, competencia_id, equipo_id=None):
     competencia = Competencia.objects.get(id=competencia_id)
-    request.session['puntos']=1
     
     try:
         equipo = Equipo.objects.get(id=equipo_id)
@@ -373,6 +421,71 @@ def equipo_tiempos(request, competencia_id, equipo_id=None):
         'wizard_stage': 1,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id
+
+
+    })
+    
+@login_required
+def equipo_tiempos(request, competencia_id, equipo_id=None):
+    competencia = Competencia.objects.get(id=competencia_id)
+    
+    try:
+        equipo = Equipo.objects.get(id=equipo_id)
+    except Exception:
+        equipo = None
+
+
+    form = EquipoTiempoForm(instance=equipo)
+
+    if request.method == "POST":
+        form = EquipoTiempoForm(request.POST, instance=equipo)
+
+        if form.is_valid():
+            equipo_nuevo = form.save(commit=False)
+            equipo_nuevo.competencia = competencia
+            equipo_nuevo.save()
+            messages.success(request, "Equipo registrado correctamente.")
+
+            return redirect('listar_equipos', competencia_id)
+
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
+        'form': form,
+        'wizard_stage': 1,
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id
+
+
+    })
+    
+@login_required
+def equipo_metros(request, competencia_id, equipo_id=None):
+    competencia = Competencia.objects.get(id=competencia_id)
+    
+    try:
+        equipo = Equipo.objects.get(id=equipo_id)
+    except Exception:
+        equipo = None
+
+
+    form = EquipoMetrosForm(instance=equipo)
+
+    if request.method == "POST":
+        form = EquipoMetrosForm(request.POST, instance=equipo)
+
+        if form.is_valid():
+            equipo_nuevo = form.save(commit=False)
+            equipo_nuevo.competencia = competencia
+            equipo_nuevo.save()
+            messages.success(request, "Equipo registrado correctamente.")
+
+            return redirect('listar_equipos', competencia_id)
+
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
+        'form': form,
+        'wizard_stage': 1,
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id,
+        'metros': True
 
 
     })
