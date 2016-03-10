@@ -7,6 +7,7 @@ from snd.models import *
 class EscenarioView(models.Model):
     class Meta:
         managed = False
+        db_table = 'reportes_tenantescenarioview'
     #campos modelo escenario
     nombre =  models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
@@ -34,11 +35,12 @@ class EscenarioView(models.Model):
     #campos modelo Foto
     foto = models.ImageField(upload_to='fotos_escenarios', null=True, blank=True)
     #campo para búsqueda
-    contenido = models.TextField()
+    #contenido = models.TextField()
 
 class CAFView(models.Model):
     class Meta:
         managed = False
+        db_table = 'reportes_tenantcafview'
     #campos cafs
     nombre =  models.CharField(max_length=100)
     direccion = models.CharField(max_length=100, verbose_name="dirección")
@@ -58,15 +60,16 @@ class CAFView(models.Model):
     #campo de modelo CAfoto
     foto = models.ImageField(upload_to='ruta_fotos_cafs')
     #campo para búsqueda
-    contenido = models.TextField()
+    #contenido = models.TextField()
 
 
     
 class DeportistaView(models.Model):
     class Meta:
         managed = False
+        db_table = 'reportes_tenantdeportistaview'
     #campos deportista
-    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    nombre = models.CharField(max_length=100, db_column='nombres', verbose_name='Nombres')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
     genero = models.CharField(max_length=11, verbose_name='Genero del Deportista',default='Hombre')
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
@@ -81,13 +84,14 @@ class DeportistaView(models.Model):
     foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
     entidad = models.ForeignKey(Entidad)   
     #campo para búsqueda
-    contenido = models.TextField()
+    #contenido = models.TextField()
      
 class PersonalApoyoView(models.Model):
     class Meta:
         managed = False
+        db_table = 'reportes_tenantpersonalapoyoview'
     #campos deportista
-    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    nombre = models.CharField(max_length=100, db_column='nombres', verbose_name='Nombres')
     telefono_contacto = models.CharField(max_length=100,verbose_name='Telefono')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
     genero = models.CharField(verbose_name='Género', max_length=11)
@@ -100,18 +104,18 @@ class PersonalApoyoView(models.Model):
     etnia = models.CharField(max_length=20, blank=True)
     foto = models.ImageField(upload_to='fotos_personal_apoyo', null=True, blank=True)
     #campo para búsqueda
-    contenido = models.TextField()
+    #contenido = models.TextField()
 
 
 class DirigenteView(models.Model):
     class Meta:
         managed = False
-
-    nombres = models.CharField(max_length=100)
+        db_table = 'reportes_tenantdirigenteview'
+    nombre = models.CharField(max_length=100, db_column='nombres')
     cargo = models.CharField(max_length=100, verbose_name="Nombre del cargo")
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(max_length=6, verbose_name='Género')
-    ciudad_residencia = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
+    ciudad = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
     telefono_contacto = models.CharField(max_length=100, verbose_name="Teléfono")
     email = models.EmailField(null=True,blank=True)
     nacionalidad = models.ForeignKey(Nacionalidad)
@@ -119,12 +123,12 @@ class DirigenteView(models.Model):
     foto = models.ImageField(null=True, blank=True)
     entidad = models.ForeignKey(Entidad) 
     #campo para búsqueda
-    contenido = models.TextField()
+    #contenido = models.TextField()
 
 class CajaCompensacionView(models.Model):
     class Meta:
         managed = False
-
+        db_table = 'reportes_tenantcajasview'
     nombre =  models.CharField(max_length=100)    
     clasificacion = models.CharField(max_length=1)
     foto = models.ImageField(null=True, blank=True)
@@ -136,5 +140,5 @@ class CajaCompensacionView(models.Model):
     email = models.EmailField()
     ciudad = models.ForeignKey(Ciudad, verbose_name="Ciudad")    
     #campo para búsqueda
-    contenido = models.TextField()
+    #contenido = models.TextField()
 
