@@ -3,7 +3,7 @@
     display: inline-block;
     width: 540px;
     height: 400px;
-    background-color:#888;
+    background:url("../../img/fondo-crop.png")no-repeat 0 0;
     position:relative; /* or fixed or absolute */
     margin-bottom: 10px;
 }
