@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block css %}
+    {{ form.media }}
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
 {% endblock %}
 
@@ -22,15 +23,15 @@
                 <div class="well row">
                     <div class="col-xs-12">
                         {% if edicion %}
-                            <h3>Modificar socio</h3>
+                            <h3>Modificar Socio</h3>
                         {% else %}
-                            <h3>Registrar socio</h3>
+                            <h3>Registrar Socio</h3>
                         {% endif %}
                         {% for i in form %}
                             {% bootstrap_field i layout="vertical" %}
                         {% endfor %}
                         {% if edicion %}
-                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar cambios</button>
+                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar</button>
                         {% else %}
                             <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
                         {% endif %}
@@ -40,10 +41,10 @@
         </div>
 
         <div class="col-md-8">
-            <h3>Socios registrados actualmente:</h3>
+            <h3>Socios Registrados Actualmente:</h3>
 
             {% if lista_socios %}
-                <table id="data-table-socios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                <table id="tabla-socios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>Identificación</th>
@@ -66,8 +67,11 @@
                                 {% endif %}
                                 <td>
                                     <a href="#" data-target="#modal-consultar-{{socio.id}}" data-toggle="modal"><i class="fa fa-eye"> Vista previa </i></a><br>
-                                    <a href="{% url 'editar_socio' socio.id %}"><i class="fa fa-gear"> Modificar </i></a><br>
-                                    <a href="#" data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal"><i class="fa fa-refresh"> Activar/Desactivar </i></a>
+                                    <a href="{% url 'editar_socio' socio.id %}"><i class="fa fa-gear"> Editar </i></a><br>
+                                    <a href="#" data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal">
+                                        <i class="fa fa-ban"> A/I </i>
+                                        <i class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Activar / Inactivar"></i>
+                                    </a>
                                 </td>
                             </tr>
 
@@ -77,14 +81,14 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                            <h4 class="modal-title">Cambiar estado</h4>
+                                            <h4 class="modal-title">Cambiar de estado socio</h4>
                                         </div>
                                         <div class="modal-body">
                                             ¿Está seguro que desea cambiar el estado de este socio?
                                         </div>
                                         <div class="modal-footer">
-                                            <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
-                                            <a href="{% url 'desactivar_socio' socio.id %}" class="btn btn-sm btn-danger">Si</a>
+                                            <a href="" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                            <a href="{% url 'desactivar_socio' socio.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -99,11 +103,16 @@
                                         </div>
                                         <div class="modal-body">
                                             <b>Nombre completo: </b>{{socio.nombre}} {{ socio.apellido }}<br>
-                                            <b>Tipo documento: </b> {{socio.tipo_documento}}<br>
+                                            <b>Tipo documento:
+                                            </b>
+                                                {% if socio.tipo_documento == 'CC' %} CÉDULA DE CIUDADANÍA {% endif %}
+                                                {% if socio.tipo_documento == 'CE' %} CÉDULA DE EXTRANJERÍA {% endif %}
+                                                {% if socio.tipo_documento == 'PS' %} PASAPORTE {% endif %}
+                                            <br>
                                             <b>Número de documento: </b> {{socio.numero_documento}}<br>
                                             <b>Correo electrónico: </b> {{socio.correo}}<br>
-                                            <b>Ciudad: </b> {{ socio.ciudad }}<br>
-                                            <b>Empresa: </b> {{ socio.empresa }}
+                                            <b>Ciudad de residencia: </b> {{ socio.ciudad }}<br>
+                                            <b>Dirección: </b> {{ socio.direccion }}
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
@@ -122,14 +131,20 @@
 {% endblock %}
 
 {% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-socios";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $(document).on('mouseenter','tr',function(e){
+               $('.add-tooltip').tooltip();
+           });
+        });
+    </script>
+
     <script src="{{ STATIC_URL }}js/validaciones/entidad/validaciones-socios.js"></script>
-    {% if edicion %}
-        <script>
-            $(document).ready(function(){
-                $("#id_tipo_documento").css("pointer-events", "none");
-            });
-        </script>
-    {% endif %}
 
     <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
     <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>

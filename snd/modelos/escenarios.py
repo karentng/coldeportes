@@ -173,9 +173,9 @@ class Mantenimiento(models.Model):
 
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
-    fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico del escenario")
+    fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico")
     fecha_fin = models.DateField(null=True, blank=True)
-    descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico del escenario")
+    descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class Contacto(models.Model):

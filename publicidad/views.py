@@ -80,7 +80,9 @@ def editar_clasificado(request, id_clasificado):
         if form.has_changed or nueva_foto != "No":
             if form.is_valid():
                 clasificado_form = form.save(commit=False)
-                if nueva_foto != "No":
+                if nueva_foto == "No":
+                    clasificado_form.foto = "clasificados/clasificados-default.png"
+                elif nueva_foto != "si":
                     clasificado_form.foto = nueva_foto
 
                 clasificado_form.titulo = clasificado_form.titulo.upper()
