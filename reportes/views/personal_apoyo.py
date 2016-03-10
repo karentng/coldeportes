@@ -343,10 +343,10 @@ def reportes_nacionalidad_personal_apoyo(request):
         genero = None if request.GET['genero'] == 'null' else ast.literal_eval(request.GET['genero'])
 
         consultas = [
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
-            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('nacionalidad')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,ciudad__departamento__id__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,genero__in=%s).annotate(descripcion=F('nacionalidad__nombre')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0).annotate(descripcion=F('nacionalidad__nombre')).values('id','descripcion','entidad').annotate(cantidad=Count('id',distinct=True)))",
         ]
 
         nacionalidades = ejecutar_casos_recursivos(consultas, departamentos, genero, tipo_tenant)
