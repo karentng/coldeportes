@@ -52,7 +52,9 @@ $(document).ready(function(){
             return false;
         }
     });
-
+    $(document).on('ready',".add-tooltip",function(){
+        $(this).tooltip();
+    });
     $("#myModalCrop").bind('hidden.bs.modal',function(){
         if(!$('.cropControls.cropControlsCrop').length){
 

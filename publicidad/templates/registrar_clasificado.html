@@ -45,6 +45,7 @@
 
             {% if edicion %}
                 if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
+                    $("#imagen-hidden").val("si");
                     document.getElementById(formId).submit();
                     return false;
                 }else {

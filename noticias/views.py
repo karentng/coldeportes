@@ -81,7 +81,9 @@ def editar_noticia(request, id_noticia):
                 noticia = form.save(commit=False)
                 nueva_foto = request.POST.get('imagen-crop')
 
-                if nueva_foto != "No":
+                if nueva_foto == "No":
+                    noticia.foto = "clasificados/clasificados-default.png"
+                elif nueva_foto != "si":
                     noticia.foto = nueva_foto
 
                 if noticia.video:
