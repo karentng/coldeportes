@@ -5,6 +5,9 @@ from django.db import models
 from coldeportes.utilities import calculate_age,extraer_codigo_video
 from django.db.models.fields.files import ImageFieldFile, FileField
 from coldeportes.settings import STATIC_URL
+from django.conf import settings
+import os
+
 
 class Deportista(models.Model):
 
