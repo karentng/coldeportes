@@ -20,4 +20,4 @@ solicitudes_escenarios/solicitud/migrations
 solicitudes_escenarios/respuesta/migrations
 publicidad/migrations
 buscador/migrations
-gestion_eventos/migrations
+gestion_eventos/migrations/*
