@@ -30,13 +30,13 @@ class Escenario(models.Model):
     altura = models.PositiveIntegerField(null=True, blank=True)
     comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)
-    nombre_administrador = models.CharField(max_length=50, null=True)
+    nombre_administrador = models.CharField(max_length=50)
     estrato = models.CharField(choices=estratos, max_length=1)
     entidad = models.ForeignKey(Entidad)    
     estado = models.IntegerField(choices=ESTADOS, verbose_name="estado del Escenario")
     ciudad = models.ForeignKey(Ciudad)
     division_territorial = models.CharField(choices=DIVISIONES, max_length=2, verbose_name="división territorial")    
-    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -87,7 +87,7 @@ class CaracterizacionEscenario(models.Model):
     espectadores_habituales = models.PositiveIntegerField(verbose_name='cantidad de espectadores habituales')
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
-    descripcion = models.TextField(verbose_name='descripción',  max_length=1024, null=True)
+    descripcion = models.TextField(verbose_name='descripción',  max_length=1024)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HorarioDisponibilidad(models.Model):
@@ -147,5 +147,5 @@ class Contacto(models.Model):
     nombre =  models.CharField(max_length=50)
     telefono = models.CharField(max_length=20, verbose_name='teléfono')
     email = models.EmailField()
-    descripcion = models.TextField(max_length=1024, null=True, verbose_name='descripción')
+    descripcion = models.TextField(max_length=1024, verbose_name='descripción')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
