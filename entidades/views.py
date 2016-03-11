@@ -810,7 +810,7 @@ def mostrar_gestion_socios(request):
                 socio.club_id = club.id
                 socio = form.save()
                 club.socios.add(socio)
-                messages.success(request, "Los datos del socio fueron registrados correctamente.")
+                messages.success(request, "Socio registrado correctamente.")
                 return redirect('gestion_socios')
         else:
             messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
@@ -849,10 +849,10 @@ def desactivar_socio(request, id_socio):
 
     if socio.estado == 0:
         socio.estado = 1
-        messages.success(request, ("El socio %s ha sido desactivado.")%(socio.nombre+" "+socio.apellido))
+        messages.success(request, "Socio desactivado correctamente.")
     else:
         socio.estado = 0
-        messages.success(request, ("El socio %s ha sido activado.")%(socio.nombre+" "+socio.apellido))
+        messages.success(request, "Socio activado correctamente.")
     socio.save()
     return redirect('gestion_socios')
 
@@ -880,13 +880,12 @@ def editar_socio(request, id_socio):
         messages.error(request, 'No se pudo encontrar el socio.')
         return redirect('gestion_socios')
 
-
     if request.method == 'POST':
         form = SocioClubForm(request.POST, instance=socio)
         if form.has_changed():
             if form.is_valid():
                 form.save()
-                messages.success(request, "Los datos del socio fueron actualizados correctamente.")
+                messages.success(request, "Socio editado correctamente.")
                 return redirect('gestion_socios')
             else:
                 messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')

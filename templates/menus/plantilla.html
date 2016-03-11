@@ -21,7 +21,7 @@
 
 {% if request.tenant.schema_name != 'public' %}
     {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo == 3%}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'gestion-socios' in request.path or 'planes' in request.path%} active {% endif %}">
+        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path%} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
                 <i class="fa fa-cogs"></i>
@@ -35,7 +35,7 @@
                 {% endif %}
                 {% if request.tenant.tipo == 3 %}
                     {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
-                        <li class="has-sub {% if 'gestion-socios' in request.path %} active {% endif %}">
+                        <li class="has-sub {% if 'socio' in request.path %} active {% endif %}">
                             <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
                         </li>
                         <li class="has-sub {% if 'planes' in request.path %} active {% endif %}">
