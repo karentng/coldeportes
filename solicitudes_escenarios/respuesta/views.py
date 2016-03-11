@@ -7,10 +7,11 @@ from solicitudes_escenarios.solicitud.forms import DiscusionForm
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
-import zipfile
+import zipfile,tempfile
 from io import StringIO
 import os
 from coldeportes.settings import MEDIA_ROOT
+from django.core.servers.basehttp import FileWrapper
 
 # Create your views here.
 @login_required
@@ -212,26 +213,23 @@ def descargar_todos_adjuntos(request,id_sol,id_ent):
     connection.set_tenant(entidad)
 
     adj = AdjuntoSolicitud.objects.filter(solicitud=id_sol)
-    zip = comprimir_archivos(adj)
+    zip,temp = comprimir_archivos(adj)
 
-    response = HttpResponse(zip,content_type="application/x-zip-compressed")
-    response['Content-Disposition'] = 'attachment; filename=zip_adj.zip'
-    response['X-Sendfile'] = 'zip_adj.zip'
-    #borrar archivo zip
-
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adj[0].solicitud.codigo_unico(entidad))
+    temp.seek(0)
+    response.write(temp.read())
     connection.set_tenant(yo)
 
     return response
 
 
 def comprimir_archivos(query):
-    s = StringIO()
-    #zip_file = zipfile.ZipFile(s, 'w') #Se crea el archivo .zip
-    zip_file = zipfile.ZipFile(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/zip_adj.zip', 'w') #Se crea el archivo .zip
+    temp = tempfile.TemporaryFile()
+    zip_file = zipfile.ZipFile(temp, 'w', zipfile.ZIP_DEFLATED)
     for f in query:
-        #zip_file.write(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/'+f.nombre_archivo(),os.path.join('zip', f.nombre_archivo()))
-        zip_file.write(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/'+f.nombre_archivo())
+        zip_file.write(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/'+f.nombre_archivo(),f.nombre_archivo())
 
     zip_file.close()
-    return zip_file
-    #return s
+    wrapper = FileWrapper(temp)
+    return wrapper,temp
