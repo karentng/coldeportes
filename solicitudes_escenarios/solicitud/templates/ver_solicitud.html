@@ -129,8 +129,17 @@
                                             <td><a href="{% url  'descargar_adjunto' solicitud.id ad.id %}"><i class="fa fa-download"></i> Descargar</a></td>
                                         </tr>
                                     {% endfor %}
-
                                     </tbody>
+                                    {% if solicitud.adjuntos %}
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td><a href="{% url 'descargar_todos_adjuntos_solicitud' solicitud.id %}"><i class="fa fa-cloud-download"></i> Descargar todos los adjuntos</a></td>
+                                            </tr>
+
+                                        </tfoot>
+                                    {% endif %}
                                 </table>
                                 {% if not solicitud.adjuntos %}
                                     <p align="center">No hay adjuntos registrados</p>
@@ -154,6 +163,10 @@
                                             <div class="btn-row">
                                                 <a data-toggle="tooltip" data-container="body" data-title="Estado actual"><i class="fa fa-fw fa-tags"></i></a>
                                                 Cambio de estado a: {{ d.get_estado_actual_display }}
+                                                {% if d.tiene_adjuntos %}
+                                                    <a href="{% url 'descargar_adjuntos_discusion' solicitud.id d.id %}" data-toggle="tooltip" data-container="body" data-title="Descargar adjuntos en archivo comprimido"><i class="fa fa-fw fa-cloud-download"></i></a>
+                                                    Descargar los adjuntos de esta discusion
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </li>

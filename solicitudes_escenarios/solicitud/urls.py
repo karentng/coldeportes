@@ -15,5 +15,7 @@ urlpatterns = patterns('solicitudes_escenarios.solicitud.views',
     url(r'^descargar/(\d+)/(\d+)$', 'descargar_adjunto', name='descargar_adjunto'),
     url(r'^responder/(\d+)$', 'editar_solicitud', name='editar_solicitud'),
     url(r'^comentar/(\d+)$', 'enviar_comentario', name='enviar_comentario'),
+    url(r'^descargar-todos/(\d+)$', 'descargar_todos_adjuntos_solicitud', name='descargar_todos_adjuntos_solicitud'),
+    url(r'^descargar-discusion/(\d+)/(\d+)$', 'descargar_adjuntos_discusion', name='descargar_adjuntos_discusion'),
 
 )

@@ -7,6 +7,7 @@ from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSo
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
+from solicitudes_escenarios.utilities import comprimir_archivos
 # Create your views here.
 
 @login_required
@@ -294,3 +295,37 @@ def enviar_comentario(request,id):
 
         messages.error(request,'La solicitud no se ha podido reenviar por un error en el formulario, intentalo de nuevo')
         return redirect('editar_solicitud',solicitud.id)
+
+def descargar_todos_adjuntos_solicitud(request,id_sol):
+    """
+    Marzo 11, 2016
+    Autor: Daniel Correa
+
+    Permite descargar todos los adjuntos de una solicitud en un archivo zip
+
+    """
+
+    adj = AdjuntoSolicitud.objects.filter(solicitud=id_sol)
+    zip,temp = comprimir_archivos(adj)
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adj[0].solicitud.codigo_unico(request.tenant))
+    temp.seek(0)
+    response.write(temp.read())
+    return response
+
+def descargar_adjuntos_discusion(request,id_sol,id_dis):
+    """
+    Marzo 11, 2016
+    Autor: Daniel Correa
+
+    Permite descargar los archivos adjuntos de una discusion a una solicitud
+    """
+
+    adj = AdjuntoSolicitud.objects.filter(solicitud=id_sol, discucion=id_dis)
+    zip,temp = comprimir_archivos(adj)
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adj[0].solicitud.codigo_unico(request.tenant))
+    temp.seek(0)
+    response.write(temp.read())
+    return response
+
