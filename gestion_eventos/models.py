@@ -1,7 +1,28 @@
 from django.db import models
 from noticias.models import Noticia
 
+
 # Create your models here.
+class Participante(models.Model):
+    TIPO_IDENTIDAD = (
+        ('CC', 'CÉDULA DE CIUDADANÍA'),
+        ('TI', 'TARJETA DE IDENTIDAD'),
+        ('CE', 'CÉDULA DE EXTRANJERÍA'),
+        ('PS', 'PASAPORTE'),
+    )
+
+    evento_participe = models.IntegerField()
+    tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC', verbose_name='Tipo de Identificación')
+    identificacion = models.CharField(max_length=100, verbose_name='Identificación')
+    nombre = models.CharField(max_length=155)
+    apellido = models.CharField(max_length=155)
+    fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
+    email = models.EmailField()
+
+    class Meta:
+        unique_together = ('evento_participe', 'identificacion')
+
+
 class Evento(models.Model):
 
     titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
@@ -19,8 +40,3 @@ class Evento(models.Model):
     participantes = models.ManyToManyField(Participante)
     autor = models.CharField(verbose_name="Autor de la noticia", max_length=150)
     estado = models.IntegerField(default=1)
-
-
-class Participante(models.Model):
-
-    cedula = models.CharField(max_length=20)

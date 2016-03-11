@@ -37,6 +37,10 @@
                 $("#valor-mostrar").toggleClass("fadeInDown");
                 $("#id_video").val("");
             });
+            $("#check-mostrar-costo").click(function(){
+                $("#valor-costo").toggleClass("fadeInDown");
+                $("#id_costo_entrada").val("");
+            });
             $("#id_etiquetas").tagit({
                 singleField:true,
                 singleFieldDelimiter: ",",
@@ -120,6 +124,14 @@
                             <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
                             <label class="control-label" for="modalTrigger2"></label>
                             {% include 'modal_croppic.html' %}
+                        </div>
+                    {% elif field.name == 'costo_entrada' %}
+                        <div class="control-personalizado form-group">
+                            <input id="check-mostrar-costo" type="checkbox" name="mostrar-costo" value="" {% if edicion %} checked {% endif %}>
+                            ¿El evento tiene algún costo de entrada?
+                        </div>
+                        <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-costo">
+                            {% bootstrap_field field %}
                         </div>
                     {% else %}
                         {% bootstrap_field field %}

@@ -48,7 +48,6 @@ def registrar_evento(request):
 
 def listar_eventos(request):
     from django.db.models import Q
-    user = request.user
     # if user.has_perm("gestion_eventos.change_evento"):
     if True:
         eventos = Evento.objects.all()

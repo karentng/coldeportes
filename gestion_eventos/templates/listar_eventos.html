@@ -59,7 +59,10 @@
                                 {% else %}
                                     <label class="label-danger label label-table">Inactivo</label>
                                 {% endif %}</td>
-                            <td></td>
+                            <td><a href="{% url 'detalles_noticia' evento.noticia.id %}?evento=1">
+                                    <i class="fa fa-eye">Ver más</i>
+                                </a>
+                            </td>
                         {% endfor %}
                     </tbody>
                 </table>
