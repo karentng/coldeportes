@@ -79,6 +79,10 @@
             </div>
             <p style="float: right;"><i>{{ noticia.autor }}</i></p>
             <br>
+            {% if evento %}
+                <hr>
+                {% include 'fechas_eventos.html' %}
+            {% endif %}
             <hr>
             <p style="float: right;">Palabras clave: {{ noticia.etiquetas }}</p>
             <br>

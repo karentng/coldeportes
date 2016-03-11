@@ -12,7 +12,8 @@ class Participante(models.Model):
     )
 
     evento_participe = models.IntegerField()
-    tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC', verbose_name='Tipo de Identificación')
+    tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',
+                               verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100, verbose_name='Identificación')
     nombre = models.CharField(max_length=155)
     apellido = models.CharField(max_length=155)
@@ -33,10 +34,12 @@ class Evento(models.Model):
     fecha_finalizacion_preinscripcion = models.DateField(verbose_name="Fecha de finalización de las preinscripciones")
     imagen = models.ImageField()
     video = models.CharField(max_length=255, verbose_name="Vídeo del evento", blank=True, null=True)
-    descripcion_evento = models.TextField(verbose_name="Descripción del evento (se usara como cuerpo de noticia)")
+    descripcion_evento = models.TextField(verbose_name="Descripción del evento (se usará como cuerpo de noticia)")
     costo_entrada = models.PositiveIntegerField(verbose_name="Costo de la entrada", blank=True, null=True)
     cupo_participantes = models.PositiveIntegerField(verbose_name="Cupo para participantes")
+    cupo_disponible = models.PositiveIntegerField()
     noticia = models.ForeignKey(Noticia)
     participantes = models.ManyToManyField(Participante)
-    autor = models.CharField(verbose_name="Autor de la noticia", max_length=150)
+    autor = models.CharField(verbose_name="Autor de la noticia", max_length=150,
+                             help_text="Se usará como autor para la noticia del evento que se creará")
     estado = models.IntegerField(default=1)

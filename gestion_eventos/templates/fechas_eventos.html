@@ -1,6 +1,19 @@
-<p style="text-align: center; font-size: 15px">
+<p style="text-align: left; font-size: 15px">
     Fechas importantes:<br>
     <br>
-        <span class="m-l-20">Fecha inicio de preinscripciones: </span><i>{{ fecha_i_p }}</i><br>
-        <span class="m-l-20">Fecha fin de preinscripciones: </span><i>{{ fecha_f_p }}</i>
+        <span class="m-l-20">Fecha inicio de preinscripciones: </span><i>{{ evento.fecha_inicio_preinscripcion }}</i><br>
+        <span class="m-l-20">Fecha fin de preinscripciones: </span><i>{{ evento.fecha_finalizacion_preinscripcion }}</i><br><br>
+
+        <span class="m-l-20">Fecha inicio evento: </span><i>{{ evento.fecha_inicio }}</i><br>
+        <span class="m-l-20">Fecha fin evento: </span><i>{{ evento.fecha_finalizacion }}</i><br><br>
+
+    {% if evento.costo_entrada %}
+    Valor de la entrada del evento:
+        <i>{{ evento.costo_entrada }}</i><br><br>
+    {% endif %}
+    Cupo de participantes:
+        <i>{{ evento.cupo_participantes }}</i><br><br>
+    Cupo disponible:
+        <i>{{ evento.cupo_disponible }}</i><br><br>
+    Si deseas inscribirte puedes seguir este <a href="{% url 'preinscripcion_evento' evento.id %}">enlace</a> durante las fechas de preincripción
 </p>

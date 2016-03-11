@@ -27,6 +27,7 @@ def registrar_evento(request):
             if evento.video:
                 evento.video = evento.video.replace("watch?v=", "embed/")
             evento.previsualizacion = request.POST.get("previsualizacion")
+            evento.cupo_disponible = evento.cupo_participantes
 
             noticia_evento = Noticia()
             noticia_evento.titulo = evento.titulo_evento
@@ -36,6 +37,7 @@ def registrar_evento(request):
             noticia_evento.autor = evento.autor
             noticia_evento.foto = evento.imagen
             noticia_evento.video = evento.video
+            noticia_evento.etiquetas = ""
             noticia_evento.save()
             evento.noticia = noticia_evento
             evento.save()
@@ -47,6 +49,18 @@ def registrar_evento(request):
 
 
 def listar_eventos(request):
+    from django.db.models import Q
+    # if user.has_perm("gestion_eventos.change_evento"):
+    if True:
+        eventos = Evento.objects.all()
+    else:
+        eventos = Evento.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
+                                        Q(fecha_finalizacion__gte=datetime.date.today()), estado=1)
+
+    return render(request, 'listar_eventos.html', {'eventos': eventos})
+
+
+def preinscripcion_evento(request, id_evento):
     from django.db.models import Q
     # if user.has_perm("gestion_eventos.change_evento"):
     if True:

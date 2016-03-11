@@ -62,6 +62,18 @@ fields = {
             }
         }
     },
+    video: {
+        validators:{
+            callback:{
+                message: "Ingrese una url valida, por ejemplo https://www.youtube.com/watch?v=YYW7klRKl_g",
+                callback: function(value, validator){
+                    var re = value.match(/^https:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/);
+                    return re != null || value =="" ? true : false;
+                }
+            }
+
+        }
+    },
     descripcion_evento: {
         validators: {
             notEmpty: {
