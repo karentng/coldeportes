@@ -82,7 +82,7 @@ def editar_noticia(request, id_noticia):
                 nueva_foto = request.POST.get('imagen-crop')
 
                 if nueva_foto == "No":
-                    noticia.foto = "clasificados/clasificados-default.png"
+                    noticia.foto = ""
                 elif nueva_foto != "si":
                     noticia.foto = nueva_foto
 
@@ -96,7 +96,7 @@ def editar_noticia(request, id_noticia):
                 messages.success(request, 'La noticia se ha editado correctamente')
                 return redirect('listar_noticias')
     return render(request, 'registrar_noticia.html', {'form': form,
-                                               'edicion':True})
+                                                      'edicion': True, 'foto': noticia.foto})
 
 
 @login_required
