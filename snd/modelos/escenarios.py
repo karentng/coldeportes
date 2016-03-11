@@ -56,6 +56,38 @@ class Escenario(models.Model):
     def tipo_escenario(self):
         return self.caracteristicas().tipo_escenario
 
+    def posicionInicialMapa(self):
+        if self.latitud != None and self.longitud != None:
+            coordenadas = [self.latitud, self.longitud]
+        else:
+            try:
+                ciudad = self.ciudad
+            except Exception:
+                ciudad = Ciudad.objects.get(nombre="Bogotá D.C.")
+
+            coordenadas = [ciudad.latitud, ciudad.longitud]
+
+        return coordenadas
+
+    def obtener_atributos(self):
+        from django.conf import settings
+        imagen = None
+        if len(self.fotos()) != 0:
+            imagen = ("%s%s")%(settings.MEDIA_URL, self.fotos()[0].__str__())
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/EscenarioView.PNG")
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Comuna", self.comuna],
+            ["Barrio", self.barrio],
+            ["Estrato", self.estrato],
+            ["Dirección", self.direccion],
+            ["Latitud", self.latitud],
+            ["Longitud", self.longitud],
+        ]
+        return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
+
     def __str__(self):
         return self.nombre
 
@@ -141,9 +173,9 @@ class Mantenimiento(models.Model):
 
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
-    fecha_inicio = models.DateField()
+    fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico")
     fecha_fin = models.DateField(null=True, blank=True)
-    descripcion = models.TextField(max_length=1024, verbose_name="descripción")
+    descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class Contacto(models.Model):

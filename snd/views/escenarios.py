@@ -11,6 +11,7 @@ from entidades.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from coldeportes.utilities import *
+import json
 
 
 @login_required
@@ -125,6 +126,11 @@ def ver_escenario(request, escenario_id, id_entidad):
     mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
     contactos = Contacto.objects.filter(escenario=escenario)
 
+    datos_georreferenciacion = escenario.obtener_atributos()
+    posicion_inicial = escenario.posicionInicialMapa()
+
+    print(datos_georreferenciacion[0])
+
     return render(request, 'escenarios/ver_escenario.html', {
         'escenario': escenario,
         'caracteristicas': caracteristicas,
@@ -134,7 +140,9 @@ def ver_escenario(request, escenario_id, id_entidad):
         'videos': videos,
         'mantenimientos': mantenimientos,
         'escenario_id': escenario_id,
-        'contactos': contactos
+        'contactos': contactos,
+        'datosMostrar': json.dumps(datos_georreferenciacion),
+        'posicionInicial': json.dumps(posicion_inicial),
     })
 
 @login_required

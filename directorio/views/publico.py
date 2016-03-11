@@ -8,54 +8,54 @@ from directorio.inicializacion_vistas_directorio import *
 
     
 def buscar_contenido(texto, listado_resultados):
-    listado_resultados += list(EscenarioView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(CAFView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(DeportistaView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(PersonalApoyoView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(DirigenteView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id'))
+    listado_resultados += list(EscenarioView.objects.filter(nombre__icontains=texto).distinct('id'))
+    listado_resultados += list(CAFView.objects.filter(nombre__icontains=texto).distinct('id'))
+    listado_resultados += list(DeportistaView.objects.filter(nombre__icontains=texto).distinct('id'))
+    listado_resultados += list(PersonalApoyoView.objects.filter(nombre__icontains=texto).distinct('id'))
+    listado_resultados += list(DirigenteView.objects.filter(nombre__icontains=texto).distinct('id'))
+    listado_resultados += list(CajaCompensacionView.objects.filter(nombre__icontains=texto).distinct('id'))
     
     return listado_resultados
 
 def buscar_contenido_ciudad(texto, ciudad, listado_resultados):
-    listado_resultados += list(EscenarioView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
-    listado_resultados += list(CAFView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
-    listado_resultados += list(DeportistaView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
-    listado_resultados += list(PersonalApoyoView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
-    listado_resultados += list(DirigenteView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
-    listado_resultados += list(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id'))
+    listado_resultados += list(EscenarioView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
+    listado_resultados += list(CAFView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
+    listado_resultados += list(DeportistaView.objects.filter(nombre__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
+    listado_resultados += list(PersonalApoyoView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
+    listado_resultados += list(DirigenteView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
+    listado_resultados += list(CajaCompensacionView.objects.filter(nombre__icontains=texto).distinct('id'))
 
     return listado_resultados
     
 def buscar_contenido_actor(texto, actor, listado_resultados):
     if actor == 'ES':
-        listado_resultados += list(EscenarioView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(EscenarioView.objects.filter(nombre__icontains=texto).distinct('id'))
     elif actor == 'CA':
-        listado_resultados += list(CAFView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(CAFView.objects.filter(nombre__icontains=texto).distinct('id'))
     elif actor == 'DE':
-        listado_resultados += list(DeportistaView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(DeportistaView.objects.filter(nombre__icontains=texto).distinct('id'))
     elif actor == 'DI':
-        listado_resultados += list(DirigenteView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(DirigenteView.objects.filter(nombre__icontains=texto).distinct('id'))
     elif actor == 'PA':
-        listado_resultados += list(PersonalApoyoView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(PersonalApoyoView.objects.filter(nombre__icontains=texto).distinct('id'))
     elif actor == 'CF':
-        listado_resultados += list(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(CajaCompensacionView.objects.filter(nombre__icontains=texto).distinct('id'))
 
     return listado_resultados
 
 def buscar_contenido_actor_ciudad(actor, ciudad, texto, listado_resultados):
     if actor == 'ES':
-        listado_resultados += list(EscenarioView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
+        listado_resultados += list(EscenarioView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
     elif actor == 'CA':
-        listado_resultados += list(CAFView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
+        listado_resultados += list(CAFView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
     elif actor == 'DE':
-        listado_resultados += list(DeportistaView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
+        listado_resultados += list(DeportistaView.objects.filter(nombre__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
     elif actor == 'DI':
-        listado_resultados += list(DirigenteView.objects.filter(contenido__icontains=texto, ciudad_residencia=ciudad).distinct('id'))
+        listado_resultados += list(DirigenteView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
     elif actor == 'PA':
-        listado_resultados += list(PersonalApoyoView.objects.filter(contenido__icontains=texto, ciudad=ciudad).distinct('id'))
+        listado_resultados += list(PersonalApoyoView.objects.filter(nombre__icontains=texto, ciudad=ciudad).distinct('id'))
     elif actor == 'CF':
-        listado_resultados += list(CajaCompensacionView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(CajaCompensacionView.objects.filter(nombre__icontains=texto).distinct('id'))
 
     return listado_resultados
 

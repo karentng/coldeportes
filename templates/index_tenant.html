@@ -20,7 +20,7 @@
     <script src="{{STATIC_URL}}amcharts/exporting/amexport.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/canvg.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
-    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>    
+    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
     <script type="text/javascript">
         datosMostrar = "{{ubicaciones}}";
         posicionInicial = "{{posicionInicial}}";
@@ -89,7 +89,7 @@
                                     {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
                                 </p>
                                 <div class="m-b-10">
-                                    {% if entidad.tipo_tenant == "Club" %}
+                                    {% if entidad.tipo_tenant == "Club" and user.is_authenticated %}
                                         <a href="" data-target="#modal-socios" data-toggle="modal" style="margin-right: 10px;"> <i class="fa fa-group"></i> Ver socios del club</a>
                                         <a data-toggle="modal" data-target="#modal-planes"  href=""><i class="fa fa-money"></i> Ver planes de costos</a>
                                     {% endif %}
@@ -299,13 +299,11 @@
                                 </tbody>
                             </table>
                         {% else %}
-                            <div class="alert alert-warning fade in m-b-15">
-                                No se encuentran planes de costo registrados o activos
-                            </div>
+                            <center>No hay planes de costo registrados</center>
                         {% endif %}
                     </div>
                     <div class="modal-footer">
-                        <a href="" class="btn btn-sm btn-white" data-dismiss="modal">Cerrar</a>
+                        <a href="" class="btn btn-sm btn-warning" data-dismiss="modal">Cerrar</a>
                     </div>
                 </div>
             </div>

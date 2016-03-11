@@ -15,6 +15,12 @@
 {% endblock %}
 
 {% block css %}
+    <style>
+        #mapa {
+            height: 250px;
+            width: 100%;
+          }
+    </style>
 {% endblock %}
 
 {% block titulo_panel %}
@@ -35,7 +41,8 @@
         <div class="panel-body" style="padding:0">
             <div class="row">
                 <div class="col-sm-12">
-                    <img src="http://www.conwayark.com/images/resized/images/stories/slideshow/sports_1200_300.jpg" alt="gimnasio" style="width:100%; height:250px">
+                    <!--<img src="http://www.conwayark.com/images/resized/images/stories/slideshow/sports_1200_300.jpg" alt="gimnasio" style="width:100%; height:250px">-->
+                    <div id="mapa"></div>
                     <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
                         <div class="panel-heading p-0">
                             <div class="panel-heading-btn m-r-10 m-t-10">
@@ -369,6 +376,16 @@
     <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
     <script src="{{STATIC_URL}}js/gallery-v2.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/arrayToJson.js"></script>
+
+    <script type="text/javascript">
+        datosMostrar = "{{datosMostrar}}";
+        posicionInicial = "{{posicionInicial}}";
+        mapa = "mapa";
+    </script>
+
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/ver_mas_georreferenciacion.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
 
 {% endblock %}
 

@@ -3,7 +3,7 @@
  * Valiodacion de los campos de resgistro y edicion de los planes de costo
  */
 
-form = "#plan-de-costo-form";
+form = "#formulario-planes";
 
 fields = {
     nombre: {
