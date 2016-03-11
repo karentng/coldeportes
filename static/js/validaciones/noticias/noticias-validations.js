@@ -1,4 +1,6 @@
 form = "#form-noticia";
+
+var init_date;
 fields = {
     titulo: {
         validators: {
@@ -39,7 +41,11 @@ fields = {
                 message: 'El valor ingresado debe ser mayor o igual que hoy y menor que la fecha de expiración',
                 format: 'YYYY-MM-DD',
                 max: 'fecha_expiracion',
-                min: function(){
+                min: function(field, validator){
+                    console.log(init_date);
+                    if(init_date != ""){
+                        return "2016-01-01";
+                    }
                     var d = new Date();
 
                     var curr_date = d.getDate();
@@ -85,6 +91,8 @@ $.getScript(base+"js/validaciones/validations-base.js");
 
 
 $(document).ready(function(){
+    init_date = $("input#id_fecha_inicio").val();
+    console.log(init_date);
     $("#id_cuerpo_noticia")
         .ckeditor({
             language: 'es'
