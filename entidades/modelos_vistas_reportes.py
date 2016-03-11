@@ -211,8 +211,6 @@ class PublicDeportistaView(models.Model):
     fecha_lesion = models.DateField()
     segmento_corporal = models.IntegerField()
 
-    #campos doping
-    fecha_doping = models.DateField()
     fecha_participacion = models.DateField()
 
     def return_display_lesion(self,dic,is_tipo):

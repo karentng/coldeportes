@@ -146,8 +146,7 @@ def seleccion_datos_deportistas(tenant=''):
             IA.fecha_finalizacion,
             ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
             HL.tipo_lesion,HL.periodo_rehabilitacion, HL.fecha_lesion,
-            HL.segmento_corporal,
-            IFD.fecha as fecha_doping
+            HL.segmento_corporal
         FROM
         %ssnd_deportista DE
         LEFT JOIN %ssnd_deportista_nacionalidad NAL ON NAL.deportista_id = DE.id
@@ -156,8 +155,7 @@ def seleccion_datos_deportistas(tenant=''):
         LEFT JOIN %ssnd_informacionacademica IA ON IA.deportista_id = DE.id
         LEFT JOIN %ssnd_informacionadicional ID ON ID.deportista_id = DE.id
         LEFT JOIN %ssnd_historiallesiones HL ON HL.deportista_id = DE.id
-        LEFT JOIN %ssnd_historialdoping IFD ON IFD.deportista_id = DE.id 
-        """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant,tenant)
+        """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant)
 
 def seleccion_datos_dirigentes(tenant=''):
     if tenant != '':

@@ -445,7 +445,6 @@ def ver_deportista(request,id_depor,id_entidad,estado):
     if len(info_adicional) != 0:
         info_adicional = info_adicional[0]
     historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
-    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
@@ -454,7 +453,6 @@ def ver_deportista(request,id_depor,id_entidad,estado):
             'info_adicional':info_adicional,
             'historial_deportivo':historial_deportivo,
             'historial_lesiones':historial_lesiones,
-            'historial_doping':historial_doping,
             'informacion_academica':informacion_academica
     })
 
@@ -622,6 +620,7 @@ def cambio_tipo_documento_deportista(request,id):
         'form': form
     })
 
+
 def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     """
     Agosto 28 /2015
@@ -641,6 +640,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
         historiales += c.historiales_para_avalar(tipo)
     connection.set_tenant(tenant_actual)
     return historiales
+
 
 @login_required
 #permiso de aval deportivo
@@ -763,32 +763,6 @@ def rechazar_logros_deportivos(request,id_tenant,id_hist):
     return redirect('deportista_listar')
 
 
-@login_required
-#@tenant_required
-@all_permission_required('snd.add_deportista')
-def eliminar_historia_doping(request,id_depor,id_historia):
-    """
-    Octubre 5 / 2015
-    Autor: Milton Lenis
-
-    Eliminar Historial de Doping
-
-    Se obtiene el id del historial y el del deportista, se busca y se elimina de la base de datos
-
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param id_depor: Llave primaria del deportista
-    :type id_depor: String
-    :param id_historia: Llave primaria del historial de doping
-    :type id_historia: String
-    """
-    try:
-        doping = HistorialDoping.objects.get(id=id_historia, deportista=id_depor)
-        doping.delete()
-        return redirect('wizard_historia_doping', id_depor)
-
-    except Exception:
-        return redirect('wizard_historia_doping', id_depor)
 
 
 @login_required
@@ -811,8 +785,8 @@ def eliminar_historia_lesion(request,id_depor,id_historia):
     :type id_historia: String
     """
     try:
-        doping = HistorialLesiones.objects.get(id=id_historia, deportista=id_depor)
-        doping.delete()
+        lesion = HistorialLesiones.objects.get(id=id_historia, deportista=id_depor)
+        lesion.delete()
         return redirect('wizard_historia_doping', id_depor)
 
     except Exception:
@@ -869,53 +843,6 @@ def wizard_informacion_adicional(request,id_depor):
         'form': info_adicional_form,
         'id_deportista' : deportista.id,
         'edicion':edicion
-    })
-
-
-@login_required
-#@tenant_required
-@all_permission_required('snd.add_deportista')
-def wizard_historia_doping(request,id_depor):
-    """
-    5 Octubre / 2015
-    Autor: Milton Lenis
-
-    Paso 6: Historial de doping, se obtiene un historial de doping, se almacena y asigna al deportista.
-    Si no hay historial se inicializa en nulo
-
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param id_depor: Llave primaria del deportista
-    :type id_depor: String
-    """
-
-    historial_doping = HistorialDoping.objects.filter(deportista=id_depor)
-
-    deportista = Deportista.objects.get(id=id_depor)
-
-    non_permission = not_transferido_required(request,deportista)
-    if non_permission:
-        return non_permission
-
-    historial_doping_form = HistorialDopingForm()
-
-    if request.method == 'POST':
-        historial_doping_form = HistorialDopingForm(request.POST)
-
-        if historial_doping_form.is_valid():
-            historial_doping_nuevo = historial_doping_form.save(commit=False)
-            historial_doping_nuevo.deportista = deportista
-            historial_doping_nuevo.save()
-            historial_doping_form.save()
-            return redirect('wizard_historia_doping', id_depor)
-
-    return render(request, 'deportistas/wizard/wizard_historia_doping.html', {
-        'titulo': 'Historial de doping',
-        'wizard_stage': 7,
-        'form': historial_doping_form,
-        'historicos': historial_doping,
-        'id_deportista': id_depor,
-        'edicion':True
     })
 
 
