@@ -34,12 +34,13 @@
                     <thead>
                         <tr>
                             <th>Título</th>
-                            <th>Fecha de publicación</th>
-                            <th>Fecha de expiración</th>
+                            <th>Fecha de inicio</th>
+                            <th>Fecha de finalización</th>
                             <th>Fecha inicio preinscripción</th>
                             <th>Fecha finalizacion preinscripción</th>
                             <th>Costo entrada</th>
                             <th>Cupo participantes</th>
+                            <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -52,6 +53,12 @@
                             <td>{{ evento.fecha_finalizacion_preinscripcion }}</td>
                             <td>{{ evento.costo_entrada }}</td>
                             <td>{{ evento.cupo_participantes }}</td>
+                            <td>
+                                {% if evento.estado == 1 %}
+                                    <label class="label-success label label-table">Activo</label>
+                                {% else %}
+                                    <label class="label-danger label label-table">Inactivo</label>
+                                {% endif %}</td>
                             <td></td>
                         {% endfor %}
                     </tbody>

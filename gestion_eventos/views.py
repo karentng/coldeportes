@@ -20,18 +20,18 @@ def registrar_evento(request):
             nueva_foto = request.POST.get('imagen-crop')
 
             if nueva_foto == "No":
-                evento.foto = ""
+                evento.imagen = ""
             else:
-                evento.foto = nueva_foto
+                evento.imagen = nueva_foto
 
             if evento.video:
                 evento.video = evento.video.replace("watch?v=", "embed/")
             evento.previsualizacion = request.POST.get("previsualizacion")
 
-            noticia_evento = NoticiaForm()
+            noticia_evento = Noticia()
             noticia_evento.titulo = evento.titulo_evento
             noticia_evento.cuerpo_noticia = evento.descripcion_evento
-            noticia_evento.fecha_incio = datetime.date.today()
+            noticia_evento.fecha_inicio = datetime.date.today()
             noticia_evento.fecha_expiracion = evento.fecha_finalizacion
             noticia_evento.autor = evento.autor
             noticia_evento.foto = evento.imagen
@@ -49,7 +49,8 @@ def registrar_evento(request):
 def listar_eventos(request):
     from django.db.models import Q
     user = request.user
-    if user.has_perm("gestion_eventos.change_evento"):
+    # if user.has_perm("gestion_eventos.change_evento"):
+    if True:
         eventos = Evento.objects.all()
     else:
         eventos = Evento.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
