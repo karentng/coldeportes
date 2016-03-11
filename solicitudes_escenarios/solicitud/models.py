@@ -56,6 +56,11 @@ class DiscucionSolicitud(models.Model):
     entidad = models.ForeignKey(Entidad)
     respuesta = models.BooleanField()
 
+    def tiene_adjuntos(self):
+        if AdjuntoSolicitud.objects.filter(discucion=self):
+            return True
+        return False
+
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudEscenario)
     archivo = models.FileField(upload_to="adjuntos_adecuacion_escenarios",verbose_name='Archivo a adjuntar')

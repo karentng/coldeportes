@@ -9,5 +9,6 @@ urlpatterns = patterns('solicitudes_escenarios.respuesta.views',
     url(r'^responder/(\d+)/(\d+)$', 'responder_solicitud', name='responder_solicitud'),
     url(r'^comentar/(\d+)/(\d+)$', 'enviar_respuesta', name='enviar_respuesta'),
     url(r'^descargar-todos/(\d+)/(\d+)$', 'descargar_todos_adjuntos', name='descargar_todos_adjuntos_respuesta'),
+    url(r'^descargar-respuesta/(\d+)/(\d+)/(\d+)$', 'descargar_adjuntos_respuesta', name='descargar_adjuntos_respuesta'),
 
 )

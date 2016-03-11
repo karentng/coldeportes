@@ -7,11 +7,7 @@ from solicitudes_escenarios.solicitud.forms import DiscusionForm
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
-import zipfile,tempfile
-from io import StringIO
-import os
-from coldeportes.settings import MEDIA_ROOT
-from django.core.servers.basehttp import FileWrapper
+from solicitudes_escenarios.utilities import comprimir_archivos
 
 # Create your views here.
 @login_required
@@ -64,6 +60,7 @@ def obtener_datos_solicitud(request,id,id_ent):
     for d in discusiones:
         d.estado_actual = d.get_estado_actual_display()
         d.entidad_nombre = d.entidad.nombre
+        d.tiene_adjuntos = d.tiene_adjuntos()
     discusiones = [d.__dict__ for d in discusiones]
     connection.set_tenant(yo)
 
@@ -202,6 +199,13 @@ def enviar_respuesta(request,id,id_ent):
         return redirect('responder_solicitud',solicitud.id,entidad.id)
 
 def descargar_todos_adjuntos(request,id_sol,id_ent):
+    """
+    Marzo 6, 2016
+    Autor: Daniel Correa
+
+    Permite descargar todos los adjuntos de una solicitud en un archivo zip
+
+    """
     try:
         lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id_sol))
     except:
@@ -223,13 +227,30 @@ def descargar_todos_adjuntos(request,id_sol,id_ent):
 
     return response
 
+def descargar_adjuntos_respuesta(request,id_sol,id_ent,id_dis):
+    """
+    Marzo 11, 2016
+    Autor: Daniel Correa
 
-def comprimir_archivos(query):
-    temp = tempfile.TemporaryFile()
-    zip_file = zipfile.ZipFile(temp, 'w', zipfile.ZIP_DEFLATED)
-    for f in query:
-        zip_file.write(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/'+f.nombre_archivo(),f.nombre_archivo())
+    Permite descargar los archivos adjuntos de una respuesta a una solicitud
+    """
+    try:
+        lista = ListaSolicitudes.objects.get(entidad_solicitante=id_ent,solicitud=int(id_sol))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_respuesta')
 
-    zip_file.close()
-    wrapper = FileWrapper(temp)
-    return wrapper,temp
+    yo = request.tenant
+    entidad = lista.entidad_solicitante
+    connection.set_tenant(entidad)
+
+    adj = AdjuntoSolicitud.objects.filter(solicitud=id_sol, discucion=id_dis)
+    zip,temp = comprimir_archivos(adj)
+
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adj[0].solicitud.codigo_unico(entidad))
+    temp.seek(0)
+    response.write(temp.read())
+    connection.set_tenant(yo)
+
+    return response

@@ -164,6 +164,10 @@
                                             <div class="btn-row">
                                                 <a data-toggle="tooltip" data-container="body" data-title="Estado actual"><i class="fa fa-fw fa-tags"></i></a>
                                                 Cambio de estado a: {{ d.estado_actual }}
+                                                {% if d.tiene_adjuntos %}
+                                                    <a href="{% url 'descargar_adjuntos_respuesta' solicitud.id solicitud.entidad_solicitante.id d.id %}" data-toggle="tooltip" data-container="body" data-title="Descargar adjuntos en archivo comprimido"><i class="fa fa-fw fa-cloud-download"></i></a>
+                                                    Descargar los adjuntos de esta discusion
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </li>
