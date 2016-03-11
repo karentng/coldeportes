@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Eventos</a>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de eventos
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de eventos
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-eventos";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-eventos" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Fecha de publicación</th>
+                            <th>Fecha de expiración</th>
+                            <th>Fecha inicio preinscripción</th>
+                            <th>Fecha finalizacion preinscripción</th>
+                            <th>Costo entrada</th>
+                            <th>Cupo participantes</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evento in eventos %}
+                            <td>{{ evento.titulo_evento }}</td>
+                            <td>{{ evento.fecha_inicio }}</td>
+                            <td>{{ evento.fecha_finalizacion }}</td>
+                            <td>{{ evento.fecha_inicio_preinscripcion }}</td>
+                            <td>{{ evento.fecha_finalizacion_preinscripcion }}</td>
+                            <td>{{ evento.costo_entrada }}</td>
+                            <td>{{ evento.cupo_participantes }}</td>
+                            <td></td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

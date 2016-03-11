@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
     url(r'^clasificados/',include('publicidad.urls')),#urls del modulo de clasificados
     url(r'^noticias/',include('noticias.urls')),#urls del modulo de noticias
+    url(r'^eventos/',include('gestion_eventos.urls')),
 
     #url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
