@@ -16,5 +16,11 @@ class Evento(models.Model):
     costo_entrada = models.PositiveIntegerField(verbose_name="Costo de la entrada", blank=True, null=True)
     cupo_participantes = models.PositiveIntegerField(verbose_name="Cupo para participantes")
     noticia = models.ForeignKey(Noticia)
+    participantes = models.ManyToManyField(Participante)
     autor = models.CharField(verbose_name="Autor de la noticia", max_length=150)
     estado = models.IntegerField(default=1)
+
+
+class Participante(models.Model):
+
+    cedula = models.CharField(max_length=20)
