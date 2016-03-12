@@ -39,30 +39,41 @@
                             <th>Fecha inicio preinscripción</th>
                             <th>Fecha finalizacion preinscripción</th>
                             <th>Costo entrada</th>
-                            <th>Cupo participantes</th>
+                            <th>Participantes</th>
+                            <th>Cupo disponible</th>
                             <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for evento in eventos %}
+                            <tr>
                             <td>{{ evento.titulo_evento }}</td>
                             <td>{{ evento.fecha_inicio }}</td>
                             <td>{{ evento.fecha_finalizacion }}</td>
                             <td>{{ evento.fecha_inicio_preinscripcion }}</td>
                             <td>{{ evento.fecha_finalizacion_preinscripcion }}</td>
                             <td>{{ evento.costo_entrada }}</td>
-                            <td>{{ evento.cupo_participantes }}</td>
+                            <td>
+                                <a href="{% url 'listar_participantes' evento.id %}">
+                                    <i class="fa fa-eye">Ver participantes</i>
+                                </a><br>
+                                {% for participante in evento.participantes.all %}
+                                {{ participante.nombre }}<br>
+                            {% endfor %}
+                            </td>
+                            <td>{{ evento.cupo_disponible }}</td>
                             <td>
                                 {% if evento.estado == 1 %}
                                     <label class="label-success label label-table">Activo</label>
                                 {% else %}
                                     <label class="label-danger label label-table">Inactivo</label>
                                 {% endif %}</td>
-                            <td><a href="{% url 'detalles_noticia' evento.noticia.id %}?evento=1">
+                            <td><a href="{% url 'detalles_noticia' evento.noticia.id %}">
                                     <i class="fa fa-eye">Ver más</i>
                                 </a>
                             </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>

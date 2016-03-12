@@ -108,41 +108,48 @@
 
 {% block contenido_panel %}
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-lg-10 col-lg-offset-1">
 
-            <form id="form-eventos" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <form id="form-eventos"action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="row">
+            <div class="col-xs-12">
                 {% for field in form %}
-                    {% if field.name == 'video' %}
-                        <div class="control-personalizado form-group">
-                            <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
-                            ¿Desea incluir algún url de un video de youtube?
+                    {% if field.name == 'costo_entrada' %}
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                                <label class="control-label" for="modalTrigger2"></label>
+                                {% include 'modal_croppic.html' %}
+                            </div>
                         </div>
-                        <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
-                            {% bootstrap_field field %}
+                        <div class="col-md-6">
+                            <div class="control-personalizado form-group">
+                                <input id="check-mostrar-costo" type="checkbox" name="mostrar-costo" value="" {% if edicion %} checked {% endif %}>
+                                ¿El evento tiene algún costo de entrada?
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
-                            <label class="control-label" for="modalTrigger2"></label>
-                            {% include 'modal_croppic.html' %}
+                        <div class="col-md-6">
+                            <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-costo">
+                                {% bootstrap_field field %}
+                            </div>
                         </div>
-                    {% elif field.name == 'costo_entrada' %}
-                        <div class="control-personalizado form-group">
-                            <input id="check-mostrar-costo" type="checkbox" name="mostrar-costo" value="" {% if edicion %} checked {% endif %}>
-                            ¿El evento tiene algún costo de entrada?
-                        </div>
-                        <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-costo">
-                            {% bootstrap_field field %}
-                        </div>
+
                     {% else %}
-                        {% bootstrap_field field %}
+                        <div style="min-height: 90px;" class="col-md-6">
+                            {% bootstrap_field field  %}
+                        </div>
                     {% endif %}
                 {% endfor %}
 
                 <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
                 <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
 
+            </div>
+            </div>
+
             {% if edicion %}
-                <a type="button" class="btn btn-primary pull-right" href="{% url 'listar_eventos'%}">
+                <a type="button" class="btn btn-warning pull-right" href="{% url 'listar_eventos'%}">
                     Cancelar
                 </a>
             {% endif %}

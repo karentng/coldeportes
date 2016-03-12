@@ -10,15 +10,21 @@ class Participante(models.Model):
         ('CE', 'CÉDULA DE EXTRANJERÍA'),
         ('PS', 'PASAPORTE'),
     )
+    ESTADO = (
+        (0, 'Cancelado'),
+        (1, 'Preinscrito'),
+        (2, 'Inscrito'),
+    )
 
     evento_participe = models.IntegerField()
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',
                                verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100, verbose_name='Identificación')
-    nombre = models.CharField(max_length=155)
-    apellido = models.CharField(max_length=155)
+    nombre = models.CharField(max_length=155, verbose_name="Nombres")
+    apellido = models.CharField(max_length=155, verbose_name="Apellidos")
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
-    email = models.EmailField()
+    email = models.EmailField(verbose_name="Correo electronico")
+    estado = models.IntegerField(choices=ESTADO, default=1)
 
     class Meta:
         unique_together = ('evento_participe', 'identificacion')
@@ -32,8 +38,11 @@ class Evento(models.Model):
     fecha_finalizacion = models.DateField(verbose_name="Fecha de finalización del evento")
     fecha_inicio_preinscripcion = models.DateField(verbose_name="Fecha de inicio de las preinscripciones")
     fecha_finalizacion_preinscripcion = models.DateField(verbose_name="Fecha de finalización de las preinscripciones")
+    fecha_inicio_inscripcion = models.DateField(verbose_name="Fecha de inicio de las inscripciones")
+    fecha_finalizacion_inscripcion = models.DateField(verbose_name="Fecha de finalización de las inscripciones")
     imagen = models.ImageField()
-    video = models.CharField(max_length=255, verbose_name="Vídeo del evento", blank=True, null=True)
+    video = models.CharField(max_length=255, verbose_name="Vídeo del evento(opcional)",
+                             help_text="Debe ingresar un url válida de un video de youtube", blank=True, null=True)
     descripcion_evento = models.TextField(verbose_name="Descripción del evento (se usará como cuerpo de noticia)")
     costo_entrada = models.PositiveIntegerField(verbose_name="Costo de la entrada", blank=True, null=True)
     cupo_participantes = models.PositiveIntegerField(verbose_name="Cupo para participantes")
