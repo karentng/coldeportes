@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect,render
 from datetime import date
 from django.contrib.auth.models import *
-from datetimewidget.widgets import DateWidget
+from datetimewidget.widgets import DateWidget, DateTimeWidget
 import urllib.parse
 
 def get_request_or_none(request, field):
@@ -17,6 +17,9 @@ def get_request_or_none(request, field):
 
 def MyDateWidget():
     return DateWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd', 'startView':4, 'language':'es'})
+
+def MyDateTimeWidget():
+    return DateTimeWidget(usel10n=False, bootstrap_version=3, options={'format': 'yyyy-mm-dd HH:ii', 'startView':4, 'language':'es'})
 
 def permisos_de_tipo(entidad,perms):
     """
@@ -50,7 +53,7 @@ def verificar_tamano_archivo(self, datos, campo):
                     from django.forms.util import ErrorList
                     if not campo in self._errors:
                         self._errors[campo] = ErrorList()
-                    self._errors[campo].append("El tamaño de la foto no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
+                    self._errors[campo].append("El tamaño del archivo no debe ser mayor a %s MB"%(MAX_UPLOAD_SIZE_MB))
             except Exception:
                 pass
         else:
@@ -362,3 +365,5 @@ def obtener_modelo_actor(actor):
         return Noticia
     else:
         return None
+
+

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listado_competencias' juego_id %}">Listado de Competencias</a>
+    <li class="active">Registro de Resultados</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Registro de Competencia
+{% endblock %}
+
+{% block titulo_panel %}
+    Registro de Competencia
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript">
+    idTabla = "tabla-entidades";
+  </script>
+  <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+  <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+  <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+
+{% endblock %}
+
+{% block css %}
+  <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+  <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+  
+  {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block contenido_panel %}
+  {% include 'wizard_info_juego/_wizard.html' %}
+  <div class="row">
+    <div class="email-btn-row col-md-12">
+      <a href="{% url 'listar_participantes' competencia_id %}" class="btn btn-sm btn-inverse pull-left"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>
+      <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-inverse pull-right"><i class="fa fa-arrow-right m-r-5"></i> Siguiente</a>
+    </div>
+  </div>
+  <br>    
+  <div class="row">
+    <div class="col-md-12">
+      <fieldset>
+        <div class="table-responsive">
+          <table id="tabla-medalleria" class="table table-bordered table-hover">
+              <thead>
+                  <tr>
+                      <th>Nombre</th>
+                      <th>Posicion</th>
+                      <th>Medalla</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for resultado in resultados1 %}
+                  <tr>
+                      <td>{{resultado.nombre}}</td>
+                      <td>{{resultado.posicion}}</td>
+                      <td><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</td>
+                  </tr>
+                  {% endfor %}
+                  {% for resultado in resultados2 %}
+                  <tr>
+                      <td>{{resultado.nombre}}</td>
+                      <td>{{resultado.posicion}}</td>
+                      <td><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</td>
+                  </tr>
+                  {% endfor %}
+                  {% for resultado in resultados3 %}
+                  <tr>
+                      <td>{{resultado.nombre}}</td>
+                      <td>{{resultado.posicion}}</td>
+                      <td><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+        </div>
+      </fieldset>
+        
+    </div>
+</div>
+                            
+                    
+{% endblock %}

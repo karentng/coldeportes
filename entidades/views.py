@@ -1,5 +1,5 @@
 import os
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from entidades.models import *
 from entidades.forms import *
@@ -778,3 +778,230 @@ def crear_editar_dep(request,id=None):
         'nombre': 'DEPORTES',
         'url' : 'listar_deportes'
     })
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def mostrar_gestion_socios(request):
+    """
+    Marzo 02 / 2016
+    Autor: Diego Monsalve
+
+    Gestion de socios
+
+    Se permite crear un nuevo socio y se muestran los socios que ya se han registrado en el club.
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+    if request.method == 'POST':
+        form = SocioClubForm(request.POST)
+        if form.is_valid():
+            socio = form.save(commit=False)
+            club = request.tenant.obtenerTenant()
+
+            club_id = club.id
+            num_doc = socio.numero_documento
+
+            if club.socios.filter(club_id = club_id, numero_documento = num_doc).count() > 0:
+                lista_socios = club.socios.all()
+                form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
+                return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
+            else:
+                socio.club_id = club.id
+                socio = form.save()
+                club.socios.add(socio)
+                messages.success(request, "Los datos del socio fueron registrados correctamente.")
+                return redirect('gestion_socios')
+        else:
+            messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+            club = request.tenant.obtenerTenant()
+            lista_socios = club.socios.all()
+            return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
+    else:
+        club = request.tenant.obtenerTenant()
+        lista_socios = club.socios.all()
+        form = SocioClubForm()
+        return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
+
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def desactivar_socio(request, id_socio):
+    """
+    Marzo 02 / 2016
+    Autor: Diego Monsalve
+
+    Desactivar o activar socio
+
+    Permite cambiar el estado de un socio
+
+    :param request:     Petición realizada
+    :type request:      WSGIRequest
+    :param id_socio:    Identificador del socio
+    :type id_socio:     String
+    """
+    try:
+        club = request.tenant.obtenerTenant()
+        socio = club.socios.get(id=id_socio)
+    except:
+        messages.error(request, 'No se pudo encontrar el socio.')
+        return redirect('gestion_socios')
+
+    if socio.estado == 0:
+        socio.estado = 1
+        messages.success(request, ("El socio %s ha sido desactivado.")%(socio.nombre+" "+socio.apellido))
+    else:
+        socio.estado = 0
+        messages.success(request, ("El socio %s ha sido activado.")%(socio.nombre+" "+socio.apellido))
+    socio.save()
+    return redirect('gestion_socios')
+
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def editar_socio(request, id_socio):
+    """
+    Marzo 03 / 2016
+    Autor: Diego Monsalve
+
+    Editar información de un socio
+
+    Permite actualizar la información de un socio
+
+    :param request:     Petición realizada
+    :type request:      WSGIRequest
+    :param id_socio:    Identificador del socio
+    :type id_socio:     String
+    """
+    try:
+        club = request.tenant.obtenerTenant()
+        socio = club.socios.get(id=id_socio)
+    except:
+        messages.error(request, 'No se pudo encontrar el socio.')
+        return redirect('gestion_socios')
+
+
+    if request.method == 'POST':
+        form = SocioClubForm(request.POST, instance=socio)
+        if form.has_changed():
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Los datos del socio fueron actualizados correctamente.")
+                return redirect('gestion_socios')
+            else:
+                messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+                club = request.tenant.obtenerTenant()
+                lista_socios = club.socios.all()
+                return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
+        else:
+            return redirect('gestion_socios')
+    else:
+        form = SocioClubForm(instance=socio)
+        lista_socios = club.socios.all()
+        return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
+    
+    
+@login_required
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def crear_plan_de_costo(request):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Registrar Plan
+
+    Se almacena la informacion requerida para un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+    club_actual = request.tenant.obtenerTenant()
+    planes = club_actual.planes_de_costo.all()
+
+    if request.method == 'POST':
+        planesForm = PlanDeCostoForm(request.POST)
+        if planesForm.is_valid():
+            plan = planesForm.save()
+            club_actual.planes_de_costo.add(plan)
+
+            messages.success(request, "Plan de costo registrado")
+            return redirect('crear_plan_de_costo')
+        else:
+            messages.warning(request, "Error: Los datos no son validos, por favor vuelva a llenar el formulario")
+            return redirect('crear_plan_de_costo')
+    else:
+        planesForm = PlanDeCostoForm()
+        return render(request, 'planes_costo.html', {'form': planesForm,'planes': planes})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def editar_plan_de_costo(request, id):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Editar Plan
+
+    Se almacena la informacion editada para un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param id:             Identificador Plan de costo
+    :type id:              String
+    """
+    club_actual = request.tenant.obtenerTenant()
+    planes = club_actual.planes_de_costo.all()
+    try:
+        plan = PlanesDeCostoClub.objects.get(id=id)
+        planForm = PlanDeCostoForm(instance=plan)
+    except Exception:
+        messages.warning(request, "Error: El plan no fue encontrado")
+        return redirect('crear_plan_de_costo')
+
+    if request.method == 'POST':
+        planForm = PlanDeCostoForm(request.POST, instance=plan)
+        if planForm.is_valid():
+            planForm.save()
+            messages.success(request, "Datos del plan de costo guardados correctamente.")
+            return redirect('crear_plan_de_costo')
+        else:
+            messages.warning(request, "Erro: No se pudo editar el plan de costo.")
+            return redirect('editar_plan_de_costo', id)
+
+
+    return render(request, 'planes_costo.html', {'form': planForm, 'planes': planes, 'edicion': True})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def cambiar_estado_plan_costo(request, id):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Cambiar estado del Plan
+
+    Se almacena el cambio del estado de un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param id:             Identificador Plan de costo
+    :type id:              String
+    """
+    try:
+        plan = PlanesDeCostoClub.objects.get(id=id)
+    except Exception:
+        messages.warning(request, "Error: Plan no encontrado")
+        return redirect('crear_plan_de_costo')
+
+    if plan.estado == 0:
+        plan.estado = 1
+        plan.save()
+        messages.success(request, "Estado de plan cambiado")
+        return redirect('crear_plan_de_costo')
+    else:
+        plan.estado = 0
+        plan.save()
+        messages.success(request, "Estado de plan cambiado")
+        return redirect('crear_plan_de_costo')

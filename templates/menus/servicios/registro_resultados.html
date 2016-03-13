@@ -1,0 +1,24 @@
+<li class="has-sub {% if "/registro-resultados/" in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-edit"></i>
+        <span class="colorMenu">REG. RESULTADOS</span>
+    </a>
+    <ul class="sub-menu">        
+        <li class="has-sub {% if '/registro-resultados/juegos' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                Juegos
+            </a>
+            <ul class="sub-menu">
+                <li {% if "/registro-resultados/juegos/registro" in request.path  %} class="active" {% endif %}>
+                    <a href="{% url 'registrar_juego' %}">Registrar Juego</a>
+                </li>
+                <li {% if "/registro-resultados/juegos/listar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'listar_juegos' %}">Listar Juegos</a>
+                </li>
+            </ul>
+        </li>
+       
+    </ul>
+</li>

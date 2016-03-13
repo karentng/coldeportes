@@ -16,22 +16,44 @@
 {% endblock %}
 
 {% block js %}
-    
+    <script src="{{STATIC_URL}}js/funciones_calculos/registro_resultados/registro_competencia.js"></script>
 {% endblock %}
 
 {% block css %}
 
+    {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block contenido_panel %}
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <form id="" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-                {% bootstrap_form form %}
-                <button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">
-                    Registrar
-                </button>
-            </form>
-        </div>
+<div class="row">
+    <div class="email-btn-row col-md-12">
+
+      <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
+      
     </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <fieldset>
+            <form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>{{titulo}}</h3>
+                        
+                        {% for field in form %}
+                            <div class="col-md-6">
+                                
+                                {% bootstrap_field field layout="vertical" %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr>
+                <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
+            </form>
+        </fieldset>
+    </div>
+        
+</div>                        
+                    
 {% endblock %}

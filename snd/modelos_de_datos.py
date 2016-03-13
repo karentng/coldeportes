@@ -50,8 +50,25 @@ MODELOS_DE_DATOS = (
                     [
                         'snd.add_centroacondicionamiento',
                     ],
+                    [
+                        ['estado'],
+                        ['Activo'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
                 ]
             ],
+            [
+                "A/I",
+                'desactivar_caf',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        'snd.add_centroacondicionamiento',
+                    ]
+                ]
+
+            ]
         ],
     ),
     #MODELO DE DATOS CAF PARA LIGAS Y FEDERACIONES
@@ -208,6 +225,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_personalapoyo',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -251,6 +273,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_personalapoyo',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -294,6 +321,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_dirigente',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -338,6 +370,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_dirigente',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -381,6 +418,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_escenario',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -560,6 +602,11 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_cajacompensacion',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
                     ]
                 ]
             ],
@@ -604,6 +651,27 @@ MODELOS_DE_DATOS = (
                 [
                     [
                         'snd.add_escueladeportiva',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0])
+                    ]
+                ]
+            ],
+            [
+                "A/I",
+                'escuela_deportiva_desactivar',
+                ['id'],
+                'fa-ban',
+                [
+                    [
+                        'snd.change_escueladeportiva',
+                    ],
+                    [
+                        ['estado'],
+                        ['ACTIVO','INACTIVO'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
             ],

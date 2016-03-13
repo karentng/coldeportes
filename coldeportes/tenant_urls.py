@@ -21,12 +21,24 @@ urlpatterns = patterns('',
     url(r'^directorio/',include('directorio.entidad_urls')),#urls del modulo de directorio perfil entidad
     url(r'^directorio-publico/',include('directorio.publico_urls')),#urls del modulo de directorio publico
     url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
+    url(r'^clasificados/',include('publicidad.urls')),#urls del modulo de clasificados
     url(r'^noticias/',include('noticias.urls')),#urls del modulo de noticias
+
     #url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
 
     url(r'^reportes/', include('reportes.urls.publico')),
-    
+    url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
+    url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
+    url(r'^gestion-socios$', 'entidades.views.mostrar_gestion_socios', name='gestion_socios'),
+    url(r'^desactivar-socio/(\d+)$', 'entidades.views.desactivar_socio', name='desactivar_socio'),
+    url(r'^editar-socio/(\d+)$', 'entidades.views.editar_socio', name='editar_socio'),
+
+    #GESTION PLANES DE COSTOS
+    url(r'^planes$', 'entidades.views.crear_plan_de_costo', name='crear_plan_de_costo'),
+    url(r'^cambiar/(\d+)$', 'entidades.views.cambiar_estado_plan_costo', name='cambiar_estado_plan_costo'),
+    url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
+
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += required(
@@ -34,7 +46,6 @@ urlpatterns += required(
     patterns('',
         url(r'^selecciones/', include('snd.urls.selecciones')), #urls de cafs
     ),
-
 )
 
 urlpatterns += required(

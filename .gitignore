@@ -16,3 +16,7 @@ entidades/migrations
 transferencias/migrations
 gestion_usuarios/migrations
 registro_resultados/migrations
+solicitudes_escenarios/solicitud/migrations
+solicitudes_escenarios/respuesta/migrations
+publicidad/migrations
+buscador/migrations

@@ -16,21 +16,127 @@
 {% endblock %}
 
 {% block js %}
+    <script src="{{STATIC_URL}}js/ckeditor/ckeditor.js"></script>
+    <script src="{{STATIC_URL}}js/ckeditor/adapters/jquery.js"></script>
     <script src="{{STATIC_URL}}js/validaciones/noticias/noticias-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script>
+        var csrftoken = '{{ csrf_token }}';
+        var urlCrop = "{% url 'crop_pic' %}";
+        var buttonReset = "#reset-crop";
+        var formId = "form-noticia";
+        var urlMedia = "/fotos_noticias/";
+        var picture = "";
+        {% if edicion %}
+            picture = "{{ MEDIA_URL }}{{ foto }}";
+        {% endif %}
+
+        $(document).ready(function(){
+            $("#check-mostrar-valor").click(function(){
+                $("#valor-mostrar").toggleClass("fadeInDown");
+                $("#id_video").val("");
+            });
+            $("#id_etiquetas").tagit({
+                singleField:true,
+                singleFieldDelimiter: ",",
+            });
+
+            $('#submit-crop').click(function(event){
+                event.preventDefault();
+                CKEDITOR.instances.id_cuerpo_noticia.updateElement();
+                var str = CKEDITOR.instances.id_cuerpo_noticia.document.getBody().getText();
+
+                if(str.length <= 150){
+                    $("#previsualizacion").val(str);
+                }else {
+                    $("#previsualizacion").val(str.substring(0, 150));
+                }
+                console.log($("#previsualizacion").val());
+                {% if edicion %}
+                    if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
+                        $("#imagen-hidden").val("si");
+                        document.getElementById(formId).submit();
+                        return false;
+                    }else {
+                        $("#"+formId).bootstrapValidator('validate');
+                        if($("div.form-group").hasClass("has-error")){
+                            return false;
+                        }else {
+                            if($('.cropControls.cropControlsCrop').length) {
+                                console.log("Cortando");
+                                $('.cropControlCrop').click();
+                            }else{
+                                document.getElementById(formId).submit();
+                                return false;
+                            }
+                        }
+                    }
+                {% else %}
+
+                    $("#"+formId).bootstrapValidator('validate');
+
+                    if($("div.form-group").hasClass("has-error")){
+                        return false;
+                    }else {
+                        if($('.cropControls.cropControlsCrop').length) {
+                            console.log("Cortando");
+                            $('.cropControlCrop').click();
+                        }else{
+                            document.getElementById(formId).submit();
+                            return false;
+                        }
+                    }
+                {% endif %}
+            });
+        });
+
+    </script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic-conf.js"></script>
 {% endblock %}
 
 {% block css %}
-
+    {{ form.media }}
+    <link href="{{STATIC_URL}}plugins/croppic/croppic.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/croppic/estilos_personalizados.css" rel="stylesheet">
 {% endblock %}
 
 {% block contenido_panel %}
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <form id="noticia" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-                {% bootstrap_form form %}
-                <button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">
-                    {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
-                </button>
+
+            <form id="form-noticia" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                {% for field in form %}
+                    {% if field.name == 'video' %}
+                        <div class="control-personalizado form-group">
+                            <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
+                            ¿Desea incluir algún url de un video de youtube?
+                        </div>
+                        <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
+                            {% bootstrap_field field %}
+                        </div>
+                        <div class="form-group">
+                            <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <label class="control-label" for="modalTrigger2"></label>
+                            {% include 'modal_croppic.html' %}
+                        </div>
+                    {% else %}
+                        {% bootstrap_field field %}
+                    {% endif %}
+                {% endfor %}
+
+                <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
+                <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
+
+            {% if edicion %}
+                <a type="button" class="btn btn-primary pull-right" href="{% url 'listar_noticias'%}">
+                    Cancelar
+                </a>
+            {% endif %}
+            <button class="btn btn-primary pull-right" type="submit" style="margin-right:15px;" id="submit-crop">
+                {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+            </button>
             </form>
         </div>
     </div>

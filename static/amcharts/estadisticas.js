@@ -29,7 +29,6 @@ function valoresEnCero(datos){
 
 
 AmCharts.checkEmptyData = function (chart) {
-    console.log(valoresEnCero(chart.dataProvider));
     if ( 0 == chart.dataProvider.length || valoresEnCero(chart.dataProvider)) {
         // set min/max on the value axis
         try{

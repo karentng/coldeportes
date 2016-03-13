@@ -46,7 +46,6 @@ class DeportistaForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(DeportistaForm, self).clean()
-        self = verificar_tamano_archivo(self, cleaned_data, "foto")
         fecha_nacimiento = self.cleaned_data['fecha_nacimiento']
         if fecha_nacimiento > datetime.date.today():
                 msg = "La fecha de nacimiento no puede ser mayor al día de hoy"
