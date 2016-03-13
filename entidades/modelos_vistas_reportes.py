@@ -146,7 +146,7 @@ class PublicPersonalApoyoView(models.Model):
     genero = models.CharField(max_length=11)
     tipo_id = models.CharField(max_length=5)
     fecha_nacimiento = models.DateField()
-    nacionalidad = models.ManyToManyField(Nacionalidad)
+    nacionalidad = models.ForeignKey(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad)
     etnia = models.CharField(max_length=20)
     lgtbi = models.BooleanField()

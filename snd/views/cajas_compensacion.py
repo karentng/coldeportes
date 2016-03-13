@@ -170,11 +170,11 @@ def wizard_editar_caja(request, caja_id):
     except Exception:
         caja = None
 
-    caja_form = CajaCompensacionForm(instance=caja)
+    caja_form = CajaCompensacionEditarForm(instance=caja)
 
     if request.method == 'POST':
 
-        caja_form = CajaCompensacionForm(request.POST, request.FILES, instance=caja)
+        caja_form = CajaCompensacionEditarForm(request.POST, request.FILES, instance=caja)
 
         if caja_form.is_valid():
             caja = caja_form.save(commit=False)

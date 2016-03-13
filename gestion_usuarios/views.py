@@ -206,15 +206,6 @@ def inicio(request):
         comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
         comiteParalimpico.save()
 
-    if request.user.is_authenticated():
-        # lectura y creación de vistas del directorio sql
-        if schema_name == "public":
-            return redirect('entidad_tipo')
-        else:
-            if request.user.is_superuser:
-                return redirect('usuarios_lista')
-            else:
-                return redirect('inicio_tenant')
 
     if schema_name == 'public':
         return redirect('inicio_public')
@@ -228,7 +219,7 @@ def inicio_public(request):
     from django.db.models import Count
 
     import json
-
+    import datetime
 
     ubicaciones = atributos_actor_vista(PublicEscenarioView)
     cantidad_deportistas = PublicDeportistaView.objects.filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad').count()
@@ -242,26 +233,29 @@ def inicio_public(request):
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
-        if len(noticias_todas)>5:
+        noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
+                                                Q(fecha_expiracion__gte=datetime.date.today()),
+                                                estado=1).order_by("-fecha_inicio")
+        if len(noticias_todas) > 5:
             noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
     except Exception:
         noticias = []
 
-    return render(request,'index_public.html',{
+    return render(request, 'index_public.html', {
         'deportistas': cantidad_deportistas,
         'escenarios': cantidad_escenarios,
         'cantidad_entes': json.dumps(cantidad_entes),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias,
+        'noticias': noticias,
     })
 
 
 def inicio_tenant(request):
     import json
+    import datetime
     """
     Julio 14 / 2015
     Autor: Daniel Correa
@@ -307,24 +301,31 @@ def inicio_tenant(request):
 
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
-
     entidad = tipoTenant.obtener_datos_entidad()
+
+    if request.tenant.tipo == 3:
+        entidad['planes_de_costo']= entidad['planes_de_costo'].filter(estado=0)
+        entidad['socios'] = entidad['socios'].filter(estado=0)
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
-        if len(noticias_todas)>5:
+        noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
+                                                Q(fecha_expiracion__gte=datetime.date.today()),
+                                                estado=1).order_by("-fecha_inicio")
+        if len(noticias_todas) > 5:
             noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
     except Exception:
         noticias = []
-    return render(request,'index_tenant.html',{
-        'transfer_persona' : transfer_personas,
+
+
+    return render(request, 'index_tenant.html', {
+        'transfer_persona': transfer_personas,
         'actoresAsociados': actoresAsociados,
-        #'actoresAsociadosJSON': json.dumps(actoresAsociados),
+        # 'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias,
-        'entidad':entidad
+        'noticias': noticias,
+        'entidad': entidad
 
     })
 

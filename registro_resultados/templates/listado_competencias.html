@@ -20,6 +20,7 @@
         idTabla = "tabla-entidades";
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    
 {% endblock %}
 
 {% block css %}
@@ -27,6 +28,13 @@
 {% endblock %}
 
 {% block contenido_panel %}
+<div class="row">
+    <div class="email-btn-row col-md-12">
+
+      <a href="{% url 'datos_competencia' juego_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-plus m-r-5"></i> Nueva Competencia</a>
+      
+    </div>
+</div>
     <div class="row">
         <div class="col-sm-12">
             <div class="table-responsive">
@@ -35,8 +43,12 @@
                         <tr>
                             <th>Logo</th>
                             <th>Nombre</th>
-                            <th>Año</th>
-                            <th>Tipo</th>
+                            <th>Deporte</th>
+                            <th>Tipos de Participantes</th>
+                            <th>Fecha</th>
+                            <th>Categoría</th>
+                            <th>Modalidad</th>
+                            <th>Tipo de Registros</th>
                             <th>Descripción</th>
                             <th>Opciones</th>
                         </tr>
@@ -46,22 +58,31 @@
                         <tr>
                             <td align="center">
                                 {% if competencia.imagen == "" or competencia.imagen == None %}
-                                    <img src="{{STATIC_URL}}img/competencia.jpg" height='150' width='150'>
+                                    <img src="{{STATIC_URL}}img/competencia.jpg" height='50' width='70'>
                                 {% else %}
-                                    <img src="{{MEDIA_URL}}{{competencia.imagen}}" height='150' width='150'>
+                                    <img src="{{MEDIA_URL}}{{competencia.imagen}}" height='50' width='70'>
                                 {% endif %}
                             </td>
                             <td>{{competencia.nombre}}</td>
-                            <td>{{competencia.anno}}</td>
-                            <td>{{competencia.get_tipo_competencia_display}}</td>
+                            <td>{{competencia.deporte}}</td>
+                            <td>{{competencia.get_tipos_participantes_display}}</td>
+                            <td>{{competencia.fecha_competencia}}</td>
+                            <td>{%if competencia.categoria %}{{competencia.categoria}}{% else %}No registra{% endif %}</td>
+                            <td>{%if competencia.modalidad %}{{competencia.modalidad}}{% else %}No registra{% endif %}</td>
+                            <td>{{competencia.get_tipo_registro_display}}</td>
                             <td>{{competencia.descripcion}}</td>
                             <td>
-                                <a href='{% url 'acceder_competencia' competencia.id %}' class="btn btn-primary">
-                                    <i class="fa fa-check"></i> Acceder
-                                </a>
-                                <a href='{% url 'datos_competencia' competencia.id %}' class="btn btn-warning">
+                                <a href='{% url 'listar_participantes' competencia.id %}'>
+                                    <i class="fa fa-check"></i> Ingresar Resultados
+                                </a><br>
+                                {% comment %}
+                                <a href='{% url 'datos_competencia' juego_id competencia.id %}'>
                                     <i class="fa fa-edit"></i> Modificar
-                                </a>
+                                </a><br>
+                                {% endcomment %}
+                                <a href='{% url 'eliminar_competencia' juego_id competencia.id %}'>
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </a><br>
                             </td>
                         </tr>
                         {% endfor %}

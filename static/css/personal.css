@@ -32,3 +32,32 @@
 #logo-coldeportes{
     margin-top: 25px;
 }
+
+.display-none{
+    display: none;
+}
+
+.fadeInDown{
+    display: block;
+}
+
+ul.tagit{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+ul.tagit li.tagit-choice-editable {
+    background: #e4e4e4!important;
+    border: 1px solid #aaa !important;
+    cursor: default;
+    margin-top: 6px!important;
+    font-size: 12px!important;
+    font-family: 'Open Sans',"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    color: #707478!important;
+    border-radius: 4px !important;
+    -webkit-border-radius: 4px!important;
+    -moz-border-radius: 4px !important;
+}
+
+.tagit .ui-icon-close:before {
+    color: #999;
+}

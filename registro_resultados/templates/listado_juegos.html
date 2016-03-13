@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Listado de Juegos</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de Juegos
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de Juegos
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-entidades";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Nombre</th>
+                            <th>Año</th>
+                            <th>País</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for juego in juegos %}
+                        <tr>
+                            <td align="center">
+                                {% if juego.imagen == "" or juego.imagen == None %}
+                                    <img src="{{STATIC_URL}}img/juego.jpg" height='60' width='100'>
+                                {% else %}
+                                    <img src="{{MEDIA_URL}}{{juego.imagen}}" height='60' width='100'>
+                                {% endif %}
+                            </td>
+                            <td>{{juego.nombre}}</td>
+                            <td>{{juego.anio}}</td>
+                            <td>{{juego.pais}}</td>
+                            <td>
+                                <a href='{% url 'listado_competencias' juego.id %}'>
+                                    <i class="fa fa-check"></i> Registrar Competencias
+                                </a><br>
+                                <a href='{% url 'registrar_juego' juego.id %}'>
+                                    <i class="fa fa-edit"></i> Modificar
+                                </a><br>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

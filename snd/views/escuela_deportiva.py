@@ -173,3 +173,36 @@ def listar(request):
     return render(request, 'escuela_deportiva/escuela_deportiva_lista.html', {
         'tipo_tenant':request.tenant.tipo
     })
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def desactivar_escuela_deportiva(request,id_escuela):
+    """
+    Junio 9 / 2015
+    Autor: Milton Lenis
+
+    Cambiar estado de una escuela deportiva
+
+    Se obtiene el estado actual y se invierte su valor
+
+    :param request: Petición Realizada
+    :type request: WSGIRequest
+    :param id_escuela: Llave primaria de la escuela
+    :type id_escuela: String
+    """
+    try:
+        escuela = EscuelaDeportiva.objects.get(id=id_escuela)
+    except:
+        messages.error(request, "La escuela que está intentando desactivar no existe")
+        return redirect('escuela_deportiva_listar')
+
+    estado_actual = escuela.estado
+    escuela.estado = not(estado_actual)
+    escuela.save()
+    if(estado_actual):
+        message = "Escuela deportiva activada correctamente."
+    else:
+        message = "Escuela deportiva desactivada correctamente."
+    messages.success(request, message)
+    return redirect('escuela_deportiva_listar')

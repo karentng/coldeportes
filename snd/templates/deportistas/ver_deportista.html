@@ -366,6 +366,7 @@
                                                             <th>TIPO LESIÓN</th>
                                                             <th>FECHA LESIÓN</th>
                                                             <th>PERIODO REHABILITACIÓN</th>
+                                                            <th>SEGMENTO CORPORAL</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -374,6 +375,7 @@
                                                                 <td>{{historial.get_tipo_lesion_display}}</td>
                                                                 <td>{{historial.fecha_lesion}}</td>
                                                                 <td>{{historial.get_periodo_rehabilitacion_display}}</td>
+                                                                <td>{{ historial.get_segmento_corporal_display }}</td>
                                                             </tr>
                                                         {% endfor %}
                                                     </tbody>

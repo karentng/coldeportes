@@ -1,20 +1,56 @@
+{% load has_group %}
+
+<!-- ESTE MENÚ NO TIENE RESTRICCIONES NI DE USUARIOS NI DE TENANTS -->
+<li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
+    {% if request.tenant.schema_name == 'public' %}
+    <a href="{% url 'inicio_public' %}">
+    {% else %}
+    <a href="{% url 'inicio_tenant' %}">
+    {% endif %}
+        <i class="fa fa-desktop"></i>
+        <span class="colorMenu">INICIO</span>
+    </a>
+</li>
+<!-- =============================================== -->
+
+<!-- CUANDO EL USUARIO ES SUPER USUARIO Y NO HAY RESTRICCIÓN DE TENANT -->
 {% if request.user.is_superuser %}
     {% include "menus/aplicacion/usuarios.html" %}
-    {% if request.tenant.schema_name != 'public' %}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
-            <a href="{% url 'datos_basicos_entidad' %}">
-                <i class="fa fa-desktop"></i>
-                <span class="colorMenu">MODIFICAR DATOS BÁSICOS DE LA ENTIDAD</span>
+{% endif %}
+<!-- =============================================== -->
+
+{% if request.tenant.schema_name != 'public' %}
+    {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo == 3%}
+        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'gestion-socios' in request.path or 'planes' in request.path%} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                <i class="fa fa-cogs"></i>
+                <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
             </a>
+            <ul class="sub-menu">
+                {% if request.user.is_superuser %}
+                    <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
+                        <a href="{% url 'datos_basicos_entidad' %}"><span class="colorMenu">Modificar datos básicos de la entidad</span></a>
+                    </li>
+                {% endif %}
+                {% if request.tenant.tipo == 3 %}
+                    {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
+                        <li class="has-sub {% if 'gestion-socios' in request.path %} active {% endif %}">
+                            <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
+                        </li>
+                        <li class="has-sub {% if 'planes' in request.path %} active {% endif %}">
+                            <a href="{% url 'crear_plan_de_costo' %}"><span class="colorMenu">Gestionar planes de costos del club</span></a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
         </li>
     {% endif %}
-{% else %}
-    <li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
-        <a href="{% url 'inicio_tenant' %}">
-            <i class="fa fa-desktop"></i>
-            <span class="colorMenu">INICIO</span>
-        </a>
-    </li>
+{% endif %}
+
+
+{% if not request.user.is_superuser %}
+
     {% if user.is_authenticated %}
         <li class="has-sub
             {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
@@ -57,30 +93,31 @@
         {%if perms.snd.view_seleccion %}
             {% include "menus/aplicacion/selecciones.html" %}
         {%endif%}
-        {% if perms.noticias.view_noticia %}
-            {% include "menus/aplicacion/noticias.html" %}
-        {% endif %}
+        {% include "menus/aplicacion/manual.html" %}
+
+
     {% endif %}
 
-
-    {#  Cualquiera puede buscar normas y buscar en el directorio, no requiere validar permiso de lectura #}
-    
-    {% include "menus/aplicacion/directorio.html" %}
-    {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/reportes.html" %}
+    {% include "menus/aplicacion/normograma.html" %}
+    {% include "menus/aplicacion/noticias.html" %}
+    {% include "menus/aplicacion/publicidad.html" %}
 
 {% endif %}
+
 {% if request.tenant.schema_name == 'public' %}
-    {% if user.is_authenticated and user.is_superuser %}
+    {% if user.is_superuser %}
         {% include "menus/aplicacion/entidades.html" %}
-        {% include "menus/aplicacion/noticias.html" %}
-        {% include "menus/aplicacion/directorio.html" %}
-        {% include "menus/aplicacion/normograma.html" %}
-        {% include "menus/aplicacion/manual.html" %}
         {% include "menus/aplicacion/reportes.html" %}
-        {% include "menus/aplicacion/registro_resultados.html" %}
+        {% include "menus/aplicacion/normograma.html" %}
+        {% include "menus/servicios/registro_resultados.html" %}
+        {% include "menus/aplicacion/noticias.html" %}
+        {% include "menus/aplicacion/publicidad.html" %}
+        {% include "menus/aplicacion/manual.html" %}
 
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
 {% endif %}
+
+{% include "menus/aplicacion/directorio.html" %}

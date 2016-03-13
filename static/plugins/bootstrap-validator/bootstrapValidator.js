@@ -5443,7 +5443,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.numeric = $.extend($.fn.bootstrapValidator.i18n.numeric || {}, {
-		'default': 'Please enter a valid float number'
+		'default': 'Por favor ingrese un valor flotante válido'
 	});
 
 	$.fn.bootstrapValidator.validators.numeric = {

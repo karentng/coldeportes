@@ -11,6 +11,7 @@ from entidades.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from coldeportes.utilities import *
+import json
 
 
 @login_required
@@ -125,6 +126,11 @@ def ver_escenario(request, escenario_id, id_entidad):
     mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
     contactos = Contacto.objects.filter(escenario=escenario)
 
+    datos_georreferenciacion = escenario.obtener_atributos()
+    posicion_inicial = escenario.posicionInicialMapa()
+
+    print(datos_georreferenciacion[0])
+
     return render(request, 'escenarios/ver_escenario.html', {
         'escenario': escenario,
         'caracteristicas': caracteristicas,
@@ -134,7 +140,9 @@ def ver_escenario(request, escenario_id, id_entidad):
         'videos': videos,
         'mantenimientos': mantenimientos,
         'escenario_id': escenario_id,
-        'contactos': contactos
+        'contactos': contactos,
+        'datosMostrar': json.dumps(datos_georreferenciacion),
+        'posicionInicial': json.dumps(posicion_inicial),
     })
 
 @login_required
@@ -200,15 +208,15 @@ def wizard_identificacion(request, escenario_id):
     except Exception:
         escenario = None
 
-    identificacion_form = IdentificacionForm(instance=escenario)
+    identificacion_form = IdentificacionEditarForm(instance=escenario)
 
     if request.method == 'POST':
 
-        identificacion_form = IdentificacionForm(request.POST, instance=escenario)
+        identificacion_form = IdentificacionEditarForm(request.POST, instance=escenario)
 
         if identificacion_form.is_valid():
             escenario = identificacion_form.save(commit=False)
-            escenario.entidad =  request.tenant
+            escenario.entidad =  request.tenant            
             escenario.nombre = escenario.nombre.upper()
             escenario.direccion = escenario.direccion.upper()
             escenario.barrio = escenario.barrio.upper()
@@ -255,7 +263,7 @@ def wizard_caracterizacion(request, escenario_id):
     
     if request.method == 'POST':
         
-        caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
+        caracterizacion_form = CaracterizacionForm(request.POST, request.FILES, instance=caracteristicas)
 
         if caracterizacion_form.is_valid():
             caracteristicas = caracterizacion_form.save(commit=False)
