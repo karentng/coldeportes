@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li>Evento</li>
+	<li class="active">Actividades</li>
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'listar_eventos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
+{% block css %}
+    {{ form.media }}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block titulo_panel %}
+	Actividades
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-4" >
+            <form id="form-actividad" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        {% if edicion %}
+                            <h3>Modificar actividad</h3>
+                        {% else %}
+                            <h3>Registrar actividad</h3>
+                        {% endif %}
+                        {% for field in form %}
+                            {% bootstrap_field field layout="vertical" %}
+                        {% endfor %}
+                        {% if edicion %}
+                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar</button>
+                        {% else %}
+                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Actividades Registradas Actualmente:</h3>
+
+            {% if lista_actividades %}
+                <div class="table-responsive">
+                    <table id="tabla-actividades" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Titulo</th>
+                                <th>Descripcion</th>
+                                <th>Día actividad</th>
+                                <th>Hora inicio</th>
+                                <th>Hora finalización</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for actividad in lista_actividades %}
+                                <tr>
+                                    <td>{{ actividad.titulo }}</td>
+                                    <td>{{actividad.descripcion}}</td>
+                                    <td>{{actividad.dia_actividad}}</td>
+                                    <td>{{ actividad.hora_inicio }}</td>
+                                    <td>{{ actividad.hora_fin }}</td>
+                                    <td>
+                                        <a href="#"><i class="fa fa-eye"> Vista previa </i></a><br>
+                                        <a href="{% url 'editar_actividad' actividad.id %}"><i class="fa fa-gear"> Editar </i></a><br>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-warning fade in m-b-15"><strong>No hay actividades registradas</strong></div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-actividades";
+        var fecha_in = '{{ evento.fecha_inicio|date:"Y-m-d" }}';
+        var fecha_fn = '{{ evento.fecha_finalizacion|date:"Y-m-d" }}';
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+
+    <<script src="{{ STATIC_URL }}js/validaciones/gestion_eventos/validaciones-actividades.js"></script>
+
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
+{% endblock %}

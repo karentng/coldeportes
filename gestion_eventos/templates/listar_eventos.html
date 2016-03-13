@@ -69,9 +69,22 @@
                                 {% else %}
                                     <label class="label-danger label label-table">Inactivo</label>
                                 {% endif %}</td>
-                            <td><a href="{% url 'detalles_noticia' evento.noticia.id %}">
+                            <td>
+                                <a href="{% url 'detalles_noticia' evento.noticia.id %}">
                                     <i class="fa fa-eye">Ver más</i>
-                                </a>
+                                </a><br>
+                                <a href="{% url 'editar_evento' evento.id %}">
+                                    <i class="fa fa-gear"> Editar </i>
+                                </a><br>
+                                <a href="{% url 'registrar_actividad' evento.id %}">
+                                    <i class="fa fa-plus">Gestionar actividades</i>
+                                </a><br>
+                                <a href="{% url 'ver_actividades' evento.id %}">
+                                    <i class="fa fa-folder">Ver actividades</i>
+                                </a><br>
+                                <a href="{% url 'preinscripcion_evento' evento.id %}">
+                                    <i class="fa fa-pencil">Preinscribirse</i>
+                                </a><br>
                             </td>
                             </tr>
                         {% endfor %}

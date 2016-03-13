@@ -16,6 +16,10 @@
     Listado de eventos
 {% endblock %}
 
+{% block botones_panel %}
+    <a href="{% url 'listar_eventos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-participantes";
@@ -38,6 +42,7 @@
                             <th>Apellidos</th>
                             <th>Fecha de nacimiento</th>
                             <th>Estado</th>
+                            <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,6 +52,10 @@
                                 <td>{{ participante.apellido }}</td>
                                 <td>{{ participante.fecha_nacimiento }}</td>
                                 <td>{{ participante.get_estado_display }}</td>
+                                <td>
+                                    <a href="#"><i class="fa fa-eye">Ver más</i></a><br>
+                                    <a href="{% url 'editar_participante' participante.id %}"><i class="fa fa-eye">Editar</i></a><br>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

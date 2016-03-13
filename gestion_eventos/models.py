@@ -30,6 +30,20 @@ class Participante(models.Model):
         unique_together = ('evento_participe', 'identificacion')
 
 
+class Actividad(models.Model):
+
+    titulo = models.CharField(max_length=255, verbose_name="Título de la actividad")
+    descripcion = models.TextField(verbose_name="Descripción de la actividad")
+    dia_actividad = models.DateField(verbose_name="Día de la actividad")
+    hora_inicio = models.TimeField(verbose_name="Hora de inicio")
+    hora_fin = models.TimeField(verbose_name="Hora de finalización")
+    evento_perteneciente = models.IntegerField()
+    estado = models.IntegerField( default=1)
+
+    class Meta:
+        unique_together = ('evento_perteneciente', 'id')
+
+
 class Evento(models.Model):
 
     titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
@@ -49,6 +63,7 @@ class Evento(models.Model):
     cupo_disponible = models.PositiveIntegerField()
     noticia = models.ForeignKey(Noticia)
     participantes = models.ManyToManyField(Participante)
+    actividades = models.ManyToManyField(Actividad)
     autor = models.CharField(verbose_name="Autor de la noticia", max_length=150,
                              help_text="Se usará como autor para la noticia del evento que se creará")
     estado = models.IntegerField(default=1)

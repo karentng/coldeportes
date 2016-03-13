@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .forms import *
 from .models import Evento
 from noticias.models import Noticia
 from noticias.forms import NoticiaForm
 from snd.formularios.deportistas import VerificarExistenciaForm
 from snd.views.deportistas import existencia_deportista
-from datetime import datetime
+import datetime
 
 
 # Create your views here.
@@ -62,6 +63,52 @@ def listar_eventos(request):
     return render(request, 'listar_eventos.html', {'eventos': eventos})
 
 
+def editar_evento(request, id_evento):
+    print("dsaddsd")
+    try:
+        evento = Evento.objects.get(id=id_evento)
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    form = EventoForm(instance=evento)
+
+    if request.method == 'POST':
+        form = EventoForm(request.POST, instance=evento)
+        nueva_foto = request.POST.get("imagen-crop")
+        if form.has_changed or nueva_foto != "No":
+            if form.is_valid():
+                evento_form = form.save(commit=False)
+                nueva_foto = request.POST.get('imagen-crop')
+
+                if nueva_foto == "No":
+                    evento_form.imagen = ""
+                else:
+                    evento_form.imagen = nueva_foto
+
+                if evento_form.video:
+                    evento_form.video = evento_form.video.replace("watch?v=", "embed/")
+                evento_form.previsualizacion = request.POST.get("previsualizacion")
+                evento_form.cupo_disponible = evento_form.cupo_participantes - evento.participantes.count()
+
+                noticia_evento = evento.noticia
+                noticia_evento.titulo = evento_form.titulo_evento
+                noticia_evento.cuerpo_noticia = evento_form.descripcion_evento
+                noticia_evento.fecha_expiracion = evento_form.fecha_finalizacion
+                noticia_evento.autor = evento_form.autor
+                noticia_evento.foto = evento_form.imagen
+                noticia_evento.video = evento_form.video
+                noticia_evento.etiquetas = ""
+                noticia_evento.save()
+                evento_form.save()
+
+                messages.success(request, 'El evento se ha editado correctamente')
+                return redirect('listar_eventos')
+
+    return render(request, 'registrar_evento.html', {'form': form,
+                                               'edicion':True})
+
+
 def listar_participantes(request, id_evento):
     if True:
         try:
@@ -84,12 +131,6 @@ def preinscripcion_evento(request, id_evento):
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
-    try:
-        datos = request.session["datos"]
-    except Exception:
-        return redirect('verificar_participante')
-
-    participante_form = ParticipanteForm(initial=datos)
     if request.method == 'POST':
         participante_form = ParticipanteForm(request.POST)
         if participante_form.is_valid():
@@ -102,18 +143,54 @@ def preinscripcion_evento(request, id_evento):
             messages.success(request, "Has sido preinscrito con exito!")
             return redirect('listar_eventos')
 
+    try:
+        datos = request.session["datos"]
+    except Exception:
+        return redirect('verificar_participante', id_evento)
+
+    participante_form = ParticipanteForm(initial=datos)
+    del request.session["datos"]
     return render(request, 'registrar_preinscrito.html', {'form': participante_form})
 
 
-def verificar_participante(request,id_evento):
+def editar_participante(request, id_participante):
+
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Exception:
+        messages.error(request, 'El participante al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    if request.method == 'POST':
+        participante_form = ParticipanteForm(request.POST, instance=participante)
+        if participante_form.has_changed():
+            if participante_form.is_valid():
+                participante_form.save()
+
+                messages.success(request, "El participante ha sido editado con exito!")
+                return redirect('listar_participantes', participante.evento_participe)
+
+    participante_form = ParticipanteForm(instance=participante)
+    return render(request, 'registrar_preinscrito.html', {'form': participante_form, 'edicion': True})
+
+
+def verificar_participante(request, id_evento):
 
     try:
         evento = Evento.objects.get(id=id_evento)
+        hoy = datetime.date.today()
+        if evento.fecha_inicio_preinscripcion > hoy:
+            messages.error(request, 'El evento aún no se encuentra en etapa de preinscripcion')
+            return redirect('listar_eventos')
+        elif evento.fecha_finalizacion_preinscripcion < hoy:
+            messages.error(request, 'La etapa de preinscripcion del evento ya finalizó')
+            return redirect('listar_eventos')
+
         if evento.cupo_disponible == 0:
-            messages.success(request, 'No hay cupos disponibles para el evento!')
+            messages.error(request, 'No hay cupos disponibles para el evento!')
             return redirect('listar_eventos')
     except Exception:
-        messages.success(request, 'El evento al que trata de acceder no existe!')
+        messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
 
     if request.method=='POST':
@@ -124,7 +201,16 @@ def verificar_participante(request,id_evento):
                 'identificacion': form.cleaned_data['identificacion'],
                 'tipo_id': form.cleaned_data['tipo_id']
             }
+            try:
+                participante = evento.participantes.get(tipo_id=datos['tipo_id'],identificacion=datos['identificacion'])
+                if participante:
+                    messages.error(request, 'El participante ya se encuentra inscrito')
+                    form = VerificarExistenciaForm()
+                    return render(request,'deportistas/verificar_deportista.html',{'form':form,
+                                                                   'existe':False})
 
+            except Exception:
+                pass
             deportista,tenant_existencia,existe = existencia_deportista(datos)
 
             if existe:
@@ -141,25 +227,115 @@ def verificar_participante(request,id_evento):
                 #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
                 request.session['datos'] = datos
                 return redirect('preinscripcion_evento',id_evento)
+        else:
+            form = VerificarExistenciaForm()
+            messages.error(request, 'El evento al que trata de acceder no existe!')
+            return render(request,'deportistas/verificar_deportista.html',{'form':form,
+                                                                   'existe':False})
 
     else:
         form = VerificarExistenciaForm()
     return render(request,'deportistas/verificar_deportista.html',{'form':form,
                                                                    'existe':False})
 
-def detalles_noticia(request, id_noticia):
+
+def registrar_actividad(request, id_evento):
+
     try:
-        noticia = Noticia.objects.get(id=id_noticia)
+        evento = Evento.objects.get(id=id_evento)
     except Exception:
-        messages.error(request, 'La noticia que está tratando de visualizar no existe')
-        return redirect('listar_noticias')
-    if not request.user.has_perm("publicidad.change_clasificado"):
-        if noticia.fecha_inicio > datetime.date.today() or noticia.fecha_expiracion < datetime.date.today() or noticia.estado == 0:
-            messages.error(request, 'La noticia que está tratando de visualizar no está disponible')
-            return redirect('listar_noticias')
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
 
-    return render(request, 'detalles_noticia.html', {'noticia': noticia})
+    actividad_form = ActividadForm()
 
+    if request.method == 'POST':
+        actividad_form = ActividadForm(request.POST)
+        if actividad_form.is_valid():
+            actividad = actividad_form.save(commit=False)
+            actividad.evento_perteneciente = evento.id
+            actividad.save()
+            evento.actividades.add(actividad)
+            evento.save()
+            messages.success(request, "La actividad ha sido creada con exito!")
+            return redirect('registrar_actividad', id_evento)
+    lista_actividades = evento.actividades.all()
+    return render(request, 'gestion_actividades.html', {'form': actividad_form, 'lista_actividades': lista_actividades,
+                                                        'evento': evento})
+
+
+def editar_actividad(request, id_actividad):
+    try:
+        actividad = Actividad.objects.get(id=id_actividad)
+    except Exception:
+        messages.error(request, 'La actividad a la que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    actividad_form = ActividadForm(instance=actividad)
+
+    if request.method == "POST":
+        actividad_form = ActividadForm(request.POST, instance=actividad)
+        if actividad_form.has_changed():
+            if actividad_form.is_valid():
+                actividad = actividad_form.save(commit=False)
+                actividad.save()
+                messages.success(request, "La actividad ha sido editada con exito!")
+                return redirect('registrar_actividad', actividad.evento_perteneciente)
+
+    evento = Evento.objects.get(id=actividad.evento_perteneciente)
+    lista_actividades = evento.actividades.all()
+    return render(request, 'gestion_actividades.html', {'form': actividad_form, 'lista_actividades': lista_actividades,
+                                                        'evento': evento, 'edicion': True})
+
+
+def ver_actividades(request, id_evento):
+
+    try:
+        evento = Evento.objects.get(id=id_evento)
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    actividades = evento.actividades.all()
+    return render(request, 'ver_actividades.html', {'actividades': actividades,
+                                                    'evento': evento})
+
+
+def cambio_fecha_actividad(request):
+
+    if request.is_ajax():
+        response = {
+            'status': 'error',
+            'message': 'actividad no existe'
+        }
+        try:
+            actividad = Actividad.objects.get(id=request.POST.get("id"))
+        except Exception:
+            return JsonResponse(response)
+
+        dias = request.POST.get("delta_dias")
+        mins = request.POST.get("delta_minutos")
+        if not mins:
+            actividad.dia_actividad = actividad.dia_actividad + datetime.timedelta(days=int(dias))
+            actividad.save()
+            message = "ok"
+        else:
+            try:
+                actividad.hora_inicio = (datetime.datetime.combine(actividad.dia_actividad, actividad.hora_inicio) + datetime.timedelta(minutes=int(mins))).time()
+                actividad.hora_fin = (datetime.datetime.combine(actividad.dia_actividad, actividad.hora_fin) + datetime.timedelta(minutes=int(mins))).time()
+                actividad.dia_actividad = actividad.dia_actividad + datetime.timedelta(days=int(dias))
+                actividad.save()
+                message = "ok"
+            except Exception as e:
+                print(e)
+                message = e
+        response = {
+            'status': 'ok',
+            'message': message
+        }
+        return JsonResponse(response)
+
+    return redirect('listar_eventos')
 
 @login_required
 @permission_required('noticias.change_noticia')

@@ -1,6 +1,7 @@
 from django import forms
 from .models import *
-from coldeportes.utilities import MyDateWidget
+from coldeportes.utilities import MyDateWidget, MyDateTimeWidget
+from datetimewidget.widgets import TimeWidget
 
 
 class EventoForm(forms.ModelForm):
@@ -36,4 +37,20 @@ class ParticipanteForm(forms.ModelForm):
 
         widgets = {
             'fecha_nacimiento': MyDateWidget()
+        }
+
+
+class ActividadForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
+
+    class Meta:
+        model = Actividad
+        fields = ('titulo','descripcion', 'dia_actividad', 'hora_inicio', 'hora_fin')
+
+        widgets = {
+            'dia_actividad': MyDateWidget(),
+            'hora_inicio': MyDateTimeWidget()
         }

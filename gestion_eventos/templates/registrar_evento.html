@@ -43,7 +43,7 @@
             });
             $("#id_etiquetas").tagit({
                 singleField:true,
-                singleFieldDelimiter: ",",
+                singleFieldDelimiter: ","
             });
 
             $('#submit-crop').click(function(event){
@@ -59,6 +59,7 @@
                 console.log($("#previsualizacion").val());
                 {% if edicion %}
                     if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
+
                         $("#imagen-hidden").val("si");
                         document.getElementById(formId).submit();
                         return false;
@@ -71,7 +72,10 @@
                                 console.log("Cortando");
                                 $('.cropControlCrop').click();
                             }else{
+
                                 document.getElementById(formId).submit();
+
+                                console.log("fasdasdasd");
                                 return false;
                             }
                         }
@@ -89,6 +93,7 @@
                         }else{
                             document.getElementById(formId).submit();
                             return false;
+                            console.log("fasdasdasd");
                         }
                     }
                 {% endif %}
@@ -110,7 +115,7 @@
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
 
-            <form id="form-eventos"action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <form id="form-eventos" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="row">
             <div class="col-xs-12">
                 {% for field in form %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Eventos</a>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de eventos
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'listar_eventos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de eventos
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-eventos";
+        urlDrop = "{% url 'cambio_fecha_actividad' %}";
+        csrf = '{{ csrf_token }}';
+        calendarEvents = [];
+            {% for actividad in actividades %}
+            calendarEvents.push({
+                act_id: '{{actividad.id }}',
+				title: '{{ actividad.titulo }}',
+				start: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_inicio }}',
+				end: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_fin }}',
+				className: 'bg-purple',
+                allDay:false,
+				media: '<i class="fa fa-trophy"></i>',
+				description: '{{ actividad.descripcion }}'
+            });
+        {% endfor %}
+    </script>
+    <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <script src="{{ STATIC_URL }}js/gestion_eventos/calendar.evento.js"></script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="vertical-box">
+            <div id="calendar" class="vertical-box-column p-15 calendar"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+    <script>
+		$(document).ready(function() {
+			Calendar.init();
+		});
+    </script>
+{% endblock %}
