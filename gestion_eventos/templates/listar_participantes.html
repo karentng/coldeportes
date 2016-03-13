@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-    Listado de eventos
+    Listado de participantes
 {% endblock %}
 
 {% block titulo_panel %}
-    Listado de eventos
+    Listado de participantes
 {% endblock %}
 
 {% block botones_panel %}
@@ -35,6 +35,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="table-responsive">
+                <div class="m-b-20" style="font-size: 25px;">
+                    Cupo Disponible: {{ cupo }}
+                </div>
                 <table id="tabla-participantes" class="table table-bordered table-hover">
                     <thead>
                         <tr>
@@ -54,7 +57,13 @@
                                 <td>{{ participante.get_estado_display }}</td>
                                 <td>
                                     <a href="#"><i class="fa fa-eye">Ver más</i></a><br>
-                                    <a href="{% url 'editar_participante' participante.id %}"><i class="fa fa-eye">Editar</i></a><br>
+                                    <a href="{% url 'editar_participante' participante.id %}"><i class="fa fa-gear">Editar</i></a><br>
+                                    {% if participante.estado == 1 %}
+                                        <a href="{% url 'aceptar_candidato' participante.id %}"><i class="fa fa-check">Aceptar inscripción</i></a><br>
+                                    {% elif participante.estado == 3 %}
+                                        <a href="#" data-toggle="modal" data-target="#modal-pago-{{ participante.id }}" ><i class="fa fa-dollar">Estado pago</i></a><br>
+                                        {% include 'modal_pago.html' %}
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

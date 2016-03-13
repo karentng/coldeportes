@@ -13,7 +13,9 @@ class Participante(models.Model):
     ESTADO = (
         (0, 'Cancelado'),
         (1, 'Preinscrito'),
-        (2, 'Inscrito'),
+        (2, 'Pendiente'),
+        (3, 'Aceptado'),
+        (4, 'Rechazado'),
     )
 
     evento_participe = models.IntegerField()
@@ -24,7 +26,10 @@ class Participante(models.Model):
     apellido = models.CharField(max_length=155, verbose_name="Apellidos")
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     email = models.EmailField(verbose_name="Correo electronico")
+    token_email = models.CharField(max_length=255, null=True)
+    pago_registrado = models.BooleanField(default=False)
     estado = models.IntegerField(choices=ESTADO, default=1)
+
 
     class Meta:
         unique_together = ('evento_participe', 'identificacion')
@@ -61,6 +66,7 @@ class Evento(models.Model):
     costo_entrada = models.PositiveIntegerField(verbose_name="Costo de la entrada", blank=True, null=True)
     cupo_participantes = models.PositiveIntegerField(verbose_name="Cupo para participantes")
     cupo_disponible = models.PositiveIntegerField()
+    cupo_candidatos = models.IntegerField()
     noticia = models.ForeignKey(Noticia)
     participantes = models.ManyToManyField(Participante)
     actividades = models.ManyToManyField(Actividad)

@@ -1,0 +1,36 @@
+
+<div class="modal fade" id="modal-pago-{{ participante.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="titulo-modal">Gestion pago</h2>
+            </div>
+            <div class="modal-body">
+                <p class="datos-participante">
+                    Participante: {{ participante.nombre }}
+                </p>
+                <hr>
+                <form id="pago_form" method="post" action="{% url 'gestion_pago' participante.id %}">
+                {% csrf_token %}
+                    <div class="form-group" >
+                        <label class="control-label" for="id_pago">Esto de pago</label>
+                        <select class="form-control" id="id_pago" name="pago">
+                            {% if participante.pago_registrado %}
+                                <option value="0">PENDIENTE</option>
+                                <option value="1" selected="selected">REALIZADO</option>
+                            {% else %}
+                                <option value="0" selected="selected">PENDIENTE</option>
+                                <option value="1">REALIZADO</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+                <button type="submit" onclick="$('#pago_form').submit();" class="btn btn-primary" style="margin-left: 15px;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

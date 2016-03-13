@@ -1,3 +1,6 @@
+import binascii
+import os
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
@@ -121,7 +124,7 @@ def listar_participantes(request, id_evento):
         participantes = None
         eventos = None
 
-    return render(request, 'listar_participantes.html', {'participantes': participantes})
+    return render(request, 'listar_participantes.html', {'participantes': participantes, 'cupo': eventos.cupo_candidatos})
 
 
 def preinscripcion_evento(request, id_evento):
@@ -238,6 +241,88 @@ def verificar_participante(request, id_evento):
     return render(request,'deportistas/verificar_deportista.html',{'form':form,
                                                                    'existe':False})
 
+
+def aceptar_candidato(request, id_participante):
+    from django.core.mail import EmailMessage
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Exception:
+        messages.error(request, 'El participante al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    evento = Evento.objects.get(id=participante.evento_participe)
+    if evento.cupo_candidatos == 0:
+        messages.error(request, 'No hay cupos disponible!')
+        return redirect('listar_participantes', evento.id)
+
+
+    token = binascii.hexlify(os.urandom(25))
+    participante.token_email = token
+    participante.estado = 2
+    participante.save()
+
+
+    evento.cupo_candidatos = evento.cupo_candidatos - 1
+    evento.save()
+    print(str(token))
+    messages.success(request, 'Se ha enviado la peticion de confirmación')
+    return redirect('listar_participantes', evento.id)
+
+
+def confirmar_participacion(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Exception:
+        messages.error(request, 'El participante al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    try:
+        token = request.GET.get("token")
+        if participante.token_email != token:
+            messages.error(request, 'No está autorizado para ingresar!')
+            return redirect('listar_eventos')
+
+        aceptar = request.GET["acp"]
+        if aceptar == '1':
+            participante.estado = 3
+            participante.save()
+            messages.success(request, 'Has aceptado la inscripción satisfactoriamente')
+            return redirect('listar_eventos')
+        else:
+            participante.estado = 4
+            participante.save()
+            evento = Evento.objects.get(id=participante.evento_participe)
+            evento.cupo_candidatos = evento.cupo_candidatos + 1
+            evento.save()
+            messages.success(request, 'Has rechazado la inscripción satisfactoriamente')
+            return redirect('listar_eventos')
+
+
+    except Exception:
+        messages.error(request, 'Ha ocurrido un error')
+        return redirect('listar_eventos')
+
+
+def gestion_pago(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Exception:
+        messages.error(request, 'El participante al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    if request.method == "POST":
+        estado_pago = request.POST.get("pago")
+        print(estado_pago)
+        if estado_pago == '0':
+            participante.pago_registrado = False
+        else:
+            participante.pago_registrado = True
+        participante.save()
+        messages.success(request, 'Se ha registrado el estado del pago correctamente')
+        return redirect('listar_participantes', participante.evento_participe)
+
+
+    return redirect('listar_eventos')
 
 def registrar_actividad(request, id_evento):
 
