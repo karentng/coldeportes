@@ -30,4 +30,4 @@ class Articulo(models.Model):
     entidad = models.IntegerField(choices=TIPOS)
     modulo = models.CharField(choices=MODULOS, max_length=2, verbose_name="módulo")
     usuario = models.CharField(choices=USUARIOS, max_length=2)
-    contenido = RichTextUploadingField(config_name='default', verbose_name=" ")
+    contenido = RichTextUploadingField(config_name='default', verbose_name=" ", null=True, blank=True)
