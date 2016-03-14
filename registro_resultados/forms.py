@@ -2,6 +2,8 @@
 from django import forms
 from registro_resultados.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
+from reportes.utilities import add_visualizacion
+
 
 class JuegoForm(forms.ModelForm):
     required_css_class = 'required'
@@ -144,3 +146,26 @@ class EquipoMetrosForm(forms.ModelForm):
 class CompetenciasBaseDeDatos(forms.Form):
     archivo = forms.FileField(label="Archivo de competencias")
 
+class FiltrosMedalleriaDeptGenForm(forms.Form):
+    
+    GENEROS = (
+        ('HOMBRE','MASCULINO'),
+        ('MUJER','FEMENINO'),
+    )
+    
+    def __init__(self, *args, **kwargs):
+        visualizaciones_definidas = kwargs.pop('visualizaciones', None)
+        eliminar = kwargs.pop('eliminar', None)
+        super(FiltrosMedalleriaDeptGenForm, self).__init__(*args, **kwargs)
+        self.fields['departamentos'] = adicionarClase(self.fields['departamentos'], 'many')
+        self.fields['generos'] = adicionarClase(self.fields['generos'], 'many')
+
+        if eliminar:
+            del self.fields[eliminar]
+
+        add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
+
+
+    departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
+    generos = forms.ChoiceField(required=False,choices=GENEROS)
+    visualizacion = forms.ChoiceField(label="Visualización")
