@@ -68,7 +68,9 @@
                                             <address class="m-t-5 m-b-5">
                                                 <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br/>
                                                 {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br/>
-                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br/>
+                                                {% if escenario.latitud %}Latitud: {{escenario.latitud}} {% endif %} 
+                                                {% if escenario.longitud %}Longitud: {{escenario.longitud}} {% endif %} 
+                                                {% if escenario.altura %}Altura: {{escenario.altura}} {% endif %}<br/>
                                                 Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
                                                 Nombre del Administrador: {{escenario.nombre_administrador}}
                                             </address>
@@ -178,7 +180,7 @@
                                                     {% for historico in historicos %}
                                                     <tr>
                                                         <td>{{historico.fecha_inicio}}</td>
-                                                        <td>{{historico.fecha_fin}}</td>
+                                                        {% if historico.fecha_fin %}<td>{{historico.fecha_fin}}</td>{% endif %}
                                                         <td>{{historico.descripcion}}</td>
                                                     </tr> 
                                                     {% endfor %}                               
