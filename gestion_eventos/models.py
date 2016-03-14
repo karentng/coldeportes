@@ -30,9 +30,11 @@ class Participante(models.Model):
     pago_registrado = models.BooleanField(default=False)
     estado = models.IntegerField(choices=ESTADO, default=1)
 
-
     class Meta:
         unique_together = ('evento_participe', 'identificacion')
+
+    def __str__(self):
+        return str(self.nombre) + " " + str(self.apellido)
 
 
 class Resultado(models.Model):
@@ -42,13 +44,19 @@ class Resultado(models.Model):
         (2, 'HASTA SEGUNDO LUGAR'),
         (3, 'HASTA TERCER LUGAR'),
     )
+    actividad_perteneciente = models.IntegerField()
     titulo_competencia = models.CharField(max_length=255, verbose_name="Título alternativo (opcional)",
-                                          help_text="En caso de que el título de la competencia a la cual"+
-                                                    " se le registrará el resulta, se puede escribir aquí")
+                                          help_text="En caso de que el título de la competencia sea diferente " +
+                                                    "al de la actividad, se puede escribir aquí", null=True, blank=True)
+    estado = models.IntegerField(default=1)
     cantidad_puestos = models.PositiveIntegerField(choices=PUESTOS)
     primer_lugar = models.ForeignKey(Participante)
-    segundo_lugar = models.ForeignKey(Participante, null=True, related_name="segundo_lugar_resultado")
-    tercer_lugar = models.ForeignKey(Participante, null=True, related_name="tercer_lugar_resultado")
+    segundo_lugar = models.ForeignKey(Participante, null=True, blank=True, related_name="segundo_lugar_resultado")
+    tercer_lugar = models.ForeignKey(Participante, null=True, blank=True, related_name="tercer_lugar_resultado")
+
+    class Meta:
+        unique_together = ('actividad_perteneciente', 'id')
+
 
 class Actividad(models.Model):
 
@@ -58,7 +66,8 @@ class Actividad(models.Model):
     hora_inicio = models.TimeField(verbose_name="Hora de inicio")
     hora_fin = models.TimeField(verbose_name="Hora de finalización")
     evento_perteneciente = models.IntegerField()
-    estado = models.IntegerField( default=1)
+    estado = models.IntegerField(default=1)
+    resultado = models.ManyToManyField(Resultado)
 
     class Meta:
         unique_together = ('evento_perteneciente', 'id')

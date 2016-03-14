@@ -72,7 +72,7 @@ var handleCalendarDemo = function () {
 	});
 	
 	/* initialize the external events
-	-----------------------------------------------------------------*/
+	-----------------------------------------------------------------
 	$('#external-events .external-event').each(function() {
 		var eventObject = {
 			title: $.trim($(this).attr('data-title')),
@@ -88,7 +88,15 @@ var handleCalendarDemo = function () {
 			revert: true,
 			revertDuration: 0
 		});
-	});
+	});*/
+
+        $(".external-event i").click(function(){
+            var diaAct = $(this).attr("data-date");
+            var goDate = new Date(diaAct);
+            var anio = goDate.getFullYear();
+            var mes = goDate.getMonth();
+			$("#calendar").fullCalendar('gotoDate', anio, mes);
+        });
 };
 
 

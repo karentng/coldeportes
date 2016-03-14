@@ -70,6 +70,7 @@
                                     <td>{{ actividad.hora_fin }}</td>
                                     <td>
                                         <a href="{% url 'editar_actividad' actividad.id %}"><i class="fa fa-gear"> Editar </i></a><br>
+                                        <a href="{% url 'registrar_resultado' actividad.id %}"><i class="fa fa-plus"> Gestionar resultados </i></a><br>
                                     </td>
                                 </tr>
 
@@ -92,7 +93,7 @@
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 
-    <<script src="{{ STATIC_URL }}js/validaciones/gestion_eventos/validaciones-actividades.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/gestion_eventos/validaciones-actividades.js"></script>
 
     <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
     <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>

@@ -68,7 +68,8 @@
                                     <label class="label-success label label-table">Activo</label>
                                 {% else %}
                                     <label class="label-danger label label-table">Inactivo</label>
-                                {% endif %}</td>
+                                {% endif %}
+                            </td>
                             <td>
                                 <a href="{% url 'detalles_noticia' evento.noticia.id %}">
                                     <i class="fa fa-eye">Ver más</i>
@@ -80,7 +81,7 @@
                                     <i class="fa fa-plus">Gestionar actividades</i>
                                 </a><br>
                                 <a href="{% url 'ver_actividades' evento.id %}">
-                                    <i class="fa fa-folder">Ver actividades</i>
+                                    <i class="fa fa-calendar">Ver actividades</i>
                                 </a><br>
                                 <a href="{% url 'preinscripcion_evento' evento.id %}">
                                     <i class="fa fa-pencil">Preinscribirse</i>

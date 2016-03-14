@@ -22,6 +22,7 @@ class EventoForm(forms.ModelForm):
             'fecha_finalizacion_inscripcion': MyDateWidget()
         }
 
+
 class ParticipanteForm(forms.ModelForm):
     required_css_class = 'required'
 
@@ -43,21 +44,23 @@ class ParticipanteForm(forms.ModelForm):
 class ActividadForm(forms.ModelForm):
     required_css_class = 'required'
 
-    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
-    hora_fin = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii'}))
 
     class Meta:
         model = Actividad
-        fields = ('titulo','descripcion', 'dia_actividad', 'hora_inicio', 'hora_fin')
+        fields = ('titulo', 'descripcion', 'dia_actividad', 'hora_inicio', 'hora_fin')
 
         widgets = {
             'dia_actividad': MyDateWidget(),
             'hora_inicio': MyDateTimeWidget()
         }
 
+
 class ResultadoForm(forms.ModelForm):
     required_css_class = 'required'
 
     class Meta:
         model = Resultado
+        exclude = ('actividad_perteneciente', 'estado',)
         fields = '__all__'

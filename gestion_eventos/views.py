@@ -16,7 +16,7 @@ import datetime
 
 # Create your views here.
 @login_required
-# @permission_required('gestion_eventos.add_evento')
+@permission_required('gestion_eventos.add_evento')
 def registrar_evento(request):
     if request.method == 'POST':
         form = EventoForm(request.POST, request.FILES)
@@ -34,6 +34,7 @@ def registrar_evento(request):
                 evento.video = evento.video.replace("watch?v=", "embed/")
             evento.previsualizacion = request.POST.get("previsualizacion")
             evento.cupo_disponible = evento.cupo_participantes
+            evento.cupo_candidatos = evento.cupo_participantes
 
             noticia_evento = Noticia()
             noticia_evento.titulo = evento.titulo_evento
@@ -233,17 +234,18 @@ def verificar_participante(request, id_evento):
         else:
             form = VerificarExistenciaForm()
             messages.error(request, 'El evento al que trata de acceder no existe!')
-            return render(request,'deportistas/verificar_deportista.html',{'form':form,
-                                                                   'existe':False})
+            return render(request, 'deportistas/verificar_deportista.html', {'form': form,
+                                                                             'existe': False})
 
     else:
         form = VerificarExistenciaForm()
-    return render(request,'deportistas/verificar_deportista.html',{'form':form,
-                                                                   'existe':False})
+    return render(request, 'deportistas/verificar_deportista.html', {'form': form,
+                                                                     'existe': False})
 
 
 def aceptar_candidato(request, id_participante):
     from django.core.mail import EmailMessage
+    from django.core.urlresolvers import reverse
     try:
         participante = Participante.objects.get(id=id_participante)
     except Exception:
@@ -255,14 +257,15 @@ def aceptar_candidato(request, id_participante):
         messages.error(request, 'No hay cupos disponible!')
         return redirect('listar_participantes', evento.id)
 
-
     token = binascii.hexlify(os.urandom(25))
     participante.token_email = token
     participante.estado = 2
     participante.save()
 
+    # email = EmailMessage('Inscripción Aceptada', 'gdfgdfgdfgdfgdfg', to=['juanchoo.wow@gmail.com'])
+    # email.send()
 
-    evento.cupo_candidatos = evento.cupo_candidatos - 1
+    evento.cupo_candidatos -= 1
     evento.save()
     print(str(token))
     messages.success(request, 'Se ha enviado la peticion de confirmación')
@@ -297,7 +300,6 @@ def confirmar_participacion(request, id_participante):
             messages.success(request, 'Has rechazado la inscripción satisfactoriamente')
             return redirect('listar_eventos')
 
-
     except Exception:
         messages.error(request, 'Ha ocurrido un error')
         return redirect('listar_eventos')
@@ -324,10 +326,9 @@ def gestion_pago(request, id_participante):
     return redirect('listar_eventos')
 
 
-from reportlab.pdfgen import canvas
-from django.http import HttpResponse
-
 def generar_entrada(request, id_participante):
+    from reportlab.pdfgen import canvas
+    from django.http import HttpResponse
     try:
         participante = Participante.objects.get(id=id_participante)
     except Exception:
@@ -351,6 +352,7 @@ def generar_entrada(request, id_participante):
     p.showPage()
     p.save()
     return response
+
 
 def registrar_actividad(request, id_evento):
 
@@ -450,55 +452,33 @@ def cambio_fecha_actividad(request):
 
     return redirect('listar_eventos')
 
-@login_required
-@permission_required('noticias.change_noticia')
-def editar_noticia(request, id_noticia):
-    try:
-        noticia = Noticia.objects.get(id=id_noticia)
-    except Exception:
-        messages.error(request, 'La noticia que está intentando editar no existe')
-        return redirect('listar_noticias')
 
-    form = NoticiaForm(instance=noticia)
+def registrar_resultado(request, id_actividad):
+
+    try:
+        actividad = Actividad.objects.get(id=id_actividad)
+    except Exception:
+        messages.error(request, 'La actividad a la que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    resultado_form = ResultadoForm()
 
     if request.method == 'POST':
-        form = NoticiaForm(request.POST, request.FILES, instance=noticia)
-        nueva_foto = request.POST.get("imagen-crop")
-        if form.has_changed or nueva_foto != "No":
-            if form.is_valid():
-                noticia = form.save(commit=False)
-                nueva_foto = request.POST.get('imagen-crop')
+        resultado_form = ResultadoForm(request.POST)
+        if resultado_form.is_valid():
+            resultado = resultado_form.save(commit=False)
+            resultado.actividad_perteneciente = actividad.id
+            resultado.save()
+            actividad.resultado.add(resultado)
+            actividad.save()
+            messages.success(request, "El resultado ha sido registrado con exito!")
+            return redirect('registrar_resultado', actividad.id)
 
-                if nueva_foto == "No":
-                    noticia.foto = "clasificados/clasificados-default.png"
-                elif nueva_foto != "si":
-                    noticia.foto = nueva_foto
+    participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
+    resultado_form.fields["primer_lugar"].queryset = participantes_evento
+    resultado_form.fields["segundo_lugar"].queryset = participantes_evento
+    resultado_form.fields["tercer_lugar"].queryset = participantes_evento
+    lista_resultados = actividad.resultado.all()
 
-                if noticia.video:
-                    noticia.video = noticia.video.replace("watch?v=", "embed/")
-
-                noticia.previsualizacion = request.POST.get("previsualizacion")
-                noticia.etiquetas = noticia.etiquetas.upper()
-                form.save()
-
-                messages.success(request, 'La noticia se ha editado correctamente')
-                return redirect('listar_noticias')
-    return render(request, 'registrar_evento.html', {'form': form,
-                                               'edicion':True})
-
-
-@login_required
-@permission_required('noticias.change_noticia')
-def cambiar_estado_noticia(request, id_noticia):
-    try:
-        noticia = Noticia.objects.get(id=id_noticia)
-        noticia.estado = not noticia.estado
-        noticia.save()
-
-    except Exception:
-        messages.error(request, 'La noticia que está intentando eliminar no existe')
-        return redirect('listar_noticias')
-
-    messages.success(request, 'Se ha eliminado la noticia correctamente')
-    return redirect('listar_noticias')
-
+    return render(request, 'gestion_resultados.html', {'form': resultado_form, 'lista_resultados': lista_resultados,
+                                                       'actividad': actividad})
