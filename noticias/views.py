@@ -109,9 +109,9 @@ def cambiar_estado_noticia(request, id_noticia):
         noticia.save()
 
     except Exception:
-        messages.error(request, 'La noticia que está intentando eliminar no existe')
+        messages.error(request, 'La noticia a la que intenta acceder no existe')
         return redirect('listar_noticias')
 
-    messages.success(request, 'Se ha eliminado la noticia correctamente')
+    messages.success(request, 'Se ha cambiado el estado de la noticia correctamente')
     return redirect('listar_noticias')
 
