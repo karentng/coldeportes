@@ -526,36 +526,6 @@ def get_categorias(request,deporte_id):
     })
 
 
-def medalleria_genero(request):
-    """
-    Marzo 10, 2015
-    Autor: Karent Narvaez
-
-    Permite conocer el numero de medallas de acuerdo al departamento y género.
-    """
-
-    if request.is_ajax():
-        departamentos = get_request_or_none(request.GET, 'departamentos')
-        generos = get_request_or_none(request.GET, 'generos')    
-        return JsonResponse(escenarios)
-
-
-    visualizaciones = [1, 5 , 6]
-
-    form = FiltrosEscenariosDMDForm(visualizaciones=visualizaciones)
-    nombres_columnas = ["Clase", "Caracteristica", "Comuna", "Departamento", "Estrato", "Estado Físico", "Tipo", "Tipo Superficie", "Tipo de Propietario", "Periodicidad", "Día"]
-    return render(request, 'escenarios/reporte_generador.html', {
-        'nombre_reporte' : 'Clase de Acceso Escenarios',
-        'nombre_generador': 'Características Escenarios',
-        'url_data' : 'reportes_caracteristicas_escenarios',
-        'datos': escenarios,
-        'visualizaciones': visualizaciones,
-        'form': form,
-        'actor': 'Escenarios',
-        'fecha_generado': datetime.now(),
-        'nombres_columnas': nombres_columnas
-
-    })
 
 # cargar por excel
 @login_required
