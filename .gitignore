@@ -20,3 +20,4 @@ solicitudes_escenarios/solicitud/migrations
 solicitudes_escenarios/respuesta/migrations
 publicidad/migrations
 buscador/migrations
+listados_doping/migrations
