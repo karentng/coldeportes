@@ -129,6 +129,7 @@ class EquipoPuntosForm(forms.ModelForm):
         model = Equipo
         exclude = ("competencia", 'tiempo', 'marca')
 
+
 class EquipoMetrosForm(forms.ModelForm):
     required_css_class = 'required'
 
@@ -139,3 +140,7 @@ class EquipoMetrosForm(forms.ModelForm):
     class Meta:
         model = Equipo
         exclude = ("competencia", 'tiempo', 'puntos')
+
+class CompetenciasBaseDeDatos(forms.Form):
+    archivo = forms.FileField(label="Archivo de competencias")
+

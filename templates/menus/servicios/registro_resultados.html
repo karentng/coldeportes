@@ -19,6 +19,17 @@
                 </li>
             </ul>
         </li>
+        <li class="has-sub {% if '/registro-resultados/reportes' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                Reportes
+            </a>
+            <ul class="sub-menu">
+                <li {% if "/registro-resultados/reportes/medalleria-genero" in request.path  %} class="active" {% endif %}>
+                    <a href="{% url 'reporte_medalleria_genero' %}">Medallería Género</a>
+                </li>
+            </ul>
+        </li>
        
     </ul>
 </li>

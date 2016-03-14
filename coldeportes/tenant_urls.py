@@ -26,7 +26,7 @@ urlpatterns = patterns('',
 
     #url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
-
+    url(r'^manual/',include('manual.urls')),
     url(r'^reportes/', include('reportes.urls.publico')),
     url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
     url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),

@@ -61,9 +61,9 @@
             <div class="row">
                 <div class="col-md-12">
                     {% if articulo %}
-                    <button class="btn btn-sm btn-info pull-right" href="{% url 'editar_articulo_manual' articulo.id %}" >
-                    <i class=""></i>  Editar
-                    </button><br><br>
+                    <a href="{% url 'editar_articulo_manual' articulo.id %}" class="btn btn-sm btn-info pull-right">
+                        <i class=""></i>  Editar
+                    </a><br><br>                    
                     {% endif %}
                 </div>
 
