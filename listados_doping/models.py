@@ -28,8 +28,8 @@ class CasoDoping(models.Model):
         (8, 'COMPLICIDAD'),
         (9, 'ASOCIACIÓN PROHIBIDA'),
     )
-    nombres_deportista = models.CharField(max_length=100)
-    apellidos_deportista = models.CharField(max_length=100)
+    nombres_sancionado = models.CharField(max_length=100, verbose_name='Nombres del sancionado')
+    apellidos_sancionado = models.CharField(max_length=100, verbose_name='Apellidos del sancionado')
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     tipo_sancion = models.IntegerField(choices=TIPO_SANCION)

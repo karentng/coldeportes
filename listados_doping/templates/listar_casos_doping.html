@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Listados de casos de doping</a>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de casos de doping
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de casos de doping
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-casos-doping";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-casos-doping" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre del sancionado</th>
+                            <th>Documento de identidad del sancionado</th>
+                            <th>Tipo de sanción</th>
+                            <th>Duración de la sanción</th>
+                            {% if perms.listados_doping.change_casodoping %}
+                                <th>Estado</th>
+                            {% endif %}
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for caso_doping in casos_doping %}
+                            <tr>
+                                <td>{{caso_doping.nombres_sancionado}} {{caso_doping.apellidos_sancionado}}</td>
+                                <td>{{caso_doping.tipo_id}}: {{ caso_doping.identificacion }}</td>
+                                <td>{{caso_doping.tipo_sancion}}</td>
+                                <td>{{caso_doping.duracion_sancion}}</td>
+                                {% if perms.listados_doping.change_casodoping %}
+                                    <td>
+                                        {% if caso_doping.estado == 0 %}
+                                            <label class="label-success label label-table">ACTIVO</label>
+                                        {% else %}
+                                            <label class="label-danger label label-table">INACTIVO</label>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                <td>
+                                    {% if 'listados_doping.change_casodoping' in perms %}
+                                        <a href='{% url 'editar_caso_doping' caso_doping.id %}'>
+                                            <i class="fa fa-edit"></i> Editar
+                                        </a>
+                                    {% endif %}
+                                    {% if 'listados_doping.change_casodoping' in perms %}
+                                        <br/>
+                                        <a href='{% url 'cambiar_estado_caso_doping' caso_doping.id %}'>
+                                            <i class="fa fa-trash-o"></i> Cambiar estado
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

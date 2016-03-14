@@ -292,19 +292,3 @@ class HistorialLesiones(models.Model):
     periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     segmento_corporal = models.IntegerField(verbose_name='Segmento Corporal', choices=SEGMENTOS,blank=True,null=True)
-
-class HistorialDoping(models.Model):
-    TIPO_IDENTIDAD = (
-        ('TI', 'TARJETA DE IDENTIDAD'),
-        ('CC', 'CÉDULA DE CIUDADANÍA'),
-        ('CE', 'CÉDULA DE EXTRANJERÍA'),
-        ('PS', 'PASAPORTE'),
-    )
-    deportista = models.ForeignKey(Deportista)
-    nombre_delegado = models.CharField(max_length=100,verbose_name='Nombre del delegado')
-    tipo_identidad_delegado = models.CharField(max_length=2,choices=TIPO_IDENTIDAD,verbose_name='Tipo de identificación del delegado')
-    identificacion_delegado = models.CharField(max_length=30,verbose_name='Número de identificación del delegado')
-    evento = models.CharField(max_length=300,verbose_name='Evento en el que se detectó el doping')
-    fecha = models.DateField(verbose_name='Fecha en la que se detectó el doping')
-    observaciones = models.TextField(blank=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)

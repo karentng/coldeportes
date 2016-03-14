@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Listado de casos de doping</a>
+    <li class="active">Registrar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} caso de doping
+{% endblock %}
+
+{% block titulo_panel %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} caso de doping
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <form id="form-noticia" class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% if edicion %}
+                    <a type="button" class="btn btn-primary pull-right" href="{% url 'listar_casos_doping'%}">
+                        Cancelar
+                    </a>
+                {% endif %}
+                <button class="btn btn-primary pull-right" type="submit" style="margin-right:15px;" id="submit-crop">
+                    {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
