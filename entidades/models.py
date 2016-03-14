@@ -441,6 +441,9 @@ class ClubParalimpico(ResolucionReconocimiento):
     def obtener_padre(self):
         return self.liga
 
+    def disciplinas_str(self):
+        return ",".join([d.descripcion for d in self.disciplinas.all()])
+
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
@@ -450,7 +453,9 @@ class ClubParalimpico(ResolucionReconocimiento):
             'tipo_tenant': type(self).__name__,
             'mostrar_info':True,
             'nombre':self.nombre,
-            'disciplina': self.discapacidad,
+            'disciplina': self.get_discapacidad_display(),
+            'deportes' : self.disciplinas_str(),
+            'has_deportes': True,
             'descripcion': self.descripcion,
             'ciudad': self.ciudad,
             'direccion': self.direccion,
