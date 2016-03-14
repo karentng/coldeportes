@@ -63,6 +63,9 @@
                                     {% elif participante.estado == 3 %}
                                         <a href="#" data-toggle="modal" data-target="#modal-pago-{{ participante.id }}" ><i class="fa fa-dollar">Estado pago</i></a><br>
                                         {% include 'modal_pago.html' %}
+                                        {% if participante.pago_registrado %}
+                                            <a href="{% url 'generar_entrada' participante.id %}" ><i class="fa fa-file">Generar escarapela</i></a><br>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                             </tr>

@@ -321,8 +321,36 @@ def gestion_pago(request, id_participante):
         messages.success(request, 'Se ha registrado el estado del pago correctamente')
         return redirect('listar_participantes', participante.evento_participe)
 
-
     return redirect('listar_eventos')
+
+
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+
+def generar_entrada(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Exception:
+        messages.error(request, 'El participante al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="entrada-'+participante.nombre+'.pdf"'
+
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response,pagesize=(500,300))
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 250,"Tipo Identificación: " + str(participante.tipo_id))
+    p.drawString(100, 200,"Número Identificación: " + str(participante.identificacion))
+    p.drawString(100, 150,"Participante: " + str(participante.nombre) + " " + participante.apellido)
+    p.drawString(100, 100,"Fecha Naciemiento: " + str(participante.fecha_nacimiento))
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
 
 def registrar_actividad(request, id_evento):
 

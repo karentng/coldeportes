@@ -54,3 +54,10 @@ class ActividadForm(forms.ModelForm):
             'dia_actividad': MyDateWidget(),
             'hora_inicio': MyDateTimeWidget()
         }
+
+class ResultadoForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = Resultado
+        fields = '__all__'

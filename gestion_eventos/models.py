@@ -35,6 +35,21 @@ class Participante(models.Model):
         unique_together = ('evento_participe', 'identificacion')
 
 
+class Resultado(models.Model):
+
+    PUESTOS = (
+        (1, 'PRIMER LUGAR'),
+        (2, 'HASTA SEGUNDO LUGAR'),
+        (3, 'HASTA TERCER LUGAR'),
+    )
+    titulo_competencia = models.CharField(max_length=255, verbose_name="Título alternativo (opcional)",
+                                          help_text="En caso de que el título de la competencia a la cual"+
+                                                    " se le registrará el resulta, se puede escribir aquí")
+    cantidad_puestos = models.PositiveIntegerField(choices=PUESTOS)
+    primer_lugar = models.ForeignKey(Participante)
+    segundo_lugar = models.ForeignKey(Participante, null=True, related_name="segundo_lugar_resultado")
+    tercer_lugar = models.ForeignKey(Participante, null=True, related_name="tercer_lugar_resultado")
+
 class Actividad(models.Model):
 
     titulo = models.CharField(max_length=255, verbose_name="Título de la actividad")
