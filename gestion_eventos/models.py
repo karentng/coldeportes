@@ -1,5 +1,5 @@
 from django.db import models
-from noticias.models import Noticia
+from entidades.models import Ciudad
 
 
 # Create your models here.
@@ -76,13 +76,12 @@ class Actividad(models.Model):
 class Evento(models.Model):
 
     titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
+    ciudad_evento = models.ForeignKey(Ciudad)
     lugar_evento = models.CharField(max_length=255, verbose_name="Lugar de realización del evento")
     fecha_inicio = models.DateField(verbose_name="Fecha de inicio del evento")
     fecha_finalizacion = models.DateField(verbose_name="Fecha de finalización del evento")
     fecha_inicio_preinscripcion = models.DateField(verbose_name="Fecha de inicio de las preinscripciones")
     fecha_finalizacion_preinscripcion = models.DateField(verbose_name="Fecha de finalización de las preinscripciones")
-    fecha_inicio_inscripcion = models.DateField(verbose_name="Fecha de inicio de las inscripciones")
-    fecha_finalizacion_inscripcion = models.DateField(verbose_name="Fecha de finalización de las inscripciones")
     imagen = models.ImageField()
     video = models.CharField(max_length=255, verbose_name="Vídeo del evento(opcional)",
                              help_text="Debe ingresar un url válida de un video de youtube", blank=True, null=True)
@@ -91,7 +90,6 @@ class Evento(models.Model):
     cupo_participantes = models.PositiveIntegerField(verbose_name="Cupo para participantes")
     cupo_disponible = models.PositiveIntegerField()
     cupo_candidatos = models.IntegerField()
-    noticia = models.ForeignKey(Noticia)
     participantes = models.ManyToManyField(Participante)
     actividades = models.ManyToManyField(Actividad)
     autor = models.CharField(verbose_name="Autor de la noticia", max_length=150,

@@ -14,6 +14,19 @@ from snd.views.deportistas import existencia_deportista
 import datetime
 
 
+def dashboard(request, id_evento):
+    try:
+        evento = Evento.objects.get(id=id_evento)
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    actividades = evento.actividades.all()
+    participantes = evento.participantes.all()
+    return render(request, "dashboard_evento.html", {"evento": evento, "actividades": actividades,
+                                                     "participantes": participantes})
+
+
 # Create your views here.
 @login_required
 @permission_required('gestion_eventos.add_evento')
@@ -36,17 +49,6 @@ def registrar_evento(request):
             evento.cupo_disponible = evento.cupo_participantes
             evento.cupo_candidatos = evento.cupo_participantes
 
-            noticia_evento = Noticia()
-            noticia_evento.titulo = evento.titulo_evento
-            noticia_evento.cuerpo_noticia = evento.descripcion_evento
-            noticia_evento.fecha_inicio = datetime.date.today()
-            noticia_evento.fecha_expiracion = evento.fecha_finalizacion
-            noticia_evento.autor = evento.autor
-            noticia_evento.foto = evento.imagen
-            noticia_evento.video = evento.video
-            noticia_evento.etiquetas = ""
-            noticia_evento.save()
-            evento.noticia = noticia_evento
             evento.save()
             messages.success(request, 'Se ha registrado el evento correctamente')
             return redirect('listar_eventos')
@@ -67,8 +69,19 @@ def listar_eventos(request):
     return render(request, 'listar_eventos.html', {'eventos': eventos})
 
 
+def detalle_evento(request, id_evento):
+    try:
+        evento = Evento.objects.get(id=id_evento)
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    return render(request, "detalles_evento.html", {"evento": evento})
+
+
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def editar_evento(request, id_evento):
-    print("dsaddsd")
     try:
         evento = Evento.objects.get(id=id_evento)
     except Exception:
@@ -87,30 +100,22 @@ def editar_evento(request, id_evento):
 
                 if nueva_foto == "No":
                     evento_form.imagen = ""
-                else:
+                elif nueva_foto != "si":
                     evento_form.imagen = nueva_foto
 
                 if evento_form.video:
                     evento_form.video = evento_form.video.replace("watch?v=", "embed/")
+
                 evento_form.previsualizacion = request.POST.get("previsualizacion")
                 evento_form.cupo_disponible = evento_form.cupo_participantes - evento.participantes.count()
 
-                noticia_evento = evento.noticia
-                noticia_evento.titulo = evento_form.titulo_evento
-                noticia_evento.cuerpo_noticia = evento_form.descripcion_evento
-                noticia_evento.fecha_expiracion = evento_form.fecha_finalizacion
-                noticia_evento.autor = evento_form.autor
-                noticia_evento.foto = evento_form.imagen
-                noticia_evento.video = evento_form.video
-                noticia_evento.etiquetas = ""
-                noticia_evento.save()
                 evento_form.save()
 
                 messages.success(request, 'El evento se ha editado correctamente')
                 return redirect('listar_eventos')
 
     return render(request, 'registrar_evento.html', {'form': form,
-                                               'edicion':True})
+                                                     'edicion': True, "foto": evento.imagen})
 
 
 def listar_participantes(request, id_evento):

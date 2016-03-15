@@ -39,7 +39,7 @@
                             <th>Fecha inicio preinscripción</th>
                             <th>Fecha finalizacion preinscripción</th>
                             <th>Costo entrada</th>
-                            <th>Participantes</th>
+                            <!--<th>Participantes</th>-->
                             <th>Cupo disponible</th>
                             <th>Estado</th>
                             <th>Opciones</th>
@@ -54,38 +54,48 @@
                             <td>{{ evento.fecha_inicio_preinscripcion }}</td>
                             <td>{{ evento.fecha_finalizacion_preinscripcion }}</td>
                             <td>{{ evento.costo_entrada }}</td>
-                            <td>
+                            <!--<td>
                                 <a href="{% url 'listar_participantes' evento.id %}">
                                     <i class="fa fa-eye">Ver participantes</i>
                                 </a><br>
                                 {% for participante in evento.participantes.all %}
                                 {{ participante.nombre }}<br>
                             {% endfor %}
-                            </td>
+                            </td>-->
                             <td>{{ evento.cupo_disponible }}</td>
                             <td>
                                 {% if evento.estado == 1 %}
-                                    <label class="label-success label label-table">Activo</label>
+                                    Activo
                                 {% else %}
-                                    <label class="label-danger label label-table">Inactivo</label>
+                                    Inactivo
                                 {% endif %}
                             </td>
-                            <td>
-                                <a href="{% url 'detalles_noticia' evento.noticia.id %}">
+                            <td><!--
+                                {% if 'gestion_eventos.change_evento' in perms %}
+                                    <a href="{% url 'detalle_evento' evento.id %}">
+                                        <i class="fa fa-bar-chart">Estadisticas</i>
+                                    </a><br>
+                                {% endif %}
+                                <a href="{% url 'detalle_evento' evento.id %}">
                                     <i class="fa fa-eye">Ver más</i>
                                 </a><br>
-                                <a href="{% url 'editar_evento' evento.id %}">
-                                    <i class="fa fa-gear"> Editar </i>
-                                </a><br>
-                                <a href="{% url 'registrar_actividad' evento.id %}">
-                                    <i class="fa fa-plus">Gestionar actividades</i>
-                                </a><br>
+                                {% if 'gestion_eventos.change_evento' in perms %}
+                                    <a href="{% url 'editar_evento' evento.id %}">
+                                        <i class="fa fa-gear"> Editar </i>
+                                    </a><br>
+                                {% endif %}
+                                {% if 'gestion_eventos.change_evento' in perms %}
+                                    <a href="{% url 'registrar_actividad' evento.id %}">
+                                        <i class="fa fa-plus">Gestionar actividades</i>
+                                    </a><br>
+                                {% endif %}
                                 <a href="{% url 'ver_actividades' evento.id %}">
                                     <i class="fa fa-calendar">Ver actividades</i>
                                 </a><br>
                                 <a href="{% url 'preinscripcion_evento' evento.id %}">
                                     <i class="fa fa-pencil">Preinscribirse</i>
-                                </a><br>
+                                </a><br>-->
+                                <a type="button" href="{% url 'dashboard' evento.id %}" class="btn btn-primary">Acceder</a>
                             </td>
                             </tr>
                         {% endfor %}
