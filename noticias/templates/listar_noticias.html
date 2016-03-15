@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
+{% block titulo %}
+    Noticias - SND Coldeportes
+{% endblock %}
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="">Noticias</a>
@@ -36,10 +39,10 @@
                             <th>Título</th>
                             <th>Fecha de publicación</th>
                             <th>Fecha de expiración</th>
-                            <th>Palabras clave</th>
                             {% if perms.publicidad.change_clasificado %}
                                 <th>Estado</th>
                             {% endif %}
+                            <th>Palabras clave</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -49,7 +52,6 @@
                                 <td>{{noticia.titulo}}</td>
                                 <td>{{noticia.fecha_inicio}}</td>
                                 <td>{{noticia.fecha_expiracion}}</td>
-                                <td>{{noticia.etiquetas}}</td>
                                 {% if perms.publicidad.change_clasificado %}
                                     <td>
                                         {% if noticia.estado == 1 %}
@@ -59,6 +61,7 @@
                                         {% endif %}
                                     </td>
                                 {% endif %}
+                                <td>{{noticia.etiquetas}}</td>
                                 <td>
                                     <a href="{% url 'detalles_noticia' noticia.id %}">
                                         <i class="fa fa-eye"></i> Ver más
