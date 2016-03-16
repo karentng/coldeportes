@@ -172,7 +172,7 @@ def caracteristicas_escenarios(request):
 
     cantidad = 'id'
     escenarios = generador_reporte_escenario(request, tabla, cantidad)
-    visualizaciones = [1, 5, 6, 7]
+    
     
 
     if request.is_ajax():

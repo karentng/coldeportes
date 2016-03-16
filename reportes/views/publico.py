@@ -15,7 +15,8 @@ def tipos(request):
     permisos_permitidos_lectura = Permisos.objects.get(tipo=tipo_sub_entidad,entidad=tipo_entidad)
 
     actores_que_se_pueden_ver = permisos_permitidos_lectura.get_actores('%')
-    actores_de_la_entidad = request.tenant.actores.resumen_nombre_atributos()
+    #actores_de_la_entidad = request.tenant.actores.resumen_nombre_atributos()
 
-    actores_permitidos_reportes = list(set().union(actores_de_la_entidad,actores_que_se_pueden_ver))
-    return render(request, 'publico/tipos.html', {'actores_permitidos_reportes':actores_permitidos_reportes})
+    #actores_permitidos_reportes = list(set().union(actores_de_la_entidad,actores_que_se_pueden_ver))
+    return render(request, 'publico/tipos.html', {#'actores_permitidos_reportes':actores_permitidos_reportes
+        })
