@@ -292,3 +292,4 @@ class HistorialLesiones(models.Model):
     periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     segmento_corporal = models.IntegerField(verbose_name='Segmento Corporal', choices=SEGMENTOS,blank=True,null=True)
+

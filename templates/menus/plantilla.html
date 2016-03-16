@@ -30,16 +30,16 @@
             <ul class="sub-menu">
                 {% if request.user.is_superuser %}
                     <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
-                        <a href="{% url 'datos_basicos_entidad' %}"><span class="colorMenu">Modificar datos básicos de la entidad</span></a>
+                        <a href="{% url 'datos_basicos_entidad' %}"><span >Modificar datos básicos de la entidad</span></a>
                     </li>
                 {% endif %}
                 {% if request.tenant.tipo == 3 %}
                     {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
                         <li class="has-sub {% if 'gestion-socios' in request.path %} active {% endif %}">
-                            <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
+                            <a href="{% url 'gestion_socios' %}"><span>Gestionar socios del club</span></a>
                         </li>
                         <li class="has-sub {% if 'planes' in request.path %} active {% endif %}">
-                            <a href="{% url 'crear_plan_de_costo' %}"><span class="colorMenu">Gestionar planes de costos del club</span></a>
+                            <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
                         </li>
                     {% endif %}
                 {% endif %}
@@ -56,16 +56,17 @@
             <span class="colorMenu">CASOS DE DOPING</span>
         </a>
         <ul class="sub-menu">
-            <li class="has-sub {% if 'casos-doping/registrar' in request.path %} active {% endif %}">
-                <a href="{% url 'registrar_caso_doping' %}">Registrar caso de doping</a>
-            </li>
-            <li class="has-sub {% if 'casos-doping/listar' in request.path %} active {% endif %}">
+            {% if perms.listados_doping.add_casodoping %}
+                <li class="{% if 'casos-doping/registrar' in request.path %} active {% endif %}">
+                    <a href="{% url 'registrar_caso_doping' %}">Registrar caso de doping</a>
+                </li>
+            {% endif %}
+            <li class="{% if 'casos-doping/listar' in request.path or 'casos-doping/editar' in request.path %} active {% endif %}">
                 <a href="{% url 'listar_casos_doping' %}">Listar casos de doping</a>
             </li>
         </ul>
     </li>
 {% endif %}
-
 
 {% if not request.user.is_superuser %}
 

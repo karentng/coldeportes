@@ -114,3 +114,4 @@ def cambiar_estado_noticia(request, id_noticia):
     messages.success(request, 'Se ha eliminado la noticia correctamente')
     return redirect('listar_noticias')
 
+

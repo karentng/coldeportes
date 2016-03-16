@@ -19,3 +19,8 @@ for entidad in entidades:
         ct.delete()
     except Exception:
         pass
+    try:
+        hd = ContentType.objects.filter(model='historialdoping')
+        hd.delete()
+    except Exception:
+        pass

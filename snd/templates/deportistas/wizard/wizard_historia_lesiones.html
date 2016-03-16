@@ -100,7 +100,12 @@
         {% if wizard_stage > 1 %}
         <a href="{% url 'wizard_historia_academica' id_deportista %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
         {% endif %}
-        <a href="{% url 'wizard_historia_doping' id_deportista %}" class="btn btn-primary pull-right">Siguiente →</a>
+        <a href="{% url 'finalizar_deportista' opcion='listar' %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Finalizar</a>
+        <a href="{% url 'finalizar_deportista' opcion='nuevo' %}">
+                <button class="btn btn-warning pull-right" type="submit" style="margin-right:10px">
+                    <i class="fa fa-circle-o-notch"></i> Guardar y registrar otro deportista
+                </button>
+        </a>
 
 
 {% endblock %}

@@ -28,10 +28,15 @@ class CasoDoping(models.Model):
         (8, 'COMPLICIDAD'),
         (9, 'ASOCIACIÓN PROHIBIDA'),
     )
-    nombres_sancionado = models.CharField(max_length=100, verbose_name='Nombres del sancionado')
-    apellidos_sancionado = models.CharField(max_length=100, verbose_name='Apellidos del sancionado')
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='CC',verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100,verbose_name='Identificación')
-    tipo_sancion = models.IntegerField(choices=TIPO_SANCION)
-    duracion_sancion = models.CharField(max_length=255)
+    nombres_sancionado = models.CharField(max_length=100, verbose_name='Nombres del sancionado')
+    apellidos_sancionado = models.CharField(max_length=100, verbose_name='Apellidos del sancionado')
+    tipo_sancion = models.IntegerField(choices=TIPO_SANCION,verbose_name='Tipo de sanción',help_text='Estos tipos de sanción se obtienen directamente a partir del código mundial antidopaje')
+    duracion_sancion = models.CharField(max_length=255, verbose_name='Duración de la sanción')
     estado = models.IntegerField(default=0)
+
+    class Meta:
+        permissions = (
+            ("view_casodoping", "Permite ver caso doping"),
+        )

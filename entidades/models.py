@@ -974,7 +974,8 @@ class Permisos(models.Model):
             opcion = [1,5]
 
         actores_seleccionados = []
-        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias','publicidad','listados_doping']
+        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
