@@ -22,9 +22,16 @@ def dashboard(request, id_evento):
         return redirect('listar_eventos')
 
     actividades = evento.actividades.all()
-    participantes = evento.participantes.all()
+    participantes = evento.participantes
+
+    evento.cancelados = participantes.filter(estado=0).count()
+    evento.pendientes = participantes.filter(estado=2).count()
+    evento.rechazado = participantes.filter(estado=4).count()
+    evento.aprobado = participantes.filter(estado=3).count()
+    evento.aceptado = evento.pendientes + evento.rechazado + evento.aprobado
+
     return render(request, "dashboard_evento.html", {"evento": evento, "actividades": actividades,
-                                                     "participantes": participantes})
+                                                     "participantes": participantes.all()})
 
 
 # Create your views here.
@@ -130,7 +137,8 @@ def listar_participantes(request, id_evento):
         participantes = None
         eventos = None
 
-    return render(request, 'listar_participantes.html', {'participantes': participantes, 'cupo': eventos.cupo_candidatos})
+    return render(request, 'listar_participantes.html', {'participantes': participantes,
+                                                         'cupo': eventos.cupo_candidatos, 'evento': eventos.id})
 
 
 def preinscripcion_evento(request, id_evento):
@@ -295,15 +303,15 @@ def confirmar_participacion(request, id_participante):
             participante.estado = 3
             participante.save()
             messages.success(request, 'Has aceptado la inscripción satisfactoriamente')
-            return redirect('listar_eventos')
+            return redirect('dashboard', participante.evento_participe)
         else:
             participante.estado = 4
             participante.save()
             evento = Evento.objects.get(id=participante.evento_participe)
-            evento.cupo_candidatos = evento.cupo_candidatos + 1
+            evento.cupo_candidatos += 1
             evento.save()
             messages.success(request, 'Has rechazado la inscripción satisfactoriamente')
-            return redirect('listar_eventos')
+            return redirect('dashboard', participante.evento_participe)
 
     except Exception:
         messages.error(request, 'Ha ocurrido un error')
