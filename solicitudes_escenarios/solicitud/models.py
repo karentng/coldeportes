@@ -4,9 +4,11 @@ from entidades.models import Entidad
 import os
 # Create your models here.
 class SolicitudEscenario(models.Model):
-    #TIPOS= (
-        #(0,'INFRAESTRUCTURA'),
-    #)
+    TIPOS= (
+        (0,'ADECUACIÓN'),
+        (1,'DOTACIÓN'),
+        (2,'CONSTRUCCIÓN'),
+    )
     PRIORIDADES = (
         (0,'BAJA'),
         (1,'MEDIA'),
@@ -21,11 +23,12 @@ class SolicitudEscenario(models.Model):
     )
 
     escenarios = models.ManyToManyField(Escenario)
-    #tipo = models.IntegerField(choices=TIPOS)
+    tipo = models.IntegerField(choices=TIPOS)
     prioridad = models.IntegerField(choices=PRIORIDADES)
     estado = models.IntegerField(choices=ESTADOS,default=0)
     descripcion = models.TextField()
     para_quien = models.ForeignKey(Entidad)
+    estado_actual_escenario = models.CharField(max_length=150)
     fecha = models.DateTimeField(auto_now=True)
 
     def codigo_unico(self,entidad):
@@ -43,19 +46,28 @@ class DiscucionSolicitud(models.Model):
         (1,'INCOMPLETA'),
         (2,'APROBADA'),
         (3,'RECHAZADA'),
-        (4,'CANCELADA POR ENTIDAD'),
     )
 
     estado_anterior = models.IntegerField(choices=ESTADOS)
-    estado_actual = models.IntegerField(choices=ESTADOS)
+    estado_actual = models.IntegerField(choices=ESTADOS, verbose_name='Cambiar estado a')
     descripcion = models.TextField()
     solicitud = models.ForeignKey(SolicitudEscenario)
     fecha = models.DateTimeField(auto_now=True)
+    entidad = models.ForeignKey(Entidad)
+    respuesta = models.BooleanField()
+
+    def tiene_adjuntos(self):
+        if AdjuntoSolicitud.objects.filter(discucion=self):
+            return True
+        return False
 
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudEscenario)
     archivo = models.FileField(upload_to="adjuntos_adecuacion_escenarios",verbose_name='Archivo a adjuntar')
     discucion = models.ForeignKey(DiscucionSolicitud,null=True,blank=True)
+
+    def __str__(self):
+        return self.nombre_archivo()
 
     def nombre_archivo(self):
         return os.path.basename(self.archivo.name)
