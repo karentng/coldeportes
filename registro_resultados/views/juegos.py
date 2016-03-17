@@ -176,7 +176,6 @@ def participante_puntos(request, competencia_id, participante_id=None):
     return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         "form": form,
         'wizard_stage': 1,
-        'participantes': participantes,
         'individual': True,
         'puntos': True,        
         'competencia_id': competencia_id,

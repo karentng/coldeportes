@@ -72,7 +72,7 @@ class ParticipantePuntosForm(forms.ModelForm):
     
     class Meta:
         model = Participante
-        exclude = ("competencia", 'tiempo', 'marca', 'equipo')
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'metros')
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
         }
@@ -149,23 +149,24 @@ class CompetenciasBaseDeDatos(forms.Form):
 class FiltrosMedalleriaDeptGenForm(forms.Form):
     
     GENEROS = (
-        ('HOMBRE','MASCULINO'),
-        ('MUJER','FEMENINO'),
+        ('HOMBRE','Masculino'),
+        ('MUJER','Femenino'),
     )
     
+
+
+    departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
+    generos = forms.MultipleChoiceField(label="Géneros", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Género'}), choices=GENEROS)
+    visualizacion = forms.ChoiceField(label="Visualización")
+
     def __init__(self, *args, **kwargs):
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
         eliminar = kwargs.pop('eliminar', None)
         super(FiltrosMedalleriaDeptGenForm, self).__init__(*args, **kwargs)
         self.fields['departamentos'] = adicionarClase(self.fields['departamentos'], 'many')
         self.fields['generos'] = adicionarClase(self.fields['generos'], 'many')
-
+        
         if eliminar:
             del self.fields[eliminar]
 
         add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
-
-
-    departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
-    generos = forms.ChoiceField(required=False,choices=GENEROS)
-    visualizacion = forms.ChoiceField(label="Visualización")
