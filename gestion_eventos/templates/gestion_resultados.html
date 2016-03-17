@@ -3,8 +3,8 @@
 
 {% block miga_pan %}
 	<li><a href="{% url 'inicio' %}">Inicio</a></li>
-	<li>Evento</li>
-	<li>Actividades</li>
+	<li><a href="{%  url 'listar_eventos' %}">Eventos</a>
+	<li><a href="{%  url 'registrar_actividad' actividad.evento_perteneciente%}">Actividades</a>
 	<li class="active">Resultados</li>
 {% endblock %}
 

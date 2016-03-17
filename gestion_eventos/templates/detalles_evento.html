@@ -1,52 +1,7 @@
 
-{% extends 'base.html' %}
-{% load bootstrap3 %}
-
-{% block meta %}
-    <meta property="og:title" content="{{ evento.titulo_evento }}" />
-    <meta property="og:type" content="Noticias" />
-    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:image" content="http://{% if evento.imagen != "" %}{{ request.get_host }}{{ MEDIA_URL }}{{ evento.imagen }}{% else %}{{ MEDIA_URL }}/clasificados/clasificados-default.png{% endif %}" />
-    <meta property="og:description" content="{{ evento.previsualizacion }}" />
-    <meta property="og:site_name" content="Coldeportes" />
-{% endblock %}
-
-{% block miga_pan %}
-
-    <div id="fb-root"></div>
-    <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="#">Eventos</a>
-    <li><a href="#">Detalle</a></li>
-    <li class="active">{{ evento.titulo_evento }}</li>
-{% endblock %}
-
-{% block titulo_contenido %}
-    Detalles evento
-{% endblock %}
-
-{% block titulo_panel %}
-    Detalles evento
-{% endblock %}
-
-{% block botones_panel %}
-    <a href="{% url 'listar_eventos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
-{% endblock %}
-
-{% block js %}
-    <script type="text/javascript">var switchTo5x=true;</script>
-    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-    <script type="text/javascript">stLight.options({publisher: "90bca334-7e2d-4235-872f-e3936e302163", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
-{% endblock %}
-
-{% block css %}
-    <link href="{{ STATIC_URL }}css/noticias/detalles_noticia.css" rel="stylesheet">
-{% endblock %}
-
-{% block contenido_panel %}
-
     <div class="row">
-        <div class="col-md-8 col-md-offset-2" >
-            <h1>{{ evento.titulo_evento }}</h1>
+        <div class="col-md-10 col-md-offset-1" >
+            <h1 class="text-center">{{ evento.titulo_evento }}</h1>
             <hr class="line-style">
             <p >Fecha de Publicación: {{ evento.fecha_inicio|date:"l, F j, Y" }}</p>
 
@@ -61,7 +16,7 @@
                     <b>Costo Entrada: </b>{% if evento.costo %}{{ evento.costo }}{% else %} Libre{% endif %}<br>
                     <b>Cupo Disponible: </b>{{ evento.cupo_disponible }}
                 </p>
-                <a type="button" class="btn btn-danger" href="{% url 'verificar_participante' evento.id %}">Resgistrarse</a>
+                <a type="button" class="btn btn-primary" href="{% url 'verificar_participante' evento.id %}">Resgistrarse</a>
             </div>
 
             <div class="cuerpo_noticia">
@@ -86,4 +41,3 @@
             <hr>
         </div>
     </div>
-{% endblock %}

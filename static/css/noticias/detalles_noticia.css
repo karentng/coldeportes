@@ -1,4 +1,7 @@
+
 .img-right{
+    text-align: center;
+    margin-right: 15px;
     margin-bottom: 15px;
     overflow: hidden;
 }
@@ -13,6 +16,12 @@
     display: inline-block;
 }
 @media (min-width: 992px) {
+    .img-right{
+        float: left;
+        margin-right: 15px;
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
     .social-container {
         position: absolute;
         margin-top: 0;
@@ -45,5 +54,5 @@ height: 24px !important;
 }
 
 .info-evento{
-
+    margin-bottom: 15px;
 }

@@ -33,13 +33,14 @@
 				title: '{{ actividad.titulo }}',
 				start: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_inicio }}',
 				end: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_fin }}',
-				className: 'bg-purple',
+				className: 'bg-blue-darker',
                 allDay:false,
 				media: '<i class="fa fa-trophy"></i>',
 				description: '{{ actividad.descripcion }}'
             });
         {% endfor %}
     </script>
+    <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="{{ STATIC_URL }}js/gestion_eventos/calendar.evento.js"></script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
@@ -57,7 +58,7 @@
                     <h4 class="m-b-20">Actividades</h4>
                     {% if actividades %}
                         {% for actividad in actividades %}
-                            <div class="external-event bg-purple-darker" data-bg="bg-purple" data-title="{{ actividad.titulo }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ actividad.descripcion }}">
+                            <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ actividad.titulo }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ actividad.descripcion }}">
                                 <h5><i style="cursor:pointer;" data-toggle="tooltip" title="Muestra la actividad en el calendario" class="fa fa-calendar fa-lg fa-fw add-tooltip" data-date="{{ actividad.dia_actividad|date:"Y-m-d" }}"></i> {{ actividad.titulo }}</h5>
                                 <p>{{ actividad.descripcion }}</p>
                             </div>

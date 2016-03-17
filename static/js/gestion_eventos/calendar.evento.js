@@ -14,6 +14,16 @@ var handleCalendarDemo = function () {
 	
 	var calendar = $('#calendar').fullCalendar({
 		header: buttonSetting,
+        monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+        dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día'
+        },
 		selectable: true,
 		selectHelper: true,
 		droppable: true,

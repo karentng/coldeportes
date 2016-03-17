@@ -125,6 +125,8 @@ def editar_evento(request, id_evento):
                                                      'edicion': True, "foto": evento.imagen})
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def listar_participantes(request, id_evento):
     if True:
         try:
@@ -155,7 +157,7 @@ def preinscripcion_evento(request, id_evento):
             participante.evento_participe = evento.id
             participante.save()
             evento.participantes.add(participante)
-            evento.cupo_disponible = evento.cupo_disponible - 1
+            evento.cupo_disponible -= 1
             evento.save()
             messages.success(request, "Has sido preinscrito con exito!")
             return redirect('listar_eventos')
@@ -256,6 +258,8 @@ def verificar_participante(request, id_evento):
                                                                      'existe': False})
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def aceptar_candidato(request, id_participante):
     from django.core.mail import EmailMessage
     from django.core.urlresolvers import reverse
@@ -318,6 +322,8 @@ def confirmar_participacion(request, id_participante):
         return redirect('listar_eventos')
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def gestion_pago(request, id_participante):
     try:
         participante = Participante.objects.get(id=id_participante)
@@ -339,6 +345,8 @@ def gestion_pago(request, id_participante):
     return redirect('listar_eventos')
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def generar_entrada(request, id_participante):
     from reportlab.pdfgen import canvas
     from django.http import HttpResponse
@@ -367,6 +375,8 @@ def generar_entrada(request, id_participante):
     return response
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def registrar_actividad(request, id_evento):
 
     try:
@@ -392,6 +402,8 @@ def registrar_actividad(request, id_evento):
                                                         'evento': evento})
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def editar_actividad(request, id_actividad):
     try:
         actividad = Actividad.objects.get(id=id_actividad)
@@ -429,6 +441,8 @@ def ver_actividades(request, id_evento):
                                                     'evento': evento})
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def cambio_fecha_actividad(request):
 
     if request.is_ajax():
@@ -466,6 +480,8 @@ def cambio_fecha_actividad(request):
     return redirect('listar_eventos')
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def registrar_resultado(request, id_actividad):
 
     try:
