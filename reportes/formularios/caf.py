@@ -35,8 +35,8 @@ class DemografiaForm(forms.Form):
 class FiltrosCafDMDForm(forms.Form):
     
     TIPO_REPORTE = (
-        ('DT', 'Centros de acondicionamiento por departamento'),
         ('ES', 'Estratos Socioeconómicos'),
+        ('DT', 'Centros de acondicionamiento por departamento'),
         ('CC', 'Clases ofrecidas por el CAF'),
         ('SC', 'Servicios ofrecidos por el CAF'),
     )

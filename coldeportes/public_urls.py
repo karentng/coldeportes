@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^buscador/', include('buscador.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^registro-resultados/juegos/', include('registro_resultados.urls.juegos')),
+    url(r'^registro-resultados/reporte/', include('registro_resultados.urls.reportes')),
     url(r'^fix-actores-entidades$', 'gestion_usuarios.views.fix_actores_entidades', name='fix_actores_entidades'),
     #url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
