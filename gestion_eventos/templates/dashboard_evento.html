@@ -25,7 +25,7 @@
                 '{{ actividad.dia_actividad|date:"j/n/Y" }}',
                 '{{ actividad.titulo }}',
                 '#',
-                '#2d353c',
+                '#008a8a',
                 '{{ actividad.descripcion }}'
 
             ]);
@@ -87,7 +87,7 @@
         <!-- begin row -->
         <div class="row">
             <!-- begin col-3 -->
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="widget widget-stats bg-green">
                     <div class="stats-icon stats-icon-lg"><i class="fa fa-calendar fa-fw"></i></div>
                     <div class="stats-title f-s-20">ACTIVIDADES</div>
@@ -104,7 +104,7 @@
             </div>
             <!-- end col-3 -->
             <!-- begin col-3 -->
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="widget widget-stats bg-blue">
                     <div class="stats-icon stats-icon-lg"><i class="fa fa-users fa-fw"></i></div>
                     <div class="stats-title f-s-20">PARTICIPANTES</div>
@@ -127,7 +127,7 @@
             </div>
             <!-- end col-3 -->
             <!-- begin col-3 -->
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="widget widget-stats bg-purple">
                     <div class="stats-icon stats-icon-lg"><i class="fa fa-users fa-fw"></i></div>
                     <div class="stats-title f-s-20">CUPOS </div>
@@ -144,7 +144,33 @@
 
         <!-- begin row -->
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-5">
+                <div class="panel panel-success" >
+                    <div class="panel-heading">
+                        <div class="panel-heading-btn">
+
+                        </div>
+                        <h4 class="panel-title">
+                            Calendario de actividades
+                        </h4>
+                    </div>
+                    <div class="panel-body" style="height: 480px;">
+                        <div style="width:100%;height: auto; text-align: center;">
+                            <div style="height: auto; width:100px;display:inline-block;vertical-align: middle;">
+                                <img src="{{ STATIC_URL }}img/cono_calendario.png" class="img-responsive">
+                            </div>
+                            <div class="f-w-600" style="display: inline-block; font-size: 30px;color: #337ab7;">Calendario de Actividades</div>
+                        </div>
+                            <div id="schedule-calendar" class="bootstrap-calendar"></div>
+                        <div class="text-center m-t-30">
+                            <a type="button" style="display: inline-block; background-color:#337ab7;" href="{% url 'ver_actividades' evento.id %}" class="btn text-white">
+                                <i class="fa fa-calendar"></i> Gestionar calendario
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-7">
                 <div class="panel panel-success" >
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -156,11 +182,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-lg-12 col-md-6">
                 <div class="panel panel-success" >
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            Mapa del lugar
+                            Mapa del lugar del eventos
                         </h4>
                     </div>
                     <div class="panel-body">
@@ -169,25 +198,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="panel panel-success" >
-                    <div class="panel-heading">
-                        <div class="panel-heading-btn">
-                            <a type="button" href="{% url 'ver_actividades' evento.id %}" class="btn btn-warning btn-xs">Visualizar</a>
-                        </div>
-                        <h4 class="panel-title">
-                            Calendario de actividades
-                        </h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="vertical-box">
-                            <div id="schedule-calendar" style="height: 450px;" class="bootstrap-calendar"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-        <!-- end row -->
 {% endblock %}
 
 {% block script %}
