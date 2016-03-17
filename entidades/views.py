@@ -473,7 +473,6 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
     if len(info_adicional) != 0:
         info_adicional = info_adicional[0]
     historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
-    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
@@ -482,7 +481,6 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
             'info_adicional':info_adicional,
             'historial_deportivo':historial_deportivo,
             'historial_lesiones':historial_lesiones,
-            'historial_doping':historial_doping,
             'informacion_academica':informacion_academica
     })
 

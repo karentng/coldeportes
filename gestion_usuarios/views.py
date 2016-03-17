@@ -134,7 +134,8 @@ def fix_actores_entidades(request):
             digitador = Group.objects.get(name="Digitador")
             lectura = Group.objects.get(name='Solo lectura')
         except Group.DoesNotExist:
-            pass
+            digitador = None
+            lectura = None
 
         if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
             print(entidad)

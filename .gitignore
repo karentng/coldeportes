@@ -19,5 +19,6 @@ registro_resultados/migrations
 solicitudes_escenarios/solicitud/migrations
 solicitudes_escenarios/respuesta/migrations
 publicidad/migrations
+listados_doping/migrations
 buscador/migrations
 gestion_eventos/migrations
