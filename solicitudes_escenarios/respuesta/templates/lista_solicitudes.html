@@ -63,11 +63,13 @@
                                 <i class="fa fa-eye"></i> Ver mas
                             </a>
                             <br/>
-                            {% if s.estado == 0 %}
-                                <a href="{% url 'responder_solicitud' s.id s.entidad_solicitante.id %}">
-                                    <i class="fa fa-send"></i> Responder solicitud
-                                </a>
-                                <br/>
+                            {% if perms.respuesta.add_listasolicitudes%}
+                                {% if s.estado == 0 %}
+                                    <a href="{% url 'responder_solicitud' s.id s.entidad_solicitante.id %}">
+                                        <i class="fa fa-send"></i> Responder solicitud
+                                    </a>
+                                    <br/>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

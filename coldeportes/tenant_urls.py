@@ -28,8 +28,8 @@ urlpatterns = patterns('',
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
 
     url(r'^reportes/', include('reportes.urls.publico')),
-    url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
-    url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
+    #url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
+    #url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
     url(r'^gestion-socios$', 'entidades.views.mostrar_gestion_socios', name='gestion_socios'),
     url(r'^desactivar-socio/(\d+)$', 'entidades.views.desactivar_socio', name='desactivar_socio'),
     url(r'^editar-socio/(\d+)$', 'entidades.views.editar_socio', name='editar_socio'),
@@ -40,6 +40,21 @@ urlpatterns = patterns('',
     url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += required(
+    tenant_actor('solicitudescenario'),
+    patterns('',
+        url(r'^solicitudes-escen/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
+    ),
+)
+
+urlpatterns += required(
+    tenant_actor('listasolicitudes'),
+    patterns('',
+        url(r'^solicitudes-escen/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
+    ),
+)
+
 
 urlpatterns += required(
     tenant_actor('seleccion'),

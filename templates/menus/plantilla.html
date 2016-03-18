@@ -95,6 +95,9 @@
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
 
+        {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+            {% include "menus/aplicacion/solicitudescenarios.html" %}
+        {%endif%}
 
     {% endif %}
 
