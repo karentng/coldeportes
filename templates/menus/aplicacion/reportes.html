@@ -7,7 +7,7 @@
   <ul class="sub-menu">
     <li {% if 'reportes' in request.path %} class="active" {% endif %}>
         <a href="{% url 'reportes_publico_tipos' %}">
-           <span class="colorMenu">Reportes Gráficos</span>
+           <span>Reportes Gráficos</span>
         </a>
     </li>
     {% if request.tenant.schema_name == 'public' %}
@@ -19,7 +19,7 @@
             {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
-                <span class="colorMenu">Listados Nacionales</span>
+                <span>Listados Nacionales</span>
             </a>
             <ul class="sub-menu">
                 {% include "menus/tenant_nacional_menu.html" %}

@@ -31,6 +31,11 @@ class SolicitudEscenario(models.Model):
     estado_actual_escenario = models.CharField(max_length=150)
     fecha = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        permissions = (
+            ("view_solicitudescenario", "Permite ver solicitudes"),
+        )
+
     def codigo_unico(self,entidad):
         return ("AD-%s-%s-%s")%(entidad.id,self.para_quien.id,self.id)
 

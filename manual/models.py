@@ -29,5 +29,5 @@ class Articulo(models.Model):
     palabras_clave = models.CharField(max_length=1024, verbose_name='palabras clave')
     entidad = models.IntegerField(choices=TIPOS)
     modulo = models.CharField(choices=MODULOS, max_length=2, verbose_name="módulo")
-    usuario = models.CharField(choices=USUARIOS, max_length=2)
-    contenido = RichTextUploadingField(config_name='default', verbose_name=" ")
+    perfil = models.CharField(choices=USUARIOS, max_length=2)
+    contenido = RichTextUploadingField(config_name='default', verbose_name=" ", null=True, blank=True)

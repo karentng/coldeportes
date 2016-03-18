@@ -1,5 +1,6 @@
 if(typeof(options)=='undefined'){options=[]}
 var table = $('#'+idTabla).DataTable({
+    responsive: true,
     dom: 'TRC<"clear">lfrtip',
     tableTools: {
         "sSwfPath": base+"plugins/DataTables/swf/copy_csv_xls_pdf.swf",

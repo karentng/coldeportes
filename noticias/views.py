@@ -115,3 +115,4 @@ def cambiar_estado_noticia(request, id_noticia):
     messages.success(request, 'Se ha cambiado el estado de la noticia correctamente')
     return redirect('listar_noticias')
 
+

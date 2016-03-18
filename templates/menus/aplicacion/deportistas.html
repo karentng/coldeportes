@@ -1,11 +1,11 @@
 <li class="has-sub {% if '/deportistas/' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        <span span class="colorMenu">Deportistas</span>
+        <span>Deportistas</span>
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_deportista%}
-            <li {% if "/deportistas/crear" in request.path %} class="active" {% endif %}>
+            <li {% if "/deportistas/wizard/" in request.path %} class="active" {% endif %}>
                 <a href="{% url 'verificar_deportista' %}">Registro</a>
             </li>
         {% endif %}

@@ -61,9 +61,9 @@
             <div class="row">
                 <div class="col-md-12">
                     {% if articulo %}
-                    <button class="btn btn-sm btn-info pull-right" href="{% url 'editar_articulo_manual' articulo.id %}" >
-                    <i class=""></i>  Editar
-                    </button><br><br>
+                    <a href="{% url 'editar_articulo_manual' articulo.id %}" class="btn btn-sm btn-info pull-right">
+                        <i class=""></i>  Editar
+                    </a><br><br>                    
                     {% endif %}
                 </div>
 
@@ -101,7 +101,9 @@
     <script src="{{STATIC_URL}}plugins/jstree/dist/jstree.min.js"></script>
     <script src="{{STATIC_URL}}js/ui-tree.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
     <!-- ================== END PAGE LEVEL JS ================== --> 
+    
     
 {% endblock %}
 
@@ -110,6 +112,7 @@
         $(document).ready(function() {
             App.init();
             TreeView.init();
+            $( "img" ).addClass( "img-responsive" );
         });
     </script>
 
