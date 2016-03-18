@@ -801,6 +801,7 @@ def mostrar_gestion_socios(request):
             num_doc = socio.numero_documento
 
             if club.socios.filter(club_id = club_id, numero_documento = num_doc).count() > 0:
+                messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
                 lista_socios = club.socios.all()
                 form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
                 return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
@@ -858,6 +859,8 @@ def desactivar_socio(request, id_socio):
 @login_required()
 @user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def editar_socio(request, id_socio):
+    from django.db import IntegrityError
+
     """
     Marzo 03 / 2016
     Autor: Diego Monsalve
@@ -882,9 +885,16 @@ def editar_socio(request, id_socio):
         form = SocioClubForm(request.POST, instance=socio)
         if form.has_changed():
             if form.is_valid():
-                form.save()
-                messages.success(request, "Socio editado correctamente.")
-                return redirect('gestion_socios')
+                try:
+                    form.save()
+                    messages.success(request, "Socio editado correctamente.")
+                    return redirect('gestion_socios')
+                except IntegrityError:
+                    form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
+                    messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+                    club = request.tenant.obtenerTenant()
+                    lista_socios = club.socios.all()
+                    return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
             else:
                 messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
                 club = request.tenant.obtenerTenant()

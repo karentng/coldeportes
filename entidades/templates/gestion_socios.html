@@ -80,8 +80,8 @@
                                         {% endif %}
                                         <a href="#" data-target="#modal-desactivar-{{socio.id}}" data-toggle="modal">
                                             <i class="fa fa-ban"> A/I </i>
-                                            <i class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Activar / Inactivar"> </i>
                                         </a>
+                                        <i class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Activar / Inactivar"> </i>
                                     </td>
                                 </tr>
 
@@ -94,7 +94,7 @@
                                                 <h4 class="modal-title">Cambiar de estado socio</h4>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Está seguro que desea {% if socio.estado == 0 %} desactivar {% else %} activar {% endif %} de este socio?
+                                                ¿Está seguro que desea {% if socio.estado == 0 %} desactivar {% else %} activar {% endif %} este socio?
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
