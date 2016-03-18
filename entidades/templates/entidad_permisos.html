@@ -35,6 +35,8 @@
                     <th>Noticias</th>
                     <th>Publicidad</th>
                     <th>Listados Doping</th>
+                    <th>Solicitud Escenarios</th>
+                    <th>Respuesta Solicitud Escenarios</th>
                 </thead>
                 <tbody>
                     {% for form in forms%}
@@ -56,6 +58,8 @@
                             <td>{{form.noticias}}</td>
                             <td>{{form.publicidad}}</td>
                             <td>{{form.listados_doping}}</td>
+                            <td>{{form.solicitud}}</td>
+                            <td>{{form.respuesta}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
