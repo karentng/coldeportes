@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from solicitudes_escenarios.solicitud.forms import SolicitudEscenarioForm,AdjuntoSolicitudForm,EditarForm
 from solicitudes_escenarios.respuesta.models import ListaSolicitudes
 from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud,DiscucionSolicitud
@@ -11,6 +11,7 @@ from solicitudes_escenarios.utilities import comprimir_archivos
 # Create your views here.
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def generar_solicitud(request,id=None):
     """
     Febrero 19, 2016
@@ -45,6 +46,7 @@ def generar_solicitud(request,id=None):
     })
 #Restringir acceso despues de enviada la solicitud para no enviar mas adjuntos durante el proceso
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def adjuntar_archivo_solicitud(request,id):
     """
     Febrero 19,2016
@@ -85,6 +87,7 @@ def adjuntar_archivo_solicitud(request,id):
     })
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def borrar_adjunto(request,id_sol,id_adj):
     """
     Febrero 19, 2016
@@ -116,6 +119,7 @@ def borrar_adjunto(request,id_sol,id_adj):
 
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def finalizar_solicitud(request,id):
     """
     Febrero 19, 2016
@@ -144,6 +148,7 @@ def listar_solicitudes(request):
     })
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def cancelar_solicitud(request, id=None):
     """
     Febrero 19, 2016
@@ -192,7 +197,7 @@ def imprimir_solicitud(request,id):
         'solicitud' : solicitud,
         'discusiones' : discusiones
     })
-
+@login_required
 def ver_solicitud(request,id):
     """
     Febrero 25, 2016
@@ -214,7 +219,7 @@ def ver_solicitud(request,id):
         'solicitud' : solicitud,
         'discusiones' : discusiones
     })
-
+@login_required
 def descargar_adjunto(request,id_sol,id_adj):
     """
     Marzo 1, 2016
@@ -235,6 +240,7 @@ def descargar_adjunto(request,id_sol,id_adj):
     return response
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def editar_solicitud(request,id):
     """
     Marzo 5, 2016
@@ -261,6 +267,7 @@ def editar_solicitud(request,id):
     })
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def enviar_comentario(request,id):
     """
     Marzo 5, 2016
@@ -296,6 +303,7 @@ def enviar_comentario(request,id):
         messages.error(request,'La solicitud no se ha podido reenviar por un error en el formulario, intentalo de nuevo')
         return redirect('editar_solicitud',solicitud.id)
 
+@login_required
 def descargar_todos_adjuntos_solicitud(request,id_sol):
     """
     Marzo 11, 2016
@@ -313,6 +321,7 @@ def descargar_todos_adjuntos_solicitud(request,id_sol):
     response.write(temp.read())
     return response
 
+@login_required
 def descargar_adjuntos_discusion(request,id_sol,id_dis):
     """
     Marzo 11, 2016

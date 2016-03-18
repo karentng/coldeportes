@@ -175,26 +175,28 @@
                                 {% endfor %}
 							</ul>
                         </div>
-                        {% if responder and solicitud.estado == 1 %}
-                            <div class="row">
-                                <h5><strong>Responder</strong></h5>
-                                <form action="{% url 'enviar_comentario' solicitud.id %}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <div class="input-group">
-                                        <div class="form-group">
-                                            <label class="control-label" for="adjuntos">Adjuntar archivos: </label>
-                                            <input type="file" name="adjuntos" id="adjuntos" multiple><br>
-                                            <p><strong>Nota:</strong> Puede seleccionar varios archivos.</p>
+                        {% if perms.solicitud.add_solicitudescenario%}
+                            {% if responder and solicitud.estado == 1 %}
+                                <div class="row">
+                                    <h5><strong>Responder</strong></h5>
+                                    <form action="{% url 'enviar_comentario' solicitud.id %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            <div class="form-group">
+                                                <label class="control-label" for="adjuntos">Adjuntar archivos: </label>
+                                                <input type="file" name="adjuntos" id="adjuntos" multiple><br>
+                                                <p><strong>Nota:</strong> Puede seleccionar varios archivos.</p>
+                                            </div>
+                                            {% bootstrap_form form_comentarios %}
+                                            <span class="pull-right">
+                                                <br>
+                                                <button class="btn btn-primary" type="submit"><i class="fa fa-pencil"></i> Enviar</button>
+                                            </span>
                                         </div>
-                                        {% bootstrap_form form_comentarios %}
-                                        <span class="pull-right">
-                                            <br>
-                                            <button class="btn btn-primary" type="submit"><i class="fa fa-pencil"></i> Enviar</button>
-                                        </span>
-                                    </div>
 
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
+                            {% endif %}
                         {% endif %}
                     </div>
 		            <!-- end wrapper -->
