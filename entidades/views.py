@@ -135,6 +135,10 @@ def registro(request, tipo, tipoEnte=None):
 
             try:
                 obj.save()
+                #Condicion para que siempre que hayan escenarios exista solicitud
+                if actores.escenarios:
+                    actores.solicitud = True
+                    actores.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
                 from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
                 generar_vistas(obj, obj.obtener_padre())
@@ -180,6 +184,9 @@ def editar(request, idEntidad, tipo):
         if form.is_valid() and form2.is_valid():
             actores = form2.save(commit=False)
             add_actores(actores,permisos.get_actores('O'))
+            #Condicion para que siempre que hayan escenarios exista solicitud
+            if actores.escenarios:
+                actores.solicitud = True
             actores.save()
             obj = form.save()
             messages.success(request, ("%s editado correctamente.")%(nombre))
