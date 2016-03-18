@@ -1,6 +1,6 @@
 from django import forms
 from .models import *
-from coldeportes.utilities import MyDateWidget, MyDateTimeWidget
+from coldeportes.utilities import *
 from datetimewidget.widgets import TimeWidget
 
 
@@ -9,9 +9,9 @@ class EventoForm(forms.ModelForm):
 
     class Meta:
         model = Evento
-        fields = ('titulo_evento','lugar_evento', 'fecha_inicio', 'fecha_finalizacion', 'fecha_inicio_preinscripcion',
-                  'fecha_finalizacion_preinscripcion', 'descripcion_evento', 'video', 'cupo_participantes',
-                  'costo_entrada', 'autor')
+        fields = ('titulo_evento', 'categoria', 'ciudad_evento', 'nombre_lugar', 'direccion', 'fecha_inicio',
+                  'fecha_finalizacion', 'fecha_inicio_preinscripcion', 'fecha_finalizacion_preinscripcion',
+                  'descripcion_evento', 'video', 'cupo_participantes', 'costo_entrada', 'autor')
 
         widgets = {
             'fecha_inicio': MyDateWidget(),
@@ -26,12 +26,12 @@ class ParticipanteForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ParticipanteForm, self).__init__(*args, **kwargs)
-        self.fields['tipo_id'].widget.attrs.update({'readonly': True, 'style':'pointer-events:none;'})
+        self.fields['tipo_id'].widget.attrs.update({'readonly': True, 'style': 'pointer-events:none;'})
         self.fields['identificacion'].widget.attrs.update({'readonly': True})
 
     class Meta:
         model = Participante
-        fields = ('nombre','apellido', 'tipo_id', 'identificacion', 'fecha_nacimiento',
+        fields = ('nombre', 'apellido', 'tipo_id', 'identificacion', 'fecha_nacimiento',
                   'email')
 
         widgets = {

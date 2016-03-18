@@ -118,7 +118,7 @@ function ClaseReportes(){
         chart.addChartCursor(chartCursor);
 
         chart.exportConfig = exportConfig();
-    
+
         // WRITE
         chart.write(nombreDiv);
         charts.push([chart, nombreDiv]);

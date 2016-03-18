@@ -47,6 +47,7 @@ PERMISOS_DIGITADOR = [
 
     ['add_evento', 'eventos'],
     ['change_evento', 'eventos'],
+    ['view_evento', 'eventos'],
 
     ['add_escueladeportiva', 'escuelas_deportivas'],
     ['change_escueladeportiva', 'escuelas_deportivas'],

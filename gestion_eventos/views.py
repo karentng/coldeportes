@@ -52,6 +52,9 @@ def registrar_evento(request):
 
             if evento.video:
                 evento.video = evento.video.replace("watch?v=", "embed/")
+
+            evento.latitud = float(request.POST.get('lat'))
+            evento.longitud = float(request.POST.get('lng'))
             evento.previsualizacion = request.POST.get("previsualizacion")
             evento.cupo_disponible = evento.cupo_participantes
             evento.cupo_candidatos = evento.cupo_participantes
@@ -113,6 +116,8 @@ def editar_evento(request, id_evento):
                 if evento_form.video:
                     evento_form.video = evento_form.video.replace("watch?v=", "embed/")
 
+                evento.latitud = float(request.POST.get('lat'))
+                evento.longitud = float(request.POST.get('lng'))
                 evento_form.previsualizacion = request.POST.get("previsualizacion")
                 evento_form.cupo_disponible = evento_form.cupo_participantes - evento.participantes.count()
 
@@ -121,12 +126,14 @@ def editar_evento(request, id_evento):
                 messages.success(request, 'El evento se ha editado correctamente')
                 return redirect('listar_eventos')
 
-    return render(request, 'registrar_evento.html', {'form': form,
-                                                     'edicion': True, "foto": evento.imagen})
+    lat = evento.latitud
+    lng = evento.longitud
+    return render(request, 'registrar_evento.html', {'form': form, 'edicion': True, "foto": evento.imagen,
+                                                     'lat': lat, 'lng': lng})
 
 
 @login_required
-@permission_required('gestion_eventos.change_evento')
+@permission_required('gestion_eventos.view_evento')
 def listar_participantes(request, id_evento):
     if True:
         try:
@@ -212,7 +219,7 @@ def verificar_participante(request, id_evento):
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
 
-    if request.method=='POST':
+    if request.method == 'POST':
         form = VerificarExistenciaForm(request.POST)
 
         if form.is_valid():
@@ -221,16 +228,16 @@ def verificar_participante(request, id_evento):
                 'tipo_id': form.cleaned_data['tipo_id']
             }
             try:
-                participante = evento.participantes.get(tipo_id=datos['tipo_id'],identificacion=datos['identificacion'])
+                participante = evento.participantes.get(tipo_id=datos['tipo_id'], identificacion=datos['identificacion'])
                 if participante:
                     messages.error(request, 'El participante ya se encuentra inscrito')
                     form = VerificarExistenciaForm()
-                    return render(request,'deportistas/verificar_deportista.html',{'form':form,
-                                                                   'existe':False})
+                    return render(request, 'deportistas/verificar_deportista.html', {'form': form,
+                                                                                     'existe': False})
 
             except Exception:
                 pass
-            deportista,tenant_existencia,existe = existencia_deportista(datos)
+            deportista, tenant_existencia, existe = existencia_deportista(datos)
 
             if existe:
                 datos = {
@@ -243,7 +250,7 @@ def verificar_participante(request, id_evento):
                 request.session['datos'] = datos
                 return redirect('preinscripcion_evento',id_evento)
             else:
-                #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
+                # Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
                 request.session['datos'] = datos
                 return redirect('preinscripcion_evento',id_evento)
         else:
@@ -376,7 +383,7 @@ def generar_entrada(request, id_participante):
 
 
 @login_required
-@permission_required('gestion_eventos.change_evento')
+@permission_required('gestion_eventos.view_evento')
 def registrar_actividad(request, id_evento):
 
     try:
@@ -481,7 +488,7 @@ def cambio_fecha_actividad(request):
 
 
 @login_required
-@permission_required('gestion_eventos.change_evento')
+@permission_required('gestion_eventos.view_evento')
 def registrar_resultado(request, id_actividad):
 
     try:
@@ -511,3 +518,32 @@ def registrar_resultado(request, id_actividad):
 
     return render(request, 'gestion_resultados.html', {'form': resultado_form, 'lista_resultados': lista_resultados,
                                                        'actividad': actividad})
+
+
+@login_required
+@permission_required('gestion_eventos.change_evento')
+def editar_resultado(request, id_resultado):
+    try:
+        resultado = Resultado.objects.get(id=id_resultado)
+    except Exception:
+        messages.error(request, 'El resultado al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    resultado_form = ResultadoForm(instance=resultado)
+    actividad = Actividad.objects.get(id=resultado.actividad_perteneciente)
+    if request.method == "POST":
+        resultado_form = ResultadoForm(request.POST, instance=resultado)
+        if resultado_form.has_changed():
+            if resultado_form.is_valid():
+                resultado = resultado_form.save(commit=False)
+                resultado.save()
+                messages.success(request, "El resultado ha sido editado con exito!")
+                return redirect('registrar_resultado', actividad.id)
+
+    participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
+    resultado_form.fields["primer_lugar"].queryset = participantes_evento
+    resultado_form.fields["segundo_lugar"].queryset = participantes_evento
+    resultado_form.fields["tercer_lugar"].queryset = participantes_evento
+    lista_resultados = actividad.resultado.all()
+    return render(request, 'gestion_resultados.html', {'form': resultado_form, 'lista_resultados': lista_resultados,
+                                                       'actividad': actividad, 'edicion': True})

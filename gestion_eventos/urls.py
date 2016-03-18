@@ -19,4 +19,5 @@ urlpatterns = patterns('gestion_eventos.views',
                        url(r'^ver-actividades/(\d+)$', 'ver_actividades', name='ver_actividades'),
                        url(r'^cambio-fecha-actividad$', 'cambio_fecha_actividad', name='cambio_fecha_actividad'),
                        url(r'^registrar-resultado/(\d+)$', 'registrar_resultado', name='registrar_resultado'),
+                       url(r'^editar-resultado/(\d+)$', 'editar_resultado', name='editar_resultado'),
                        )

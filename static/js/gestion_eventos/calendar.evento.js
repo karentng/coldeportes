@@ -62,9 +62,9 @@ var handleCalendarDemo = function () {
 				data = {delta_dias: dayDelta, delta_minutos: minuteDelta, id: event.act_id, csrfmiddlewaretoken: csrf};
 			}
 			$.post(urlDrop, data, function(datam){
-				alert(datam['status']+", "+datam["message"]);
+				alert(datam);
 			}).fail(function(datam){
-				alert(datam['status']+", "+datam["message"]);
+				alert(datam);
 				revertFunc();
 			});
 		},

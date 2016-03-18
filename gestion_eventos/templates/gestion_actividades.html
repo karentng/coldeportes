@@ -22,6 +22,7 @@
 
 {% block contenido_panel %}
     <div class="row">
+        {% if "gestion_eventos.change_evento" in perms %}
         <div class="col-md-4" >
             <form id="form-actividad" action="" method="post">{% csrf_token %}
                 <div class="well row">
@@ -35,7 +36,8 @@
                             {% bootstrap_field field layout="vertical" %}
                         {% endfor %}
                         {% if edicion %}
-                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar</button>
+                            <button class="pull-right row m-l-15 btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar</button>
+                            <a href="{% url 'registrar_actividad' evento.id %}" class="pull-right row btn btn-warning" type="button" style="margin-top:10px"><i class="fa fa-ban"></i> Cancelar</a>
                         {% else %}
                             <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
                         {% endif %}
@@ -43,8 +45,8 @@
                 </div>
             </form>
         </div>
-
-        <div class="col-md-8">
+        {% endif %}
+        <div class="{% if "gestion_eventos.change_evento" in perms %}col-md-8{% else %}col-md-12{% endif %}">
             <h3>Actividades Registradas Actualmente:</h3>
 
             {% if lista_actividades %}
@@ -69,8 +71,11 @@
                                     <td>{{ actividad.hora_inicio }}</td>
                                     <td>{{ actividad.hora_fin }}</td>
                                     <td>
-                                        <a href="{% url 'editar_actividad' actividad.id %}"><i class="fa fa-gear"> Editar </i></a><br>
-                                        <a href="{% url 'registrar_resultado' actividad.id %}"><i class="fa fa-plus"> Gestionar resultados </i></a><br>
+                                        {% if "gestion_eventos.change_evento" in perms %}
+                                        <a href="{% url 'editar_actividad' actividad.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                        {% endif %}
+                                        <a href="{% url 'registrar_resultado' actividad.id %}"><i class="fa fa-gear"></i>
+                                            {% if "gestion_eventos.change_evento" in perms %}Gestionar resultados{% else %}Listar resultados{% endif %} </a><br>
                                     </td>
                                 </tr>
 
