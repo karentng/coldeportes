@@ -161,7 +161,7 @@ def cantidad_escuelas(request):
         datos = {'Total escuelas de formación deportiva': len(escuelas)}
         return JsonResponse(datos)
 
-    visualizaciones = [1,3,5]
+    visualizaciones = [1]
     form = EscuelasForm(visualizaciones=visualizaciones)
     return render(request, 'escuelas/base_escuelas.html', {
         'nombre_reporte' : 'Cantidad de escuelas de formación deportiva',

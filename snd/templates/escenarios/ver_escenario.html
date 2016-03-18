@@ -312,17 +312,21 @@
                                                     <th>DESCRIPCIÓN ÚLTIMO MANTENIMIENTO</th>
                                                     <th>PERIODICIDAD</th>
                                                     <th>RAZONES NO MANTENIMIENTO</th>
+                                                    <th>INVERSIONISTA</th>
+                                                    <th>CONVENIO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for matenimiento in mantenimientos %}
-                                                <tr> 
-                                                    <td>{% if matenimiento.fecha_ultimo_mantenimiento %}{{matenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
-                                                    <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{matenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
-                                                    <td>{% if mantenimiento.get_periodicidad_display %}{{matenimiento.get_periodicidad_display}}{% endif %}</td>
-                                                    <td>{% if mantenimiento.razones_no_mantenimiento %}{{matenimiento.razones_no_mantenimiento}}{% endif %}</td>
-                                                </tr> 
-                                                {% endfor %}                               
+                                                {% for mantenimiento in mantenimientos %}
+                                                <tr>
+                                                    <td>{% if mantenimiento.fecha_ultimo_mantenimiento %}{{mantenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{mantenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.get_periodicidad_display %}{{mantenimiento.get_periodicidad_display}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.razones_no_mantenimiento %}{{mantenimiento.razones_no_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.inversionista %}{{mantenimiento.inversionista}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.convenio %}{{mantenimiento.convenio}}{% endif %}</td>
+                                                </tr>
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>

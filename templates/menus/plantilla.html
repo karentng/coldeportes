@@ -29,16 +29,16 @@
             </a>
             <ul class="sub-menu">
                 {% if request.user.is_superuser %}
-                    <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
+                    <li {% if 'datos-basicos-entidad' in request.path %} class="active" {% endif %}>
                         <a href="{% url 'datos_basicos_entidad' %}"><span >Modificar datos básicos de la entidad</span></a>
                     </li>
                 {% endif %}
                 {% if request.tenant.tipo == 3 %}
                     {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
-                        <li class="has-sub {% if 'socio' in request.path %} active {% endif %}">
-                            <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
+                        <li {% if 'socio' in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'gestion_socios' %}"><span>Gestionar socios del club</span></a>
                         </li>
-                        <li class="has-sub {% if 'planes' in request.path %} active {% endif %}">
+                        <li {% if 'planes' in request.path %} class="active" {% endif %}>
                             <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
                         </li>
                     {% endif %}

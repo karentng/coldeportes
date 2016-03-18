@@ -5,7 +5,7 @@
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_escenario %}
-            <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
+            <li {% if "/escenarios/wizard/" in request.path %} class="active" {% endif %}>
                 <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
             </li>
         {% endif %} 
