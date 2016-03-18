@@ -111,7 +111,7 @@ def seleccion_datos_personal_apoyo(tenant=''):
         SELECT
             PA.id, PA.actividad,
             PA.genero, PA.tipo_id, PA.foto,
-            PA.nombres, PA.apellidos,
+            PA.nombres, PA.apellidos, PA.identificacion,
             PA.fecha_nacimiento, NAL.nacionalidad_id,            
             PA.telefono_fijo as telefono_contacto,
             PA.ciudad_id, PA.etnia, PA.telefono_celular,
@@ -137,7 +137,7 @@ def seleccion_datos_deportistas(tenant=''):
             DE.fecha_nacimiento,DE.fecha_creacion,
             DE.lgtbi,DE.etnia, DE.barrio, DE.comuna,
             DE.email, DE.telefono as telefono_contacto,
-            DE.direccion, DE.foto,
+            DE.direccion, DE.foto, DE.identificacion,
             DE.nombres, DE.apellidos, DE.entidad_id,
             NAL.nacionalidad_id,DE.estado,
             HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
@@ -165,7 +165,7 @@ def seleccion_datos_dirigentes(tenant=''):
         SELECT
             DIR.id, NAL.nacionalidad_id,
             DIR.nombres, DIR.apellidos,
-            DIR.foto,
+            DIR.foto, DIR.identificacion,
             DIR.entidad_id, DIR.fecha_creacion,
             DIR.genero, DIR.telefono_fijo as telefono_contacto,
             DIR.estado, DIR.ciudad_residencia_id AS ciudad_id,

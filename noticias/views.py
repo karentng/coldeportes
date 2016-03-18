@@ -70,7 +70,7 @@ def editar_noticia(request, id_noticia):
     except Exception:
         messages.error(request, 'La noticia que está intentando editar no existe')
         return redirect('listar_noticias')
-
+    noticia.video = noticia.video.replace("embed/", "watch?v=")
     form = NoticiaForm(instance=noticia)
 
     if request.method == 'POST':
@@ -82,7 +82,7 @@ def editar_noticia(request, id_noticia):
                 nueva_foto = request.POST.get('imagen-crop')
 
                 if nueva_foto == "No":
-                    noticia.foto = "clasificados/clasificados-default.png"
+                    noticia.foto = ""
                 elif nueva_foto != "si":
                     noticia.foto = nueva_foto
 
@@ -95,8 +95,9 @@ def editar_noticia(request, id_noticia):
 
                 messages.success(request, 'La noticia se ha editado correctamente')
                 return redirect('listar_noticias')
+
     return render(request, 'registrar_noticia.html', {'form': form,
-                                               'edicion':True})
+                                                      'edicion': True, 'foto': noticia.foto})
 
 
 @login_required
@@ -108,9 +109,10 @@ def cambiar_estado_noticia(request, id_noticia):
         noticia.save()
 
     except Exception:
-        messages.error(request, 'La noticia que está intentando eliminar no existe')
+        messages.error(request, 'La noticia a la que intenta acceder no existe')
         return redirect('listar_noticias')
 
-    messages.success(request, 'Se ha eliminado la noticia correctamente')
+    messages.success(request, 'Se ha cambiado el estado de la noticia correctamente')
     return redirect('listar_noticias')
+
 

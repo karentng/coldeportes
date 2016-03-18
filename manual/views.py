@@ -52,7 +52,7 @@ def editar_articulo(request, articulo_id):
     """
     articulo_edicion =  Articulo.objects.get(id=articulo_id)
     articulo_form = ArticuloForm(instance=articulo_edicion)
-
+    print('alskalskas')
     if request.method == 'POST':
 
         articulo_form = ArticuloForm(request.POST, request.FILES, instance=articulo_edicion)

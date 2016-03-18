@@ -139,6 +139,7 @@ class PublicPersonalApoyoView(models.Model):
     class Meta:
         managed = False
 
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     actividad = models.IntegerField(choices=ACTIVIDADES)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
@@ -180,6 +181,7 @@ class PublicDeportistaView(models.Model):
         managed = False
 
     #campos modelo deportista
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -231,6 +233,7 @@ class PublicDirigenteView(models.Model):
     class Meta:
         managed = False
 
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_creacion = models.DateTimeField()
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)

@@ -146,6 +146,7 @@ class TenantPersonalApoyoView(models.Model):
     entidad = models.ForeignKey(Entidad)
     genero = models.CharField(max_length=11)
     tipo_id = models.CharField(max_length=5)
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_nacimiento = models.DateField()
     nacionalidad = models.ForeignKey(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad)
@@ -163,6 +164,7 @@ class TenantDeportistaView(models.Model):
         managed = False
 
     #campos modelo deportista
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -201,6 +203,7 @@ class TenantDirigenteView(models.Model):
     class Meta:
         managed = False
 
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_creacion = models.DateTimeField()
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)

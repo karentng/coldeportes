@@ -787,10 +787,10 @@ def eliminar_historia_lesion(request,id_depor,id_historia):
     try:
         lesion = HistorialLesiones.objects.get(id=id_historia, deportista=id_depor)
         lesion.delete()
-        return redirect('wizard_historia_doping', id_depor)
+        return redirect('wizard_historia_lesiones', id_depor)
 
     except Exception:
-        return redirect('wizard_historia_doping', id_depor)
+        return redirect('wizard_historia_lesiones', id_depor)
 
 @login_required
 #@tenant_required

@@ -63,15 +63,23 @@
                         <td>{{ s.para_quien }}</td>
                         <td>{{ s.fecha }}</td>
                         <td>
-                            <a href=''>
+                            <a href='{% url 'ver_solicitud' s.id %}'>
                                 <i class="fa fa-eye"></i> Ver mas
                             </a>
                             <br/>
-                            {% if s.estado == 0 %}
-                                <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud' s.id %}">
-                                    <i class="fa fa-trash"></i> Cancelar solicitud
-                                </a>
-                                <br/>
+                            {% if perms.solicitud.add_solicitudescenario%}
+                                {% if s.estado == 0 %}
+                                    <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud' s.id %}">
+                                        <i class="fa fa-trash"></i> Cancelar solicitud
+                                    </a>
+                                    <br/>
+                                {% endif %}
+                                {% if s.estado == 1 %}
+                                    <a href="{% url 'editar_solicitud' s.id %}">
+                                        <i class="fa fa-envelope"></i> Completar solicitud
+                                    </a>
+                                    <br/>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

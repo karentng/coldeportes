@@ -50,7 +50,9 @@
         <div class="col-md-12">       
         {% for field in form %}
             {% block tam_bloque %}
-            <div class="{% if nombre_generador %}col-md-2{% else %}col-md-3{% endif %}">
+            <div class="
+                {% if nombre_generador %}col-md-2{% else %}
+                {% if tres_filtros %}col-md-4 {% else %}col-md-3{% endif %}{% endif %}">
             {% endblock %}
                 {% bootstrap_field field layout="vertical" %}
             </div>

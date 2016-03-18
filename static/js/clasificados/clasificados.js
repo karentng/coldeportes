@@ -76,7 +76,7 @@ $(document).ready(function(){
         $("#etiquetas").append(etiquetas);
         if(valor !="None"){
             $(".ver").show();
-            $("#valor").html(valor);
+            $("#valor").html("$"+valor);
         }else {
             $(".ver").hide();
         }

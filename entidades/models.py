@@ -78,6 +78,9 @@ class Actores(models.Model):
     escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva", default=False)
     noticias = models.BooleanField(verbose_name="Noticias", default=False)
     publicidad = models.BooleanField(verbose_name="Publicidad", default=True)
+    listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
+    solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
+    respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
 
     def resumen(self):
         actores = []
@@ -441,6 +444,9 @@ class ClubParalimpico(ResolucionReconocimiento):
     def obtener_padre(self):
         return self.liga
 
+    def disciplinas_str(self):
+        return ",".join([d.descripcion for d in self.disciplinas.all()])
+
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
@@ -450,7 +456,9 @@ class ClubParalimpico(ResolucionReconocimiento):
             'tipo_tenant': type(self).__name__,
             'mostrar_info':True,
             'nombre':self.nombre,
-            'disciplina': self.discapacidad,
+            'disciplina': self.get_discapacidad_display(),
+            'deportes' : self.disciplinas_str(),
+            'has_deportes': True,
             'descripcion': self.descripcion,
             'ciudad': self.ciudad,
             'direccion': self.direccion,
@@ -957,6 +965,9 @@ class Permisos(models.Model):
     escuelas_deportivas = models.IntegerField(choices=ACTORES, default=1)
     noticias = models.IntegerField(choices=ACTORES, default=1)
     publicidad = models.IntegerField(choices=ACTORES, default=2)
+    listados_doping = models.IntegerField(choices=ACTORES, default=1)
+    solicitud = models.IntegerField(choices=ACTORES, default=1)
+    respuesta = models.IntegerField(choices=ACTORES, default=1)
 
     class Meta:
         unique_together = ('entidad','tipo',)
@@ -972,7 +983,8 @@ class Permisos(models.Model):
             opcion = [1,5]
 
         actores_seleccionados = []
-        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias','publicidad']
+        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)

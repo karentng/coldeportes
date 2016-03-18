@@ -16,7 +16,7 @@ $(document).ready(function() {
                     }
                 }
             },
-            descripcion: {
+            descripcion_video: {
                 validators: {
                     notEmpty: {
                         message: 'La descripción del video del escenario no puede ser vacía'

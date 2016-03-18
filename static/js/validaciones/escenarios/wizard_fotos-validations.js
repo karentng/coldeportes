@@ -24,14 +24,6 @@ $(document).ready(function() {
                     }
                 }
             },
-            descripcion_video: {
-                validators:{
-                    notEmpty: {
-                        message: 'Debe ingresar una descipcion'
-                    }
-                }
-            },
-
 
             }
         }).on('success.field.bv', function(e, data) {
