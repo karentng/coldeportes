@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Cargar competencias</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Cargar competencias
+{% endblock %}
+
+{% block titulo_panel %}
+    Cargar competencias
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-xs-12">
+            <b>Archivo de Competencias a subir</b>
+        </div>
+        <hr>
+        <div class="col-sm-12" align="center">
+            <form class="form-vertical" enctype="multipart/form-data" method="post">{% csrf_token %}
+                {% bootstrap_form form layout="vertical" %}
+                <button class="btn btn-primary" type="submit">
+                    Subir <i class="fa fa-angle-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}x

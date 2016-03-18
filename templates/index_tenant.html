@@ -266,11 +266,13 @@
                             </tbody>
                         </table>
                     {% else %}
-                        <center>No hay socios registrados</center>
+                        <div class="alert alert-warning fade in m-b-15">
+                            No hay socios registrados.
+                        </div>
                     {% endif %}
                 </div>
                 <div class="modal-footer">
-                    <a href="" class="btn btn-sm btn-white" data-dismiss="modal">Cerrar</a>
+                    <a href="" class="btn btn-sm btn-warning" data-dismiss="modal">Cerrar</a>
                 </div>
             </div>
         </div>
@@ -297,7 +299,7 @@
                                     {% for plan in entidad.planes_de_costo %}
                                         <tr class="gradeX">
                                             <td>{{ plan.nombre }}</td>
-                                            <td>{{ plan.precio }}</td>
+                                            <td>$ {{ plan.precio }}</td>
                                             <td>{{ plan.descripcion }}</td>
                                         </tr>
                                     {% endfor %}

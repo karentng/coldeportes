@@ -39,7 +39,7 @@
             });
             $("#id_etiquetas").tagit({
                 singleField:true,
-                singleFieldDelimiter: ",",
+                singleFieldDelimiter: ","
             });
 
             $('#submit-crop').click(function(event){
@@ -117,8 +117,8 @@
                             {% bootstrap_field field %}
                         </div>
                         <div class="form-group">
-                            <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
-                            <label class="control-label" for="modalTrigger2"></label>
+                            <div id="modalTrigger2" class="btn {% if foto %}btn-success {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
                             {% include 'modal_croppic.html' %}
                         </div>
                     {% else %}
@@ -130,7 +130,7 @@
                 <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
 
             {% if edicion %}
-                <a type="button" class="btn btn-primary pull-right" href="{% url 'listar_noticias'%}">
+                <a type="button" class="btn btn-warning pull-right" href="{% url 'listar_noticias'%}">
                     Cancelar
                 </a>
             {% endif %}

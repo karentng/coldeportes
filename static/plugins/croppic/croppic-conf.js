@@ -18,7 +18,7 @@ $(document).ready(function(){
             "csrfmiddlewaretoken":csrftoken,
             "url_media": urlMedia
         },
-        loadPicture:picture,
+        loadPicture:picture == "" || picture == "/media/" ? null : picture,
         onBeforeImgCrop:function(){},
         onAfterImgCrop: function(mns){
 
@@ -59,7 +59,7 @@ $(document).ready(function(){
         if(!$('.cropControls.cropControlsCrop').length){
 
             $("#modalTrigger2").removeClass("btn-success").addClass("btn-primary").html("Cargar Imagen");
-            $("#labelImg").html("");
+            $("#labelImg").html("No se ha seleccionado una imagen");
         }else{
 
             $("#modalTrigger2").removeClass("btn-primary").addClass("btn-success").html("Cambiar Imagen");

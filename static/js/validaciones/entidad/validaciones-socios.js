@@ -55,4 +55,7 @@ fields = {
         }
     }
 };
+$("#id_fecha_incorporacion").on('change',function(e){
+   $(form).bootstrapValidator('revalidateField', 'fecha_incorporacion');
+});
 $.getScript(base+"js/validaciones/validations-base.js");

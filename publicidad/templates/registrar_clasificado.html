@@ -100,8 +100,8 @@
                 {% for field in form %}
                     {% if field.name == 'descripcion' %}
                         <div class="form-group">
-                            <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
-                            <label class="control-label" for="modalTrigger2"></label>
+                            <div id="modalTrigger2" class="btn {% if foto %}btn-success {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
                             {% include 'modal_croppic.html' %}
                         </div>
                         {% bootstrap_field field %}
@@ -125,11 +125,11 @@
 
             </form>
             {% if edicion %}
-                <a type="button" class="btn btn-primary pull-right" href="{% url 'gestionar_clasificados'%}">
+                <a type="button" class="btn btn-warning pull-right" style="margin-left: 15px;" href="{% url 'gestionar_clasificados'%}">
                     Cancelar
                 </a>
             {% endif %}
-            <button class="btn btn-primary pull-right" style="margin-right:15px;" id="submit-crop">
+            <button class="btn btn-primary pull-right" id="submit-crop">
                 {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
             </button>
         </div>

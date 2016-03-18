@@ -113,7 +113,6 @@ def servicios_escuelas(request):
     cantidad = 'id'
     categoria = 'nombre_servicio'
     escuelas = generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=None)
-    print(escuelas)
     if request.is_ajax():
         return JsonResponse(escuelas)
 
@@ -146,7 +145,7 @@ def cantidad_escuelas(request):
         tabla = TenantEscuelaView
 
     escuelas = tabla.objects.filter(estado=0).values('id', 'entidad_id').distinct()
-    datos = {'cantidad': len(escuelas)}
+    datos = {'Total escuelas de formación deportiva': len(escuelas)}
 
     if request.is_ajax():
         departamentos = None if request.GET['departamentos'] == 'null' else ast.literal_eval(request.GET['departamentos'])
@@ -159,10 +158,10 @@ def cantidad_escuelas(request):
             escuelas = tabla.objects.filter(estado=0, ciudad__in=municipios).values('id', 'entidad_id').distinct()
         else:
             escuelas = tabla.objects.filter(estado=0).values('id', 'entidad_id').distinct()
-        datos = {'cantidad': len(escuelas)}
+        datos = {'Total escuelas de formación deportiva': len(escuelas)}
         return JsonResponse(datos)
 
-    visualizaciones = [1]
+    visualizaciones = [1,3,5]
     form = EscuelasForm(visualizaciones=visualizaciones)
     return render(request, 'escuelas/base_escuelas.html', {
         'nombre_reporte' : 'Cantidad de escuelas de formación deportiva',
@@ -172,5 +171,5 @@ def cantidad_escuelas(request):
         'form': form,
         'actor': 'Escuelas de Formación Deportiva',
         'fecha_generado': datetime.now(),
-        'nombre_columna':'cantidad'
+        'nombre_columna':'Descripción'
     })

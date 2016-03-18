@@ -12,7 +12,7 @@
         {% endif %}
         {% if perms.publicidad.change_clasificado %}
             <li {% if "/clasificados/gestionar" in request.path %} class="active" {% endif %}>
-                <a href="{% url 'gestionar_clasificados' %}">Gestionar clasificado</a>
+                <a href="{% url 'gestionar_clasificados' %}">Listar clasificados</a>
             </li>
         {% endif %}
         <li {% if "/clasificados/listar" in request.path %} class="active" {% endif %}>

@@ -88,7 +88,7 @@ def editar_clasificado(request, id_clasificado):
                 clasificado_form.titulo = clasificado_form.titulo.upper()
                 form.save()
                 messages.success(request, 'El clasificado se ha editado correctamente')
-                return redirect('listar_clasificados')
+                return redirect('gestionar_clasificados')
     return render(request, 'registrar_clasificado.html', {'form': form, 'edicion': True, "foto": foto})
 
 
