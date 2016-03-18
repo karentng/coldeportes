@@ -24,6 +24,7 @@ class Escenario(models.Model):
         ('ZU','ZONA URBANA'),
     )
     nombre =  models.CharField(max_length=100,unique=True,help_text="asdasd")
+    razon_social = models.CharField(max_length=255, verbose_name="Razón social", blank=True)
     direccion = models.CharField(max_length=100, verbose_name='dirección')
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
