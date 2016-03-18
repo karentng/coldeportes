@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from django.http import HttpResponse
 from solicitudes_escenarios.respuesta.models import ListaSolicitudes
 from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud,DiscucionSolicitud
@@ -85,6 +85,7 @@ def imprimir_solicitud(request,id,id_ent):
         'discusiones' : discusiones
     })
 
+@login_required
 def ver_solicitud(request,id,id_ent):
     """
     Marzo 1, 2016
@@ -105,6 +106,7 @@ def ver_solicitud(request,id,id_ent):
 
     })
 
+@login_required
 def descargar_adjunto(request,id_sol,id_adj,id_ent):
     """
     Marzo 1, 2016
@@ -137,6 +139,7 @@ def descargar_adjunto(request,id_sol,id_adj,id_ent):
     return response
 
 @login_required
+@permission_required('respuesta.add_listasolicitudes')
 def responder_solicitud(request,id,id_ent):
     """
     Marzo 2, 2016
@@ -159,6 +162,7 @@ def responder_solicitud(request,id,id_ent):
     })
 
 @login_required
+@permission_required('respuesta.add_listasolicitudes')
 def enviar_respuesta(request,id,id_ent):
     """
     Marzo 2, 2016
@@ -198,6 +202,7 @@ def enviar_respuesta(request,id,id_ent):
         messages.error(request,'Tu respuesta no se ha podido enviar por un error en el formulario, intenta de nuevo')
         return redirect('responder_solicitud',solicitud.id,entidad.id)
 
+@login_required
 def descargar_todos_adjuntos(request,id_sol,id_ent):
     """
     Marzo 6, 2016
@@ -227,6 +232,7 @@ def descargar_todos_adjuntos(request,id_sol,id_ent):
 
     return response
 
+@login_required
 def descargar_adjuntos_respuesta(request,id_sol,id_ent,id_dis):
     """
     Marzo 11, 2016
