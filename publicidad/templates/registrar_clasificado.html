@@ -20,15 +20,11 @@
     <script src="{{STATIC_URL}}plugins/croppic/croppic.min.js"></script>
     <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
     <script >
-        var csrftoken = '{{ csrf_token }}';
         var urlCrop = "{% url 'crop_pic' %}";
-        var buttonReset = "#reset-crop";
         var formId = "clasificado-form";
         var urlMedia = "/clasificados/";
-        var picture = "";
-        {% if edicion %}
-            picture = "{{ MEDIA_URL }}{{ foto }}";
-        {% endif %}
+        var edicion = {% if edicion %}true{% else %}false{% endif %};
+        var picture = "{{ MEDIA_URL }}{{ foto }}";
 
         $("#check-mostrar-valor").click(function(){
             $("#valor-mostrar").toggleClass("fadeInDown");
@@ -40,46 +36,6 @@
             singleFieldDelimiter: ","
         });
 
-        $('#submit-crop').click(function(event){
-            event.preventDefault();
-
-            {% if edicion %}
-                if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
-                    $("#imagen-hidden").val("si");
-                    document.getElementById(formId).submit();
-                    return false;
-                }else {
-                    $("#"+formId).bootstrapValidator('validate');
-                    if($("div.form-group").hasClass("has-error")){
-                        return false;
-                    }else {
-                        if($('.cropControls.cropControlsCrop').length) {
-                            console.log("Cortando");
-                            $('.cropControlCrop').click();
-                        }else{
-                            document.getElementById(formId).submit();
-                            return false;
-                        }
-                    }
-                }
-            {% else %}
-
-                $("#"+formId).bootstrapValidator('validate');
-
-                if($("div.form-group").hasClass("has-error")){
-                    return false;
-                }else {
-                    if($('.cropControls.cropControlsCrop').length) {
-                        console.log("Cortando");
-                        $('.cropControlCrop').click();
-                    }else{
-                        document.getElementById(formId).submit();
-                        return false;
-                    }
-                }
-            {% endif %}
-        });
-
 
     </script>
     <script src="{{STATIC_URL}}plugins/croppic/croppic-conf.js"></script>
@@ -88,8 +44,8 @@
 {% block css %}
 
     <link href="{{STATIC_URL}}plugins/croppic/croppic.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
     <link href="{{STATIC_URL}}plugins/croppic/estilos_personalizados.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
 
 {% endblock %}
 
@@ -103,6 +59,7 @@
                             <div id="modalTrigger2" class="btn {% if foto %}btn-success {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
                             <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
                             {% include 'modal_croppic.html' %}
+                            <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
                         </div>
                         {% bootstrap_field field %}
                     {% else %}
@@ -111,6 +68,7 @@
                                 <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
                                 ¿Desea incluir algún valor, precio o salario en su clasificado?
                             </div>
+
                             <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
                                 {% bootstrap_field field %}
                             </div>
@@ -120,7 +78,6 @@
                     {% endif %}
                 {% endfor %}
 
-                <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
 
 
             </form>

@@ -103,6 +103,15 @@ $(document).ready(function(){
                     // Revalidate the bio field
                     $('#form-noticia').bootstrapValidator('revalidateField', 'cuerpo_noticia');
                     console.log(evt.editor.getData().length);
+                    CKEDITOR.instances.id_cuerpo_noticia.updateElement();
+                    var str = CKEDITOR.instances.id_cuerpo_noticia.document.getBody().getText();
+                    var $prev = $("#previsualizacion");
+                    if(str.length <= 150){
+                        $prev.val(str);
+                    }else {
+                        $prev.val(str.substring(0, 150));
+                    }
+                    console.log($prev.val());
                 });
 
 });
