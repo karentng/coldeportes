@@ -7,7 +7,28 @@ fields = {
             }
         }
     },
-    lugar_evento: {
+    categoria: {
+        validators: {
+            notEmpty: {
+                message: "La categoria del evento no puede ser vacía"
+            }
+        }
+    },
+    ciudad_evento: {
+        validators: {
+            notEmpty: {
+                message: "La ciudad del evento no puede ser vacía"
+            }
+        }
+    },
+    nombre_lugar: {
+        validators: {
+            notEmpty: {
+                message: "El lugar del evento no puede ser vacío"
+            }
+        }
+    },
+    direccion: {
         validators: {
             notEmpty: {
                 message: "El lugar del evento no puede ser vacío"

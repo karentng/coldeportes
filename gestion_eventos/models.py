@@ -1,5 +1,5 @@
 from django.db import models
-from noticias.models import Noticia
+from entidades.models import Ciudad
 
 
 # Create your models here.
@@ -30,9 +30,11 @@ class Participante(models.Model):
     pago_registrado = models.BooleanField(default=False)
     estado = models.IntegerField(choices=ESTADO, default=1)
 
-
     class Meta:
         unique_together = ('evento_participe', 'identificacion')
+
+    def __str__(self):
+        return str(self.nombre) + " " + str(self.apellido)
 
 
 class Resultado(models.Model):
@@ -42,13 +44,19 @@ class Resultado(models.Model):
         (2, 'HASTA SEGUNDO LUGAR'),
         (3, 'HASTA TERCER LUGAR'),
     )
+    actividad_perteneciente = models.IntegerField()
     titulo_competencia = models.CharField(max_length=255, verbose_name="Título alternativo (opcional)",
-                                          help_text="En caso de que el título de la competencia a la cual"+
-                                                    " se le registrará el resulta, se puede escribir aquí")
-    cantidad_puestos = models.PositiveIntegerField(choices=PUESTOS)
+                                          help_text="En caso de que el título de la competencia sea diferente " +
+                                                    "al de la actividad, se puede escribir aquí", null=True, blank=True)
+    estado = models.IntegerField(default=1)
+    cantidad_puestos = models.PositiveIntegerField(choices=PUESTOS, help_text="Cantidad de ")
     primer_lugar = models.ForeignKey(Participante)
-    segundo_lugar = models.ForeignKey(Participante, null=True, related_name="segundo_lugar_resultado")
-    tercer_lugar = models.ForeignKey(Participante, null=True, related_name="tercer_lugar_resultado")
+    segundo_lugar = models.ForeignKey(Participante, null=True, blank=True, related_name="segundo_lugar_resultado")
+    tercer_lugar = models.ForeignKey(Participante, null=True, blank=True, related_name="tercer_lugar_resultado")
+
+    class Meta:
+        unique_together = ('actividad_perteneciente', 'id')
+
 
 class Actividad(models.Model):
 
@@ -58,33 +66,49 @@ class Actividad(models.Model):
     hora_inicio = models.TimeField(verbose_name="Hora de inicio")
     hora_fin = models.TimeField(verbose_name="Hora de finalización")
     evento_perteneciente = models.IntegerField()
-    estado = models.IntegerField( default=1)
+    estado = models.IntegerField(default=1)
+    resultado = models.ManyToManyField(Resultado)
 
     class Meta:
         unique_together = ('evento_perteneciente', 'id')
 
 
 class Evento(models.Model):
+    CATEGORIA = (
+        (1, 'CAPACITACIÓN'),
+        (2, 'EDUCATIVO'),
+        (3, 'DEPORTIVO'),
+        (4, 'CULTURAL'),
+        (5, 'RECREATIVO'),
+    )
 
     titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
-    lugar_evento = models.CharField(max_length=255, verbose_name="Lugar de realización del evento")
+    categoria = models.IntegerField(choices=CATEGORIA, verbose_name="Categoría del evento")
+    ciudad_evento = models.ForeignKey(Ciudad)
+    nombre_lugar = models.CharField(max_length=255, help_text="Nombre del lugar donde se realizará el evento",
+                                    verbose_name="Lugar del evento")
+    direccion = models.CharField(max_length=255, help_text="Dirección del lugar del evento (georeferenciado)")
+    latitud = models.FloatField()
+    longitud = models.FloatField()
     fecha_inicio = models.DateField(verbose_name="Fecha de inicio del evento")
     fecha_finalizacion = models.DateField(verbose_name="Fecha de finalización del evento")
     fecha_inicio_preinscripcion = models.DateField(verbose_name="Fecha de inicio de las preinscripciones")
     fecha_finalizacion_preinscripcion = models.DateField(verbose_name="Fecha de finalización de las preinscripciones")
-    fecha_inicio_inscripcion = models.DateField(verbose_name="Fecha de inicio de las inscripciones")
-    fecha_finalizacion_inscripcion = models.DateField(verbose_name="Fecha de finalización de las inscripciones")
-    imagen = models.ImageField()
-    video = models.CharField(max_length=255, verbose_name="Vídeo del evento(opcional)",
+    imagen = models.ImageField(upload_to="fotos_eventos/", blank=True, null=True)
+    video = models.CharField(max_length=255, verbose_name="Vídeo del evento (opcional)",
                              help_text="Debe ingresar un url válida de un video de youtube", blank=True, null=True)
     descripcion_evento = models.TextField(verbose_name="Descripción del evento (se usará como cuerpo de noticia)")
-    costo_entrada = models.PositiveIntegerField(verbose_name="Costo de la entrada", blank=True, null=True)
+    costo_entrada = models.PositiveIntegerField(verbose_name="Costo de la entrada (opcional)", blank=True, null=True)
     cupo_participantes = models.PositiveIntegerField(verbose_name="Cupo para participantes")
     cupo_disponible = models.PositiveIntegerField()
     cupo_candidatos = models.IntegerField()
-    noticia = models.ForeignKey(Noticia)
     participantes = models.ManyToManyField(Participante)
     actividades = models.ManyToManyField(Actividad)
     autor = models.CharField(verbose_name="Autor de la noticia", max_length=150,
                              help_text="Se usará como autor para la noticia del evento que se creará")
     estado = models.IntegerField(default=1)
+
+    class Meta:
+        permissions = (
+                ("view_evento", "Permite ver eventos"),
+            )

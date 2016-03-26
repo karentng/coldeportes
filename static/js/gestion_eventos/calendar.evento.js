@@ -14,6 +14,16 @@ var handleCalendarDemo = function () {
 	
 	var calendar = $('#calendar').fullCalendar({
 		header: buttonSetting,
+        monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+        dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día'
+        },
 		selectable: true,
 		selectHelper: true,
 		droppable: true,
@@ -52,9 +62,9 @@ var handleCalendarDemo = function () {
 				data = {delta_dias: dayDelta, delta_minutos: minuteDelta, id: event.act_id, csrfmiddlewaretoken: csrf};
 			}
 			$.post(urlDrop, data, function(datam){
-				alert(datam['status']+", "+datam["message"]);
+				alert(datam);
 			}).fail(function(datam){
-				alert(datam['status']+", "+datam["message"]);
+				alert(datam);
 				revertFunc();
 			});
 		},
@@ -72,7 +82,7 @@ var handleCalendarDemo = function () {
 	});
 	
 	/* initialize the external events
-	-----------------------------------------------------------------*/
+	-----------------------------------------------------------------
 	$('#external-events .external-event').each(function() {
 		var eventObject = {
 			title: $.trim($(this).attr('data-title')),
@@ -88,7 +98,15 @@ var handleCalendarDemo = function () {
 			revert: true,
 			revertDuration: 0
 		});
-	});
+	});*/
+
+        $(".external-event i").click(function(){
+            var diaAct = $(this).attr("data-date");
+            var goDate = new Date(diaAct);
+            var anio = goDate.getFullYear();
+            var mes = goDate.getMonth();
+			$("#calendar").fullCalendar('gotoDate', anio, mes);
+        });
 };
 
 

@@ -12,7 +12,9 @@
 {% endblock %}
 
 {% block botones_panel %}
-    <a href="{% url 'listar_eventos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+    {% with actividades|first as first_act %}
+        <a href="{% url 'dashboard' first_act.evento_perteneciente %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+    {% endwith %}
 {% endblock %}
 
 {% block titulo_panel %}
@@ -31,13 +33,14 @@
 				title: '{{ actividad.titulo }}',
 				start: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_inicio }}',
 				end: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_fin }}',
-				className: 'bg-purple',
+				className: 'bg-blue-darker',
                 allDay:false,
 				media: '<i class="fa fa-trophy"></i>',
 				description: '{{ actividad.descripcion }}'
             });
         {% endfor %}
     </script>
+    <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="{{ STATIC_URL }}js/gestion_eventos/calendar.evento.js"></script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
@@ -49,11 +52,24 @@
 {% endblock %}
 
 {% block contenido_panel %}
-    <div class="row">
         <div class="vertical-box">
-            <div id="calendar" class="vertical-box-column p-15 calendar"></div>
+            <div class="vertical-box-column col-sm-3 ">
+                <div class="calendar-event" id="external-events">
+                    <h4 class="m-b-20">Actividades</h4>
+                    {% if actividades %}
+                        {% for actividad in actividades %}
+                            <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ actividad.titulo }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ actividad.descripcion }}">
+                                <h5><i style="cursor:pointer;" data-toggle="tooltip" title="Muestra la actividad en el calendario" class="fa fa-calendar fa-lg fa-fw add-tooltip" data-date="{{ actividad.dia_actividad|date:"Y-m-d" }}"></i> {{ actividad.titulo }}</h5>
+                                <p>{{ actividad.descripcion }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-warning fade in m-b-15"><strong>No hay actividades registradas</strong></div>
+                    {% endif %}
+                </div>
+            </div>
+            <div id="calendar" class="vertical-box-column p-15 calendar col-sm-9 fc fc-ltr"></div>
         </div>
-    </div>
 {% endblock %}
 
 {% block script %}

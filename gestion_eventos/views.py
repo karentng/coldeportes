@@ -14,9 +14,29 @@ from snd.views.deportistas import existencia_deportista
 import datetime
 
 
+def dashboard(request, id_evento):
+    try:
+        evento = Evento.objects.get(id=id_evento)
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    actividades = evento.actividades.all()
+    participantes = evento.participantes
+
+    evento.cancelados = participantes.filter(estado=0).count()
+    evento.pendientes = participantes.filter(estado=2).count()
+    evento.rechazado = participantes.filter(estado=4).count()
+    evento.aprobado = participantes.filter(estado=3).count()
+    evento.aceptado = evento.pendientes + evento.rechazado + evento.aprobado
+
+    return render(request, "dashboard_evento.html", {"evento": evento, "actividades": actividades,
+                                                     "participantes": participantes.all()})
+
+
 # Create your views here.
 @login_required
-# @permission_required('gestion_eventos.add_evento')
+@permission_required('gestion_eventos.add_evento')
 def registrar_evento(request):
     if request.method == 'POST':
         form = EventoForm(request.POST, request.FILES)
@@ -32,20 +52,13 @@ def registrar_evento(request):
 
             if evento.video:
                 evento.video = evento.video.replace("watch?v=", "embed/")
+
+            evento.latitud = float(request.POST.get('lat'))
+            evento.longitud = float(request.POST.get('lng'))
             evento.previsualizacion = request.POST.get("previsualizacion")
             evento.cupo_disponible = evento.cupo_participantes
+            evento.cupo_candidatos = evento.cupo_participantes
 
-            noticia_evento = Noticia()
-            noticia_evento.titulo = evento.titulo_evento
-            noticia_evento.cuerpo_noticia = evento.descripcion_evento
-            noticia_evento.fecha_inicio = datetime.date.today()
-            noticia_evento.fecha_expiracion = evento.fecha_finalizacion
-            noticia_evento.autor = evento.autor
-            noticia_evento.foto = evento.imagen
-            noticia_evento.video = evento.video
-            noticia_evento.etiquetas = ""
-            noticia_evento.save()
-            evento.noticia = noticia_evento
             evento.save()
             messages.success(request, 'Se ha registrado el evento correctamente')
             return redirect('listar_eventos')
@@ -66,8 +79,19 @@ def listar_eventos(request):
     return render(request, 'listar_eventos.html', {'eventos': eventos})
 
 
+def detalle_evento(request, id_evento):
+    try:
+        evento = Evento.objects.get(id=id_evento)
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    return render(request, "detalles_evento.html", {"evento": evento})
+
+
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def editar_evento(request, id_evento):
-    print("dsaddsd")
     try:
         evento = Evento.objects.get(id=id_evento)
     except Exception:
@@ -86,32 +110,30 @@ def editar_evento(request, id_evento):
 
                 if nueva_foto == "No":
                     evento_form.imagen = ""
-                else:
+                elif nueva_foto != "si":
                     evento_form.imagen = nueva_foto
 
                 if evento_form.video:
                     evento_form.video = evento_form.video.replace("watch?v=", "embed/")
+
+                evento.latitud = float(request.POST.get('lat'))
+                evento.longitud = float(request.POST.get('lng'))
                 evento_form.previsualizacion = request.POST.get("previsualizacion")
                 evento_form.cupo_disponible = evento_form.cupo_participantes - evento.participantes.count()
 
-                noticia_evento = evento.noticia
-                noticia_evento.titulo = evento_form.titulo_evento
-                noticia_evento.cuerpo_noticia = evento_form.descripcion_evento
-                noticia_evento.fecha_expiracion = evento_form.fecha_finalizacion
-                noticia_evento.autor = evento_form.autor
-                noticia_evento.foto = evento_form.imagen
-                noticia_evento.video = evento_form.video
-                noticia_evento.etiquetas = ""
-                noticia_evento.save()
                 evento_form.save()
 
                 messages.success(request, 'El evento se ha editado correctamente')
                 return redirect('listar_eventos')
 
-    return render(request, 'registrar_evento.html', {'form': form,
-                                               'edicion':True})
+    lat = evento.latitud
+    lng = evento.longitud
+    return render(request, 'registrar_evento.html', {'form': form, 'edicion': True, "foto": evento.imagen,
+                                                     'lat': lat, 'lng': lng})
 
 
+@login_required
+@permission_required('gestion_eventos.view_evento')
 def listar_participantes(request, id_evento):
     if True:
         try:
@@ -124,7 +146,8 @@ def listar_participantes(request, id_evento):
         participantes = None
         eventos = None
 
-    return render(request, 'listar_participantes.html', {'participantes': participantes, 'cupo': eventos.cupo_candidatos})
+    return render(request, 'listar_participantes.html', {'participantes': participantes,
+                                                         'cupo': eventos.cupo_candidatos, 'evento': eventos.id})
 
 
 def preinscripcion_evento(request, id_evento):
@@ -141,7 +164,7 @@ def preinscripcion_evento(request, id_evento):
             participante.evento_participe = evento.id
             participante.save()
             evento.participantes.add(participante)
-            evento.cupo_disponible = evento.cupo_disponible - 1
+            evento.cupo_disponible -= 1
             evento.save()
             messages.success(request, "Has sido preinscrito con exito!")
             return redirect('listar_eventos')
@@ -196,7 +219,7 @@ def verificar_participante(request, id_evento):
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
 
-    if request.method=='POST':
+    if request.method == 'POST':
         form = VerificarExistenciaForm(request.POST)
 
         if form.is_valid():
@@ -205,16 +228,16 @@ def verificar_participante(request, id_evento):
                 'tipo_id': form.cleaned_data['tipo_id']
             }
             try:
-                participante = evento.participantes.get(tipo_id=datos['tipo_id'],identificacion=datos['identificacion'])
+                participante = evento.participantes.get(tipo_id=datos['tipo_id'], identificacion=datos['identificacion'])
                 if participante:
                     messages.error(request, 'El participante ya se encuentra inscrito')
                     form = VerificarExistenciaForm()
-                    return render(request,'deportistas/verificar_deportista.html',{'form':form,
-                                                                   'existe':False})
+                    return render(request, 'deportistas/verificar_deportista.html', {'form': form,
+                                                                                     'existe': False})
 
             except Exception:
                 pass
-            deportista,tenant_existencia,existe = existencia_deportista(datos)
+            deportista, tenant_existencia, existe = existencia_deportista(datos)
 
             if existe:
                 datos = {
@@ -227,23 +250,26 @@ def verificar_participante(request, id_evento):
                 request.session['datos'] = datos
                 return redirect('preinscripcion_evento',id_evento)
             else:
-                #Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
+                # Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
                 request.session['datos'] = datos
                 return redirect('preinscripcion_evento',id_evento)
         else:
             form = VerificarExistenciaForm()
             messages.error(request, 'El evento al que trata de acceder no existe!')
-            return render(request,'deportistas/verificar_deportista.html',{'form':form,
-                                                                   'existe':False})
+            return render(request, 'deportistas/verificar_deportista.html', {'form': form,
+                                                                             'existe': False})
 
     else:
         form = VerificarExistenciaForm()
-    return render(request,'deportistas/verificar_deportista.html',{'form':form,
-                                                                   'existe':False})
+    return render(request, 'deportistas/verificar_deportista.html', {'form': form,
+                                                                     'existe': False})
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def aceptar_candidato(request, id_participante):
     from django.core.mail import EmailMessage
+    from django.core.urlresolvers import reverse
     try:
         participante = Participante.objects.get(id=id_participante)
     except Exception:
@@ -255,14 +281,15 @@ def aceptar_candidato(request, id_participante):
         messages.error(request, 'No hay cupos disponible!')
         return redirect('listar_participantes', evento.id)
 
-
     token = binascii.hexlify(os.urandom(25))
     participante.token_email = token
     participante.estado = 2
     participante.save()
 
+    # email = EmailMessage('Inscripción Aceptada', 'gdfgdfgdfgdfgdfg', to=['juanchoo.wow@gmail.com'])
+    # email.send()
 
-    evento.cupo_candidatos = evento.cupo_candidatos - 1
+    evento.cupo_candidatos -= 1
     evento.save()
     print(str(token))
     messages.success(request, 'Se ha enviado la peticion de confirmación')
@@ -287,22 +314,23 @@ def confirmar_participacion(request, id_participante):
             participante.estado = 3
             participante.save()
             messages.success(request, 'Has aceptado la inscripción satisfactoriamente')
-            return redirect('listar_eventos')
+            return redirect('dashboard', participante.evento_participe)
         else:
             participante.estado = 4
             participante.save()
             evento = Evento.objects.get(id=participante.evento_participe)
-            evento.cupo_candidatos = evento.cupo_candidatos + 1
+            evento.cupo_candidatos += 1
             evento.save()
             messages.success(request, 'Has rechazado la inscripción satisfactoriamente')
-            return redirect('listar_eventos')
-
+            return redirect('dashboard', participante.evento_participe)
 
     except Exception:
         messages.error(request, 'Ha ocurrido un error')
         return redirect('listar_eventos')
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def gestion_pago(request, id_participante):
     try:
         participante = Participante.objects.get(id=id_participante)
@@ -324,10 +352,11 @@ def gestion_pago(request, id_participante):
     return redirect('listar_eventos')
 
 
-from reportlab.pdfgen import canvas
-from django.http import HttpResponse
-
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def generar_entrada(request, id_participante):
+    from reportlab.pdfgen import canvas
+    from django.http import HttpResponse
     try:
         participante = Participante.objects.get(id=id_participante)
     except Exception:
@@ -352,6 +381,9 @@ def generar_entrada(request, id_participante):
     p.save()
     return response
 
+
+@login_required
+@permission_required('gestion_eventos.view_evento')
 def registrar_actividad(request, id_evento):
 
     try:
@@ -377,6 +409,8 @@ def registrar_actividad(request, id_evento):
                                                         'evento': evento})
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def editar_actividad(request, id_actividad):
     try:
         actividad = Actividad.objects.get(id=id_actividad)
@@ -414,6 +448,8 @@ def ver_actividades(request, id_evento):
                                                     'evento': evento})
 
 
+@login_required
+@permission_required('gestion_eventos.change_evento')
 def cambio_fecha_actividad(request):
 
     if request.is_ajax():
@@ -450,55 +486,64 @@ def cambio_fecha_actividad(request):
 
     return redirect('listar_eventos')
 
-@login_required
-@permission_required('noticias.change_noticia')
-def editar_noticia(request, id_noticia):
-    try:
-        noticia = Noticia.objects.get(id=id_noticia)
-    except Exception:
-        messages.error(request, 'La noticia que está intentando editar no existe')
-        return redirect('listar_noticias')
 
-    form = NoticiaForm(instance=noticia)
+@login_required
+@permission_required('gestion_eventos.view_evento')
+def registrar_resultado(request, id_actividad):
+
+    try:
+        actividad = Actividad.objects.get(id=id_actividad)
+    except Exception:
+        messages.error(request, 'La actividad a la que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    resultado_form = ResultadoForm()
 
     if request.method == 'POST':
-        form = NoticiaForm(request.POST, request.FILES, instance=noticia)
-        nueva_foto = request.POST.get("imagen-crop")
-        if form.has_changed or nueva_foto != "No":
-            if form.is_valid():
-                noticia = form.save(commit=False)
-                nueva_foto = request.POST.get('imagen-crop')
+        resultado_form = ResultadoForm(request.POST)
+        if resultado_form.is_valid():
+            resultado = resultado_form.save(commit=False)
+            resultado.actividad_perteneciente = actividad.id
+            resultado.save()
+            actividad.resultado.add(resultado)
+            actividad.save()
+            messages.success(request, "El resultado ha sido registrado con exito!")
+            return redirect('registrar_resultado', actividad.id)
 
-                if nueva_foto == "No":
-                    noticia.foto = "clasificados/clasificados-default.png"
-                elif nueva_foto != "si":
-                    noticia.foto = nueva_foto
+    participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
+    resultado_form.fields["primer_lugar"].queryset = participantes_evento
+    resultado_form.fields["segundo_lugar"].queryset = participantes_evento
+    resultado_form.fields["tercer_lugar"].queryset = participantes_evento
+    lista_resultados = actividad.resultado.all()
 
-                if noticia.video:
-                    noticia.video = noticia.video.replace("watch?v=", "embed/")
-
-                noticia.previsualizacion = request.POST.get("previsualizacion")
-                noticia.etiquetas = noticia.etiquetas.upper()
-                form.save()
-
-                messages.success(request, 'La noticia se ha editado correctamente')
-                return redirect('listar_noticias')
-    return render(request, 'registrar_evento.html', {'form': form,
-                                               'edicion':True})
+    return render(request, 'gestion_resultados.html', {'form': resultado_form, 'lista_resultados': lista_resultados,
+                                                       'actividad': actividad})
 
 
 @login_required
-@permission_required('noticias.change_noticia')
-def cambiar_estado_noticia(request, id_noticia):
+@permission_required('gestion_eventos.change_evento')
+def editar_resultado(request, id_resultado):
     try:
-        noticia = Noticia.objects.get(id=id_noticia)
-        noticia.estado = not noticia.estado
-        noticia.save()
-
+        resultado = Resultado.objects.get(id=id_resultado)
     except Exception:
-        messages.error(request, 'La noticia que está intentando eliminar no existe')
-        return redirect('listar_noticias')
+        messages.error(request, 'El resultado al que trata de acceder no existe!')
+        return redirect('listar_eventos')
 
-    messages.success(request, 'Se ha eliminado la noticia correctamente')
-    return redirect('listar_noticias')
+    resultado_form = ResultadoForm(instance=resultado)
+    actividad = Actividad.objects.get(id=resultado.actividad_perteneciente)
+    if request.method == "POST":
+        resultado_form = ResultadoForm(request.POST, instance=resultado)
+        if resultado_form.has_changed():
+            if resultado_form.is_valid():
+                resultado = resultado_form.save(commit=False)
+                resultado.save()
+                messages.success(request, "El resultado ha sido editado con exito!")
+                return redirect('registrar_resultado', actividad.id)
 
+    participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
+    resultado_form.fields["primer_lugar"].queryset = participantes_evento
+    resultado_form.fields["segundo_lugar"].queryset = participantes_evento
+    resultado_form.fields["tercer_lugar"].queryset = participantes_evento
+    lista_resultados = actividad.resultado.all()
+    return render(request, 'gestion_resultados.html', {'form': resultado_form, 'lista_resultados': lista_resultados,
+                                                       'actividad': actividad, 'edicion': True})

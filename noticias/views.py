@@ -55,13 +55,10 @@ def detalles_noticia(request, id_noticia):
     except Exception:
         messages.error(request, 'La noticia que está tratando de visualizar no existe')
         return redirect('listar_noticias')
-    try:
-        evento = Evento.objects.get(noticia=noticia)
-        return render(request, 'detalles_noticia.html', {'noticia': noticia, 'evento': evento})
-    except Exception:
-        pass
-    if not request.user.has_perm("publicidad.change_clasificado"):
-        if noticia.fecha_inicio > datetime.date.today() or noticia.fecha_expiracion < datetime.date.today() or noticia.estado == 0:
+
+    if not request.user.has_perm("noticias.change_noticias"):
+        if noticia.fecha_inicio > datetime.date.today() or noticia.fecha_expiracion < datetime.date.today()\
+                or noticia.estado == 0:
             messages.error(request, 'La noticia que está tratando de visualizar no está disponible')
             return redirect('listar_noticias')
 

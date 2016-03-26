@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block botones_panel %}
-    <a href="{% url 'listar_eventos' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+    <a href="{% url 'dashboard' evento %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
 {% endblock %}
 
 {% block js %}
@@ -55,19 +55,21 @@
                                 <td>{{ participante.apellido }}</td>
                                 <td>{{ participante.fecha_nacimiento }}</td>
                                 <td>{{ participante.get_estado_display }}</td>
-                                <td>
-                                    <a href="#"><i class="fa fa-eye">Ver más</i></a><br>
-                                    <a href="{% url 'editar_participante' participante.id %}"><i class="fa fa-gear">Editar</i></a><br>
-                                    {% if participante.estado == 1 %}
-                                        <a href="{% url 'aceptar_candidato' participante.id %}"><i class="fa fa-check">Aceptar inscripción</i></a><br>
-                                    {% elif participante.estado == 3 %}
-                                        <a href="#" data-toggle="modal" data-target="#modal-pago-{{ participante.id }}" ><i class="fa fa-dollar">Estado pago</i></a><br>
-                                        {% include 'modal_pago.html' %}
-                                        {% if participante.pago_registrado %}
-                                            <a href="{% url 'generar_entrada' participante.id %}" ><i class="fa fa-file">Generar escarapela</i></a><br>
+                                    <td>
+                                        <a href="#" data-toggle="modal" data-target="#modal-participante-{{ participante.id }}" ><i class="fa fa-eye">Ver más</i></a><br>
+                                        {% include 'modal_participante.html' %}
+                                    {% if 'gestion_eventos.change_evento' in perms %}
+                                        {% if participante.estado == 1 %}
+                                            <a href="{% url 'aceptar_candidato' participante.id %}"><i class="fa fa-check">Aceptar inscripción</i></a><br>
+                                        {% elif participante.estado == 3 %}
+                                            <a href="#" data-toggle="modal" data-target="#modal-pago-{{ participante.id }}" ><i class="fa fa-dollar">Estado pago</i></a><br>
+                                            {% include 'modal_pago.html' %}
+                                            {% if participante.pago_registrado %}
+                                                <a href="{% url 'generar_entrada' participante.id %}" ><i class="fa fa-file">Generar escarapela</i></a><br>
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
-                                </td>
+                                    </td>
                             </tr>
                         {% endfor %}
                     </tbody>
