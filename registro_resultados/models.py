@@ -32,7 +32,7 @@ class Competencia(models.Model):
     )
     
     nombre = models.CharField(max_length=255, verbose_name='nombre')
-    fecha_competencia = models.DateField(verbose_name="Fecha de la compentencia")
+    fecha_competencia = models.DateField(verbose_name="Fecha de la competencia")
     tipo_competencia = models.IntegerField(choices=TIPOS_COMPETENCIAS, verbose_name="tipo de competencia")
     tipo_registro = models.IntegerField(choices=TIPOS_REGISTROS)
     lugar = models.CharField(max_length=150)
