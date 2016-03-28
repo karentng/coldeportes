@@ -262,6 +262,7 @@ class PublicEscuelaView(models.Model):
 
 
 class PublicCajasView(models.Model):
+    clases = (('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
 
     class Meta:
         managed = False
@@ -270,7 +271,7 @@ class PublicCajasView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     email = models.CharField(max_length=100)
-    clasificacion = models.CharField(max_length=100)
+    clasificacion = models.CharField(max_length=100, choices=clases)
     entidad = models.ForeignKey(Entidad)
     categoria = models.CharField(max_length=255)
     descripcion = models.CharField(max_length=255)

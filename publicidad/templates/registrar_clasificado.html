@@ -33,7 +33,8 @@
 
         $("#id_etiquetas").tagit({
             singleField:true,
-            singleFieldDelimiter: ","
+            singleFieldDelimiter: ",",
+            tagLimit: 20
         });
 
 
@@ -42,7 +43,7 @@
 {% endblock %}
 
 {% block css %}
-
+    {{ form.media }}
     <link href="{{STATIC_URL}}plugins/croppic/croppic.css" rel="stylesheet">
     <link href="{{STATIC_URL}}plugins/croppic/estilos_personalizados.css" rel="stylesheet">
     <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
