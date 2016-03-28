@@ -79,7 +79,6 @@ def seleccion_datos_escenarios(tenant=''):
             M.descripcion_ultimo_mantenimiento,
             M.periodicidad,
             M.razones_no_mantenimiento,
-            M.tiene_planos,
             M.fecha_creacion as fecha_creacion_mantenimiento,
 
             DH.fecha_inicio,
