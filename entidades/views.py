@@ -1019,3 +1019,20 @@ def cambiar_estado_plan_costo(request, id):
         plan.save()
         messages.success(request, "Estado de plan cambiado")
         return redirect('crear_plan_de_costo')
+
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def foto_entidad(request):
+    if request.method == "POST":
+        entidad = request.tenant
+        nueva_foto = request.POST.get('imagen-crop')
+
+        if nueva_foto == "No":
+            entidad.foto_info = ""
+        else:
+            entidad.foto_info = nueva_foto
+
+        entidad.save()
+        return redirect("inicio")
+    return redirect("inicio")

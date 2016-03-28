@@ -98,6 +98,24 @@ def listar_articulo(request, articulo_id):
 
     })
 
+
+def encontrar_articulos_tenant(tenant_actual):
+    #Todos los artículos
+    if tenant_actual.schema_name=='public':
+        articulos = Articulo.objects.all()
+    else:
+        articulos = Articulo.objects.filter(entidad=tenant_actual.tipo)
+
+    return articulos
+
+
+def filtrar_entidades(entidades, tenant_actual):
+    if tenant_actual.schema_name=='public':
+        return entidades
+    else:
+        entidades = [entidades[tenant_actual.tipo-1]]
+        return entidades
+
 @login_required
 def listar(request):
     """
@@ -110,10 +128,15 @@ def listar(request):
     :type request:    WSGIRequest
     """
     items_manual = Articulo.MODULOS
-    articulos = Articulo.objects.all()
+    tenant_actual = request.tenant
     entidades = TIPOS
-
     mensaje = "No hay artísulos registrados."
+
+    
+    articulos = encontrar_articulos_tenant(tenant_actual)
+    entidades = filtrar_entidades(entidades, tenant_actual)
+
+    print(entidades)
 
     return render(request, 'tree_list.html', {
         'articulos': articulos,

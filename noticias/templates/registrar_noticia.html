@@ -22,15 +22,11 @@
     <script src="{{STATIC_URL}}plugins/croppic/croppic.min.js"></script>
     <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
     <script>
-        var csrftoken = '{{ csrf_token }}';
         var urlCrop = "{% url 'crop_pic' %}";
-        var buttonReset = "#reset-crop";
+        var edicion = {% if edicion %}true{% else %}false{% endif %};
         var formId = "form-noticia";
         var urlMedia = "/fotos_noticias/";
-        var picture = "";
-        {% if edicion %}
-            picture = "{{ MEDIA_URL }}{{ foto }}";
-        {% endif %}
+        var picture = "{{ MEDIA_URL }}{{ foto }}";
 
         $(document).ready(function(){
             $("#check-mostrar-valor").click(function(){
@@ -39,56 +35,10 @@
             });
             $("#id_etiquetas").tagit({
                 singleField:true,
-                singleFieldDelimiter: ","
+                singleFieldDelimiter: ",",
+                tagLimit: 20
             });
 
-            $('#submit-crop').click(function(event){
-                event.preventDefault();
-                CKEDITOR.instances.id_cuerpo_noticia.updateElement();
-                var str = CKEDITOR.instances.id_cuerpo_noticia.document.getBody().getText();
-
-                if(str.length <= 150){
-                    $("#previsualizacion").val(str);
-                }else {
-                    $("#previsualizacion").val(str.substring(0, 150));
-                }
-                console.log($("#previsualizacion").val());
-                {% if edicion %}
-                    if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
-                        $("#imagen-hidden").val("si");
-                        document.getElementById(formId).submit();
-                        return false;
-                    }else {
-                        $("#"+formId).bootstrapValidator('validate');
-                        if($("div.form-group").hasClass("has-error")){
-                            return false;
-                        }else {
-                            if($('.cropControls.cropControlsCrop').length) {
-                                console.log("Cortando");
-                                $('.cropControlCrop').click();
-                            }else{
-                                document.getElementById(formId).submit();
-                                return false;
-                            }
-                        }
-                    }
-                {% else %}
-
-                    $("#"+formId).bootstrapValidator('validate');
-
-                    if($("div.form-group").hasClass("has-error")){
-                        return false;
-                    }else {
-                        if($('.cropControls.cropControlsCrop').length) {
-                            console.log("Cortando");
-                            $('.cropControlCrop').click();
-                        }else{
-                            document.getElementById(formId).submit();
-                            return false;
-                        }
-                    }
-                {% endif %}
-            });
         });
 
     </script>
@@ -120,14 +70,13 @@
                             <div id="modalTrigger2" class="btn {% if foto %}btn-success {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
                             <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
                             {% include 'modal_croppic.html' %}
+                            <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
+                            <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
                         </div>
                     {% else %}
                         {% bootstrap_field field %}
                     {% endif %}
                 {% endfor %}
-
-                <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
-                <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
 
             {% if edicion %}
                 <a type="button" class="btn btn-warning pull-right" href="{% url 'listar_noticias'%}">

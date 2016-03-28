@@ -231,6 +231,7 @@ class TenantEscuelaView(models.Model):
 
 
 class TenantCajasView(models.Model):
+    clases = (('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
 
     class Meta:
         managed = False
@@ -239,6 +240,6 @@ class TenantCajasView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     email = models.CharField(max_length=100)
-    clasificacion = models.CharField(max_length=100)
+    clasificacion = models.CharField(max_length=100, choices=clases)
     entidad = models.ForeignKey(Entidad)
     nombre_servicio = models.CharField(max_length=255)

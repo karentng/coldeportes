@@ -73,7 +73,7 @@ $(document).ready(function(){
         $("#categoria").text(categoria).html();
         $("#contacto").text(contacto).html();
         $("#descripcion").text(descripcion).html();
-        $("#etiquetas").append(etiquetas);
+        $("#etiquetas > span").text(etiquetas).html();
         if(valor !="None"){
             $(".ver").show();
             $("#valor").html("$"+valor);

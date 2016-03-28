@@ -10,7 +10,7 @@ class Juego(models.Model):
     anio = models.PositiveIntegerField(verbose_name="Año")
     imagen = models.FileField(upload_to=ruta_juegos_imagenes, blank=True, null=True, verbose_name="imagen o logo del juego")
     pais = models.ForeignKey(Nacionalidad, default=52, verbose_name="País")
-    descripcion = models.TextField(null=True, blank=True)
+    descripcion = models.TextField(null=True, blank=True, verbose_name="descripción")
 
     
     def __str__(self):
@@ -32,7 +32,7 @@ class Competencia(models.Model):
     )
     
     nombre = models.CharField(max_length=255, verbose_name='nombre')
-    fecha_competencia = models.DateField(verbose_name="Fecha de la compentencia")
+    fecha_competencia = models.DateField(verbose_name="Fecha de la competencia")
     tipo_competencia = models.IntegerField(choices=TIPOS_COMPETENCIAS, verbose_name="tipo de competencia")
     tipo_registro = models.IntegerField(choices=TIPOS_REGISTROS)
     lugar = models.CharField(max_length=150)

@@ -504,6 +504,10 @@ def wizard_mantenimiento(request, escenario_id):
     """
     Octubre 13 / 2015
     Autor: Karent Narvaez Grisales
+
+    Marzo 28 / 2016
+    Modificado por: Diego Monsalve
+    Se podrán registrar y visualizar todos los mantenimientos del escenario
     
     Mantenimiento de un escenario
 
@@ -519,27 +523,26 @@ def wizard_mantenimiento(request, escenario_id):
     escenario = Escenario.objects.get(id=escenario_id)
 
     try:
-        mantenimiento = Mantenimiento.objects.get(escenario=escenario_id)
+        mantenimientos = Mantenimiento.objects.filter(escenario=escenario_id).order_by('-fecha_ultimo_mantenimiento')
     except Exception:
-        mantenimiento = None
+        mantenimientos = None
 
-    mantenimiento_form = MantenimientoEscenarioForm(instance=mantenimiento)
+    mantenimiento_form = MantenimientoEscenarioForm()
 
     if request.method == 'POST':
-        mantenimiento_form = MantenimientoEscenarioForm(request.POST, instance=mantenimiento)
+        mantenimiento_form = MantenimientoEscenarioForm(request.POST)
 
         if mantenimiento_form.is_valid():
-            ultimo_mantenimiento = mantenimiento_form.save(commit=False) 
-
-            ultimo_mantenimiento.escenario = escenario
-            ultimo_mantenimiento.save()
-            return redirect('wizard_contactos', escenario_id)
-
+            mantenimiento = mantenimiento_form.save(commit=False)
+            mantenimiento.escenario = escenario
+            mantenimiento.save()
+            return redirect('wizard_mantenimiento', escenario_id)
 
     return render(request, 'escenarios/wizard/wizard_mantenimiento.html', {
-        'titulo': 'Mantenimiento del Escenario',
+        'titulo': 'Mantenimientos del Escenario',
         'wizard_stage': 6,
         'form': mantenimiento_form,
+        'mantenimientos': mantenimientos,
         'escenario_id': escenario_id,
     })
 
@@ -647,6 +650,34 @@ def eliminar_historico(request, escenario_id, historico_id):
 
     except Exception:
         return redirect('wizard_historicos', escenario_id)
+
+@login_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
+def eliminar_mantenimiento(request, escenario_id, mantenimiento_id):
+    """
+    Marzo 28 / 2016
+    Autor: Diego Monsalve
+
+    Eliminar mantenimiento
+
+    Se obtiene el mantenimiento de la base de datos y se elimina
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del escenario
+    :type escenario_id:    String
+    :param mantenimiento_id:   Identificador del dato historico
+    :type mantenimiento_id:    String
+    """
+
+    try:
+        mantenimiento = Mantenimiento.objects.get(id=mantenimiento_id, escenario=escenario_id)
+        mantenimiento.delete()
+        return redirect('wizard_mantenimiento', escenario_id)
+
+    except Exception:
+        return redirect('wizard_mantenimiento', escenario_id)
 
 @login_required
 #@tenant_required
