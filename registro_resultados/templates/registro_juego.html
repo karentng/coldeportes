@@ -28,7 +28,7 @@
     <fieldset>
         <form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="well row">
-                <div class="col-xs-12">
+                <div class="row">
                     <h3>{{titulo}}</h3>
                     
                     {% for field in form %}
@@ -38,9 +38,9 @@
                         </div>
                     {% endfor %}
                 </div>
+                <hr>                
+                <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
             </div>
-            <hr>
-            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
         </form>
     </fieldset>                        
                     
