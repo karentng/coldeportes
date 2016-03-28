@@ -7,6 +7,10 @@ from datetimewidget.widgets import TimeWidget
 class EventoForm(forms.ModelForm):
     required_css_class = 'required'
 
+    def __init__(self, *args, **kwargs):
+        super(EventoForm, self).__init__(*args, **kwargs)
+        self.fields['ciudad_evento'] = adicionarClase(self.fields['ciudad_evento'], 'one')
+
     class Meta:
         model = Evento
         fields = ('titulo_evento', 'categoria', 'ciudad_evento', 'nombre_lugar', 'direccion', 'fecha_inicio',

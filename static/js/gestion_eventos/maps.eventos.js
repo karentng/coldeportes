@@ -23,11 +23,17 @@ function initialize() {
   var marker = new google.maps.Marker({
     position: latlng,
     map: map,
-    title: "Palmaseca"
+    title: direccion
   });
-  panorama = map.getStreetView();
-  panorama.setPosition(latlng);
-  panorama.setVisible(true);
+  var service = new google.maps.StreetViewService();
+  service.getPanoramaByLocation(marker.getPosition(), 0, function(result, status) {
+      if (status == google.maps.StreetViewStatus.OK) {
+          var panorama = map.getStreetView();
+          panorama.setPosition(result.location.latLng);
+          panorama.setVisible(true);
+      }
+  });
+
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.open(map, marker);
   });

@@ -55,6 +55,11 @@
 
         $(document).ready(function(){
 
+            {% if edicion  %}
+                $("#lat").val("{{ lat|stringformat:'f' }}");
+                $("#lng").val('{{ lng|stringformat:"f" }}');
+            {% endif %}
+
             $('#submit-crop').click(function(event){
                 event.preventDefault();
                 CKEDITOR.instances.id_descripcion_evento.updateElement();
@@ -150,8 +155,8 @@
                         {% bootstrap_field field  %}
                     {% endif %}
                 {% endfor %}
-                <input name="lat" type="text" value="" hidden>
-                <input name="lng" type="text" value="" hidden>
+                <input name="lat" id="lat" type="text" value="" hidden>
+                <input name="lng" id="lng" type="text" value="" hidden>
                 <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
                 <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
 

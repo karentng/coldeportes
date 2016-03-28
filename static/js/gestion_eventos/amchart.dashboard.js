@@ -44,7 +44,6 @@ $(document).ready(function(){
 
         chart.creditsPosition = "top-right";
 
-        console.log("dasds");
         // WRITE
         chart.write("chartdiv");
     });

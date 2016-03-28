@@ -13,7 +13,7 @@
                     <b>Fecha de Preinscripción: </b>Desde el {{ evento.fecha_inicio_preinscripcion|date:"l, j \d\e F" }}
                                                     hasta el {{ evento.fecha_finalizacion_preinscripcion|date:"l, j \d\e F \d\e Y" }}<br>
                     <b>Lugar de Realización: </b>{{ evento.lugar_evento }}, {{ evento.ciudad_evento }}<br>
-                    <b>Costo Entrada: </b>{% if evento.costo %}{{ evento.costo }}{% else %} Libre{% endif %}<br>
+                    <b>Costo Entrada: </b>{% if evento.costo_entrada %}{{ evento.costo_entrada }}{% else %} Libre{% endif %}<br>
                     <b>Cupo Disponible: </b>{{ evento.cupo_disponible }}
                 </p>
                 <a type="button" class="btn btn-primary" href="{% url 'verificar_participante' evento.id %}">Resgistrarse</a>

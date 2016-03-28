@@ -124,7 +124,7 @@ def editar_evento(request, id_evento):
                 evento_form.save()
 
                 messages.success(request, 'El evento se ha editado correctamente')
-                return redirect('listar_eventos')
+                return redirect('dashboard', evento.id)
 
     lat = evento.latitud
     lng = evento.longitud
@@ -151,7 +151,6 @@ def listar_participantes(request, id_evento):
 
 
 def preinscripcion_evento(request, id_evento):
-
     try:
         evento = Evento.objects.get(id=id_evento)
     except Exception:
@@ -180,7 +179,6 @@ def preinscripcion_evento(request, id_evento):
 
 
 def editar_participante(request, id_participante):
-
     try:
         participante = Participante.objects.get(id=id_participante)
     except Exception:
@@ -201,7 +199,6 @@ def editar_participante(request, id_participante):
 
 
 def verificar_participante(request, id_evento):
-
     try:
         evento = Evento.objects.get(id=id_evento)
         hoy = datetime.date.today()
@@ -228,7 +225,8 @@ def verificar_participante(request, id_evento):
                 'tipo_id': form.cleaned_data['tipo_id']
             }
             try:
-                participante = evento.participantes.get(tipo_id=datos['tipo_id'], identificacion=datos['identificacion'])
+                participante = evento.participantes.get(tipo_id=datos['tipo_id'],
+                                                        identificacion=datos['identificacion'])
                 if participante:
                     messages.error(request, 'El participante ya se encuentra inscrito')
                     form = VerificarExistenciaForm()
@@ -248,11 +246,10 @@ def verificar_participante(request, id_evento):
                     'fecha_nacimiento': deportista.fecha_nacimiento.strftime("%Y-%m-%d")
                 }
                 request.session['datos'] = datos
-                return redirect('preinscripcion_evento',id_evento)
+                return redirect('preinscripcion_evento', id_evento)
             else:
-                # Si no se encuentra el deportista entonces se redirecciona a registro de deportista con los datos iniciales en una sesión
                 request.session['datos'] = datos
-                return redirect('preinscripcion_evento',id_evento)
+                return redirect('preinscripcion_evento', id_evento)
         else:
             form = VerificarExistenciaForm()
             messages.error(request, 'El evento al que trata de acceder no existe!')
@@ -364,17 +361,17 @@ def generar_entrada(request, id_participante):
         return redirect('listar_eventos')
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="entrada-'+participante.nombre+'.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="entrada-' + participante.nombre + '.pdf"'
 
     # Create the PDF object, using the response object as its "file."
-    p = canvas.Canvas(response,pagesize=(500,300))
+    p = canvas.Canvas(response, pagesize=(500, 300))
 
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 250,"Tipo Identificación: " + str(participante.tipo_id))
-    p.drawString(100, 200,"Número Identificación: " + str(participante.identificacion))
-    p.drawString(100, 150,"Participante: " + str(participante.nombre) + " " + participante.apellido)
-    p.drawString(100, 100,"Fecha Naciemiento: " + str(participante.fecha_nacimiento))
+    p.drawString(100, 250, "Tipo Identificación: " + str(participante.tipo_id))
+    p.drawString(100, 200, "Número Identificación: " + str(participante.identificacion))
+    p.drawString(100, 150, "Participante: " + str(participante.nombre) + " " + participante.apellido)
+    p.drawString(100, 100, "Fecha Naciemiento: " + str(participante.fecha_nacimiento))
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()
@@ -385,7 +382,6 @@ def generar_entrada(request, id_participante):
 @login_required
 @permission_required('gestion_eventos.view_evento')
 def registrar_actividad(request, id_evento):
-
     try:
         evento = Evento.objects.get(id=id_evento)
     except Exception:
@@ -436,7 +432,6 @@ def editar_actividad(request, id_actividad):
 
 
 def ver_actividades(request, id_evento):
-
     try:
         evento = Evento.objects.get(id=id_evento)
     except Exception:
@@ -451,7 +446,6 @@ def ver_actividades(request, id_evento):
 @login_required
 @permission_required('gestion_eventos.change_evento')
 def cambio_fecha_actividad(request):
-
     if request.is_ajax():
         response = {
             'status': 'error',
@@ -470,8 +464,12 @@ def cambio_fecha_actividad(request):
             message = "ok"
         else:
             try:
-                actividad.hora_inicio = (datetime.datetime.combine(actividad.dia_actividad, actividad.hora_inicio) + datetime.timedelta(minutes=int(mins))).time()
-                actividad.hora_fin = (datetime.datetime.combine(actividad.dia_actividad, actividad.hora_fin) + datetime.timedelta(minutes=int(mins))).time()
+                actividad.hora_inicio = (
+                datetime.datetime.combine(actividad.dia_actividad, actividad.hora_inicio) + datetime.timedelta(
+                    minutes=int(mins))).time()
+                actividad.hora_fin = (
+                datetime.datetime.combine(actividad.dia_actividad, actividad.hora_fin) + datetime.timedelta(
+                    minutes=int(mins))).time()
                 actividad.dia_actividad = actividad.dia_actividad + datetime.timedelta(days=int(dias))
                 actividad.save()
                 message = "ok"
@@ -490,7 +488,6 @@ def cambio_fecha_actividad(request):
 @login_required
 @permission_required('gestion_eventos.view_evento')
 def registrar_resultado(request, id_actividad):
-
     try:
         actividad = Actividad.objects.get(id=id_actividad)
     except Exception:

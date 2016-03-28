@@ -12,9 +12,7 @@
 {% endblock %}
 
 {% block botones_panel %}
-    {% with actividades|first as first_act %}
-        <a href="{% url 'dashboard' first_act.evento_perteneciente %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
-    {% endwith %}
+    <a href="{% url 'dashboard' evento.id %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
 {% endblock %}
 
 {% block titulo_panel %}
