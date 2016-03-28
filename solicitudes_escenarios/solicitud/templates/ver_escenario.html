@@ -1,0 +1,325 @@
+<div class="modal modal-message fade in" id="modal-esc-{{ escenario.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">{{ escenario.nombre }}</h4>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="mapa"></div>
+                    <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                        <div class="panel-heading p-0">
+                            <div class="panel-heading-btn m-r-10 m-t-10">
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                            </div>
+                            <div class="tab-overflow">
+                                <ul class="nav nav-tabs">
+                                    <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
+                                    <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+                                    <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-paint-brush"></i> Caracterización</a></li>
+                                    <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-md fa-clock-o"></i> Horarios Disponibilidad</a></li>
+                                    <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>
+                                    <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
+                                    <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>
+                                    <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li>
+                                    <li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>
+                                    <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="nav-tab2-12">
+                                <div class="invoice">
+                                    <div class="invoice-company">
+                                        <b>{{escenario.nombre}}</b>
+                                    </div>
+                                    <div class="invoice-header">
+                                        <div class="invoice-from">
+                                            <address class="m-t-5 m-b-5">
+                                                <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br/>
+                                                {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br/>
+                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br/>
+                                                Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
+                                                Nombre del Administrador: {{escenario.nombre_administrador}}
+                                            </address>
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                        <h5 class="m-t-10"><strong>Descripción:</strong></h5>
+                                        <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% endif %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tab2-13">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.caracteristicas %}
+                                    <div class="invoice-header">
+                                        <div class="invoice-from">
+                                            <address class="m-t-5 m-b-5">
+                                                <strong>{{escenario.caracteristicas.tipo_escenario.descripcion}}</strong><br />
+                                                Capacidad de zona espectadores: {{escenario.caracteristicas.capacidad_espectadores}}<br>Metros construídos: {{escenario.caracteristicas.metros_construidos}}<br />
+                                                Disciplinas: {% for disciplina in escenario.caracteristicas.tipo_disciplinas.all %} {{disciplina.descripcion}}, {% endfor %}<br />
+                                                Tipo de Superficie: {% for superficie in escenario.caracteristicas.tipo_superficie_juego.all %} {{superficie.descripcion}}, {% endfor %}<br/>
+                                                Clase de Acceso: {{escenario.caracteristicas.get_clase_acceso_display}} <br/>
+                                                Características del escenario:
+                                                {% for caracteristica in escenario.caracteristicas.caracteristicas.all %}
+                                                    {{caracteristica.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %} <br/>
+                                                Clases de uso:
+                                                {% for uso in escenario.caracteristicas.clase_uso.all %}
+                                                    {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %} <br>
+                                                Planos escenarios:
+                                                {% if escenario.caracteristicas.plano_archivo %}
+                                                    <a href="{{ MEDIA_URL }}{{ escenario.caracteristicas.plano_archivo }}" target="_blank">{{ escenario.caracteristicas.plano_archivo.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}<br>
+                                                Ficha catastral:
+                                                {% if escenario.caracteristicas.ficha_catastral %}
+                                                    <a href="{{ MEDIA_URL }}{{ escenario.caracteristicas.ficha_catastral }}" target="_blank">{{ escenario.caracteristicas.ficha_catastral.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}<br>
+                                                Certificado de tradicion de libertad:
+                                                {% if escenario.caracteristicas.certificado_tradicio_libertad %}
+                                                    <a href="{{ MEDIA_URL }}{{ escenario.caracteristicas.certificado_tradicio_libertad }}" target="_blank">{{ escenario.caracteristicas.certificado_tradicio_libertad.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}
+                                            </address>
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                        <h5 class="m-t-10">Descripción:</h5>
+                                        <p>{% if escenario.caracteristicas.descripcion %}{{escenario.caracteristicas.descripcion}}{% endif %}</p>
+                                    </div>
+                                {% else %}
+                                    <p>No hay características disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tab2-14">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.horarios %}
+
+                                    <div class="invoice-content">
+                                        <div class="table-responsive">
+                                            <table class="table table-invoice">
+                                                <thead>
+                                                    <tr>
+                                                        <th>HORA INICIO</th>
+                                                        <th>HORA FIN</th>
+                                                        <th>DÍAS</th>
+                                                        <th>DESCRIPCIÓN</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for horario in escenario.horarios %}
+                                                    <tr>
+                                                        <td>{{horario.hora_inicio}}</td>
+                                                        <td>{{horario.hora_fin}}</td>
+                                                        <td>{% for dia in horario.dias.all %} {{dia.nombre}} {% endfor %}</td>
+                                                        <td>{{horario.descripcion}}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p>No hay horarios disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tab2-15">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.historicos %}
+                                    <div class="invoice-content">
+                                        <div class="table-responsive">
+                                            <table class="table table-invoice">
+                                                <thead>
+                                                    <tr>
+                                                        <th>FECHA INICIO</th>
+                                                        <th>FECHA FIN</th>
+                                                        <th>DESCRIPCIÓN</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for historico in escenario.historicos %}
+                                                    <tr>
+                                                        <td>{{historico.fecha_inicio}}</td>
+                                                        <td>{{historico.fecha_fin}}</td>
+                                                        <td>{{historico.descripcion}}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p>No hay datos históricos disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="nav-tab2-16">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.fotos %}
+
+                                    <div class="superbox" data-offset="54">
+                                        {% for foto in escenario.fotos %}
+                                        <div class="superbox-list">
+                                            <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" data-titulo="{{foto.titulo}}" alt="" data-descripcion="{{foto.descripcion}}" class="superbox-img" />
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p>No hay fotos disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tab2-17">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.videos %}
+
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align:center">VISUALIZACIÓN</th>
+                                                    <th style="text-align:center">URL</th>
+                                                    <th style="text-align:center">DESCRIPCIÓN</th>
+                                                    <th style="text-align:center">VER VÍDEO</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for video in escenario.videos %}
+                                                <tr>
+                                                    <td align="center" class="col-md-3"><iframe width="150" height="75" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
+                                                    <td align="center" ><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
+                                                    <td>{{video.descripcion}}</td>
+                                                    <td>
+                                                        <a class="btn btn-md btn-info" href="#modal-{{video.id}}" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
+                                                        <div class="modal fade" id="modal-{{video.id}}">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                        <h4 class="modal-title">VIDEO DEL ESCENARIO {{ escenario.nombre }}:</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div align="center">
+                                                                            <iframe  width="500" height="400" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p>No hay videos disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="nav-tab2-19">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.mantenimientos %}
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>FECHA ÚLTIMO MANTENIMIENTO</th>
+                                                    <th>DESCRIPCIÓN ÚLTIMO MANTENIMIENTO</th>
+                                                    <th>PERIODICIDAD</th>
+                                                    <th>RAZONES NO MANTENIMIENTO</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for matenimiento in escenario.mantenimientos %}
+                                                <tr>
+                                                    <td>{% if matenimiento.fecha_ultimo_mantenimiento %}{{matenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{matenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.get_periodicidad_display %}{{matenimiento.get_periodicidad_display}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.razones_no_mantenimiento %}{{matenimiento.razones_no_mantenimiento}}{% endif %}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p>No hay último mantenimiento registrado</p>
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tab2-18">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.contactos %}
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>NOMBRE</th>
+                                                    <th>TELÉFONO</th>
+                                                    <th>EMAIL</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for contacto in escenario.contactos %}
+                                                <tr>
+                                                    <td>{{contacto.nombre}}</td>
+                                                    <td>{{contacto.telefono}}</td>
+                                                    <td>{{contacto.email}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p>No hay contactos disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+            </div>
+        </div>
+    </div>
+</div>
