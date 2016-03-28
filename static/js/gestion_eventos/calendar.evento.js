@@ -8,6 +8,8 @@ Website: http://www.seantheme.com/color-admin-v1.7/admin/
 var handleCalendarDemo = function () {
 	"use strict";
 	var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,agendaWeek,agendaDay'};
+	var data = {};
+	var revert;
 	var date = new Date();
 	var m = date.getMonth();
 	var y = date.getFullYear();
@@ -24,60 +26,27 @@ var handleCalendarDemo = function () {
             week: 'Semana',
             day: 'Día'
         },
-		selectable: true,
+		selectable: false,
 		selectHelper: true,
-		droppable: true,
-		drop: function(date, allDay) { // this function is called when something is dropped
-		
-			// retrieve the dropped element's stored Event Object
-			var originalEventObject = $(this).data('eventObject');
-			
-			// we need to copy it, so that multiple events don't have a reference to the same object
-			var copiedEventObject = $.extend({}, originalEventObject);
-			
-			// assign it the date that was reported
-			copiedEventObject.start = date;
-			console.log(date);
-			copiedEventObject.allDay = allDay;
-			
-			// render the event on the calendar
-			// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-			$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-			
-			// is the "remove after drop" checkbox checked?
-			if ($('#drop-remove').is(':checked')) {
-				// if so, remove the element from the "Draggable Events" list
-				$(this).remove();
-			}
-			
-		},
-		select: function(){
-			return false;
-		},
 		eventDrop:function( event, dayDelta, minuteDelta, allDay, revertFunc) {
-			var data = {};
+
 			if(minuteDelta === 0){
 				data = {delta_dias: dayDelta, id: event.act_id, csrfmiddlewaretoken: csrf};
 			}else {
 				data = {delta_dias: dayDelta, delta_minutos: minuteDelta, id: event.act_id, csrfmiddlewaretoken: csrf};
 			}
-			$.post(urlDrop, data, function(datam){
-				alert(datam);
-			}).fail(function(datam){
-				alert(datam);
-				revertFunc();
-			});
+			revert = revertFunc;
+			$("#nuevo-dia > span").text(dayDelta + " días y "+ minuteDelta + " minutos.");
+			$('#modal-confirmacion').modal("show");
 		},
-		eventResize : function( event, dayDelta, minuteDelta, revertFunc){
-			revertFunc();
-		},
+		eventDurationEditable : false,
 		eventRender: function(event, element, calEvent) {
 				var mediaObject = (event.media) ? event.media : '';
 				var description = (event.description) ? event.description : '';
             element.find(".fc-event-title").after($("<span class=\"fc-event-icons\"></span>").html(mediaObject));
             element.find(".fc-event-title").append('<small>'+ description +'</small>');
         },
-		editable: true,
+		editable: editableCal,
 		events: calendarEvents
 	});
 	
@@ -99,14 +68,43 @@ var handleCalendarDemo = function () {
 			revertDuration: 0
 		});
 	});*/
+	$('#modal-confirmacion').on('click', '.btn-ok', function(e) {
 
-        $(".external-event i").click(function(){
-            var diaAct = $(this).attr("data-date");
-            var goDate = new Date(diaAct);
-            var anio = goDate.getFullYear();
-            var mes = goDate.getMonth();
-			$("#calendar").fullCalendar('gotoDate', anio, mes);
-        });
+		var $modalDiv = $(e.delegateTarget);
+
+		$modalDiv.addClass('loading');
+		$.post(urlDrop, data, function(datam){
+			$modalDiv.modal('hide').removeClass('loading');
+
+			setTimeout(function() {
+				toastr.options = {
+					"closeButton": true,
+					"progressBar": true,
+					"showEasing": "swing"
+				};
+				toastr["success"]("Actividad actualizada exitosamente");
+			},500);
+		}).fail(function(datam){
+			setTimeout(function() {
+				toastr.options = {
+					"closeButton": true,
+					"progressBar": true,
+					"showEasing": "swing"
+				};
+				toastr["success"]("Actividad actualizada exitosamente");
+			},500);
+		});
+	});
+	$('#modal-confirmacion').on('click', '.btn-not', function(e) {
+		revert();
+	});
+	$(".external-event i").click(function(){
+		var diaAct = $(this).attr("data-date");
+		var goDate = new Date(diaAct);
+		var anio = goDate.getFullYear();
+		var mes = goDate.getMonth();
+		$("#calendar").fullCalendar('gotoDate', anio, mes);
+	});
 };
 
 

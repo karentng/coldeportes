@@ -24,6 +24,7 @@
         idTabla = "tabla-eventos";
         urlDrop = "{% url 'cambio_fecha_actividad' %}";
         csrf = '{{ csrf_token }}';
+        editableCal = {% if "gestion_eventos.change_evento" in perms %} true{% else %} false {% endif %};
         calendarEvents = [];
             {% for actividad in actividades %}
             calendarEvents.push({
@@ -67,6 +68,25 @@
                 </div>
             </div>
             <div id="calendar" class="vertical-box-column p-15 calendar col-sm-9 fc fc-ltr"></div>
+            <div class="modal fade" id="modal-confirmacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h3 class="modal-title" id="titulo-modal">¿Desea cambiar el día de la actividad?</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p id="nuevo-dia">
+                                <b>El día de la actividad se ha movido: </b><span></span>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning btn-not" data-dismiss="modal">Cancelar</button>
+                            <button type="button"  class="btn btn-primary btn-ok" style="margin-left: 15px;">Cambiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 {% endblock %}
 
