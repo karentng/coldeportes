@@ -15,18 +15,20 @@
     Registro de Juego
 {% endblock %}
 
-{% block js %}
-    
+{% block js %}    
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>    
+    <script src="{{ STATIC_URL }}js/validaciones/registro_resultados/registro_juego-validations.js"></script>
 {% endblock %}
 
 {% block css %}
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
 {% block contenido_panel %}
     <fieldset>
-        <form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <form id="form-juego" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="well row">
                 <div class="row">
                     <h3>{{titulo}}</h3>
