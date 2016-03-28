@@ -306,9 +306,8 @@
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
     <script>
         $(document).ready(function(){
-            var helpTexts = $(".help-block");
 
-            $.each($(".help-block:not(.has-error span)"),function(){
+            $.each($("span.help-block:not(.has-error span)"),function(){
                 var bloqueActual = $(this);
                 nuevoElemento = bloqueActual.siblings("label");
                 nuevoElemento.after(" <span style='font-size:14px;color: #0044cc;'><i class='fa fa-question-circle add-tooltip' data-placement='right' data-toggle='tooltip' data-original-title='"+bloqueActual.text()+"'></i></span>");
