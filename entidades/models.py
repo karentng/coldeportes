@@ -105,6 +105,7 @@ class Entidad(TenantMixin): # Entidad deportiva
     ciudad = models.ForeignKey(Ciudad)
     telefono = models.CharField(max_length=255, verbose_name="teléfono", blank=True)
     descripcion = models.TextField(verbose_name="descripción", blank=True, null=True)
+    foto_info = models.CharField(null=True, blank=True, max_length=255)
 
     tipo = models.IntegerField(choices=TIPOS)
     actores = models.OneToOneField(Actores, null=True)
@@ -311,7 +312,8 @@ class Ente(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -333,7 +335,8 @@ class Comite(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -350,7 +353,8 @@ class CajaDeCompensacion(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -395,7 +399,8 @@ class FederacionParalimpica(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -424,7 +429,8 @@ class LigaParalimpica(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -464,7 +470,8 @@ class ClubParalimpico(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -486,7 +493,8 @@ class Federacion(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -724,7 +732,8 @@ class Liga(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -811,7 +820,8 @@ class Club(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias(),
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias(),
             'socios': self.socios.all(),
             'planes_de_costo': self.planes_de_costo.all()
         }
@@ -830,7 +840,8 @@ class Caf(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -848,7 +859,8 @@ class EscuelaDeportiva_(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
