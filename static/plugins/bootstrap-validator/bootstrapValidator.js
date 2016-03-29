@@ -5443,7 +5443,7 @@ if (typeof jQuery === 'undefined') {
 }(window.jQuery));
 ;(function($) {
 	$.fn.bootstrapValidator.i18n.numeric = $.extend($.fn.bootstrapValidator.i18n.numeric || {}, {
-		'default': 'Por favor ingrese un valor flotante válido'
+		'default': 'Por favor ingrese un valor decimal correcto. Por ejemplo: 5.0'
 	});
 
 	$.fn.bootstrapValidator.validators.numeric = {
