@@ -34,13 +34,7 @@
                         {% else %}
                             <h3>Registrar resultado</h3>
                         {% endif %}
-                        {% for field in form %}
-                            {% if "lugar" in field.name %}
-                                {% bootstrap_field field layout="vertical" form_group_class="form-group animated" %}
-                            {% else %}
-                                {% bootstrap_field field layout="vertical" %}
-                            {% endif %}
-                        {% endfor %}
+                        {% bootstrap_form form %}
                         {% if edicion %}
                             <button class="pull-right row btn btn-primary m-l-15" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar</button>
                             <a href="{% url 'registrar_resultado' actividad.id %}" class="pull-right row btn btn-warning" type="button" style="margin-top:10px"><i class="fa fa-ban"></i> Cancelar</a>
@@ -61,8 +55,8 @@
                         <thead>
                             <tr>
                                 <th>Titulo</th>
-                                <th>Cantidad premiación</th>
-                                <th>Participantes</th>
+                                <th>Reconocmiento</th>
+                                <th>Participante Ganador</th>
                                 <th>Estado</th>
                                 {% if "gestion_eventos.change_evento" in perms %}
                                     <th>Opciones</th>
@@ -73,15 +67,9 @@
                             {% for resultado in lista_resultados %}
                                 <tr>
                                     <td>{% if resultado.titulo %}{{ resultado.titulo }}{% else %}{{ actividad.titulo }}{% endif %}</td>
-                                    <td>{{resultado.get_cantidad_puestos_display}}</td>
+                                    <td>{{resultado.reconocimiento}}</td>
                                     <td>
-                                        Primer Lugar: {{resultado.primer_lugar}}<br>
-                                        {% if resultado.segundo_lugar %}
-                                            Segundo Lugar: {{resultado.segundo_lugar}}<br>
-                                        {% endif %}
-                                        {% if resultado.tercer_lugar %}
-                                            Segundo Lugar: {{resultado.tercer_lugar}}<br>
-                                        {% endif %}
+                                        {{ resultado.paticipante_reconocido }}
                                     </td>
                                     <td>
                                         {% if resultado.estado == 1 %}
@@ -93,6 +81,10 @@
                                 {% if "gestion_eventos.change_evento" in perms %}
                                     <td>
                                         <a href="{% url 'editar_resultado' resultado.id %}"><i class="fa fa-edit"> Editar </i></a><br>
+                                        <a href="{% url 'cambiar_estado_resultado' resultado.id %}">
+                                            <i class="fa fa-ban"></i>
+                                            A/I <i style="cursor:pointer;" data-toggle="tooltip" title="Activar/Inactivar" class="fa fa-question-circle add-tooltip"></i>
+                                        </a><br>
                                     </td>
                                 {% endif %}
                                 </tr>
@@ -111,6 +103,15 @@
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-resultados";
+        $(document).ready(function(){
+            $("#id_cantidad_puestos").change(function(){
+                var val = $(this).val();
+                if(val){
+                    $(".form-group.animated").removeClass("fadeInDown");
+                    $(".form-group.animated:lt("+val+")").addClass("fadeInDown");
+                }
+            });
+        });
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 

@@ -83,11 +83,14 @@
         <!-- begin page-header -->
         <h1 class="page-header">
         {% if "gestion_eventos.change_evento" in perms %}
+            <a type="button" class="btn btn-danger pull-right m-l-10 add-tooltip" data-toggle="tooltip" title="Activar/Inactivar" href="{% url 'cambiar_estado_evento' evento.id %}">
+                <i class="fa fa-ban"></i>A/I
+            </a>
             <a type="button" class="btn btn-warning pull-right" href="{% url 'editar_evento' evento.id %}">
                 <i class="fa fa-gear"></i> Editar
             </a>
         {% endif %}
-                Gestión de Eventos <small>{{ evento.titulo_evento }}</small>
+                Gestión de Eventos <small>{{ evento.titulo_evento }} </small><label class="label f-s-10 {% if evento.estado == 1 %}label-success">Activo</label>{% else %}label-danger">Inactivo</label>{% endif %}
         </h1>
         <!-- end page-header -->
         <!-- begin row -->

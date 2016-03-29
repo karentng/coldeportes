@@ -20,8 +20,11 @@ def dashboard(request, id_evento):
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
-
-    actividades = evento.actividades.all()
+    user = request.user
+    if user.has_perm("gestion_eventos.view_evento"):
+        actividades = evento.actividades.all()
+    else:
+        actividades = evento.actividades.filter(estado=1)
     participantes = evento.participantes
 
     evento.cancelados = participantes.filter(estado=0).count()
@@ -68,13 +71,11 @@ def registrar_evento(request):
 
 
 def listar_eventos(request):
-    from django.db.models import Q
-    # if user.has_perm("gestion_eventos.change_evento"):
-    if True:
+    user = request.user
+    if user.has_perm("gestion_eventos.view_evento"):
         eventos = Evento.objects.all()
     else:
-        eventos = Evento.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
-                                        Q(fecha_finalizacion__gte=datetime.date.today()), estado=1)
+        eventos = Evento.objects.filter(estado=1)
 
     return render(request, 'listar_eventos.html', {'eventos': eventos})
 
@@ -133,18 +134,29 @@ def editar_evento(request, id_evento):
 
 
 @login_required
+@permission_required('gestion_eventos.change_evento')
+def cambiar_estado_evento(request, id_evento):
+    try:
+        evento = Evento.objects.get(id=id_evento)
+        evento.estado = not evento.estado
+        evento.save()
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    messages.success(request, 'Se ha cambiado el estado del evento correctamente')
+    return redirect('dashboard', evento.id)
+
+
+@login_required
 @permission_required('gestion_eventos.view_evento')
 def listar_participantes(request, id_evento):
-    if True:
-        try:
-            eventos = Evento.objects.get(id=id_evento)
-            participantes = eventos.participantes
-        except Exception:
-            messages.error(request, 'El evento al que trata de acceder no existe!')
-            return redirect('listar_eventos')
-    else:
-        participantes = None
-        eventos = None
+    try:
+        eventos = Evento.objects.get(id=id_evento)
+        participantes = eventos.participantes
+    except Exception:
+        messages.error(request, 'El evento al que trata de acceder no existe!')
+        return redirect('listar_eventos')
 
     return render(request, 'listar_participantes.html', {'participantes': participantes,
                                                          'cupo': eventos.cupo_candidatos, 'evento': eventos.id})
@@ -438,7 +450,12 @@ def ver_actividades(request, id_evento):
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
 
-    actividades = evento.actividades.all()
+    user = request.user
+    if user.has_perm("gestion_eventos.view_evento"):
+        actividades = evento.actividades.all()
+    else:
+        actividades = evento.actividades.filter(estado=1)
+
     return render(request, 'ver_actividades.html', {'actividades': actividades,
                                                     'evento': evento})
 
@@ -486,6 +503,21 @@ def cambio_fecha_actividad(request):
 
 
 @login_required
+@permission_required('gestion_eventos.change_evento')
+def cambiar_estado_actividad(request, id_actividad):
+    try:
+        actividad = Actividad.objects.get(id=id_actividad)
+        actividad.estado = not actividad.estado
+        actividad.save()
+    except Exception:
+        messages.error(request, 'La actividad a la que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    messages.success(request, 'Se ha cambiado el estado de la actividad correctamente')
+    return redirect('registrar_actividad', actividad.evento_perteneciente)
+
+
+@login_required
 @permission_required('gestion_eventos.view_evento')
 def registrar_resultado(request, id_actividad):
     try:
@@ -508,9 +540,7 @@ def registrar_resultado(request, id_actividad):
             return redirect('registrar_resultado', actividad.id)
 
     participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
-    resultado_form.fields["primer_lugar"].queryset = participantes_evento
-    resultado_form.fields["segundo_lugar"].queryset = participantes_evento
-    resultado_form.fields["tercer_lugar"].queryset = participantes_evento
+    resultado_form.fields["paticipante_reconocido"].queryset = participantes_evento
     lista_resultados = actividad.resultado.all()
 
     return render(request, 'gestion_resultados.html', {'form': resultado_form, 'lista_resultados': lista_resultados,
@@ -538,9 +568,22 @@ def editar_resultado(request, id_resultado):
                 return redirect('registrar_resultado', actividad.id)
 
     participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
-    resultado_form.fields["primer_lugar"].queryset = participantes_evento
-    resultado_form.fields["segundo_lugar"].queryset = participantes_evento
-    resultado_form.fields["tercer_lugar"].queryset = participantes_evento
+    resultado_form.fields["paticipante_reconocido"].queryset = participantes_evento
     lista_resultados = actividad.resultado.all()
     return render(request, 'gestion_resultados.html', {'form': resultado_form, 'lista_resultados': lista_resultados,
                                                        'actividad': actividad, 'edicion': True})
+
+
+@login_required
+@permission_required('gestion_eventos.change_evento')
+def cambiar_estado_resultado(request, id_resultado):
+    try:
+        resultado = Resultado.objects.get(id=id_resultado)
+        resultado.estado = not resultado.estado
+        resultado.save()
+    except Exception:
+        messages.error(request, 'El resultado al que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    messages.success(request, 'Se ha cambiado el estado del resultado correctamente')
+    return redirect('registrar_resultado', resultado.actividad_perteneciente)

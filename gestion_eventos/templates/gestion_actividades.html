@@ -59,6 +59,7 @@
                                 <th>Día actividad</th>
                                 <th>Hora inicio</th>
                                 <th>Hora finalización</th>
+                                <th>Estado</th>
                                 <th>Opciones</th>
                             </tr>
                         </thead>
@@ -70,12 +71,19 @@
                                     <td>{{actividad.dia_actividad}}</td>
                                     <td>{{ actividad.hora_inicio }}</td>
                                     <td>{{ actividad.hora_fin }}</td>
+                                    <td>{% if actividad.estado == 1 %}ACTIVO{% else %}INACTIVO{% endif %}</td>
                                     <td>
                                         {% if "gestion_eventos.change_evento" in perms %}
                                         <a href="{% url 'editar_actividad' actividad.id %}"><i class="fa fa-edit"></i> Editar</a><br>
                                         {% endif %}
                                         <a href="{% url 'registrar_resultado' actividad.id %}"><i class="fa fa-gear"></i>
-                                            {% if "gestion_eventos.change_evento" in perms %}Gestionar resultados{% else %}Listar resultados{% endif %} </a><br>
+                                            {% if "gestion_eventos.change_evento" in perms %}Gestionar resultados{% else %}Listar resultados{% endif %}
+                                        </a><br>
+                                        {% if "gestion_eventos.change_evento" in perms %}
+                                            <a href="{% url 'cambiar_estado_actividad' actividad.id %}"><i class="fa fa-ban"></i>
+                                                A/I <i style="cursor:pointer;" data-toggle="tooltip" title="Activar/Inactivar" class="fa fa-question-circle add-tooltip"></i>
+                                            </a><br>
+                                        {% endif %}
                                     </td>
                                 </tr>
 

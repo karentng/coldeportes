@@ -3,7 +3,6 @@
  */
 var geocoder;
 var map;
-var address = "Cali, Valle del Cauca, Colombia";
 
 function initialize() {
   geocoder = new google.maps.Geocoder();
@@ -26,7 +25,8 @@ function initialize() {
     title: direccion
   });
   var service = new google.maps.StreetViewService();
-  service.getPanoramaByLocation(marker.getPosition(), 0, function(result, status) {
+  service.getPanoramaByLocation(marker.getPosition(), 100, function(result, status) {
+
       if (status == google.maps.StreetViewStatus.OK) {
           var panorama = map.getStreetView();
           panorama.setPosition(result.location.latLng);

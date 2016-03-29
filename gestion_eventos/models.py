@@ -39,20 +39,13 @@ class Participante(models.Model):
 
 class Resultado(models.Model):
 
-    PUESTOS = (
-        (1, 'PRIMER LUGAR'),
-        (2, 'HASTA SEGUNDO LUGAR'),
-        (3, 'HASTA TERCER LUGAR'),
-    )
     actividad_perteneciente = models.IntegerField()
     titulo_competencia = models.CharField(max_length=255, verbose_name="Título alternativo (opcional)",
                                           help_text="En caso de que el título de la competencia sea diferente " +
                                                     "al de la actividad, se puede escribir aquí", null=True, blank=True)
     estado = models.IntegerField(default=1)
-    cantidad_puestos = models.PositiveIntegerField(choices=PUESTOS, help_text="Cantidad de ")
-    primer_lugar = models.ForeignKey(Participante)
-    segundo_lugar = models.ForeignKey(Participante, null=True, blank=True, related_name="segundo_lugar_resultado")
-    tercer_lugar = models.ForeignKey(Participante, null=True, blank=True, related_name="tercer_lugar_resultado")
+    reconocimiento = models.CharField(help_text="Nombre del reconocimiento", max_length=255)
+    paticipante_reconocido = models.ForeignKey(Participante)
 
     class Meta:
         unique_together = ('actividad_perteneciente', 'id')
