@@ -22,13 +22,15 @@
   <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
   <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
   <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+  <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>  
+  <script src="{{ STATIC_URL }}js/validaciones/registro_resultados/registro_participante-validations.js"></script>
 
 {% endblock %}
 
 {% block css %}
   <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
   <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
-  
+  <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet"> 
   {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -48,10 +50,10 @@
   <div class="row">  
     <div class="col-md-12">
       <fieldset>
-        <form id="form-wizard-participantes" action="" method="post" enctype="multipart/form-data">
+        <form id="form-participante" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
           <div class="well row">
-            <div class="col-xs-12">
+            <div class="row">
               <h4>{% if individual %}Ingrese Datos del Participante {% else %}Ingrese Datos del Equipo {% endif %}</h4>
               <br>
               {% for field in form %}
@@ -61,6 +63,7 @@
                   </div>
               {% endfor %}
             </div>
+            <hr>
             <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-save"></i> Guardar</button>
           </div>
         </form>
