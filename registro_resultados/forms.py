@@ -4,7 +4,6 @@ from registro_resultados.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
 from reportes.utilities import add_visualizacion
 
-
 class JuegoForm(forms.ModelForm):
     required_css_class = 'required'
     
