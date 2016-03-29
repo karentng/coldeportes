@@ -54,7 +54,7 @@
         <div class="vertical-box">
             <div class="vertical-box-column col-sm-3 ">
                 <div class="calendar-event" id="external-events">
-                    <h4 class="m-b-20">Actividades</h4>
+                    <h4 class="m-b-20">Actividades</h4><i style="cursor:pointer;" data-toggle="tooltip" title="Al arrastrar las acitividades que están dentro del calendario, se puede cambiar el día" class="fa fa-question-circle add-tooltip" data-date="{{ actividad.dia_actividad|date:"Y-m-d" }}"></i>
                     {% if actividades %}
                         {% for actividad in actividades %}
                             <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ actividad.titulo }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ actividad.descripcion }}">
