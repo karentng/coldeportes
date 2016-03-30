@@ -171,8 +171,8 @@ class Mantenimiento(models.Model):
     inversionista = models.CharField(max_length=255, verbose_name="¿Quién invirtió en el mantenimiento?", null=True, blank=True)
     convenio = models.CharField(max_length=255, verbose_name="Convenio mediante el cual se realizó el mantenimiento", null=True, blank=True)
     razones_no_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name="Si no se realiza mantenimiento, mencione las razones")
-    tiene_planos = models.BooleanField(verbose_name='¿Se cuenta con los planos del escenario?')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+
 
 class DatoHistorico(models.Model):
     SUCESOS = (
