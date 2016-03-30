@@ -4,7 +4,6 @@ from registro_resultados.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
 from reportes.utilities import add_visualizacion
 
-
 class JuegoForm(forms.ModelForm):
     required_css_class = 'required'
     
@@ -104,7 +103,7 @@ class ParticipanteEquipoForm(forms.ModelForm):
     
     class Meta:
         model = Participante
-        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'puntos', 'posicion')
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'puntos', 'posicion', 'metros')
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
         }

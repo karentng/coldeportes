@@ -22,12 +22,15 @@
   <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
   <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
   <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+  <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>  
+  <script src="{{ STATIC_URL }}js/validaciones/registro_resultados/registro_participante-validations.js"></script>
 
 {% endblock %}
 
 {% block css %}
   <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
   <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+  <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet"> 
   
   {{form.media}} {# js y css para datetime #}
 {% endblock %}
@@ -37,17 +40,16 @@
   <div class="row">
     <div class="email-btn-row col-md-12">
       <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
-      <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-inverse pull-right"><i class="fa fa-arrow-right m-r-5"></i> Siguiente</a>
     </div>
   </div>
   <br>    
   <div class="row">
     <div class="col-md-4">
       <fieldset>
-        <form id="form-wizard-participantes-equipo" action="" method="post" enctype="multipart/form-data">
+        <form id="form-participante" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
           <div class="well row">
-            <div class="col-xs-12">
+            <div class="row">
               <h4>Ingrese Datos del Participante del Equipo {{equipo.nombre}}</h4>
               <br>
               {% for field in form %}
@@ -57,6 +59,7 @@
                   </div>
               {% endfor %}
             </div>
+            <hr>
             <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-save"></i> Guardar</button>
           </div>
         </form>

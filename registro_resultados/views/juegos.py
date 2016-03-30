@@ -554,6 +554,7 @@ def cargas_competencias(request, juego_id):
 
     return render(request, 'cargado_archivos/cargas_competencias.html', {
         'form': form,
+        'juego_id': juego_id,
     })
 
 @login_required
