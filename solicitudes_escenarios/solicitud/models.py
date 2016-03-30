@@ -45,6 +45,11 @@ class SolicitudEscenario(models.Model):
     def escenarios_str(self):
         return ','.join([e.nombre for e in self.escenarios.all()])
 
+    def save(self, *args, **kwargs):
+        self.descripcion = self.descripcion.upper()
+        self.estado_actual_escenario = self.estado_actual_escenario.upper()
+        super(SolicitudEscenario, self).save(*args, **kwargs)
+
 class DiscucionSolicitud(models.Model):
     ESTADOS = (
         (0,'ESPERANDO RESPUESTA'),

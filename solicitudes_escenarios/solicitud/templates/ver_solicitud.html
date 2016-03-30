@@ -90,7 +90,7 @@
                             </li>
 						</ul>
                         <div class="row">
-                            <h5><strong>Información de la solcitud</strong></h5><br>
+                            <h5><strong>Información de la solicitud</strong></h5><br>
                             <div class="col-lg-6">
                                 <strong>Escenarios seleccionados</strong><br><br>
                                 <p class="f-s-12 text-inverse">
@@ -100,13 +100,13 @@
                             <div class="col-lg-6">
                                 <strong>Estado actual de los escenarios</strong><br><br>
                                 <p class="f-s-12 text-inverse">
-                                    {{ solicitud.estado_actual_escenario }}
+                                    {{ solicitud.estado_actual_escenario|upper }}
                                 </p>
                             </div>
                             <div class="col-lg-12">
-                                <strong>Descripcion</strong><br><br>
+                                <strong>Descripción</strong><br><br>
                                 <p class="f-s-12 text-inverse">
-                                    {{ solicitud.descripcion }}
+                                    {{ solicitud.descripcion|upper }}
                                 </p>
                             </div>
                         </div>
