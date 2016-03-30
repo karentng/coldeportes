@@ -90,7 +90,11 @@
                 <i class="fa fa-gear"></i> Editar
             </a>
         {% endif %}
-                Gestión de Eventos <small>{{ evento.titulo_evento }} </small><label class="label f-s-10 {% if evento.estado == 1 %}label-success">Activo</label>{% else %}label-danger">Inactivo</label>{% endif %}
+                 {{ evento.titulo_evento }} <small>Gestión de Eventos</small>
+
+        {% if "gestion_eventos.view_evento" in perms %}
+            <label class="label f-s-10 {% if evento.estado == 1 %}label-success">Activo</label>{% else %}label-danger">Inactivo</label>{% endif %}
+        {% endif %}
         </h1>
         <!-- end page-header -->
         <!-- begin row -->
@@ -111,9 +115,7 @@
                                     Listar <i class="fa fa-list"></i>{% endif %}
                             </a>
                         {% else %}
-                            <a href="{% url 'verificar_participante' evento.id %}" class="text-white">
-                                Registrarse <i class="fa fa-pencil"></i>
-                            </a>
+                                <i class="fa fa-users"></i>
                         {% endif %}
                     </div>
                 </div>
@@ -135,9 +137,7 @@
                                     Listar <i class="fa fa-list"></i>{% endif %}
                             </a>
                         {% else %}
-                            <a href="{% url 'ver_actividades' evento.id %}" class="text-white">
-                                Ver Actividades <i class="fa fa-calendar"></i>
-                            </a>
+                             <i class="fa fa-calendar"></i>
                         {% endif %}
                     </div>
                 </div>

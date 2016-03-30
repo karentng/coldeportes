@@ -41,7 +41,10 @@
                             <th>Costo entrada</th>
                             <!--<th>Participantes</th>-->
                             <th>Cupo disponible</th>
-                            <th>Estado</th>
+
+                            {% if "gestion_eventos.view_evento" in perms %}
+                                <th>Estado</th>
+                            {% endif %}
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -63,13 +66,15 @@
                             {% endfor %}
                             </td>-->
                             <td>{{ evento.cupo_disponible }}</td>
-                            <td>
-                                {% if evento.estado == 1 %}
-                                    Activo
-                                {% else %}
-                                    Inactivo
-                                {% endif %}
-                            </td>
+                            {% if "gestion_eventos.view_evento" in perms %}
+                                <td>
+                                    {% if evento.estado == 1 %}
+                                        Activo
+                                    {% else %}
+                                        Inactivo
+                                    {% endif %}
+                                </td>
+                            {% endif %}
                             <td><!--
                                 {% if 'gestion_eventos.change_evento' in perms %}
                                     <a href="{% url 'detalle_evento' evento.id %}">
