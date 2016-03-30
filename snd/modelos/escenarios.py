@@ -170,7 +170,6 @@ class Mantenimiento(models.Model):
     periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True)
     inversionista = models.CharField(max_length=255, verbose_name="¿Quién invirtió en el mantenimiento?", null=True, blank=True)
     convenio = models.CharField(max_length=255, verbose_name="Convenio mediante el cual se realizó el mantenimiento", null=True, blank=True)
-    razones_no_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name="Si no se realiza mantenimiento, mencione las razones")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 
