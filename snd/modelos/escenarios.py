@@ -175,17 +175,10 @@ class Mantenimiento(models.Model):
 
 
 class DatoHistorico(models.Model):
-    SUCESOS = (
-        (0, 'ADECUACIONES'),
-        (1, 'JUEGO'),
-        (2, 'EVENTO CULTURAL'),
-        (3, 'INAUGURACIÓN'),
-        (4, 'OTROS'),
-    )
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico")
     fecha_fin = models.DateField(null=True, blank=True)
-    tipo_suceso = models.IntegerField(verbose_name="Tipo de suceso histórico", choices=SUCESOS)
+    tipo_suceso = models.CharField(verbose_name="Tipo de suceso histórico", max_length=50)
     descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
