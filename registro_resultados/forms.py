@@ -103,7 +103,7 @@ class ParticipanteEquipoForm(forms.ModelForm):
     
     class Meta:
         model = Participante
-        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'puntos', 'posicion')
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'puntos', 'posicion', 'metros')
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
         }
