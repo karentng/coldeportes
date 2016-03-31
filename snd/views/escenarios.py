@@ -152,6 +152,7 @@ def wizard_nuevo_identificacion(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
+    from django.db import IntegrityError
 
     identificacion_form = IdentificacionForm( )
 
@@ -160,14 +161,21 @@ def wizard_nuevo_identificacion(request):
         identificacion_form = IdentificacionForm(request.POST)
 
         if identificacion_form.is_valid():
-            escenario = identificacion_form.save(commit=False)
-            escenario.entidad =  request.tenant
-            escenario.nombre = escenario.nombre.upper()
-            escenario.direccion = escenario.direccion.upper()
-            escenario.barrio = escenario.barrio.upper()
-            escenario.nombre_administrador = escenario.nombre_administrador.upper()
-            escenario.save()
-            return redirect('wizard_caracterizacion', escenario.id)
+            try:
+                escenario = identificacion_form.save(commit=False)
+                escenario.entidad =  request.tenant
+                escenario.nombre = escenario.nombre.upper()
+                escenario.direccion = escenario.direccion.upper()
+                escenario.barrio = escenario.barrio.upper()
+                escenario.nombre_administrador = escenario.nombre_administrador.upper()
+                escenario.save()
+                return redirect('wizard_caracterizacion', escenario.id)
+
+            except IntegrityError as e:
+                if 'unique constraint' in str(e):
+                    escenario = identificacion_form.save(commit=False)
+                    identificacion_form = IdentificacionForm(instance=escenario)
+                    messages.error(request, "El nombre del escenario que intenta crear ya fue registrado.")
 
 
     return render(request, 'escenarios/wizard/wizard_escenario.html', {
@@ -194,7 +202,7 @@ def wizard_identificacion(request, escenario_id):
     :param escenario_id:   Identificador del escenario
     :type escenario_id:    String
     """
-
+    from django.db import IntegrityError
     try:
         escenario = Escenario.objects.get(id=escenario_id)
     except Exception:
@@ -207,14 +215,21 @@ def wizard_identificacion(request, escenario_id):
         identificacion_form = IdentificacionEditarForm(request.POST, instance=escenario)
 
         if identificacion_form.is_valid():
-            escenario = identificacion_form.save(commit=False)
-            escenario.entidad =  request.tenant            
-            escenario.nombre = escenario.nombre.upper()
-            escenario.direccion = escenario.direccion.upper()
-            escenario.barrio = escenario.barrio.upper()
-            escenario.nombre_administrador = escenario.nombre_administrador.upper()
-            escenario.save()
-            return redirect('wizard_caracterizacion', escenario_id)
+
+            try:
+                escenario = identificacion_form.save(commit=False)
+                escenario.entidad =  request.tenant            
+                escenario.nombre = escenario.nombre.upper()
+                escenario.direccion = escenario.direccion.upper()
+                escenario.barrio = escenario.barrio.upper()
+                escenario.nombre_administrador = escenario.nombre_administrador.upper()
+                escenario.save()
+                return redirect('wizard_caracterizacion', escenario_id)
+            except IntegrityError as e:
+                if 'unique constraint' in str(e):
+                    escenario = identificacion_form.save(commit=False)
+                    identificacion_form = IdentificacionForm(request.POST, instance=escenario)
+                    messages.error(request, "El nombre del escenario que intenta crear ya fue registrado.")
 
 
     return render(request, 'escenarios/wizard/wizard_escenario.html', {
