@@ -13,6 +13,8 @@ class SolicitudEscenarioForm(ModelForm):
         self.fields['escenarios'] = adicionarClase(self.fields['escenarios'], 'many')
         self.fields['prioridad'] = adicionarClase(self.fields['prioridad'], 'one')
         self.fields['para_quien'] = adicionarClase(self.fields['para_quien'], 'one')
+        self.fields['estado_actual_escenario'] = adicionarClase(self.fields['estado_actual_escenario'], 'one')
+        self.fields['vinculo_solicitante'] = adicionarClase(self.fields['vinculo_solicitante'], 'one')
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
         self.fields['para_quien'].queryset = Entidad.objects.filter(tipo=5)
