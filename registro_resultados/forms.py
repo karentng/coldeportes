@@ -153,7 +153,7 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
     )
     
 
-
+    juegos = forms.ModelChoiceField(queryset=Juego.objects.all(), required=False)
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     generos = forms.MultipleChoiceField(label="Géneros", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Género'}), choices=GENEROS)
     visualizacion = forms.ChoiceField(label="Visualización")
@@ -164,6 +164,7 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
         super(FiltrosMedalleriaDeptGenForm, self).__init__(*args, **kwargs)
         self.fields['departamentos'] = adicionarClase(self.fields['departamentos'], 'many')
         self.fields['generos'] = adicionarClase(self.fields['generos'], 'many')
+        self.fields['juegos'] = adicionarClase(self.fields['juegos'], 'one')
         
         if eliminar:
             del self.fields[eliminar]

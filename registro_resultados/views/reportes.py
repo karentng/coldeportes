@@ -38,28 +38,31 @@ def medalleria_genero(request):
     if request.is_ajax():
         departamentos = get_request_or_none(request.GET, 'departamentos')
         generos = get_request_or_none(request.GET, 'generos')    
+        juegos = get_request_or_none(request.GET, 'juegos')
     
+        if juegos:
+            #Departamentos, Generos
+            if departamentos and generos:
+                medallas = Participante.objects.filter(posicion__in=[1,2,3], departamento__in=departamentos, genero__in=generos, competencia__juego=juegos).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
+            #Departamentos
+            elif departamentos:
 
-        #Departamentos, Generos
-        if departamentos and generos:
-            medallas = Participante.objects.filter(posicion__in=[1,2,3], departamento__in=departamentos, genero__in=generos).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
-        #Departamentos
-        elif departamentos:
+                medallas = Participante.objects.filter(posicion__in=[1,2,3], departamento__in=departamentos, competencia__juego=juegos).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
+            #Generos
+            elif generos:
+                medallas = Participante.objects.filter(posicion__in=[1,2,3], genero__in=generos, competencia__juego=juegos).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
+            #Sin filtros
+            else:
+                medallas = Participante.objects.filter(posicion__in=[1,2,3], competencia__juego=juegos).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
 
-            medallas = Participante.objects.filter(posicion__in=[1,2,3], departamento__in=departamentos).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
-        #Generos
-        elif generos:
-            medallas = Participante.objects.filter(posicion__in=[1,2,3], genero__in=generos).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
-        #Sin filtros
+            
+            medallas = tipoTenant.ajustar_resultado(medallas)
+            medallas = cambiarEtiquetasPosiciones(medallas)
+            
+
+            return JsonResponse(medallas)
         else:
-            medallas = Participante.objects.filter(posicion__in=[1,2,3]).annotate(descripcion=F('posicion')).values('id', 'descripcion').annotate(cantidad=Count('id', distinct=True))
-
-        
-        medallas = tipoTenant.ajustar_resultado(medallas)
-        medallas = cambiarEtiquetasPosiciones(medallas)
-        
-
-        return JsonResponse(medallas)
+            print('seleccione un juego')
 
     else:
         medallas = list(Participante.objects.filter(posicion__in=[1,2,3]).annotate(descripcion=F('posicion')).values('descripcion', 'departamento').annotate(cantidad=Count('id')))
@@ -68,14 +71,12 @@ def medalleria_genero(request):
 
     medallas = cambiarEtiquetasPosiciones(medallas)
 
-    #print(medallas)
     visualizaciones = [1, 5 , 6]
     form = FiltrosMedalleriaDeptGenForm(visualizaciones=visualizaciones)    
     nombres_columnas = ["Medallas", "Departamento"]
 
     return render(request, 'reportes/medalleria_genero.html', {
-        'nombre_reporte' : 'Medallería por Género',
-        'tres_filtros': True,
+        'nombre_reporte' : 'Medallería de Juegos por Género y Departamento',
         'url_data' : 'reporte_medalleria_genero',
         'datos': medallas,
         'visualizaciones': visualizaciones,

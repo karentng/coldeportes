@@ -12,16 +12,18 @@
             url = "{% url url_data %}";
             realizarConsulta = function realizarConsulta(){
                 var departamentos = JSON.stringify($("#id_departamentos").val());
-                console.log(departamentos)                
                 var generos = JSON.stringify($("#id_generos").val());
+                var juegos = JSON.stringify($("#id_juegos").val());
                 $('#loading').modal('show');
                 $.ajax({
                     url: url,
-                    data: {'departamentos': departamentos,'generos':generos},
+                    data: {'departamentos': departamentos,'generos':generos, 'juegos':juegos},
                     dataType: 'json',
                     success: function(data) {
-                        Reportes.modificarDatos(data,  $("#id_reporte option:selected").text());
-                        //id = $("#id_reporte").prop('selectedIndex');
+                        var inicio = "Medallería por Género y Departamento de ";                        
+                        Reportes.modificarDatos(data,  inicio.concat($("#id_juegos option:selected").text()));
+                        id = $("#id_juegos").prop('selectedIndex');
+                        
                         tablaDeDatos.setDatos(data);
                         tablaDeDatos.verificarActualizacion();
                         $('#loading').modal('hide');
@@ -38,6 +40,9 @@
                 realizarConsulta();
             });
             $("#id_generos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_juegos").on("change", function(){
                 realizarConsulta();
             });
                

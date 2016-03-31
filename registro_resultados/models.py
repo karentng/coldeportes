@@ -14,7 +14,7 @@ class Juego(models.Model):
 
     
     def __str__(self):
-        return self.nombre
+        return self.nombre+", Año: "+str(self.anio)
 
 class Competencia(models.Model):
     TIPOS_PARTICIPANTES = (
