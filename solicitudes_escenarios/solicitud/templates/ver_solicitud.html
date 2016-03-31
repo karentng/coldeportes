@@ -21,6 +21,7 @@
 
 {% block js %}
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/solicitud_escenario/wizard-respuesta-validations.js"></script>
 {% endblock %}
 
 {% block titulo_panel %}
@@ -179,7 +180,7 @@
                             {% if responder and solicitud.estado == 1 %}
                                 <div class="row">
                                     <h5><strong>Responder</strong></h5>
-                                    <form action="{% url 'enviar_comentario' solicitud.id %}" method="post" enctype="multipart/form-data">
+                                    <form id="form-respuesta-solicitud" action="{% url 'enviar_comentario' solicitud.id %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="input-group">
                                             <div class="form-group">

@@ -1,3 +1,4 @@
+#encoding:utf-8
 from django.db import models
 from snd.models import Escenario
 from entidades.models import Entidad
@@ -60,7 +61,7 @@ class DiscucionSolicitud(models.Model):
 
     estado_anterior = models.IntegerField(choices=ESTADOS)
     estado_actual = models.IntegerField(choices=ESTADOS, verbose_name='Cambiar estado a')
-    descripcion = models.TextField()
+    descripcion = models.TextField(verbose_name="Descripción")
     solicitud = models.ForeignKey(SolicitudEscenario)
     fecha = models.DateTimeField(auto_now=True)
     entidad = models.ForeignKey(Entidad)
