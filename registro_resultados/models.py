@@ -49,11 +49,11 @@ class Competencia(models.Model):
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=255, verbose_name='nombre')
-    tiempo = models.CharField(blank=True, null=True, max_length=8)
+    tiempo = models.CharField(blank=True, null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
     puntos = models.IntegerField(default=0, null=True)
-    metros = models.IntegerField(default=0, null=True)
+    metros = models.DecimalField(default=0, null=True, max_digits=3, decimal_places=2, help_text='En metros')
     departamento = models.ForeignKey(Departamento)
-    marca = models.TimeField(blank=True, null=True)
+    marca = models.CharField(blank=True, null=True, max_length=10, help_text="La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
     posicion = models.IntegerField(default=0, verbose_name="posición")    
     creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia)
@@ -75,10 +75,10 @@ class Participante(models.Model):
     peso = models.PositiveIntegerField(verbose_name='peso (kg)', null=True, blank=True)
 
     posicion = models.IntegerField(default=0, verbose_name="posición")
-    metros = models.DecimalField(default=0, null=True, max_digits=3, decimal_places=2)
+    metros = models.DecimalField(default=0, null=True, max_digits=3, decimal_places=2, help_text='En metros')
     puntos = models.IntegerField(default=0, null=True)
-    tiempo = models.CharField(null=True, max_length=8)
-    marca = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=3)
+    tiempo = models.CharField(null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
+    marca = models.CharField(blank=True, null=True, max_length=10, help_text="La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
     equipo = models.ForeignKey(Equipo, null=True)
     creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia, null=True)
