@@ -120,11 +120,11 @@
                 <i class="fa fa-plus-circle"></i>
                 <span class="colorMenu">SERVICIOS</span>
             </a>
-            <ul class="sub-menu">
-                {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+            {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+                <ul class="sub-menu">
                     {% include "menus/aplicacion/solicitudescenarios.html" %}
-                {%endif%}
-            </ul>
+                </ul>
+            {%endif%}
         </li>
 
     {% endif %}

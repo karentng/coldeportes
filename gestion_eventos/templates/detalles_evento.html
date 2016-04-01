@@ -1,0 +1,67 @@
+<div class="col-xs-12" id="accordion">
+    <div class="panel panel-success overflow-hidden">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#datos-colapse">
+                    <i class="fa fa-plus-circle pull-right"></i>
+                    Datos
+                </a>
+            </h3>
+        </div>
+        <div class="panel-collapse collapse in" id="datos-colapse">
+            <div class="panel-body">
+                <h1 class="text-center">{{ evento.titulo_evento }}</h1>
+                <hr class="line-style">
+                <p >Fecha de Publicación: {{ evento.fecha_inicio|date:"l, F j, Y" }}</p>
+
+                <div class="info-evento">
+                    <h3>Información del evento</h3>
+                    <p>
+                        <b>Fecha Inicio: </b>{{ evento.fecha_inicio|date:"l, j \d\e F \d\e Y" }}<br>
+                        <b>Fecha Finalización: </b>{{ evento.fecha_finalizacion|date:"l, j \d\e F \d\e Y" }}<br>
+                        <b>Fecha de Preinscripción: </b>Desde el {{ evento.fecha_inicio_preinscripcion|date:"l, j \d\e F" }}
+                                                        hasta el {{ evento.fecha_finalizacion_preinscripcion|date:"l, j \d\e F \d\e Y" }}<br>
+                        <b>Lugar de Realización: </b>{{ evento.lugar_evento }}, {{ evento.ciudad_evento }}<br>
+                        <b>Costo Entrada: </b>{% if evento.costo_entrada %}{{ evento.costo_entrada }}{% else %} Libre{% endif %}<br>
+                        <b>Cupo Disponible: </b>{{ evento.cupo_disponible }}
+                    </p>
+                    <a type="button" class="btn btn-primary" href="{% url 'verificar_participante' evento.id %}">Resgistrarse</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-success overflow-hidden">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#descripcion-colapse">
+                    <i class="fa fa-plus-circle pull-right"></i>
+                    Descripción
+                </a>
+            </h3>
+        </div>
+        <div class="panel-collapse collapse in" id="descripcion-colapse">
+            <div class="panel-body">
+                <div class="cuerpo_noticia">
+                    <div class="social-container">
+                        <span class='st_facebook_large' displayText='Facebook'></span>
+                        <span class='st_twitter_large' displayText='Tweet'></span>
+                        <span class='st_googleplus_large' displayText='Google +'></span>
+                        <span class='st_linkedin_large' displayText='LinkedIn'></span>
+                    </div>
+                    {% if evento.imagen != ""  %}
+                        <img class="img-responsive img-right" src="{{ MEDIA_URL }}{{ evento.imagen }}">
+                    {% endif %}
+                    {% if evento.video != "" and false%}
+                        <div class="embed-responsive embed-responsive-16by9" style="margin-top: 30px;">
+                            <iframe class="embed-responsive-item" src="{{ evento.video }}"></iframe>
+                        </div>
+                    {% endif %}
+                    <p>{{ evento.descripcion_evento|safe }}</p>
+                </div>
+                <p style="float: right;"><i>{{ evento.autor }}</i></p>
+                <br>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>

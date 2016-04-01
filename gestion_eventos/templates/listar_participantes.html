@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Eventos</a></li>
+    <li><a href="">Participantes</a></li>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de participantes
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de participantes
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'dashboard' evento %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-participantes";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <div class="m-b-20" style="font-size: 25px;">
+                    Cupo Disponible: {{ cupo }}
+                </div>
+                <table id="tabla-participantes" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Fecha de nacimiento</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participante in participantes.all %}
+                            <tr>
+                                <td>{{ participante.nombre }}</td>
+                                <td>{{ participante.apellido }}</td>
+                                <td>{{ participante.fecha_nacimiento }}</td>
+                                <td>{{ participante.get_estado_display }}</td>
+                                    <td>
+                                        <a href="#" data-toggle="modal" data-target="#modal-participante-{{ participante.id }}" ><i class="fa fa-eye">Ver más</i></a><br>
+                                        {% include 'modal_participante.html' %}
+                                    {% if 'gestion_eventos.change_evento' in perms %}
+                                        {% if participante.estado == 1 %}
+                                            <a href="{% url 'aceptar_candidato' participante.id %}"><i class="fa fa-check">Aceptar inscripción</i></a><br>
+                                        {% elif participante.estado == 3 %}
+                                            <a href="#" data-toggle="modal" data-target="#modal-pago-{{ participante.id }}" ><i class="fa fa-dollar">Estado pago</i></a><br>
+                                            {% include 'modal_pago.html' %}
+                                            {% if participante.pago_registrado %}
+                                                <a href="{% url 'generar_entrada' participante.id %}" ><i class="fa fa-file">Generar escarapela</i></a><br>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                    </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

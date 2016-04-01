@@ -78,6 +78,7 @@ class Actores(models.Model):
     escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva", default=False)
     noticias = models.BooleanField(verbose_name="Noticias", default=False)
     publicidad = models.BooleanField(verbose_name="Publicidad", default=True)
+    eventos = models.BooleanField(verbose_name="Eventos", default=True)
     listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
@@ -980,6 +981,7 @@ class Permisos(models.Model):
     listados_doping = models.IntegerField(choices=ACTORES, default=1)
     solicitud = models.IntegerField(choices=ACTORES, default=1)
     respuesta = models.IntegerField(choices=ACTORES, default=1)
+    eventos = models.IntegerField(choices=ACTORES, default=2)
 
     class Meta:
         unique_together = ('entidad','tipo',)
@@ -996,7 +998,7 @@ class Permisos(models.Model):
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
-                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta']
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'eventos']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
