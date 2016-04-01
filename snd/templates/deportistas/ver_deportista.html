@@ -260,13 +260,13 @@
                                                     <thead>
                                                         <tr>
                                                             <th>NOMBRE COMPETENCIA</th>
-                                                            <th>FECHA INICIAL</th>
+                                                            <th>FECHA INICIACIÓN</th>
                                                             <th>FECHA FINALIZACIÓN</th>
                                                             <th>PAÍS</th>
-                                                            <th>INSTITUCIÓN O EQUIPO</th>
-                                                            <th>TIPO</th>
-                                                            <th>PUESTO</th>
-                                                            <th>CATEGORIA</th>
+                                                            <th>DEPORTE</th>
+                                                            <th>CLASE DE CAMPEONATO</th>
+                                                            <th>CLUB DEPORTIVO</th>
+                                                            <th>MAS DETALLE</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -276,6 +276,8 @@
                                                                 <td>{{historial.fecha_inicial}}</td>
                                                                 <td>{{ historial.fecha_final }}</td>
                                                                 <td>{{historial.pais}}</td>
+                                                                <td>{{historial.deporte}}</td>
+                                                                <td>{{historial.tipo}}</td>
                                                                 <td>
                                                                     {% if historial.institucion_equipo %}
                                                                         {{ historial.institucion_equipo }}
@@ -283,9 +285,74 @@
                                                                         Ninguno
                                                                     {% endif %}
                                                                 </td>
-                                                                <td>{{historial.tipo}}</td>
-                                                                <td>{{historial.puesto}}</td>
-                                                                <td>{{historial.categoria}}</td>
+                                                                <td>
+                                                                    <a class="btn btn-md btn-info" href="#modal-masdetalle-{{historial.id}}" data-toggle="modal"><i class="fa fa-binoculars"></i> Ver mas</a>
+                                                                    <div class="modal modal-message fade in" id="modal-masdetalle-{{historial.id}}">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                                    <h4 class="modal-title">Mas detalle historial deportivo de {{ deportista.full_name }}:</h4>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                <b>Nota: </b>Adjunto se encuentra la información de la participación en el historial deportivo
+                                                                                    <div class="table-responsive">
+                                                                                        <table class="table table-invoice">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th>DEPORTE</th>
+                                                                                                    <th>CATEGORÍA</th>
+                                                                                                    <th>MODALIDAD</th>
+                                                                                                    <th>PUESTO OBTENIDO</th>
+                                                                                                    <th>MARCA OBTENIDA</th>
+                                                                                                    <th>DIVISIÓN DE COMPETENCIA</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>{{historial.deporte}}</td>
+                                                                                                    <td>
+                                                                                                        {% if historial.categoria %}
+                                                                                                            {{ historial.categoria }}
+                                                                                                        {% else %}
+                                                                                                            No hay categoría registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {% if historial.modalidad %}
+                                                                                                            {{ historial.modalidad }}
+                                                                                                        {% else %}
+                                                                                                            No hay modalidad registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                    <td>{{ historial.puesto }}</td>
+                                                                                                    <td>
+                                                                                                        {% if historial.marca %}
+                                                                                                            {{ historial.marca }}
+                                                                                                        {% else %}
+                                                                                                            No hay marca registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {% if historial.division %}
+                                                                                                            {{ historial.division }}
+                                                                                                        {% else %}
+                                                                                                            No hay división registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
                                                             </tr>
                                                         {% endfor %}
                                                     </tbody>
