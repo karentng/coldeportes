@@ -23,8 +23,7 @@ class Escenario(models.Model):
         ('ZR','ZONA RURAL'),
         ('ZU','ZONA URBANA'),
     )
-    nombre =  models.CharField(max_length=100,unique=True)
-    razon_social = models.CharField(max_length=255, verbose_name="Razón social", blank=True)
+    nombre =  models.CharField(max_length=100, unique=True)
     direccion = models.CharField(max_length=100, verbose_name='dirección')
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
@@ -37,6 +36,7 @@ class Escenario(models.Model):
     estado = models.IntegerField(choices=ESTADOS, verbose_name="estado del Escenario")
     ciudad = models.ForeignKey(Ciudad)
     division_territorial = models.CharField(choices=DIVISIONES, max_length=2, verbose_name="división territorial")    
+    razon_social = models.CharField(max_length=255, verbose_name="Razón social", blank=True)
     descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 

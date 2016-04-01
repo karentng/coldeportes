@@ -129,7 +129,7 @@ def ver_escenario(request, escenario_id, id_entidad):
     datos_georreferenciacion = escenario.obtener_atributos()
     posicion_inicial = escenario.posicionInicialMapa()
 
-    print(datos_georreferenciacion[0])
+    #print(datos_georreferenciacion[0])
 
     return render(request, 'escenarios/ver_escenario.html', {
         'escenario': escenario,
