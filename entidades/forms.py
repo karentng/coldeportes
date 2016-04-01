@@ -342,6 +342,10 @@ class DeporteForm(ModelForm):
 class SocioClubForm(ModelForm):
     required_css_class = 'required'
 
+    def __init__(self, *args, **kwargs):
+        super(SocioClubForm, self).__init__(*args, **kwargs)
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+
     class Meta:
         model = SocioClub
         exclude = ('estado','club_id')

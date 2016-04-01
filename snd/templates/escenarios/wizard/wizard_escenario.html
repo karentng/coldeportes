@@ -39,7 +39,7 @@
     <fieldset>
         <form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
             <div class="well row">
-                <div class="col-xs-12">
+                <div class="row">
                     <h3>{{titulo}}</h3>
                     
                     {% for field in form %}
@@ -49,12 +49,12 @@
                         </div>
                     {% endfor %}
                 </div>
+                <hr>
+                {% if wizard_stage > 1 %}
+                <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back(); " />
+                {% endif %}     
+                <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
             </div>
-            <hr>
-            {% if wizard_stage > 1 %}
-            <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back(); " />
-            {% endif %}     
-            <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
         </form>
     </fieldset>
     

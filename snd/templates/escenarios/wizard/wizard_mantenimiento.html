@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
     <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">    
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}
@@ -35,33 +36,110 @@
 
 {% block contenido_panel %}
     {% include 'escenarios/wizard/_wizard.html' %}
-    <fieldset>
-        <form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
-            <div class="well row">
-                <div class="col-xs-12">
-                    <h3>{{titulo}}</h3>
-                    
-                    {% for field in form %}
-                        <div class="col-md-6">                            
-                            {% bootstrap_field field layout="vertical" %}
+    <div class="row">
+        <div class="col-md-4">
+            <form id="form-wizard-mantenimiento" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>{{titulo}}</h3>
+
+                        {% for field in form %}
+                            <div class="col-md-12">
+                                {% bootstrap_field field layout="vertical" %}
+                            </div>
+                        {% endfor %}
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <button class="pull-right row btn btn-info" type="submit"><i class="fa fa-plus"></i> Adicionar</button>
+                            </div>
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <a href="{% url 'wizard_contactos' escenario_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
-            <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
-        </form>
-    </fieldset>
-    
+            </form>
+        </div>
+        <div class="col-md-8">
+            <h4>Mantenimientos Actuales</h4>
+            {% if mantenimientos %}
+                <div class="table-responsive">
+                    <table id="tabla-mantenimientos" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th align="center">Fecha Mantenimiento</th>
+                                <th align="center">Descripción Mantenimiento</th>
+                                <th align="center">Periodicidad</th>
+                                <th align="center">Inversionista</th>
+                                <th align="center">Convenio</th>
+                                <th align="center">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for mantenimiento in mantenimientos %}
+                            <tr>
+                                <td align="center">{{ mantenimiento.fecha_ultimo_mantenimiento }}</td>
+                                <td align="center">{{ mantenimiento.descripcion_ultimo_mantenimiento }}</td>
+                                <td align="center">
+                                    {% if  mantenimiento.periodicidad == 'di' %} DIARIA {% endif %}
+                                    {% if  mantenimiento.periodicidad == 'se' %} SEMANAL {% endif %}
+                                    {% if  mantenimiento.periodicidad == 'qu' %} QUINCENAL {% endif %}
+                                    {% if  mantenimiento.periodicidad == 'me' %} MENSUAL {% endif %}
+                                    {% if  mantenimiento.periodicidad == 'bm' %} BIMESTRAL {% endif %}
+                                    {% if  mantenimiento.periodicidad == 'tm' %} TRIMESTRAL {% endif %}
+                                    {% if  mantenimiento.periodicidad == 'sm' %} SEMESTRAL {% endif %}
+                                    {% if  mantenimiento.periodicidad == 'an' %} ANUAL {% endif %}
+                                </td>
+                                <td align="center">{{ mantenimiento.inversionista }}</td>
+                                <td align="center">{{ mantenimiento.convenio }}</td>
+                                <td align="center">
+                                    <a href="#modal-desactivate{{mantenimiento.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                    <div class="modal fade" id="modal-desactivate{{mantenimiento.id}}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    <h4 class="modal-title">Eliminar Mantenimiento:</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Está seguro que desea eliminar este registro de mantenimiento?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                    <a href="{% url 'eliminar_mantenimiento' escenario_id mantenimiento.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <br>
+                No hay mantenimientos registrados
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+    <a href="{% url 'wizard_contactos' escenario_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+    <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
 
 {% endblock %}
 
 {% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-mantenimientos";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
-    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_escenario-validations.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_mantenimiento-validations.js"></script>
+
 {% endblock %}
 
 {% block script %}

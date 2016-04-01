@@ -16,8 +16,8 @@
                 if (municipios == '""'){
                     municipios = null;
                 }
-                var disciplinas = JSON.stringify($("#id_disciplinas").val());
                 var reporte = JSON.stringify($("#id_reporte").val());
+                var disciplinas = JSON.stringify($("#id_disciplinas").val());
                 $('#loading').modal('show');
                 $.ajax({
                     url: url,

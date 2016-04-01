@@ -10,6 +10,12 @@ urlpatterns = patterns('solicitudes_escenarios.solicitud.views',
     url(r'^cancelar$', 'cancelar_solicitud', name='cancelar_solicitud'),
     url(r'^cancelar/(\d+)$', 'cancelar_solicitud', name='cancelar_solicitud'),
     url(r'^finalizar/(\d+)$', 'finalizar_solicitud', name='finalizar_solicitud'),
+    url(r'^ver/(\d+)$', 'ver_solicitud', name='ver_solicitud'),
     url(r'^imprimir/(\d+)$', 'imprimir_solicitud', name='imprimir_solicitud'),
+    url(r'^descargar/(\d+)/(\d+)$', 'descargar_adjunto', name='descargar_adjunto'),
+    url(r'^responder/(\d+)$', 'editar_solicitud', name='editar_solicitud'),
+    url(r'^comentar/(\d+)$', 'enviar_comentario', name='enviar_comentario'),
+    url(r'^descargar-todos/(\d+)$', 'descargar_todos_adjuntos_solicitud', name='descargar_todos_adjuntos_solicitud'),
+    url(r'^descargar-discusion/(\d+)/(\d+)$', 'descargar_adjuntos_discusion', name='descargar_adjuntos_discusion'),
 
 )

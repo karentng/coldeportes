@@ -136,7 +136,6 @@ def fix_actores_entidades(request):
         except Group.DoesNotExist:
             digitador = None
             lectura = None
-            pass
 
         if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
             print(entidad)
@@ -493,3 +492,22 @@ def datos_basicos_entidad(request):
         'nombre': nombre,
         'form': form,
     })
+
+
+@login_required
+def fix_solicitudes_escenarios(request):
+    #respuesta
+    entes = Entidad.objects.filter(tipo=5)
+    for e in entes:
+        actores = e.actores
+        actores.respuesta = True
+        actores.save()
+
+    #solicitud
+    tiene_escenario = Actores.objects.filter(escenarios=True)
+    for a in tiene_escenario:
+        a.solicitud = True
+        a.save()
+
+    #termino
+    return HttpResponse("Solicitud y Respuesta asignadas correctamente ")

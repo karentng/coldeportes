@@ -68,8 +68,6 @@
 
                                 <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-md fa-medkit"></i> Historial Lesiones</a></li>
 
-                                <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-md fa-heartbeat"></i> Historial Doping</a></li>
-
                                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                             </ul>
                         </div>
@@ -350,6 +348,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!--HISTORIAL LESIONES-->
                         <div class="tab-pane fade" id="nav-tab2-16">
                             <div class="invoice">
@@ -366,6 +365,7 @@
                                                             <th>TIPO LESIÓN</th>
                                                             <th>FECHA LESIÓN</th>
                                                             <th>PERIODO REHABILITACIÓN</th>
+                                                            <th>SEGMENTO CORPORAL</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -374,54 +374,12 @@
                                                                 <td>{{historial.get_tipo_lesion_display}}</td>
                                                                 <td>{{historial.fecha_lesion}}</td>
                                                                 <td>{{historial.get_periodo_rehabilitacion_display}}</td>
+                                                                <td>{{ historial.get_segmento_corporal_display }}</td>
                                                             </tr>
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>
                                                 {%if not historial_lesiones%}
-                                                    <p align="center">No hay resultados disponibles</p>
-                                                {%endif%}
-                                            </div>
-                                        </address>
-                                        <div align="right">
-                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--HISTORIAL DOPING-->
-                        <div class="tab-pane fade" id="nav-tab2-17">
-                            <div class="invoice">
-                                <div class="invoice-company">
-                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
-                                </div>
-                                <div class="invoice-header">
-                                    <div class="invoice-from">
-                                        <address class="m-t-5 m-b-5">
-                                            <div class="table-responsive">
-                                                <table class="table table-invoice">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>FECHA</th>
-                                                            <th>EVENTO</th>
-                                                            <th>DELEGADO</th>
-                                                            <th>OBSERVACIONES</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for historial in historial_doping %}
-                                                            <tr>
-                                                                <td>{{historial.fecha}}</td>
-                                                                <td>{{historial.evento}}</td>
-                                                                <td>{% if request.tenant.schema_name != 'public' %}{{historial.tipo_identidad_delegado}}:{{historial.identificacion_delegado}}
-                                                                    ,{% endif %} {{ historial.nombre_delegado }}</td>
-                                                                <td>{{historial.observaciones}}</td>
-                                                            </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                                {%if not historial_doping%}
                                                     <p align="center">No hay resultados disponibles</p>
                                                 {%endif%}
                                             </div>

@@ -78,18 +78,19 @@
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
-                                            <p><b>Dirección:</b> {{escuela.direccion}}</p>
-                                            <p><b>Barrio:</b> {{escuela.barrio}}</p>
-                                            <p><b>Ciudad:</b> {{escuela.ciudad}}</p>
-                                            <p><b>Estrato:</b> {{escuela.estrato}}, <b>Comuna:</b> {{escuela.comuna}}</p>
+                                            <p><b>Dirección:</b> {% if escuela.direccion %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
+                                            <p><b>Barrio:</b> {% if escuela.barrio %} {{escuela.barrio}} {% else %} No especificado {% endif %}</p>
+                                            <p><b>Ciudad:</b> {% if escuela.ciudad %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
+                                            <p><b>Estrato:</b> {% if escuela.estrato %} {{escuela.estrato}} {% else %} No especificado {% endif %}</p>
+                                            <p><b>Comuna:</b> {% if escuela.comuna %} {{escuela.comuna}} {% else %} No especificado {% endif %}</p>
                                         </address>
                                         <br/>
-                                        <h5 class="m-t-10">Información de contacto:</h5>
-                                        <p><b>Teléfono:</b> {{escuela.telefono_fijo}}</p>
-                                        <p><b>Teléfono Celular:</b> {{escuela.telefono_celular}}</p>
-                                        <p><b>Email:</b> {{escuela.email}}</p>
-                                        <p><b>Página web:</b> {{escuela.web}}</p>
-                                        <p><b>Nombre del Administrador:</b> {{escuela.nombre_administrador}}</p>
+                                        <h5 class="m-t-10"><b>Información de contacto:</b></h5>
+                                        <p><b>Teléfono:</b> {% if escuela.telefono_fijo %} {{escuela.telefono_fijo}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Teléfono celular:</b> {% if escuela.telefono_celular %} {{escuela.telefono_celular}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Email:</b> {% if escuela.email %} {{escuela.email}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Página web:</b> {% if escuela.web %} {{escuela.web}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Nombre del administrador:</b> {% if escuela.nombre_administrador %} {{escuela.nombre_administrador}} {% else %} No especificado {% endif %}</p>
                                         <div align="right">
                                             <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                         </div>
@@ -110,8 +111,8 @@
                                         <address class="m-t-5 m-b-5">
                                             <b>Servicios que ofrece la Escuela de Formación Deportiva:</b>
                                             <ul>
-                                                {% for i in escuela.servicios.all %}
-                                                <li>{{i}}</li>
+                                                {% for servicio in escuela.servicios.all %}
+                                                <li>{% if servicio %} {{servicio}} {% else %} No especificado</li>
                                                 {% endfor %}
                                             </ul>
                                         </address>

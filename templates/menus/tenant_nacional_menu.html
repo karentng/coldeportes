@@ -1,35 +1,35 @@
-<li class="{% if 'caf' in request.path %} active {% endif %}">
+<li {% if 'caf' in request.path %} class="active" {% endif %}>
     <a href="{% url 'listar_cafs' %}">
-        <span class="colorMenu">Listado de centros de acondicionamiento nacionales</span>
+        <span>Listado de centros de acondicionamiento nacionales</span>
     </a>
 </li>
 <li class="{% if 'deportistas' in request.path %} active {% endif %}">
     <a href="{% url 'deportista_listar' %}">
-        <span class="colorMenu">Listado de deportistas nacionales</span>
+        <span>Listado de deportistas nacionales</span>
     </a>
 </li>
 <li class="{% if 'dirigentes' in request.path %} active {% endif %}">
     <a href="{% url 'dirigentes_listar' %}">
-        <span class="colorMenu">Listado de dirigentes nacionales</span>
+        <span>Listado de dirigentes nacionales</span>
     </a>
 </li>
 <li class="{% if 'personal-apoyo' in request.path %} active {% endif %}">
     <a href="{% url 'personal_apoyo_listar' %}">
-        <span class="colorMenu">Listado de personal de apoyo nacional</span>
+        <span>Listado de personal de apoyo nacional</span>
     </a>
 </li>
 <li class="{% if 'escenarios' in request.path %} active {% endif %}">
     <a href="{% url 'listar_escenarios' %}">
-        <span class="colorMenu">Listado de escenarios nacionales</span>
+        <span>Listado de escenarios nacionales</span>
     </a>
 </li>
 <li class="{% if 'escuelas' in request.path %} active {% endif %}">
     <a href="{% url 'escuela_deportiva_listar' %}">
-        <span class="colorMenu">Listado de escuelas de formación deportiva nacionales</span>
+        <span>Listado de escuelas de formación deportiva nacionales</span>
     </a>
 </li>
 <li class="{% if 'cajas' in request.path %} active {% endif %}">
     <a href="{% url 'listar_ccfs' %}">
-        <span class="colorMenu">Listado de cajas de compensación familiar nacionales</span>
+        <span>Listado de cajas de compensación familiar nacionales</span>
     </a>
 </li>

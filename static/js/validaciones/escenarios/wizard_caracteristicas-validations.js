@@ -15,30 +15,30 @@ $(document).ready(function() {
                 plano_archivo: {
                     validators: {
                         file: {
-                            extension: 'pdf',
-                            type: 'application/pdf',
-                            maxSize: 3170304,   // 2048 * 1024
-                            message: 'Por favor escoja un archivo en formato pdf menor a 3MB'
+                            extension: 'pdf,rar,zip,jpeg,jpg,png',
+                            type: 'application/pdf,application/x-rar-compressed,application/zip,image/jpeg,image/png',
+                            maxSize: 5242880,   // 5120 * 1024
+                            message: 'Por favor escoja un archivo en formato pdf, rar, zip, jpeg, jpg o png menor a 5MB'
                         }
                     }
                 },
                 ficha_catastral: {
                     validators: {
                         file: {
-                            extension: 'pdf',
-                            type: 'application/pdf',
-                            maxSize: 3170304,   // 2048 * 1024
-                            message: 'Por favor escoja un archivo en formato pdf menor a 3MB'
+                            extension: 'pdf,rar,zip,jpeg,jpg,png',
+                            type: 'application/pdf,application/x-rar-compressed,application/zip,image/jpeg,image/png',
+                            maxSize: 5242880,   // 5120 * 1024
+                            message: 'Por favor escoja un archivo en formato pdf, rar, zip, jpeg, jpg o png menor a 5MB'
                         }
                     }
                 },
                 certificado_tradicio_libertad: {
                     validators: {
                         file: {
-                            extension: 'pdf',
-                            type: 'application/pdf',
-                            maxSize: 3170304,   // 2048 * 1024
-                            message: 'Por favor escoja un archivo en formato pdf menor a 3MB'
+                            extension: 'pdf,rar,zip,jpeg,jpg,png',
+                            type: 'application/pdf,application/x-rar-compressed,application/zip,image/jpeg,image/png',
+                            maxSize: 5242880,   // 5120 * 1024
+                            message: 'Por favor escoja un archivo en formato pdf, rar, zip, jpeg, jpg o png menor a 5MB'
                         }
                     }
                 }

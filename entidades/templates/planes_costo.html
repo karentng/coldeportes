@@ -3,7 +3,7 @@
 
 {% block miga_pan %}
 	<li><a href="{% url 'inicio' %}">Inicio</a></li>
-	<li><a href="">Club</a>
+	<li><a href="">Club</a></li>
 	<li class="active">Planes</li>
 {% endblock %}
 
@@ -42,9 +42,10 @@
         <div class="col-md-9">
             <h3 >Planes Registrados Actualmente:</h3>
                 {% if planes %}
+                    <div class="table-responsive">
                     <table id="tabla-planes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                         <thead>
-                            </tr>
+                            <tr>
                                 <th>Nombre</th>
                                 <th>Precio</th>
                                 <th>Descripción</th>
@@ -104,7 +105,7 @@
                         No se encuentran planes de costo registrados
                     </div>
                 {% endif %}
-
+                </div>
 
         </div>
     </div>

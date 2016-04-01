@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-    Solicites de adecuación de escenarios
+    Solicitudes de adecuación de escenarios
 {% endblock %}
 
 {% block miga_pan %}
@@ -21,7 +21,7 @@
 
 
 {% block titulo_panel %}
-    Solicites de adecuación de escenarios
+    Solicitudes de adecuación de escenarios
 {% endblock %}
 
 {% block js %}
@@ -44,7 +44,7 @@
             <table id="tabla-solicitudes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th>Codigo Unico</th>
+                        <th>Código Único</th>
                         <th>Escenarios</th>
                         <th>Prioridad</th>
                         <th>Estado</th>
@@ -63,15 +63,23 @@
                         <td>{{ s.para_quien }}</td>
                         <td>{{ s.fecha }}</td>
                         <td>
-                            <a href=''>
-                                <i class="fa fa-eye"></i> Ver mas
+                            <a href='{% url 'ver_solicitud' s.id %}'>
+                                <i class="fa fa-eye"></i> Ver más
                             </a>
                             <br/>
-                            {% if s.estado == 0 %}
-                                <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud' s.id %}">
-                                    <i class="fa fa-trash"></i> Cancelar solicitud
-                                </a>
-                                <br/>
+                            {% if perms.solicitud.add_solicitudescenario%}
+                                {% if s.estado == 0 %}
+                                    <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud' s.id %}">
+                                        <i class="fa fa-trash"></i> Cancelar solicitud
+                                    </a>
+                                    <br/>
+                                {% endif %}
+                                {% if s.estado == 1 %}
+                                    <a href="{% url 'editar_solicitud' s.id %}">
+                                        <i class="fa fa-envelope"></i> Completar solicitud
+                                    </a>
+                                    <br/>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

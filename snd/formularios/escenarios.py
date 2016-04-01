@@ -147,9 +147,7 @@ class MantenimientoEscenarioForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(MantenimientoEscenarioForm, self).__init__(*args, **kwargs)
         self.fields['descripcion_ultimo_mantenimiento'].widget.attrs['rows'] = 3
-        self.fields['razones_no_mantenimiento'].widget.attrs['rows'] = 3
         self.fields['periodicidad'] = adicionarClase(self.fields['periodicidad'], 'one')
-
 
     class Meta:
         model = Mantenimiento
@@ -157,6 +155,26 @@ class MantenimientoEscenarioForm(ModelForm):
         widgets = {
             'fecha_ultimo_mantenimiento': MyDateWidget(),
         }
+
+    def clean(self):
+        cleaned_data = super(MantenimientoEscenarioForm, self).clean()
+        if not self._errors:
+            try:
+                fecha_mantenimiento = cleaned_data.get('fecha_ultimo_mantenimiento')
+            except Exception:
+                fecha_mantenimiento = None
+
+            fecha_actual = datetime.date.today()
+            if fecha_mantenimiento:
+                if fecha_mantenimiento >= fecha_actual:
+                    mensaje = 'La fecha no es válida, debe ser igual o anterior a la fecha actual'
+                    self.add_error('fecha_ultimo_mantenimiento', mensaje)
+                else:
+                    return cleaned_data
+            else:
+                return cleaned_data
+
+        return cleaned_data
 
 class VideoEscenarioForm(ModelForm):
     required_css_class = 'required'

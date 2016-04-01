@@ -176,7 +176,6 @@ def participante_puntos(request, competencia_id, participante_id=None):
     return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         "form": form,
         'wizard_stage': 1,
-        'participantes': participantes,
         'individual': True,
         'puntos': True,        
         'competencia_id': competencia_id,
@@ -524,3 +523,85 @@ def get_categorias(request,deporte_id):
     return JsonResponse({
         'data': data
     })
+
+
+
+# cargar por excel
+@login_required
+def cargas_competencias(request, juego_id):
+    try:
+        juego = Juego.objects.get(id=juego_id)
+    except Exception:
+        return redirect("listar_juegos")
+
+    form = CompetenciasBaseDeDatos()
+
+    if request.method == 'POST':
+        form = CompetenciasBaseDeDatos(request.POST, request.FILES)
+        if form.is_valid():
+            archivo = request.FILES['archivo']
+            nombre = archivo.name.split('.')
+
+            FORMATOS_PERMITIDOS = ['csv', 'xls', 'xlsx']
+
+            if nombre[len(nombre)-1] in FORMATOS_PERMITIDOS:
+                competencias, datemode = leer_competencias(request, archivo)
+                crear_competencias(request, competencias, datemode, juego)
+            else:
+                from django.forms.util import ErrorList
+                errors = form._errors.setdefault("archivo", ErrorList())
+                errors.append(u"Error de formato, debe ser CSV, XLS o XLSX")
+
+    return render(request, 'cargado_archivos/cargas_competencias.html', {
+        'form': form,
+        'juego_id': juego_id,
+    })
+
+@login_required
+def crear_competencias(request, competencias, datemode, juego):
+    import xlrd
+    import datetime
+    for competencia in competencias:
+        obj = Competencia()
+        obj.nombre = competencia[0]
+
+        date = datetime.datetime(1899, 12, 30)
+        get_col2 = str(date + datetime.timedelta(competencia[1]))[:10]
+        d = datetime.datetime.strptime(get_col2, "%Y-%m-%d")
+
+        obj.fecha_competencia = d.strftime("%Y-%m-%d")#xlrd.xldate_as_tuple(competencia[1], datemode)
+        obj.tipo_competencia = competencia[2]
+        obj.tipo_registro = competencia[3]
+        obj.lugar = competencia[4]
+        obj.tipos_participantes = competencia[5]
+        obj.deporte = TipoDisciplinaDeportiva.objects.get(id=competencia[6])
+        obj.categoria = CategoriaDisciplinaDeportiva.objects.get(id=competencia[7])
+        obj.modalidad = ModalidadDisciplinaDeportiva.objects.get(id=competencia[8])
+        obj.descripcion = competencia[9]
+        obj.juego = juego
+        obj.save()
+
+@login_required
+def leer_competencias(request, archivo):
+    import xlrd
+    archivo = archivo.read()
+    excel = xlrd.open_workbook(file_contents=archivo)
+    hoja = excel.sheet_by_name('Hoja1')
+
+    numero_filas = hoja.nrows 
+    numero_celdas = hoja.ncols
+    fila_actual = 1 # -1 para tomar la primera linea
+    competencias = []
+    while fila_actual < numero_filas:
+        datos = []
+        celda_actual = 0
+
+        while celda_actual < numero_celdas:
+            valor = hoja.cell(fila_actual, celda_actual).value
+            datos.append(valor)
+            celda_actual += 1
+
+        competencias.append(datos)
+        fila_actual += 1
+    print(competencias)
+    return [competencias, excel.datemode]
