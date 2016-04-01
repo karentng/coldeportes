@@ -21,6 +21,7 @@
 
 {% block js %}
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/solicitud_escenario/wizard-respuesta-validations.js"></script>
 {% endblock %}
 
 {% block titulo_panel %}
@@ -103,7 +104,37 @@
                                     {{ solicitud.estado_actual_escenario|upper }}
                                 </p>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <strong>Nombre solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.nombre_solicitante|upper }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong>Identificación solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.id_solicitante|upper }}
+                                </p>
+                            </div>
+                             <div class="col-lg-6">
+                                <strong>Teléfono solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.tel_solicitante|upper }}
+                                </p>
+                            </div>
+                             <div class="col-lg-6">
+                                <strong>Dirección solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.direccion_solicitante|upper }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong>Vinculo del solicitante con la entidad</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.get_vinculo_solicitante_display|upper }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
                                 <strong>Descripción</strong><br><br>
                                 <p class="f-s-12 text-inverse">
                                     {{ solicitud.descripcion|upper }}
@@ -180,7 +211,7 @@
                             {% if responder and solicitud.estado == 0 %}
                             <div class="row">
                                 <h5><strong>Responder</strong></h5>
-                                <form action="{% url 'enviar_respuesta' solicitud.id solicitud.entidad_solicitante.id  %}" method="post" enctype="multipart/form-data">
+                                <form id="form-respuesta-solicitud" action="{% url 'enviar_respuesta' solicitud.id solicitud.entidad_solicitante.id  %}" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="input-group">
                                         <div class="form-group">
