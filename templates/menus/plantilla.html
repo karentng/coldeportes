@@ -11,17 +11,17 @@
         <span class="colorMenu">INICIO</span>
     </a>
 </li>
-<!-- ----------------------------------------------- -->
+<!-- =============================================== -->
 
 <!-- CUANDO EL USUARIO ES SUPER USUARIO Y NO HAY RESTRICCIÓN DE TENANT -->
 {% if request.user.is_superuser %}
     {% include "menus/aplicacion/usuarios.html" %}
 {% endif %}
-<!-- ----------------------------------------------- -->
+<!-- =============================================== -->
 
 {% if request.tenant.schema_name != 'public' %}
     {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo == 3%}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'gestion-socios' in request.path or 'planes' in request.path%} active {% endif %}">
+        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path%} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
                 <i class="fa fa-cogs"></i>
@@ -29,17 +29,17 @@
             </a>
             <ul class="sub-menu">
                 {% if request.user.is_superuser %}
-                    <li class="has-sub {% if 'datos-basicos-entidad' in request.path %} active {% endif %}">
-                        <a href="{% url 'datos_basicos_entidad' %}"><span class="colorMenu">Modificar datos básicos de la entidad</span></a>
+                    <li {% if 'datos-basicos-entidad' in request.path %} class="active" {% endif %}>
+                        <a href="{% url 'datos_basicos_entidad' %}"><span >Modificar datos básicos de la entidad</span></a>
                     </li>
                 {% endif %}
                 {% if request.tenant.tipo == 3 %}
                     {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
-                        <li class="has-sub {% if 'gestion-socios' in request.path %} active {% endif %}">
-                            <a href="{% url 'gestion_socios' %}"><span class="colorMenu">Gestionar socios del club</span></a>
+                        <li {% if 'socio' in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'gestion_socios' %}"><span>Gestionar socios del club</span></a>
                         </li>
-                        <li class="has-sub {% if 'planes' in request.path %} active {% endif %}">
-                            <a href="{% url 'crear_plan_de_costo' %}"><span class="colorMenu">Gestionar planes de costos del club</span></a>
+                        <li {% if 'planes' in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
                         </li>
                     {% endif %}
                 {% endif %}
@@ -48,6 +48,25 @@
     {% endif %}
 {% endif %}
 
+{% if  request.tenant.tipo == 2 %}
+    <li class="has-sub {% if 'casos-doping' in request.path %} active {% endif %}">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <i class="fa fa-heartbeat"></i>
+            <span class="colorMenu">CASOS DE DOPING</span>
+        </a>
+        <ul class="sub-menu">
+            {% if perms.listados_doping.add_casodoping %}
+                <li class="{% if 'casos-doping/registrar' in request.path %} active {% endif %}">
+                    <a href="{% url 'registrar_caso_doping' %}">Registrar caso de doping</a>
+                </li>
+            {% endif %}
+            <li class="{% if 'casos-doping/listar' in request.path or 'casos-doping/editar' in request.path %} active {% endif %}">
+                <a href="{% url 'listar_casos_doping' %}">Listar casos de doping</a>
+            </li>
+        </ul>
+    </li>
+{% endif %}
 
 {% if not request.user.is_superuser %}
 
@@ -95,6 +114,9 @@
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
 
+        {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+            {% include "menus/aplicacion/solicitudescenarios.html" %}
+        {%endif%}
 
     {% endif %}
 

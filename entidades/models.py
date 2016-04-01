@@ -78,6 +78,9 @@ class Actores(models.Model):
     escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva", default=False)
     noticias = models.BooleanField(verbose_name="Noticias", default=False)
     publicidad = models.BooleanField(verbose_name="Publicidad", default=True)
+    listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
+    solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
+    respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
 
     def resumen(self):
         actores = []
@@ -102,6 +105,7 @@ class Entidad(TenantMixin): # Entidad deportiva
     ciudad = models.ForeignKey(Ciudad)
     telefono = models.CharField(max_length=255, verbose_name="teléfono", blank=True)
     descripcion = models.TextField(verbose_name="descripción", blank=True, null=True)
+    foto_info = models.CharField(null=True, blank=True, max_length=255)
 
     tipo = models.IntegerField(choices=TIPOS)
     actores = models.OneToOneField(Actores, null=True)
@@ -308,7 +312,8 @@ class Ente(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -330,7 +335,8 @@ class Comite(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -347,7 +353,8 @@ class CajaDeCompensacion(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -392,7 +399,8 @@ class FederacionParalimpica(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -421,7 +429,8 @@ class LigaParalimpica(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -441,6 +450,9 @@ class ClubParalimpico(ResolucionReconocimiento):
     def obtener_padre(self):
         return self.liga
 
+    def disciplinas_str(self):
+        return ",".join([d.descripcion for d in self.disciplinas.all()])
+
     def historiales_para_avalar(self,tipo):
         from snd.models import HistorialDeportivo
         return [x.obtener_info_aval() for x in HistorialDeportivo.objects.filter(estado='Pendiente',tipo=tipo,deportista__estado=0)]
@@ -450,13 +462,16 @@ class ClubParalimpico(ResolucionReconocimiento):
             'tipo_tenant': type(self).__name__,
             'mostrar_info':True,
             'nombre':self.nombre,
-            'disciplina': self.discapacidad,
+            'disciplina': self.get_discapacidad_display(),
+            'deportes' : self.disciplinas_str(),
+            'has_deportes': True,
             'descripcion': self.descripcion,
             'ciudad': self.ciudad,
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -478,7 +493,8 @@ class Federacion(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -716,7 +732,8 @@ class Liga(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -746,8 +763,9 @@ class SocioClub(models.Model):
     nombre = models.CharField(max_length=255, verbose_name="Nombres")
     apellido = models.CharField(max_length=255, verbose_name="Apellidos")
     correo = models.EmailField(max_length=255, blank=True, verbose_name="Correo electrónico")
-    ciudad = models.ForeignKey(Ciudad)
-    empresa = models.CharField(max_length=255, blank=True, verbose_name="Empresa")
+    fecha_incorporacion = models.DateField(verbose_name="Fecha de incorporación")
+    ciudad = models.ForeignKey(Ciudad, verbose_name="Ciudad de residencia")
+    direccion = models.CharField(max_length=255, verbose_name="Dirección de residencia", blank=True)
     estado = models.IntegerField(choices=ESTADO, default=0)
 
     class Meta:
@@ -755,7 +773,6 @@ class SocioClub(models.Model):
 
     def __str__(self):
         return self.nombre + self.apellido
-
 
 
 class PlanesDeCostoClub(models.Model):
@@ -766,7 +783,7 @@ class PlanesDeCostoClub(models.Model):
     nombre=models.CharField(max_length=200)
     precio=models.IntegerField()
     descripcion = models.TextField(verbose_name="descripción")
-    estado =models.IntegerField(choices=ESTADO, default=1)
+    estado =models.IntegerField(choices=ESTADO, default=0)
 
     def __str__(self):
         return self.nombre
@@ -803,7 +820,8 @@ class Club(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias(),
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias(),
             'socios': self.socios.all(),
             'planes_de_costo': self.planes_de_costo.all()
         }
@@ -822,7 +840,8 @@ class Caf(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -840,7 +859,8 @@ class EscuelaDeportiva_(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -957,6 +977,9 @@ class Permisos(models.Model):
     escuelas_deportivas = models.IntegerField(choices=ACTORES, default=1)
     noticias = models.IntegerField(choices=ACTORES, default=1)
     publicidad = models.IntegerField(choices=ACTORES, default=2)
+    listados_doping = models.IntegerField(choices=ACTORES, default=1)
+    solicitud = models.IntegerField(choices=ACTORES, default=1)
+    respuesta = models.IntegerField(choices=ACTORES, default=1)
 
     class Meta:
         unique_together = ('entidad','tipo',)
@@ -972,7 +995,8 @@ class Permisos(models.Model):
             opcion = [1,5]
 
         actores_seleccionados = []
-        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias','publicidad']
+        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)

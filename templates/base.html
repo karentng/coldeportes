@@ -79,13 +79,13 @@
                     </button>
                 </div>
                 <!-- end mobile sidebar expand / collapse button -->
-                <ul class="nav navbar-nav navbar-left hidden-xs">
+                <div class="nav navbar-nav navbar-left hidden-xs">
                     <ol class="breadcrumb pull-right" style="margin: 20px 0 0 45px">
                         {% block miga_pan %}
                             
                         {% endblock %}
                     </ol>
-                </ul>
+                </div>
 
                 <!-- begin header navigation right -->
                 <ul class="nav navbar-nav navbar-right">
@@ -119,7 +119,7 @@
                             </li>
                         </ul>
                     </li>
-                    <!--Fin camapana notificaciones-->
+                    <Fin camapana notificaciones-->
                     {% if request.user.username %}
                     <li class="dropdown navbar-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
@@ -143,11 +143,13 @@
                         </ul>
                     </li>
                     {% else %}
+                    <li>
                         <div class="p-t-10 p-r-20">
-                        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">
-                            <i class="fa fa-key"></i> Iniciar sesión
-                        </a>
+                            <a href="{% url 'login' %}" class="btn btn-primary btn-sm">
+                                <i class="fa fa-key"></i> Iniciar sesión
+                            </a>
                         </div>
+                    </li>
                     {% endif %}
                 </ul>
                 <!-- end header navigation right -->
@@ -245,15 +247,15 @@
         </div>
         {% block footer %}
         <footer class="footer hidden-xs hidden-sm" id="footer">
-            <div class=" contenido-footer">
-                <div class="row" align="center">
+            <div class="contenido-footer">
+                <div class="row" style="text-align: center;">
                     <div class="col-md-4 col-lg-3 item-footer p-b-15">
-                        <img src="{{STATIC_URL}}img/LogoPais.png" width="200">
+                        <img src="{{STATIC_URL}}img/LogoPais.png" width="200" alt="Logo País">
                     </div>
                     <div class="col-md-4 col-lg-4 item-footer p-b-15" id="logo-coldeportes">
-                        <img src="{{STATIC_URL}}img/LogoColdeportes.png" width="260">
+                        <img src="{{STATIC_URL}}img/LogoColdeportes.png" width="260" alt="Logo Coldeportes">
                     </div>
-                    <div class="col-md-4 col-lg-5 item-footer contact-footer" style="padding:35px" align="justify">
+                    <div class="col-md-4 col-lg-5 item-footer contact-footer" style="padding:35px; text-align: justify;">
                         <p>
                             Coldeportes Av. 68 No 55-65
                             PBX: conmutador 57-1- 4377030
@@ -301,6 +303,19 @@
     <!-- ================== END PAGE LEVEL JS ================== -->
     <script src="{{STATIC_URL}}js/select2.min.js"></script> 
     <script src="{{STATIC_URL}}js/jquery.datetimepicker.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            $.each($("span.help-block:not(.has-error span)"),function(){
+                var bloqueActual = $(this);
+                nuevoElemento = bloqueActual.siblings("label");
+                nuevoElemento.after(" <span style='font-size:14px;color: #0044cc;'><i class='fa fa-question-circle add-tooltip' data-placement='right' data-toggle='tooltip' data-original-title='"+bloqueActual.text()+"'></i></span>");
+                bloqueActual.remove();
+            });
+        });
+    </script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             $('[data-toggle=tooltip]').tooltip();
@@ -335,6 +350,8 @@
             });
         {% endfor %}
     </script>
+
+
     {% block js %}
     {% endblock %}
     {% block script %}

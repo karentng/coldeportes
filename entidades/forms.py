@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import datetime
 from django.forms import *
 from django import forms
 from entidades.models import *
@@ -343,13 +344,35 @@ class SocioClubForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SocioClubForm, self).__init__(*args, **kwargs)
-        if self.instance.pk != None:
-            self.fields['tipo_documento'].widget.attrs['readonly'] = 1
-            self.fields['numero_documento'].widget.attrs['readonly'] = 1
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
 
     class Meta:
         model = SocioClub
         exclude = ('estado','club_id')
+        widgets = {
+            'fecha_incorporacion': MyDateWidget(),
+        }
+
+    def clean(self):
+
+        cleaned_data = super(SocioClubForm, self).clean()
+        if not self._errors:
+            try:
+                fecha_incorporacion = cleaned_data.get('fecha_incorporacion')
+            except Exception:
+                fecha_incorporacion = None
+
+            fecha_actual = datetime.date.today()
+            if fecha_incorporacion:
+                if fecha_incorporacion >= fecha_actual:
+                    mensaje = 'La fecha no es válida, debe ser igual o anterior a la fecha actual'
+                    self.add_error('fecha_incorporacion', mensaje)
+                else:
+                    return cleaned_data
+            else:
+                return cleaned_data
+
+        return cleaned_data
         
         
 #Formulario Planes de Costo de un club.

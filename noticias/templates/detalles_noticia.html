@@ -42,6 +42,7 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
     </script>
+    <script type="text/javascript">var switchTo5x=true;</script>
     <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
     <script type="text/javascript">stLight.options({publisher: "90bca334-7e2d-4235-872f-e3936e302163", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
 {% endblock %}
@@ -53,27 +54,25 @@
 {% block contenido_panel %}
 
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-8 col-md-offset-2" >
             <center><h1>{{ noticia.titulo }}</h1></center>
-            <div class="social-container">
-                <span class='st_fblike_hcount' displayText='Facebook Like'></span>
-                <span class='st_facebook_hcount' displayText='Facebook'></span>
-                <span class='st_twitter_hcount' displayText='Tweet'></span>
-                <span class='st_linkedin_hcount' displayText='LinkedIn'></span>
-                <span class='st_googleplus_hcount' displayText='Google +'></span>
-            </div>
-            <p style="text-align:right;">Fecha de Publicación: {{ noticia.fecha_inicio }}</p>
-            <br><br>
+            <hr class="line-style">
+            <p >Fecha de Publicación: {{ noticia.fecha_inicio|date:"l, F j, Y" }}</p>
+
             {% if noticia.video  %}
                 <div class="embed-responsive embed-responsive-16by9" style="margin-top: 30px;">
                     <iframe class="embed-responsive-item" src="{{ noticia.video }}"></iframe>
                 </div>
-            {% elif noticia.foto != "" %}
-                <img class="img-responsive img-right" src="{{ MEDIA_URL }}{{ noticia.foto }}">
             {% endif %}
             <br>
             <div class="cuerpo_noticia">
-                {% if noticia.foto != "" and noticia.video %}
+                <div class="social-container">
+                    <span class='st_facebook_large' displayText='Facebook'></span>
+                    <span class='st_twitter_large' displayText='Tweet'></span>
+                    <span class='st_googleplus_large' displayText='Google +'></span>
+                    <span class='st_linkedin_large' displayText='LinkedIn'></span>
+                </div>
+                {% if noticia.foto != "" %}
                     <img class="img-responsive img-right" src="{{ MEDIA_URL }}{{ noticia.foto }}">
                 {% endif %}
                 <p>{{ noticia.cuerpo_noticia|safe }}</p>

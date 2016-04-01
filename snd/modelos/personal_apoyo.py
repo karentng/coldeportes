@@ -4,6 +4,8 @@ from django.db import models
 from entidades.models import Entidad
 from entidades.models import Ciudad, Entidad, Nacionalidad
 from coldeportes.utilities import calculate_age
+from django.conf import settings
+import os
 #======================= ================================================================================
 #Modelos para PersonalApoyo
 

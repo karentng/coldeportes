@@ -14,6 +14,18 @@
 {% block js %}
     <script type="text/javascript" src="{{STATIC_URL}}js/validaciones/entidad/editar_entidad.js"></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+            $('#id_solicitud, label[for="id_solicitud"]').hide();
+        });
+        $("#id_escenarios").on('change',function(){
+            var escenario = $(this);
+            if(escenario.is(":checked")){
+                $("#id_solicitud").prop('checked', true);
+            }else{
+                $("#id_solicitud").prop('checked', false);
+            }
+
+        });
         $( "#id_pagina" ).blur(function(){
             var texto = $(this).val();
             var inicio = texto[0];

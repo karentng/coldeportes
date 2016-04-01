@@ -43,12 +43,19 @@ fields = {
             }
         }
     },
-    ciudad: {
+    fecha_incorporacion: {
         validators: {
             notEmpty: {
-                message: "La ciudad no puede ser vacía"
+                message: "La fecha de incorporación no puede ser vacía"
+            },
+            date: {
+                format: "YYYY-MM-DD",
+                message: "La fecha no es válida"
             }
         }
     }
 };
+$("#id_fecha_incorporacion").on('change',function(e){
+   $(form).bootstrapValidator('revalidateField', 'fecha_incorporacion');
+});
 $.getScript(base+"js/validaciones/validations-base.js");
