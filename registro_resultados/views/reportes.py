@@ -62,7 +62,8 @@ def medalleria_genero(request):
 
             return JsonResponse(medallas)
         else:
-            print('seleccione un juego')
+            #print('seleccione un juego')
+            pass
 
     else:
         medallas = list(Participante.objects.filter(posicion__in=[1,2,3]).annotate(descripcion=F('posicion')).values('descripcion', 'departamento').annotate(cantidad=Count('id')))

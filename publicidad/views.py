@@ -162,7 +162,7 @@ def crop_pic(request):
 
     # Croppic will parse the information returned into json. content_type needs
     # to be set as 'text/plain'
-    print(response_data)
+    #print(response_data)
     return JsonResponse(response_data)
 
 

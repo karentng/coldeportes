@@ -603,5 +603,5 @@ def leer_competencias(request, archivo):
 
         competencias.append(datos)
         fila_actual += 1
-    print(competencias)
+    #print(competencias)
     return [competencias, excel.datemode]
