@@ -3,6 +3,7 @@ from django import forms
 from registro_resultados.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
 from reportes.utilities import add_visualizacion
+from django.core.exceptions import ValidationError
 
 class JuegoForm(forms.ModelForm):
     required_css_class = 'required'
@@ -53,6 +54,26 @@ class ParticipanteTiempoForm(forms.ModelForm):
         super(ParticipanteTiempoForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
     
+    def clean_marca(self):
+        marca = self.cleaned_data['marca']
+        try:
+            if marca.isdigit() or "." in marca or ":" in marca:
+                pass
+            else:
+                raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        except:
+            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+
+    def clean_tiempo(self):
+        tiempo = self.cleaned_data['tiempo']
+        try:
+            if tiempo.isdigit() or "." in tiempo or ":" in tiempo:
+                pass
+            else:
+                raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+        except:
+            raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+    
     class Meta:
         model = Participante
         exclude = ("competencia", 'puntos', 'equipo')
@@ -84,6 +105,17 @@ class ParticipanteMetrosForm(forms.ModelForm):
         competencia = kwargs.pop('competencia')
         super(ParticipanteMetrosForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+
+    def clean_marca(self):
+        marca = self.cleaned_data['marca']
+        try:
+            if marca.isdigit() or "." in marca or ":" in marca:
+                pass
+            else:
+                raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        except:
+            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+
     
     class Meta:
         model = Participante
@@ -115,6 +147,28 @@ class EquipoTiempoForm(forms.ModelForm):
         super(EquipoTiempoForm, self).__init__(*args, **kwargs)
         self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
 
+
+    def clean_marca(self):
+        marca = self.cleaned_data['marca']
+        try:
+            if marca.isdigit() or "." in marca or ":" in marca:
+                pass
+            else:
+                raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        except:
+            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+
+    def clean_tiempo(self):
+        tiempo = self.cleaned_data['tiempo']
+        try:
+            if tiempo.isdigit() or "." in tiempo or ":" in tiempo:
+                pass
+            else:
+                raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+        except:
+            raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+    
+
     class Meta:
         model = Equipo
         exclude = ("competencia", 'puntos')
@@ -142,6 +196,17 @@ class EquipoMetrosForm(forms.ModelForm):
         model = Equipo
         exclude = ("competencia", 'tiempo', 'puntos')
 
+    def clean_marca(self):
+        marca = self.cleaned_data['marca']
+        try:
+            if marca.isdigit() or "." in marca or ":" in marca:
+                pass
+            else:
+                raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        except:
+            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+
+    
 class CompetenciasBaseDeDatos(forms.Form):
     archivo = forms.FileField(label="Archivo de competencias")
 
@@ -153,7 +218,7 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
     )
     
 
-
+    juegos = forms.ModelChoiceField(queryset=Juego.objects.all(), required=False)
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     generos = forms.MultipleChoiceField(label="Géneros", required=False, widget=forms.SelectMultiple(attrs={'placeholder': 'Género'}), choices=GENEROS)
     visualizacion = forms.ChoiceField(label="Visualización")
@@ -164,6 +229,7 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
         super(FiltrosMedalleriaDeptGenForm, self).__init__(*args, **kwargs)
         self.fields['departamentos'] = adicionarClase(self.fields['departamentos'], 'many')
         self.fields['generos'] = adicionarClase(self.fields['generos'], 'many')
+        self.fields['juegos'] = adicionarClase(self.fields['juegos'], 'one')
         
         if eliminar:
             del self.fields[eliminar]

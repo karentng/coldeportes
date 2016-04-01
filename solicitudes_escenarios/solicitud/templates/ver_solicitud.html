@@ -22,6 +22,20 @@
 {% block js %}
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
     <script src="{{ STATIC_URL }}js/validaciones/solicitud_escenario/wizard-respuesta-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/gallery-v2.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            Gallery.init();
+        });
+    </script>
 {% endblock %}
 
 {% block titulo_panel %}
@@ -97,6 +111,25 @@
                                 <p class="f-s-12 text-inverse">
                                     {{ solicitud.escenarios_str }}
                                 </p>
+                                {% comment %}
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                        {% for escenario in solicitud.escenarios.all %}
+                                            <tr>
+                                                <td>{{escenario.nombre}}</td>
+                                                <td>
+                                                    <a href="#modal-esc-{{ escenario.id }}" data-toggle="modal"  class="btn btn-info btn-sm" onclick=set_mapa({{ escenario.id }},{{escenario.datosMostrar}},{{escenario.posicionInicial}})>
+                                                        <i class="fa fa-info-circle"></i> Ver mas
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% include 'ver_escenario_solicitud.html' %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endcomment %}
                             </div>
                             <div class="col-lg-6">
                                 <strong>Estado actual de los escenarios</strong><br><br>

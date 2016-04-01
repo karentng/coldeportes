@@ -52,7 +52,7 @@ def editar_articulo(request, articulo_id):
     """
     articulo_edicion =  Articulo.objects.get(id=articulo_id)
     articulo_form = ArticuloForm(instance=articulo_edicion)
-    print('alskalskas')
+
     if request.method == 'POST':
 
         articulo_form = ArticuloForm(request.POST, request.FILES, instance=articulo_edicion)
@@ -70,33 +70,22 @@ def editar_articulo(request, articulo_id):
     })
 
 @login_required
-def listar_articulo(request, articulo_id):
+@all_permission_required('manual.add_articulo')
+def eliminar_articulo(request, articulo_id):
     """
-    Enero 28 / 2016
+    Marzo 30 / 2016
     Autor: Karent Narvaez Grisales
     
-    Ver artículos de manual de usuario.
+    Eliminar un artículo en el manual de usuario.
 
     :param request:   Petición realizada
     :type request:    WSGIRequest
+    :param articulo_id: Identificador del artículo
+    :type articulo_id: String
     """
-    articulo = get_object_or_404(Articulo,id=articulo_id)
-
-    items_manual = Articulo.MODULOS
-    articulos = Articulo.objects.all()
-    entidades = TIPOS
-
-
-    mensaje = "No hay artísulos registrados."
-
-    return render(request, 'listar_articulo.html', {
-        'articulos': articulos,
-        'mensaje': mensaje,
-        'items': items_manual,
-        'articulo': articulo,
-        'entidades': entidades
-
-    })
+    articulo = get_object_or_404(Articulo, id=articulo_id)
+    articulo.delete()
+    return redirect('listar_manual')
 
 
 def encontrar_articulos_tenant(tenant_actual):
@@ -117,6 +106,39 @@ def filtrar_entidades(entidades, tenant_actual):
         return entidades
 
 @login_required
+def listar_articulo(request, articulo_id):
+    """
+    Enero 28 / 2016
+    Autor: Karent Narvaez Grisales
+    
+    Ver artículos de manual de usuario.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    """
+    articulo = get_object_or_404(Articulo,id=articulo_id)
+
+    items_manual = Articulo.MODULOS
+    entidades = TIPOS
+    tenant_actual = request.tenant
+    mensaje = "No hay artículos registrados."
+
+
+    articulos = encontrar_articulos_tenant(tenant_actual)
+    entidades = filtrar_entidades(entidades, tenant_actual)
+
+    return render(request, 'listar_articulo.html', {
+        'articulos': articulos,
+        'mensaje': mensaje,
+        'items': items_manual,
+        'articulo': articulo,
+        'entidades': entidades
+
+    })
+
+
+
+@login_required
 def listar(request):
     """
     Febrero 9 / 2016
@@ -128,15 +150,13 @@ def listar(request):
     :type request:    WSGIRequest
     """
     items_manual = Articulo.MODULOS
-    tenant_actual = request.tenant
     entidades = TIPOS
-    mensaje = "No hay artísulos registrados."
+    tenant_actual = request.tenant
+    mensaje = "No hay artículos registrados."
 
     
     articulos = encontrar_articulos_tenant(tenant_actual)
     entidades = filtrar_entidades(entidades, tenant_actual)
-
-    print(entidades)
 
     return render(request, 'tree_list.html', {
         'articulos': articulos,

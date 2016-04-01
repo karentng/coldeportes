@@ -8,6 +8,8 @@ from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
 from solicitudes_escenarios.utilities import comprimir_archivos
+from snd.models import *
+import json
 # Create your views here.
 
 @login_required
@@ -214,6 +216,7 @@ def ver_solicitud(request,id):
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
     discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
+    #for escenario in solicitud.escenarios.all(): escenario.fotos = Foto.objects.filter(escenario=escenario)
 
     return render(request,'ver_solicitud.html',{
         'solicitud' : solicitud,
@@ -256,6 +259,7 @@ def editar_solicitud(request,id):
         return redirect('listar_solicitudes')
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    #for escenario in solicitud.escenarios.all(): escenario.fotos = Foto.objects.filter(escenario=escenario)
     discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
     form = EditarForm()
 

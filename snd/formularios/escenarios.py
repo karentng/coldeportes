@@ -6,7 +6,7 @@ from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
 from datetimewidget.widgets import TimeWidget, DateWidget
 from coldeportes.utilities import adicionarClase, MyDateWidget, extraer_codigo_video
-
+from django.core.exceptions import ValidationError
 
 class IdentificacionForm(forms.ModelForm):
     required_css_class = 'required'
@@ -19,6 +19,14 @@ class IdentificacionForm(forms.ModelForm):
         self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
         self.fields['division_territorial'] = adicionarClase(self.fields['division_territorial'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
+
+    def clean_nombre(self):
+        try:
+            nombre = self.cleaned_data['nombre'].upper()
+            escenario = Escenario.objects.get(nombre = nombre)
+            raise ValidationError('El nombre del escenario que está creando ya se encuentra registrado.')
+        except Escenario.DoesNotExist:
+            return self.cleaned_data['nombre']
 
     class Meta:
         model = Escenario
@@ -35,6 +43,17 @@ class IdentificacionEditarForm(forms.ModelForm):
         self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
         self.fields['division_territorial'] = adicionarClase(self.fields['division_territorial'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
+
+    def clean_nombre(self):
+        try:
+            nombre = self.cleaned_data['nombre'].upper()
+            escenario = Escenario.objects.get(nombre = nombre)
+            if not escenario.id == self.instance.id:
+                raise ValidationError('El nombre del escenario que está creando ya se encuentra registrado.')
+            else:
+                return self.cleaned_data['nombre']
+        except Escenario.DoesNotExist: 
+            return self.cleaned_data['nombre']
 
     class Meta:
         model = Escenario
