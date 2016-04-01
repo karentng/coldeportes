@@ -14,7 +14,7 @@ class Clasificado(models.Model):
     titulo = models.CharField(max_length=40)
     descripcion = models.TextField(max_length=800)
     contacto = models.CharField(max_length=150)
-    fecha_publicacion = models.DateField(auto_now_add=True)
+    fecha_publicacion = models.DateField()
     fecha_expiracion = models.DateField()
     valor = models.PositiveIntegerField(null=True, blank=True)
     etiquetas = models.CharField(max_length=255, null=True, blank=True)

@@ -1,0 +1,134 @@
+<div class="modal fade" id="modal-esc-{{ escenario.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">{{ escenario.nombre }}</h4>
+            </div>
+            <!--div class="modal-body"-->
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                        <div class="panel-heading p-0">
+                            <div class="tab-overflow">
+                                <ul class="nav nav-tabs">
+                                    <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="text-inverse"><i class="fa fa-arrow-left"></i></a></li>
+                                    <li class="active"><a href="#nav-tab2-12-{{ escenario.id }}" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+                                    <li class=""><a href="#nav-tab2-13-{{ escenario.id }}" data-toggle="tab"><i class="fa fa-paint-brush"></i> Caracterización</a></li>
+                                    <li class=""><a href="#nav-tab2-16-{{ escenario.id }}" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
+                                    <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="nav-tab2-12-{{ escenario.id }}">
+                                <div class="invoice">
+                                    <div class="invoice-company">
+                                        <b>{{escenario.nombre}}</b>
+                                    </div>
+                                    <div class="invoice-header">
+                                        <div class="invoice-from">
+                                            <address class="m-t-5 m-b-5">
+                                                <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br/>
+                                                {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br/>
+                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br/>
+                                                Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
+                                                Nombre del Administrador: {{escenario.nombre_administrador}}
+                                            </address>
+                                            <h5 class="m-t-10"><strong>Descripción:</strong></h5>
+                                            <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% else %}No hay descripción disponible{% endif %}</p>
+                                            <!--h5 class="m-t-10"><strong>Mapa:</strong></h5>
+                                            <div id="mapa-{{ escenario.id }}"></div-->
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tab2-13-{{ escenario.id }}">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.caracteristicas %}
+                                    <div class="invoice-header">
+                                        <div class="invoice-from">
+                                            <address class="m-t-5 m-b-5">
+                                                <strong>{{escenario.caracteristicas.tipo_escenario.descripcion}}</strong><br />
+                                                Capacidad de zona espectadores: {{escenario.caracteristicas.capacidad_espectadores}}<br>Metros construídos: {{escenario.caracteristicas.metros_construidos}}<br />
+                                                Disciplinas: {% for disciplina in escenario.caracteristicas.tipo_disciplinas.all %} {{disciplina.descripcion}}, {% endfor %}<br />
+                                                Tipo de Superficie: {% for superficie in escenario.caracteristicas.tipo_superficie_juego.all %} {{superficie.descripcion}}, {% endfor %}<br/>
+                                                Clase de Acceso: {{escenario.caracteristicas.get_clase_acceso_display}} <br/>
+                                                Características del escenario:
+                                                {% for caracteristica in escenario.caracteristicas.caracteristicas.all %}
+                                                    {{caracteristica.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %} <br/>
+                                                Clases de uso:
+                                                {% for uso in escenario.caracteristicas.clase_uso.all %}
+                                                    {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %} <br>
+                                                Planos escenarios:
+                                                {% if escenario.caracteristicas.plano_archivo %}
+                                                    <a href="{{ MEDIA_URL }}{{ escenario.caracteristicas.plano_archivo }}" target="_blank">{{ escenario.caracteristicas.plano_archivo.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}<br>
+                                                Ficha catastral:
+                                                {% if escenario.caracteristicas.ficha_catastral %}
+                                                    <a href="{{ MEDIA_URL }}{{ escenario.caracteristicas.ficha_catastral }}" target="_blank">{{ escenario.caracteristicas.ficha_catastral.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}<br>
+                                                Certificado de tradicion de libertad:
+                                                {% if escenario.caracteristicas.certificado_tradicio_libertad %}
+                                                    <a href="{{ MEDIA_URL }}{{ escenario.caracteristicas.certificado_tradicio_libertad }}" target="_blank">{{ escenario.caracteristicas.certificado_tradicio_libertad.name}}</a>
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}
+                                            </address>
+                                            <h5 class="m-t-10">Descripción:</h5>
+                                            <p>{% if escenario.caracteristicas.descripcion %}{{escenario.caracteristicas.descripcion}}{% else %}No hay descripción disponible{% endif %}</p>
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                {% else %}
+                                    <p>No hay características disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-tab2-16-{{ escenario.id }}">
+                                <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{escenario.nombre}}</b>
+                                </div>
+                                {% if escenario.fotos %}
+
+                                    <div class="superbox" data-offset="54">
+                                        {% for foto in escenario.fotos %}
+                                        <div class="superbox-list">
+                                            <img width="125px" height="100px" src="{{MEDIA_URL}}{{foto.foto}}" data-img="{{MEDIA_URL}}{{foto.foto}}" data-titulo="{{foto.titulo}}" alt="" data-descripcion="{{foto.descripcion}}" class="superbox-img" />
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p>No hay fotos disponibles</p>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/div-->
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -34,15 +34,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_facebook.png" alt="fb">
-            </a>
-            <a href="" style="margin-left:0px">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_twiter.png" alt="tw">
-            </a>
-            <a href="" style="margin-left:0px">
-                <img src="{{STATIC_URL}}img/imagenes-ver/bot_imprimir.png" alt="imprimir">
-            </a>
+            <a href="{% url 'centro_biomedico_listar' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
         </div>
         <h4 class="panel-title">
             {{centro.nombre}}
@@ -83,22 +75,23 @@
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
-                                            <p>{{centro.direccion}}, Barrio {{centro.barrio}}</p>
-                                            <p>{{centro.ciudad}}</p>
-                                            <p>Estrato {{centro.estrato}}, Comuna {{centro.comuna}}</p>
+                                            <p><b>Dirección: </b> {% if centro.direccion %}{{centro.direccion}}{% else %} No especificado{% endif %}</p>
+                                            <p><b>Barrio:</b> {% if centro.barrio %}{{centro.barrio}}{% else %} No especificado{% endif %}</p>
+                                            <p><b>Ciudad:</b> {% if centro.ciudad %}{{centro.ciudad}}{% else %} No especificado{% endif %}</p>
+                                            <p><b>Estrato:</b> {% if centro.estrato %}{{centro.estrato}}{% else %} No especificado{% endif %}</p>
+                                            <p><b>Comuna:</b> {% if centro.comuna %}{{centro.comuna}}{% else %} No especificado{% endif %}</p>
                                         </address>
-
-                                        <div align="right">
-                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
-                                        </div>
+                                    </div>
+                                    <h5 class="m-t-10"><b>Información de contacto:</b></h5>
+                                    <p><b>Teléfono:</b> {%if centro.telefono_fijo %} {{centro.telefono_fijo}} {%else%} No especificado {%endif%}</p>
+                                    <p><b>Teléfono Celular:</b> {%if centro.telefono_celular %} {{centro.telefono_celular}} {%else%} No especificado {%endif%}</p>
+                                    <p><b>Email:</b> {%if centro.email %} {{centro.email}} {%else%} No especificado {%endif%}</p>
+                                    <p><b>Página web:</b> {%if centro.web %} {{centro.web}} {%else%} No especificado {%endif%}</p>
+                                    <p><b>Nombre del Administrador:</b> {%if centro.nombre_administrador %} {{centro.nombre_administrador}} {%else%} No especificado {%endif%}</p>
+                                    <div align="right">
+                                        <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                     </div>
                                 </div>
-                                <h5 class="m-t-10">Información de contacto:</h5>
-                                <p>Teléfono: {{centro.telefono_fijo}}</p>
-                                <p>Teléfono Celular: {{centro.telefono_celular}}</p>
-                                <p>Email: {%if centro.email %} {{centro.email}} {%else%} Ninguno {%endif%}</p>
-                                <p>Página web: {%if centro.web %} {{centro.web}} {%else%} Ninguna {%endif%}</p>
-                                <p>Nombre del Administrador: {{centro.nombre_administrador}}</p>
                             </div>
                         </div>
                         

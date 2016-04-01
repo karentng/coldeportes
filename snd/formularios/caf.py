@@ -9,11 +9,10 @@ class CentroAcondicionamientoForm(forms.ModelForm):
         super(CentroAcondicionamientoForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
-        self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
 
     class Meta:
         model = CentroAcondicionamiento
-        exclude = ('entidad', 'clases', 'servicios',)
+        exclude = ('entidad', 'clases', 'servicios', 'estado',)
 
 class CAPlanForm(forms.ModelForm):
     required_css_class = 'required'

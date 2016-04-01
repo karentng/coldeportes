@@ -216,20 +216,7 @@ def ver_solicitud(request,id):
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
     discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
-
-    for escenario in solicitud.escenarios.all():
-        escenario.datos_georreferenciacion = escenario.obtener_atributos()
-        escenario.posicion_inicial = escenario.posicionInicialMapa()
-        escenario.horarios = HorarioDisponibilidad.objects.filter(escenario=escenario)
-        escenario.fotos = Foto.objects.filter(escenario=escenario)
-        escenario.videos =  Video.objects.filter(escenario=escenario)
-        escenario.historicos =  DatoHistorico.objects.filter(escenario=escenario)
-        escenario.mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
-        escenario.contactos = Contacto.objects.filter(escenario=escenario)
-        print(escenario)
-
-
-
+    #for escenario in solicitud.escenarios.all(): escenario.fotos = Foto.objects.filter(escenario=escenario)
 
     return render(request,'ver_solicitud.html',{
         'solicitud' : solicitud,
@@ -272,6 +259,7 @@ def editar_solicitud(request,id):
         return redirect('listar_solicitudes')
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    #for escenario in solicitud.escenarios.all(): escenario.fotos = Foto.objects.filter(escenario=escenario)
     discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
     form = EditarForm()
 

@@ -2,68 +2,68 @@
 {% load bootstrap3 %}
 
 {% block head %}
-	Registro Caja de Compensación
+    Registro Caja de Compensación
 {% endblock %}
 
 {% block css %}
-	<link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
-	<script src="{{ STATIC_URL }}js/validaciones/ccf/wizard_cajas-validations.js"></script>
-	<link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-	
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}js/validaciones/ccf/wizard_cajas-validations.js"></script>
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    
 {% endblock %}
 
 {% block miga_pan %}
-	<li><a href="{% url 'inicio' %}">Inicio</a></li>
-	<li><a href="{% url 'listar_ccfs' %}">Escenarios CCF</a>
-	{% if ccf_id %}
-	<li class="active">Editar</li>
-	{% else %}
-	<li class="active">Registrar</li>
-	{% endif %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listar_ccfs' %}">Escenarios CCF</a>
+    {% if ccf_id %}
+    <li class="active">Editar</li>
+    {% else %}
+    <li class="active">Registrar</li>
+    {% endif %}
 {% endblock %}
 
 {% block titulo_contenido %}
-	Cajas de Compensación Familiar
+    Cajas de Compensación Familiar
 {% endblock %}
 
 {% block titulo_panel %}
-	Registro de Cajas de Compensación Familiar
+    Registro de Cajas de Compensación Familiar
 {% endblock %}
 
 {% block panel_botones %}
 {% endblock %}
 
 {% block contenido_panel %}
-	{% include 'cajas_compensacion/wizard/_wizard.html' %}
-	<fieldset>
-		<form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-			<div class="well row">
-				<div class="col-xs-12">
-					<h3>{{titulo}}</h3>
-					
-					{% for field in form %}
-						<div class="col-md-6">
-							
-							{% bootstrap_field field layout="vertical" %}
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-			<hr>
-			{% if wizard_stage > 1 %}
-			<input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
-			{% endif %}		
-			<button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
-		</form>
-	</fieldset>
-	
+    {% include 'cajas_compensacion/wizard/_wizard.html' %}
+    <fieldset>
+        <form id="form-wizard-cajas" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="well row">
+                <div class="row">
+                    <h3>{{titulo}}</h3>
+                    
+                    {% for field in form %}
+                        <div class="col-md-6">
+                            
+                            {% bootstrap_field field layout="vertical" %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <hr>
+                {% if wizard_stage > 1 %}
+                <input class="btn btn-success pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+                {% endif %}     
+                <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
+            </div>
+        </form>
+    </fieldset>
+    
 
 {% endblock %}
 
 {% block js %}
-	<script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
-	<script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
-	<script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
-	
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    
 {% endblock %}
 

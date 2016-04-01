@@ -480,7 +480,6 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
     if len(info_adicional) != 0:
         info_adicional = info_adicional[0]
     historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
-    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
@@ -489,7 +488,6 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
             'info_adicional':info_adicional,
             'historial_deportivo':historial_deportivo,
             'historial_lesiones':historial_lesiones,
-            'historial_doping':historial_doping,
             'informacion_academica':informacion_academica
     })
 
@@ -810,6 +808,7 @@ def mostrar_gestion_socios(request):
             num_doc = socio.numero_documento
 
             if club.socios.filter(club_id = club_id, numero_documento = num_doc).count() > 0:
+                messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
                 lista_socios = club.socios.all()
                 form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
                 return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
@@ -817,7 +816,7 @@ def mostrar_gestion_socios(request):
                 socio.club_id = club.id
                 socio = form.save()
                 club.socios.add(socio)
-                messages.success(request, "Los datos del socio fueron registrados correctamente.")
+                messages.success(request, "Socio registrado correctamente.")
                 return redirect('gestion_socios')
         else:
             messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
@@ -856,10 +855,10 @@ def desactivar_socio(request, id_socio):
 
     if socio.estado == 0:
         socio.estado = 1
-        messages.success(request, ("El socio %s ha sido desactivado.")%(socio.nombre+" "+socio.apellido))
+        messages.success(request, "Socio desactivado correctamente.")
     else:
         socio.estado = 0
-        messages.success(request, ("El socio %s ha sido activado.")%(socio.nombre+" "+socio.apellido))
+        messages.success(request, "Socio activado correctamente.")
     socio.save()
     return redirect('gestion_socios')
 
@@ -867,6 +866,8 @@ def desactivar_socio(request, id_socio):
 @login_required()
 @user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
 def editar_socio(request, id_socio):
+    from django.db import IntegrityError
+
     """
     Marzo 03 / 2016
     Autor: Diego Monsalve
@@ -887,14 +888,20 @@ def editar_socio(request, id_socio):
         messages.error(request, 'No se pudo encontrar el socio.')
         return redirect('gestion_socios')
 
-
     if request.method == 'POST':
         form = SocioClubForm(request.POST, instance=socio)
         if form.has_changed():
             if form.is_valid():
-                form.save()
-                messages.success(request, "Los datos del socio fueron actualizados correctamente.")
-                return redirect('gestion_socios')
+                try:
+                    form.save()
+                    messages.success(request, "Socio editado correctamente.")
+                    return redirect('gestion_socios')
+                except IntegrityError:
+                    form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
+                    messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+                    club = request.tenant.obtenerTenant()
+                    lista_socios = club.socios.all()
+                    return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
             else:
                 messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
                 club = request.tenant.obtenerTenant()
@@ -1012,3 +1019,20 @@ def cambiar_estado_plan_costo(request, id):
         plan.save()
         messages.success(request, "Estado de plan cambiado")
         return redirect('crear_plan_de_costo')
+
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def foto_entidad(request):
+    if request.method == "POST":
+        entidad = request.tenant
+        nueva_foto = request.POST.get('imagen-crop')
+
+        if nueva_foto == "No":
+            entidad.foto_info = ""
+        else:
+            entidad.foto_info = nueva_foto
+
+        entidad.save()
+        return redirect("inicio")
+    return redirect("inicio")

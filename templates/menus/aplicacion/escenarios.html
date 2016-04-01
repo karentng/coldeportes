@@ -1,11 +1,11 @@
 <li class="has-sub {% if '/escenarios/' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        <span class="colorMenu">Escenarios</span>
+        <span>Escenarios</span>
     </a>
     <ul class="sub-menu">
         {% if perms.snd.add_escenario %}
-            <li {% if "/escenarios/nuevo" in request.path %} class="active" {% endif %}>
+            <li {% if "/escenarios/wizard/" in request.path %} class="active" {% endif %}>
                 <a href="{% url 'wizard_nuevo_identificacion' %}">Registro</a>
             </li>
         {% endif %} 

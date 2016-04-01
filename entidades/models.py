@@ -78,6 +78,7 @@ class Actores(models.Model):
     escuelas_deportivas = models.BooleanField(verbose_name="Escuelas de Formación Deportiva", default=False)
     noticias = models.BooleanField(verbose_name="Noticias", default=False)
     publicidad = models.BooleanField(verbose_name="Publicidad", default=True)
+    listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
 
@@ -104,6 +105,7 @@ class Entidad(TenantMixin): # Entidad deportiva
     ciudad = models.ForeignKey(Ciudad)
     telefono = models.CharField(max_length=255, verbose_name="teléfono", blank=True)
     descripcion = models.TextField(verbose_name="descripción", blank=True, null=True)
+    foto_info = models.CharField(null=True, blank=True, max_length=255)
 
     tipo = models.IntegerField(choices=TIPOS)
     actores = models.OneToOneField(Actores, null=True)
@@ -310,7 +312,8 @@ class Ente(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -332,7 +335,8 @@ class Comite(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -349,7 +353,8 @@ class CajaDeCompensacion(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -394,7 +399,8 @@ class FederacionParalimpica(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -423,7 +429,8 @@ class LigaParalimpica(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -463,7 +470,8 @@ class ClubParalimpico(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -485,7 +493,8 @@ class Federacion(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -723,7 +732,8 @@ class Liga(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -810,7 +820,8 @@ class Club(ResolucionReconocimiento):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias(),
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias(),
             'socios': self.socios.all(),
             'planes_de_costo': self.planes_de_costo.all()
         }
@@ -829,7 +840,8 @@ class Caf(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -847,7 +859,8 @@ class EscuelaDeportiva_(Entidad):
             'direccion': self.direccion,
             'telefono': self.telefono,
             'pagina_web': self.pagina_web,
-            'disponible_para_transferencias' : self.disponible_para_transferencias()
+            'foto': self.foto_info,
+            'disponible_para_transferencias': self.disponible_para_transferencias()
         }
         return entidad
 
@@ -964,6 +977,7 @@ class Permisos(models.Model):
     escuelas_deportivas = models.IntegerField(choices=ACTORES, default=1)
     noticias = models.IntegerField(choices=ACTORES, default=1)
     publicidad = models.IntegerField(choices=ACTORES, default=2)
+    listados_doping = models.IntegerField(choices=ACTORES, default=1)
     solicitud = models.IntegerField(choices=ACTORES, default=1)
     respuesta = models.IntegerField(choices=ACTORES, default=1)
 
@@ -981,7 +995,8 @@ class Permisos(models.Model):
             opcion = [1,5]
 
         actores_seleccionados = []
-        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos','normas','escuelas_deportivas','noticias','publicidad','solicitud','respuesta' ]
+        actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)

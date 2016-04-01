@@ -4,21 +4,15 @@
 
 $(document).ready(function(){
     var cropperHeader;
-
     var cropperOptions = {
         imgEyecandy:true,
         imgEyecandyOpacity:0.2,
         processInline:true,
-        uploadUrl:'{}',
-        uploadData:{
-            "csrfmiddlewaretoken":csrftoken,
-        },
         cropUrl:urlCrop,
         cropData:{
-            "csrfmiddlewaretoken":csrftoken,
             "url_media": urlMedia
         },
-        loadPicture:picture,
+        loadPicture:picture == "" || picture == "/media/" ? null : picture,
         onBeforeImgCrop:function(){},
         onAfterImgCrop: function(mns){
 
@@ -27,9 +21,7 @@ $(document).ready(function(){
             if(status != "error"){
                 $("#imagen-hidden").val(img);
             }
-
             console.log(mns);
-
             document.getElementById(formId).submit();
 
         },
@@ -38,13 +30,51 @@ $(document).ready(function(){
 
     cropperHeader = new Croppic('image-upload', cropperOptions);
 
-    $(buttonReset).click(function(){
+    $("#reset-crop").click(function(){
         cropperOptions["loadPicture"] = "";
         console.log("destroy");
         cropperHeader.destroy();
         cropperHeader = new Croppic('image-upload', cropperOptions);
     });
 
+    $('#submit-crop').click(function(event){
+        event.preventDefault();
+        if (edicion) {
+            if ($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length) {
+                $("#imagen-hidden").val("si");
+                document.getElementById(formId).submit();
+                return false;
+            } else {
+                $("#" + formId).bootstrapValidator('validate');
+                if ($("div.form-group").hasClass("has-error")) {
+                    return false;
+                } else {
+                    if ($('.cropControls.cropControlsCrop').length) {
+                        console.log("Cortando");
+                        $('.cropControlCrop').click();
+                    } else {
+                        document.getElementById(formId).submit();
+                        return false;
+                    }
+                }
+            }
+        }else{
+
+            $("#"+formId).bootstrapValidator('validate');
+
+            if($("div.form-group").hasClass("has-error")){
+                return false;
+            }else {
+                if($('.cropControls.cropControlsCrop').length) {
+                    console.log("Cortando");
+                    $('.cropControlCrop').click();
+                }else{
+                    document.getElementById(formId).submit();
+                    return false;
+                }
+            }
+        }
+    });
 
     $(window).keydown(function(event){
         if(event.keyCode == 13 || event.which == 13) {
@@ -59,7 +89,7 @@ $(document).ready(function(){
         if(!$('.cropControls.cropControlsCrop').length){
 
             $("#modalTrigger2").removeClass("btn-success").addClass("btn-primary").html("Cargar Imagen");
-            $("#labelImg").html("");
+            $("#labelImg").html("No se ha seleccionado una imagen");
         }else{
 
             $("#modalTrigger2").removeClass("btn-primary").addClass("btn-success").html("Cambiar Imagen");

@@ -24,6 +24,7 @@ class Escenario(models.Model):
         ('ZU','ZONA URBANA'),
     )
     nombre =  models.CharField(max_length=100,unique=True)
+    razon_social = models.CharField(max_length=255, verbose_name="Razón social", blank=True)
     direccion = models.CharField(max_length=100, verbose_name='dirección')
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
@@ -36,7 +37,7 @@ class Escenario(models.Model):
     estado = models.IntegerField(choices=ESTADOS, verbose_name="estado del Escenario")
     ciudad = models.ForeignKey(Ciudad)
     division_territorial = models.CharField(choices=DIVISIONES, max_length=2, verbose_name="división territorial")    
-    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -120,7 +121,7 @@ class CaracterizacionEscenario(models.Model):
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
     descripcion = models.TextField(verbose_name='descripción',  max_length=1024, null=True)
-    tiene_planos = models.BooleanField(verbose_name='¿se cuenta con los planos del escenario?', default=False)
+    tiene_planos = models.BooleanField(verbose_name='¿Se cuenta con los planos del escenario?', default=False)
     plano_archivo = models.FileField(upload_to="archivos_escenarios/", verbose_name="Plano del escenario (opcional)", null=True, blank=True)
     ficha_catastral = models.FileField(upload_to="archivos_escenarios/", verbose_name="Ficha catastral (opcional)", null=True, blank=True)
     certificado_tradicio_libertad = models.FileField(upload_to="archivos_escenarios/", verbose_name="Certificado de tradición y libertad (opcional)", null=True, blank=True)
@@ -164,17 +165,27 @@ class Mantenimiento(models.Model):
         ('an', 'ANUAL'),
     )
     escenario = models.ForeignKey(Escenario)
-    fecha_ultimo_mantenimiento = models.DateField( verbose_name="fecha del último mantenimiento", null=True, blank=True)
-    descripcion_ultimo_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name='descripción del último mantenimiento')
-    periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)    
+    fecha_ultimo_mantenimiento = models.DateField(verbose_name="Fecha del mantenimiento", null=True)
+    descripcion_ultimo_mantenimiento = models.TextField(null=True, max_length=1024, verbose_name='Descripción del mantenimiento')
+    periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True)
+    inversionista = models.CharField(max_length=255, verbose_name="¿Quién invirtió en el mantenimiento?", null=True, blank=True)
+    convenio = models.CharField(max_length=255, verbose_name="Convenio mediante el cual se realizó el mantenimiento", null=True, blank=True)
     razones_no_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name="Si no se realiza mantenimiento, mencione las razones")
-    tiene_planos = models.BooleanField(verbose_name='¿se cuenta con los planos del escenario?')
+    tiene_planos = models.BooleanField(verbose_name='¿Se cuenta con los planos del escenario?')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class DatoHistorico(models.Model):
+    SUCESOS = (
+        (0, 'ADECUACIONES'),
+        (1, 'JUEGO'),
+        (2, 'EVENTO CULTURAL'),
+        (3, 'INAUGURACIÓN'),
+        (4, 'OTROS'),
+    )
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico")
     fecha_fin = models.DateField(null=True, blank=True)
+    tipo_suceso = models.IntegerField(verbose_name="Tipo de suceso histórico", choices=SUCESOS)
     descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 

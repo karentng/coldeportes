@@ -18,4 +18,5 @@ def tipos(request):
     actores_de_la_entidad = request.tenant.actores.resumen_nombre_atributos()
 
     actores_permitidos_reportes = list(set().union(actores_de_la_entidad,actores_que_se_pueden_ver))
-    return render(request, 'publico/tipos.html', {'actores_permitidos_reportes':actores_permitidos_reportes})
+    return render(request, 'publico/tipos.html', {'actores_permitidos_reportes':actores_permitidos_reportes
+        })

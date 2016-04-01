@@ -79,7 +79,6 @@ def seleccion_datos_escenarios(tenant=''):
             M.descripcion_ultimo_mantenimiento,
             M.periodicidad,
             M.razones_no_mantenimiento,
-            M.tiene_planos,
             M.fecha_creacion as fecha_creacion_mantenimiento,
 
             DH.fecha_inicio,
@@ -111,7 +110,7 @@ def seleccion_datos_personal_apoyo(tenant=''):
         SELECT
             PA.id, PA.actividad,
             PA.genero, PA.tipo_id, PA.foto,
-            PA.nombres, PA.apellidos,
+            PA.nombres, PA.apellidos, PA.identificacion,
             PA.fecha_nacimiento, NAL.nacionalidad_id,            
             PA.telefono_fijo as telefono_contacto,
             PA.ciudad_id, PA.etnia, PA.telefono_celular,
@@ -137,7 +136,7 @@ def seleccion_datos_deportistas(tenant=''):
             DE.fecha_nacimiento,DE.fecha_creacion,
             DE.lgtbi,DE.etnia, DE.barrio, DE.comuna,
             DE.email, DE.telefono as telefono_contacto,
-            DE.direccion, DE.foto,
+            DE.direccion, DE.foto, DE.identificacion,
             DE.nombres, DE.apellidos, DE.entidad_id,
             NAL.nacionalidad_id,DE.estado,
             HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
@@ -146,8 +145,7 @@ def seleccion_datos_deportistas(tenant=''):
             IA.fecha_finalizacion,
             ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
             HL.tipo_lesion,HL.periodo_rehabilitacion, HL.fecha_lesion,
-            HL.segmento_corporal,
-            IFD.fecha as fecha_doping
+            HL.segmento_corporal
         FROM
         %ssnd_deportista DE
         LEFT JOIN %ssnd_deportista_nacionalidad NAL ON NAL.deportista_id = DE.id
@@ -156,8 +154,7 @@ def seleccion_datos_deportistas(tenant=''):
         LEFT JOIN %ssnd_informacionacademica IA ON IA.deportista_id = DE.id
         LEFT JOIN %ssnd_informacionadicional ID ON ID.deportista_id = DE.id
         LEFT JOIN %ssnd_historiallesiones HL ON HL.deportista_id = DE.id
-        LEFT JOIN %ssnd_historialdoping IFD ON IFD.deportista_id = DE.id 
-        """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant,tenant)
+        """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant)
 
 def seleccion_datos_dirigentes(tenant=''):
     if tenant != '':
@@ -167,7 +164,7 @@ def seleccion_datos_dirigentes(tenant=''):
         SELECT
             DIR.id, NAL.nacionalidad_id,
             DIR.nombres, DIR.apellidos,
-            DIR.foto,
+            DIR.foto, DIR.identificacion,
             DIR.entidad_id, DIR.fecha_creacion,
             DIR.genero, DIR.telefono_fijo as telefono_contacto,
             DIR.estado, DIR.ciudad_residencia_id AS ciudad_id,

@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
 from .forms import ClasificadoForm
@@ -88,7 +89,7 @@ def editar_clasificado(request, id_clasificado):
                 clasificado_form.titulo = clasificado_form.titulo.upper()
                 form.save()
                 messages.success(request, 'El clasificado se ha editado correctamente')
-                return redirect('listar_clasificados')
+                return redirect('gestionar_clasificados')
     return render(request, 'registrar_clasificado.html', {'form': form, 'edicion': True, "foto": foto})
 
 
@@ -107,7 +108,7 @@ def cambiar_estado_clasificado(request, id_clasificado):
     messages.success(request, 'Se ha cambiado el estado del clasificado correctamente')
     return redirect('gestionar_clasificados')
 
-
+@csrf_exempt
 @login_required
 def crop_pic(request):
     import os
