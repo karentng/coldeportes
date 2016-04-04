@@ -105,3 +105,6 @@ class EquipoPuntosForm(forms.ModelForm):
 
 class CompetenciasBaseDeDatos(forms.Form):
     archivo = forms.FileField(label="Archivo de competencias")
+
+class ParticipantesBaseDeDatos(forms.Form):
+    archivo = forms.FileField(label="Archivo de participantes")

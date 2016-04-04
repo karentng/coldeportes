@@ -43,4 +43,5 @@ urlpatterns = patterns('registro_resultados.views',
 
     # cargado por excel
     url(r'^cargar-competencias/(\d+)$', 'cargas_competencias', name='cargas_competencias'),
+    url(r'^cargar-participantes/(\d+)$', 'cargar_participantes', name='cargar_participantes'),
 )
