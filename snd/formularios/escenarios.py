@@ -1,18 +1,21 @@
 #-*- coding: utf-8 -*-
-from django import forms
 import datetime
+from django import forms
 from django.forms import ModelForm
+from django.core.exceptions import ValidationError
+from datetimewidget.widgets import TimeWidget, DateWidget
 from snd.models import *
 from entidades.models import CaracteristicaEscenario, Dias
-from datetimewidget.widgets import TimeWidget, DateWidget
 from coldeportes.utilities import adicionarClase, MyDateWidget, extraer_codigo_video
-from django.core.exceptions import ValidationError
+
 
 class IdentificacionForm(forms.ModelForm):
-    required_css_class = 'required'
 
+    required_css_class = 'required'
     descripcion = forms.CharField(widget=forms.Textarea, required=False, label="Descripción")
+
     def __init__(self, *args, **kwargs):
+
         super(IdentificacionForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
@@ -21,6 +24,7 @@ class IdentificacionForm(forms.ModelForm):
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
     def clean_nombre(self):
+
         try:
             nombre = self.cleaned_data['nombre'].upper()
             escenario = Escenario.objects.get(nombre = nombre)
@@ -29,15 +33,18 @@ class IdentificacionForm(forms.ModelForm):
             return self.cleaned_data['nombre']
 
     class Meta:
+
         model = Escenario
         exclude = ('entidad', 'fecha_creacion')
 
 
 class IdentificacionEditarForm(forms.ModelForm):
-    required_css_class = 'required'
 
+    required_css_class = 'required'
     descripcion = forms.CharField(widget=forms.Textarea, required=False, label="Descripción")
+
     def __init__(self, *args, **kwargs):
+
         super(IdentificacionEditarForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
@@ -45,6 +52,7 @@ class IdentificacionEditarForm(forms.ModelForm):
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
     def clean_nombre(self):
+
         try:
             nombre = self.cleaned_data['nombre'].upper()
             escenario = Escenario.objects.get(nombre = nombre)
@@ -56,13 +64,17 @@ class IdentificacionEditarForm(forms.ModelForm):
             return self.cleaned_data['nombre']
 
     class Meta:
+
         model = Escenario
         exclude = ('entidad', 'estado', 'fecha_creacion')
 
+
 class CaracterizacionForm(forms.ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
+
         super(CaracterizacionForm, self).__init__(*args, **kwargs)
         self.fields['tipo_escenario'] = adicionarClase(self.fields['tipo_escenario'], 'one')
         self.fields['clase_acceso'] = adicionarClase(self.fields['clase_acceso'], 'one')
@@ -78,20 +90,21 @@ class CaracterizacionForm(forms.ModelForm):
         self.fields['clase_uso'] = adicionarClase(self.fields['clase_uso'], 'many')
         self.fields['clase_uso'].queryset = TipoUsoEscenario.objects.all().order_by('descripcion')
         self.fields['descripcion'].widget.attrs['rows'] = 3
+
     class Meta:
+
         model = CaracterizacionEscenario
         exclude = ('escenario', 'fecha_creacion') 
-
-
         
 
 class HorariosDisponibleForm(ModelForm):
-    required_css_class = 'required'
 
-    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
-    hora_fin = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii'}))
+    required_css_class = 'required'
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii', 'language':'es'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format':'hh:ii', 'language':'es'}))
 
     def __init__(self, *args, **kwargs):
+
         super(HorariosDisponibleForm, self).__init__(*args, **kwargs)
         self.fields['dias'] = adicionarClase(self.fields['dias'], 'many')
         self.fields['descripcion'].widget.attrs['rows'] = 3
@@ -103,14 +116,17 @@ class HorariosDisponibleForm(ModelForm):
         
 
 class DatoHistoricoForm(ModelForm):
-    required_css_class = 'required'
-    
+
+    required_css_class = 'required'    
     fecha_fin = forms.DateField(widget=MyDateWidget(), required=False, label="Fecha fin del suceso histórico")
+
     def __init__(self, *args, **kwargs):
+
         super(DatoHistoricoForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
+
         model = DatoHistorico
         exclude = ('escenario', 'fecha_creacion')
         widgets = {
@@ -119,6 +135,7 @@ class DatoHistoricoForm(ModelForm):
         }
         
     def clean(self):
+
         cleaned_data = super(DatoHistoricoForm, self).clean()
 
         if not self._errors:
@@ -131,7 +148,6 @@ class DatoHistoricoForm(ModelForm):
                 fecha_fin = cleaned_data.get('fecha_fin')
             except Exception:
                 fecha_fin = None
-
            
             #Fecha de inicio no sea mayor a la fecha actual
             if fecha_inicio>datetime.date.today():                
@@ -143,33 +159,39 @@ class DatoHistoricoForm(ModelForm):
                 if fecha_fin<fecha_inicio:
                     
                     msg = 'Usted ha seleccionado una fecha de menor que la fecha de inicio'
-                    self.add_error('fecha_fin',msg)
-                
+                    self.add_error('fecha_fin',msg)                
             
         return cleaned_data
         
 
 class FotoEscenarioForm(ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
+
         super(FotoEscenarioForm, self).__init__(*args, **kwargs)
         self.fields['descripcion_foto'].widget.attrs['rows'] = 3
 
     class Meta:
+
         model = Foto
         exclude = ('escenario','fecha_creacion')
 
+
 class MantenimientoEscenarioForm(ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
+
         super(MantenimientoEscenarioForm, self).__init__(*args, **kwargs)
         self.fields['descripcion_ultimo_mantenimiento'].widget.attrs['rows'] = 3
         self.fields['razones_no_mantenimiento'].widget.attrs['rows'] = 3
         self.fields['periodicidad'] = adicionarClase(self.fields['periodicidad'], 'one')
 
     class Meta:
+
         model = Mantenimiento
         exclude = ('escenario', 'fecha_creacion')
         widgets = {
@@ -177,7 +199,9 @@ class MantenimientoEscenarioForm(ModelForm):
         }
 
     def clean(self):
+
         cleaned_data = super(MantenimientoEscenarioForm, self).clean()
+
         if not self._errors:
             try:
                 fecha_mantenimiento = cleaned_data.get('fecha_ultimo_mantenimiento')
@@ -196,12 +220,16 @@ class MantenimientoEscenarioForm(ModelForm):
 
         return cleaned_data
 
+
 class VideoEscenarioForm(ModelForm):
+
     required_css_class = 'required'
 
     def clean(self):
+
         cleaned_data = super(VideoEscenarioForm, self).clean()
         video = self.cleaned_data['url']
+
         if video:
             try:
                 extraer_codigo_video(video)
@@ -210,16 +238,21 @@ class VideoEscenarioForm(ModelForm):
         return self.cleaned_data
 
     class Meta:
+
         model = Video
         exclude = ('escenario', 'fecha_creacion')
 
+
 class ContactoForm(ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
+
         super(ContactoForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].widget.attrs['rows'] = 3
 
     class Meta:
+
         model = Contacto
         exclude = ('escenario', 'fecha_creacion')
