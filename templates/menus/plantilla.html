@@ -1,4 +1,5 @@
 {% load has_group %}
+{% load can_manage %}
 
 <!-- ESTE MENÚ NO TIENE RESTRICCIONES NI DE USUARIOS NI DE TENANTS -->
 <li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
@@ -20,8 +21,8 @@
 <!-- =============================================== -->
 
 {% if request.tenant.schema_name != 'public' %}
-    {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo == 3%}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path%} active {% endif %}">
+    {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo|can_manage %}
+        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path or 'escuela-deportiva' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
                 <i class="fa fa-cogs"></i>
@@ -40,6 +41,42 @@
                         </li>
                         <li {% if 'planes' in request.path %} class="active" {% endif %}>
                             <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+                {% if request.tenant.tipo == 11 %}
+                    {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
+                        <li class="has-sub {% if '/escuela-deportiva/sedes' in request.path %} active {% endif %}">
+                            <a href="javascript:;">
+                                <b class="caret pull-right"></b>
+                                <span>Gestión Sedes</span>
+                            </a>
+                            <ul class="sub-menu">
+                                {% if perms.snd.add_escueladeportiva %}
+                                    <li {% if "/escuela-deportiva/sedes/crear_editar" in request.path %} class="active" {% endif %}>
+                                        <a href="{% url 'escuela_deportiva_crear_editar' paso='identificacion' edicion=0 %}">Registro Sede</a>
+                                    </li>
+                                {% endif %}
+                                <li {% if "/escuela-deportiva/sedes/listar" in request.path %} class="active" {% endif %}>
+                                    <a href="{% url 'escuela_deportiva_listar' %}">Listar Sedes</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-sub {% if '/escuela-deportiva/participantes' in request.path %} active {% endif %}">
+                            <a href="javascript:;">
+                                <b class="caret pull-right"></b>
+                                <span>Gestión Participantes</span>
+                            </a>
+                            <ul class="sub-menu">
+                                {% if perms.snd.add_escueladeportiva %}
+                                    <li {% if "/escuela-deportiva/participantes/registrar" in request.path %} class="active" {% endif %}>
+                                        <a href="{% url 'registrar_participante' %}">Registro Participante</a>
+                                    </li>
+                                {% endif %}
+                                <li {% if "/escuela-deportiva/participantes/listar" in request.path %} class="active" {% endif %}>
+                                    <a href="{% url 'listar_participante' %}">Listar Participantes</a>
+                                </li>
+                            </ul>
                         </li>
                     {% endif %}
                 {% endif %}
@@ -72,7 +109,7 @@
 
     {% if user.is_authenticated %}
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
+            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path %}
                 {% if 'reportes' not in request.path %}
                 active
                 {% endif %}
