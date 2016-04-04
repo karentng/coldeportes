@@ -12,7 +12,7 @@ triatlon = TipoDisciplinaDeportiva.objects.get(id=42)
 
 #ACTIVIDADES SUBACUATICO QUE SE DEBE BORRAR
 subacuaticas1 = TipoDisciplinaDeportiva.objects.get(id=55)
-print(subacuaticas1)
+#print(subacuaticas1)
 #ACTIVIDADES SUBACUATICAS CORRECTO
 subacuaticas2 = TipoDisciplinaDeportiva.objects.get(id=23)
 
