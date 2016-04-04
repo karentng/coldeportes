@@ -146,6 +146,7 @@ class EquipoMetrosForm(forms.ModelForm):
 class CompetenciasBaseDeDatos(forms.Form):
     archivo = forms.FileField(label="Archivo de competencias")
 
+
 class FiltrosMedalleriaDeptGenForm(forms.Form):
     
     GENEROS = (
@@ -169,3 +170,6 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     generos = forms.ChoiceField(required=False,choices=GENEROS)
     visualizacion = forms.ChoiceField(label="Visualización")
+
+class ParticipantesBaseDeDatos(forms.Form):
+    archivo = forms.FileField(label="Archivo de participantes")
