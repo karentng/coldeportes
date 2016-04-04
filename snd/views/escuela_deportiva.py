@@ -200,9 +200,35 @@ def desactivar_escuela_deportiva(request,id_escuela):
     estado_actual = escuela.estado
     escuela.estado = not(estado_actual)
     escuela.save()
-    if(estado_actual):
+    if estado_actual:
         message = "Escuela deportiva activada correctamente."
     else:
         message = "Escuela deportiva desactivada correctamente."
     messages.success(request, message)
     return redirect('escuela_deportiva_listar')
+
+
+@login_required
+@permission_required('snd.add_escueladeportiva')
+def registrar_participante(request):
+
+    if request.method == 'POST':
+        participante_form = ParticipanteForm(request.POST)
+        if participante_form.is_valid():
+            participante = participante_form.save(commit=False)
+            participante.entidad = request.tenant
+            participante.save()
+            messages.success(request, "El participante ha sido registrado con exito")
+            return redirect('listar_participante')
+
+    participante_form = ParticipanteForm()
+    return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form})
+
+
+@login_required
+@permission_required('snd.add_escueladeportiva')
+def listar_participante(request):
+    participantes = Participante.objects.all()
+
+    return render(request, 'escuela_deportiva/listar_participantes.html', {'participantes': participantes})
+

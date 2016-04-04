@@ -1,10 +1,33 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django import forms
-from snd.models import EscuelaDeportiva
-from coldeportes.utilities import adicionarClase, verificar_tamano_archivo
+from snd.models import EscuelaDeportiva, Participante
+from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
+
+
+class ParticipanteForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(ParticipanteForm, self).__init__(*args, **kwargs)
+        self.fields['ciudad_residencia'] = adicionarClase(self.fields['ciudad_residencia'], 'one')
+        self.fields['anho_curso'] = adicionarClase(self.fields['anho_curso'], 'one')
+        self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
+        self.fields['eps'].widget.attrs.update({'style': 'height: 71px;'})
+        self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
+        self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
+
+    class Meta:
+        model = Participante
+        exclude = ('entidad', 'fecha_creacion', 'estado')
+
+        widgets = {
+            'fecha_nacimiento': MyDateWidget()
+        }
+
 
 class EscuelaDeportivaForm(forms.ModelForm):
     required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super(EscuelaDeportivaForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
@@ -17,7 +40,8 @@ class EscuelaDeportivaForm(forms.ModelForm):
 
     class Meta:
         model = EscuelaDeportiva
-        exclude = ('entidad','servicios','estado','fecha_creacion')
+        exclude = ('entidad', 'servicios', 'estado', 'fecha_creacion')
+
 
 class EscuelaDeportivaServiciosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
