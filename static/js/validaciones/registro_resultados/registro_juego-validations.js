@@ -38,7 +38,16 @@ $(document).ready(function() {
                             message: 'Por favor seleccione un país'
                         }
                     }
-                },            
+                },
+                imagen: {
+                    validators:{
+                        file: {
+                            extension: 'png,jpg,jpeg,svg',
+                            message: 'Seleccione una imagen con alguno de los siguientes formatos (png, jpg, jpeg, svg) cuyo tamaño sea menor a 5MB',
+                            maxSize: 5242880,
+                        }                        
+                    }
+                }            
             
 
 
