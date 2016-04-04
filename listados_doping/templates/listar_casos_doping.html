@@ -63,7 +63,7 @@
                                         </td>
                                     {% endif %}
                                     <td>
-                                        {% if 'listados_doping.change_casodoping' in perms %}
+                                        {% if 'listados_doping.change_casodoping' in perms and caso_doping.estado == 0 %}
                                             <a href='{% url 'editar_caso_doping' caso_doping.id %}'>
                                                 <i class="fa fa-edit"></i> Editar
                                             </a>
