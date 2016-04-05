@@ -276,6 +276,7 @@ def medalleria_por_competencia(request, competencia_id):
 
 @login_required
 def eliminar_equipo(request, competencia_id, participante_id):
+    competencia = Competencia.objects.get(id=competencia_id)    
     equipo = Equipo.objects.get(id=participante_id, competencia=competencia_id)
     equipo.delete()
 
