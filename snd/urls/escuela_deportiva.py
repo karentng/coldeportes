@@ -18,6 +18,14 @@ urlpatterns = patterns(
     # urls participantes
     url(r'^escuela-deportiva/participantes/registrar', 'registrar_participante', name='registrar_participante'),
     url(r'^escuela-deportiva/participantes/listar$', 'listar_participante', name='listar_participante'),
+    url(r'^escuela-deportiva/participantes/editar/(\d+)$', 'editar_participante', name='editar_participante'),
+    url(r'^escuela-deportiva/participantes/detalles/(\d+)$', 'detalles_participante', name='detalles_participante'),
+
+    # urls participantes
+    url(r'^escuela-deportiva/participantes/acudiente/registrar/(\d+)$', 'registrar_acudiente',
+        name='registrar_acudiente'),
+    # url(r'^escuela-deportiva/participantes/acudiente/listar$', 'listar_participante', name='listar_participante'),
+    # url(r'^escuela-deportiva/participantes/acudiente/editar/(\d+)$', 'editar_participante', name='editar_participante'),
 
     # urls wizard
     url(r'^escuela-deportiva/sedes/crear_editar/(?P<paso>\w+)/(?P<edicion>\d+)$', 'crear_editar', name='escuela_deportiva_crear_editar'),

@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Participantes - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Ver Detalles de Participante de EFD
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listar_participante' %}">Participantes</a></li>
+    <li class="active">Ver Participante</li>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .profile-image img {
+          display: block;
+          width: 100%;
+          max-height: 100%;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="{% url 'listar_participante' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+        </div>
+        <h4 class="panel-title">
+            Información del participante: {{participante.full_name}}
+        </h4>
+    </div>
+    <div class="panel-body" style="padding:0">
+        <div class="row">
+            <div class="col-sm-12">
+                <img src="{{STATIC_URL}}img/ver_mas_deportistas.png" alt="deportistas" style="width:100%; height:250px">
+                <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                    <div class="panel-heading p-0">
+                        <div class="panel-heading-btn m-r-10 m-t-10">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
+
+                        <div class="tab-overflow">
+                            <ul class="nav nav-tabs">
+                                <li class="prev-button">
+                                    <a href="javascript:;" data-click="prev-tab" class="text-inverse">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                </li>
+
+                                <li class="active"><a href="#nav-tab2-11" data-toggle="tab"><i class="fa fa-globe"></i> Datos de Identificación</a></li>
+
+                                <li class=""><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-stethoscope"></i> Datos Acudiente</a></li>
+
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-info-circle"></i> Informe de seguimientos</a></li>
+
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="ion fa-md ion-trophy"></i> Informe de acudiente</a></li>
+
+                                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" style="margin-bottom:0px;padding-bottom:0px">
+                        <div class="tab-pane fade active in" id="nav-tab2-11" style="margin-bottom:0px">
+                            <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
+                                <div class="invoice-company">
+                                    <b>{{participante.full_name}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="profile-left">
+                                                <div class="profile-image">
+                                                    {%if participante.foto %}
+                                                        <img src="{{MEDIA_URL}}{{participante.foto}}" alt="Foto del participante">
+                                                    {%else%}
+                                                        <img src="{{STATIC_URL}}img/depor_default.png" alt="Foto del participante" />
+                                                    {%endif%}
+                                                    <i class="fa fa-user hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="profile-right">
+                                                <div class="col-lg-9">
+                                                    <p>{% if perms.snd.change_participante and request.tenant.schema_name != 'public' %}
+                                                        <b>{{participante.get_tipo_id_display | title}} </b>: {{participante.identificacion}}<br />
+                                                    {% else %}
+                                                        <b>Entidad:</b> {{ participante.entidad | upper}}<br/>
+                                                    {% endif %}</p>
+                                                    {% if request.tenant.schema_name != 'public' %}
+                                                        {% ifequal participante.estado 3 %}
+                                                            <p><b>Estado:</b> {{participante.get_estado_display}} A {{ participante.entidad | upper  }}</p>
+                                                        {% else %}
+                                                            <p><b>Estado:</b> {{participante.get_estado_display}}</p>
+                                                        {% endifequal %}
+                                                    {% endif %}
+                                                    <p><b>Género:</b> {{participante.get_genero_display}}</p>
+                                                    <p><b>Edad:</b> {{ participante.edad }}</p>
+                                                    <p><b>Etnia:</b>
+                                                        {%if participante.etnia%}
+                                                            {{ participante.etnia}}
+                                                        {%else%}
+                                                            Ninguna
+                                                        {%endif%}
+                                                    </p>
+                                                    <p><b>Nacionalidades:</b> {{participante.nacionalidad_str}}</p>
+                                                    <p><b>Ciudad (Departamento) de Residencia:</b> {{ participante.ciudad_residencia}}</p>
+                                                    <p><b>Sistema de salud afiliado:</b> {{ participante.eps }}</p>
+                                                </div>
+                                            {% if perms.snd.change_participante and request.tenant.schema_name != 'public' %}
+                                                <p><strong>Información adicional:</strong></p>
+                                                <p><b>Teléfono:</b> {{participante.telefono}}</p>
+                                                <p><b>Dirección:</b> {{participante.direccion}}</p>
+                                                <p><b>Institución educativa actual:</b> {{ participante.institucion_educativa }}</p>
+                                                <p><b>año que cursa:</b> {{ participante.anho_curso }} </p>
+                                                <p><b>Comuna:</b> {{ participante.comuna }} </p>
+                                            {% endif %}
+                                            </div>
+                                        </address>
+
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--COMPOSICION CORPORAL-->
+                        <div class="tab-pane fade" id="nav-tab2-12">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{actudiente.full_name}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <div class="row">
+                                            <address class="m-t-5 m-b-5">
+                                                <div class="col-lg-6">
+                                                    {% if acudiente %}
+                                                        <p><strong>Datos:</strong></p>
+                                                        <p><b>{{ accudiente.get_tipo_id_display }}:</b> {{ accudiente.identificacion }}</p>
+                                                        <p><b>Soporte Identificación:</b> <a href="{{ MEDIA_URL }}{{ accudiente.soporte_id }}" target="_blank">Soporte</a> </p>
+                                                        <p><b>Genero:</b> {{ accudiente.get_genero_display | upper}}</p>
+                                                        <p><b>Fecha Nacimiento:</b> {{accudiente.fecha_nacimiento}} kg/m^2</p>
+                                                        <p><b>Sistema de salud afiliado:</b> {{ accudiente.eps }} </p>
+                                                    {% else %}
+                                                        <p><b>NO SE HA REGISTRADO EL ACUDIENTE</b></p>
+                                                        <p><a type="button" class="btn btn-primary" href="{% url 'registrar_acudiente' participante.id %}">Regsitrar</a> </p>
+                                                    {% endif %}
+                                                </div>
+                                            </address>
+                                        </div>
+                                        <div class="row">
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--INFORMACIÓN ADICIONAL-->
+                        <div class="tab-pane fade" id="nav-tab2-13">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{participante.nombres}} {{participante.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <div class="row">
+                                            <address class="m-t-5 m-b-5">
+                                                <div class="col-lg-6">
+                                                    <p><strong>Información Adicional:</strong></p>
+                                                    <ul>
+
+                                                    </ul>
+                                                </div>
+                                            </address>
+                                        </div>
+                                        <div class="row">
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--HISTORIAL DEPORTIVO-->
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="table-responsive">
+                                                <table class="table table-invoice">
+                                                </table>
+                                            </div>
+                                        </address>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            console.log("Re holis");
+            $('#modal-video').on('hidden.bs.modal', function () {
+                console.log("Holis");
+                $iframe = $(this).find( "iframe" );
+                $iframe.attr("src", $iframe.attr("src"));
+            });
+
+        });
+    </script>
+{% endblock %}

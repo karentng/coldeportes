@@ -5,19 +5,19 @@
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="">EFD</a></li>
     <li ><a href="">Participantes</a></li>
-    <li class="active">Registrar</li>
+    <li class="active">Registrar Acudiente</li>
 {% endblock %}
 
 {% block titulo_contenido %}
-    {% if edicion %}Editar{% else %}Registrar{% endif %} participante
+    {% if edicion %}Editar{% else %}Registrar{% endif %} acudiente
 {% endblock %}
 
 {% block titulo_panel %}
-    {% if edicion %}Editar{% else %}Registrar{% endif %} participante
+    {% if edicion %}Editar{% else %}Registrar{% endif %} acudiente
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/validaciones/escuela_deportiva/participantes-validations.js"></script>
+    <script src="{{STATIC_URL}}js/validaciones/gestion_eventos/participantes-validations.js"></script>
 {% endblock %}
 
 {% block css %}
@@ -27,7 +27,7 @@
 {% block contenido_panel %}
     <div class="well row">
         <div class="row">
-            <form id="form-participante" action="" method="post" enctype="multipart/form-data">
+            <form id="form-acudientee" action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="col-md-6">

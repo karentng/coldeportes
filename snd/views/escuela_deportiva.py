@@ -13,7 +13,7 @@ from coldeportes.utilities import *
 # Crear / Modificar Escuela de formación deportiva
 #==================================================================
 
-"""
+"""a
 Noviembre 02 / 2015
 Autor: Cristian Leonardo Ríos López
 
@@ -226,9 +226,96 @@ def registrar_participante(request):
 
 
 @login_required
-@permission_required('snd.add_escueladeportiva')
+@permission_required('snd.change_escueladeportiva')
+def editar_participante(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Participante.DoesNotExist:
+        messages.error(request, 'El participante al que trata de acceder no existe')
+        return redirect("listar_participantes")
+
+    if request.method == 'POST':
+        participante_form = ParticipanteForm(request.POST, instance=participante)
+        if participante_form.has_changed():
+            if participante_form.is_valid():
+                participante_form.save()
+                messages.success(request, "El participante ha sido registrado con exito")
+                return redirect('listar_participante')
+
+    participante_form = ParticipanteForm(instance=participante)
+    return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
+                                                                             'edicion': True})
+
+
 def listar_participante(request):
     participantes = Participante.objects.all()
 
     return render(request, 'escuela_deportiva/listar_participantes.html', {'participantes': participantes})
 
+
+@login_required
+@permission_required('snd.view_escueladeportiva')
+def detalles_participante(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Participante.DoesNotExist:
+        messages.error(request, 'El participante al que trata de acceder no existe')
+        return redirect("listar_participantes")
+
+    try:
+        acudiente = Acudiente.objects.get(participante_responsable=participante)
+    except Acudiente.DoesNotExist:
+        acudiente = None
+
+    return render(request, 'escuela_deportiva/ver_participante.html', {'participante': participante,
+                                                                       'acudiente': acudiente})
+
+
+@login_required
+@permission_required('snd.add_escueladeportiva')
+def registrar_acudiente(request, id_participante):
+
+    if request.method == 'POST':
+        try:
+            participante = Participante.objects.get(id=id_participante)
+        except Participante.DoesNotExist:
+            messages.error(request, 'El participante al que trata de acceder no existe')
+            return redirect("listar_participantes")
+        acudiente_form = AcudienteForm(request.POST)
+        if acudiente_form.is_valid():
+            acudiente = acudiente_form.save(commit=False)
+            acudiente.participante_responsable = participante
+            acudiente.save()
+            messages.success(request, "El acudiente ha sido registrado con exito")
+            return redirect('detalles_participante', id_participante)
+
+    acudiente_form = AcudienteForm()
+    return render(request, 'escuela_deportiva/registrar_acudiente.html', {'form': acudiente_form})
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def editar_participante(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Participante.DoesNotExist:
+        messages.error(request, 'El participante al que trata de acceder no existe')
+        return redirect("listar_participantes")
+
+    if request.method == 'POST':
+        participante_form = ParticipanteForm(request.POST, instance=participante)
+        if participante_form.has_changed():
+            if participante_form.is_valid():
+                participante_form.save()
+                messages.success(request, "El participante ha sido registrado con exito")
+                return redirect('listar_participante')
+
+    participante_form = ParticipanteForm(instance=participante)
+    return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
+                                                                             'edicion': True})
+
+
+def listar_participante(request):
+    participantes = Participante.objects.all()
+
+    return render(request, 'escuela_deportiva/listar_participantes.html', {'participantes': participantes})

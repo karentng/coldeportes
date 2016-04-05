@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from snd.models import EscuelaDeportiva, Participante
+from snd.models import EscuelaDeportiva, Participante, Acudiente
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
 
 
@@ -19,6 +19,23 @@ class ParticipanteForm(forms.ModelForm):
     class Meta:
         model = Participante
         exclude = ('entidad', 'fecha_creacion', 'estado')
+
+        widgets = {
+            'fecha_nacimiento': MyDateWidget()
+        }
+
+
+class AcudienteForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(AcudienteForm, self).__init__(*args, **kwargs)
+        self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
+        self.fields['eps'].widget.attrs.update({'style': 'height: 71px;'})
+
+    class Meta:
+        model = Acudiente
+        exclude = ('fecha_creacion', 'estado')
 
         widgets = {
             'fecha_nacimiento': MyDateWidget()

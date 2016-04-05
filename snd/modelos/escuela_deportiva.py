@@ -6,22 +6,23 @@ from django.conf import settings
 import os
 # encoding:utf-8
 
+ESTADO = (
+    (0, 'INACTIVO'),
+    (1, 'ACTIVO'),
+)
+tipo_sexo = (
+    ('HOMBRE', 'MASCULINO'),
+    ('MUJER', 'FEMENINO'),
+)
+TIPO_IDENTIDAD = (
+    ('CC', 'CÉDULA DE CIUDADANÍA'),
+    ('TI', 'TARJETA DE IDENTIDAD'),
+    ('CE', 'CÉDULA DE EXTRANJERÍA'),
+    ('PS', 'PASAPORTE'),
+)
+
 
 class Participante(models.Model):
-    ESTADO = (
-        (0, 'INACTIVO'),
-        (1, 'ACTIVO'),
-    )
-    tipo_sexo = (
-        ('HOMBRE', 'MASCULINO'),
-        ('MUJER', 'FEMENINO'),
-    )
-    TIPO_IDENTIDAD = (
-        ('CC', 'CÉDULA DE CIUDADANÍA'),
-        ('TI', 'TARJETA DE IDENTIDAD'),
-        ('CE', 'CÉDULA DE EXTRANJERÍA'),
-        ('PS', 'PASAPORTE'),
-    )
     ETNIAS = (
         ('MESTIZO', 'MESTIZO'),
         ('AFROCOLOMBIANO', 'AFROCOLOMBIANO'),
@@ -68,7 +69,7 @@ class Participante(models.Model):
     class Meta:
         unique_together = ('tipo_id', 'identificacion',)
         permissions = (
-            ("view_deportista", "Permite ver deportista"),
+            ("view_deportista", "Permite ver participante"),
         )
 
     def __str__(self):
@@ -91,6 +92,28 @@ class Participante(models.Model):
         self.apellidos = self.apellidos.upper()
         self.direccion = self.direccion.upper()
         super(Participante, self).save(*args, **kwargs)
+
+
+class Acudiente(models.Model):
+    nombres = models.CharField(max_length=100, verbose_name='Nombres')
+    apellidos = models.CharField(max_length=100, verbose_name='Apellidos')
+    genero = models.CharField(choices=tipo_sexo, max_length=11, verbose_name='Genero del Participante')
+    fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
+    tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='TI',
+                               verbose_name='Tipo de Identificación')
+    identificacion = models.CharField(max_length=100, verbose_name='Identificación')
+    soporte_id = models.FileField(upload_to="soporte_acudientes_EFD",
+                                  verbose_name="Soporte de identificación (escaneado)")
+    eps = models.ForeignKey(EPS, verbose_name='Sistema de salud afiliado')
+    estado = models.IntegerField(default=1, choices=ESTADO)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    participante_responsable = models.ForeignKey(Participante)
+
+    class Meta:
+        unique_together = ('tipo_id', 'identificacion',)
+
+    def full_name(self):
+        return str(self.nombres) + " " + str(self.apellidos)
 
 
 class EscuelaDeportiva(models.Model):
