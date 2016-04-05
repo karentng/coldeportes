@@ -56,23 +56,28 @@ class ParticipanteTiempoForm(forms.ModelForm):
     
     def clean_marca(self):
         marca = self.cleaned_data['marca']
-        try:
-            if marca.isdigit() or "." in marca or ":" in marca:
-                pass
-            else:
+        if marca:
+            try:
+                if marca.isdigit() or "." in marca or ":" in marca:
+                    return self.cleaned_data['marca']
+                else:
+                    raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+            except:
                 raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
-        except:
-            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        else:
+            pass
 
     def clean_tiempo(self):
         tiempo = self.cleaned_data['tiempo']
-        try:
-            if tiempo.isdigit() or "." in tiempo or ":" in tiempo:
-                pass
-            else:
+        if tiempo:
+            try:
+                if tiempo.isdigit() or "." in tiempo or ":" in tiempo:
+                    return self.cleaned_data['tiempo']
+                else:
+                    raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+            except:
                 raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
-        except:
-            raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+        pass
     
     class Meta:
         model = Participante
@@ -108,15 +113,17 @@ class ParticipanteMetrosForm(forms.ModelForm):
 
     def clean_marca(self):
         marca = self.cleaned_data['marca']
-        try:
-            if marca.isdigit() or "." in marca or ":" in marca:
-                pass
-            else:
+        if marca:
+            try:
+                if marca.isdigit() or "." in marca or ":" in marca:
+                    return self.cleaned_data['marca']
+                else:
+                    raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+            except:
                 raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
-        except:
-            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
-
-    
+        else:
+            pass
+            
     class Meta:
         model = Participante
         exclude = ("competencia", 'tiempo', 'equipo', 'puntos')
@@ -150,23 +157,28 @@ class EquipoTiempoForm(forms.ModelForm):
 
     def clean_marca(self):
         marca = self.cleaned_data['marca']
-        try:
-            if marca.isdigit() or "." in marca or ":" in marca:
-                pass
-            else:
+        if marca:
+            try:
+                if marca.isdigit() or "." in marca or ":" in marca:
+                    return self.cleaned_data['marca']
+                else:
+                    raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+            except:
                 raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
-        except:
-            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        else:
+            pass
 
     def clean_tiempo(self):
         tiempo = self.cleaned_data['tiempo']
-        try:
-            if tiempo.isdigit() or "." in tiempo or ":" in tiempo:
-                pass
-            else:
+        if tiempo:
+            try:
+                if tiempo.isdigit() or "." in tiempo or ":" in tiempo:
+                    return self.cleaned_data['tiempo']
+                else:
+                    raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+            except:
                 raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
-        except:
-            raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
+        pass
     
 
     class Meta:
@@ -198,13 +210,16 @@ class EquipoMetrosForm(forms.ModelForm):
 
     def clean_marca(self):
         marca = self.cleaned_data['marca']
-        try:
-            if marca.isdigit() or "." in marca or ":" in marca:
-                pass
-            else:
+        if marca:
+            try:
+                if marca.isdigit() or "." in marca or ":" in marca:
+                    return self.cleaned_data['marca']
+                else:
+                    raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+            except:
                 raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
-        except:
-            raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        else:
+            pass
 
     
 class CompetenciasBaseDeDatos(forms.Form):

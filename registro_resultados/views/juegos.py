@@ -280,13 +280,8 @@ def eliminar_equipo(request, competencia_id, participante_id):
     equipo = Equipo.objects.get(id=participante_id, competencia=competencia_id)
     equipo.delete()
 
-    if competencia.tipo_registro == 1:
-        return redirect('equipo_tiempos', competencia_id)
-    elif competencia.tipo_registro == 2:
-        return redirect('equipo_puntos', competencia_id)
-    elif competencia.tipo_registro == 3:
-        return redirect('equipo_metros', competencia_id)
-
+    return redirect('listar_equipos', competencia_id)
+    
 
 @login_required
 def datos_equipo(request, competencia_id):
