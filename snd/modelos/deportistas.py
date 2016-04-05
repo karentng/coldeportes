@@ -5,8 +5,21 @@ from django.db import models
 from coldeportes.utilities import calculate_age,extraer_codigo_video
 from django.db.models.fields.files import ImageFieldFile, FileField
 from coldeportes.settings import STATIC_URL
+from django.conf import settings
+import os
+
 
 class Deportista(models.Model):
+
+    def foto_name(instance, filename):
+        #el nombre de la imagen es la identificación del deportista, filename[-4:] indica la extensión del archivo
+        #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
+        ruta = 'fotos_deportistas/' + instance.identificacion + filename[-4:]
+        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        if(os.path.exists(ruta_delete)):
+            os.remove(ruta_delete)
+        return ruta
+
     #Datos personales
         #Identificacion
     tipo_sexo = (
@@ -57,7 +70,7 @@ class Deportista(models.Model):
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,verbose_name='Disciplinas Deportivas')
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
-    foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -280,18 +293,3 @@ class HistorialLesiones(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     segmento_corporal = models.IntegerField(verbose_name='Segmento Corporal', choices=SEGMENTOS,blank=True,null=True)
 
-class HistorialDoping(models.Model):
-    TIPO_IDENTIDAD = (
-        ('TI', 'TARJETA DE IDENTIDAD'),
-        ('CC', 'CÉDULA DE CIUDADANÍA'),
-        ('CE', 'CÉDULA DE EXTRANJERÍA'),
-        ('PS', 'PASAPORTE'),
-    )
-    deportista = models.ForeignKey(Deportista)
-    nombre_delegado = models.CharField(max_length=100,verbose_name='Nombre del delegado')
-    tipo_identidad_delegado = models.CharField(max_length=2,choices=TIPO_IDENTIDAD,verbose_name='Tipo de identificación del delegado')
-    identificacion_delegado = models.CharField(max_length=30,verbose_name='Número de identificación del delegado')
-    evento = models.CharField(max_length=300,verbose_name='Evento en el que se detectó el doping')
-    fecha = models.DateField(verbose_name='Fecha en la que se detectó el doping')
-    observaciones = models.TextField(blank=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)

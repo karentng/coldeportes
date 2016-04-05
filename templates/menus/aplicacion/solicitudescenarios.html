@@ -1,0 +1,24 @@
+<li class="has-sub {% if '/solicitudes-escen/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-building fa-2x"></i>
+        <span span class="colorMenu">SOLICITUDES ESCENARIOS</span>
+    </a>
+    <ul class="sub-menu">
+        {% if perms.solicitud.add_solicitudescenario%}
+            <li {% if "/solicitudes-escen/solicitud/crear$" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'generar_solicitud' %}">Enviar solicitud</a>
+            </li>
+        {% endif %}
+        {% if perms.respuesta.view_listasolicitudes %}
+            <li {% if "/solicitudes-escen/respuesta/listar$" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'listar_solicitudes_respuesta' %}">Listar solicitudes pendientes</a>
+            </li>
+        {% endif %}
+        {% if perms.solicitud.view_solicitudescenario%}
+            <li {% if "/solicitudes-escen/solicitud/listar$" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'listar_solicitudes' %}">Listar mis solicitudes</a>
+            </li>
+        {% endif %}
+    </ul>
+</li>

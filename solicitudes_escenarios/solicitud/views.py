@@ -1,14 +1,19 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from solicitudes_escenarios.solicitud.forms import SolicitudEscenarioForm,AdjuntoSolicitudForm
+from django.contrib.auth.decorators import login_required,permission_required
+from solicitudes_escenarios.solicitud.forms import SolicitudEscenarioForm,AdjuntoSolicitudForm,EditarForm
 from solicitudes_escenarios.respuesta.models import ListaSolicitudes
-from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud
+from solicitudes_escenarios.solicitud.models import SolicitudEscenario,AdjuntoSolicitud,DiscucionSolicitud
 from django.db import connection
 from django.contrib import messages
+from django.utils.encoding import smart_str
+from solicitudes_escenarios.utilities import comprimir_archivos
+from snd.models import *
+import json
 # Create your views here.
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def generar_solicitud(request,id=None):
     """
     Febrero 19, 2016
@@ -27,9 +32,10 @@ def generar_solicitud(request,id=None):
         form = SolicitudEscenarioForm(request.POST,instance=sol)
         if form.is_valid():
             nueva_solicitud = form.save()
-            connection.set_tenant(nueva_solicitud.para_quien)
-            ListaSolicitudes.objects.create(solicitud=nueva_solicitud.id,entidad_solicitante=entidad).save()
-            connection.set_tenant(entidad)
+            if not sol:
+                connection.set_tenant(nueva_solicitud.para_quien)
+                ListaSolicitudes.objects.create(solicitud=nueva_solicitud.id,entidad_solicitante=entidad).save()
+                connection.set_tenant(entidad)
             request.session['identidad'] = {
                 'id_solicitud': nueva_solicitud.id,
                 'id_entidad': entidad.id,
@@ -42,6 +48,7 @@ def generar_solicitud(request,id=None):
     })
 #Restringir acceso despues de enviada la solicitud para no enviar mas adjuntos durante el proceso
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def adjuntar_archivo_solicitud(request,id):
     """
     Febrero 19,2016
@@ -82,6 +89,7 @@ def adjuntar_archivo_solicitud(request,id):
     })
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def borrar_adjunto(request,id_sol,id_adj):
     """
     Febrero 19, 2016
@@ -113,6 +121,7 @@ def borrar_adjunto(request,id_sol,id_adj):
 
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def finalizar_solicitud(request,id):
     """
     Febrero 19, 2016
@@ -141,6 +150,7 @@ def listar_solicitudes(request):
     })
 
 @login_required
+@permission_required('solicitud.add_solicitudescenario')
 def cancelar_solicitud(request, id=None):
     """
     Febrero 19, 2016
@@ -158,11 +168,177 @@ def cancelar_solicitud(request, id=None):
             messages.error(request,'No existe la solicitud, proceso no realizado')
         solicitud.estado = 4
         solicitud.save()
+
+    try:
+        del request.session['identidad']
+    except Exception:
+        pass
+
     messages.warning(request,'Solicitud cancelada correctamente')
     return redirect('listar_solicitudes')
 
 @login_required
 def imprimir_solicitud(request,id):
-    return render(request,'solicitud_imprimir.html',{
+    """
+    Febrero 25, 2016
+    Autor: Daniel Correa
 
+    Permite renderizar el html imprimible de la solicitud
+
+    """
+    try:
+        solicitud = SolicitudEscenario.objects.get(id=id)
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes')
+
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
+
+    return render(request,'solicitud_imprimir.html',{
+        'solicitud' : solicitud,
+        'discusiones' : discusiones
     })
+@login_required
+def ver_solicitud(request,id):
+    """
+    Febrero 25, 2016
+    Autor: Daniel Correa
+
+    Permite tener el detalle de una solicitud
+
+    """
+    try:
+        solicitud = SolicitudEscenario.objects.get(id=id)
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes')
+
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
+    #for escenario in solicitud.escenarios.all(): escenario.fotos = Foto.objects.filter(escenario=escenario)
+
+    return render(request,'ver_solicitud.html',{
+        'solicitud' : solicitud,
+        'discusiones' : discusiones
+    })
+@login_required
+def descargar_adjunto(request,id_sol,id_adj):
+    """
+    Marzo 1, 2016
+    Autor: Daniel Correa
+
+    Permite descargar algun archivo adjunto de una solicitud
+
+    """
+    try:
+        adj = AdjuntoSolicitud.objects.get(solicitud=id_sol,id=id_adj)
+    except:
+        messages.error(request,'No existe el archivo adjunto solicitado')
+        return redirect('listar_solicitudes')
+
+    response = HttpResponse(adj.archivo.read(),content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adj.nombre_archivo())
+    response['X-Sendfile'] = smart_str(adj.archivo)
+    return response
+
+@login_required
+@permission_required('solicitud.add_solicitudescenario')
+def editar_solicitud(request,id):
+    """
+    Marzo 5, 2016
+    Autor:Daniel Correa
+
+    Permite cargar la plantilla de edicion de solicitudes
+
+    """
+    try:
+        solicitud = SolicitudEscenario.objects.get(id=id)
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes')
+
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+    #for escenario in solicitud.escenarios.all(): escenario.fotos = Foto.objects.filter(escenario=escenario)
+    discusiones = DiscucionSolicitud.objects.filter(solicitud=solicitud)
+    form = EditarForm()
+
+    return render(request,'ver_solicitud.html',{
+        'solicitud' : solicitud,
+        'discusiones' : discusiones,
+        'form_comentarios' : form,
+        'responder' : True
+    })
+
+@login_required
+@permission_required('solicitud.add_solicitudescenario')
+def enviar_comentario(request,id):
+    """
+    Marzo 5, 2016
+    Autor: Daniel Correa
+
+    Permite volver a enviar la solicitud completa
+    """
+    if request.method == 'POST':
+
+        try:
+            solicitud = SolicitudEscenario.objects.get(id=id)
+        except:
+            messages.error(request,'No existe la solcitud')
+            return redirect('listar_solicitudes')
+
+
+        form = EditarForm(request.POST)
+        if form.is_valid():
+            dis = form.save(commit=False)
+            dis.solicitud = solicitud
+            dis.estado_anterior = solicitud.estado
+            dis.estado_actual = 0
+            dis.entidad = request.tenant
+            dis.respuesta = False
+            dis.save()
+            for afile in request.FILES.getlist('adjuntos'):
+                 AdjuntoSolicitud(solicitud = solicitud,archivo=afile,discucion = dis).save()
+            solicitud.estado = dis.estado_actual
+            solicitud.save()
+            messages.success(request,'La solicitud se ha reenviado con exito')
+            return redirect('ver_solicitud',solicitud.id)
+
+        messages.error(request,'La solicitud no se ha podido reenviar por un error en el formulario, intentalo de nuevo')
+        return redirect('editar_solicitud',solicitud.id)
+
+@login_required
+def descargar_todos_adjuntos_solicitud(request,id_sol):
+    """
+    Marzo 11, 2016
+    Autor: Daniel Correa
+
+    Permite descargar todos los adjuntos de una solicitud en un archivo zip
+
+    """
+
+    adj = AdjuntoSolicitud.objects.filter(solicitud=id_sol)
+    zip,temp = comprimir_archivos(adj)
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adj[0].solicitud.codigo_unico(request.tenant))
+    temp.seek(0)
+    response.write(temp.read())
+    return response
+
+@login_required
+def descargar_adjuntos_discusion(request,id_sol,id_dis):
+    """
+    Marzo 11, 2016
+    Autor: Daniel Correa
+
+    Permite descargar los archivos adjuntos de una discusion a una solicitud
+    """
+
+    adj = AdjuntoSolicitud.objects.filter(solicitud=id_sol, discucion=id_dis)
+    zip,temp = comprimir_archivos(adj)
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adj[0].solicitud.codigo_unico(request.tenant))
+    temp.seek(0)
+    response.write(temp.read())
+    return response
+

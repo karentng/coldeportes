@@ -42,6 +42,8 @@
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
     {{form.media}} {# js y css para datetime #}       
     <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
+    
     {{form.media}} {# js y css para datetime #}
 {% endblock %}
 
@@ -63,6 +65,16 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/moment.js"></script>
     <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="{{STATIC_URL}}js/form-plugins.demo.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script>
+        $(document).ready(function(){
+                
+            $("#id_palabras_clave").tagit({
+                singleField:true,
+                singleFieldDelimiter: ",",
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block script %}

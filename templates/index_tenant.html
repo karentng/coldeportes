@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
+{% load has_group %}
 
 {% block titulo %}
     Inicio - SIND COLDEPORTES
@@ -14,13 +15,14 @@
 {% endblock %}
 
 {% block js %}
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/arrayToJson.js"></script>
     <script src="{{STATIC_URL}}amcharts/amcharts.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/serial.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/amexport.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/canvg.js" type="text/javascript"></script>
     <script src="{{STATIC_URL}}amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
-    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>    
+    <script src="{{STATIC_URL}}amcharts/exporting/filesaver.js" type="text/javascript"></script>
     <script type="text/javascript">
         datosMostrar = "{{ubicaciones}}";
         posicionInicial = "{{posicionInicial}}";
@@ -28,7 +30,7 @@
     </script>
     <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/creacion_google_maps.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
-
+    <script src="{{STATIC_URL}}plugins/croppic/croppic.min.js"></script>
     <script>
         // EFECTOS DE ANIMACIÓN DASHBOARD
         $(document).ready(function(){
@@ -47,8 +49,26 @@
                 tiempo+=150;
             }
 
+            $("#UploadImg").click(function(){
+                if ($('.cropControls.cropControlsCrop').length) {
+                    console.log("Cortando");
+                    $('.cropControlCrop').click();
+                }
+            });
+
         });
+        {% if user.is_authenticated %}
+        var urlCrop = "{% url 'crop_pic' %}";
+        var formId = "form-foto-club";
+        var urlMedia = "/info_entidad/";
+        var edicion = {% if edicion %}true{% else %}false{% endif %};
+        var picture = "{{ MEDIA_URL }}{{ foto }}";
+        {% endif %}
     </script>
+
+    {% if user.is_authenticated %}
+    <script src="{{STATIC_URL}}plugins/croppic/croppic-conf.js"></script>
+    {% endif %}
 {% endblock %}
 
 {% block css %}
@@ -70,6 +90,8 @@
             bottom: 0;
         }
     </style>
+    <link href="{{STATIC_URL}}plugins/croppic/croppic.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/croppic/estilos_personalizados.css" rel="stylesheet">
 {% endblock %}
 
 {% block contenido %}
@@ -80,7 +102,16 @@
                     <ul class="result-list">
                         <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">
                             <div class="result-image">
-                                <img src="{{ STATIC_URL }}img/info-tenant-imagen.png" alt=""/>
+                                <img src="{% if entidad.foto %}{{ MEDIA_URL }}{{ entidad.foto }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" class="img-responsive" alt="Info Tenant"/>
+                                {% if request.user.is_superuser  or request.user|has_group:"Digitador" %}
+                                    <button id="modalTrigger2" data-toggle="modal" data-target="#myModalCrop" type="button" class="btn btn-warning btn-xs" style="position:absolute;bottom: 0; right:0;">Cambiar imagen</button>
+                                    <form id="form-foto-club" method="post" action="{% url 'foto_entidad' %}">
+                                        {% csrf_token %}
+                                        <label hidden for="modalTrigger2" id="labelImg"></label>
+                                        <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
+                                        <button id="submit-crop" hidden></button>
+                                    </form>
+                                {% endif %}
                             </div>
                             <div class="result-info">
                                 <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>
@@ -88,6 +119,12 @@
                                 <p class="desc">
                                     {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
                                 </p>
+                                <div class="m-b-10">
+                                    {% if entidad.tipo_tenant == "Club" and user.is_authenticated %}
+                                        <a href="" data-target="#modal-socios" data-toggle="modal" style="margin-right: 10px;"> <i class="fa fa-group"></i> Ver socios del club</a>
+                                        <a data-toggle="modal" data-target="#modal-planes"  href=""><i class="fa fa-money"></i> Ver planes de costos</a>
+                                    {% endif %}
+                                </div>
                                 <div class="btn-row">
                                     <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Ciudad(Departamento)">
                                         <i class="fa fa-fw fa-globe"></i>
@@ -98,9 +135,14 @@
                                     <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Teléfono">
                                         <i class="fa fa-fw fa-phone"></i>
                                     </a><span>{% if entidad.telefono %} {{entidad.telefono }} {% else %} No especificado{% endif %}</span>
-                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Teléfono">
+                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Pagina web">
                                         <i class="fa fa-fw fa-link"></i>
                                     </a><span>{% if entidad.pagina_web %} {{entidad.pagina_web }} {% else %} No especificado{% endif %}</span>
+                                    {% if entidad.has_deportes %}
+                                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Disciplinas deportivas">
+                                            <i class="fa fa-fw fa-futbol-o"></i>
+                                        </a><span>{% if entidad.deportes %} {{entidad.deportes }} {% else %} No especificado{% endif %}</span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </li>
@@ -108,6 +150,7 @@
                 </div>
             </div>
         </div>
+        {% include 'modal_croppic.html' %}
     {% endif %}
 
     <!--Se trae todo el bloque ya que se pueden utilizar mas de un panel-->
@@ -221,4 +264,84 @@
         {% endif %}
         </div>
     </div>
+
+    <!-- Modales -->
+    <div class="modal fade" id="modal-socios">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Lista de socios del club {{ entidad.nombre | upper }}</h4>
+                </div>
+                <div class="modal-body">
+                    {% if entidad.socios %}
+                        <table class="table table-striped table-bordered table-hover dataTables-socios" >
+                            <thead>
+                                <tr>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Ciudad</th>
+                                    <th>Empresa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for socio in entidad.socios %}
+                                    <tr class="gradeX">
+                                        <td>{{ socio.nombre }}</td>
+                                        <td>{{ socio.apellido }}</td>
+                                        <td>{{ socio.ciudad }}</td>
+                                        <td>{{ socio.empresa }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <center>No hay socios registrados.</center>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <a href="" class="btn btn-sm btn-warning" data-dismiss="modal">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Modal información planes de costos del club -->
+        <div class="modal fade" id="modal-planes">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Planes de costos del club {{ entidad.nombre | upper }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% if entidad.planes_de_costo %}
+                            <table id="tabla-plan-costo" class="table table-bordered table-striped table-hover" >
+                                <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Descripción</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plan in entidad.planes_de_costo %}
+                                        <tr class="gradeX">
+                                            <td>{{ plan.nombre }}</td>
+                                            <td>$ {{ plan.precio }}</td>
+                                            <td>{{ plan.descripcion }}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <center>No hay planes de costo registrados</center>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-sm btn-warning" data-dismiss="modal">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 {% endblock %}

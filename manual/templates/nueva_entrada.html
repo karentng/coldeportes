@@ -21,10 +21,23 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
     <script src="{{STATIC_URL}}js/form-wysiwyg.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script>
+        $(document).ready(function(){
+                
+            $("#id_palabras_clave").tagit({
+                singleField:true,
+                singleFieldDelimiter: ",",
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block css %}
     {{ form.media }}
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
+    
 {% endblock %}
 
 {% block contenido_panel %}

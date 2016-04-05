@@ -39,6 +39,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipio
         escuelas = sumar_datos_diccionario(escuelas, choices)
         return escuelas
 
+    #print(escuelas)
     escuelas = tipoTenant.ajustar_resultado(escuelas)
     return escuelas
 
@@ -112,9 +113,9 @@ def servicios_escuelas(request):
     cantidad = 'id'
     categoria = 'nombre_servicio'
     escuelas = generador_reporte_escuelas(request, tabla, cantidad, categoria, choices=None)
-    
     if request.is_ajax():
         return JsonResponse(escuelas)
+
         
     visualizaciones = [1, 5, 6]
     form = EscuelasForm(visualizaciones=visualizaciones)
@@ -127,4 +128,48 @@ def servicios_escuelas(request):
         'actor': 'Escuelas de Formación Deportiva',
         'fecha_generado': datetime.now(),
         'nombre_columna':'Servicio'
+    })
+
+def cantidad_escuelas(request):
+    """
+    Marzo 8, 2016
+    Autor: Diego Monsalve
+
+    Permite conocer la cantidad de escuelas de formación deportiva por departamento y municipio
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicEscuelaView
+    else:
+        tabla = TenantEscuelaView
+
+    escuelas = tabla.objects.filter(estado=0).values('id', 'entidad_id').distinct()
+    datos = {'Total escuelas de formación deportiva': len(escuelas)}
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null' else ast.literal_eval(request.GET['departamentos'])
+        municipios = None if request.GET['municipios'] == 'null' else ast.literal_eval(request.GET['municipios'])
+        if departamentos and municipios:
+            escuelas = tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos, ciudad__in=municipios).values('id', 'entidad_id').distinct()
+        elif departamentos:
+            escuelas = tabla.objects.filter(estado=0, ciudad__departamento__id__in=departamentos).values('id', 'entidad_id').distinct()
+        elif municipios:
+            escuelas = tabla.objects.filter(estado=0, ciudad__in=municipios).values('id', 'entidad_id').distinct()
+        else:
+            escuelas = tabla.objects.filter(estado=0).values('id', 'entidad_id').distinct()
+        datos = {'Total escuelas de formación deportiva': len(escuelas)}
+        return JsonResponse(datos)
+
+    visualizaciones = [1]
+    form = EscuelasForm(visualizaciones=visualizaciones)
+    return render(request, 'escuelas/base_escuelas.html', {
+        'nombre_reporte' : 'Cantidad de escuelas de formación deportiva',
+        'url_data' : 'reportes_cantidad_escuelas',
+        'datos': datos,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Escuelas de Formación Deportiva',
+        'fecha_generado': datetime.now(),
+        'nombre_columna':'Descripción'
     })

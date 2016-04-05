@@ -16,15 +16,14 @@ $(document).ready(function() {
                 validators: {
                     file: {
                         extension: 'png,jpg,jpeg,svg',
-                        message: 'Seleccione una imagen con alguno de los siguientes formatos (png, jpg, jpeg, svg)'
+                        message: 'Seleccione una imagen con alguno de los siguientes formatos (png, jpg, jpeg, svg) cuyo tamaño sea menor a 5MB',
+                        maxSize: 5242880,
                     },
                     notEmpty: {
                         message: 'Debe seleccionar una imagen'
                     }
                 }
-            },            
-            
-
+            },
 
             }
         }).on('success.field.bv', function(e, data) {

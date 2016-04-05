@@ -157,19 +157,6 @@ class HistorialLesionesForm(ModelForm):
         }
 
 
-class HistorialDopingForm(ModelForm):
-    required_css_class = 'required'
-
-    def __init__(self, *args, **kwargs):
-        super(HistorialDopingForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = HistorialDoping
-        exclude = ('deportista','fecha_creacion',)
-        widgets = {
-            'fecha': MyDateWidget(),
-        }
-
 class InformacionAdicionalForm(ModelForm):
     required_css_class = 'required'
 

@@ -1,6 +1,7 @@
 from django import forms
 from .models import Clasificado
 from django.utils.translation import ugettext_lazy as _
+from coldeportes.utilities import MyDateWidget
 
 
 class ClasificadoForm(forms.ModelForm):
@@ -8,11 +9,18 @@ class ClasificadoForm(forms.ModelForm):
 
     class Meta:
         model = Clasificado
-        fields = ('categoria','titulo','descripcion','contacto','valor','etiquetas')
+        fields = ('categoria', 'fecha_publicacion', 'fecha_expiracion', 'titulo', 'descripcion', 'contacto', 'valor',
+                  'etiquetas')
         labels = {
             'titulo': _('Título'),
             'descripcion': _('Descripción'),
-            'categoria': _('Categoria del clasificado'),
+            'categoria': _('Categoría del clasificado'),
+            'contacto': _('Información de contacto')
+        }
+
+        widgets = {
+            'fecha_publicacion': MyDateWidget(),
+            'fecha_expiracion': MyDateWidget()
         }
 
 

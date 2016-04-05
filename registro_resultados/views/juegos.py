@@ -176,7 +176,6 @@ def participante_puntos(request, competencia_id, participante_id=None):
     return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         "form": form,
         'wizard_stage': 1,
-        'participantes': participantes,
         'individual': True,
         'puntos': True,        
         'competencia_id': competencia_id,
@@ -555,6 +554,7 @@ def cargas_competencias(request, juego_id):
 
     return render(request, 'cargado_archivos/cargas_competencias.html', {
         'form': form,
+        'juego_id': juego_id,
     })
 
 @login_required
@@ -603,7 +603,7 @@ def leer_competencias(request, archivo):
 
         competencias.append(datos)
         fila_actual += 1
-    print(competencias)
+    #print(competencias)
     return [competencias, excel.datemode]
 
 

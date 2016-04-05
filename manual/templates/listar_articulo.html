@@ -58,23 +58,44 @@
             <h4 class="panel-title">Visualizando{% if articulo %}: {{articulo.titulo}} {% endif %}</h4>
         </div>
         <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12">
-                    {% if articulo %}
-                    <a href="{% url 'editar_articulo_manual' articulo.id %}" class="btn btn-sm btn-info pull-right">
-                        <i class=""></i>  Editar
-                    </a><br><br>                    
-                    {% endif %}
+            {% if request.tenant.schema_name == 'public' %}
+                {% if articulo %}
+                <div class="btn-group m-r-5 m-b-5 pull-right">
+                    <a href="javascript:;" class="btn btn-info">Gestionar</a>
+                    <a href="javascript:;" data-toggle="dropdown" class="btn btn-info dropdown-toggle">
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="{% url 'editar_articulo_manual' articulo.id %}">Editar</a></li>
+                        <li><a href="#" data-target="#modal-eliminar-{{articulo.id}}" data-toggle="modal">Eliminar</a></li>
+                    </ul>
                 </div>
 
-            </div>
+                <div class="modal fade" id="modal-eliminar-{{articulo.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title">Eliminar Artículo</h4>
+                            </div>
+                            <div class="modal-body">
+                                ¿Está seguro que desea eliminar el artículo {{artículo.titulo}}?
+                            </div>
+                            <div class="modal-footer">
+                                <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
+                                <a href="{% url 'eliminar_articulo_manual' articulo.id %}" class="btn btn-sm btn-danger">Sí</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}            
+            {% endif %}
             <div class="row">
                 <div class="col-md-12">
                     <fieldset>
                         <div class="well row">
                             <h3>{{articulo.titulo}}</h3>
-                            <br>
-                            <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5><br>
+                            <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5>
                             <div class="col-md-12">
                                 <p align="justify">{{articulo.contenido|safe}}</p>
                             </div>
@@ -101,7 +122,9 @@
     <script src="{{STATIC_URL}}plugins/jstree/dist/jstree.min.js"></script>
     <script src="{{STATIC_URL}}js/ui-tree.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
     <!-- ================== END PAGE LEVEL JS ================== --> 
+    
     
 {% endblock %}
 
@@ -110,6 +133,7 @@
         $(document).ready(function() {
             App.init();
             TreeView.init();
+            $( "img" ).addClass( "img-responsive" );
         });
     </script>
 

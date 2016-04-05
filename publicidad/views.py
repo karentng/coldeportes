@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
 from .forms import ClasificadoForm
@@ -25,7 +26,7 @@ def registrar_clasificado(request):
             clasificado = form.save(commit=False)
             nueva_foto = request.POST.get('imagen-crop')
 
-            clasificado.titulo=clasificado.titulo.upper()
+            clasificado.titulo = clasificado.titulo.upper()
 
             if nueva_foto == "No":
                 clasificado.foto = "clasificados/clasificados-default.png"
@@ -55,6 +56,7 @@ def listar_clasificados(request):
     return render(request, 'listar_clasificados.html', {'clasificados': clasificados, "form": form})
 
 
+@login_required
 def gestionar_clasificados(request):
 
     clasificados = Clasificado.objects.all()
@@ -79,14 +81,16 @@ def editar_clasificado(request, id_clasificado):
         if form.has_changed or nueva_foto != "No":
             if form.is_valid():
                 clasificado_form = form.save(commit=False)
-                if nueva_foto != "No":
+                if nueva_foto == "No":
+                    clasificado_form.foto = "clasificados/clasificados-default.png"
+                elif nueva_foto != "si":
                     clasificado_form.foto = nueva_foto
-                form.save()
 
-                messages.success(request,'El clasificado se ha editado correctamente')
-                return redirect('listar_clasificados')
-    return render(request,'registrar_clasificado.html', {'form': form,
-                                                        'edicion': True, "foto": foto})
+                clasificado_form.titulo = clasificado_form.titulo.upper()
+                form.save()
+                messages.success(request, 'El clasificado se ha editado correctamente')
+                return redirect('gestionar_clasificados')
+    return render(request, 'registrar_clasificado.html', {'form': form, 'edicion': True, "foto": foto})
 
 
 @login_required
@@ -104,10 +108,11 @@ def cambiar_estado_clasificado(request, id_clasificado):
     messages.success(request, 'Se ha cambiado el estado del clasificado correctamente')
     return redirect('gestionar_clasificados')
 
-
+@csrf_exempt
 @login_required
 def crop_pic(request):
     import os
+    from django.conf import settings
     response_data = {"status": "error", 'message': 'Only Post Accepted'}
     if request.method == 'POST':
 
@@ -122,10 +127,9 @@ def crop_pic(request):
                     image_path = re.sub('^data:image/.+;base64,', '', image_url)
                     original = Image.open(BytesIO(base64.b64decode(image_path)))
                 else:
-                    image_path = image_url
-                    script_dir = os.path.dirname(os.path.abspath(__file__))
-                    print(script_dir)
-                    original = Image.open(script_dir+"/.."+image_path)
+                    image_path = image_url.replace("media/", "")
+
+                    original = Image.open(settings.MEDIA_ROOT+image_path)
 
                 newim = original.resize(
                             (int(form.cleaned_data['imgW']), int(form.cleaned_data['imgH'])),
@@ -139,25 +143,26 @@ def crop_pic(request):
                 y2 = int(form.cleaned_data['cropH']) + y1
 
                 newim = newim.crop((x1, y1, x2, y2))
-                nombre_tiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S");
+                nombre_tiempo = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
                 url_media = request.POST.get("url_media")
-                print(url_media)
-                newim.save("media/"+url_media+str(nombre_tiempo)+".png", "PNG")
+                print(settings.MEDIA_ROOT)
+                nombre_imagen = url_media+str(nombre_tiempo)+".png"
+                newim.save(settings.MEDIA_ROOT+nombre_imagen, "PNG")
 
                 response_data = {
                     "status": "success",
-                    "url": url_media+str(nombre_tiempo)+".png",
+                    "url": nombre_imagen,
                     "message": "ok",
                     }
 
             except Exception as e:
-                print(e)
+                response_data = {"status": "error", 'message': str(e)}
         else:
             response_data = {"status": "error", 'message': form.errors}
 
     # Croppic will parse the information returned into json. content_type needs
     # to be set as 'text/plain'
-    print(response_data)
+    #print(response_data)
     return JsonResponse(response_data)
 
 

@@ -18,7 +18,7 @@
                     <!-- If del valor -->
                     {% if clasificado.valor %}
                         <b class="ver">Valor:</b><br>
-                        <i class="ver" id='valor'>{{ clasificado.valor }}</i>
+                        <i class="ver" id='valor'>${{ clasificado.valor }}</i>
                     {% endif %}
                 </p>
                 <hr>
@@ -27,7 +27,7 @@
                 </p>
                 <p class="palabras-claves" id="etiquetas">
                     <b>Palabras Claves:</b><br>
-                    {{ clasificado.etiquetas }}
+                    <span>{{ clasificado.etiquetas }}</span>
                 </p>
             </div>
             <div class="modal-footer">

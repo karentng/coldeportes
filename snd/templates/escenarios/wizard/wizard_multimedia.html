@@ -38,16 +38,25 @@
         <div class="row">
             <fieldset class="col-md-6" >
                 <form id="form-wizard-fotos" action="{% url 'wizard_fotos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <div class="well row">
-                    <div class="col-xs-12">
-                        <h3>{{titulo}}</h3>
-                        {% bootstrap_form form layout="vertical" %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-upload"></i> Cargar</button>              
+                    <div class="well row">
+                        <div class="col-xs-12">
+                            <h3>{{titulo}}</h3>
+                            {% bootstrap_form form layout="vertical" %}
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-upload"></i> Cargar</button>
+                        </div>
                     </div>
-                </div>
+                </form>
+                <form id="form-wizard-videos" action="{% url 'wizard_videos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="well row">
+                        <div class="col-xs-12">
+                            <h3>{{titulo_videos}}</h3>
+                            {% bootstrap_form form_videos layout="vertical" %}
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>
+                        </div>
+                    </div>
                 </form>
             </fieldset>             
-            <div class="col-md-6">
+            <div class="col-md-6" style="overflow: auto;">
                 <h4>Contenido Actual:</h4>
                 <table class="table table-responsive">
                     <thead>
@@ -160,19 +169,6 @@
                 </table>      
             </div>
         </div>
-        <div class="row">
-            <fieldset class="col-md-6">
-                <form id="form-wizard-videos" action="{% url 'wizard_videos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <div class="well row">
-                    <div class="col-xs-12">
-                        <h3>{{titulo_videos}}</h3>
-                        {% bootstrap_form form_videos layout="vertical" %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
-                    </div>
-                </div>
-                </form>
-            </fieldset>
-        </div>
         
         <hr>
         {% if wizard_stage > 1 %}
@@ -188,6 +184,7 @@
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
     <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_fotos-validations.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_videos-validations.js"></script>
     
     
 {% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="">Club</a></li>
+	<li class="active">Planes</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block titulo_panel%}
+    Planes de costo
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-3" >
+            <form id="formulario-planes" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        {% if edicion %}
+                            <h3 >Editar Plan De Costo</h3>
+                        {% else %}
+                            <h3 >Registrar Plan De Costo</h3>
+                        {% endif %}
+                        {% for i in form %}
+                            {% bootstrap_field i layout="vertical" %}
+                        {% endfor %}
+                        {% if edicion %}
+                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar cambios</button>
+                        {% else %}
+                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-9">
+            <h3 >Planes Registrados Actualmente:</h3>
+                {% if planes %}
+                    <div class="table-responsive">
+                    <table id="tabla-planes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for plan in planes %}
+                                <tr>
+                                    <td>{{ plan.nombre }}</td>
+                                    <td>$ {{ plan.precio }}</td>
+                                    <td>{{ plan.descripcion }}</td>
+
+                                    {% if plan.estado == 0 %}
+                                        <td>{{ plan.get_estado_display }}</td>
+                                    {% else %}
+                                        <td>{{ plan.get_estado_display }}</td>
+                                    {% endif %}
+
+                                    <td>
+
+                                        {% if user.is_authenticated %}
+                                            <a href="{% url 'editar_plan_de_costo' plan.id %}"><i class="fa fa-gear"></i> Editar </a>
+                                            <br>
+                                            <a data-toggle="modal" data-target="#modal-estado{{ plan.id }}" href="#" ><i class="fa fa-ban"></i> A/I </a>
+                                            <i class="fa fa-question-circle" data-toggle="tooltip" title="Activar/Desactivar"></i>
+                                        {% endif %}
+
+
+                                    </td>
+                                </tr>
+                                <!-- Modal -->
+                                <div class="modal fade"  id="modal-estado{{ plan.id }}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Cambiar estado del plan de costo</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea cambiar de estado a este plan?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                <a href="{% url 'cambiar_estado_plan_costo' plan.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-warning fade in m-b-15">
+                        No se encuentran planes de costo registrados
+                    </div>
+                {% endif %}
+                </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{ STATIC_URL }}js/validaciones/entidad/validacion-plan-costo.js"></script>
+    <script type="text/javascript">
+        idTabla = "tabla-planes";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}

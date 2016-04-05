@@ -161,6 +161,7 @@ def tenant_actor(actor):
                 permisos_text = []
                 for permiso in permisos:
                     permisos_text.append(permiso.codename)
+                print(permisos_text)
                 if 'view_'+actor in permisos_text:
                     return a_view(request, *args, **kwargs)
                 else:
@@ -365,3 +366,5 @@ def obtener_modelo_actor(actor):
         return Noticia
     else:
         return None
+
+

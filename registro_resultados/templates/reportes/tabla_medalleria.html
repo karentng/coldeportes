@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Listado de Competencias</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de Competencias
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de Competencias
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-entidades";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="">Total Medallas: {{total_medallas}}</h4>
+            <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Departamento</th>
+                            <th colspan="4">Total</th>
+                            <th colspan="4">Femenina</th>
+                            <th colspan="4">Masculina</th>
+                            <th colspan="4">Mixta</th>
+                        </tr>
+                        <tr>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
+                            <th>Total</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
+                            <th>Total</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
+                            <th>Total</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resultado in resultados %}
+                        <tr>                            
+                            <td>{{resultado.nombre}}</td>
+                            <td>{{resultado.total_oro}}</td>
+                            <td>{{resultado.total_plata}}</td>
+                            <td>{{resultado.total_bronce}}</td>
+                            <td><b>{{resultado.total_medallas}}</b></td>
+
+                            <td>{{resultado.total_oro_femenino}}</td>
+                            <td>{{resultado.total_plata_femenino}}</td>
+                            <td>{{resultado.total_bronce_femenino}}</td>
+                            <td><b>{{resultado.total_medallas_femenino}}</b></td>
+
+                            <td>{{resultado.total_oro_masculino}}</td>
+                            <td>{{resultado.total_plata_masculino}}</td>
+                            <td>{{resultado.total_bronce_masculino}}</td>
+                            <td><b>{{resultado.total_medallas_masculino}}</b></td>
+
+                            <td>{{resultado.total_oro_mixto}}</td>
+                            <td>{{resultado.total_plata_mixto}}</td>
+                            <td>{{resultado.total_bronce_mixto}}</td>
+                            <td><b>{{resultado.total_medallas_mixto}}</b></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

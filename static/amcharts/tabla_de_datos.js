@@ -74,7 +74,7 @@ function TablaDeDatos(identificadorTabla, columnas, datosIniciales){
 			actualizar();
 		},
 		transformarDatos: function(datos){
-			trasformarDatos(datos);
+			transformarDatos(datos);
 		},
 		cambioDiv: function(nuevoEstado){ // 1) es el de la tabla, 0) otro
 			console.log(nuevoEstado);

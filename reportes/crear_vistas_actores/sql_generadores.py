@@ -8,9 +8,9 @@ def seleccion_datos_cafs(tenant=''):
         CAF.comuna, CAF.estrato,
         CAF.latitud, CAF.longitud,
         CAF.altura, CAF.estado,
-        CAF.email, CAF.web,
+        CAF.email, CAF.web, CAF.telefono as telefono_contacto,
         CAF.entidad_id, CAF.fecha_creacion,
-        CAF.barrio,
+        CAF.barrio, CAF.nombre_administrador,
         CLASE.nombre as nombre_clase, SERVICIO.nombre as nombre_servicio,
         F.foto
     FROM
@@ -79,13 +79,13 @@ def seleccion_datos_escenarios(tenant=''):
             M.descripcion_ultimo_mantenimiento,
             M.periodicidad,
             M.razones_no_mantenimiento,
-            M.tiene_planos,
             M.fecha_creacion as fecha_creacion_mantenimiento,
 
             DH.fecha_inicio,
             DH.fecha_fin,
             DH.descripcion as descripcion_dato_historico,
             DH.fecha_creacion as fecha_creacion_dato_historico
+
     FROM %ssnd_escenario E 
     LEFT join %ssnd_caracterizacionescenario CE on CE.escenario_id=E.id 
     LEFT join %ssnd_caracterizacionescenario_caracteristicas CEC on CEC.caracterizacionescenario_id=E.id 
@@ -109,12 +109,13 @@ def seleccion_datos_personal_apoyo(tenant=''):
         """
         SELECT
             PA.id, PA.actividad,
-            PA.genero, PA.tipo_id,
-            PA.nombres, PA.apellidos,
-            PA.fecha_nacimiento, NAL.nacionalidad_id,
-            PA.ciudad_id, PA.etnia,
+            PA.genero, PA.tipo_id, PA.foto,
+            PA.nombres, PA.apellidos, PA.identificacion,
+            PA.fecha_nacimiento, NAL.nacionalidad_id,            
+            PA.telefono_fijo as telefono_contacto,
+            PA.ciudad_id, PA.etnia, PA.telefono_celular,
             PA.lgtbi, PA.fecha_creacion,
-            PA.estado, PA.entidad_id,
+            PA.estado, PA.entidad_id, PA.correo_electronico, 
             FD.nivel as nivel_formacion, FD.estado as estado_formacion,
             FD.fecha_finalizacion
         FROM
@@ -133,7 +134,9 @@ def seleccion_datos_deportistas(tenant=''):
             DE.id, DE.genero,
             DE.ciudad_residencia_id,DIS.tipodisciplinadeportiva_id,
             DE.fecha_nacimiento,DE.fecha_creacion,
-            DE.lgtbi,DE.etnia,
+            DE.lgtbi,DE.etnia, DE.barrio, DE.comuna,
+            DE.email, DE.telefono as telefono_contacto,
+            DE.direccion, DE.foto, DE.identificacion,
             DE.nombres, DE.apellidos, DE.entidad_id,
             NAL.nacionalidad_id,DE.estado,
             HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
@@ -142,8 +145,7 @@ def seleccion_datos_deportistas(tenant=''):
             IA.fecha_finalizacion,
             ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
             HL.tipo_lesion,HL.periodo_rehabilitacion, HL.fecha_lesion,
-            HL.segmento_corporal,
-            IFD.fecha as fecha_doping
+            HL.segmento_corporal
         FROM
         %ssnd_deportista DE
         LEFT JOIN %ssnd_deportista_nacionalidad NAL ON NAL.deportista_id = DE.id
@@ -152,8 +154,7 @@ def seleccion_datos_deportistas(tenant=''):
         LEFT JOIN %ssnd_informacionacademica IA ON IA.deportista_id = DE.id
         LEFT JOIN %ssnd_informacionadicional ID ON ID.deportista_id = DE.id
         LEFT JOIN %ssnd_historiallesiones HL ON HL.deportista_id = DE.id
-        LEFT JOIN %ssnd_historialdoping IFD ON IFD.deportista_id = DE.id 
-        """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant,tenant)
+        """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant)
 
 def seleccion_datos_dirigentes(tenant=''):
     if tenant != '':
@@ -163,12 +164,15 @@ def seleccion_datos_dirigentes(tenant=''):
         SELECT
             DIR.id, NAL.nacionalidad_id,
             DIR.nombres, DIR.apellidos,
+            DIR.foto, DIR.identificacion,
             DIR.entidad_id, DIR.fecha_creacion,
-            DIR.genero,
-            DIR.estado, DIR.ciudad_residencia_id AS ciudad_id
+            DIR.genero, DIR.telefono_fijo as telefono_contacto,
+            DIR.estado, DIR.ciudad_residencia_id AS ciudad_id,
+            C.cargo, DIR.email
         FROM
         {0}snd_dirigente DIR
         LEFT JOIN {0}snd_dirigente_nacionalidad NAL ON NAL.dirigente_id = DIR.id
+        LEFT join (SELECT DIC.id, DIC.dirigente_id, DIC.nombre as cargo, max(fecha_posesion) as fecha_posesion_cargo FROM snd_dirigentecargo as DIC group by DIC.id) C on C.dirigente_id=DIR.id
         """.format(tenant))
 
 def seleccion_datos_escuelas(tenant=''):
@@ -197,7 +201,9 @@ def seleccion_datos_cajas(tenant=''):
             CAJA.id, CAJA.nombre,
             CAJA.estado, CAJA.ciudad_id,
             CAJA.email, CAJA.clasificacion,
-            CAJA.entidad_id,
+            CAJA.entidad_id, CAJA.foto,
+            CAJA.telefono_contacto, 
+            CAJA.nombre_contacto,
             SERVICIO.categoria,
             SERVICIO.descripcion
         FROM

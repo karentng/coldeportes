@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Solicitudes de adecuación de escenarios-SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Solicitudes de adecuación de escenarios
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Solicitudes de adecuación escenarios</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+
+
+{% block titulo_panel %}
+    Solicitudes de adecuación de escenarios
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script>
+        idTabla = "tabla-solicitudes";
+
+    </script>
+{% endblock %}
+
+{% block contenido_panel %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+            <table id="tabla-solicitudes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Código Único</th>
+                        <th>Escenarios</th>
+                        <th>Prioridad</th>
+                        <th>Estado</th>
+                        <th>Quien lo solicita</th>
+                        <th>Fecha de creación</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in solicitudes %}
+                    <tr>
+                        <td><strong>{{ s.codigo }}</strong></td>
+                        <td>{{s.escenarios_str}}</td>
+                        <td>{{s.get_prioridad_display}}</td>
+                        <td>{{s.get_estado_display}}</td>
+                        <td>{{ s.entidad_solicitante }}</td>
+                        <td>{{ s.fecha }}</td>
+                        <td>
+                            <a href='{% url 'ver_solicitud_respuesta' s.id s.entidad_solicitante.id %}'>
+                                <i class="fa fa-eye"></i> Ver más
+                            </a>
+                            <br/>
+                            {% if perms.respuesta.add_listasolicitudes%}
+                                {% if s.estado == 0 %}
+                                    <a href="{% url 'responder_solicitud' s.id s.entidad_solicitante.id %}">
+                                        <i class="fa fa-send"></i> Responder solicitud
+                                    </a>
+                                    <br/>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
