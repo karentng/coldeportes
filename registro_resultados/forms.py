@@ -171,7 +171,7 @@ class EquipoTiempoForm(forms.ModelForm):
 
     class Meta:
         model = Equipo
-        exclude = ("competencia", 'puntos')
+        exclude = ("competencia", 'puntos', 'metros')
 
 class EquipoPuntosForm(forms.ModelForm):
     required_css_class = 'required'
