@@ -46,7 +46,7 @@ class SolicitudEscenario(models.Model):
     id_solicitante = models.CharField(max_length=150,verbose_name='Número de identificación')
     tel_solicitante = models.CharField(max_length=150,verbose_name='Teléfono')
     direccion_solicitante = models.CharField(max_length=150,verbose_name='Dirección')
-    vinculo_solicitante = models.IntegerField(choices=VINCULOS,verbose_name='Vinculo con la entidad')
+    vinculo_solicitante = models.IntegerField(choices=VINCULOS,verbose_name='Vínculo con la entidad')
 
     fecha = models.DateTimeField(auto_now=True)
 
