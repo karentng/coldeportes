@@ -14,7 +14,7 @@ for entidad in entidades:
             try:
                 escenario_id = mantenimiento.escenario_id
                 tiene_planos = mantenimiento.tiene_planos
-                print(entidad.schema_name,escenario_id,tiene_planos)
+                #print(entidad.schema_name,escenario_id,tiene_planos)
                 caracterizacion = CaracterizacionEscenario.objects.get(escenario_id=escenario_id)
                 caracterizacion.tiene_planos = tiene_planos
                 caracterizacion.save()

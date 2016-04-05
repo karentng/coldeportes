@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Participantes</a>
+    <li class="active">Cargar participantes</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Cargar participantes
+{% endblock %}
+
+{% block titulo_panel %}
+    Cargar participantes
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'wizard_info_juego/_wizard.html' %}
+    <div class="row">
+    <div class="email-btn-row col-md-12">
+      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-inverse pull-left"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>
+    </div>
+  </div>
+  <br>    
+    <div class="row">
+        <div class="col-xs-12">
+            <b>Archivo de Participantes a subir</b>
+        </div>
+        <hr>
+        <div class="col-sm-12" align="center">
+            <form class="form-vertical" enctype="multipart/form-data" method="post">{% csrf_token %}
+                {% bootstrap_form form layout="vertical" %}
+                <button class="btn btn-primary" type="submit">
+                    Subir <i class="fa fa-angle-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

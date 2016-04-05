@@ -39,7 +39,7 @@ def ejecutar_consulta_segun_filtro(categoria, cantidad, departamentos, municipio
         escuelas = sumar_datos_diccionario(escuelas, choices)
         return escuelas
 
-    print(escuelas)
+    #print(escuelas)
     escuelas = tipoTenant.ajustar_resultado(escuelas)
     return escuelas
 
