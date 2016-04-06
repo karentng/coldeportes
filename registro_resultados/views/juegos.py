@@ -492,6 +492,7 @@ def equipo_metros(request, competencia_id, equipo_id=None):
 def get_modalidades(request,deporte_id):
     modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id)
     if modalidades:
+        print('lekrokerl')
         data = []
         for m in modalidades:
             dic = {}

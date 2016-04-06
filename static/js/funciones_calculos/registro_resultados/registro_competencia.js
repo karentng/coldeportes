@@ -10,7 +10,7 @@ $("#id_deporte").on('change',function(){
 function ajax_modalidades(depor){
     $("#id_modalidad").empty();
     $.ajax({
-        url: '/registro-resultados/modalidades/get/'+depor,
+        url: '/registro-resultados/juegos/modalidades/get/'+depor,
         dataType: 'json',
         success: function(response) {
             $("#id_modalidad").prop("disabled", false);
@@ -32,7 +32,7 @@ function ajax_modalidades(depor){
 function ajax_categorias(depor){
     $("#id_categoria").empty();
     $.ajax({
-        url: '/registro-resultados/categorias/get/'+depor,
+        url: '/registro-resultados/juegos/categorias/get/'+depor,
         dataType: 'json',
         success: function(response) {
             $("#id_categoria").prop("disabled", false);
