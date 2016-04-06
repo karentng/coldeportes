@@ -87,6 +87,9 @@ class Participante(models.Model):
     def full_id(self):
         return str(self.get_tipo_id_display())+":"+str(self.identificacion)
 
+    def get_estado_accion(self):
+        return ("desactivado", "activado")[int(self.estado)]
+
     def save(self, *args, **kwargs):
         self.nombres = self.nombres.upper()
         self.apellidos = self.apellidos.upper()
@@ -114,6 +117,9 @@ class Acudiente(models.Model):
 
     def full_name(self):
         return str(self.nombres) + " " + str(self.apellidos)
+
+    def get_estado_accion(self):
+        return ("desactivado", "activado")[int(self.estado)]
 
 
 class EscuelaDeportiva(models.Model):

@@ -76,6 +76,9 @@
                                 <li {% if "/escuela-deportiva/participantes/listar" in request.path %} class="active" {% endif %}>
                                     <a href="{% url 'listar_participante' %}">Listar Participantes</a>
                                 </li>
+                                <li {% if "/escuela-deportiva/acudiente/listar" in request.path %} class="active" {% endif %}>
+                                    <a href="{% url 'listar_acudientes' %}">Listar Acudientes</a>
+                                </li>
                             </ul>
                         </li>
                     {% endif %}

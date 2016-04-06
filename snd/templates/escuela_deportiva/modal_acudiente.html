@@ -1,0 +1,27 @@
+
+<div class="modal fade" id="modal-acudiente-{{ acudiente.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="titulo-modal">Datos Acudiente</h2>
+            </div>
+            <div class="modal-body">
+                <p class="datos-acudiente f-s-14">
+                    <b>Nombre: </b>{{ acudiente.nombres }}<br>
+                    <b>Apellidos: </b>{{ acudiente.apellidos }}<br>
+                    <b>Genero: </b>{{ acudiente.get_genero_display }}<br>
+                    {% if perms.snd.view_escueladeportiva %}
+                        <b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}<br>
+                        <b>Soporte Identificación:</b> <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a><br>
+                    {% endif %}
+                    <b>Fecha de nacimiento: </b>{{ acudiente.fecha_nacimiento }}<br>
+                    <b>Sistema de salud afiliado:</b> {{ acudiente.eps }}
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

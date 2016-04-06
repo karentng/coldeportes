@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/validaciones/gestion_eventos/participantes-validations.js"></script>
+    <script src="{{STATIC_URL}}js/validaciones/escuela_deportiva/acudientes-validations.js"></script>
 {% endblock %}
 
 {% block css %}
@@ -27,7 +27,7 @@
 {% block contenido_panel %}
     <div class="well row">
         <div class="row">
-            <form id="form-acudientee" action="" method="post" enctype="multipart/form-data">
+            <form id="form-acudiente" action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="col-md-6">

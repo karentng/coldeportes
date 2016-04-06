@@ -24,6 +24,7 @@ ESCUELA_DEPORTIVA_WIZARD = {
     "servicios": [EscuelaDeportivaServiciosForm, 2, "identificacion", None, "escuela_deportiva/wizard/escuela_deportiva_servicios.html"],
 }
 
+
 @login_required
 @all_permission_required('snd.add_escueladeportiva')
 def obtenerDatosPasoDelWizard(request, paso):
@@ -235,11 +236,11 @@ def editar_participante(request, id_participante):
         return redirect("listar_participantes")
 
     if request.method == 'POST':
-        participante_form = ParticipanteForm(request.POST, instance=participante)
+        participante_form = ParticipanteForm(request.POST, request.FILES, instance=participante)
         if participante_form.has_changed():
             if participante_form.is_valid():
                 participante_form.save()
-                messages.success(request, "El participante ha sido registrado con exito")
+                messages.success(request, "El participante ha sido editado con exito")
                 return redirect('listar_participante')
 
     participante_form = ParticipanteForm(instance=participante)
@@ -248,8 +249,10 @@ def editar_participante(request, id_participante):
 
 
 def listar_participante(request):
-    participantes = Participante.objects.all()
-
+    if request.user.has_perm("snd.change_escueladeportiva"):
+        participantes = Participante.objects.all()
+    else:
+        participantes = Participante.objects.filter(estado=1)
     return render(request, 'escuela_deportiva/listar_participantes.html', {'participantes': participantes})
 
 
@@ -263,12 +266,28 @@ def detalles_participante(request, id_participante):
         return redirect("listar_participantes")
 
     try:
-        acudiente = Acudiente.objects.get(participante_responsable=participante)
+        acudiente = Acudiente.objects.get(participante_responsable=participante.id)
     except Acudiente.DoesNotExist:
         acudiente = None
-
+    print(acudiente)
     return render(request, 'escuela_deportiva/ver_participante.html', {'participante': participante,
                                                                        'acudiente': acudiente})
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def cambiar_estado_participante(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Participante.DoesNotExist:
+        messages.error(request, 'El participante al que trata de acceder no existe')
+        return redirect("listar_participantes")
+
+    participante.estado = not participante.estado
+    participante.save()
+
+    messages.success(request, "Participante "+participante.get_estado_accion()+" correctamente")
+    return redirect('listar_participante')
 
 
 @login_required
@@ -280,8 +299,8 @@ def registrar_acudiente(request, id_participante):
             participante = Participante.objects.get(id=id_participante)
         except Participante.DoesNotExist:
             messages.error(request, 'El participante al que trata de acceder no existe')
-            return redirect("listar_participantes")
-        acudiente_form = AcudienteForm(request.POST)
+            return redirect("listar_participante")
+        acudiente_form = AcudienteForm(request.POST, request.FILES)
         if acudiente_form.is_valid():
             acudiente = acudiente_form.save(commit=False)
             acudiente.participante_responsable = participante
@@ -295,27 +314,45 @@ def registrar_acudiente(request, id_participante):
 
 @login_required
 @permission_required('snd.change_escueladeportiva')
-def editar_participante(request, id_participante):
+def editar_acudiente(request, id_acudiente):
     try:
-        participante = Participante.objects.get(id=id_participante)
-    except Participante.DoesNotExist:
-        messages.error(request, 'El participante al que trata de acceder no existe')
-        return redirect("listar_participantes")
+        acudiente = Acudiente.objects.get(id=id_acudiente)
+    except Acudiente.DoesNotExist:
+        messages.error(request, 'El acudiente al que trata de acceder no existe')
+        return redirect("listar_acudientes")
 
     if request.method == 'POST':
-        participante_form = ParticipanteForm(request.POST, instance=participante)
-        if participante_form.has_changed():
-            if participante_form.is_valid():
-                participante_form.save()
-                messages.success(request, "El participante ha sido registrado con exito")
-                return redirect('listar_participante')
+        acudiente_form = AcudienteForm(request.POST, request.FILES, instance=acudiente)
+        if acudiente_form.has_changed():
+            if acudiente_form.is_valid():
+                acudiente_form.save()
+                messages.success(request, "El acudiente ha sido editado con éxito")
+                return redirect('listar_acudientes')
 
-    participante_form = ParticipanteForm(instance=participante)
-    return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
-                                                                             'edicion': True})
+    acudiente_form = AcudienteForm(instance=acudiente)
+    return render(request, 'escuela_deportiva/registrar_acudiente.html', {'form': acudiente_form,
+                                                                          'edicion': True})
 
 
-def listar_participante(request):
-    participantes = Participante.objects.all()
+def listar_acudientes(request):
+    if request.user.has_perm("snd.view_escueladeportiva"):
+        acudientes = Acudiente.objects.all()
+    else:
+        acudientes = Acudiente.objects.filter(estado=1)
+    return render(request, 'escuela_deportiva/listar_acudientes.html', {'acudientes': acudientes})
 
-    return render(request, 'escuela_deportiva/listar_participantes.html', {'participantes': participantes})
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def cambiar_estado_acudiente(request, id_acudiente):
+    try:
+        acudiente = Acudiente.objects.get(id=id_acudiente)
+    except Acudiente.DoesNotExist:
+        messages.error(request, 'El acudiente al que trata de acceder no existe')
+        return redirect("listar_acudientes")
+
+    acudiente.estado = not acudiente.estado
+    acudiente.save()
+
+    messages.success(request, "Acudiente "+acudiente.get_estado_accion()+" correctamente")
+    return redirect('listar_acudientes')

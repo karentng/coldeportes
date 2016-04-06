@@ -89,7 +89,7 @@
                                             </div>
                                             <div class="profile-right">
                                                 <div class="col-lg-9">
-                                                    <p>{% if perms.snd.change_participante and request.tenant.schema_name != 'public' %}
+                                                    <p>{% if perms.snd.change_escueladeportiva and request.tenant.schema_name != 'public' %}
                                                         <b>{{participante.get_tipo_id_display | title}} </b>: {{participante.identificacion}}<br />
                                                     {% else %}
                                                         <b>Entidad:</b> {{ participante.entidad | upper}}<br/>
@@ -114,13 +114,12 @@
                                                     <p><b>Ciudad (Departamento) de Residencia:</b> {{ participante.ciudad_residencia}}</p>
                                                     <p><b>Sistema de salud afiliado:</b> {{ participante.eps }}</p>
                                                 </div>
-                                            {% if perms.snd.change_participante and request.tenant.schema_name != 'public' %}
+                                            {% if perms.snd.change_escueladeportiva and request.tenant.schema_name != 'public' %}
                                                 <p><strong>Información adicional:</strong></p>
                                                 <p><b>Teléfono:</b> {{participante.telefono}}</p>
                                                 <p><b>Dirección:</b> {{participante.direccion}}</p>
                                                 <p><b>Institución educativa actual:</b> {{ participante.institucion_educativa }}</p>
                                                 <p><b>año que cursa:</b> {{ participante.anho_curso }} </p>
-                                                <p><b>Comuna:</b> {{ participante.comuna }} </p>
                                             {% endif %}
                                             </div>
                                         </address>
@@ -136,7 +135,7 @@
                         <div class="tab-pane fade" id="nav-tab2-12">
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    <b>{{actudiente.full_name}}</b>
+                                    <b>{{acudiente.full_name}}</b>
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
@@ -145,14 +144,18 @@
                                                 <div class="col-lg-6">
                                                     {% if acudiente %}
                                                         <p><strong>Datos:</strong></p>
-                                                        <p><b>{{ accudiente.get_tipo_id_display }}:</b> {{ accudiente.identificacion }}</p>
-                                                        <p><b>Soporte Identificación:</b> <a href="{{ MEDIA_URL }}{{ accudiente.soporte_id }}" target="_blank">Soporte</a> </p>
-                                                        <p><b>Genero:</b> {{ accudiente.get_genero_display | upper}}</p>
-                                                        <p><b>Fecha Nacimiento:</b> {{accudiente.fecha_nacimiento}} kg/m^2</p>
-                                                        <p><b>Sistema de salud afiliado:</b> {{ accudiente.eps }} </p>
+                                                        {% if perms.snd.view_escueladeportiva %}
+                                                            <p><b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}</p>
+                                                            <p><b>Soporte Identificación:</b> <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a></p>
+                                                        {% endif %}
+                                                        <p><b>Genero:</b> {{ acudiente.get_genero_display | upper}}</p>
+                                                        <p><b>Fecha Nacimiento:</b> {{acudiente.fecha_nacimiento}} </p>
+                                                        <p><b>Sistema de salud afiliado:</b> {{ acudiente.eps }} </p>
                                                     {% else %}
                                                         <p><b>NO SE HA REGISTRADO EL ACUDIENTE</b></p>
-                                                        <p><a type="button" class="btn btn-primary" href="{% url 'registrar_acudiente' participante.id %}">Regsitrar</a> </p>
+                                                        {% if perms.snd.change_escueladeportiva %}
+                                                            <p><a type="button" class="btn btn-primary" href="{% url 'registrar_acudiente' participante.id %}">Regsitrar</a> </p>
+                                                        {% endif %}
                                                     {% endif %}
                                                 </div>
                                             </address>

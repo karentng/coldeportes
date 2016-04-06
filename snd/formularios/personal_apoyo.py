@@ -45,7 +45,6 @@ class VerificarExistenciaForm(forms.Form):
             return True
 
 
-
 class FormacionDeportivaForm(ModelForm):
 
     required_css_class = 'required'
