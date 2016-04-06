@@ -39,7 +39,7 @@
   {% include 'wizard_info_juego/_wizard.html' %}
   <div class="row">
     <div class="email-btn-row col-md-12">
-      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
+      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-info"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
     </div>
   </div>
   <br>    
@@ -90,7 +90,7 @@
                             <td>{{participante.fecha_nacimiento}}</td>
                             <td>                              
                               <a href='{% url "participante_equipo" competencia_id equipo.id participante.id %}'>
-                                  <i class="fa fa-edit"></i> Modificar
+                                  <i class="fa fa-edit"></i> Editar
                               </a><br>
                               <a href="#modal-desactivate{{participante.id}}" data-toggle="modal"><i class="fa fa-trash"></i> Eliminar</a>
                               <div class="modal fade" id="modal-desactivate{{participante.id}}">
