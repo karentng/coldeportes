@@ -205,7 +205,7 @@ def participante_tiempos(request, competencia_id, participante_id=None):
             messages.success(request, "Participante registrado correctamente.")
             return redirect('listar_individual', competencia_id)
             
-    return render(request, 'wizard_info_juego/wizard_participantes.html', {
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         "form": form,
         'wizard_stage': 1,
         'individual': True,  
