@@ -205,7 +205,7 @@ def participante_tiempos(request, competencia_id, participante_id=None):
             messages.success(request, "Participante registrado correctamente.")
             return redirect('listar_individual', competencia_id)
             
-    return render(request, 'wizard_info_juego/wizard_participantes.html', {
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         "form": form,
         'wizard_stage': 1,
         'individual': True,  
@@ -297,6 +297,7 @@ def datos_equipo(request, competencia_id):
 
 @login_required
 def listar_participantes(request, competencia_id):
+
     competencia = Competencia.objects.get(id=competencia_id)
 
     if competencia.tipos_participantes == 1:
@@ -304,8 +305,10 @@ def listar_participantes(request, competencia_id):
     else:
         return redirect('listar_equipos', competencia_id)
 
+
 @login_required
 def listar_individual(request, competencia_id):
+
     participantes = Participante.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
     puntos = False
@@ -329,8 +332,10 @@ def listar_individual(request, competencia_id):
 
     })
 
+
 @login_required
 def listar_equipos(request, competencia_id):
+
     equipos = Equipo.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
     puntos = False
@@ -357,6 +362,7 @@ def listar_equipos(request, competencia_id):
 
 @login_required
 def equipo_puntos(request, competencia_id, equipo_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
     
     try:
@@ -388,8 +394,10 @@ def equipo_puntos(request, competencia_id, equipo_id=None):
 
     })
     
+    
 @login_required
 def equipo_tiempos(request, competencia_id, equipo_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
     
     try:

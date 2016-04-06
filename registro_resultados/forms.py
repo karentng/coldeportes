@@ -47,6 +47,7 @@ class CompetenciaForm(forms.ModelForm):
         }
 
 class ParticipanteTiempoForm(forms.ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
@@ -81,7 +82,7 @@ class ParticipanteTiempoForm(forms.ModelForm):
     
     class Meta:
         model = Participante
-        exclude = ("competencia", 'puntos', 'equipo')
+        exclude = ("competencia", 'puntos', 'equipo', 'metros')
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
         }
@@ -148,6 +149,7 @@ class ParticipanteEquipoForm(forms.ModelForm):
         }
 
 class EquipoTiempoForm(forms.ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
@@ -186,6 +188,7 @@ class EquipoTiempoForm(forms.ModelForm):
         exclude = ("competencia", 'puntos', 'metros')
 
 class EquipoPuntosForm(forms.ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
@@ -194,10 +197,11 @@ class EquipoPuntosForm(forms.ModelForm):
 
     class Meta:
         model = Equipo
-        exclude = ("competencia", 'tiempo', 'marca')
+        exclude = ("competencia", 'tiempo', 'marca', 'metros')
 
 
 class EquipoMetrosForm(forms.ModelForm):
+    
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
@@ -240,6 +244,7 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
     visualizacion = forms.ChoiceField(label="Visualización")
 
     def __init__(self, *args, **kwargs):
+
         visualizaciones_definidas = kwargs.pop('visualizaciones', None)
         eliminar = kwargs.pop('eliminar', None)
         super(FiltrosMedalleriaDeptGenForm, self).__init__(*args, **kwargs)
@@ -252,6 +257,17 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
 
         add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
+
+class FiltrosTablaMedalleriaForm(forms.Form):
+
+    juego = forms.ModelChoiceField(queryset=Juego.objects.all().order_by('anio'))
+    deportes = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all().order_by('descripcion'), required=False)
+
+    def __init__(self, *args, **kwargs):
+        
+        super(FiltrosTablaMedalleriaForm, self).__init__(*args, **kwargs)
+        self.fields['deportes'] = adicionarClase(self.fields['deportes'], 'many')
+        self.fields['juego'] = adicionarClase(self.fields['juego'], 'one')
 
     
 class ParticipantesBaseDeDatos(forms.Form):

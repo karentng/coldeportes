@@ -20,7 +20,16 @@
         idTabla = "tabla-entidades";
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
-    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            $("#btn-buscar").on("click", function(){
+                $('#loading').modal('show');
+                $('#loading').modal('hide');
+
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block css %}
@@ -28,11 +37,27 @@
 {% endblock %}
 
 {% block contenido_panel %}
-
+{% include "loading.html" %}
     <div class="row">
         <div class="col-sm-12">
+            <form  method="POST">{% csrf_token %}
+                {% for field in form %}
+                    <div class="col-md-5">
+                        {% bootstrap_field field layout="vertical" %}
+                    </div>
+                {% endfor %}
+
+                <div class="col-md-2">
+                    <button id="btn-buscar" type="submit" class="btn btn-primary" style="margin-top: 22px">
+                        <span class="fa fa-search"></span> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-12">            
             <h4 class="">Total Medallas: {{total_medallas}}</h4>
-            <div class="table-responsive">
+            {% if resultados %}
+            <div id="tabla-medalleria" class="table-responsive">
                 <table id="tabla-entidades" class="table table-bordered table-hover">
                     <thead>
                         <tr>
@@ -89,6 +114,11 @@
                     </tbody>
                 </table>
             </div>
+            {% else %}
+            <div align="center">                
+                <p><h5>Por favor seleccione un juego</h5></p>
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
