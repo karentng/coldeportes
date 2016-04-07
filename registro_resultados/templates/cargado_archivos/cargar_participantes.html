@@ -28,7 +28,7 @@
     {% include 'wizard_info_juego/_wizard.html' %}
     <div class="row">
     <div class="email-btn-row col-md-12">
-      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-inverse pull-left"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>
+      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-primary pull-left"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>
     </div>
   </div>
   <br>    
@@ -37,6 +37,23 @@
             <b>Archivo de Participantes a subir</b>
         </div>
         <hr>
+        <div class="col-sm-12">
+            <p>
+                El archivo que vaya a cargar debe tener las columnas en el siguiente orden:
+                <ol type="1" start="1">
+                    <li> Nombre </li>
+                    <li> Fecha de Competencia (AAAA-MM-DD) </li>
+                    <li> Tipo de Competencia: se escribe <b>1</b> para <b>Olímpica</b> y <b>2</b> para <b>Paralímpica</b> </li>
+                    <li> Tipo de Registro: se escribe <b>1</b> para <b>Tiempos</b>, <b>2</b> para <b>Metros</b> y <b>3</b> para <b>Puntos</b> </li>
+                    <li>Tipos de Participantes: <b>1</b> para <b>Individual</b> y <b>2</b> para <b>Equipos</b></li>
+                    <li>Tipo de Disciplina Deportiva: debe tener el identificador de la disciplina deportiva del sistema (Contácte el administrador si no los tiene)</li>
+                    <li>Categoría: debe tener el identificador de la categoría deportiva del sistema (Contácte el administrador si no los tiene)</li>
+                    <li>Modalidad: debe tener el identificador de la modalidad deportiva del sistema (Contácte el administrador si no los tiene)</li>
+                    <li>Descripción de la competencia</li>
+                </ol>
+
+            </p>
+        </div>
         <div class="col-sm-12" align="center">
             <form class="form-vertical" enctype="multipart/form-data" method="post">{% csrf_token %}
                 {% bootstrap_form form layout="vertical" %}

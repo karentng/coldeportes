@@ -301,4 +301,3 @@ class FiltrosTablaMedalleriaForm(forms.Form):
 class ParticipantesBaseDeDatos(forms.Form):
     archivo = forms.FileField(label="Archivo de participantes")
 
-
