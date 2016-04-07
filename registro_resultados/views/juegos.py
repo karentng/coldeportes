@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.template import RequestContext
-from entidades.models import *
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse, HttpResponse
 from registro_resultados.models import *
 from registro_resultados.forms import *
+from entidades.models import *
 
 
 @login_required
 def registrar_juego(request, juego_id=None):
+
     try:
         juego = Juego.objects.get(id=juego_id)
     except Exception:
@@ -29,15 +30,28 @@ def registrar_juego(request, juego_id=None):
         "form": form,
     })
 
+
+@login_required
+def eliminar_juego(request, juego_id):
+
+    juego= Juego.objects.get(id=juego_id)
+    juego.delete()
+    messages.warning(request, "Juego eliminado correctamente.")
+    return redirect('listar_juegos')
+
+
 @login_required
 def listar_juegos(request):
+
     juegos = Juego.objects.all()
     return render(request, 'listado_juegos.html', {
         "juegos": juegos,
     })
 
+
 @login_required
 def datos_competencia(request, juego_id, competencia_id=None):
+
     try:
         juego = Juego.objects.get(id=juego_id)
         competencia = Competencia.objects.get(id=competencia_id)
@@ -64,6 +78,7 @@ def datos_competencia(request, juego_id, competencia_id=None):
 
 @login_required
 def listado_competencias(request, juego_id):
+
     competencias = Competencia.objects.filter(juego=juego_id)
 
     return render(request, 'listado_competencias.html', {
@@ -71,8 +86,10 @@ def listado_competencias(request, juego_id):
         'competencias': competencias,
     })
 
+
 @login_required
 def eliminar_competencia(request, juego_id, competencia_id):
+
     competencia = Competencia.objects.get(id=competencia_id, juego=juego_id)
     competencia.delete()
     messages.warning(request, "Competencia eliminada correctamente.")
@@ -81,6 +98,7 @@ def eliminar_competencia(request, juego_id, competencia_id):
 
 @login_required
 def crear_participante(request, competencia_id):
+
     competencia = Competencia.objects.get(id=competencia_id)
     
     if competencia.tipos_participantes == 1:
@@ -91,8 +109,8 @@ def crear_participante(request, competencia_id):
 
 @login_required
 def datos_participante(request, competencia_id):
-    competencia = Competencia.objects.get(id=competencia_id)
 
+    competencia = Competencia.objects.get(id=competencia_id)
     if competencia.tipo_registro == 1:
         return redirect('participante_tiempos', competencia_id)
     elif competencia.tipo_registro == 2:
@@ -102,10 +120,10 @@ def datos_participante(request, competencia_id):
     
 @login_required
 def eliminar_participante(request, competencia_id, participante_id):
+
     competencia = Competencia.objects.get(id=competencia_id)
     participante = Participante.objects.get(id=participante_id, competencia=competencia_id)
     participante.delete()
-
     if competencia.tipo_registro == 1:
         return redirect('participante_tiempos', competencia_id)        
     elif competencia.tipo_registro == 2:
@@ -118,15 +136,14 @@ def eliminar_participante(request, competencia_id, participante_id):
 
 @login_required
 def participante_equipo(request, competencia_id, equipo_id, participante_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
     equipo = Equipo.objects.get(id=equipo_id)
     participantes = Participante.objects.filter(competencia=competencia_id, equipo=equipo_id)
-
     try:
         participante = Participante.objects.get(id=participante_id)
     except Exception:
         participante = None
-
 
     form = ParticipanteEquipoForm(competencia=competencia, instance=participante)
 
@@ -151,15 +168,16 @@ def participante_equipo(request, competencia_id, equipo_id, participante_id=None
         
     })
 
+
 @login_required
 def participante_puntos(request, competencia_id, participante_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
 
     try:
         participante = Participante.objects.get(id=participante_id)
     except Exception:
         participante = None
-
 
     form = ParticipantePuntosForm(competencia=competencia, instance=participante)
 
@@ -183,15 +201,16 @@ def participante_puntos(request, competencia_id, participante_id=None):
         
     })
 
+
 @login_required
 def participante_tiempos(request, competencia_id, participante_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
 
     try:
         participante = Participante.objects.get(id=participante_id)
     except Exception:
         participante = None
-
 
     form = ParticipanteTiempoForm(competencia=competencia_id, instance=participante)
 
@@ -205,7 +224,7 @@ def participante_tiempos(request, competencia_id, participante_id=None):
             messages.success(request, "Participante registrado correctamente.")
             return redirect('listar_individual', competencia_id)
             
-    return render(request, 'wizard_info_juego/wizard_participantes.html', {
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
         "form": form,
         'wizard_stage': 1,
         'individual': True,  
@@ -217,13 +236,13 @@ def participante_tiempos(request, competencia_id, participante_id=None):
 
 @login_required
 def participante_metros(request, competencia_id, participante_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
 
     try:
         participante = Participante.objects.get(id=participante_id)
     except Exception:
         participante = None
-
 
     form = ParticipanteMetrosForm(competencia=competencia, instance=participante)
 
@@ -248,9 +267,9 @@ def participante_metros(request, competencia_id, participante_id=None):
     })
 
 
-
 @login_required
 def medalleria_por_competencia(request, competencia_id):
+
     competencia = Competencia.objects.get(id=competencia_id)
 
     if competencia.tipos_participantes == 1:
@@ -271,24 +290,22 @@ def medalleria_por_competencia(request, competencia_id):
         'resultados2':resultados2,
         'resultados3': resultados3
 
-
     })
+
 
 @login_required
 def eliminar_equipo(request, competencia_id, participante_id):
+
+    competencia = Competencia.objects.get(id=competencia_id)    
     equipo = Equipo.objects.get(id=participante_id, competencia=competencia_id)
     equipo.delete()
 
-    if competencia.tipo_registro == 1:
-        return redirect('equipo_tiempos', competencia_id)
-    elif competencia.tipo_registro == 2:
-        return redirect('equipo_puntos', competencia_id)
-    elif competencia.tipo_registro == 3:
-        return redirect('equipo_metros', competencia_id)
-
+    return redirect('listar_equipos', competencia_id)
+    
 
 @login_required
 def datos_equipo(request, competencia_id):
+
     competencia = Competencia.objects.get(id=competencia_id)
     
     if competencia.tipo_registro == 1:
@@ -301,6 +318,7 @@ def datos_equipo(request, competencia_id):
 
 @login_required
 def listar_participantes(request, competencia_id):
+
     competencia = Competencia.objects.get(id=competencia_id)
 
     if competencia.tipos_participantes == 1:
@@ -308,8 +326,10 @@ def listar_participantes(request, competencia_id):
     else:
         return redirect('listar_equipos', competencia_id)
 
+
 @login_required
 def listar_individual(request, competencia_id):
+
     participantes = Participante.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
     puntos = False
@@ -329,12 +349,12 @@ def listar_individual(request, competencia_id):
         'individual': True,
         'puntos': puntos,
         'metros': metros
-
-
     })
+
 
 @login_required
 def listar_equipos(request, competencia_id):
+
     equipos = Equipo.objects.filter(competencia=competencia_id) or None
     competencia = Competencia.objects.get(id=competencia_id)
     puntos = False
@@ -354,20 +374,18 @@ def listar_equipos(request, competencia_id):
         'juego_id': competencia.juego.id,
         'puntos': puntos,
         'metros': metros
-
-
     })
 
 
 @login_required
 def equipo_puntos(request, competencia_id, equipo_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
     
     try:
         equipo = Equipo.objects.get(id=equipo_id)
     except Exception:
         equipo = None
-
 
     form = EquipoPuntosForm(instance=equipo)
 
@@ -388,12 +406,12 @@ def equipo_puntos(request, competencia_id, equipo_id=None):
         'puntos': True,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id
-
-
     })
+
     
 @login_required
 def equipo_tiempos(request, competencia_id, equipo_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
     
     try:
@@ -401,6 +419,35 @@ def equipo_tiempos(request, competencia_id, equipo_id=None):
     except Exception:
         equipo = None
 
+    form = EquipoTiempoForm(instance=equipo)
+
+    if request.method == "POST":
+        form = EquipoTiempoForm(request.POST, instance=equipo)
+        if form.is_valid():
+            equipo_nuevo = form.save(commit=False)
+            equipo_nuevo.competencia = competencia
+            equipo_nuevo.save()
+            messages.success(request, "Equipo registrado correctamente.")
+
+            return redirect('listar_equipos', competencia_id)
+
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
+        'form': form,
+        'wizard_stage': 1,
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id
+    })
+    
+
+@login_required
+def equipo_tiempos(request, competencia_id, equipo_id=None):
+
+    competencia = Competencia.objects.get(id=competencia_id)
+    
+    try:
+        equipo = Equipo.objects.get(id=equipo_id)
+    except Exception:
+        equipo = None
 
     form = EquipoTiempoForm(instance=equipo)
 
@@ -420,51 +467,18 @@ def equipo_tiempos(request, competencia_id, equipo_id=None):
         'wizard_stage': 1,
         'competencia_id': competencia_id,
         'juego_id': competencia.juego.id
-
-
     })
-    
-@login_required
-def equipo_tiempos(request, competencia_id, equipo_id=None):
-    competencia = Competencia.objects.get(id=competencia_id)
-    
-    try:
-        equipo = Equipo.objects.get(id=equipo_id)
-    except Exception:
-        equipo = None
 
-
-    form = EquipoTiempoForm(instance=equipo)
-
-    if request.method == "POST":
-        form = EquipoTiempoForm(request.POST, instance=equipo)
-
-        if form.is_valid():
-            equipo_nuevo = form.save(commit=False)
-            equipo_nuevo.competencia = competencia
-            equipo_nuevo.save()
-            messages.success(request, "Equipo registrado correctamente.")
-
-            return redirect('listar_equipos', competencia_id)
-
-    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
-        'form': form,
-        'wizard_stage': 1,
-        'competencia_id': competencia_id,
-        'juego_id': competencia.juego.id
-
-
-    })
     
 @login_required
 def equipo_metros(request, competencia_id, equipo_id=None):
+
     competencia = Competencia.objects.get(id=competencia_id)
     
     try:
         equipo = Equipo.objects.get(id=equipo_id)
     except Exception:
         equipo = None
-
 
     form = EquipoMetrosForm(instance=equipo)
 
@@ -490,12 +504,13 @@ def equipo_metros(request, competencia_id, equipo_id=None):
     })
 
 
-
 #Ajax para modalidad y categoria historia deportiva
 @login_required
 def get_modalidades(request,deporte_id):
+
     modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id)
     if modalidades:
+        print('lekrokerl')
         data = []
         for m in modalidades:
             dic = {}
@@ -508,8 +523,10 @@ def get_modalidades(request,deporte_id):
         'data': data
     })
 
+
 @login_required
 def get_categorias(request,deporte_id):
+
     categorias = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id)
     if categorias:
         data = []
@@ -525,10 +542,10 @@ def get_categorias(request,deporte_id):
     })
 
 
-
 # cargar por excel
 @login_required
 def cargas_competencias(request, juego_id):
+
     try:
         juego = Juego.objects.get(id=juego_id)
     except Exception:
@@ -557,8 +574,10 @@ def cargas_competencias(request, juego_id):
         'juego_id': juego_id,
     })
 
+
 @login_required
 def crear_competencias(request, competencias, datemode, juego):
+
     import xlrd
     import datetime
     for competencia in competencias:
@@ -581,8 +600,10 @@ def crear_competencias(request, competencias, datemode, juego):
         obj.juego = juego
         obj.save()
 
+
 @login_required
 def leer_competencias(request, archivo):
+    
     import xlrd
     archivo = archivo.read()
     excel = xlrd.open_workbook(file_contents=archivo)
