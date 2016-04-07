@@ -49,9 +49,9 @@ class Competencia(models.Model):
 
 class Equipo(models.Model):
     GENEROS = (
-        ('HOMBRE','MASCULINO'),
-        ('MUJER','FEMENINO'),
-        ('MIXTO','MIXTO'),
+        (1,'MASCULINO'),
+        (2,'FEMENINO'),
+        (3,'MIXTO'),
     )
 
     nombre = models.CharField(max_length=255, verbose_name='nombre')
@@ -63,19 +63,19 @@ class Equipo(models.Model):
     posicion = models.IntegerField(default=0, verbose_name="posición")    
     creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia)
-    genero = models.CharField(max_length=11, choices=GENEROS, verbose_name='género de competidores')
+    genero = models.IntegerField(choices=GENEROS, verbose_name='género de competidores')
 
 
 
 
 class Participante(models.Model):
     GENEROS = (
-        ('HOMBRE','MASCULINO'),
-        ('MUJER','FEMENINO'),
+        (1,'MASCULINO'),
+        (2,'FEMENINO'),
     )
 
     nombre = models.CharField(max_length=255, verbose_name='nombre')
-    genero = models.CharField(max_length=11, choices=GENEROS, verbose_name='género del deportista')
+    genero = models.IntegerField(choices=GENEROS, verbose_name='género del deportista')
     departamento = models.ForeignKey(Departamento)
     club = models.CharField(max_length=100, verbose_name='club de Registro', null=True, blank=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)

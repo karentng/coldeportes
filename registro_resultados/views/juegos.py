@@ -622,7 +622,7 @@ def leer_competencias(request, archivo):
     excel = xlrd.open_workbook(file_contents=archivo)
 
     hoja = excel.sheet_by_name('Hoja1')
-
+    
     numero_filas = hoja.nrows 
     numero_celdas = hoja.ncols
     fila_actual = 1 # -1 para tomar la primera linea
@@ -640,3 +640,81 @@ def leer_competencias(request, archivo):
         fila_actual += 1
     #print(competencias)
     return [competencias, excel.datemode]
+
+
+@login_required
+def cargar_participantes(request, competencia_id):
+    try:
+        competencia = Competencia.objects.get(id=competencia_id)
+    except Exception:
+        return redirect("listar_juegos")
+
+    form = ParticipantesBaseDeDatos()
+
+    if request.method == 'POST':
+        form = ParticipantesBaseDeDatos(request.POST, request.FILES)
+        if form.is_valid():
+            archivo = request.FILES['archivo']
+            nombre = archivo.name.split('.')
+
+            FORMATOS_PERMITIDOS = ['csv', 'xls', 'xlsx']
+
+            if nombre[len(nombre)-1] in FORMATOS_PERMITIDOS:
+                try:
+                    participantes, datemode = leer_competencias(request, archivo)
+                except:
+                    messages.error(request, 'La primera hoja del archivo debe llamarse: Hoja1')
+                    return redirect('cargar_participantes', competencia_id)
+                try:
+                    crear_participantes(request, participantes, datemode, competencia)
+                    messages.success(request, "Participantes subidos correctamente.")
+                except:
+                    messages.error(request, "El archivo no se encuentra en el formato correcto.")
+                    return redirect('cargar_participantes', competencia_id)
+            else:
+                from django.forms.util import ErrorList
+                errors = form._errors.setdefault("archivo", ErrorList())
+                errors.append(u"Error de formato, debe ser CSV, XLS o XLSX")
+
+    return render(request, 'cargado_archivos/cargar_participantes.html', {
+        'form': form,
+        'competencia_id': competencia.id,
+        'wizard_stage': 3,
+    })
+
+
+@login_required
+def crear_participantes(request, participantes, datemode, competencia):
+    import xlrd
+    import datetime
+    for participante in participantes:
+        obj = Participante()
+
+        obj.nombre = participante[0]
+        obj.genero = participante[1]
+        obj.departamento = Departamento.objects.get(id=participante[2])
+        obj.club = participante[3]
+
+        date = datetime.datetime(1899, 12, 30)
+        #get_col2 = str(date  datetime.timedelta(participante[4]))[:10]
+        d = datetime.datetime.strptime(get_col2, "%Y-%m-%d")
+
+        obj.fecha_nacimiento = d.strftime("%Y-%m-%d")
+        obj.estatura = participante[5]
+        obj.peso = participante[6]
+        obj.competencia = competencia
+
+        if competencia.tipos_participantes == 1: #Individual
+            if competencia.tipo_registro == 1: # Tiempos
+                obj.posicion = participante[7]
+                print(participante[8])
+                hora = participante[8].split(":")
+                obj.tiempo = datetime.time(0, int(hora[0]), int(hora[1]))
+                hora = participante[9].split(":")
+                obj.marca = datetime.time(0, int(hora[0]), int(hora[1]))
+            else: # Puntos
+                obj.posicion = participante[7]
+                obj.puntos = participante[8]
+        else: # Equipos
+            obj.equipo = Equipo.objects.get(id=participante[7])        
+        obj.save()
