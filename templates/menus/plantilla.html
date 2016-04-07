@@ -114,9 +114,18 @@
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
 
-        {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
-            {% include "menus/aplicacion/solicitudescenarios.html" %}
-        {%endif%}
+        <li class="has-sub{% if '/solicitudes-escen/' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                <i class="fa fa-plus-circle"></i>
+                <span class="colorMenu">SERVICIOS</span>
+            </a>
+            {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+                <ul class="sub-menu">
+                    {% include "menus/aplicacion/solicitudescenarios.html" %}
+                </ul>
+            {%endif%}
+        </li>
 
     {% endif %}
 

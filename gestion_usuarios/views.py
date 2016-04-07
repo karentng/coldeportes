@@ -493,6 +493,7 @@ def datos_basicos_entidad(request):
         'form': form,
     })
 
+
 @login_required
 def fix_solicitudes_escenarios(request):
     #respuesta

@@ -101,10 +101,12 @@
                 <div class="result-container">
                     <ul class="result-list">
                         <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">
-                            <div class="result-image">
+                            <div class="result-image" style="background: white !important;">
                                 <img src="{% if entidad.foto %}{{ MEDIA_URL }}{{ entidad.foto }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" class="img-responsive" alt="Info Tenant"/>
                                 {% if request.user.is_superuser  or request.user|has_group:"Digitador" %}
-                                    <button id="modalTrigger2" data-toggle="modal" data-target="#myModalCrop" type="button" class="btn btn-warning btn-xs" style="position:absolute;bottom: 0; right:0;">Cambiar imagen</button>
+                                    <span data-toggle="tooltip" class="add-tooltip" title="Al hacer click se puede cambiar la imagen de la entidad que se muestra en la pantalla de inicio" style="position:absolute;bottom: 0; right:0;">
+                                        <button id="modalTrigger2" data-toggle="modal" data-target="#myModalCrop" type="button" class="btn btn-warning btn-xs" style="position:relative;">Cambiar imagen</button>
+                                    </span>
                                     <form id="form-foto-club" method="post" action="{% url 'foto_entidad' %}">
                                         {% csrf_token %}
                                         <label hidden for="modalTrigger2" id="labelImg"></label>

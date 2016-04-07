@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Eventos</a>
+    <li class="active">Registrar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} evento
+{% endblock %}
+
+{% block titulo_panel %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} evento
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/ckeditor/ckeditor.js"></script>
+    <script src="{{STATIC_URL}}js/ckeditor/adapters/jquery.js"></script>
+    <script src="{{STATIC_URL}}js/validaciones/gestion_eventos/eventos-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-geocomplete/jquery.geocomplete.js"></script>
+    <script>
+        var csrftoken = '{{ csrf_token }}';
+        var urlCrop = "{% url 'crop_pic' %}";
+        var buttonReset = "#reset-crop";
+        var formId = "form-eventos";
+        var urlMedia = "/fotos_eventos/";
+        var picture = "";
+        {% if edicion %}
+            picture = "{{ MEDIA_URL }}{{ foto }}";
+        {% endif %}
+        var $direccion = $("#id_direccion");
+        $direccion.geocomplete({
+            map: "#mapa",
+            mapOptions: {
+                zoom: 10,
+                scrollwheel: true
+            },
+            {% if edicion  %}
+            location: [{{ lat|stringformat:"f" }}, {{ lng|stringformat:"f" }}],
+            {% endif %}
+            markerOptions: {
+                draggable: true
+            },
+            details: "#form-eventos"
+        });
+
+        $direccion.bind("geocode:dragged", function(event, latLng){
+          $("input[name=lat]").val(latLng.lat());
+          $("input[name=lng]").val(latLng.lng());
+        });
+
+        $(document).ready(function(){
+
+            {% if edicion  %}
+                $("#lat").val("{{ lat|stringformat:'f' }}");
+                $("#lng").val('{{ lng|stringformat:"f" }}');
+            {% endif %}
+
+            $('#submit-crop').click(function(event){
+                event.preventDefault();
+                CKEDITOR.instances.id_descripcion_evento.updateElement();
+                var str = CKEDITOR.instances.id_descripcion_evento.document.getBody().getText();
+
+                if(str.length <= 150){
+                    $("#previsualizacion").val(str);
+                }else {
+                    $("#previsualizacion").val(str.substring(0, 150));
+                }
+                console.log($("#previsualizacion").val());
+                {% if edicion %}
+                    if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
+
+                        $("#imagen-hidden").val("si");
+                        document.getElementById(formId).submit();
+                        return false;
+                    }else {
+                        $("#"+formId).bootstrapValidator('validate');
+                        if($("div.form-group").hasClass("has-error")){
+                            return false;
+                        }else {
+                            if($('.cropControls.cropControlsCrop').length) {
+                                console.log("Cortando");
+                                $('.cropControlCrop').click();
+                            }else{
+
+                                document.getElementById(formId).submit();
+                                return false;
+                            }
+                        }
+                    }
+                {% else %}
+
+                    $("#"+formId).bootstrapValidator('validate');
+
+                    if($("div.form-group").hasClass("has-error")){
+                        return false;
+                    }else {
+                        if($('.cropControls.cropControlsCrop').length) {
+                            console.log("Cortando");
+                            $('.cropControlCrop').click();
+                        }else{
+                            document.getElementById(formId).submit();
+                            return false;
+                        }
+                    }
+                {% endif %}
+            });
+        });
+
+    </script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic-conf.js"></script>
+{% endblock %}
+
+{% block css %}
+    {{ form.media }}
+    <style>
+    #mapa {
+        width: 100%;
+        height: 400px;
+    }
+    </style>
+    <link href="{{STATIC_URL}}plugins/croppic/croppic.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/croppic/estilos_personalizados.css" rel="stylesheet">
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+
+            <form id="form-eventos" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="row">
+            <div class="col-xs-12">
+                {% for field in form %}
+                    {% if field.name == 'autor' %}
+
+                        {% bootstrap_field field %}
+                        <div class="form-group crop-form">
+                            <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <label class="control-label" for="modalTrigger2"></label>
+                            {% include 'modal_croppic.html' %}
+                        </div>
+
+                    {% elif field.name = "direccion" %}
+                        {% bootstrap_field field  %}
+                        <div class="form-group" style="height: 400px;;">
+                            <div class="col-xs-12">
+                                <div id="mapa"></div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% bootstrap_field field  %}
+                    {% endif %}
+                {% endfor %}
+                <input name="lat" id="lat" type="text" value="" hidden>
+                <input name="lng" id="lng" type="text" value="" hidden>
+                <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
+                <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
+
+            </div>
+            </div>
+
+            {% if edicion %}
+                <a type="button" class="btn btn-warning pull-right" href="{% url 'listar_eventos'%}">
+                    Cancelar
+                </a>
+            {% endif %}
+            <button class="btn btn-primary pull-right" type="submit" style="margin-right:15px;" id="submit-crop">
+                {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+            </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

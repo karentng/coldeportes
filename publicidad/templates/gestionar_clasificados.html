@@ -11,6 +11,10 @@
     Listado de clasificados
 {% endblock %}
 
+{% block titulo %}
+    Clasificados - SND Coldeportes
+{% endblock %}
+
 {% block titulo_panel %}
     Listado de clasificados
 {% endblock %}
@@ -37,8 +41,8 @@
                             <th>Título</th>
                             <th>Fecha de publicación</th>
                             <th>Fecha de expiración</th>
-                            <th>Palabras clave</th>
                             <th>Estado</th>
+                            <th>Palabras clave</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -48,7 +52,6 @@
                                 <td>{{clasificado.titulo}}</td>
                                 <td>{{clasificado.fecha_publicacion}}</td>
                                 <td>{{clasificado.fecha_expiracion}}</td>
-                                <td>{{clasificado.etiquetas}}</td>
                                 <td>
                                     {% if clasificado.estado == 1 %}
                                         ACTIVO
@@ -56,6 +59,7 @@
                                         INACTIVO
                                     {% endif %}
                                 </td>
+                                <td>{{clasificado.etiquetas}}</td>
                                 <td>
                                     <a href="" data-toggle="modal" data-target="#modal-clasificado-{{ clasificado.id }}">
                                         <i class="fa fa-eye"></i> Ver más

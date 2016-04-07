@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^clasificados/',include('publicidad.urls')),#urls del modulo de clasificados
     url(r'^noticias/',include('noticias.urls')),#urls del modulo de noticias
     #url(r'^casos-doping/', include('listados_doping.urls')), #urls de listados de doping
+    url(r'^eventos/',include('gestion_eventos.urls')),
 
     #url(r'^selecciones/', include('snd.urls.selecciones')), #urls de selecciones
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),

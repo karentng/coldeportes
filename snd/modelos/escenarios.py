@@ -170,22 +170,14 @@ class Mantenimiento(models.Model):
     periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True)
     inversionista = models.CharField(max_length=255, verbose_name="¿Quién invirtió en el mantenimiento?", null=True, blank=True)
     convenio = models.CharField(max_length=255, verbose_name="Convenio mediante el cual se realizó el mantenimiento", null=True, blank=True)
-    razones_no_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name="Si no se realiza mantenimiento, mencione las razones")
-    tiene_planos = models.BooleanField(verbose_name='¿Se cuenta con los planos del escenario?')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+
 class DatoHistorico(models.Model):
-    SUCESOS = (
-        (0, 'ADECUACIONES'),
-        (1, 'JUEGO'),
-        (2, 'EVENTO CULTURAL'),
-        (3, 'INAUGURACIÓN'),
-        (4, 'OTROS'),
-    )
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico")
     fecha_fin = models.DateField(null=True, blank=True)
-    tipo_suceso = models.IntegerField(verbose_name="Tipo de suceso histórico", choices=SUCESOS)
+    tipo_suceso = models.CharField(verbose_name="Tipo de suceso histórico", max_length=50)
     descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
