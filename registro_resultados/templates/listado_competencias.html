@@ -71,7 +71,7 @@
                             <td>{%if competencia.categoria %}{{competencia.categoria}}{% else %}No registra{% endif %}</td>
                             <td>{%if competencia.modalidad %}{{competencia.modalidad}}{% else %}No registra{% endif %}</td>
                             <td>{{competencia.get_tipo_registro_display}}</td>
-                            <td>{{competencia.descripcion}}</td>
+                            <td>{% if competencia.descripcion %}{{competencia.descripcion}}{% else %} {% endif %}</td>
                             <td>
                                 <a href='{% url 'listar_participantes' competencia.id %}'>
                                     <i class="fa fa-check"></i> Ingresar Resultados
