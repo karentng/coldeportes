@@ -272,7 +272,11 @@ def wizard_caracterizacion(request, escenario_id):
     except Exception:
         caracteristicas = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
     
