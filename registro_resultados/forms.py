@@ -262,8 +262,8 @@ class ParticipantesBaseDeDatos(forms.Form):
 class FiltrosMedalleriaDeptGenForm(forms.Form):
     
     GENEROS = (
-        ('HOMBRE','Masculino'),
-        ('MUJER','Femenino'),
+        (1,'Masculino'),
+        (2,'Femenino'),
     )    
     juegos = forms.ModelChoiceField(queryset=Juego.objects.all(), required=False)
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)

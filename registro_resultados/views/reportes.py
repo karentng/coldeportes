@@ -141,18 +141,18 @@ def buscar_medallas_totales(juego, deportes):
     resultados['medallas_oro'] = buscar_medallas_por_categoria(1, juego, deportes)
     resultados['medallas_plata'] = buscar_medallas_por_categoria(2, juego, deportes)
     resultados['medallas_bronce'] = buscar_medallas_por_categoria(3, juego, deportes)
-    #Buscar totales femenino
-    resultados['medallas_oro_femenino'] = buscar_medallas_por_categoria(1, juego, 'MUJER', deportes)
-    resultados['medallas_plata_femenino'] = buscar_medallas_por_categoria(2, juego, 'MUJER', deportes)
-    resultados['medallas_bronce_femenino'] = buscar_medallas_por_categoria(3, juego, 'MUJER', deportes)
     #Buscar totales masculino
-    resultados['medallas_oro_masculino'] = buscar_medallas_por_categoria(1, juego, 'HOMBRE', deportes)
-    resultados['medallas_plata_masculino'] = buscar_medallas_por_categoria(2, juego, 'HOMBRE', deportes)
-    resultados['medallas_bronce_masculino'] = buscar_medallas_por_categoria(3, juego, 'HOMBRE', deportes)
+    resultados['medallas_oro_masculino'] = buscar_medallas_por_categoria(1, juego, 1, deportes)
+    resultados['medallas_plata_masculino'] = buscar_medallas_por_categoria(2, juego, 1, deportes)
+    resultados['medallas_bronce_masculino'] = buscar_medallas_por_categoria(3, juego, 1, deportes)
+    #Buscar totales femenino
+    resultados['medallas_oro_femenino'] = buscar_medallas_por_categoria(1, juego, 2, deportes)
+    resultados['medallas_plata_femenino'] = buscar_medallas_por_categoria(2, juego, 2, deportes)
+    resultados['medallas_bronce_femenino'] = buscar_medallas_por_categoria(3, juego, 2, deportes)
     #Buscar totales mixto
-    resultados['medallas_oro_mixto'] = buscar_medallas_por_categoria(1, juego, 'MIXTO', deportes)
-    resultados['medallas_plata_mixto'] = buscar_medallas_por_categoria(2, juego, 'MIXTO', deportes)
-    resultados['medallas_bronce_mixto'] = buscar_medallas_por_categoria(3, juego, 'MIXTO', deportes)
+    resultados['medallas_oro_mixto'] = buscar_medallas_por_categoria(1, juego, 3, deportes)
+    resultados['medallas_plata_mixto'] = buscar_medallas_por_categoria(2, juego, 3, deportes)
+    resultados['medallas_bronce_mixto'] = buscar_medallas_por_categoria(3, juego, 3, deportes)
 
     return resultados
 

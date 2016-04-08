@@ -123,15 +123,9 @@ def eliminar_participante(request, competencia_id, participante_id):
 
     competencia = Competencia.objects.get(id=competencia_id)
     participante = Participante.objects.get(id=participante_id, competencia=competencia_id)
-    participante.delete()
-    if competencia.tipo_registro == 1:
-        return redirect('participante_tiempos', competencia_id)        
-    elif competencia.tipo_registro == 2:
-        return redirect('participante_puntos', competencia_id)
-    elif competencia.tipo_registro == 3:
-        return redirect('participante_metros', competencia_id)
-    else:
-        return redirect('participante_equipo', competencia_id)
+    participante.delete()    
+    return redirect('listar_participantes', competencia_id)        
+    
 
 
 @login_required
@@ -605,11 +599,16 @@ def crear_competencias(request, competencias, datemode, juego):
         obj.tipos_participantes = competencia[5]
         obj.deporte = TipoDisciplinaDeportiva.objects.get(id=competencia[6])
         try:
-            obj.categoria = CategoriaDisciplinaDeportiva.objects.get(id=competencia[7])
-            obj.modalidad = ModalidadDisciplinaDeportiva.objects.get(id=competencia[8])
-            obj.descripcion = competencia[9] or None
-        except CategoriaDisciplinaDeportiva.DoesNotExist or ModalidadDisciplinaDeportiva.DoesNotExist:
-            pass
+            categoria = CategoriaDisciplinaDeportiva.objects.get(id=competencia[7]) or None
+            modalidad = ModalidadDisciplinaDeportiva.objects.get(id=competencia[8]) or None
+            obj.categoria = categoria
+            obj.modalidad = modalidad
+            obj.descripcion =  competencia[9] 
+        except:
+            obj.categoria = None
+            obj.modalidad = None
+            obj.descripcion =  None
+
         obj.juego = juego
         obj.save()
 
@@ -638,5 +637,81 @@ def leer_competencias(request, archivo):
 
         competencias.append(datos)
         fila_actual += 1
-    #print(competencias)
     return [competencias, excel.datemode]
+
+
+@login_required
+def cargar_participantes(request, competencia_id):
+    try:
+        competencia = Competencia.objects.get(id=competencia_id)
+    except Exception:
+        return redirect("listar_juegos")
+
+    form = ParticipantesBaseDeDatos()
+
+    if request.method == 'POST':
+        form = ParticipantesBaseDeDatos(request.POST, request.FILES)
+        if form.is_valid():
+            archivo = request.FILES['archivo']
+            nombre = archivo.name.split('.')
+
+            FORMATOS_PERMITIDOS = ['csv', 'xls', 'xlsx']
+
+            if nombre[len(nombre)-1] in FORMATOS_PERMITIDOS:
+                try:
+                    participantes, datemode = leer_competencias(request, archivo)
+                except:
+                    messages.error(request, 'La primera hoja del archivo debe llamarse: Hoja1')
+                    return redirect('cargar_participantes', competencia_id)
+                try:
+                    crear_participantes(request, participantes, datemode, competencia)
+                    messages.success(request, "Participantes subidos correctamente.")
+                    return redirect('listar_participantes', competencia_id)                    
+                except:
+                    messages.error(request, "El archivo no se encuentra en el formato correcto.")
+                    return redirect('cargar_participantes', competencia_id)
+            else:
+                from django.forms.util import ErrorList
+                errors = form._errors.setdefault("archivo", ErrorList())
+                errors.append(u"Error de formato, debe ser CSV, XLS o XLSX")
+
+    return render(request, 'cargado_archivos/cargar_participantes.html', {
+        'form': form,
+        'competencia_id': competencia.id,
+        'wizard_stage': 3,
+    })
+
+
+@login_required
+def crear_participantes(request, participantes, datemode, competencia):
+    import xlrd
+    import datetime
+    for participante in participantes:
+        obj = Participante()
+
+        obj.nombre = participante[0]
+        obj.genero = participante[1]
+        obj.departamento = Departamento.objects.get(id=participante[2])
+        obj.club = participante[3] or None
+
+        date = datetime.datetime(1899, 12, 30)
+        get_col2 = str(date + datetime.timedelta(participante[4]))[:10]
+        d = datetime.datetime.strptime(get_col2, "%Y-%m-%d")
+        obj.fecha_nacimiento = None#d.strftime("%Y-%m-%d")
+
+        obj.estatura = participante[5] or None
+        obj.peso = participante[6] or None
+        obj.posicion = participante[7]
+        obj.competencia = competencia
+        if competencia.tipos_participantes == 1: #Individual
+            if competencia.tipo_registro == 1: # Tiempos
+                obj.tiempo = participante[10]
+                obj.marca = participante[11]
+            elif competencia.tipo_registro == 2: # Puntos
+                obj.puntos = participante[9]                
+            else: # Metros
+                obj.metros = participante[8]
+                obj.marca = participante[11]                
+        else: # Equipos
+            obj.equipo = Equipo.objects.get(id=participante[12]) 
+        obj.save()
