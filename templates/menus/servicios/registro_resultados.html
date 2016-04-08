@@ -28,6 +28,9 @@
                 <li {% if "/registro-resultados/reporte/medalleria-genero" in request.path  %} class="active" {% endif %}>
                     <a href="{% url 'reporte_medalleria_genero' %}">Medallería Género</a>
                 </li>
+                <li {% if "/registro-resultados/reporte/tabla_medalleria" in request.path  %} class="active" {% endif %}>
+                    <a href="{% url 'reporte_tabla_medalleria' %}">Tabla de Medallería</a>
+                </li>
             </ul>
         </li>
        

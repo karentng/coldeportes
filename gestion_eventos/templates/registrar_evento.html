@@ -23,15 +23,12 @@
     <script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
     <script src="{{STATIC_URL}}plugins/jquery-geocomplete/jquery.geocomplete.js"></script>
     <script>
-        var csrftoken = '{{ csrf_token }}';
         var urlCrop = "{% url 'crop_pic' %}";
-        var buttonReset = "#reset-crop";
+        var edicion = {% if edicion %}true{% else %}false{% endif %};
         var formId = "form-eventos";
         var urlMedia = "/fotos_eventos/";
-        var picture = "";
-        {% if edicion %}
-            picture = "{{ MEDIA_URL }}{{ foto }}";
-        {% endif %}
+        var picture = "{{ MEDIA_URL }}{{ foto }}";
+
         var $direccion = $("#id_direccion");
         $direccion.geocomplete({
             map: "#mapa",
@@ -55,60 +52,15 @@
 
         $(document).ready(function(){
 
+            $("#check-mostrar-valor").click(function(){
+                $("#valor-mostrar").toggleClass("fadeInDown");
+                $("#id_video").val("");
+            });
+
             {% if edicion  %}
                 $("#lat").val("{{ lat|stringformat:'f' }}");
                 $("#lng").val('{{ lng|stringformat:"f" }}');
             {% endif %}
-
-            $('#submit-crop').click(function(event){
-                event.preventDefault();
-                CKEDITOR.instances.id_descripcion_evento.updateElement();
-                var str = CKEDITOR.instances.id_descripcion_evento.document.getBody().getText();
-
-                if(str.length <= 150){
-                    $("#previsualizacion").val(str);
-                }else {
-                    $("#previsualizacion").val(str.substring(0, 150));
-                }
-                console.log($("#previsualizacion").val());
-                {% if edicion %}
-                    if($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length){
-
-                        $("#imagen-hidden").val("si");
-                        document.getElementById(formId).submit();
-                        return false;
-                    }else {
-                        $("#"+formId).bootstrapValidator('validate');
-                        if($("div.form-group").hasClass("has-error")){
-                            return false;
-                        }else {
-                            if($('.cropControls.cropControlsCrop').length) {
-                                console.log("Cortando");
-                                $('.cropControlCrop').click();
-                            }else{
-
-                                document.getElementById(formId).submit();
-                                return false;
-                            }
-                        }
-                    }
-                {% else %}
-
-                    $("#"+formId).bootstrapValidator('validate');
-
-                    if($("div.form-group").hasClass("has-error")){
-                        return false;
-                    }else {
-                        if($('.cropControls.cropControlsCrop').length) {
-                            console.log("Cortando");
-                            $('.cropControlCrop').click();
-                        }else{
-                            document.getElementById(formId).submit();
-                            return false;
-                        }
-                    }
-                {% endif %}
-            });
         });
 
     </script>
@@ -135,19 +87,29 @@
             <div class="row">
             <div class="col-xs-12">
                 {% for field in form %}
-                    {% if field.name == 'autor' %}
+                    {% if field.name == 'video' %}
+                        <div class="control-personalizado form-group">
+                            <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
+                            ¿Desea incluir algún url de un video de youtube?
+                        </div>
+                        <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
+                            {% bootstrap_field field %}
+                        </div>
+                    {% elif field.name == 'categoria' %}
 
                         {% bootstrap_field field %}
-                        <div class="form-group crop-form">
-                            <div id="modalTrigger2" class="btn btn-primary" data-toggle="modal" data-target="#myModalCrop" >{% if edicion %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
-                            <label class="control-label" for="modalTrigger2"></label>
+                        <div class="form-group">
+                            <div id="modalTrigger2" class="btn {% if foto %}btn-success {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
                             {% include 'modal_croppic.html' %}
+                            <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
                         </div>
 
                     {% elif field.name = "direccion" %}
                         {% bootstrap_field field  %}
-                        <div class="form-group" style="height: 400px;;">
+                        <div class="form-group" style="height: 400px;">
                             <div class="col-xs-12">
+                                <label for="mapa" class="control-label">Mapa del evento</label>
                                 <div id="mapa"></div>
                             </div>
                         </div>
@@ -157,8 +119,6 @@
                 {% endfor %}
                 <input name="lat" id="lat" type="text" value="" hidden>
                 <input name="lng" id="lng" type="text" value="" hidden>
-                <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
-                <textarea id="previsualizacion" name="previsualizacion" hidden></textarea>
 
             </div>
             </div>

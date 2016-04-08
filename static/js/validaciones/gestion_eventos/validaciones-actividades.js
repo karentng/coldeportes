@@ -1,4 +1,6 @@
 form = "#form-actividad";
+
+$.getScript(base+"plugins/moment/moment.min.js");
 fields = {
     titulo: {
         validators: {
@@ -20,10 +22,19 @@ fields = {
                 message: 'El día de la activiadad no puede ser vacía'
             },
             date: {
-                message: 'El valor ingresado no es una fecha válida, debe estar entre las fechas del evento',
-                format: 'YYYY-MM-DD',
-                max: fecha_fn,
-                min: fecha_in
+                message: 'El valor ingresado no es una fecha válida',
+                format: 'YYYY-MM-DD'
+            },
+            callback:{
+                message: "El valor ingresado no es una fecha válida, debe estar entre las fechas del evento",
+                callback: function(field, validator){
+                    var momento = new moment(field, 'YYYY-MM-DD', true);
+                    if (!momento.isValid()) {
+                        return false;
+                    }
+                    return momento.isSameOrAfter(fecha_in) && momento.isSameOrBefore(fecha_fn);
+
+                }
             }
         }
     },

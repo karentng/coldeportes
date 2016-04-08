@@ -46,7 +46,7 @@ class SolicitudEscenario(models.Model):
     id_solicitante = models.CharField(max_length=150,verbose_name='Número de identificación')
     tel_solicitante = models.CharField(max_length=150,verbose_name='Teléfono')
     direccion_solicitante = models.CharField(max_length=150,verbose_name='Dirección')
-    vinculo_solicitante = models.IntegerField(choices=VINCULOS,verbose_name='Vinculo con la entidad')
+    vinculo_solicitante = models.IntegerField(choices=VINCULOS,verbose_name='Vínculo con la entidad')
 
     fecha = models.DateTimeField(auto_now=True)
 
@@ -67,6 +67,9 @@ class SolicitudEscenario(models.Model):
     def save(self, *args, **kwargs):
         self.descripcion = self.descripcion.upper()
         self.estado_actual_escenario = self.estado_actual_escenario.upper()
+        self.nombre_solicitante = self.nombre_solicitante.upper()
+        self.id_solicitante = self.id_solicitante.upper()
+        self.direccion_solicitante = self.direccion_solicitante.upper()
         super(SolicitudEscenario, self).save(*args, **kwargs)
 
 class DiscucionSolicitud(models.Model):
@@ -117,3 +120,8 @@ class AdjuntoSolicitud(models.Model):
             return 'powerpoint'
         return 'file'
 
+    def save(self, *args, **kwargs):
+        name, extension = os.path.splitext(self.archivo.name)
+        next_id = AdjuntoSolicitud.objects.filter(solicitud=self.solicitud).count() + 1
+        self.archivo.name = "AdjuntoSolicitud"+str(next_id)+str(self.solicitud.id)+extension
+        super(AdjuntoSolicitud, self).save(*args, **kwargs)

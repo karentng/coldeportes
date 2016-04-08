@@ -33,6 +33,11 @@ def editar_caso_doping(request, id_caso_doping):
         messages.error(request, 'El caso de doping que está intentando editar no existe')
         return redirect('listar_casos_doping')
 
+    if caso_doping.estado == 1:
+        return redirect('listar_casos_doping')
+    else:
+        pass
+
     form = CasoDopingForm(instance=caso_doping)
 
     if request.method == 'POST':

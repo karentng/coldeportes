@@ -40,9 +40,9 @@
     <div class="email-btn-row col-md-12">
 
       {% if individual %}
-      <a href="{% url 'listar_individual' competencia_id %}" class="btn btn-sm btn-inverse"><i class="fa fa-arrow-left m-r-5"></i> Listar Participantes</a>
+      <a href="{% url 'listar_individual' competencia_id %}" class="btn btn-sm btn-primary"><i class="fa fa-arrow-left m-r-5"></i> Listar Participantes</a>
       {% else %}
-      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-inverse pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
+      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
       {% endif %}
     </div>
   </div>

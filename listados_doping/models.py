@@ -36,6 +36,12 @@ class CasoDoping(models.Model):
     duracion_sancion = models.CharField(max_length=255, verbose_name='Duración de la sanción')
     estado = models.IntegerField(default=0)
 
+    def save(self, *args, **kwargs):
+        self.nombres_sancionado = self.nombres_sancionado.upper()
+        self.apellidos_sancionado = self.apellidos_sancionado.upper()
+        self.duracion_sancion = self.duracion_sancion.upper()
+        super(CasoDoping, self).save(*args, **kwargs)
+
     class Meta:
         permissions = (
             ("view_casodoping", "Permite ver caso doping"),
