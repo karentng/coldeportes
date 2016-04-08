@@ -20,16 +20,40 @@ class ReconocimientoDeportivo(models.Model):
         (2,'FUNCIONARIO'),
     )
 
+    TIPO_SOLICITUD = (
+        (0,'PRIMERA VEZ'),
+        (1,'RENOVACIÓN'),
+    )
+
     
     estado = models.IntegerField(choices=ESTADOS,default=0)
     descripcion = models.TextField(verbose_name='Descripción')
     para_quien = models.ForeignKey(Entidad,verbose_name='Dirigido a')    
     nombre_solicitante = models.CharField(max_length=150,verbose_name='Nombre')
+
+    solicitud_por_escrito = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    acta_constitucion_club = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    acta_organo_administracion = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    listado_deportistas = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    tarjetas_profesionales_revisores_fiscales = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    aceptacion_expresa_deportistas = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    estatutos = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    resolucion = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    informacion_oficina = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    acreditacion_cumplimiento_requisitos = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    reconocimiento_caracter_oficial = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    resolucion_creacion_club = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    constancia_eleccion_tercer_miembro_disciplinaria = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    constancia_eleccion_dos_miembro_disciplinaria = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    constancia_nombramiento_rector = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+    acta_afiliacion_deportistas = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
+
     id_solicitante = models.CharField(max_length=150,verbose_name='Número de identificación')
     tel_solicitante = models.CharField(max_length=150,verbose_name='Teléfono')
     direccion_solicitante = models.CharField(max_length=150,verbose_name='Dirección')
     vinculo_solicitante = models.IntegerField(choices=VINCULOS,verbose_name='Vínculo con la entidad')
-    fecha = models.DateTimeField(auto_now=True)
+    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia")
+    fecha_creacion = models.DateTimeField(auto_now=True)
 
     class Meta:
         permissions = (
@@ -73,7 +97,7 @@ class DiscucionSolicitud(models.Model):
 
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(ReconocimientoDeportivo)
-    archivo = models.FileField(upload_to="adjuntos_adecuacion_escenarios",verbose_name='Archivo a adjuntar')
+    archivo = models.FileField(upload_to="adjuntos_reconocimiento_deportivo",verbose_name='Archivo a adjuntar')
     discucion = models.ForeignKey(DiscucionSolicitud,null=True,blank=True)
 
     def __str__(self):
