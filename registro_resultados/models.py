@@ -81,7 +81,6 @@ class Participante(models.Model):
     fecha_nacimiento = models.DateField(null=True, blank=True)
     estatura = models.PositiveIntegerField(verbose_name='estatura (cm)', null=True, blank=True)
     peso = models.PositiveIntegerField(verbose_name='peso (kg)', null=True, blank=True)
-
     posicion = models.IntegerField(default=0, verbose_name="posición")
     metros = models.DecimalField(default=0, null=True, max_digits=3, decimal_places=2, help_text='En metros')
     puntos = models.IntegerField(default=0, null=True)
