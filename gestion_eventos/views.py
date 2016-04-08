@@ -93,7 +93,8 @@ def editar_evento(request, id_evento):
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
-    evento.video = evento.video.replace("embed/", "watch?v=")
+    if evento.video:
+        evento.video = evento.video.replace("embed/", "watch?v=")
     form = EventoForm(instance=evento)
 
     if request.method == 'POST':
