@@ -63,7 +63,7 @@ class Actividad(models.Model):
     resultado = models.ManyToManyField(Resultado)
 
     def get_estado(self):
-        return ("desactivada", "inactivada")[int(self.estado)]
+        return ("desactivada", "activada")[int(self.estado)]
 
     class Meta:
         unique_together = ('evento_perteneciente', 'id')
@@ -108,7 +108,7 @@ class Evento(models.Model):
     fecha_creacion = models.DateField(auto_now_add=True)
 
     def get_estado(self):
-        return ("desactivado", "inactivado")[int(self.estado)]
+        return ("desactivado", "activado")[int(self.estado)]
 
     class Meta:
         permissions = (

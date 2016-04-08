@@ -17,6 +17,9 @@ import datetime
 def dashboard(request, id_evento):
     try:
         evento = Evento.objects.get(id=id_evento)
+        if evento.estado == 0:
+            messages.error(request, 'El evento al que trata de acceder no está disponible!')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -79,21 +82,14 @@ def listar_eventos(request):
     return render(request, 'listar_eventos.html', {'eventos': eventos})
 
 
-def detalle_evento(request, id_evento):
-    try:
-        evento = Evento.objects.get(id=id_evento)
-    except Exception:
-        messages.error(request, 'El evento al que trata de acceder no existe!')
-        return redirect('listar_eventos')
-
-    return render(request, "detalles_evento.html", {"evento": evento})
-
-
 @login_required
 @permission_required('gestion_eventos.change_evento')
 def editar_evento(request, id_evento):
     try:
         evento = Evento.objects.get(id=id_evento)
+        if evento.estado == 0:
+            messages.error(request, 'El evento al que trata de acceder no está disponible!')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -143,7 +139,7 @@ def cambiar_estado_evento(request, id_evento):
         return redirect('listar_eventos')
 
     messages.success(request, 'Evento '+evento.get_estado()+' correctamente')
-    return redirect('dashboard', evento.id)
+    return redirect('listar_eventos')
 
 
 @login_required
