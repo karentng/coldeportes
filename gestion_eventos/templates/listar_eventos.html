@@ -18,6 +18,11 @@
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-eventos";
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
@@ -39,7 +44,6 @@
                             <th>Fecha inicio preinscripción</th>
                             <th>Fecha finalizacion preinscripción</th>
                             <th>Costo entrada</th>
-                            <!--<th>Participantes</th>-->
                             <th>Cupo disponible</th>
 
                             {% if "gestion_eventos.view_evento" in perms %}
@@ -56,15 +60,12 @@
                             <td>{{ evento.fecha_finalizacion }}</td>
                             <td>{{ evento.fecha_inicio_preinscripcion }}</td>
                             <td>{{ evento.fecha_finalizacion_preinscripcion }}</td>
-                            <td>{{ evento.costo_entrada }}</td>
-                            <!--<td>
-                                <a href="{% url 'listar_participantes' evento.id %}">
-                                    <i class="fa fa-eye">Ver participantes</i>
-                                </a><br>
-                                {% for participante in evento.participantes.all %}
-                                {{ participante.nombre }}<br>
-                            {% endfor %}
-                            </td>-->
+                            <td>{% if evento.costo_entrada %}
+                                    ${{ evento.costo_entrada }}
+                                {% else %}
+                                    $0
+                                {% endif %}
+                            </td>
                             <td>{{ evento.cupo_disponible }}</td>
                             {% if "gestion_eventos.view_evento" in perms %}
                                 <td>
@@ -75,37 +76,45 @@
                                     {% endif %}
                                 </td>
                             {% endif %}
-                            <td><!--
-                                {% if 'gestion_eventos.change_evento' in perms %}
-                                    <a href="{% url 'detalle_evento' evento.id %}">
-                                        <i class="fa fa-bar-chart">Estadisticas</i>
-                                    </a><br>
-                                {% endif %}
-                                <a href="{% url 'detalle_evento' evento.id %}">
-                                    <i class="fa fa-eye">Ver más</i>
-                                </a><br>
-                                {% if 'gestion_eventos.change_evento' in perms %}
-                                    <a href="{% url 'editar_evento' evento.id %}">
-                                        <i class="fa fa-gear"> Editar </i>
-                                    </a><br>
+                            <td>
+                                {% if evento.estado == 1 %}
+                                    <a href="{% url 'dashboard' evento.id %}"><i class="fa fa-eye"></i> Acceder</a><br>
+                                    {% if 'gestion_eventos.change_evento' in perms %}
+                                        <a href="{% url 'editar_evento' evento.id %}">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a><br>
+                                    {% endif %}
                                 {% endif %}
                                 {% if 'gestion_eventos.change_evento' in perms %}
-                                    <a href="{% url 'registrar_actividad' evento.id %}">
-                                        <i class="fa fa-plus">Gestionar actividades</i>
-                                    </a><br>
+                                    <a data-toggle="modal" data-target="#modal-desactivate" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_evento' evento.id %}">
+                                        <span class=" add-tooltip" data-toggle="tooltip" title="Activar/Inactivar" href="#">
+                                            <i class="fa fa-ban"></i> A/I
+                                        </span>
+                                    </a>
                                 {% endif %}
-                                <a href="{% url 'ver_actividades' evento.id %}">
-                                    <i class="fa fa-calendar">Ver actividades</i>
-                                </a><br>
-                                <a href="{% url 'preinscripcion_evento' evento.id %}">
-                                    <i class="fa fa-pencil">Preinscribirse</i>
-                                </a><br>-->
-                                <a type="button" href="{% url 'dashboard' evento.id %}" class="btn btn-primary">Acceder</a>
                             </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-desactivate">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Cambiar de estado evento:</h4>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro que desea cambiar el estado de este evento?
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                </div>
             </div>
         </div>
     </div>

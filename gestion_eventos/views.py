@@ -17,6 +17,9 @@ import datetime
 def dashboard(request, id_evento):
     try:
         evento = Evento.objects.get(id=id_evento)
+        if evento.estado == 0:
+            messages.error(request, 'El evento al que trata de acceder no está disponible!')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -58,7 +61,6 @@ def registrar_evento(request):
 
             evento.latitud = float(request.POST.get('lat'))
             evento.longitud = float(request.POST.get('lng'))
-            evento.previsualizacion = request.POST.get("previsualizacion")
             evento.cupo_disponible = evento.cupo_participantes
             evento.cupo_candidatos = evento.cupo_participantes
 
@@ -80,25 +82,18 @@ def listar_eventos(request):
     return render(request, 'listar_eventos.html', {'eventos': eventos})
 
 
-def detalle_evento(request, id_evento):
-    try:
-        evento = Evento.objects.get(id=id_evento)
-    except Exception:
-        messages.error(request, 'El evento al que trata de acceder no existe!')
-        return redirect('listar_eventos')
-
-    return render(request, "detalles_evento.html", {"evento": evento})
-
-
 @login_required
 @permission_required('gestion_eventos.change_evento')
 def editar_evento(request, id_evento):
     try:
         evento = Evento.objects.get(id=id_evento)
+        if evento.estado == 0:
+            messages.error(request, 'El evento al que trata de acceder no está disponible!')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
-
+    evento.video = evento.video.replace("embed/", "watch?v=")
     form = EventoForm(instance=evento)
 
     if request.method == 'POST':
@@ -119,7 +114,6 @@ def editar_evento(request, id_evento):
 
                 evento.latitud = float(request.POST.get('lat'))
                 evento.longitud = float(request.POST.get('lng'))
-                evento_form.previsualizacion = request.POST.get("previsualizacion")
                 evento_form.cupo_disponible = evento_form.cupo_participantes - evento.participantes.count()
 
                 evento_form.save()
@@ -144,8 +138,8 @@ def cambiar_estado_evento(request, id_evento):
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
 
-    messages.success(request, 'Se ha cambiado el estado del evento correctamente')
-    return redirect('dashboard', evento.id)
+    messages.success(request, 'Evento '+evento.get_estado()+' correctamente')
+    return redirect('listar_eventos')
 
 
 @login_required
@@ -422,6 +416,10 @@ def registrar_actividad(request, id_evento):
 def editar_actividad(request, id_actividad):
     try:
         actividad = Actividad.objects.get(id=id_actividad)
+        if actividad.estado == 0:
+            messages.error(request, 'La actividad a la que trata de acceder no está disponbible')
+            return redirect('listar_eventos')
+
     except Exception:
         messages.error(request, 'La actividad a la que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -434,7 +432,7 @@ def editar_actividad(request, id_actividad):
             if actividad_form.is_valid():
                 actividad = actividad_form.save(commit=False)
                 actividad.save()
-                messages.success(request, "La actividad ha sido editada con exito!")
+                messages.success(request, "La actividad ha sido editada con éxito!")
                 return redirect('registrar_actividad', actividad.evento_perteneciente)
 
     evento = Evento.objects.get(id=actividad.evento_perteneciente)
@@ -513,7 +511,7 @@ def cambiar_estado_actividad(request, id_actividad):
         messages.error(request, 'La actividad a la que trata de acceder no existe!')
         return redirect('listar_eventos')
 
-    messages.success(request, 'Se ha cambiado el estado de la actividad correctamente')
+    messages.success(request, 'Actividad '+actividad.get_estado()+' correctamente')
     return redirect('registrar_actividad', actividad.evento_perteneciente)
 
 
@@ -522,6 +520,9 @@ def cambiar_estado_actividad(request, id_actividad):
 def registrar_resultado(request, id_actividad):
     try:
         actividad = Actividad.objects.get(id=id_actividad)
+        if actividad.estado == 0:
+            messages.error(request, 'La actividad a la que trata de acceder no está disponbible')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'La actividad a la que trata de acceder no existe!')
         return redirect('listar_eventos')
