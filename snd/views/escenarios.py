@@ -324,7 +324,11 @@ def wizard_horarios(request, escenario_id):
     except Exception:
         horarios = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     horarios_form = HorariosDisponibleForm()
 
@@ -372,7 +376,11 @@ def wizard_historicos(request, escenario_id):
     except Exception:
         historicos = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     historico_form = DatoHistoricoForm()
 
@@ -425,7 +433,11 @@ def wizard_fotos(request, escenario_id):
     except Exception:
         videos = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     fotos_form = FotoEscenarioForm()
     videos_form = VideoEscenarioForm()
@@ -481,10 +493,12 @@ def wizard_videos(request, escenario_id):
         videos = Video.objects.filter(escenario=escenario_id)
     except Exception:
         videos = None
-
-
-
-    escenario = Escenario.objects.get(id=escenario_id)
+        
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     fotos_form = FotoEscenarioForm()
     videos_form = VideoEscenarioForm()
@@ -539,7 +553,11 @@ def wizard_mantenimiento(request, escenario_id):
     :type escenario_id:    String
     """
     
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     try:
         mantenimientos = Mantenimiento.objects.filter(escenario=escenario_id).order_by('-fecha_ultimo_mantenimiento')
@@ -590,7 +608,11 @@ def wizard_contactos(request, escenario_id):
     except Exception:
         contactos = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     contactos_form = ContactoForm()
 
