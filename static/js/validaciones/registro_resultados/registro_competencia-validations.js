@@ -22,7 +22,7 @@ $(document).ready(function() {
                 fecha_competencia: {
                     validators: {
                         notEmpty: {
-                            message: 'La fecha de la competencia no puede ser vacío'
+                            message: 'La fecha de la competencia no puede ser vacía'
                         }
                     }
                 },
