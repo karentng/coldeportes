@@ -258,11 +258,12 @@ class CompetenciasBaseDeDatos(forms.Form):
 
     archivo = forms.FileField(label="Archivo de competencias")
 
+
 class FiltrosMedalleriaDeptGenForm(forms.Form):
     
     GENEROS = (
-        ('HOMBRE','Masculino'),
-        ('MUJER','Femenino'),
+        (1,'Masculino'),
+        (2,'Femenino'),
     )    
     juegos = forms.ModelChoiceField(queryset=Juego.objects.all(), required=False)
     departamentos = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
@@ -281,4 +282,20 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
         
         if eliminar:
             del self.fields[eliminar]
+
+
+class FiltrosTablaMedalleriaForm(forms.Form):
+
+    juego = forms.ModelChoiceField(queryset=Juego.objects.all().order_by('anio'))
+    deportes = forms.ModelMultipleChoiceField(queryset=TipoDisciplinaDeportiva.objects.all().order_by('descripcion'), required=False)
+
+    def __init__(self, *args, **kwargs):
+        
+        super(FiltrosTablaMedalleriaForm, self).__init__(*args, **kwargs)
+        self.fields['deportes'] = adicionarClase(self.fields['deportes'], 'many')
+        self.fields['juego'] = adicionarClase(self.fields['juego'], 'one')
+
+    
+class ParticipantesBaseDeDatos(forms.Form):
+    archivo = forms.FileField(label="Archivo de participantes")
 
