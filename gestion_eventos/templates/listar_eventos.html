@@ -18,6 +18,11 @@
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-eventos";
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
@@ -56,7 +61,12 @@
                             <td>{{ evento.fecha_finalizacion }}</td>
                             <td>{{ evento.fecha_inicio_preinscripcion }}</td>
                             <td>{{ evento.fecha_finalizacion_preinscripcion }}</td>
-                            <td>{{ evento.costo_entrada }}</td>
+                            <td>{% if evento.costo_entrada %}
+                                    ${{ evento.costo_entrada }}
+                                {% else %}
+                                    $0
+                                {% endif %}
+                            </td>
                             <!--<td>
                                 <a href="{% url 'listar_participantes' evento.id %}">
                                     <i class="fa fa-eye">Ver participantes</i>
@@ -75,32 +85,21 @@
                                     {% endif %}
                                 </td>
                             {% endif %}
-                            <td><!--
-                                {% if 'gestion_eventos.change_evento' in perms %}
-                                    <a href="{% url 'detalle_evento' evento.id %}">
-                                        <i class="fa fa-bar-chart">Estadisticas</i>
-                                    </a><br>
+                            <td>
+                                {% if evento.estado == 1 %}
+                                    <a href="{% url 'dashboard' evento.id %}"><i class="fa fa-eye"></i> Acceder</a>
+                                    {% if 'gestion_eventos.change_evento' in perms %}
+                                        <a href="{% url 'editar_evento' evento.id %}">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a><br>
+                                    {% endif %}
                                 {% endif %}
-                                <a href="{% url 'detalle_evento' evento.id %}">
-                                    <i class="fa fa-eye">Ver más</i>
-                                </a><br>
-                                {% if 'gestion_eventos.change_evento' in perms %}
-                                    <a href="{% url 'editar_evento' evento.id %}">
-                                        <i class="fa fa-gear"> Editar </i>
-                                    </a><br>
-                                {% endif %}
-                                {% if 'gestion_eventos.change_evento' in perms %}
-                                    <a href="{% url 'registrar_actividad' evento.id %}">
-                                        <i class="fa fa-plus">Gestionar actividades</i>
-                                    </a><br>
-                                {% endif %}
-                                <a href="{% url 'ver_actividades' evento.id %}">
-                                    <i class="fa fa-calendar">Ver actividades</i>
-                                </a><br>
-                                <a href="{% url 'preinscripcion_evento' evento.id %}">
-                                    <i class="fa fa-pencil">Preinscribirse</i>
-                                </a><br>-->
-                                <a type="button" href="{% url 'dashboard' evento.id %}" class="btn btn-primary">Acceder</a>
+
+                                <a data-toggle="modal" data-target="#modal-desactivate" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_evento' evento.id %}">
+                                    <span class=" add-tooltip" data-toggle="tooltip" title="Activar/Inactivar" href="#">
+                                        <i class="fa fa-ban"></i> A/I
+                                    </span>
+                                </a>
                             </td>
                             </tr>
                         {% endfor %}

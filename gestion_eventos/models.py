@@ -62,6 +62,9 @@ class Actividad(models.Model):
     estado = models.IntegerField(default=1)
     resultado = models.ManyToManyField(Resultado)
 
+    def get_estado(self):
+        return ("desactivada", "inactivada")[int(self.estado)]
+
     class Meta:
         unique_together = ('evento_perteneciente', 'id')
 
@@ -80,7 +83,8 @@ class Evento(models.Model):
     ciudad_evento = models.ForeignKey(Ciudad)
     nombre_lugar = models.CharField(max_length=255, help_text="Nombre del lugar donde se realizará el evento",
                                     verbose_name="Lugar del evento")
-    direccion = models.CharField(max_length=255, help_text="Dirección del lugar del evento (georeferenciado)")
+    direccion = models.CharField(max_length=255, verbose_name="Dirección",
+                                 help_text="Dirección del lugar del evento (georeferenciado)")
     latitud = models.FloatField()
     longitud = models.FloatField()
     fecha_inicio = models.DateField(verbose_name="Fecha de inicio del evento")
@@ -100,6 +104,11 @@ class Evento(models.Model):
     autor = models.CharField(verbose_name="Autor de la noticia", max_length=150,
                              help_text="Se usará como autor para la noticia del evento que se creará")
     estado = models.IntegerField(default=1)
+
+    fecha_creacion = models.DateField(auto_now_add=True)
+
+    def get_estado(self):
+        return ("desactivado", "inactivado")[int(self.estado)]
 
     class Meta:
         permissions = (

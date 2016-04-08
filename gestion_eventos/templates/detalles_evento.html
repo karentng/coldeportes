@@ -12,7 +12,7 @@
             <div class="panel-body">
                 <h1 class="text-center">{{ evento.titulo_evento }}</h1>
                 <hr class="line-style">
-                <p >Fecha de Publicación: {{ evento.fecha_inicio|date:"l, F j, Y" }}</p>
+                <p >Fecha de Publicación: {{ evento.fecha_creacion|date:"l, F j, Y" }}</p>
 
                 <div class="info-evento">
                     <h3>Información del evento</h3>
@@ -21,7 +21,7 @@
                         <b>Fecha Finalización: </b>{{ evento.fecha_finalizacion|date:"l, j \d\e F \d\e Y" }}<br>
                         <b>Fecha de Preinscripción: </b>Desde el {{ evento.fecha_inicio_preinscripcion|date:"l, j \d\e F" }}
                                                         hasta el {{ evento.fecha_finalizacion_preinscripcion|date:"l, j \d\e F \d\e Y" }}<br>
-                        <b>Lugar de Realización: </b>{{ evento.lugar_evento }}, {{ evento.ciudad_evento }}<br>
+                        <b>Lugar de Realización: </b>{{ evento.nombre_lugar }}, {{ evento.ciudad_evento }}<br>
                         <b>Costo Entrada: </b>{% if evento.costo_entrada %}{{ evento.costo_entrada }}{% else %} Libre{% endif %}<br>
                         <b>Cupo Disponible: </b>{{ evento.cupo_disponible }}
                     </p>
@@ -48,13 +48,13 @@
                         <span class='st_googleplus_large' displayText='Google +'></span>
                         <span class='st_linkedin_large' displayText='LinkedIn'></span>
                     </div>
-                    {% if evento.imagen != ""  %}
-                        <img class="img-responsive img-right" src="{{ MEDIA_URL }}{{ evento.imagen }}">
-                    {% endif %}
-                    {% if evento.video != "" and false%}
-                        <div class="embed-responsive embed-responsive-16by9" style="margin-top: 30px;">
+                    {% if evento.video != ""%}
+                        <div class="embed-responsive embed-responsive-16by9" style="margin-bottom: 30px;">
                             <iframe class="embed-responsive-item" src="{{ evento.video }}"></iframe>
                         </div>
+                    {% endif %}
+                    {% if evento.imagen != ""  %}
+                        <img class="img-responsive img-right" src="{{ MEDIA_URL }}{{ evento.imagen }}">
                     {% endif %}
                     <p>{{ evento.descripcion_evento|safe }}</p>
                 </div>

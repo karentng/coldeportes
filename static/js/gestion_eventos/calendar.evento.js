@@ -26,6 +26,7 @@ var handleCalendarDemo = function () {
             week: 'Semana',
             day: 'Día'
         },
+		timeFormat: 'H:mm',
 		selectable: false,
 		selectHelper: true,
 		eventDrop:function( event, dayDelta, minuteDelta, allDay, revertFunc) {
