@@ -1,0 +1,31 @@
+<li class="has-sub {% if '/reconocimiento-deportivo/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <span class="colorMenu">Reconocimiento Deportivo</span>
+    </a>
+    <ul class="sub-menu">
+        <li {% if "/reconocimiento-deportivo/solicitar$" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'reconocimiento_deportivo_solicitar' %}">Enviar solicitud</a>
+        </li>
+        <li {% if "/reconocimiento-deportivo/listar$" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_reconocimientos' %}">Listar solicitudes</a>
+        </li>
+        {% comment %}
+        {% if perms.solicitud.add_reconocimientodeportivo%}
+            <li {% if "/reconocimiento-deportivo/solicitar$" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'reconocimiento_deportivo_solicitar' %}">Enviar solicitud</a>
+            </li>
+        {% endif %}
+        {% if perms.respuesta.view_listasolicitudes %}
+            <li {% if "/reconocimiento-deportivo/listar$" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'listar_solicitudes_respuesta' %}">Listar solicitudes pendientes</a>
+            </li>
+        {% endif %}
+        {% if perms.solicitud.view_solicitudescenario %}
+            <li {% if "/reconocimiento-deportivo/listar$" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'listar_reconocimientos' %}">Listar solicitudes</a>
+            </li>
+        {% endif %}
+        {% endcomment %}
+    </ul>
+</li>

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Reconocimiento Deportivo - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+  Reconocimiento Deportivo
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li>Adecuación Escenarios</li>
+{% endblock %}
+
+{% block titulo_panel %}
+  Reconocimiento Deportivo
+{% endblock %}
+
+{% block contenido_panel %}
+  <!-- begin vertical-box -->
+  <div class="vertical-box">
+    <div class="vertical-box-column bg-white">
+      <!-- begin wrapper -->
+      <div  class="wrapper bg-silver-lighter clearfix">
+        <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud_reconocimiento' %}" class="btn btn-warning p-l-40 p-r-40 btn-sm">
+            Cancelar
+        </a>
+        <div class="pull-right">
+          <div class="btn-group btn-toolbar">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+          </div>
+          <div class="btn-group m-l-5">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <!-- end wrapper -->
+      <!-- begin wrapper -->
+      <div class="wrapper">
+        <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitud de reconocimiento deportivo</h4>
+        {% include 'wizard/_wizard.html' %}
+          <form action="" method="POST" id="form-reconocimiento-deportivo">
+              {% csrf_token %}
+              <h4><strong>Datos de la solicitud</strong></h4>
+              <fieldset>
+                  <legend></legend>
+                  <div class="col-md-6">
+                      {% bootstrap_field form.para_quien layout="verical" %}
+                  </div>
+                  <div class="col-md-6">
+                      {% bootstrap_field form.tipo layout="verical" %}
+                  </div>
+                  <div class="col-md-6">
+                      {% bootstrap_field form.descripcion layout="verical" %}
+                  </div>
+              </fieldset>
+              <h4><strong>Datos del solicitante</strong></h4>
+              <fieldset>
+                  <legend></legend>
+
+                  <div class="col-md-6">
+                      {% bootstrap_field form.nombre_solicitante layout="verical" %}
+                  </div>
+                  <div class="col-md-6">
+                      {% bootstrap_field form.id_solicitante layout="verical" %}
+                  </div>
+                  <div class="col-md-6">
+                      {% bootstrap_field form.tel_solicitante layout="verical" %}
+                  </div>
+                  <div class="col-md-6">
+                      {% bootstrap_field form.direccion_solicitante layout="verical" %}
+                  </div>
+                  <div class="col-md-6">
+                      {% bootstrap_field form.vinculo_solicitante layout="verical" %}
+                  </div>
+              </fieldset>
+              <div class="row">
+                  <div class="col-xs-12">
+                      <hr>
+                      <button class="btn btn-primary pull-right" type="submit">
+                          Siguiente →
+                      </button>
+                  </div>
+              </div>
+          </form>
+          <br><br><br>
+        </div>
+        <!-- end wrapper -->
+        <!-- begin wrapper -->
+        <div class="wrapper bg-silver-lighter text-right clearfix">
+            Solicitud de Reconocimiento Deportivo, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+        </div>
+        <!-- end wrapper -->
+    </div>
+      <!-- end vertical-box-column -->
+  </div>
+  <!-- end vertical-box -->
+  <div class="modal fade" id="modal-desactivate">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Cancelar Solicitud:</h4>
+        </div>
+        <div class="modal-body">
+            ¿Está seguro que desea cancelar la solicitud para obtener reconocimiento deportivo?
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+            <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+  <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+  <!--script src="{{ STATIC_URL }}js/validaciones/solicitud_escenario/wizard-solicitud-validations.js"></script-->
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            FormWizard.init();
+        });
+
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        };
+    </script>
+{% endblock %}

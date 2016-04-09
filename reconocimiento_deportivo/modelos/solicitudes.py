@@ -1,8 +1,9 @@
 #encoding:utf-8
+import os
 from django.db import models
 from snd.models import Escenario
 from entidades.models import Entidad
-import os
+
 # Create your models here.
 class ReconocimientoDeportivo(models.Model):
     
@@ -48,11 +49,12 @@ class ReconocimientoDeportivo(models.Model):
     constancia_nombramiento_rector = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
     acta_afiliacion_deportistas = models.FileField(upload_to="adjuntos_reconocimiento_deportivo")
 
+    tipo = models.IntegerField(choices=TIPO_SOLICITUD, verbose_name='tipo de solicitud')
     id_solicitante = models.CharField(max_length=150,verbose_name='Número de identificación')
     tel_solicitante = models.CharField(max_length=150,verbose_name='Teléfono')
     direccion_solicitante = models.CharField(max_length=150,verbose_name='Dirección')
     vinculo_solicitante = models.IntegerField(choices=VINCULOS,verbose_name='Vínculo con la entidad')
-    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia")
+    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia", null=True)
     fecha_creacion = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -74,7 +76,7 @@ class ReconocimientoDeportivo(models.Model):
         self.direccion_solicitante = self.direccion_solicitante.upper()
         super(ReconocimientoDeportivo, self).save(*args, **kwargs)
 
-class DiscucionSolicitud(models.Model):
+class DiscucionReconocimiento(models.Model):
     ESTADOS = (
         (0,'ESPERANDO RESPUESTA'),
         (1,'INCOMPLETA'),
@@ -98,7 +100,7 @@ class DiscucionSolicitud(models.Model):
 class AdjuntoSolicitud(models.Model):
     solicitud = models.ForeignKey(ReconocimientoDeportivo)
     archivo = models.FileField(upload_to="adjuntos_reconocimiento_deportivo",verbose_name='Archivo a adjuntar')
-    discucion = models.ForeignKey(DiscucionSolicitud,null=True,blank=True)
+    discucion = models.ForeignKey(DiscucionReconocimiento,null=True,blank=True)
 
     def __str__(self):
         return self.nombre_archivo()
