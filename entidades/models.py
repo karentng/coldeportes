@@ -1003,3 +1003,39 @@ class Permisos(models.Model):
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
         return(actores_seleccionados)
+
+class CalendarioNacional(models.Model):
+    TIPO = (
+        (0, 'DEPORTIVO'),
+        #(1, 'CAPACITACIÓN'),
+        #(2, 'EDUCATIVO'),
+        #(3, 'CULTURAL'),
+        #(4, 'RECREATIVO'),
+    )
+
+    ESTADOS = (
+        (0,'APROBADO'),
+        (1,'NO APROBADO'),
+        (2,'ESPERANDO APROBACIÓN'),
+        (3,'CANCELADO')
+    )
+
+    titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
+    nombre_lugar = models.CharField(max_length=255, help_text="Nombre del lugar donde se realizará el evento",
+                                    verbose_name="Lugar del evento")
+
+    tipo = models.IntegerField(choices=TIPO)
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name="Deporte del evento")
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva, verbose_name="Categoría del evento",null=True,blank=True)
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva, verbose_name="Modalidad del evento",null=True,blank=True)
+    ciudad = models.ForeignKey(Ciudad,help_text="Ciudad donde se desarrollará el evento")
+    direccion = models.CharField(max_length=255, help_text="Dirección del lugar del evento")
+    fecha_inicio = models.DateTimeField(verbose_name="Fecha de inicio del evento")
+    fecha_finalizacion = models.DateTimeField(verbose_name="Fecha de finalización del evento")
+    fecha_inicio_preinscripcion = models.DateTimeField(verbose_name="Fecha de inicio de las preinscripciones")
+    fecha_finalizacion_preinscripcion = models.DateTimeField(verbose_name="Fecha de finalización de las preinscripciones")
+    objetivo = models.TextField(verbose_name="Objetivo del evento (cualitativo)")
+    cupo_atletas = models.PositiveIntegerField(verbose_name="Cupo para participantes")
+    cupo_personas = models.PositiveIntegerField(verbose_name="Cupo total de personas")
+    estado = models.IntegerField(choices=ESTADOS,default=2)
+    entidad = models.ForeignKey(Entidad)
