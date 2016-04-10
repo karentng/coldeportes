@@ -76,3 +76,18 @@ def cancelar_evento(request,id):
         messages.error(request,'El evento que intenta cancelar no existe')
     connection.set_tenant(yo)
     return redirect('listado_calendario_nacional')
+
+@login_required
+def ver_evento(request,id):
+    yo = request.tenant
+    public = Entidad.objects.get(schema_name='public')
+    connection.set_tenant(public)
+    try:
+        evento = CalendarioNacional.objects.get(id=id)
+    except:
+        messages.error(request,'El evento solicitado no existe')
+        return redirect('listado_calendario_nacional')
+    connection.set_tenant(yo)
+    return render(request,'ver_evento_calendario.html',{
+        'evento':evento
+    })

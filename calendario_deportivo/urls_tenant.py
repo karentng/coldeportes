@@ -6,6 +6,7 @@ urlpatterns = patterns('calendario_deportivo.views',
     url(r'^editar/(\d+)', 'registro_calendario', name='editar_calendario_nacional'),
     url(r'^listar', 'listar_eventos', name='listado_calendario_nacional'),
     url(r'^cancelar/(\d+)', 'cancelar_evento', name='cancelar_calendario_nacional'),
+    url(r'^ver-evento/(\d+)', 'ver_evento', name='ver_evento_calendario_nacional'),
 
 
 )

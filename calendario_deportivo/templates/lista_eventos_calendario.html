@@ -63,7 +63,7 @@
                         <td>{{ c.cupo_personas }} Personas</td>
                         <td>{{ c.get_estado_display }}</td>
                         <td>
-                            <a href=''>
+                            <a href='{% url 'ver_evento_calendario_nacional' c.id %}'>
                                 <i class="fa fa-eye"></i> Ver más
                             </a>
                             <br/>
