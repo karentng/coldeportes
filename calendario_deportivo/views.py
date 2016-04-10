@@ -13,13 +13,31 @@ def cargar_calendario(request):
     })
 
 @login_required
-def registro_calendario(request):
-    form = CalendarioForm()
+def registro_calendario(request,id=None):
+
+    if id:
+        try:
+            evento = CalendarioNacional.objects.get(id=id)
+            if evento.estado != 2:
+                raise Exception
+        except:
+            messages.error(request,'El evento no exite o intentas editar un evento que no esta disponible')
+            return redirect('listado_calendario_nacional')
+
+        editar = True
+        deporte_id = evento.deporte.id
+    else:
+        deporte_id = None
+        evento = None
+        editar = False
+
+    form = CalendarioForm(instance=evento,deporte_id=deporte_id)
     if request.method == 'POST':
         yo = request.tenant
         public = Entidad.objects.get(schema_name='public')
         connection.set_tenant(public)
-        form = CalendarioForm(request.POST)
+        deporte_id = request.POST['deporte']
+        form = CalendarioForm(request.POST,instance=evento,deporte_id=deporte_id)
         ev = form.save(commit=False)
         ev.entidad = yo
         ev.save()
@@ -27,7 +45,8 @@ def registro_calendario(request):
         messages.success(request, "El evento a sido enviado al Calendario Deportivo Nacional con exito!")
         return redirect('listado_calendario_nacional')
     return render(request,'registro_calendario.html',{
-        'form': form
+        'form': form,
+        'edicion':editar
     })
 
 @login_required

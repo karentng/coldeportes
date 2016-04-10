@@ -60,15 +60,11 @@
                         <td>{{c.fecha_inicio}}</td>
                         <td>{{c.fecha_finalizacion}}</td>
                         <td>{{c.ciudad}}</td>
-                        <td>{{ c.cupo_personas }}</td>
+                        <td>{{ c.cupo_personas }} Personas</td>
                         <td>{{ c.get_estado_display }}</td>
                         <td>
-                            <!--a href=''>
-                                <i class="fa fa-eye"></i> Ver más
-                            </a-->
-                            <br/>
                                 {% if c.estado == 2 %}
-                                    <a href="">
+                                    <a href="{% url 'editar_calendario_nacional' c.id %}">
                                         <i class="fa fa-edit"></i> Editar evento
                                     </a>
                                     <br/>

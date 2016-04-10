@@ -45,7 +45,13 @@
 	<form id="form-registro-calendario" action="" method="post">{% csrf_token %}
 		<fieldset>
 				<div class="col-xs-12">
-					<h3>Registro Calendario Deportivo Nacional</h3>
+					<h3>
+                        {% if edicion %}
+                            Edición Calendario Deportivo Nacional
+                        {% else %}
+                            Registro Eventos Calendario Deportivo Nacional
+                        {% endif %}
+                    </h3>
 
 					<div class="well row">
 						<strong><h4>Evento</h4></strong>
