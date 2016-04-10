@@ -6,12 +6,14 @@ from django.contrib import messages
 from django.db import connection
 from entidades.models import Entidad,CalendarioNacional
 # Create your views here.
+
 def cargar_calendario(request):
 
     return render(request,'calendario.html',{
 
     })
 
+#Vistas de Registro para Federacion
 @login_required
 def registro_calendario(request,id=None):
 
@@ -60,8 +62,17 @@ def listar_eventos(request):
         'eventos':eventos
     })
 
-def public(request):
-    return HttpResponse("Public si señor")
-
-def tenant(request):
-    return HttpResponse("Tenant no señor")
+@login_required
+def cancelar_evento(request,id):
+    yo = request.tenant
+    public = Entidad.objects.get(schema_name='public')
+    connection.set_tenant(public)
+    try:
+        evento = CalendarioNacional.objects.get(id=id,entidad=yo)
+        evento.estado = 3
+        evento.save()
+        messages.warning(request,'El evento ha sido cancelado correctamente')
+    except:
+        messages.error(request,'El evento que intenta cancelar no existe')
+    connection.set_tenant(yo)
+    return redirect('listado_calendario_nacional')

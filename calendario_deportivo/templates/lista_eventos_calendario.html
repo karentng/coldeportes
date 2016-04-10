@@ -63,12 +63,16 @@
                         <td>{{ c.cupo_personas }} Personas</td>
                         <td>{{ c.get_estado_display }}</td>
                         <td>
+                            <a href=''>
+                                <i class="fa fa-eye"></i> Ver más
+                            </a>
+                            <br/>
                                 {% if c.estado == 2 %}
                                     <a href="{% url 'editar_calendario_nacional' c.id %}">
                                         <i class="fa fa-edit"></i> Editar evento
                                     </a>
                                     <br/>
-                                    <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="">
+                                    <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_calendario_nacional' c.id %}">
                                         <i class="fa fa-trash"></i> Cancelar evento
                                     </a>
                                     <br/>
