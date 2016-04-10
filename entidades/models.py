@@ -1039,3 +1039,10 @@ class CalendarioNacional(models.Model):
     cupo_personas = models.PositiveIntegerField(verbose_name="Cupo total de personas")
     estado = models.IntegerField(choices=ESTADOS,default=2)
     entidad = models.ForeignKey(Entidad)
+
+    def save(self, *args, **kwargs):
+        self.titulo_evento = self.titulo_evento.upper()
+        self.nombre_lugar = self.nombre_lugar.upper()
+        self.direccion = self.direccion.upper()
+        self.objetivo = self.objetivo.upper()
+        super(CalendarioNacional, self).save(*args, **kwargs)
