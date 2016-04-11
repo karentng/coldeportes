@@ -287,17 +287,16 @@
                                                                 </td>
                                                                 <td>
                                                                     <a class="btn btn-md btn-info" href="#modal-masdetalle-{{historial.id}}" data-toggle="modal"><i class="fa fa-binoculars"></i> Ver mas</a>
-                                                                    <div class="modal modal-message fade in" id="modal-masdetalle-{{historial.id}}">
+                                                                    <div class="modal fade" id="modal-masdetalle-{{historial.id}}">
                                                                         <div class="modal-dialog">
                                                                             <div class="modal-content">
                                                                                 <div class="modal-header">
                                                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                                                    <h4 class="modal-title">Mas detalle historial deportivo de {{ deportista.full_name }}:</h4>
+                                                                                    <h4 class="modal-title">Detalle historial deportivo de {{ deportista.full_name }}:</h4>
                                                                                 </div>
                                                                                 <div class="modal-body">
-                                                                                <b>Nota: </b>Adjunto se encuentra la información de la participación en el historial deportivo
                                                                                     <div class="table-responsive">
-                                                                                        <table class="table table-invoice">
+                                                                                        <table class="table table table-striped table-bordered table-hover">
                                                                                             <thead>
                                                                                                 <tr>
                                                                                                     <th>DEPORTE</th>
@@ -346,7 +345,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="modal-footer">
-                                                                                    <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+                                                                                    <a href="javascript:;" class="btn btn-md btn-warning" data-dismiss="modal">Cerrar</a>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
