@@ -1,7 +1,7 @@
-<p>Te has registrado en el evento "{{ evento.titulo_evento }}" exitosamente.</p><br>
+Te has registrado en el evento "{{ evento.titulo_evento }}" exitosamente.
 
-<p>Puedes editar tu información en el siguiente enlace:<br>
-http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{% url 'editar_participante' participante.id %}?token={{ token }}</p>
+Puedes editar tu información en el siguiente enlace:
+http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{% url 'editar_participante' participante.id %}?token={{ token }}
 
 
 

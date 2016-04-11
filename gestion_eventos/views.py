@@ -323,9 +323,18 @@ def aceptar_candidato(request, id_participante):
 def confirmar_participacion(request, id_participante):
     try:
         participante = Participante.objects.get(id=id_participante)
-        if participante.estado != 1:
+        if participante.estado == 1:
+            messages.error(request, 'El participante se encuentra en etapa de preinscripción')
+            return redirect('listar_eventos')
+
+        if participante.estado == 3 or participante.estado == 4:
             messages.error(request, 'El participante ya ha respondido la confirmación de participación')
             return redirect('listar_eventos')
+
+        if participante.estado == 0:
+            messages.error(request, 'La inscripción del participante ha sido cancelado')
+            return redirect('listar_eventos')
+
     except Exception:
         messages.error(request, 'El participante al que trata de acceder no existe!')
         return redirect('listar_eventos')
