@@ -72,7 +72,8 @@ def editar_noticia(request, id_noticia):
     except Exception:
         messages.error(request, 'La noticia que está intentando editar no existe')
         return redirect('listar_noticias')
-    noticia.video = noticia.video.replace("embed/", "watch?v=")
+    if noticia.video:
+        noticia.video = noticia.video.replace("embed/", "watch?v=")
     form = NoticiaForm(instance=noticia)
 
     if request.method == 'POST':
