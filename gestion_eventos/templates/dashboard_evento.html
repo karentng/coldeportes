@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
+{% block meta %}
+    <meta property="og:title" content="{{ evento.titulo_evento }}" />
+    <meta property="og:type" content="Eventos" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="http://{% if evento.imagen != "" %}{{ request.get_host }}{{ MEDIA_URL }}{{ evento.imagen }}{% else %}{{ MEDIA_URL }}/clasificados/clasificados-default.png{% endif %}" />
+    <meta property="og:description" content="{{ evento.titulo_evento }}" />
+    <meta property="og:site_name" content="Coldeportes" />
+{% endblock %}
 
 {% block miga_pan %}
 
