@@ -59,7 +59,10 @@
 </head>
 <body>
     <!-- begin #page-loader -->
-    <div id="page-loader" class="fade in"><span class="spinner"></span></div>
+    <div id="page-loader" class="fade in q-hide">
+        <h3 class="fade in hide q-hide">Este proceso puede tardar unos minutos, por favor espere...</h3>
+        <span class="spinner"></span>
+    </div>
     <!-- end #page-loader -->
     
     <!-- begin #page-container -->
@@ -330,8 +333,6 @@
                 readonly: true,
             });
 
-
-
         });
     </script>
     <script src="{{ STATIC_URL }}plugins/toastr/toastr.js"></script>
@@ -343,7 +344,7 @@
                         "closeButton": true,
                         "progressBar": true,
                         "showEasing": "swing"
-                    }
+                    };
                     toastr["{{ msg.tags }}"]("{{msg}}")
                 },500);
 
