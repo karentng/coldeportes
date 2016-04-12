@@ -40,7 +40,7 @@ $(document).ready(function(){
     $('#submit-crop').click(function(event){
         event.preventDefault();
         if (edicion) {
-            if ($("#modalTrigger2").hasClass("btn-primary") && $('.cropControls.cropControlsCrop').length) {
+            if ($("#modalTrigger2").hasClass("btn-info") && $('.cropControls.cropControlsCrop').length) {
                 $("#imagen-hidden").val("si");
                 document.getElementById(formId).submit();
                 return false;
