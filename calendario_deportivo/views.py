@@ -7,12 +7,6 @@ from django.db import connection
 from entidades.models import Entidad,CalendarioNacional
 # Create your views here.
 
-def cargar_calendario(request):
-
-    return render(request,'calendario.html',{
-
-    })
-
 #Vistas de Registro para Federacion
 @login_required
 def registro_calendario(request,id=None):
@@ -88,6 +82,64 @@ def ver_evento(request,id):
         messages.error(request,'El evento solicitado no existe')
         return redirect('listado_calendario_nacional')
     connection.set_tenant(yo)
+    return render(request,'ver_evento_calendario.html',{
+        'evento':evento
+    })
+
+#Vistas para tenant nacional
+def cargar_calendario(request):
+
+    return render(request,'calendario.html',{
+
+    })
+
+@login_required
+def listar_todos_calendario(request):
+    eventos = CalendarioNacional.objects.all()
+    return render(request,'aprobar_calendario.html',{
+        'eventos':eventos
+    })
+
+@login_required
+def listar_pendientes_calendario(request):
+    eventos = CalendarioNacional.objects.filter(estado=2)
+    return render(request,'aprobar_calendario.html',{
+        'eventos':eventos
+    })
+
+@login_required
+def aprobar_evento(request,id):
+    try:
+        evento = CalendarioNacional.objects.get(id=id)
+    except:
+        messages.error(request,'El evento solicitado no existe')
+        return redirect('listar_aprobar_calendario')
+
+    evento.estado = 0
+    evento.save()
+    messages.success(request,'El evento ha sido aprobado con exito!')
+    return redirect('listar_aprobar_calendario')
+
+@login_required
+def reprobar_evento(request,id):
+    try:
+        evento = CalendarioNacional.objects.get(id=id)
+    except:
+        messages.error(request,'El evento solicitado no existe')
+        return redirect('listar_aprobar_calendario')
+
+    evento.estado = 1
+    evento.save()
+    messages.warning(request,'El evento ha sido rechazado con exito')
+    return redirect('listar_aprobar_calendario')
+
+def ver_evento_nacional(request,id):
+    try:
+        evento = CalendarioNacional.objects.get(id=id)
+    except:
+        messages.error(request,'El evento solicitado no existe')
+        return redirect('cargar_calendario_nacional')
+
     return render(request,'ver_evento_calendario.html',{
         'evento':evento
     })

@@ -10,8 +10,13 @@
 {% endblock %}
 
 {% block miga_pan %}
+
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'listado_calendario_nacional' %}">Calendario Deportivo Nacional</a></li>
+    {% if request.tenant.schema_name == 'public' %}
+        <li><a href="{% url 'listar_todos_calendario' %}">Calendario Deportivo Nacional</a></li>
+    {% else %}
+        <li><a href="{% url 'listado_calendario_nacional' %}">Calendario Deportivo Nacional</a></li>
+    {% endif %}
     <li class="active">Ver Evento</li>
 {% endblock %}
 
@@ -25,7 +30,11 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            <a href="{% url 'listado_calendario_nacional' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+            {% if request.tenant.schema_name == 'public' %}
+                <a href="{% url 'listar_todos_calendario' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+            {% else %}
+                <a href="{% url 'listado_calendario_nacional' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+            {% endif %}
         </div>
         <h4 class="panel-title">
             Información del evento: {{evento.titulo_evento}}
