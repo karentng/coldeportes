@@ -46,8 +46,8 @@ class ParticipanteForm(forms.ModelForm):
 class ActividadForm(forms.ModelForm):
     required_css_class = 'required'
 
-    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii'}))
-    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii'}))
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
 
     class Meta:
         model = Actividad

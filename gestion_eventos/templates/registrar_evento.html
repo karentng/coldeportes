@@ -38,6 +38,8 @@
             },
             {% if edicion  %}
             location: [{{ lat|stringformat:"f" }}, {{ lng|stringformat:"f" }}],
+            {% else %}
+            location: "COLOMBIA",
             {% endif %}
             markerOptions: {
                 draggable: true
