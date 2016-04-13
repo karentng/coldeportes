@@ -20,6 +20,20 @@ class ReconocimientoDeportivoForm(ModelForm):
         model = ReconocimientoDeportivo
         fields = ('descripcion', 'para_quien', 'nombre_solicitante', 'tipo', 'id_solicitante', 'tel_solicitante', 'direccion_solicitante', 'vinculo_solicitante')
 
+    def clean_club(self):
+
+        marca = self.cleaned_data['marca']
+        if marca:
+            try:
+                if marca.isdigit() or "." in marca or ":" in marca:
+                    return self.cleaned_data['marca']
+                else:
+                    raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+            except:
+                raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
+        else:
+            pass
+
 
 class AdjuntosReconocimientoForm(ModelForm):
 
@@ -28,4 +42,4 @@ class AdjuntosReconocimientoForm(ModelForm):
     class Meta:
         model = ReconocimientoDeportivo
         exclude = ('descripcion', 'para_quien', 'nombre_solicitante', 'tipo', 'id_solicitante', 'tel_solicitante', 
-            'direccion_solicitante', 'vinculo_solicitante', 'fecha_vigencia', 'fecha_creacion')
+            'direccion_solicitante', 'vinculo_solicitante', 'fecha_vigencia', 'fecha_creacion', 'estado')

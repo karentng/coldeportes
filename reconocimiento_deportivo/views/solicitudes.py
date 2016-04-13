@@ -6,9 +6,9 @@ from django.contrib import messages
 #from django.utils.encoding import smart_str
 from django.contrib.auth.decorators import login_required
 #from reconocimiento_deportivo.utilities import comprimir_archivos
-from reconocimiento_deportivo.forms.solicitudes import ReconocimientoDeportivoForm#, AdjuntoSolicitudForm, EditarForm
+from reconocimiento_deportivo.forms.solicitudes import ReconocimientoDeportivoForm, AdjuntosReconocimientoForm
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo#, AdjuntoSolicitud, DiscucionReconocimiento
+from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo# DiscucionReconocimiento
 # Create your views here.
 
 @login_required
@@ -30,14 +30,14 @@ def solicitar(request,reconocimiento_id=None):
 
     if request.method == 'POST':
         entidad = request.tenant
-        form = ReconocimientoDeportivoForm(request.POST,instance=reconocimiento)
+        form = ReconocimientoDeportivoForm(request.POST, instance=reconocimiento)
 
         if form.is_valid():
             nueva_solicitud = form.save()
 
             if not reconocimiento:
                 connection.set_tenant(nueva_solicitud.para_quien)
-                ListaSolicitudesReconocimiento.objects.create(solicitud=nueva_solicitud.id,entidad_solicitante=entidad).save()
+                ListaSolicitudesReconocimiento.objects.create(solicitud=nueva_solicitud.id, entidad_solicitante=entidad).save()
                 connection.set_tenant(entidad)
 
             request.session['identidad'] = {
@@ -45,7 +45,7 @@ def solicitar(request,reconocimiento_id=None):
                 'id_entidad': entidad.id,
                 'estado': True
             }
-            return redirect('adjuntar_requerimientos_reconocimiento',nueva_solicitud.id)
+            return redirect('adjuntar_requerimientos_reconocimiento', nueva_solicitud.id)
 
     return render(request,'wizard/wizard_reconocimiento.html',{
         'form': form,
@@ -159,12 +159,15 @@ def adjuntar_requerimientos_reconocimiento(request, reconocimiento_id):
     Permite adjuntar archivos  de los requerimientos a las solicitudes de reconocimiento deportivo que estan en actual creacion. se verifica la autenticidad de la peticion
     :param reconocimiento_id: id de la solicitud a la que se van a adjuntar archivos
     """
+
     try:
         solicitud = ReconocimientoDeportivo.objects.get(id=reconocimiento_id)
     except:
         messages.error(request,'Solicitud no encontrada')
         return redirect('listar_solicitudes')
-
+        
+    adjuntos = solicitud.adjuntos()
+    
     #Se verifica la autenticidad de la solicitud
     try:
         auth = request.session['identidad']
@@ -177,15 +180,16 @@ def adjuntar_requerimientos_reconocimiento(request, reconocimiento_id):
     form = AdjuntosReconocimientoForm()
 
     if request.method == 'POST':
-        form = AdjuntosReconocimientoForm(request.POST,request.FILES)
+        form = AdjuntosReconocimientoForm(request.POST, request.FILES)
         if form.is_valid():
             adjuntos = form.save(commit=False)
             adjuntos.solicitud = solicitud
             adjuntos.save()
-            return redirect('adjuntar_requerimientos_reconocimiento',solicitud.id)
+            return redirect('adjuntar_requerimientos_reconocimiento', solicitud.id)
+
     return render(request,'wizard/wizard_adjuntos.html',{
         'form' : form,
         'reconocimiento_id': reconocimiento_id,
         'wizard_stage': 2,
-        'adjuntos': solicitud.adjuntos()
+        'adjuntos': adjuntos
     })

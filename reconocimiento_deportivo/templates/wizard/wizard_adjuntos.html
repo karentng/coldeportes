@@ -51,54 +51,41 @@
 
                         <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitud de reconocimiento deportivo</h4>
                         {% include 'wizard/_wizard.html' %}
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                           <form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
                             <div class="well row">
-                                <div class="row">
-                                    <h3>Adjuntar archivos:</h3>
-                                    
-                                    {% for field in form %}
-                                        <div class="col-md-6">
-                                            
-                                            {% bootstrap_field field layout="vertical" %}
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <hr>    
-                                <button class="btn btn-primary pull-right" type="submit"> Subir</button>
-                            </div>
-                        </form>
-                        </div>
-                        <div class="col-md-6">
-                            <!--h5><strong>Registrados</strong></h5-->
-                            <!--fieldset>
-                                <legend></legend-->
+                              <div class="row">
+                                <h3>Adjuntar archivos:</h3>
                                 <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
+                                  <table class="table">
+                                      <thead>
+                                          <tr>
+                                              <th align="center">Nombre</th>
+                                              <th align="center">Tipo</th>
+                                              <th align="center">Borrar</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>  
+                                        {% for field in form %}
                                             <tr>
-                                                <th align="center">Nombre</th>
-                                                <th align="center">Tipo</th>
-                                                <th align="center">Borrar</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for ad in adjuntos %}
-                                            <tr>
-                                                <td>{{ad.nombre_archivo}}</td>
+                                                <td>{{field.label}}</td>
                                                 <td align="center"><i class="fa fa-2x fa-{% if  ad.icon_extension != 'file' %}file-{% endif %}{{ ad.icon_extension }}-o"></i></td>
+                                                <td></td>
+                                                {% comment %}
                                                 <td><a href="{% url 'borrar_adjunto' sol_id ad.id %}"><i class="fa fa-lg fa-trash"></i></a></td>
+                                                {% endcomment %}
                                             </tr>
-                                        {% endfor %}
-
-                                        </tbody>
-                                    </table>
-                                    {% if not adjuntos %}
-                                        <p align="center">No hay adjuntos registrados</p>
-                                    {% endif %}
+                                        {% endfor %} 
+                                      </tbody>
+                                  </table>
                                 </div>
-                            <!--/fieldset-->
+                              </div>
+                              <hr>    
+                              <button class="btn btn-primary pull-right" type="submit"> Subir</button>
+                            </div>
+                          </form>
                         </div>
+                        
                         <div class="row">
                             <div class="col-xs-12">
                                 <hr>

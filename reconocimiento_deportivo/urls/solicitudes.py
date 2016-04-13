@@ -12,6 +12,7 @@ urlpatterns = patterns('reconocimiento_deportivo.views.solicitudes',
     url(r'^cancelar$', 'cancelar_solicitud_reconocimiento', name='cancelar_solicitud_reconocimiento'),
     url(r'^cancelar/(\d+)$', 'cancelar_solicitud_reconocimiento', name='cancelar_solicitud_reconocimiento'),
     url(r'^imprimir/(\d+)$', 'imprimir_solicitud', name='imprimir_reconocimiento'),
+    url(r'^adjuntar/(\d+)$', 'adjuntar_requerimientos_reconocimiento', name='adjuntar_requerimientos_reconocimiento'),
 
 
 )

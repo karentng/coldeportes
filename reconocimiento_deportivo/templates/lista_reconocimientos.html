@@ -64,7 +64,7 @@
                             </a>
                             <br/>                            
                             {% if solicitud.estado == 0 %}
-                                <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud' s.id %}">
+                                <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud_reconocimiento' solicitud.id %}">
                                     <i class="fa fa-trash"></i> Cancelar solicitud
                                 </a>
                                 <br/>
