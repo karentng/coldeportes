@@ -61,3 +61,11 @@ ul.tagit li.tagit-choice-editable {
 .tagit .ui-icon-close:before {
     color: #999;
 }
+
+h3.q-hide{
+    display: block;
+    text-align: center;
+    position: absolute;
+    top: 35%;
+    width: 90vw;
+}
