@@ -10,7 +10,7 @@ urlpatterns = patterns('reconocimiento_deportivo.views.solicitudes',
     #url(r'^crear/adjunto/(\d+)$', 'adjuntar_archivo_solicitud', name='adjuntar_archivo_solicitud'),
     #url(r'^borrar/adjunto/(\d+)/(\d+)$', 'borrar_adjunto', name='borrar_adjunto'),
     url(r'^cancelar$', 'cancelar_solicitud_reconocimiento', name='cancelar_solicitud_reconocimiento'),
-    url(r'^cancelar/(\d+)$', 'cancelar_solicitud_reconocimiento', name='cancelar_solicitud_reconociemiento'),
+    url(r'^cancelar/(\d+)$', 'cancelar_solicitud_reconocimiento', name='cancelar_solicitud_reconocimiento'),
     url(r'^imprimir/(\d+)$', 'imprimir_solicitud', name='imprimir_reconocimiento'),
 
 

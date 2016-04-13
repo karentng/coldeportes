@@ -18,4 +18,14 @@ class ReconocimientoDeportivoForm(ModelForm):
 
     class Meta:
         model = ReconocimientoDeportivo
-        exclude = ('fecha_creacion','estado', 'fecha_vigencia')
+        fields = ('descripcion', 'para_quien', 'nombre_solicitante', 'tipo', 'id_solicitante', 'tel_solicitante', 'direccion_solicitante', 'vinculo_solicitante')
+
+
+class AdjuntosReconocimientoForm(ModelForm):
+
+    required_css_class = 'required'
+
+    class Meta:
+        model = ReconocimientoDeportivo
+        exclude = ('descripcion', 'para_quien', 'nombre_solicitante', 'tipo', 'id_solicitante', 'tel_solicitante', 
+            'direccion_solicitante', 'vinculo_solicitante', 'fecha_vigencia', 'fecha_creacion')

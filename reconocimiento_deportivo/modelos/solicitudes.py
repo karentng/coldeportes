@@ -70,7 +70,6 @@ class ReconocimientoDeportivo(models.Model):
 
     def save(self, *args, **kwargs):
         self.descripcion = self.descripcion.upper()
-        self.estado_actual_escenario = self.estado_actual_escenario.upper()
         self.nombre_solicitante = self.nombre_solicitante.upper()
         self.id_solicitante = self.id_solicitante.upper()
         self.direccion_solicitante = self.direccion_solicitante.upper()
