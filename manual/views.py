@@ -169,6 +169,8 @@ def listar(request):
                 items_manual_nueva += [item]
             elif tenant_actual.actores.deportistas and item[0] == 'DE':
                 items_manual_nueva += [item]
+            elif item[0] == 'DR':
+                items_manual_nueva += [item]
             elif tenant_actual.actores.dirigentes and item[0] == 'DI':
                 items_manual_nueva += [item]
             elif tenant_actual.actores.escenarios and item[0] == 'ES':
@@ -192,6 +194,8 @@ def listar(request):
             elif tenant_actual.actores.respuesta and item[0] == 'SR':
                 items_manual_nueva += [item]
             elif tenant_actual.actores.solicitud and item[0] == 'SS':
+                items_manual_nueva += [item]
+            elif item[0] == 'TR':
                 items_manual_nueva += [item]
 
     articulos = encontrar_articulos_tenant(tenant_actual)
