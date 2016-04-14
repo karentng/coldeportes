@@ -76,8 +76,9 @@ def wizard_deportista(request,id_depor):
 
     try:
         deportista = Deportista.objects.get(id=id_depor)
-    except Exception:
-        deportista = None
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     deportista_form = DeportistaForm( instance=deportista)
 
@@ -130,7 +131,11 @@ def wizard_corporal(request,id_depor):
         corporal = None
         edicion=False
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -179,8 +184,11 @@ def wizard_historia_deportiva(request,id_depor):
     """
 
     hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
-
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -294,7 +302,11 @@ def wizard_historia_academica(request,id_depor):
 
     inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -819,7 +831,11 @@ def wizard_informacion_adicional(request,id_depor):
         info_adicional = None
         edicion=False
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -864,7 +880,11 @@ def wizard_historia_lesiones(request,id_depor):
     """
     historial_lesiones = HistorialLesiones.objects.filter(deportista=id_depor)
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
