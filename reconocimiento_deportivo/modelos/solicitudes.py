@@ -64,6 +64,7 @@ class DiscusionReconocimiento(models.Model):
         (1,'INCOMPLETA'),
         (2,'APROBADA'),
         (3,'RECHAZADA'),
+        (4,'EN DISCUSION'),
     )
 
     estado_anterior = models.IntegerField(choices=ESTADOS)
@@ -74,10 +75,9 @@ class DiscusionReconocimiento(models.Model):
     entidad = models.ForeignKey(Entidad)
     respuesta = models.BooleanField()
 
-    def tiene_adjuntos(self):
-        if AdjuntoReconocimiento.objects.filter(discusion=self):
-            return True
-        return False
+    def tiene_adjunto(self):
+        adjunto = AdjuntoReconocimiento.objects.get(discusion=self)
+        return adjunto
 
 
 class AdjuntoReconocimiento(models.Model):
@@ -93,11 +93,12 @@ class AdjuntoReconocimiento(models.Model):
         (8, 'Estatutos   Seleccionar archivo'),
         (9, 'Informacion oficina Seleccionar archivo'),
         (10, 'Listado deportistas Seleccionar archivo'),
-        (11, 'Reconocimiento caracter oficial Seleccionar archivo'),
-        (12, 'Resolucion  Seleccionar archivo'),
-        (13, 'Resolucion creacion club    Seleccionar archivo'),
-        (14, 'Solicitud por escrito   Seleccionar archivo'),
-        (15, 'Tarjetas profesionales revisores fiscales'),
+        (11, 'Otros'),
+        (12, 'Reconocimiento caracter oficial Seleccionar archivo'),
+        (13, 'Resolucion  Seleccionar archivo'),
+        (14, 'Resolucion creacion club    Seleccionar archivo'),
+        (15, 'Solicitud por escrito   Seleccionar archivo'),
+        (16, 'Tarjetas profesionales revisores fiscales'),
     )
 
     solicitud = models.ForeignKey(ReconocimientoDeportivo)

@@ -100,7 +100,7 @@ def listar_reconocimientos(request):
 
 
 @login_required
-def ver_solicitud(request, id):
+def ver_solicitud(request, reconocimiento_id):
     """
     Abril 9, 2016
     Autor: Karent Narvaez
@@ -109,15 +109,15 @@ def ver_solicitud(request, id):
 
     """
     try:
-        solicitud = ReconocimientoDeportivo.objects.get(id=id)
+        solicitud = ReconocimientoDeportivo.objects.get(id = reconocimiento_id)
     except:
         messages.error(request,'No existe la solicitud')
         return redirect('listar_reconocimientos')
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
-    discusiones = DiscusionReconocimiento.objects.filter(solicitud=solicitud)
+    discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud)
 
-    return render(request,'ver_solicitud.html',{
+    return render(request,'ver_solicitud_reconocimiento.html',{
         'solicitud' : solicitud,
         'discusiones' : discusiones
     })
@@ -165,7 +165,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
         return redirect('listar_solicitudes')
         
     adjuntos = solicitud.adjuntos()
-    
+
     #Se verifica la autenticidad de la solicitud
     try:
         auth = request.session['identidad']
@@ -182,6 +182,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
         if form.is_valid():
             adjuntos = form.save(commit=False)
             adjuntos.solicitud = solicitud
+            adjuntos.archivo = solicitud
             adjuntos.save()
             return redirect('adjuntar_requerimientos_reconocimiento', solicitud.id)
 
@@ -266,11 +267,13 @@ def editar_solicitud(request, reconocimiento_id):
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
     discusiones = DiscusionReconocimiento.objects.filter(solicitud=solicitud)
     form = DiscusionForm()
+    form_adjunto = AdjuntoReconocimientoForm()
 
-    return render(request,'ver_solicitud.html',{
+    return render(request,'ver_solicitud_reconocimiento.html',{
         'solicitud' : solicitud,
         'discusiones' : discusiones,
         'form_comentarios' : form,
+        'form_adjunto' : form_adjunto,
         'responder' : True
     })
 
@@ -293,6 +296,7 @@ def enviar_comentario(request, id):
             return redirect('listar_solicitudes')
 
         form = DiscusionForm(request.POST)
+        form_adjunto = AdjuntoReconocimientoForm(request.POST, request.FILES)
 
         if form.is_valid():
             discusion = form.save(commit=False)
@@ -303,8 +307,11 @@ def enviar_comentario(request, id):
             discusion.respuesta = False
             discusion.save()
 
-            for archivo in request.FILES.getlist('adjuntos'):
-                AdjuntoReconocimiento(solicitud = solicitud, archivo = archivo, discusion = discusion).save()
+            if form_adjunto.is_valid():
+                adjunto = form_adjunto.save(commit=False)
+                adjunto.solicitud = solicitud
+                adjunto.discusion = discusion
+                adjunto.save()
 
             solicitud.estado = discusion.estado_actual
             solicitud.save()
@@ -353,4 +360,22 @@ def descargar_adjunto(request, reconocimiento_id, adjunto_id):
     response = HttpResponse(adjunto.archivo.read(),content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adjunto.nombre_archivo())
     response['X-Sendfile'] = smart_str(adjunto.archivo)
+    return response
+
+
+@login_required
+def descargar_adjunto_discusion(request, reconocimiento_id, discusion_id):
+    """
+    Abril 14, 2016
+    Autor: Karent Narvaez
+
+    Permite descargar los archivos adjuntos de una discusion a una solicitud
+    """
+    directorio = '/adjuntos_reconocimiento_deportivo/'    
+    adjunto = AdjuntoReconocimiento.objects.get(solicitud = reconocimiento_id, discucion = discusion_id)
+    zip,temp = comprimir_archivos(adjunto, directorio)
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjunto[0].solicitud.codigo_unico(request.tenant))
+    temp.seek(0)
+    response.write(temp.read())
     return response

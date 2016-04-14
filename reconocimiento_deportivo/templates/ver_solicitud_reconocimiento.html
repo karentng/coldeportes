@@ -39,7 +39,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Solicitud Escenarios
+    Solicitud Reconocimiento Deportivo
 {% endblock %}
 
 {% block contenido_panel %}
@@ -60,9 +60,9 @@
                         <p><b>Detalles</b></p>
                         <ul class="nav nav-pills nav-stacked nav-sm">
                             <li><a><i class="fa fa-barcode fa-fw m-r-5"></i> {{ solicitud.codigo_unico }}</a></li>
-                                <li><a ><i class="fa fa-calendar fa-fw m-r-5"></i> {{ solicitud.fecha_creacion }}</a></li>
-                                <li><a ><i class="fa fa-gavel fa-fw m-r-5"></i> {{ solicitud.get_estado_display }}</a></li>
-                                <li><a ><i class="fa fa-info-circle fa-fw m-r-5"></i> {{ solicitud.get_tipo_display }}</a></li>
+                            <li><a ><i class="fa fa-calendar fa-fw m-r-5"></i> {{ solicitud.fecha_creacion }}</a></li>
+                            <li><a ><i class="fa fa-gavel fa-fw m-r-5"></i> {{ solicitud.get_estado_display }}</a></li>
+                            <li><a ><i class="fa fa-info-circle fa-fw m-r-5"></i> {{ solicitud.get_tipo_display }}</a></li>
                         </ul>
                     </div>
 		            <!-- end wrapper -->
@@ -184,24 +184,40 @@
                         <div class="row">
                             <h5><strong>Discusiones</strong></h5>
                             <ul class="media-list media-list-with-divider result-list">
-                                {% for d in discusiones %}
+                                {% for discusion in discusiones %}
                                     <li class="media media-sm">
                                         <div class="media-left">
-                                            <i class="fa fa-{% if d.respuesta %}send{% else %}envelope{% endif %} fa-3x" style="color: #00acac;"></i>
+                                            <i class="fa fa-{% if discusion.respuesta %}send{% else %}envelope{% endif %} fa-3x" style="color: #00acac;"></i>
                                         </div>
                                         <div class="media-body">
-                                            <h5>Enviado por: {{ d.entidad }}</h5>
-                                            <p class="location">{{ d.fecha }}</p>
+                                            <h5>Enviado por: {{ discusion.entidad }}</h5>
+                                            <p class="location">{{ discusion.fecha }}</p>
                                             <p class="desc">
-                                                {{ d.descripcion }}
+                                                {{ discusion.descripcion }}
                                             </p>
+                                            {% if discusion.tiene_adjunto %}
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th align="center">Nombre</th>
+                                                        <th align="center">Tipo</th>
+                                                        <th align="center">Extensión</th>
+                                                        {% comment %}<th align="center">Descargar</th>{% endcomment %}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{discusion.tiene_adjunto.nombre_archivo}}</td>
+                                                        <td>{{discusion.tiene_adjunto.get_tipo_display}}</td>
+                                                        <td ><i class="fa fa-2x fa-{% if  discusion.tiene_adjunto.icon_extension != 'file' %}file-{% endif %}{{ discusion.tiene_adjunto.icon_extension }}-o"></i></td>
+                                                        {% comment %}<td><a href="{% url 'descargar_adjunto_discusion_reconocimiento' solicitud.id discusion.id %}"><i class="fa fa-cloud-download"></i> Descargar Adjunto</a></td>{% endcomment %}
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            {% endif %}
                                             <div class="btn-row">
                                                 <a data-toggle="tooltip" data-container="body" data-title="Estado actual"><i class="fa fa-fw fa-tags"></i></a>
-                                                Cambio de estado a: {{ d.get_estado_actual_display }}
-                                                {% if d.tiene_adjuntos %}
-                                                    <a href="{% url 'descargar_adjuntos_discusion' solicitud.id d.id %}" data-toggle="tooltip" data-container="body" data-title="Descargar adjuntos en archivo comprimido"><i class="fa fa-fw fa-cloud-download"></i></a>
-                                                    Descargar los adjuntos de esta discusion
-                                                {% endif %}
+                                                Cambio de estado a: {{ discusion.get_estado_actual_display }}
                                             </div>
                                         </div>
                                     </li>
@@ -218,9 +234,8 @@
                                         {% csrf_token %}
                                         <div class="input-group">
                                             <div class="form-group">
-                                                <label class="control-label" for="adjuntos">Adjuntar archivos: </label>
-                                                <input type="file" name="adjuntos" id="adjuntos" multiple><br>
-                                                <p><strong>Nota:</strong> Puede seleccionar varios archivos.</p>
+                                                <label class="control-label" for="adjunto">Adjuntar archivos: </label>
+                                                {% bootstrap_form form_adjunto %}
                                             </div>
                                             {% bootstrap_form form_comentarios %}
                                             <span class="pull-right">
@@ -237,7 +252,7 @@
 		            <!-- end wrapper -->
 		            <!-- begin wrapper -->
                     <div class="wrapper bg-silver-lighter text-right clearfix">
-                        Solicitudes de adecuación de escenarios, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+                        Solicitudes de reconocimiento deportivo, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
                     </div>
 		            <!-- end wrapper -->
 		        </div>

@@ -802,6 +802,7 @@ class Club(ResolucionReconocimiento):
     socios = models.ManyToManyField(SocioClub, blank=True);
     planes_de_costo = models.ManyToManyField(PlanesDeCostoClub, blank=True)
     tipo_club = models.IntegerField(choices=TIPOS_CLUBES, default=0)
+    reconocimiento = models.BooleanField(default=False)
 
     def obtener_padre(self):
         return self.liga
