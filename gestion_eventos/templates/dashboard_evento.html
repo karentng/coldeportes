@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
+{% block meta %}
+    <meta property="og:title" content="{{ evento.titulo_evento }}" />
+    <meta property="og:type" content="Eventos" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="http://{% if evento.imagen != "" %}{{ request.get_host }}{{ MEDIA_URL }}{{ evento.imagen }}{% else %}{{ MEDIA_URL }}/clasificados/clasificados-default.png{% endif %}" />
+    <meta property="og:description" content="{{ evento.titulo_evento }}" />
+    <meta property="og:site_name" content="Coldeportes" />
+{% endblock %}
 
 {% block miga_pan %}
 
@@ -19,6 +27,11 @@
     <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
     <script type="text/javascript">stLight.options({publisher: "90bca334-7e2d-4235-872f-e3936e302163", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
     <script type="text/javascript">
+            function urlModal(link) {
+                //Funcionalidad para agregar la url al modal
+                var url = link.getAttribute("data-url");
+                document.getElementById("confirmar-desactivate").setAttribute("href",url);
+            }
         calendarEvents = [];
         {% for actividad in actividades %}
             calendarEvents.push([
@@ -83,12 +96,23 @@
         <!-- begin page-header -->
         <h1 class="page-header">
         {% if "gestion_eventos.change_evento" in perms %}
-            <a type="button" class="btn btn-danger pull-right m-l-10 add-tooltip" data-toggle="tooltip" title="Activar/Inactivar" href="{% url 'cambiar_estado_evento' evento.id %}">
-                <i class="fa fa-ban"></i>A/I
-            </a>
-            <a type="button" class="btn btn-warning pull-right" href="{% url 'editar_evento' evento.id %}">
-                <i class="fa fa-gear"></i> Editar
-            </a>
+            <div class="btn-group pull-right m-l-10">
+                <a href="javascript:;" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-expanded="false">Opciones <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a data-toggle="modal" data-target="#modal-desactivate" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_evento' evento.id %}">
+                            <span class=" add-tooltip" data-toggle="tooltip" title="Activar/Inactivar" href="#">
+                                <i class="fa fa-ban"></i> A/I
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'editar_evento' evento.id %}">
+                            <i class="fa fa-gear"></i> Editar
+                        </a>
+                    </li>
+                </ul>
+            </div>
         {% endif %}
                  {{ evento.titulo_evento }} <small>Gestión de Eventos</small>
 
@@ -97,6 +121,24 @@
         {% endif %}
         </h1>
         <!-- end page-header -->
+            <div class="modal fade" id="modal-desactivate">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">Cambiar de estado evento:</h4>
+                        </div>
+                        <div class="modal-body">
+                            ¿Está seguro que desea cambiar el estado de este evento?
+                        </div>
+                        <div class="modal-footer">
+                            <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                            <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <!-- begin row -->
         <div class="row">
             <!-- begin col-3 -->
@@ -109,14 +151,16 @@
                         <div class="progress-bar" style="width: 100%;"></div>
                     </div>
                     <div class="stats-desc">
+                    {% if evento.estado == 1 %}
                         {% if "gestion_eventos.view_evento" in perms %}
                             <a href="{% url 'listar_participantes' evento.id %}" class="text-white">
-                                {% if "gestion_eventos.change_evento" in perms %}Gestionar<i class="fa fa-gear"></i>{% else %}
+                                {% if "gestion_eventos.change_evento" in perms %}Gestionar <i class="fa fa-gear"></i>{% else %}
                                     Listar <i class="fa fa-list"></i>{% endif %}
                             </a>
                         {% else %}
                                 <i class="fa fa-users"></i>
                         {% endif %}
+                    {% endif %}
                     </div>
                 </div>
             </div>
@@ -131,14 +175,16 @@
                         <div class="progress-bar" style="width: 100%;"></div>
                     </div>
                     <div class="stats-desc">
+                    {% if evento.estado == 1 %}
                         {% if "gestion_eventos.view_evento" in perms %}
                             <a href="{% url 'registrar_actividad' evento.id %}" class="text-white">
-                                {% if "gestion_eventos.change_evento" in perms %}Gestionar<i class="fa fa-gear"></i>{% else %}
+                                {% if "gestion_eventos.change_evento" in perms %}Gestionar <i class="fa fa-gear"></i>{% else %}
                                     Listar <i class="fa fa-list"></i>{% endif %}
                             </a>
                         {% else %}
                              <i class="fa fa-calendar"></i>
                         {% endif %}
+                    {% endif %}
                     </div>
                 </div>
             </div>
@@ -152,7 +198,11 @@
                     <div class="stats-progress progress">
                         <div class="progress-bar" style="width: 100%;"></div>
                     </div>
-                    <div class="stats-desc">Disponible preinscripción: {{ evento.cupo_disponible }}</div>
+                    <div class="stats-desc">
+                        {% if evento.estado == 1 %}
+                            Disponible preinscripción: {{ evento.cupo_disponible }}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <!-- end col-3 -->
@@ -180,9 +230,11 @@
                         </div>
                         <div id="schedule-calendar" class="bootstrap-calendar"></div>
                         <div class="text-center m-t-30 ">
-                            <a id="gestion-calendario" type="button" href="{% url 'ver_actividades' evento.id %}" class="btn text-white">
+                        {% if evento.estado == 1 %}
+                            <a id="gestion-calendario" type="button" href="{% url 'ver_actividades' evento.id %}" class="btn btn-primary">
                                 <i class="fa fa-calendar"></i> {% if "gestion_eventos.change_evento" in perms %}Gestionar calendario{% else %}Ver detalles{% endif %}
                             </a>
+                        {% endif %}
                         </div>
                     </div>
                 </div>
@@ -192,7 +244,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             {% if "gestion_eventos.view_evento" in perms %}
-                                Estadisticas de Participantes
+                                Estadísticas de Participantes
                             {% else %}
                                 Información del evento
                             {% endif %}
@@ -204,7 +256,7 @@
                                 <div class="panel-icono" style="width: 110px !important;">
                                     <img src="{{ STATIC_URL }}img/estadisticas.png" class="img-responsive">
                                 </div>
-                                <div class="f-w-600 titulo-panel">Estadisticas de Participantes</div>
+                                <div class="f-w-600 titulo-panel">Estadísticas de Participantes</div>
                             </div>
                         {% endif %}
                         {% if "gestion_eventos.view_evento" in perms %}

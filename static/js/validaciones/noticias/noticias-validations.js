@@ -102,7 +102,6 @@ $(document).ready(function(){
                 .on('change', function(evt) {
                     // Revalidate the bio field
                     $('#form-noticia').bootstrapValidator('revalidateField', 'cuerpo_noticia');
-                    console.log(evt.editor.getData().length);
                     CKEDITOR.instances.id_cuerpo_noticia.updateElement();
                     var str = CKEDITOR.instances.id_cuerpo_noticia.document.getBody().getText();
                     var $prev = $("#previsualizacion");
@@ -111,7 +110,5 @@ $(document).ready(function(){
                     }else {
                         $prev.val(str.substring(0, 150));
                     }
-                    console.log($prev.val());
                 });
-
 });

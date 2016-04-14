@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 from .forms import *
 from .models import Evento
 from noticias.models import Noticia
@@ -17,6 +19,9 @@ import datetime
 def dashboard(request, id_evento):
     try:
         evento = Evento.objects.get(id=id_evento)
+        if evento.estado == 0:
+            messages.error(request, 'El evento al que trata de acceder no está disponible!')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -58,7 +63,6 @@ def registrar_evento(request):
 
             evento.latitud = float(request.POST.get('lat'))
             evento.longitud = float(request.POST.get('lng'))
-            evento.previsualizacion = request.POST.get("previsualizacion")
             evento.cupo_disponible = evento.cupo_participantes
             evento.cupo_candidatos = evento.cupo_participantes
 
@@ -80,25 +84,19 @@ def listar_eventos(request):
     return render(request, 'listar_eventos.html', {'eventos': eventos})
 
 
-def detalle_evento(request, id_evento):
-    try:
-        evento = Evento.objects.get(id=id_evento)
-    except Exception:
-        messages.error(request, 'El evento al que trata de acceder no existe!')
-        return redirect('listar_eventos')
-
-    return render(request, "detalles_evento.html", {"evento": evento})
-
-
 @login_required
 @permission_required('gestion_eventos.change_evento')
 def editar_evento(request, id_evento):
     try:
         evento = Evento.objects.get(id=id_evento)
+        if evento.estado == 0:
+            messages.error(request, 'El evento al que trata de acceder no está disponible!')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
-
+    if evento.video:
+        evento.video = evento.video.replace("embed/", "watch?v=")
     form = EventoForm(instance=evento)
 
     if request.method == 'POST':
@@ -119,7 +117,6 @@ def editar_evento(request, id_evento):
 
                 evento.latitud = float(request.POST.get('lat'))
                 evento.longitud = float(request.POST.get('lng'))
-                evento_form.previsualizacion = request.POST.get("previsualizacion")
                 evento_form.cupo_disponible = evento_form.cupo_participantes - evento.participantes.count()
 
                 evento_form.save()
@@ -144,8 +141,8 @@ def cambiar_estado_evento(request, id_evento):
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
 
-    messages.success(request, 'Se ha cambiado el estado del evento correctamente')
-    return redirect('dashboard', evento.id)
+    messages.success(request, 'Evento '+evento.get_estado()+' correctamente')
+    return redirect('listar_eventos')
 
 
 @login_required
@@ -173,12 +170,22 @@ def preinscripcion_evento(request, id_evento):
         if participante_form.is_valid():
             participante = participante_form.save(commit=False)
             participante.evento_participe = evento.id
+            token = binascii.hexlify(os.urandom(25))
+            participante.token_email = token
             participante.save()
             evento.participantes.add(participante)
             evento.cupo_disponible -= 1
             evento.save()
+
+            correo = render_to_string("correo_participante_preinscripcion.html", {"participante": participante,
+                                                                                  "evento": evento,
+                                                                                  "token": participante.token_email,
+                                                                                  "request": request})
+            email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
+            email.send()
+
             messages.success(request, "Has sido preinscrito con exito!")
-            return redirect('listar_eventos')
+            return redirect('dashboard', evento.id)
 
     try:
         datos = request.session["datos"]
@@ -193,6 +200,10 @@ def preinscripcion_evento(request, id_evento):
 def editar_participante(request, id_participante):
     try:
         participante = Participante.objects.get(id=id_participante)
+        token = request.GET.get("token")
+        if participante.token_email != token:
+            messages.error(request, 'No está autorizado para ingresar!')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'El participante al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -204,7 +215,7 @@ def editar_participante(request, id_participante):
                 participante_form.save()
 
                 messages.success(request, "El participante ha sido editado con exito!")
-                return redirect('listar_participantes', participante.evento_participe)
+                return redirect('dashboard', participante.evento_participe)
 
     participante_form = ParticipanteForm(instance=participante)
     return render(request, 'registrar_preinscrito.html', {'form': participante_form, 'edicion': True})
@@ -277,8 +288,7 @@ def verificar_participante(request, id_evento):
 @login_required
 @permission_required('gestion_eventos.change_evento')
 def aceptar_candidato(request, id_participante):
-    from django.core.mail import EmailMessage
-    from django.core.urlresolvers import reverse
+    from django.db import transaction
     try:
         participante = Participante.objects.get(id=id_participante)
     except Exception:
@@ -289,25 +299,42 @@ def aceptar_candidato(request, id_participante):
     if evento.cupo_candidatos == 0:
         messages.error(request, 'No hay cupos disponible!')
         return redirect('listar_participantes', evento.id)
+    with transaction.atomic():
+        participante.estado = 2
+        participante.save()
 
-    token = binascii.hexlify(os.urandom(25))
-    participante.token_email = token
-    participante.estado = 2
-    participante.save()
+        evento.cupo_candidatos -= 1
+        evento.save()
 
-    # email = EmailMessage('Inscripción Aceptada', 'gdfgdfgdfgdfgdfg', to=['juanchoo.wow@gmail.com'])
-    # email.send()
+        correo = render_to_string("correo_participante_confirmacion.html", {"participante": participante,
+                                                                            "evento": evento,
+                                                                            "token": participante.token_email,
+                                                                            "request": request})
 
-    evento.cupo_candidatos -= 1
-    evento.save()
-    print(str(token))
-    messages.success(request, 'Se ha enviado la peticion de confirmación')
+        email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
+        email.send()
+        messages.success(request, 'Se ha enviado la peticion de confirmación')
+        return redirect('listar_participantes', evento.id)
+
+    messages.error(request, 'Ha ocurrido un error')
     return redirect('listar_participantes', evento.id)
 
 
 def confirmar_participacion(request, id_participante):
     try:
         participante = Participante.objects.get(id=id_participante)
+        if participante.estado == 1:
+            messages.error(request, 'El participante se encuentra en etapa de preinscripción')
+            return redirect('listar_eventos')
+
+        if participante.estado == 3 or participante.estado == 4:
+            messages.error(request, 'El participante ya ha respondido la confirmación de participación')
+            return redirect('listar_eventos')
+
+        if participante.estado == 0:
+            messages.error(request, 'La inscripción del participante ha sido cancelado')
+            return redirect('listar_eventos')
+
     except Exception:
         messages.error(request, 'El participante al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -318,13 +345,13 @@ def confirmar_participacion(request, id_participante):
             messages.error(request, 'No está autorizado para ingresar!')
             return redirect('listar_eventos')
 
-        aceptar = request.GET["acp"]
+        aceptar = request.GET.get("acp")
         if aceptar == '1':
             participante.estado = 3
             participante.save()
             messages.success(request, 'Has aceptado la inscripción satisfactoriamente')
             return redirect('dashboard', participante.evento_participe)
-        else:
+        elif aceptar == '2':
             participante.estado = 4
             participante.save()
             evento = Evento.objects.get(id=participante.evento_participe)
@@ -332,6 +359,9 @@ def confirmar_participacion(request, id_participante):
             evento.save()
             messages.success(request, 'Has rechazado la inscripción satisfactoriamente')
             return redirect('dashboard', participante.evento_participe)
+        else:
+            messages.error(request, 'No está autorizado para ingresar!')
+            return redirect('listar_eventos')
 
     except Exception:
         messages.error(request, 'Ha ocurrido un error')
@@ -422,6 +452,10 @@ def registrar_actividad(request, id_evento):
 def editar_actividad(request, id_actividad):
     try:
         actividad = Actividad.objects.get(id=id_actividad)
+        if actividad.estado == 0:
+            messages.error(request, 'La actividad a la que trata de acceder no está disponbible')
+            return redirect('listar_eventos')
+
     except Exception:
         messages.error(request, 'La actividad a la que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -434,7 +468,7 @@ def editar_actividad(request, id_actividad):
             if actividad_form.is_valid():
                 actividad = actividad_form.save(commit=False)
                 actividad.save()
-                messages.success(request, "La actividad ha sido editada con exito!")
+                messages.success(request, "La actividad ha sido editada con éxito!")
                 return redirect('registrar_actividad', actividad.evento_perteneciente)
 
     evento = Evento.objects.get(id=actividad.evento_perteneciente)
@@ -513,7 +547,7 @@ def cambiar_estado_actividad(request, id_actividad):
         messages.error(request, 'La actividad a la que trata de acceder no existe!')
         return redirect('listar_eventos')
 
-    messages.success(request, 'Se ha cambiado el estado de la actividad correctamente')
+    messages.success(request, 'Actividad '+actividad.get_estado()+' correctamente')
     return redirect('registrar_actividad', actividad.evento_perteneciente)
 
 
@@ -522,6 +556,9 @@ def cambiar_estado_actividad(request, id_actividad):
 def registrar_resultado(request, id_actividad):
     try:
         actividad = Actividad.objects.get(id=id_actividad)
+        if actividad.estado == 0:
+            messages.error(request, 'La actividad a la que trata de acceder no está disponbible')
+            return redirect('listar_eventos')
     except Exception:
         messages.error(request, 'La actividad a la que trata de acceder no existe!')
         return redirect('listar_eventos')

@@ -108,10 +108,10 @@ def cambiar_estado_clasificado(request, id_clasificado):
     messages.success(request, 'Se ha cambiado el estado del clasificado correctamente')
     return redirect('gestionar_clasificados')
 
+
 @csrf_exempt
 @login_required
 def crop_pic(request):
-    import os
     from django.conf import settings
     response_data = {"status": "error", 'message': 'Only Post Accepted'}
     if request.method == 'POST':
@@ -162,7 +162,6 @@ def crop_pic(request):
 
     # Croppic will parse the information returned into json. content_type needs
     # to be set as 'text/plain'
-    print(response_data)
     return JsonResponse(response_data)
 
 
