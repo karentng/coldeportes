@@ -79,6 +79,8 @@ class Actores(models.Model):
     noticias = models.BooleanField(verbose_name="Noticias", default=False)
     publicidad = models.BooleanField(verbose_name="Publicidad", default=True)
     listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
+    eventos = models.BooleanField(verbose_name="Eventos", default=False)
+    centros = models.BooleanField(verbose_name="Centros", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
 
