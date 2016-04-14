@@ -182,7 +182,7 @@ def seleccion_datos_escuelas(tenant=''):
     return (
         """
         SELECT
-            ESCUELA.id, ESCUELA.estrato, ESCUELA.nombre,
+            ESCUELA.id, ESCUELA.estrato, ESCUELA.nombre, ESCUELA.tipo_sede,
             ESCUELA.estado, ESCUELA.ciudad_id, ESCUELA.telefono_fijo,
             ESCUELA.email, ESCUELA.web,
             ESCUELA.entidad_id, ESCUELA.fecha_creacion,

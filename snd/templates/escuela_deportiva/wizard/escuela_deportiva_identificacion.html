@@ -28,9 +28,9 @@
 
 {% block titulo_panel %}
     {% if edicion == '1' or edicion == 1 %}
-        Edición Escuela de Formación Deportiva
+        Edición Sede Escuela de Formación Deportiva
     {% else %}
-        Registro Nueva Escuela de Formación Deportiva
+        Registro Nueva Sede Escuela de Formación Deportiva
     {% endif %}
 {% endblock %}
 
@@ -63,12 +63,15 @@
                         {% bootstrap_field form.telefono_celular layout="vertical" %}
                     </div>
                     <div class="col-md-6">
+                        {% bootstrap_field form.tipo_sede layout="vertical" %}
+                    </div>
+                    <div class="col-md-6">
                         {% bootstrap_field form.aval layout="vertical" %}
                     </div>
                 </div>
                 <hr>
                 <legend class="pull-left width-full">
-                    <h3>Ingrese los datos de ubicación de la Escuela de Formación Deportiva</h3>
+                    <h3>Ingrese los datos de ubicación de la sede de la Escuela de Formación Deportiva</h3>
                 </legend>
                 <div class="row">
                     <div class="col-md-6">

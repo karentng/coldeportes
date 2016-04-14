@@ -105,8 +105,8 @@ MODELOS_DE_DATOS = (
     ),
     (   #Numero de modelo 5
         PublicEscuelaView,
-        ['nombre', 'ciudad', 'telefono_fijo', 'email', 'web', 'estrato','entidad'],
-        ['Nombre', 'Ciudad', 'Teléfono', 'Email', 'Página Web', 'Estrato', 'Entidad'],
+        ['nombre', 'ciudad', 'tipo_sede', 'telefono_fijo', 'email', 'web', 'estrato','entidad'],
+        ['Nombre', 'Ciudad', 'Tipo Sede', 'Teléfono', 'Email', 'Página Web', 'Estrato', 'Entidad'],
         None,
         [
             [

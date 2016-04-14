@@ -53,7 +53,7 @@ class Participante(models.Model):
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='TI',
                                verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100, verbose_name='Identificación')
-    ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad en donde esta residiendo')
+    ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad de residencia')
     institucion_educativa = models.CharField(max_length=255, verbose_name="Institución educativa actual")
     anho_curso = models.CharField(max_length=100, choices=CURSO, verbose_name="Año que cursa actualmente")
     telefono = models.CharField(max_length=100, verbose_name='Teléfono')
@@ -106,7 +106,7 @@ class Acudiente(models.Model):
                                verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100, verbose_name='Identificación')
     soporte_id = models.FileField(upload_to="soporte_acudientes_EFD",
-                                  verbose_name="Soporte de identificación (escaneado)")
+                                  verbose_name="Soporte de identificación (escaneado)", null=True, blank=True)
     eps = models.ForeignKey(EPS, verbose_name='Sistema de salud afiliado')
     estado = models.IntegerField(default=1, choices=ESTADO)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -144,6 +144,10 @@ class EscuelaDeportiva(models.Model):
         (5, 'Cinco'),
         (6, 'Seis'),
     )
+    TIPO_SEDE = (
+        ("PRINCIPAL", "PRINCIPAL"),
+        ("SECUNDARIA", "SECUNDARIA"),
+    )
 
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100, verbose_name="dirección")
@@ -152,6 +156,7 @@ class EscuelaDeportiva(models.Model):
     web = models.URLField(verbose_name="página web", blank=True, null=True)
     nombre_administrador = models.CharField(max_length=50, blank=True, null=True)
     telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
+    tipo_sede = models.CharField(max_length=150,choices=TIPO_SEDE, verbose_name="Tipo de sede")
     ciudad = models.ForeignKey(Ciudad)
     comuna = models.PositiveIntegerField()
     barrio = models.CharField(max_length=20)

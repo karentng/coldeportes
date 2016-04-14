@@ -66,9 +66,6 @@ fields = {
     },
     soporte_id: {
         validators: {
-            notEmpty: {
-                message: 'El Soporte de identificación no puede ser vació'
-            },
             file: {
                 extension: 'pdf,jpeg,jpg,png',
                 type: 'application/pdf,image/jpeg,image/png',

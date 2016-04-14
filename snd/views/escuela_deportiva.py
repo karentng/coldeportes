@@ -309,6 +309,10 @@ def registrar_acudiente(request, id_participante):
             return redirect('detalles_participante', id_participante)
 
     acudiente_form = AcudienteForm()
+    participantes_sin_acudiente = Participante.objects.exclude(id__in=(
+        Acudiente.objects.all().values_list('participante_responsable', flat=True)
+    ))
+    acudiente_form.fields["participante_responsable"].queryset = participantes_sin_acudiente
     return render(request, 'escuela_deportiva/registrar_acudiente.html', {'form': acudiente_form})
 
 

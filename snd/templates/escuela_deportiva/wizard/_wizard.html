@@ -9,7 +9,7 @@
     <li role="tab"  {% if wizard_stage >= 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 1;"><span class="label">2</span>
     	<a class="hidden-phone">
     		<a {% if edicion == 1 or edicion == '1' %} href="{% url 'escuela_deportiva_crear_editar' escuela_deportiva_id=escuela_deportiva_id paso='servicios' edicion=edicion%}" style="cursor:pointer;"{% endif %}>
-        		Servicios <small>Servicios ofrecidos por la Escuela de Formación Deportiva</small>
+        		Servicios <small>Servicios ofrecidos por la sede de la Escuela de Formación Deportiva</small>
         	</a>
         </a>
     </li>

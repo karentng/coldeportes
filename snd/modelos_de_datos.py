@@ -632,8 +632,8 @@ MODELOS_DE_DATOS = (
     #Numero de modelo 14
     (
         EscuelaDeportiva,
-        ['nombre','direccion', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
-        ['Nombre','Dirección', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
+        ['nombre','direccion', 'tipo_sede', 'telefono_fijo', 'ciudad', 'email', 'web', 'estado'],
+        ['Nombre','Dirección', 'Tipo Sede', 'Teléfono', 'Ciudad', 'Email', 'Página Web', 'Estado'],
         None,
         [
             [

@@ -251,6 +251,7 @@ class PublicEscuelaView(models.Model):
 
     nombre = models.CharField(max_length=100)
     telefono_fijo = models.CharField(max_length=100)
+    tipo_sede = models.CharField(max_length=150)
     email = models.CharField(max_length=100)
     web = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField()

@@ -62,7 +62,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="has-sub {% if '/escuela-deportiva/participantes' in request.path %} active {% endif %}">
+                        <li class="has-sub {% if '/escuela-deportiva/participantes' in request.path or '/escuela-deportiva/acudiente' in request.path %} active {% endif %}">
                             <a href="javascript:;">
                                 <b class="caret pull-right"></b>
                                 <span>Gestión Participantes</span>
