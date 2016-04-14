@@ -2,16 +2,16 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Solicitudes de adecuación de escenarios-SND COLDEPORTES
+    Solicitudes de reconocimiento deportivo-SND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
-    Solicitudes de adecuación de escenarios
+    Solicitudes de reconocimiento deportivo
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li class="active">Solicitudes de adecuación escenarios</li>
+    <li class="active">Solicitudes de reconocimiento deportivo</li>
 {% endblock %}
 
 {% block css %}
@@ -21,7 +21,7 @@
 
 
 {% block titulo_panel %}
-    Solicitudes de adecuación de escenarios
+    Solicitudes de reconocimiento deportivo
 {% endblock %}
 
 {% block js %}
@@ -48,6 +48,7 @@
                         <th>Estado</th>
                         <th>A quien va dirigida</th>
                         <th>Fecha de creación</th>
+                        <th>Tipo</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
@@ -58,8 +59,9 @@
                         <td>{{solicitud.get_estado_display}}</td>
                         <td>{{ solicitud.para_quien }}</td>
                         <td>{{ solicitud.fecha_creacion }}</td>
+                        <td>{{ solicitud.get_tipo_display }}</td>
                         <td>
-                            <a href='{% url 'ver_solicitud' solicitud.id %}'>
+                            <a href='{% url 'ver_solicitud_reconocimiento' solicitud.id %}'>
                                 <i class="fa fa-eye"></i> Ver más
                             </a>
                             <br/>                            
@@ -70,7 +72,7 @@
                                 <br/>
                             {% endif %}
                             {% if solicitud.estado == 1 %}
-                                <a href="{% url 'editar_solicitud' s.id %}">
+                                <a href="{% url 'editar_solicitud_reconocimiento' solicitud.id %}">
                                     <i class="fa fa-envelope"></i> Completar solicitud
                                 </a>
                                 <br/>
@@ -90,7 +92,7 @@
                         <h4 class="modal-title">Cancelar Solicitud:</h4>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro que desea cancelar la solicitud de adecuación?
+                        ¿Está seguro que desea cancelar la solicitud de reconocimiento deportivo?
                     </div>
                     <div class="modal-footer">
                         <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>

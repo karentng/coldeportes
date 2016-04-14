@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo
 from entidades.models import Entidad
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo#, AdjuntoSolicitud, DiscucionReconocimiento
+from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoReconocimiento, DiscusionReconocimiento
 
 class ReconocimientoDeportivoForm(ModelForm):
     required_css_class = 'required'
@@ -35,11 +35,27 @@ class ReconocimientoDeportivoForm(ModelForm):
             pass
 
 
-class AdjuntosReconocimientoForm(ModelForm):
+class AdjuntoReconocimientoForm(ModelForm):
 
     required_css_class = 'required'
 
+    def __init__(self, *args, **kwargs):
+        super(AdjuntoReconocimientoForm, self).__init__(*args, **kwargs)
+        self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
+
     class Meta:
-        model = ReconocimientoDeportivo
-        exclude = ('descripcion', 'para_quien', 'nombre_solicitante', 'tipo', 'id_solicitante', 'tel_solicitante', 
-            'direccion_solicitante', 'vinculo_solicitante', 'fecha_vigencia', 'fecha_creacion', 'estado')
+        model = AdjuntoReconocimiento
+        exclude = ('solicitud', 'discusion')
+
+
+class DiscusionForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(DiscusionForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+        self.fields['descripcion'].widget.attrs['style'] = 'resize:none;'
+
+    class Meta:
+        model = DiscusionReconocimiento
+        exclude = ('solicitud','estado_anterior','fecha','entidad','estado_actual','respuesta',)

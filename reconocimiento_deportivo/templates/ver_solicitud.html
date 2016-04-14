@@ -49,7 +49,7 @@
 		        <div class="vertical-box-column width-250">
 		            <!-- begin wrapper -->
                     <div class="wrapper bg-silver text-center">
-                        <a href="{% url 'listar_solicitudes' %}" class="btn btn-success p-l-40 p-r-40 btn-sm">
+                        <a href="{% url 'listar_reconocimientos' %}" class="btn btn-success p-l-40 p-r-40 btn-sm">
                             Regresar
                         </a>
                     </div>
@@ -150,15 +150,17 @@
                                         <tr>
                                             <th align="center">Nombre</th>
                                             <th align="center">Tipo</th>
+                                            <th align="center">Extensión</th>
                                             <th align="center">Descargar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% for ad in solicitud.adjuntos %}
+                                    {% for adjunto in solicitud.adjuntos %}
                                         <tr>
-                                            <td>{{ad.nombre_archivo}}</td>
-                                            <td ><i class="fa fa-2x fa-{% if  ad.icon_extension != 'file' %}file-{% endif %}{{ ad.icon_extension }}-o"></i></td>
-                                            <td><a href="{% url  'descargar_adjunto' solicitud.id ad.id %}"><i class="fa fa-download"></i> Descargar</a></td>
+                                            <td>{{adjunto.nombre_archivo}}</td>
+                                            <td>{{adjunto.get_tipo_display}}</td>
+                                            <td ><i class="fa fa-2x fa-{% if  adjunto.icon_extension != 'file' %}file-{% endif %}{{ adjunto.icon_extension }}-o"></i></td>
+                                            <td><a href="{% url  'descargar_adjunto_reconocimiento' solicitud.id adjunto.id %}"><i class="fa fa-download"></i> Descargar</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -167,7 +169,8 @@
                                             <tr>
                                                 <td></td>
                                                 <td></td>
-                                                <td><a href="{% url 'descargar_todos_adjuntos_solicitud' solicitud.id %}"><i class="fa fa-cloud-download"></i> Descargar todos los adjuntos</a></td>
+                                                <td></td>
+                                                <td><a href="{% url 'descargar_adjuntos_reconocimiento' solicitud.id %}"><i class="fa fa-cloud-download"></i> Descargar todos los adjuntos</a></td>
                                             </tr>
 
                                         </tfoot>
@@ -207,11 +210,11 @@
                                 {% endfor %}
 							</ul>
                         </div>
-                        {% if perms.solicitud.add_solicitudescenario%}
+                        {%comment %}{% if perms.solicitud.add_solicitudescenario%}{% endcomment %}
                             {% if responder and solicitud.estado == 1 %}
                                 <div class="row">
                                     <h5><strong>Responder</strong></h5>
-                                    <form id="form-respuesta-solicitud" action="{% url 'enviar_comentario' solicitud.id %}" method="post" enctype="multipart/form-data">
+                                    <form id="form-respuesta-solicitud" action="{% url 'enviar_comentario_reconocimiento' solicitud.id %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="input-group">
                                             <div class="form-group">
@@ -229,7 +232,7 @@
                                     </form>
                                 </div>
                             {% endif %}
-                        {% endif %}
+                        
                     </div>
 		            <!-- end wrapper -->
 		            <!-- begin wrapper -->
