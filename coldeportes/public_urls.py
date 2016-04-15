@@ -16,7 +16,6 @@ urlpatterns = patterns('',
     url(r'^entidades/', include('entidades.urls')),
     url(r'^clasificados/',include('publicidad.urls')),
     url(r'^noticias/',include('noticias.urls')),#urls del modulo de noticias
-    url(r'^eventos/',include('gestion_eventos.urls')),
     url(r'^directorio-publico/',include('directorio.publico_urls')),
     url(r'^normograma/',include('normograma.urls')),
     url(r'^manual/',include('manual.urls')),

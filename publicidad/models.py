@@ -19,3 +19,4 @@ class Clasificado(models.Model):
     valor = models.PositiveIntegerField(null=True, blank=True)
     etiquetas = models.CharField(max_length=255, null=True, blank=True)
     estado = models.IntegerField(default=1)
+    archivo_adjunto = models.FileField(upload_to="clasificados/archivos_adjuntos/", blank=True, null=True)

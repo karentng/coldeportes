@@ -54,8 +54,8 @@
                     <table id="tabla-resultados" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Titulo</th>
-                                <th>Reconocmiento</th>
+                                <th>Título</th>
+                                <th>Reconocimiento</th>
                                 <th>Participante Ganador</th>
                                 <th>Estado</th>
                                 {% if "gestion_eventos.change_evento" in perms %}
@@ -80,11 +80,14 @@
                                     </td>
                                 {% if "gestion_eventos.change_evento" in perms %}
                                     <td>
-                                        <a href="{% url 'editar_resultado' resultado.id %}"><i class="fa fa-edit"> Editar </i></a><br>
-                                        <a href="{% url 'cambiar_estado_resultado' resultado.id %}">
-                                            <i class="fa fa-ban"></i>
-                                            A/I <i style="cursor:pointer;" data-toggle="tooltip" title="Activar/Inactivar" class="fa fa-question-circle add-tooltip"></i>
-                                        </a><br>
+                                        {% if resultado.estado == 1 %}
+                                            <a href="{% url 'editar_resultado' resultado.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                        {% endif %}
+                                        <a data-toggle="modal" data-target="#modal-desactivate" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_resultado' resultado.id %}">
+                                            <span class=" add-tooltip" data-toggle="tooltip" title="Activar/Inactivar" href="#">
+                                                <i class="fa fa-ban"></i> A/I
+                                            </span>
+                                        </a>
                                     </td>
                                 {% endif %}
                                 </tr>
@@ -92,6 +95,24 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <div class="modal fade" id="modal-desactivate">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h4 class="modal-title">Cambiar de estado resultado:</h4>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Está seguro que desea cambiar el estado de este resultado?
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             {% else %}
                 <div class="alert alert-warning fade in m-b-15"><strong>No hay resultados registrados</strong></div>
@@ -103,6 +124,11 @@
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-resultados";
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
         $(document).ready(function(){
             $("#id_cantidad_puestos").change(function(){
                 var val = $(this).val();

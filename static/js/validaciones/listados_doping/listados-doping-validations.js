@@ -3,7 +3,7 @@ fields = {
     identificacion: {
         validators: {
             notEmpty: {
-                message: "El título de la noticia no puede ser vacío"
+                message: "Este campo no puede ser vacío"
             },
             numeric: {
                 message: "Este campo solo puede contener números"

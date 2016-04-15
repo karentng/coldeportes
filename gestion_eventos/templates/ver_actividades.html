@@ -30,8 +30,8 @@
             calendarEvents.push({
                 act_id: '{{actividad.id }}',
 				title: '{{ actividad.titulo }}',
-				start: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_inicio }}',
-				end: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_fin }}',
+				start: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_inicio|date:"H:i" }}',
+				end: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_fin|date:"H:i" }}',
 				className: 'bg-blue-darker',
                 allDay:false,
 				media: '<i class="fa fa-trophy"></i>',

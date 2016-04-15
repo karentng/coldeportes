@@ -36,11 +36,11 @@
   {% include 'wizard_info_juego/_wizard.html' %}
   <div class="row">
     <div class="email-btn-row col-md-12">      
-      <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-inverse pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
+      <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
 
       <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i>{% if not individual %} Crear Equipo {% else %} Crear Participante{% endif %}</a>
 
-      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-inverse pull-right"><i class="fa fa-arrow-right m-r-5"></i> Siguiente</a>
+      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-primary pull-right">Siguiente <i class="fa fa-arrow-right m-r-5"></i> </a>
       
     </div>
   </div>
@@ -89,17 +89,17 @@
                               {% if individual %}
                                 {% if puntos %}
                                   <a href='{% url "participante_puntos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Modificar
+                                      <i class="fa fa-edit"></i> Editar
                                   </a><br>
                                 {% else %}
 
                                   {% if metros %}
                                   <a href='{% url "participante_metros" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Modificar
+                                      <i class="fa fa-edit"></i> Editar
                                   </a><br>
                                   {% else %}
                                   <a href='{% url "participante_tiempos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Modificar
+                                      <i class="fa fa-edit"></i> Editar
                                   </a><br>
                                   {% endif %}
                                 {% endif %}
@@ -113,16 +113,16 @@
                                 </a><br>
                                 {% if puntos %}
                                   <a href='{% url "equipo_puntos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Modificar
+                                      <i class="fa fa-edit"></i> Editar
                                   </a><br>
                                 {% else %}
                                   {% if metros %}
                                   <a href='{% url "equipo_metros" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Modificar
+                                      <i class="fa fa-edit"></i> Editar
                                   </a><br>
                                   {% else %}
                                   <a href='{% url "equipo_tiempos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Modificar
+                                      <i class="fa fa-edit"></i> Editar
                                   </a><br>
                                   {% endif %}
                                 {% endif %}

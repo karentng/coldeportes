@@ -22,8 +22,8 @@ $(document).ready(function() {
                 fecha_competencia: {
                     validators: {
                         notEmpty: {
-                            message: 'El año no puede ser vacío'
-                        },
+                            message: 'La fecha de la competencia no puede ser vacía'
+                        }
                     }
                 },
                 tipo_competencia: {
@@ -76,5 +76,9 @@ $(document).ready(function() {
             // Remove the has-success class
             $parent.removeClass('has-success');
         });
+
+        $("#id_fecha_competencia").on('change',function(e){
+        $("#form-competencia").bootstrapValidator('revalidateField', 'fecha_competencia');
+    });
 
 });

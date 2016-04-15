@@ -5,6 +5,8 @@ urlpatterns = patterns('registro_resultados.views.juegos',
     url(r'registro$', 'registrar_juego', name='registrar_juego'),
     url(r'registro/(\d+)$', 'registrar_juego', name='registrar_juego'),
     url(r'listar$', 'listar_juegos', name='listar_juegos'),
+    url(r'eliminar/(\d+)$', 'eliminar_juego', name='eliminar_juego'),
+
 
     url(r'(\d+)/datos-competencia$', 'datos_competencia', name='datos_competencia'),
     #url(r'(\d+)/datos-competencia/(\d+)$', 'datos_competencia', name='datos_competencia'),
@@ -47,4 +49,5 @@ urlpatterns = patterns('registro_resultados.views.juegos',
 
     # cargado por excel
     url(r'^cargar-competencias/(\d+)$', 'cargas_competencias', name='cargas_competencias'),
+    url(r'^cargar-participantes/(\d+)$', 'cargar_participantes', name='cargar_participantes'),
 )

@@ -31,9 +31,9 @@
 	<form action="" method="post">{% csrf_token %}
 		<fieldset>
 			<div class="well row">
-				<div class="col-xs-12">
-					<b>Seleccione las clases que ofrece el Centro de Acondicionamiento Físico:</b>
-				</div>
+				<legend class="pull-left width-full">
+					<h3>Seleccione las clases que ofrece el Centro de Acondicionamiento Físico:</h3>
+				</legend>
 				{% for i in form.clases %}
 					<div class="col-sm-3">
 						<div class="checkbox checkbox-primary">

@@ -85,7 +85,7 @@ def generar_vistas(nuevo_tenant=None, padre=None):
                 else:
                     return [(7, FederacionParalimpica), "comite"]
             return ("Hay algo malo con el tipo %s")%(tipo)
-        print(padre)
+        #print(padre)
         if padre:
             print ("PADRE")
             print(padre)
