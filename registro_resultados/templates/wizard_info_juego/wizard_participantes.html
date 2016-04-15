@@ -22,7 +22,14 @@
   <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
   <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
   <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
-
+  <script>
+      idTabla = "tabla-solicitudes";
+      function urlModal(link) {
+          //Funcionalidad para agregar la url al modal
+          var url = link.getAttribute("data-url");
+          document.getElementById("confirmar-desactivate").setAttribute("href",url);
+      };
+  </script>
 {% endblock %}
 
 {% block css %}
@@ -103,7 +110,7 @@
                                   </a><br>
                                   {% endif %}
                                 {% endif %}
-                                <a href='{% url "eliminar_participante" competencia_id participante.id %}'>
+                                <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_participante" competencia_id participante.id %}'>
                                     <i class="fa fa-trash"></i> Eliminar
                                 </a><br>
 
@@ -126,11 +133,27 @@
                                   </a><br>
                                   {% endif %}
                                 {% endif %}
-                                <a href='{% url "eliminar_equipo" competencia_id participante.id %}'>
+                                <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_equipo" competencia_id participante.id %}'>
                                     <i class="fa fa-trash"></i> Eliminar
                                 </a><br>
                               {% endif %}
-
+                              <div class="modal fade" id="modal-eliminar">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title">Eliminar {% if individual %}Participante{% else %}Equipo{% endif %}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Está seguro que desea eliminar el {% if individual %}participante{% else %}equipo{% endif %}{{participante.nombre}}?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
+                                        <a id="confirmar-desactivate" href="" class="btn btn-sm btn-danger">Si</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </td>
                         </tr>
                         {% endfor %}
