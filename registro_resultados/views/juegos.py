@@ -697,8 +697,7 @@ def crear_participantes(request, participantes, datemode, competencia):
         date = datetime.datetime(1899, 12, 30)
         get_col2 = str(date + datetime.timedelta(participante[4]))[:10]
         d = datetime.datetime.strptime(get_col2, "%Y-%m-%d")
-        obj.fecha_nacimiento = None#d.strftime("%Y-%m-%d")
-
+        obj.fecha_nacimiento = d.strftime("%Y-%m-%d")
         obj.estatura = participante[5] or None
         obj.peso = participante[6] or None
         obj.posicion = participante[7]
@@ -713,5 +712,8 @@ def crear_participantes(request, participantes, datemode, competencia):
                 obj.metros = participante[8]
                 obj.marca = participante[11]                
         else: # Equipos
-            obj.equipo = Equipo.objects.get(id=participante[12]) 
-        obj.save()
+            obj.equipo = Equipo.objects.get(id=participante[12])
+        try: 
+            obj.save()
+        except Exception as e:
+            print(e)

@@ -80,10 +80,9 @@ class Participante(models.Model):
     club = models.CharField(max_length=100, verbose_name='club de Registro', null=True, blank=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
     estatura = models.PositiveIntegerField(verbose_name='estatura (cm)', null=True, blank=True)
-    peso = models.DecimalField(max_digits=3, decimal_places=2, verbose_name='peso (kg)', null=True, blank=True)
-
+    peso = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='peso (kg)', null=True, blank=True)
     posicion = models.IntegerField(default=0, verbose_name="posición")
-    metros = models.DecimalField(default=0, null=True, max_digits=3, decimal_places=2, help_text='En metros')
+    metros = models.DecimalField(default=0, null=True, max_digits=4, decimal_places=2, help_text='En metros')
     puntos = models.IntegerField(default=0, null=True)
     tiempo = models.CharField(null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
     marca = models.CharField(blank=True, null=True, max_length=10, help_text="La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
