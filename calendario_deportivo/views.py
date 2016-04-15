@@ -38,7 +38,7 @@ def registro_calendario(request,id=None):
         ev.entidad = yo
         ev.save()
         connection.set_tenant(yo)
-        messages.success(request, "El evento a sido enviado al Calendario Deportivo Nacional con exito!")
+        messages.success(request, "El evento a sido enviado al Calendario Deportivo Nacional con exito!, Aparecera cuando COLDEPORTES lo apruebe")
         return redirect('listado_calendario_nacional')
     return render(request,'registro_calendario.html',{
         'form': form,
@@ -88,9 +88,9 @@ def ver_evento(request,id):
 
 #Vistas para tenant nacional
 def cargar_calendario(request):
-
+    eventos = CalendarioNacional.objects.filter(estado=0)
     return render(request,'calendario.html',{
-
+        'eventos':eventos
     })
 
 @login_required

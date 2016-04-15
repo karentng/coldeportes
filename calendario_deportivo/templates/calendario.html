@@ -10,37 +10,31 @@
     Calendario Deportivo Nacional
 {% endblock %}
 
-{% block botones_panel %}
-    <a href="" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
-{% endblock %}
-
 {% block titulo_panel %}
-    Listado de eventos
+    Listado de Eventos - Calendario Deportivo Nacional
 {% endblock %}
 
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-eventos";
-        urlDrop = "{% url 'cambio_fecha_actividad' %}";
         csrf = '{{ csrf_token }}';
-        editableCal = {% if "gestion_eventos.change_evento" in perms %} true{% else %} false {% endif %};
         calendarEvents = [];
-            {% for actividad in actividades %}
+            {% for event in eventos %}
             calendarEvents.push({
-                act_id: '{{actividad.id }}',
-				title: '{{ actividad.titulo }}',
-				start: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_inicio }}',
-				end: '{{ actividad.dia_actividad|date:"Y-m-d" }}'+' '+'{{ actividad.hora_fin }}',
+                id: '{{event.id }}',
+				title: '{{ event.titulo_evento }}',
+				start: '{{ event.fecha_inicio|date:"Y-m-d H:i" }}',
+				end: '{{ event.fecha_finalizacion|date:"Y-m-d H:i" }}',
 				className: 'bg-blue-darker',
                 allDay:false,
 				media: '<i class="fa fa-trophy"></i>',
-				description: '{{ actividad.descripcion }}'
+				description: '{{ event.objetivo }}'
             });
         {% endfor %}
     </script>
     <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
-    <script src="{{ STATIC_URL }}js/gestion_eventos/calendar.evento.js"></script>
+    <script src="{{ STATIC_URL }}js/funciones_calculos/calendario_deportivo/calendar.evento.js"></script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
 
@@ -53,45 +47,23 @@
         <div class="vertical-box">
             <div class="vertical-box-column col-sm-3 ">
                 <div class="calendar-event" id="external-events">
-                    <h4 class="m-b-20 m-r-5" style="display: inline-block;">Actividades</h4>
-                    {% if "gestion_eventos.change_evento" in perms %}
-                        <i style="cursor:pointer;" data-toggle="tooltip" title="Al arrastrar las acitividades que están dentro del calendario, se puede cambiar el día" class="fa fa-question-circle add-tooltip" data-date="{{ actividad.dia_actividad|date:"Y-m-d" }}"></i>
-                    {% endif %}
-                    {% if actividades %}
-                        {% for actividad in actividades %}
-                            <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ actividad.titulo }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ actividad.descripcion }}">
+                    <h4 class="m-b-20 m-r-5" style="display: inline-block;">Eventos Calendario Nacional</h4>
+                    {% if eventos %}
+                        {% for event in eventos %}
+                            <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ event.titulo_evento }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ event.objetivo }}">
                                 <h5>
-                                    <i style="cursor:pointer;" data-toggle="tooltip" title="Muestra la actividad en el calendario" class="fa fa-calendar fa-lg fa-fw add-tooltip" data-date="{{ actividad.dia_actividad|date:"Y-m-d" }}"></i>
-                                    {{ actividad.titulo }} <span class="f-s-10">{% if actividad.estado == 1 %}(Activa){% else %}(Inactiva){% endif %}</span>
+                                    <i style="cursor:pointer;" data-toggle="tooltip" title="Muestra la actividad en el calendario" class="fa fa-calendar fa-lg fa-fw add-tooltip" data-date="{{ event.fecha_inicio|date:"Y-m-d H:i" }}"></i>
+                                    {{ event.titulo_evento }}
                                 </h5>
-                                <p>{{ actividad.descripcion }}</p>
+                                <p>{{ event.objetivo }}</p>
                             </div>
                         {% endfor %}
                     {% else %}
-                        <div class="alert alert-warning fade in m-b-15"><strong>No hay actividades registradas</strong></div>
+                        <div class="alert alert-warning fade in m-b-15"><strong>No hay eventos registradas</strong></div>
                     {% endif %}
                 </div>
             </div>
             <div id="calendar" class="vertical-box-column p-15 calendar col-sm-9 fc fc-ltr"></div>
-            <div class="modal fade" id="modal-confirmacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h3 class="modal-title" id="titulo-modal">¿Desea cambiar el día de la actividad?</h3>
-                        </div>
-                        <div class="modal-body">
-                            <p id="nuevo-dia">
-                                <b>El día de la actividad se ha movido: </b><span></span>
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-warning btn-not" data-dismiss="modal">Cancelar</button>
-                            <button type="button"  class="btn btn-primary btn-ok" style="margin-left: 15px;">Cambiar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 {% endblock %}
 

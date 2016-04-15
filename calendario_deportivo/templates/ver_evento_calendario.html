@@ -30,11 +30,7 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <div class="panel-heading-btn">
-            {% if request.tenant.schema_name == 'public' %}
-                <a href="{% url 'listar_todos_calendario' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
-            {% else %}
-                <a href="{% url 'listado_calendario_nacional' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
-            {% endif %}
+            <input onclick="history.back()" class="btn btn-warning btn-xs " type="button" value="← Regresar" >
         </div>
         <h4 class="panel-title">
             Información del evento: {{evento.titulo_evento}}
