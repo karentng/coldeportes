@@ -31,6 +31,12 @@
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
 {% endblock %}
 
+{% block header_contendio %}
+        <h1 class="page-header">
+            {{ evento.titulo_evento|upper }} <small>Gestión de Eventos</small>
+        </h1>
+{% endblock header_contendio %}
+
 {% block contenido_panel %}
     <div class="row">
         <div class="col-sm-12">
