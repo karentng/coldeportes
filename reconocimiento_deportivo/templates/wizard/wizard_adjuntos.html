@@ -45,21 +45,29 @@
                         </div>
                     </div>
                 <!-- end wrapper -->
-                <!-- begin wrapper -->
+                <!-- begin wrapper -->                    
 
                     <div class="wrapper">
-
                         <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitud de reconocimiento deprotivo</h4>
                         {% include 'wizard/_wizard.html' %}
-                        <div class="col-md-6">
+                        <div  class="row alert {% if cantidad_maxima_adjuntos %}alert-warning{% else %}alert-info{% endif %} fade in">                
+                            <div align="center" class="col-md-12">
+                            {% if cantidad_maxima_adjuntos %}
+                                <strong><h4>Atención:</h4></strong> Ya ha adjuntado la máxima cantidad de archivos para los requerimientos del reconocimiento deportivo. Por favor, revise los documentos que va a enviar y pulse click en el botón finalizar solicitud para enviar la petición a trámite. Si desea adjuntar otro documento, debe borrar uno de la lista.
+                            {% else %}
+                                <strong>Nota:</strong> Se puede adjuntar únicamente un documento por requerimiento. Si tiene más de un archivo, agrupelos en uno solo antes de subirlo.
+                            {% endif %}
+                            </div>
+                        </div>                        
+                        {% if not cantidad_maxima_adjuntos %}
+                        <div class="col-md-5">
                             <form action="" method="POST" id="form-adjunto-solicitud" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <h4><strong>Archivos Adjuntos</strong></h4>
                                 <fieldset>
                                     <legend></legend>
                                     {% for field in form %}
-                                        <div class="col-md-6">
-                                            
+                                        <div class="col-md-6">                                            
                                             {% bootstrap_field field layout="vertical" %}
                                         </div>
                                     {% endfor %}
@@ -70,7 +78,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="col-md-6">
+                        {% endif %}
+                        <div {% if cantidad_maxima_adjuntos %} class="col-md-12" {% else %}class="col-md-7" {% endif %}>
                             <!--h5><strong>Registrados</strong></h5-->
                             <!--fieldset>
                                 <legend></legend-->
@@ -88,7 +97,7 @@
                                         {% for adjunto in adjuntos %}
                                             <tr>
                                                 <td>{{adjunto.nombre_archivo}}</td>
-                                                <td>{{adjunto.get_tipo_display}}</td>
+                                                <td>{{adjunto.tipo}}</td>
                                                 <td align="center"><i class="fa fa-2x fa-{% if  adjunto.icon_extension != 'file' %}file-{% endif %}{{ adjunto.icon_extension }}-o"></i></td>
                                                 <td><a href="{% url 'borrar_adjunto_reconocimiento' reconocimiento_id adjunto.id %}"><i class="fa fa-lg fa-trash"></i></a></td>
                                             </tr>
@@ -106,8 +115,11 @@
                             <div class="col-xs-12">
                                 <hr>
                                 <a href="{% url 'reconocimiento_deportivo_solicitar' reconocimiento_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
-                                <a href="{% url 'finalizar_solicitud_reconocimiento' reconocimiento_id %}" class="btn btn-primary pull-right">
-                                    <i class="fa fa-save"></i> Finalizar
+                                <a href="{% url 'finalizar_solicitud_reconocimiento' reconocimiento_id %}" class="btn btn-success pull-right" >
+                                    <i class="fa fa-check"></i> Finalizar Solicitud
+                                </a>
+                                <a href="{% url 'listar_reconocimientos' %}" class="btn btn-primary pull-right" style="margin-right: 10px;">
+                                    <i class="fa fa-save"></i> Guardar y Completar Luego
                                 </a>
                             </div>
                         </div>

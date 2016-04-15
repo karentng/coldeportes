@@ -158,7 +158,7 @@
                                     {% for adjunto in solicitud.adjuntos %}
                                         <tr>
                                             <td>{{adjunto.nombre_archivo}}</td>
-                                            <td>{{adjunto.get_tipo_display}}</td>
+                                            <td>{{adjunto.tipo}}</td>
                                             <td ><i class="fa fa-2x fa-{% if  adjunto.icon_extension != 'file' %}file-{% endif %}{{ adjunto.icon_extension }}-o"></i></td>
                                             <td><a href="{% url  'descargar_adjunto_reconocimiento' solicitud.id adjunto.id %}"><i class="fa fa-download"></i> Descargar</a></td>
                                         </tr>
@@ -208,7 +208,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>{{discusion.tiene_adjunto.nombre_archivo}}</td>
-                                                        <td>{{discusion.tiene_adjunto.get_tipo_display}}</td>
+                                                        <td>{{discusion.tiene_adjunto.tipo}}</td>
                                                         <td ><i class="fa fa-2x fa-{% if  discusion.tiene_adjunto.icon_extension != 'file' %}file-{% endif %}{{ discusion.tiene_adjunto.icon_extension }}-o"></i></td>
                                                         {% comment %}<td><a href="{% url 'descargar_adjunto_discusion_reconocimiento' solicitud.id discusion.id %}"><i class="fa fa-cloud-download"></i> Descargar Adjunto</a></td>{% endcomment %}
                                                     </tr>

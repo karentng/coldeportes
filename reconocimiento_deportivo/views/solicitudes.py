@@ -26,32 +26,47 @@ def solicitar(request,reconocimiento_id=None):
     except Exception:
         reconocimiento = None
 
-    form = ReconocimientoDeportivoForm(instance=reconocimiento)
+    validado = validar_reconocimiento(reconocimiento)
 
-    if request.method == 'POST':
-        entidad = request.tenant
-        form = ReconocimientoDeportivoForm(request.POST, instance=reconocimiento)
+    if validado:
+        form = ReconocimientoDeportivoForm(instance=reconocimiento)
 
-        if form.is_valid():
-            nueva_solicitud = form.save()
+        if request.method == 'POST':
+            entidad = request.tenant
+            form = ReconocimientoDeportivoForm(request.POST, instance=reconocimiento)
 
-            if not reconocimiento:
-                connection.set_tenant(nueva_solicitud.para_quien)
-                ListaSolicitudesReconocimiento.objects.create(solicitud=nueva_solicitud.id, entidad_solicitante=entidad).save()
-                connection.set_tenant(entidad)
+            if form.is_valid():
+                nueva_solicitud = form.save()
 
-            request.session['identidad'] = {
-                'id_solicitud': nueva_solicitud.id,
-                'id_entidad': entidad.id,
-                'estado': True
-            }
-            return redirect('adjuntar_requerimientos_reconocimiento', nueva_solicitud.id)
+                if not reconocimiento:
+                    connection.set_tenant(nueva_solicitud.para_quien)
+                    ListaSolicitudesReconocimiento.objects.create(solicitud=nueva_solicitud.id, entidad_solicitante=entidad).save()
+                    connection.set_tenant(entidad)
 
-    return render(request,'wizard/wizard_reconocimiento.html',{
-        'form': form,
-        'wizard_stage': 1
-    })
+                request.session['identidad'] = {
+                    'id_solicitud': nueva_solicitud.id,
+                    'id_entidad': entidad.id,
+                    'estado': True
+                }
+                return redirect('adjuntar_requerimientos_reconocimiento', nueva_solicitud.id)
 
+        return render(request,'wizard/wizard_reconocimiento.html',{
+            'form': form,
+            'wizard_stage': 1
+        })
+    else:
+        messages.error(request, 'La solicitud no se puede editar porque ya fue completada.')
+        return redirect('listar_reconocimientos')
+
+
+def validar_reconocimiento(reconocimiento):
+    if reconocimiento:
+        if reconocimiento.estado == 1:
+            return True
+        else:
+            return False
+    else:
+        return True
 
 @login_required
 #@permission_required('solicitud.add_solicitudescenario')
@@ -124,7 +139,7 @@ def ver_solicitud(request, reconocimiento_id):
 
 
 @login_required
-def imprimir_solicitud(request,reconocimiento_id):
+def imprimir_solicitud(request, reconocimiento_id):
     """
     Abril 9, 2016
     Autor: Karent Narvaez
@@ -163,35 +178,48 @@ def adjuntar_requerimientos(request, reconocimiento_id):
     except:
         messages.error(request,'Solicitud no encontrada')
         return redirect('listar_solicitudes')
-        
-    adjuntos = solicitud.adjuntos()
+    
+    validado = validar_reconocimiento(reconocimiento)
 
-    #Se verifica la autenticidad de la solicitud
-    try:
-        auth = request.session['identidad']
-        if not auth['estado'] or auth['id_solicitud'] != int(reconocimiento_id) or auth['id_entidad'] != request.tenant.id:
-            raise Exception
-    except Exception:
-        messages.error(request,'Estas intentando editar una solicitud que ya fue enviada')
+    if validado:
+        #inicializaciones    
+        cantidad_maxima_adjuntos = False
+        form = AdjuntoReconocimientoForm(reconocimiento_id)
+        adjuntos = solicitud.adjuntos()
+        cantidad_adjuntos = solicitud.cantidad_adjuntos()
+
+        #Se verifica la autenticidad de la solicitud
+        try:
+            auth = request.session['identidad']
+            if not auth['estado'] or auth['id_solicitud'] != int(reconocimiento_id) or auth['id_entidad'] != request.tenant.id:
+                raise Exception
+        except Exception:
+            messages.error(request,'Estas intentando editar una solicitud que ya fue enviada')
+            return redirect('listar_reconocimientos')
+
+        if cantidad_adjuntos == 16:
+            cantidad_maxima_adjuntos = True
+
+        if request.method == 'POST':
+            form = AdjuntoReconocimientoForm(reconocimiento_id, request.POST, request.FILES)
+            if form.is_valid() and cantidad_adjuntos < 16:            
+                adjunto = form.save(commit=False)
+                adjunto.solicitud = solicitud
+                adjunto.save()
+                return redirect('adjuntar_requerimientos_reconocimiento', solicitud.id)
+
+        print(cantidad_maxima_adjuntos)
+        return render(request,'wizard/wizard_adjuntos.html',{
+            'form' : form,
+            'reconocimiento_id': reconocimiento_id,
+            'wizard_stage': 2,
+            'adjuntos': adjuntos,
+            'cantidad_maxima_adjuntos': cantidad_maxima_adjuntos
+        })
+
+    else:
+        messages.error(request, 'La solicitud no se puede editar porque ya fue completada.')
         return redirect('listar_reconocimientos')
-
-    form = AdjuntoReconocimientoForm()
-
-    if request.method == 'POST':
-        form = AdjuntoReconocimientoForm(request.POST, request.FILES)
-        if form.is_valid():
-            adjuntos = form.save(commit=False)
-            adjuntos.solicitud = solicitud
-            adjuntos.archivo = solicitud
-            adjuntos.save()
-            return redirect('adjuntar_requerimientos_reconocimiento', solicitud.id)
-
-    return render(request,'wizard/wizard_adjuntos.html',{
-        'form' : form,
-        'reconocimiento_id': reconocimiento_id,
-        'wizard_stage': 2,
-        'adjuntos': adjuntos
-    })
 
 
 @login_required
@@ -213,13 +241,13 @@ def borrar_adjunto(request, reconocimiento_id, adjunto_id):
         return redirect('adjuntar_requerimientos_reconocimiento', reconocimiento_id)
 
     #Se verifica la autenticidad de la solicitud
-    try:
+    """try:
         auth = request.session['identidad']
         if not auth['estado'] or auth['reconocimiento_id'] != int(reconocimiento_id) or auth['id_entidad'] != request.tenant.id:
             raise Exception
     except Exception:
         messages.error(request,'Estas intentando editar una solicitud que ya fue enviada')
-        return redirect('listar_reconocimientos')
+        return redirect('listar_reconocimientos')"""
 
     adjunto.delete()
     messages.success(request,'Archivo adjunto eliminado satisfactoriamente')
@@ -237,7 +265,7 @@ def finalizar_solicitud(request, solicitud_id):
     :param solicitud_id: id de la solicitud en creacion
     """
     try:
-        solicitud = ReconocimientoDeportivo.objects.get(id=id)
+        solicitud = ReconocimientoDeportivo.objects.get(id = solicitud_id)
         solicitud.estado = 0
         solicitud.save()
         messages.success(request,'Solicitud enviada con éxito a:'+str(solicitud.para_quien))
@@ -267,7 +295,7 @@ def editar_solicitud(request, reconocimiento_id):
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
     discusiones = DiscusionReconocimiento.objects.filter(solicitud=solicitud)
     form = DiscusionForm()
-    form_adjunto = AdjuntoReconocimientoForm()
+    form_adjunto = AdjuntoReconocimientoForm(reconocimiento_id)
 
     return render(request,'ver_solicitud_reconocimiento.html',{
         'solicitud' : solicitud,
@@ -296,7 +324,7 @@ def enviar_comentario(request, id):
             return redirect('listar_solicitudes')
 
         form = DiscusionForm(request.POST)
-        form_adjunto = AdjuntoReconocimientoForm(request.POST, request.FILES)
+        form_adjunto = AdjuntoReconocimientoForm(request.POST, request.FILESreconocimiento_id)
 
         if form.is_valid():
             discusion = form.save(commit=False)

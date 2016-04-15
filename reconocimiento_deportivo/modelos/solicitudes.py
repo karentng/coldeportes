@@ -1,8 +1,9 @@
 #encoding:utf-8
 import os
 from django.db import models
+from django.db.models import Count
 from snd.models import Escenario
-from entidades.models import Entidad
+from entidades.models import Entidad, TipoRequerimientoReconocimientoDeportivo
 
 # Create your models here.
 class ReconocimientoDeportivo(models.Model):
@@ -50,6 +51,9 @@ class ReconocimientoDeportivo(models.Model):
     def adjuntos(self):
         return AdjuntoReconocimiento.objects.filter(solicitud=self)
 
+    def cantidad_adjuntos(self):        
+        return len(AdjuntoReconocimiento.objects.filter(solicitud=self, discusion=None))
+
     def save(self, *args, **kwargs):
         self.descripcion = self.descripcion.upper()
         self.nombre_solicitante = self.nombre_solicitante.upper()
@@ -81,30 +85,11 @@ class DiscusionReconocimiento(models.Model):
 
 
 class AdjuntoReconocimiento(models.Model):
-    TIPOS = (
-        (0, 'Aceptacion expresa deportistas  Seleccionar archivo'),
-        (1, 'Acreditacion cumplimiento requisitos    Seleccionar archivo'),
-        (2, 'Acta afiliacion deportistas Seleccionar archivo'),
-        (3, 'Acta constitucion club  Seleccionar archivo'),
-        (4, 'Acta organo administracion  Seleccionar archivo'),
-        (5, 'Constancia eleccion dos miembro disciplinaria   Seleccionar archivo'),
-        (6, 'Constancia eleccion tercer miembro disciplinaria    Seleccionar archivo'),
-        (7, 'Constancia nombramiento rector  Seleccionar archivo'),
-        (8, 'Estatutos   Seleccionar archivo'),
-        (9, 'Informacion oficina Seleccionar archivo'),
-        (10, 'Listado deportistas Seleccionar archivo'),
-        (11, 'Otros'),
-        (12, 'Reconocimiento caracter oficial Seleccionar archivo'),
-        (13, 'Resolucion  Seleccionar archivo'),
-        (14, 'Resolucion creacion club    Seleccionar archivo'),
-        (15, 'Solicitud por escrito   Seleccionar archivo'),
-        (16, 'Tarjetas profesionales revisores fiscales'),
-    )
-
+    
     solicitud = models.ForeignKey(ReconocimientoDeportivo)
     discusion = models.ForeignKey(DiscusionReconocimiento,null=True,blank=True) 
     archivo = models.FileField(upload_to="adjuntos_reconocimiento_deportivo", null=True) 
-    tipo = models.IntegerField(choices=TIPOS)   
+    tipo = models.ForeignKey(TipoRequerimientoReconocimientoDeportivo)   
 
     def __str__(self):
         return self.nombre_archivo()

@@ -105,15 +105,13 @@
                                 <tr>
                                     <th align="center">Nombre</th>
                                     <th align="center">Tipo</th>
-                                    <th align="center">Extensión</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {% for adjunto in solicitud.adjuntos %}
                                 <tr>
                                     <td>{{adjunto.nombre_archivo}}</td>
-                                    <td>{{adjunto.get_tipo_display}}</td>
-                                    <td ><i class="fa fa-2x fa-{% if  adjunto.icon_extension != 'file' %}file-{% endif %}{{ adjunto.icon_extension }}-o"></i></td>
+                                    <td>{{adjunto.tipo}}</td>
                                 </tr>
                             {% endfor %}
 
