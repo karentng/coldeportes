@@ -1,7 +1,7 @@
 from django import forms
-from .models import Clasificado
-from django.utils.translation import ugettext_lazy as _
 from coldeportes.utilities import MyDateWidget
+
+from .models import Clasificado
 
 
 class ClasificadoForm(forms.ModelForm):
@@ -10,13 +10,7 @@ class ClasificadoForm(forms.ModelForm):
     class Meta:
         model = Clasificado
         fields = ('categoria', 'fecha_publicacion', 'fecha_expiracion', 'titulo', 'descripcion', 'contacto', 'valor',
-                  'etiquetas')
-        labels = {
-            'titulo': _('Título'),
-            'descripcion': _('Descripción'),
-            'categoria': _('Categoría del clasificado'),
-            'contacto': _('Información de contacto')
-        }
+                  'archivo_adjunto', 'etiquetas')
 
         widgets = {
             'fecha_publicacion': MyDateWidget(),
@@ -24,12 +18,11 @@ class ClasificadoForm(forms.ModelForm):
         }
 
 
-
 class CropForm(forms.Form):
     """Django form for accepting the information passed after cropping a loaded
     image
     """
-    imgUrl = forms.CharField() # your image path (the one we received after successful upload)
+    imgUrl = forms.CharField()               # your image path (the one we received after successful upload)
     imgInitW = forms.DecimalField()          # your image original width (the one we received after upload)
     imgInitH = forms.DecimalField()          # your image original height (the one we received after upload)
     imgW = forms.DecimalField()              # your new scaled image width

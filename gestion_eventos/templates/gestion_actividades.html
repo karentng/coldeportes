@@ -66,8 +66,8 @@
                         <tbody>
                             {% for actividad in lista_actividades %}
                                 <tr>
-                                    <td>{{ actividad.titulo }}</td>
-                                    <td>{{actividad.descripcion}}</td>
+                                    <td>{{ actividad.titulo|upper }}</td>
+                                    <td>{{actividad.descripcion|upper}}</td>
                                     <td>{{actividad.dia_actividad}}</td>
                                     <td>{{ actividad.hora_inicio }}</td>
                                     <td>{{ actividad.hora_fin }}</td>
