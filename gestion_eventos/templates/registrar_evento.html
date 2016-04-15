@@ -38,6 +38,8 @@
             },
             {% if edicion  %}
             location: [{{ lat|stringformat:"f" }}, {{ lng|stringformat:"f" }}],
+            {% else %}
+            location: "COLOMBIA",
             {% endif %}
             markerOptions: {
                 draggable: true
@@ -99,7 +101,7 @@
 
                         {% bootstrap_field field %}
                         <div class="form-group">
-                            <div id="modalTrigger2" class="btn {% if foto %}btn-success {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <div id="modalTrigger2" class="btn {% if foto %}btn-info {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
                             <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
                             {% include 'modal_croppic.html' %}
                             <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
