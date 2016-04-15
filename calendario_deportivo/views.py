@@ -8,7 +8,9 @@ from entidades.models import Entidad,CalendarioNacional
 # Create your views here.
 
 #Vistas de Registro para Federacion
+
 @login_required
+@permission_required('entidades.add_calendarionacional')
 def registro_calendario(request,id=None):
 
     if id:
@@ -46,6 +48,7 @@ def registro_calendario(request,id=None):
     })
 
 @login_required
+@permission_required('entidades.add_calendarionacional')
 def listar_eventos(request):
     yo = request.tenant
     public = Entidad.objects.get(schema_name='public')
@@ -57,6 +60,7 @@ def listar_eventos(request):
     })
 
 @login_required
+@permission_required('entidades.add_calendarionacional')
 def cancelar_evento(request,id):
     yo = request.tenant
     public = Entidad.objects.get(schema_name='public')
@@ -72,6 +76,7 @@ def cancelar_evento(request,id):
     return redirect('listado_calendario_nacional')
 
 @login_required
+@permission_required('entidades.add_calendarionacional')
 def ver_evento(request,id):
     yo = request.tenant
     public = Entidad.objects.get(schema_name='public')

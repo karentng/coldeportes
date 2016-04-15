@@ -82,6 +82,7 @@ class Actores(models.Model):
     listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
+    calendario_deportivo = models.BooleanField(verbose_name="Calendario Deportivo Nacional", default=False)
 
     def resumen(self):
         actores = []
@@ -982,6 +983,7 @@ class Permisos(models.Model):
     solicitud = models.IntegerField(choices=ACTORES, default=1)
     respuesta = models.IntegerField(choices=ACTORES, default=1)
     eventos = models.IntegerField(choices=ACTORES, default=2)
+    calendario_deportivo = models.IntegerField(choices=ACTORES, default=1)
 
     class Meta:
         unique_together = ('entidad','tipo',)
@@ -998,7 +1000,7 @@ class Permisos(models.Model):
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
-                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'eventos']
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'eventos','calendario_deportivo']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
@@ -1039,6 +1041,11 @@ class CalendarioNacional(models.Model):
     cupo_personas = models.PositiveIntegerField(verbose_name="Cupo total de personas")
     estado = models.IntegerField(choices=ESTADOS,default=2)
     entidad = models.ForeignKey(Entidad)
+
+    class Meta:
+        permissions = (
+            ("view_calendarionacional", "Permite ver eventos del calendario deportivo"),
+        )
 
     def save(self, *args, **kwargs):
         self.titulo_evento = self.titulo_evento.upper()

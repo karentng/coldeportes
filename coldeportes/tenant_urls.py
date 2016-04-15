@@ -42,9 +42,16 @@ urlpatterns = patterns('',
     url(r'^cambiar/(\d+)$', 'entidades.views.cambiar_estado_plan_costo', name='cambiar_estado_plan_costo'),
     url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
 
-    url(r'^calendario-deportivo/', include('calendario_deportivo.urls_tenant')),
+    #url(r'^calendario-deportivo/', include('calendario_deportivo.urls_tenant')),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += required(
+    tenant_actor('calendarionacional'),
+    patterns('',
+        url(r'^calendario-deportivo/', include('calendario_deportivo.urls_tenant')),
+    ),
+)
 
 urlpatterns += required(
     tenant_actor('solicitudescenario'),
