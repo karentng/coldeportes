@@ -114,27 +114,12 @@
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
 
-        <li class="has-sub{% if '/solicitudes-escen/' in request.path  or '/evento' in request.path %} active {% endif %}">
-            <a href="javascript:;">
-                <b class="caret pull-right"></b>
-                <i class="fa fa-plus-circle"></i>
-                <span class="colorMenu">SERVICIOS</span>
-            </a>
-                <ul class="sub-menu">
-            {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
-                    {% include "menus/aplicacion/solicitudescenarios.html" %}
-            {%endif%}
-            {%if perms.gestion_eventos.view_evento %}
-                    {% include "menus/servicios/gestion_eventos.html" %}
-            {%endif%}
-
-                </ul>
-        </li>
 
     {% endif %}
 
     {% include "menus/aplicacion/reportes.html" %}
     {% include "menus/aplicacion/normograma.html" %}
+    {% include "menus/servicios/servicios_general.html" %}
     {% include "menus/aplicacion/noticias.html" %}
     {% include "menus/aplicacion/publicidad.html" %}
 
