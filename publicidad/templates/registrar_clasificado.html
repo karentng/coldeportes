@@ -31,6 +31,16 @@
             $("#id_valor").val("");
         });
 
+        $("#id_categoria").on("change", function(){
+            var value = parseInt($(this).val());
+            console.log(!value);
+            if(!value){
+                $(".arch").removeClass("hide").addClass("in");
+            }else {
+                $(".arch").removeClass("in").addClass("hide");
+            }
+        });
+
         $("#id_etiquetas").tagit({
             singleField:true,
             singleFieldDelimiter: ",",
@@ -54,33 +64,27 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <form id="clasificado-form" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-                {% for field in form %}
-                    {% if field.name == 'descripcion' %}
-                        <div class="form-group">
-                            <div id="modalTrigger2" class="btn {% if foto %}btn-info {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
-                            <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
-                            {% include 'modal_croppic.html' %}
-                            <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
-                        </div>
-                        {% bootstrap_field field %}
-                    {% else %}
-                        {% if field.name == 'valor' %}
-                            <div class="control-personalizado form-group">
-                                <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
-                                ¿Desea incluir algún valor, precio o salario en su clasificado?
-                            </div>
-
-                            <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
-                                {% bootstrap_field field %}
-                            </div>
-                        {% else %}
-                            {% bootstrap_field field %}
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-
-
-
+                {% bootstrap_field form.categoria %}
+                {% bootstrap_field form.fecha_publicacion %}
+                {% bootstrap_field form.fecha_expiracion %}
+                {% bootstrap_field form.titulo %}
+                <div class="form-group">
+                    <div id="modalTrigger2" class="btn {% if foto %}btn-info {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                    <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
+                    {% include 'modal_croppic.html' %}
+                    <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
+                </div>
+                {% bootstrap_field form.descripcion %}
+                {% bootstrap_field form.contacto %}
+                <div class="control-personalizado form-group">
+                    <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
+                    ¿Desea incluir algún valor, precio o salario en su clasificado?
+                </div>
+                <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
+                    {% bootstrap_field form.valor %}
+                </div>
+                {% bootstrap_field form.archivo_adjunto form_group_class="form-group has-feedback fade hide arch" %}
+                {% bootstrap_field form.etiquetas %}
             </form>
             {% if edicion %}
                 <a type="button" class="btn btn-warning pull-right" style="margin-left: 15px;" href="{% url 'gestionar_clasificados'%}">

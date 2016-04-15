@@ -10,7 +10,7 @@
                 <a href="{% url 'registrar_clasificado' %}">Registrar clasificados</a>
             </li>
         {% endif %}
-        {% if perms.publicidad.change_clasificado %}
+        {% if perms.publicidad.view_clasificado %}
             <li {% if "/clasificados/gestionar" in request.path %} class="active" {% endif %}>
                 <a href="{% url 'gestionar_clasificados' %}">Listar clasificados</a>
             </li>

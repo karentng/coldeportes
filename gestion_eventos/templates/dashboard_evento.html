@@ -114,7 +114,7 @@
                 </ul>
             </div>
         {% endif %}
-                 {{ evento.titulo_evento }} <small>Gestión de Eventos</small>
+                 {{ evento.titulo_evento|upper }} <small>Gestión de Eventos</small>
 
         {% if "gestion_eventos.view_evento" in perms %}
             <label class="label f-s-10 {% if evento.estado == 1 %}label-success">Activo</label>{% else %}label-danger">Inactivo</label>{% endif %}

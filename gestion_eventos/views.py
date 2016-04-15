@@ -149,14 +149,14 @@ def cambiar_estado_evento(request, id_evento):
 @permission_required('gestion_eventos.view_evento')
 def listar_participantes(request, id_evento):
     try:
-        eventos = Evento.objects.get(id=id_evento)
-        participantes = eventos.participantes
+        evento = Evento.objects.get(id=id_evento)
+        participantes = evento.participantes
     except Exception:
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
 
     return render(request, 'listar_participantes.html', {'participantes': participantes,
-                                                         'cupo': eventos.cupo_candidatos, 'evento': eventos.id})
+                                                         'cupo': evento.cupo_candidatos, 'evento': evento})
 
 
 def preinscripcion_evento(request, id_evento):
@@ -169,6 +169,8 @@ def preinscripcion_evento(request, id_evento):
         participante_form = ParticipanteForm(request.POST)
         if participante_form.is_valid():
             participante = participante_form.save(commit=False)
+            participante.nombre = participante.nombre.upper()
+            participante.apellido = participante.apellido.upper()
             participante.evento_participe = evento.id
             token = binascii.hexlify(os.urandom(25))
             participante.token_email = token
@@ -181,12 +183,13 @@ def preinscripcion_evento(request, id_evento):
                                                                                   "evento": evento,
                                                                                   "token": participante.token_email,
                                                                                   "request": request})
-            email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
+            email = EmailMessage('Información de inscripción', correo, to=[str(participante.email)])
             email.send()
 
             messages.success(request, "Has sido preinscrito con exito!")
             return redirect('dashboard', evento.id)
-
+        else:
+            return render(request, 'registrar_preinscrito.html', {'form': participante_form})
     try:
         datos = request.session["datos"]
     except Exception:
@@ -312,7 +315,7 @@ def aceptar_candidato(request, id_participante):
                                                                             "request": request})
 
         email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
-        email.send()
+        # email.send()
         messages.success(request, 'Se ha enviado la peticion de confirmación')
         return redirect('listar_participantes', evento.id)
 
