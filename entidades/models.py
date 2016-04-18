@@ -36,12 +36,14 @@ class Ciudad(models.Model):
     def __str__(self):
         return ("%s (%s)")%(self.nombre, self.departamento.nombre)
 
+
 #General para deportistas y escenarios
 class TipoDisciplinaDeportiva(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name='descripción')
 
     def __str__(self):
         return self.descripcion
+
 
 class ModalidadDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -54,6 +56,7 @@ class ModalidadDisciplinaDeportiva(models.Model):
             return '('+self.general+')-'+self.nombre
         return self.nombre
 
+
 class CategoriaDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
@@ -64,6 +67,7 @@ class CategoriaDisciplinaDeportiva(models.Model):
         if self.general:
             return '('+self.general+')-'+self.nombre
         return self.nombre
+
 
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico", default=False)
@@ -80,8 +84,6 @@ class Actores(models.Model):
     publicidad = models.BooleanField(verbose_name="Publicidad", default=True)
     eventos = models.BooleanField(verbose_name="Eventos", default=True)
     listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
-    eventos = models.BooleanField(verbose_name="Eventos", default=False)
-    centros = models.BooleanField(verbose_name="Centros", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
 

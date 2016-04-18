@@ -315,7 +315,7 @@ def aceptar_candidato(request, id_participante):
                                                                             "request": request})
 
         email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
-        # email.send()
+        email.send()
         messages.success(request, 'Se ha enviado la peticion de confirmación')
         return redirect('listar_participantes', evento.id)
 
