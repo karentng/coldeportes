@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^transferencias/',include('transferencias.urls')),#urls del modulo de transferencias
     url(r'^directorio/',include('directorio.entidad_urls')),#urls del modulo de directorio perfil entidad
     url(r'^reconocimiento-deportivo/',include('reconocimiento_deportivo.urls.solicitudes')),#urls del modulo de directorio perfil entidad
-    #url(r'^reconocimiento-deportivo/',include('reconocimiento_deportivo.urls.respuestas')),#urls del modulo de reconocimiento_deportivo
+    url(r'^reconocimiento-deportivo/',include('reconocimiento_deportivo.urls.respuestas')),#urls del modulo de reconocimiento_deportivo
     url(r'^directorio-publico/',include('directorio.publico_urls')),#urls del modulo de directorio publico
     url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
     url(r'^clasificados/',include('publicidad.urls')),#urls del modulo de clasificados

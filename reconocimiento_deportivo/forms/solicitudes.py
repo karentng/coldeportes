@@ -55,6 +55,7 @@ class AdjuntoReconocimientoForm(ModelForm):
 
 
 class DiscusionForm(ModelForm):
+
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
