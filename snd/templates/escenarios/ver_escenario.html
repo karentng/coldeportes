@@ -120,22 +120,34 @@
                                                     {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
                                                 {% endfor %} </p>
                                                 <p><b>Planos escenarios:</b>
-                                                {% if caracteristica.plano_archivo %}
-                                                     <a href="{{ MEDIA_URL }}{{ caracteristica.plano_archivo }}" target="_blank">{{ caracteristica.plano_archivo.name}}</a>
+                                                {% if request.tenant.schema_name == 'public' %}
+                                                    No disponible                                                    
                                                 {% else %}
+                                                    {% if caracteristica.plano_archivo %}
+                                                         <a href="{{ MEDIA_URL }}{{ caracteristica.plano_archivo }}" target="_blank">{{ caracteristica.plano_archivo.name}}</a>
+                                                    {% else %}
                                                     No disponible
+                                                    {% endif %}
                                                 {% endif %}</p>
                                                 <p><b>Ficha catastral: </b>
-                                                {% if caracteristica.ficha_catastral %}
-                                                     <a href="{{ MEDIA_URL }}{{ caracteristica.ficha_catastral }}" target="_blank">{{ caracteristica.ficha_catastral.name}}</a>
+                                                {% if request.tenant.schema_name == 'public' %}
+                                                    No disponible                                                    
                                                 {% else %}
-                                                    No disponible
+                                                    {% if caracteristica.ficha_catastral %}
+                                                         <a href="{{ MEDIA_URL }}{{ caracteristica.ficha_catastral }}" target="_blank">{{ caracteristica.ficha_catastral.name}}</a>
+                                                    {% else %}
+                                                        No disponible
+                                                    {% endif %}
                                                 {% endif %}</p>
                                                 <p><b>Certificado de tradicion de libertad:</b>
-                                                {% if caracteristica.certificado_tradicio_libertad %}
-                                                    <a href="{{ MEDIA_URL }}{{ caracteristica.certificado_tradicio_libertad }}" target="_blank">{{ caracteristica.certificado_tradicio_libertad.name}}</a>
+                                                {% if request.tenant.schema_name == 'public' %}
+                                                    No disponible                                                    
                                                 {% else %}
-                                                    No disponible
+                                                    {% if caracteristica.certificado_tradicio_libertad %}
+                                                    <a href="{{ MEDIA_URL }}{{ caracteristica.certificado_tradicio_libertad }}" target="_blank">{{ caracteristica.certificado_tradicio_libertad.name}}</a>
+                                                    {% else %}
+                                                        No disponible
+                                                    {% endif %}
                                                 {% endif %}</p>
                                             </address>
                                             <div align="right">

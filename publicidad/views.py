@@ -32,8 +32,6 @@ def registrar_clasificado(request):
                 clasificado.foto = "clasificados/clasificados-default.png"
             else:
                 clasificado.foto = nueva_foto
-
-            clasificado.fecha_expiracion = datetime.datetime.now() + datetime.timedelta(days=30)
             clasificado.etiquetas = clasificado.etiquetas.upper()
             form.save()
 
@@ -87,6 +85,7 @@ def editar_clasificado(request, id_clasificado):
                     clasificado_form.foto = nueva_foto
 
                 clasificado_form.titulo = clasificado_form.titulo.upper()
+                clasificado.etiquetas = clasificado.etiquetas.upper()
                 form.save()
                 messages.success(request, 'El clasificado se ha editado correctamente')
                 return redirect('gestionar_clasificados')
@@ -105,7 +104,7 @@ def cambiar_estado_clasificado(request, id_clasificado):
     clasificado.estado = not clasificado.estado
     clasificado.save()
 
-    messages.success(request, 'Se ha cambiado el estado del clasificado correctamente')
+    messages.success(request, 'Clasificado ' + clasificado.get_estado_accion() + ' correctamente')
     return redirect('gestionar_clasificados')
 
 

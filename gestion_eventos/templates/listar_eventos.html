@@ -55,7 +55,7 @@
                     <tbody>
                         {% for evento in eventos %}
                             <tr>
-                            <td>{{ evento.titulo_evento }}</td>
+                            <td>{{ evento.titulo_evento|upper }}</td>
                             <td>{{ evento.fecha_inicio }}</td>
                             <td>{{ evento.fecha_finalizacion }}</td>
                             <td>{{ evento.fecha_inicio_preinscripcion }}</td>
@@ -70,9 +70,9 @@
                             {% if "gestion_eventos.view_evento" in perms %}
                                 <td>
                                     {% if evento.estado == 1 %}
-                                        Activo
+                                        ACTIVO
                                     {% else %}
-                                        Inactivo
+                                        INACTIVO
                                     {% endif %}
                                 </td>
                             {% endif %}

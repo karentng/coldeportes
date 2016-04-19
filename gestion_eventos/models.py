@@ -25,7 +25,7 @@ class Participante(models.Model):
     nombre = models.CharField(max_length=155, verbose_name="Nombres")
     apellido = models.CharField(max_length=155, verbose_name="Apellidos")
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
-    email = models.EmailField(verbose_name="Correo electronico")
+    email = models.EmailField(verbose_name="Correo electrónico")
     token_email = models.CharField(max_length=255, null=True)
     pago_registrado = models.BooleanField(default=False)
     estado = models.IntegerField(choices=ESTADO, default=1)

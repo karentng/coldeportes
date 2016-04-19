@@ -66,16 +66,16 @@
                         <tbody>
                             {% for resultado in lista_resultados %}
                                 <tr>
-                                    <td>{% if resultado.titulo %}{{ resultado.titulo }}{% else %}{{ actividad.titulo }}{% endif %}</td>
-                                    <td>{{resultado.reconocimiento}}</td>
+                                    <td>{% if resultado.titulo %}{{ resultado.titulo|upper }}{% else %}{{ actividad.titulo|upper }}{% endif %}</td>
+                                    <td>{{resultado.reconocimiento|upper}}</td>
                                     <td>
-                                        {{ resultado.paticipante_reconocido }}
+                                        {{ resultado.paticipante_reconocido|upper }}
                                     </td>
                                     <td>
                                         {% if resultado.estado == 1 %}
-                                            Activo
+                                            ACTIVO
                                         {% else %}
-                                            Inactivo
+                                            INACTIVO
                                         {% endif %}
                                     </td>
                                 {% if "gestion_eventos.change_evento" in perms %}

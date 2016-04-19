@@ -17,7 +17,7 @@
 
 {% block js %}
   <script type="text/javascript">
-    idTabla = "tabla-entidades";
+    idTabla = "tabla-medalleria";
   </script>
   <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
   <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
@@ -33,16 +33,22 @@
 {% endblock %}
 
 {% block contenido_panel %}
-  {% include 'wizard_info_juego/_wizard.html' %}
-  <div class="row">
-    <div class="email-btn-row col-md-12">
 
-    <a href="{% url 'listar_participantes' competencia_id %}" class="btn btn-sm btn-primary pull-left"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>
-    <a href="{% url 'cargar_participantes' competencia_id  %}" class="btn btn-sm btn-primary pull-right">Siguiente <i class="fa fa-arrow-right m-r-5"></i></a>
-
+  <div  class="wrapper bg-silver-lighter clearfix">
+    <a href="{% url 'listar_participantes' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>    
+    <div class="pull-right m-l-15">        
+      <div class="btn-group btn-toolbar">
+          <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+          <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+      </div>
+      <div class="btn-group m-l-5">
+          <a href="{% url 'cargar_participantes' competencia_id  %}" class="btn btn-sm btn-primary p-l-20 p-r-20">Siguiente <i class="fa fa-arrow-right m-r-5"></i></a>
+      </div>
     </div>
   </div>
-  <br>    
+  <br><br>
+  {% include 'wizard_info_juego/_wizard.html' %}
+   
   <div class="row">
     <div class="col-md-12">
       <fieldset>

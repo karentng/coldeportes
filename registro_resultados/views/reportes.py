@@ -108,7 +108,7 @@ def verificar_agrupar_listas_por_departamento(lista1, lista2):
     return lista2
 
 
-def buscar_medallas_por_categoria(posicion, juego, genero=None, deportes=None):
+def buscar_medallas_por_categoria(posicion, juego, deportes=None, genero=None):
 
     if deportes:
         if genero:
@@ -142,17 +142,17 @@ def buscar_medallas_totales(juego, deportes):
     resultados['medallas_plata'] = buscar_medallas_por_categoria(2, juego, deportes)
     resultados['medallas_bronce'] = buscar_medallas_por_categoria(3, juego, deportes)
     #Buscar totales masculino
-    resultados['medallas_oro_masculino'] = buscar_medallas_por_categoria(1, juego, 1, deportes)
-    resultados['medallas_plata_masculino'] = buscar_medallas_por_categoria(2, juego, 1, deportes)
-    resultados['medallas_bronce_masculino'] = buscar_medallas_por_categoria(3, juego, 1, deportes)
+    resultados['medallas_oro_masculino'] = buscar_medallas_por_categoria(1, juego, deportes, 1)
+    resultados['medallas_plata_masculino'] = buscar_medallas_por_categoria(2, juego, deportes, 1)
+    resultados['medallas_bronce_masculino'] = buscar_medallas_por_categoria(3, juego, deportes, 1)
     #Buscar totales femenino
-    resultados['medallas_oro_femenino'] = buscar_medallas_por_categoria(1, juego, 2, deportes)
-    resultados['medallas_plata_femenino'] = buscar_medallas_por_categoria(2, juego, 2, deportes)
-    resultados['medallas_bronce_femenino'] = buscar_medallas_por_categoria(3, juego, 2, deportes)
+    resultados['medallas_oro_femenino'] = buscar_medallas_por_categoria(1, juego, deportes, 2)
+    resultados['medallas_plata_femenino'] = buscar_medallas_por_categoria(2, juego, deportes, 2)
+    resultados['medallas_bronce_femenino'] = buscar_medallas_por_categoria(3, juego, deportes, 2)
     #Buscar totales mixto
-    resultados['medallas_oro_mixto'] = buscar_medallas_por_categoria(1, juego, 3, deportes)
-    resultados['medallas_plata_mixto'] = buscar_medallas_por_categoria(2, juego, 3, deportes)
-    resultados['medallas_bronce_mixto'] = buscar_medallas_por_categoria(3, juego, 3, deportes)
+    resultados['medallas_oro_mixto'] = buscar_medallas_por_categoria(1, juego, deportes, 3)
+    resultados['medallas_plata_mixto'] = buscar_medallas_por_categoria(2, juego, deportes, 3)
+    resultados['medallas_bronce_mixto'] = buscar_medallas_por_categoria(3, juego, deportes, 3)
 
     return resultados
 
