@@ -17,13 +17,12 @@
 
 {% block js %}
   <script type="text/javascript">
-    idTabla = "tabla-entidades";
+    idTabla = "tabla-participantes";
   </script>
   <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
   <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
   <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
   <script>
-      idTabla = "tabla-solicitudes";
       function urlModal(link) {
           //Funcionalidad para agregar la url al modal
           var url = link.getAttribute("data-url");
@@ -40,131 +39,133 @@
 {% endblock %}
 
 {% block contenido_panel %}
-  {% include 'wizard_info_juego/_wizard.html' %}
-  <div class="row">
-    <div class="email-btn-row col-md-12">      
-      <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
-
-      <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-success"><i class="fa fa-plus m-r-5"></i>{% if not individual %} Crear Equipo {% else %} Crear Participante{% endif %}</a>
-
-      <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-primary pull-right">Siguiente <i class="fa fa-arrow-right m-r-5"></i> </a>
-      
+  <div  class="wrapper bg-silver-lighter clearfix">
+    <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
+    <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-success p-l-20 p-r-20"><i class="fa fa-plus m-r-5"></i>{% if not individual %} Crear Equipo {% else %} Crear Participante{% endif %}</a>
+    
+    <div class="pull-right">
+      <div class="btn-group btn-toolbar">
+          <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+          <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+      </div>
+      <div class="btn-group m-l-5">
+          <a href="{% url 'medalleria_por_competencia' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20">Siguiente <i class="fa fa-arrow-right m-r-5"></i> </a>
+      </div>
     </div>
   </div>
-  <br>  
+  <br><br>
+  {% include 'wizard_info_juego/_wizard.html' %}
   <div class="row">    
     <div class="col-md-12">
       <fieldset>
         <div class="well row">
           <div class="table-responsive">
-                <table id="tabla-entidades" class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Departamento</th>
-                            <th>Posición</th>
-                            <th>Género</th>
-                            {% if individual %}<th>Club</th>{% endif %}
-                            {% if puntos %}<th>Puntos</th>{% endif %}
-                            {% if not puntos %}<th>Marca</th>{% endif %}
-                            {% if not puntos %}{% if not metros %}<th>Tiempo</th>{% endif %}{% endif %}
-                            {% if metros %}<th>Metros</th>{% endif %}
-                            <th>Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for participante in participantes %}
-                        <tr>
-                            <td>{{participante.nombre}}</td>
-                            <td>{{participante.departamento}}</td>
-                            <td>{{participante.posicion}}</td>
-                            <td>{{participante.get_genero_display}}</td>
-                            {% if individual %}<td>{{participante.club}}</td>{% endif %}
-                            {% if puntos %}<td>{{participante.puntos}}</td>{% endif %}
+            <table id="tabla-participantes" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Departamento</th>
+                        <th>Posición</th>
+                        <th>Género</th>
+                        {% if individual %}<th>Club</th>{% endif %}
+                        {% if puntos %}<th>Puntos</th>{% endif %}
+                        {% if not puntos %}<th>Marca</th>{% endif %}
+                        {% if not puntos %}{% if not metros %}<th>Tiempo</th>{% endif %}{% endif %}
+                        {% if metros %}<th>Metros</th>{% endif %}
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for participante in participantes %}
+                    <tr>
+                        <td>{{participante.nombre}}</td>
+                        <td>{{participante.departamento}}</td>
+                        <td>{{participante.posicion}}</td>
+                        <td>{{participante.get_genero_display}}</td>
+                        {% if individual %}<td>{{participante.club}}</td>{% endif %}
+                        {% if puntos %}<td>{{participante.puntos}}</td>{% endif %}
 
-                            {% if not puntos %}
-                              {% if participante.marca %}
-                                <td>{{participante.marca}}</td>
-                              {% else %}
-                                <td> -- </td>
-                              {% endif %}
+                        {% if not puntos %}
+                          {% if participante.marca %}
+                            <td>{{participante.marca}}</td>
+                          {% else %}
+                            <td> -- </td>
+                          {% endif %}
+                          {% if metros %}
+                          <td>{{participante.metros}}</td>
+                          {% else %}
+                          <td>{{participante.tiempo}}</td>
+                          {% endif %}
+                        {% endif %}
+                        <td>
+                          {% if individual %}
+                            {% if puntos %}
+                              <a href='{% url "participante_puntos" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
+                            {% else %}
                               {% if metros %}
-                              <td>{{participante.metros}}</td>
+                              <a href='{% url "participante_metros" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
                               {% else %}
-                              <td>{{participante.tiempo}}</td>
+                              <a href='{% url "participante_tiempos" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
                               {% endif %}
                             {% endif %}
-                            <td>
-                              {% if individual %}
-                                {% if puntos %}
-                                  <a href='{% url "participante_puntos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Editar
-                                  </a><br>
-                                {% else %}
+                            <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_participante" competencia_id participante.id %}'>
+                                <i class="fa fa-trash"></i> Eliminar
+                            </a><br>
 
-                                  {% if metros %}
-                                  <a href='{% url "participante_metros" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Editar
-                                  </a><br>
-                                  {% else %}
-                                  <a href='{% url "participante_tiempos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Editar
-                                  </a><br>
-                                  {% endif %}
-                                {% endif %}
-                                <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_participante" competencia_id participante.id %}'>
-                                    <i class="fa fa-trash"></i> Eliminar
-                                </a><br>
-
+                          {% else %}
+                            <a href='{% url "participante_equipo" competencia_id participante.id  %}'>
+                                <i class="fa fa-check"></i> Registrar Integrantes
+                            </a><br>
+                            {% if puntos %}
+                              <a href='{% url "equipo_puntos" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
+                            {% else %}
+                              {% if metros %}
+                              <a href='{% url "equipo_metros" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
                               {% else %}
-                                <a href='{% url "participante_equipo" competencia_id participante.id  %}'>
-                                    <i class="fa fa-check"></i> Registrar Integrantes
-                                </a><br>
-                                {% if puntos %}
-                                  <a href='{% url "equipo_puntos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Editar
-                                  </a><br>
-                                {% else %}
-                                  {% if metros %}
-                                  <a href='{% url "equipo_metros" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Editar
-                                  </a><br>
-                                  {% else %}
-                                  <a href='{% url "equipo_tiempos" competencia_id participante.id %}'>
-                                      <i class="fa fa-edit"></i> Editar
-                                  </a><br>
-                                  {% endif %}
-                                {% endif %}
-                                <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_equipo" competencia_id participante.id %}'>
-                                    <i class="fa fa-trash"></i> Eliminar
-                                </a><br>
+                              <a href='{% url "equipo_tiempos" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
                               {% endif %}
-                              <div class="modal fade" id="modal-eliminar">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title">Eliminar {% if individual %}Participante{% else %}Equipo{% endif %}</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        ¿Está seguro que desea eliminar el {% if individual %}participante{% else %}equipo{% endif %}{{participante.nombre}}?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
-                                        <a id="confirmar-desactivate" href="" class="btn btn-sm btn-danger">Si</a>
-                                    </div>
-                                  </div>
+                            {% endif %}
+                            <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_equipo" competencia_id participante.id %}'>
+                                <i class="fa fa-trash"></i> Eliminar
+                            </a><br>
+                          {% endif %}
+                          <div class="modal fade" id="modal-eliminar">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h4 class="modal-title">Eliminar {% if individual %}Participante{% else %}Equipo{% endif %}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Está seguro que desea eliminar el {% if individual %}participante{% else %}equipo{% endif %}{{participante.nombre}}?
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
+                                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-danger">Si</a>
                                 </div>
                               </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                          </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
         </div>
-      </fieldset>
-        
+      </fieldset>        
     </div>
   </div>
                             
