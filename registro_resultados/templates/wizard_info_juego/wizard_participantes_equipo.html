@@ -75,6 +75,8 @@
                             <th>Nombre</th>
                             <th>Departamento</th>
                             <th>Género</th>
+                            <th>Estatura (cms)</th>
+                            <th>Peso (kg)</th>
                             <th>Club</th>
                             <th>Fecha Nacimiento</th>
                             <th>Opciones</th>
@@ -86,6 +88,8 @@
                             <td>{{participante.nombre}}</td>
                             <td>{{participante.departamento}}</td>
                             <td>{{participante.get_genero_display}}</td>
+                            <td>{% if participante.estatura %}{{participante.estatura}}{% else %}No registra{% endif %}</td>
+                            <td>{% if participante.peso %}{{participante.peso}}{% else %}No registra{% endif %}</td>
                             <td>{% if participante.club %}{{participante.club}}{% else %}No registra{% endif %}</td>
                             <td>{% if participante.fecha_nacimiento %}{{participante.fecha_nacimiento}}{% else %} No registra {% endif %}</td>
                             <td>                              
