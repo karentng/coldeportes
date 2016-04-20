@@ -42,6 +42,11 @@ PERMISOS_DIGITADOR = [
     ['delete_noticia', 'noticias'],
     ['view_noticia', 'noticias'],
 
+
+    ['add_evento', 'eventos'],
+    ['change_evento', 'eventos'],
+    ['view_evento', 'eventos'],
+
     ['add_escueladeportiva', 'escuelas_deportivas'],
     ['change_escueladeportiva', 'escuelas_deportivas'],
     ['view_escueladeportiva', 'escuelas_deportivas'],
@@ -79,4 +84,5 @@ PERMISOS_LECTURA = [
     ['view_casodoping', 'listados_doping'],
     ['view_solicitudescenario', 'solicitud'],
     ['view_listasolicitudes', 'respuesta'],
+    ['view_evento', 'eventos'],
 ]

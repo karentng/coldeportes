@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Eventos</a>
+    <li class="active">Registrar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} evento
+{% endblock %}
+
+{% block titulo_panel %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} evento
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/ckeditor/ckeditor.js"></script>
+    <script src="{{STATIC_URL}}js/ckeditor/adapters/jquery.js"></script>
+    <script src="{{STATIC_URL}}js/validaciones/gestion_eventos/eventos-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-geocomplete/jquery.geocomplete.js"></script>
+    <script>
+        var urlCrop = "{% url 'crop_pic' %}";
+        var edicion = {% if edicion %}true{% else %}false{% endif %};
+        var formId = "form-eventos";
+        var urlMedia = "/fotos_eventos/";
+        var picture = "{{ MEDIA_URL }}{{ foto }}";
+
+        var $direccion = $("#id_direccion");
+        $direccion.geocomplete({
+            map: "#mapa",
+            mapOptions: {
+                zoom: 10,
+                scrollwheel: true
+            },
+            {% if edicion  %}
+            location: [{{ lat|stringformat:"f" }}, {{ lng|stringformat:"f" }}],
+            {% else %}
+            location: "COLOMBIA",
+            {% endif %}
+            markerOptions: {
+                draggable: true
+            },
+            details: "#form-eventos"
+        });
+
+        $direccion.bind("geocode:dragged", function(event, latLng){
+          $("input[name=lat]").val(latLng.lat());
+          $("input[name=lng]").val(latLng.lng());
+        });
+
+        $(document).ready(function(){
+
+            $("#check-mostrar-valor").click(function(){
+                $("#valor-mostrar").toggleClass("fadeInDown");
+                $("#id_video").val("");
+            });
+
+            {% if edicion  %}
+                $("#lat").val("{{ lat|stringformat:'f' }}");
+                $("#lng").val('{{ lng|stringformat:"f" }}');
+            {% endif %}
+        });
+
+    </script>
+    <script src="{{STATIC_URL}}plugins/croppic/croppic-conf.js"></script>
+{% endblock %}
+
+{% block css %}
+    {{ form.media }}
+    <style>
+    #mapa {
+        width: 100%;
+        height: 400px;
+    }
+    </style>
+    <link href="{{STATIC_URL}}plugins/croppic/croppic.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/croppic/estilos_personalizados.css" rel="stylesheet">
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+
+            <form id="form-eventos" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="row">
+            <div class="col-xs-12">
+                {% for field in form %}
+                    {% if field.name == 'video' %}
+                        <div class="control-personalizado form-group">
+                            <input id="check-mostrar-valor" type="checkbox" name="mostrar" value="" {% if edicion %} checked {% endif %}>
+                            ¿Desea incluir algún url de un video de youtube?
+                        </div>
+                        <div class="{% if edicion %} fadeInDown {% endif %}display-none animated" id="valor-mostrar">
+                            {% bootstrap_field field %}
+                        </div>
+                    {% elif field.name == 'categoria' %}
+
+                        {% bootstrap_field field %}
+                        <div class="form-group">
+                            <div id="modalTrigger2" class="btn {% if foto %}btn-info {% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#myModalCrop" >{% if foto %}Cambiar{% else %}Cargar{% endif %} Imagen</div>
+                            <label class="control-label" for="modalTrigger2" id="labelImg" style="color:#707478;">{% if foto %}{{ foto }} {% else %}No se ha seleccionado una imagen{% endif %}</label>
+                            {% include 'modal_croppic.html' %}
+                            <input type="text" name="imagen-crop" hidden value="No" id="imagen-hidden">
+                        </div>
+
+                    {% elif field.name = "direccion" %}
+                        {% bootstrap_field field  %}
+                        <div class="form-group" style="height: 400px;">
+                            <div class="col-xs-12">
+                                <label for="mapa" class="control-label">Mapa del evento</label>
+                                <div id="mapa"></div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% bootstrap_field field  %}
+                    {% endif %}
+                {% endfor %}
+                <input name="lat" id="lat" type="text" value="" hidden>
+                <input name="lng" id="lng" type="text" value="" hidden>
+
+            </div>
+            </div>
+
+            {% if edicion %}
+                <a type="button" class="btn btn-warning pull-right" href="{% url 'listar_eventos'%}">
+                    Cancelar
+                </a>
+            {% endif %}
+            <button class="btn btn-primary pull-right" type="submit" style="margin-right:15px;" id="submit-crop">
+                {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+            </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

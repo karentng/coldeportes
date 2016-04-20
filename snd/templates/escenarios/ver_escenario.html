@@ -322,13 +322,12 @@
                                 {% if mantenimientos %}
                                     <!-- end page-header -->
                                     <div class="table-responsive">
-                                        <table class="table table-invoice">
+                                        <table id="tabla-mantenimientos" class="table table-invoice">
                                             <thead>
                                                 <tr>
-                                                    <th>FECHA ÚLTIMO MANTENIMIENTO</th>
-                                                    <th>DESCRIPCIÓN ÚLTIMO MANTENIMIENTO</th>
+                                                    <th>FECHA MANTENIMIENTO</th>
+                                                    <th>DESCRIPCIÓN MANTENIMIENTO</th>
                                                     <th>PERIODICIDAD</th>
-                                                    <th>RAZONES NO MANTENIMIENTO</th>
                                                     <th>INVERSIONISTA</th>
                                                     <th>CONVENIO</th>
                                                 </tr>
@@ -339,7 +338,6 @@
                                                     <td>{% if mantenimiento.fecha_ultimo_mantenimiento %}{{mantenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
                                                     <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{mantenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
                                                     <td>{% if mantenimiento.get_periodicidad_display %}{{mantenimiento.get_periodicidad_display}}{% endif %}</td>
-                                                    <td>{% if mantenimiento.razones_no_mantenimiento %}{{mantenimiento.razones_no_mantenimiento}}{% endif %}</td>
                                                     <td>{% if mantenimiento.inversionista %}{{mantenimiento.inversionista}}{% endif %}</td>
                                                     <td>{% if mantenimiento.convenio %}{{mantenimiento.convenio}}{% endif %}</td>
                                                 </tr>
@@ -348,7 +346,7 @@
                                         </table>
                                     </div>
                                 {% else %}
-                                    <p>No hay último mantenimiento registrado</p>
+                                    <p>No hay mantenimientos registrados</p>
                                 {% endif %}
                                 </div>
                             </div>
@@ -409,7 +407,6 @@
 
     <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/ver_mas_georreferenciacion.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
-
 {% endblock %}
 
 {% block script %}

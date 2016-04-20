@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Evento</a></li>
+    <li ><a href="">Preinscripción</a></li>
+    <li class="active">Registrar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} preinscrito
+{% endblock %}
+
+{% block titulo_panel %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} preinscrito
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/validaciones/gestion_eventos/participantes-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#id_etiquetas").tagit({
+                singleField:true,
+                singleFieldDelimiter: ","
+            });
+
+        });
+
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ form.media }}
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <form id="form-preinscrito" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                {% for field in form %}
+                    {% bootstrap_field field %}
+                    {% if field.name == "email" %}
+                        <div class="form-group required has-feedback">
+                            <label class="control-label" for="id_confirmacion_mail">Confirmación correo electrónico</label>
+                            <input class="form-control" onpaste="$(this).popover('show');return false;" data-placement="top" title="Función desactivada" data-content="Por seguridad se desactivó la función de pegar, por favor digite otra vez su correo" id="id_confirmacion_mail" maxlength="254" name="confirmacion_mail" placeholder="Correo electronico" required="required" type="email">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                    {% if edicion %}
+                        <a type="button" class="btn btn-primary pull-right" href="{% url 'listar_eventos' %}">
+                            Cancelar
+                        </a>
+                    {% endif %}
+                <button class="btn btn-primary pull-right" type="submit" style="margin-right:15px;" id="submit-crop">
+                    {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

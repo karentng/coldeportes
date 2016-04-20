@@ -114,14 +114,12 @@
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
 
-        {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
-            {% include "menus/aplicacion/solicitudescenarios.html" %}
-        {%endif%}
 
     {% endif %}
 
     {% include "menus/aplicacion/reportes.html" %}
     {% include "menus/aplicacion/normograma.html" %}
+    {% include "menus/servicios/servicios_general.html" %}
     {% include "menus/aplicacion/noticias.html" %}
     {% include "menus/aplicacion/publicidad.html" %}
 

@@ -39,7 +39,7 @@ def registrar_noticia(request):
 def listar_noticias(request):
     from django.db.models import Q
     user = request.user
-    if user.has_perm("publicidad.change_clasificado"):
+    if user.has_perm("noticias.change_noticia"):
         noticias = Noticia.objects.all()
     else:
         noticias = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
@@ -54,8 +54,10 @@ def detalles_noticia(request, id_noticia):
     except Exception:
         messages.error(request, 'La noticia que está tratando de visualizar no existe')
         return redirect('listar_noticias')
-    if not request.user.has_perm("publicidad.change_clasificado"):
-        if noticia.fecha_inicio > datetime.date.today() or noticia.fecha_expiracion < datetime.date.today() or noticia.estado == 0:
+
+    if not request.user.has_perm("noticias.change_noticia"):
+        if noticia.fecha_inicio > datetime.date.today() or noticia.fecha_expiracion < datetime.date.today()\
+                or noticia.estado == 0:
             messages.error(request, 'La noticia que está tratando de visualizar no está disponible')
             return redirect('listar_noticias')
 
@@ -70,7 +72,8 @@ def editar_noticia(request, id_noticia):
     except Exception:
         messages.error(request, 'La noticia que está intentando editar no existe')
         return redirect('listar_noticias')
-    noticia.video = noticia.video.replace("embed/", "watch?v=")
+    if noticia.video:
+        noticia.video = noticia.video.replace("embed/", "watch?v=")
     form = NoticiaForm(instance=noticia)
 
     if request.method == 'POST':

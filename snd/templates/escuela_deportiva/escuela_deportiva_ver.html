@@ -112,7 +112,7 @@
                                             <b>Servicios que ofrece la Escuela de Formación Deportiva:</b>
                                             <ul>
                                                 {% for servicio in escuela.servicios.all %}
-                                                <li>{% if servicio %} {{servicio}} {% else %} No especificado</li>
+                                                <li>{% if servicio %} {{servicio}} {% else %} No especificado</li>{% endif %}
                                                 {% endfor %}
                                             </ul>
                                         </address>

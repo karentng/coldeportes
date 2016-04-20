@@ -1,0 +1,26 @@
+
+<div class="modal fade" id="modal-participante-{{ participante.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="titulo-modal">Datos Participante</h2>
+            </div>
+            <div class="modal-body">
+                <p class="datos-participante f-s-14">
+                    <b>Nombre: </b>{{ participante.nombre|upper }}<br>
+                    <b>Apellidos: </b>{{ participante.apellido|upper }}<br>
+                    <b>Tipo de identificación: </b>{{ participante.get_tipo_id_display|upper }}<br>
+                    <b>Identificación: </b>{{ participante.identificacion|upper }}<br>
+                    <b>Correo electrónico: </b>{{ participante.email|upper }}<br>
+                    <b>Fecha de nacimiento: </b>{{ participante.fecha_nacimiento|upper }}<br>
+                    <b>Estado inscripción: </b>{{ participante.get_estado_display|upper }}<br>
+                    <b>Estado pago: </b>{% if participante.pago_registrado %}Realizado{% else %}Pendiente{% endif %}<br>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

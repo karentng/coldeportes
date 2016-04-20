@@ -66,7 +66,7 @@
             {% endif %}
             <br>
             <div class="cuerpo_noticia">
-                <div class="social-container">
+                <div class="social-container" style="left: -30px;">
                     <span class='st_facebook_large' displayText='Facebook'></span>
                     <span class='st_twitter_large' displayText='Tweet'></span>
                     <span class='st_googleplus_large' displayText='Google +'></span>
@@ -79,6 +79,10 @@
             </div>
             <p style="float: right;"><i>{{ noticia.autor }}</i></p>
             <br>
+            {% if evento %}
+                <hr>
+                {% include 'fechas_eventos.html' %}
+            {% endif %}
             <hr>
             <p style="float: right;">Palabras clave: {{ noticia.etiquetas }}</p>
             <br>

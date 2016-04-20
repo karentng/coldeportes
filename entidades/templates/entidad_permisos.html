@@ -37,6 +37,7 @@
                     <th>Listados Doping</th>
                     <th>Solicitud Escenarios</th>
                     <th>Respuesta Solicitud Escenarios</th>
+                    <th>Gestión de Eventos</th>
                 </thead>
                 <tbody>
                     {% for form in forms%}
@@ -60,6 +61,7 @@
                             <td>{{form.listados_doping}}</td>
                             <td>{{form.solicitud}}</td>
                             <td>{{form.respuesta}}</td>
+                            <td>{{form.eventos}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

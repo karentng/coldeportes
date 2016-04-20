@@ -187,7 +187,6 @@ class MantenimientoEscenarioForm(ModelForm):
 
         super(MantenimientoEscenarioForm, self).__init__(*args, **kwargs)
         self.fields['descripcion_ultimo_mantenimiento'].widget.attrs['rows'] = 3
-        self.fields['razones_no_mantenimiento'].widget.attrs['rows'] = 3
         self.fields['periodicidad'] = adicionarClase(self.fields['periodicidad'], 'one')
 
     class Meta:

@@ -1,0 +1,14 @@
+<li class="has-sub{% if '/solicitudes-escen/' in request.path  or '/evento' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-plus-circle"></i>
+        <span class="colorMenu">SERVICIOS</span>
+    </a>
+        <ul class="sub-menu">
+    {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+            {% include "menus/aplicacion/solicitudescenarios.html" %}
+    {%endif%}
+            {% include "menus/servicios/gestion_eventos.html" %}
+
+        </ul>
+</li>

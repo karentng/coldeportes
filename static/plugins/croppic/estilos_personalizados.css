@@ -1,10 +1,12 @@
 
+
 #image-upload {
     display: inline-block;
-    width: 540px;
+    width: 650px;
     height: 400px;
-    background:url("../../img/fondo-crop.png")no-repeat 0 0;
-    position:relative; /* or fixed or absolute */
+    background: url("../../img/fondo-crop.png") no-repeat 0 0;
+    background-size: 100% auto;
+    position: relative; /* or fixed or absolute */
     margin-bottom: 10px;
 }
 .cropControlCrop{

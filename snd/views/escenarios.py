@@ -123,7 +123,7 @@ def ver_escenario(request, escenario_id, id_entidad):
     fotos = Foto.objects.filter(escenario=escenario)
     videos =  Video.objects.filter(escenario=escenario)
     historicos =  DatoHistorico.objects.filter(escenario=escenario)
-    mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
+    mantenimientos =  Mantenimiento.objects.filter(escenario=escenario).order_by("-fecha_ultimo_mantenimiento")
     contactos = Contacto.objects.filter(escenario=escenario)
 
     datos_georreferenciacion = escenario.obtener_atributos()
