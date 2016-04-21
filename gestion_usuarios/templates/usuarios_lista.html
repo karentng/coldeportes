@@ -19,19 +19,10 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
-    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
     <script type="text/javascript">
-        if ($('#data-table').length !== 0) {
-            $('#data-table').DataTable({
-                dom: 'T<"clear">lfrtip',
-                tableTools: {
-                    "sSwfPath": "{{STATIC_URL}}"+"plugins/DataTables/swf/copy_csv_xls_pdf.swf"
-                }
-            });
-        }
-        
+        idTabla = "tabla-usuarios";
     </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
 
 {% block titulo_panel %}
@@ -39,7 +30,7 @@
 {% endblock %}
 
 {% block contenido_panel %}
-    <table id="data-table" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+    <table id="tabla-usuarios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Nombre de Usuario</th>
@@ -52,36 +43,56 @@
             </tr>
         </thead>
         <tbody>
-            {% for i in usuarios %}
+            {% for usuario in usuarios %}
                 <tr>
-                    <td>{{i.username}}</td>
-                    <td>{{i.first_name}}</td>
-                    <td>{{i.last_name}}</td>
-                    <td>{{i.email}}</td>
+                    <td>{{usuario.username}}</td>
+                    <td>{{usuario.first_name}}</td>
+                    <td>{{usuario.last_name}}</td>
+                    <td>{{usuario.email}}</td>
                     <td>
-                        {{i.groups.all.0}}
+                        {{usuario.groups.all.0}}
                     </td>
                     <td>
-                        {% if i.is_active == True %}
-                            Activo
+                        {% if usuario.is_active == True %}
+                            ACTIVO
                         {% else %}
-                            Inactivo
+                            INACTIVO
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'usuarios_desactivar' i.id %}" title="Activar/Desactivar">
-                            <i class="fa fa-refresh"></i> Activar/Desactivar
+                        <a href="{% url 'usuarios_modificar' usuario.id %}" target="__new">
+                            <i class="fa fa-gear"></i> Editar
                         </a>
                         <br/>
-                        <a href="{% url 'usuarios_modificar' i.id %}" title="Modificar" target="__new">
-                            <i class="fa fa-gear"></i> Modificar
-                        </a>
-                        <br/>
-                        <a href="{% url 'usuarios_password' i.id %}" title="Cambiar Contraseña" target="__new">
+                        <a href="{% url 'usuarios_password' usuario.id %}" target="__new">
                             <i class="fa fa-key"></i> Cambiar Contraseña
                         </a>
+                        <br/>
+                        <a href="#"  data-target="#modal-desactivar-{{usuario.id}}" data-toggle="modal">
+                            <i class="fa fa-ban"> A/I </i>
+                        </a>
+                        <i class="fa fa-question-circle add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Activar / Inactivar"> </i>
                     </td>
                 </tr>
+
+                <!-- modales -->
+                <div class="modal fade" id="modal-desactivar-{{usuario.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title">Cambiar de estado usuario</h4>
+                            </div>
+                            <div class="modal-body">
+                                ¿Está seguro que desea {% if usuario.is_active %} desactivar {% else %} activar {% endif %} este usuario?
+                            </div>
+                            <div class="modal-footer">
+                                <a href="" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                <a href="{% url 'usuarios_desactivar' usuario.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </tbody>
     </table>
