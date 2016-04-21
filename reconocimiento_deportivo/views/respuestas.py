@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
@@ -6,7 +6,9 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required,permission_required
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo
+from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, DiscusionReconocimiento, AdjuntoReconocimiento
+from reconocimiento_deportivo.forms.respuesta import ResponderSolicitudForm
+from solicitudes_escenarios.utilities import comprimir_archivos
 
 
 @login_required
@@ -30,8 +32,9 @@ def listar_solicitudes_reconocimientos(request):
         solicitud_hecha = ReconocimientoDeportivo.objects.get(id = solicitud_id)
         solicitud_hecha.entidad_solicitante = entidad
         solicitud_hecha.codigo = solicitud_hecha.codigo_unico(entidad)
-        diferencia = datetime.now()- solicitud_hecha.fecha_creacion
-        tiempos_respuestas[solicitud_hecha.codigo] = str(diferencia.days)
+        tiempo_a_contestar = solicitud_hecha.fecha_creacion + timedelta(days = 45)
+        tiempo_restante = tiempo_a_contestar - datetime.now()
+        tiempos_respuestas[solicitud_hecha.codigo] = str(tiempo_restante.days)
         resultados_finales.append(solicitud_hecha)
 
     connection.set_tenant(tenant_actual)
@@ -40,6 +43,120 @@ def listar_solicitudes_reconocimientos(request):
         'fechas': tiempos_respuestas,
 
     })
+
+
+
+def obtener_datos_solicitud(request, solicitud_id, entidad_id):
+    try:
+        lista = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
+    except Exception:
+        messages.error(request,'No existe la solicitud')
+        return False,redirect('listar_solicitudes_reconocimientos_respuesta')
+
+    tenant_actual = request.tenant
+    entidad = lista.entidad_solicitante
+    connection.set_tenant(entidad)
+
+    solicitud = ReconocimientoDeportivo.objects.get(id = solicitud_id)
+    solicitud.entidad_solicitante = entidad
+    solicitud.codigo_unico = solicitud.codigo_unico(entidad)
+    adjuntos = solicitud.adjuntos()
+    array = []
+
+    for adjunto in adjuntos:
+        resultado={
+            'nombre_archivo' : adjunto.nombre_archivo(),
+            'icon_extension' : adjunto.icon_extension(),
+            'id' : adjunto.id
+        }
+        array.append(resultado)
+
+    solicitud.adjuntos = array
+    discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud_id)
+
+    for discusion in discusiones:
+        discusion.estado_actual = discusion.get_estado_actual_display()
+        discusion.entidad_nombre = discusion.entidad.nombre
+        #discusion.tiene_adjunto = discusion.tiene_adjunto()
+    discusiones = [discusion.__dict__ for discusion in discusiones]
+    connection.set_tenant(tenant_actual)
+
+    return solicitud, discusiones
+
+
+@login_required
+def ver_solicitud_reconocimiento(request, solicitud_id, entidad_id):
+    """
+    Abril 21, 2016
+    Autor: Karent Narvaez
+
+    Permite tener el detalle de una solicitud recibida
+
+    """
+    solicitud, discusiones = obtener_datos_solicitud(request, solicitud_id, entidad_id)
+
+    if not solicitud:
+        return discusiones
+
+    return render(request,'respuesta/ver_solicitud_reconocimiento_respuesta.html',{
+        'solicitud' : solicitud,
+        'discusiones' : discusiones,
+        'responder' : False
+
+    })
+
+
+@login_required
+def imprimir_solicitud(request, solicitud_id, entidad_id):
+    """
+    Abril 21, 2016
+    Autor: Karent Narvaez
+
+    Permite renderizar el html imprimible de la solicitud
+
+    """
+    solicitud, discusiones = obtener_datos_solicitud(request, solicitud_id, entidad_id)
+
+    if not solicitud:
+        return discusiones
+
+    return render(request,'respuesta/imprimir_solicitud_reconocimiento_respuesta.html',{
+        'solicitud' : solicitud,
+        'discusiones' : discusiones
+    })
+
+
+@login_required
+def descargar_adjunto(request, solicitud_id, adjunto_id, entidad_id):
+    """
+    Abril 21, 2016
+    Autor: Karent Narvaez
+
+    Permite descargar algun archivo adjunto de una solicitud recibida
+
+    """
+    try:
+        solicitud_reconocimiento = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_reconocimientos')
+
+    tenant_actual = request.tenant
+    entidad = solicitud_reconocimiento.entidad_solicitante
+    connection.set_tenant(entidad)
+
+    try:
+        adjunto = AdjuntoReconocimiento.objects.get(solicitud = solicitud_id, id = adjunto_id)
+    except:
+        messages.error(request,'No existe el archivo adjunto solicitado')
+        return redirect('listar_solicitudes_reconocimientos')
+
+    response = HttpResponse(adjunto.archivo.read(),content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adjunto.nombre_archivo())
+    response['X-Sendfile'] = smart_str(adjunto.archivo)
+
+    connection.set_tenant(tenant_actual)
+    return response
 
 
 @login_required
@@ -57,8 +174,9 @@ def responder_solicitud_reconocimiento(request, solicitud_id, entidad_id):
     if not solicitud:
         return discusiones
 
-    form = DiscusionForm()
-    return render(request,'ver_solicitud_reconocimiento_respuesta.html',{
+    form = ResponderSolicitudForm()
+
+    return render(request,'respuesta/ver_solicitud_reconocimiento_respuesta.html',{
         'solicitud' : solicitud,
         'discusiones': discusiones,
         'form_comentarios' : form,
@@ -66,39 +184,109 @@ def responder_solicitud_reconocimiento(request, solicitud_id, entidad_id):
     })
 
 
-def obtener_datos_solicitud(request, solicitud_id, entidad_id):
-    try:
-        lista = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
-    except Exception:
-        messages.error(request,'No existe la solicitud')
-        return False,redirect('listar_solicitudes_reconocimientos_respuesta')
+@login_required
+#@permission_required('respuesta.add_listasolicitudes')
+def enviar_respuesta(request, solicitud_id, entidad_id):
+    """
+    Abril 21, 2016
+    Autor: Karent Narvaez
 
-    yo = request.tenant
-    entidad = lista.entidad_solicitante
+    Permite enviar la respuesta de una solicitud
+    """
+    if request.method == 'POST':
+
+        try:
+            solicitud = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud=int(solicitud_id))
+        except:
+            messages.error(request,'No existe la solicitud')
+            return redirect('listar_solicitudes_reconocimientos')
+
+        tenant_actual = request.tenant
+        entidad = solicitud.entidad_solicitante
+        connection.set_tenant(entidad)
+        solicitud = ReconocimientoDeportivo.objects.get(id = solicitud_id)
+        form = ResponderSolicitudForm(request.POST)
+
+        if form.is_valid():
+            discusion = form.save(commit=False)
+            discusion.solicitud = solicitud
+            discusion.estado_anterior = solicitud.estado
+            discusion.entidad = tenant_actual
+            discusion.respuesta = True
+            discusion.save()
+
+            for archivo in request.FILES.getlist('adjuntos'):
+                 AdjuntoReconocimiento(solicitud = solicitud, archivo = archivo, discusion = discusion).save()
+
+            solicitud.estado = discusion.estado_actual
+            solicitud.save()
+            connection.set_tenant(tenant_actual)
+            messages.success(request,'Su respuesta ha sido enviada con exito')
+            return redirect('ver_solicitud_reconocimiento_respuesta', solicitud.id, entidad.id)
+
+        connection.set_tenant(tenant_actual)
+        messages.error(request,'Tu respuesta no se ha podido enviar por un error en el formulario, intenta de nuevo')
+        return redirect('responder_solicitud', solicitud.id, entidad.id)
+
+
+@login_required
+def descargar_todos_adjuntos(request, solicitud_id, entidad_id):
+    """
+    Abril 21, 2016
+    Autor: Karent Narvaez
+
+    Permite descargar todos los adjuntos de una solicitud en un archivo zip
+
+    """
+    try:
+        solicitud = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_respuesta')
+
+    tenant_actual = request.tenant
+    entidad = solicitud.entidad_solicitante
     connection.set_tenant(entidad)
 
-    solicitud = ReconocimientoDeportivo.objects.get(id=id)
-    solicitud.entidad_solicitante = entidad
-    solicitud.codigo_unico = solicitud.codigo_unico(entidad)
-    adjuntos = solicitud.adjuntos()
-    array = []
+    directorio = '/adjuntos_reconocimiento_deportivo/'
+    adjunto = AdjuntoReconocimiento.objects.filter(solicitud = solicitud_id)
+    zip,temp = comprimir_archivos(adjunto, directorio)
 
-    for adjunto in adjuntos:
-        resultado={
-            'nombre_archivo' : adjunto.nombre_archivo(),
-            'icon_extension' : adjunto.icon_extension(),
-            'id' : adjunto.id
-        }
-        array.append(resultado)
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjunto[0].solicitud.codigo_unico(entidad))
+    temp.seek(0)
+    response.write(temp.read())
+    connection.set_tenant(tenant_actual)
 
-    solicitud.adjuntos = array
-    discusiones = DiscucionReconocimiento.objects.filter(solicitud=solicitud_id)
+    return response
 
-    for d in discusiones:
-        d.estado_actual = d.get_estado_actual_display()
-        d.entidad_nombre = d.entidad.nombre
-        d.tiene_adjuntos = d.tiene_adjuntos()
-    discusiones = [d.__dict__ for d in discusiones]
-    connection.set_tenant(yo)
 
-    return solicitud,discusiones
+@login_required
+def descargar_adjuntos_respuesta(request, solicitud_id, entidad_id, discusion_id):
+    """
+    Abril 21, 2016
+    Autor: Karent Narvaez
+
+    Permite descargar los archivos adjuntos de una respuesta a una solicitud
+    """
+    try:
+        solicitud = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_respuesta')
+
+    tenant_actual = request.tenant
+    entidad = solicitud.entidad_solicitante
+    connection.set_tenant(entidad)
+
+    directorio = '/adjuntos_reconocimiento_deportivo/'
+    adjunto = AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = solicitud_id, discusion = discusion_id)
+    zip, temp = comprimir_archivos(adjunto, directorio)
+
+    response = HttpResponse(zip,content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjunto[0].solicitud.codigo_unico(entidad))
+    temp.seek(0)
+    response.write(temp.read())
+    connection.set_tenant(tenant_actual)
+
+    return response

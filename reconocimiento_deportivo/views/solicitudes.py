@@ -5,9 +5,9 @@ from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
 from django.contrib.auth.decorators import login_required
-from reconocimiento_deportivo.forms.solicitudes import ReconocimientoDeportivoForm, AdjuntoReconocimientoForm, DiscusionForm
+from reconocimiento_deportivo.forms.solicitudes import ReconocimientoDeportivoForm, AdjuntoRequerimientoReconocimientoForm, DiscusionForm
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoReconocimiento, DiscusionReconocimiento
+from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoRequerimientoReconocimiento, DiscusionReconocimiento
 from solicitudes_escenarios.utilities import comprimir_archivos
 # Create your views here.
 
@@ -184,7 +184,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
     if validado:
         #inicializaciones    
         cantidad_maxima_adjuntos = False
-        form = AdjuntoReconocimientoForm(reconocimiento_id)
+        form = AdjuntoRequerimientoReconocimientoForm(reconocimiento_id)
         adjuntos = solicitud.adjuntos()
         cantidad_adjuntos = solicitud.cantidad_adjuntos()
 
@@ -201,7 +201,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
             cantidad_maxima_adjuntos = True
 
         if request.method == 'POST':
-            form = AdjuntoReconocimientoForm(reconocimiento_id, request.POST, request.FILES)
+            form = AdjuntoRequerimientoReconocimientoForm(reconocimiento_id, request.POST, request.FILES)
             if form.is_valid() and cantidad_adjuntos < 16:            
                 adjunto = form.save(commit=False)
                 adjunto.solicitud = solicitud
@@ -235,7 +235,7 @@ def borrar_adjunto(request, reconocimiento_id, adjunto_id):
     :param adjunto_id: id del adjunto a borrar
     """
     try:
-        adjunto = AdjuntoReconocimiento.objects.get(id=adjunto_id, solicitud=reconocimiento_id)
+        adjunto = AdjuntoRequerimientoReconocimiento.objects.get(id=adjunto_id, solicitud=reconocimiento_id)
     except Exception:
         messages.error(request,'No existe el archivo adjunto, no se ha realizado ninguna accion')
         return redirect('adjuntar_requerimientos_reconocimiento', reconocimiento_id)
@@ -295,7 +295,7 @@ def editar_solicitud(request, reconocimiento_id):
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
     discusiones = DiscusionReconocimiento.objects.filter(solicitud=solicitud)
     form = DiscusionForm()
-    form_adjunto = AdjuntoReconocimientoForm(reconocimiento_id)
+    form_adjunto = AdjuntoRequerimientoReconocimientoForm(reconocimiento_id)
 
     return render(request,'ver_solicitud_reconocimiento.html',{
         'solicitud' : solicitud,
@@ -324,7 +324,7 @@ def enviar_comentario(request, id):
             return redirect('listar_solicitudes')
 
         form = DiscusionForm(request.POST)
-        form_adjunto = AdjuntoReconocimientoForm(request.POST, request.FILESreconocimiento_id)
+        form_adjunto = AdjuntoRequerimientoReconocimientoForm(request.POST, request.FILESreconocimiento_id)
 
         if form.is_valid():
             discusion = form.save(commit=False)
@@ -360,7 +360,7 @@ def descargar_adjuntos(request, reconocimiento_id):
 
     """
 
-    adjuntos = AdjuntoReconocimiento.objects.filter(solicitud = reconocimiento_id)
+    adjuntos = AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = reconocimiento_id)
     directorio = '/adjuntos_reconocimiento_deportivo/'
     zip,temp = comprimir_archivos(adjuntos, directorio)
     response = HttpResponse(zip,content_type="application/zip")
@@ -380,7 +380,7 @@ def descargar_adjunto(request, reconocimiento_id, adjunto_id):
 
     """
     try:
-        adjunto = AdjuntoReconocimiento.objects.get(solicitud = reconocimiento_id, id = adjunto_id)
+        adjunto = AdjuntoRequerimientoReconocimiento.objects.get(solicitud = reconocimiento_id, id = adjunto_id)
     except:
         messages.error(request,'No existe el archivo adjunto solicitado')
         return redirect('listar_reconocimientos')
@@ -400,7 +400,7 @@ def descargar_adjunto_discusion(request, reconocimiento_id, discusion_id):
     Permite descargar los archivos adjuntos de una discusion a una solicitud
     """
     directorio = '/adjuntos_reconocimiento_deportivo/'    
-    adjunto = AdjuntoReconocimiento.objects.get(solicitud = reconocimiento_id, discucion = discusion_id)
+    adjunto = AdjuntoRequerimientoReconocimiento.objects.get(solicitud = reconocimiento_id, discucion = discusion_id)
     zip,temp = comprimir_archivos(adjunto, directorio)
     response = HttpResponse(zip,content_type="application/zip")
     response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjunto[0].solicitud.codigo_unico(request.tenant))

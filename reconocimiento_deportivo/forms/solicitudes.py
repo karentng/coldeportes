@@ -35,7 +35,7 @@ class ReconocimientoDeportivoForm(ModelForm):
             pass
 
 
-class AdjuntoReconocimientoForm(ModelForm):
+class AdjuntoRequerimientoReconocimientoForm(ModelForm):
 
     required_css_class = 'required'
 
@@ -66,3 +66,5 @@ class DiscusionForm(ModelForm):
     class Meta:
         model = DiscusionReconocimiento
         exclude = ('solicitud','estado_anterior','fecha','entidad','estado_actual','respuesta',)
+
+
