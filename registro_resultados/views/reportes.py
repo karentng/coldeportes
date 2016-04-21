@@ -169,6 +169,7 @@ def tabla_medalleria(request):
     form = FiltrosTablaMedalleriaForm()    
     total_medallas_general = 0
     resultados = list()
+    filtros = False
 
     if request.method == 'POST':
 
@@ -179,6 +180,7 @@ def tabla_medalleria(request):
             deportes = request.POST.getlist('deportes') or None   
             juego = request.POST.get('juego') or None
             medalleria = buscar_medallas_totales(juego, deportes)
+            filtros = True
 
             for departamento in Departamento.objects.all():
                 if departamento.id in medalleria['medallas_oro'] or departamento.id in medalleria['medallas_plata'] or departamento.id in medalleria['medallas_bronce']:
@@ -205,11 +207,11 @@ def tabla_medalleria(request):
                     
                     total_medallas_general += departamento.total_medallas
                     resultados.append(departamento)
-            print(resultados)
 
     return render(request, 'reportes/tabla_medalleria.html', {
         'resultados': resultados,
         'total_medallas': total_medallas_general,
         'form': form,
+        'filtros': filtros,
         'url_data' : 'reporte_tabla_medalleria',
     })

@@ -123,11 +123,19 @@
                 </table>
             </div>
             {% else %}
-            <div class="row alert alert-info fade in">                
-                <div align="center" class="col-md-12">
-                    Por favor seleccione un juego
+                {% if filtros %}
+                <div class="row alert alert-warning fade in">                
+                    <div align="center" class="col-md-12">
+                        No hay resultados encontrados.
+                    </div>
                 </div>
-            </div>
+                {% else %}
+                <div class="row alert alert-info fade in">                
+                    <div align="center" class="col-md-12">
+                        Por favor seleccione un juego
+                    </div>
+                </div>
+                {% endif %}
             {% endif %}
         </div>
     </div>
