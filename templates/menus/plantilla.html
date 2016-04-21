@@ -49,23 +49,25 @@
 {% endif %}
 
 {% if  request.tenant.tipo == 2 %}
-    <li class="has-sub {% if 'casos-doping' in request.path %} active {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-heartbeat"></i>
-            <span class="colorMenu">CASOS DE DOPING</span>
-        </a>
-        <ul class="sub-menu">
-            {% if perms.listados_doping.add_casodoping %}
-                <li class="{% if 'casos-doping/registrar' in request.path %} active {% endif %}">
-                    <a href="{% url 'registrar_caso_doping' %}">Registrar caso de doping</a>
+    {% if user.is_authenticated %}
+        <li class="has-sub {% if 'casos-doping' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                <i class="fa fa-heartbeat"></i>
+                <span class="colorMenu">CASOS DE DOPING</span>
+            </a>
+            <ul class="sub-menu">
+                {% if perms.listados_doping.add_casodoping %}
+                    <li class="{% if 'casos-doping/registrar' in request.path %} active {% endif %}">
+                        <a href="{% url 'registrar_caso_doping' %}">Registrar caso de doping</a>
+                    </li>
+                {% endif %}
+                <li class="{% if 'casos-doping/listar' in request.path or 'casos-doping/editar' in request.path %} active {% endif %}">
+                    <a href="{% url 'listar_casos_doping' %}">Listar casos de doping</a>
                 </li>
-            {% endif %}
-            <li class="{% if 'casos-doping/listar' in request.path or 'casos-doping/editar' in request.path %} active {% endif %}">
-                <a href="{% url 'listar_casos_doping' %}">Listar casos de doping</a>
-            </li>
-        </ul>
-    </li>
+            </ul>
+        </li>
+    {% endif %}
 {% endif %}
 
 {% if not request.user.is_superuser %}
