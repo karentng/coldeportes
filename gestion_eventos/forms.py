@@ -45,6 +45,13 @@ class ParticipanteForm(forms.ModelForm):
         }
 
 
+class ParticipantePagoForm(forms.ModelForm):
+
+    class Meta:
+        model = Participante
+        fields = ('pago_registrado',)
+
+
 class ActividadForm(forms.ModelForm):
     required_css_class = 'required'
 

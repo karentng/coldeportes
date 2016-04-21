@@ -2,6 +2,7 @@
  * Created by juandgc on 17/02/16.
  */
 $(document).ready(function(){
+    var clasificados = 11;
     var $grid = $('#card-container').imagesLoaded( function() {
         // init Masonry after all images have loaded
         $grid.masonry({
@@ -80,5 +81,23 @@ $(document).ready(function(){
         }else {
             $(".ver").hide();
         }
+    });
+
+    $("#adicionar").click(function(){
+        $.post(adicionar_url,{'csrfmiddlewaretoken': csrf_token, 'count': clasificados})
+            .success(function(result){
+                clasificados += 10;
+                var $items = $(result["plantilla"]);
+                $grid.append($items).imagesLoaded( function(){
+                    $grid.masonry( 'appended',$items);
+                });
+                if( parseInt(result["counter"]) == -1){
+                    clasificados = 0;
+                    console.log(result["counter"]);
+                    $("#adicionar").addClass("display-none");
+                }
+            }).fail(function(result){
+            console.log(result);
+        });
     });
 });

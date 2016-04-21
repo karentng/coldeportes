@@ -123,6 +123,9 @@ def editar_evento(request, id_evento):
 
                 messages.success(request, 'El evento se ha editado correctamente')
                 return redirect('dashboard', evento.id)
+        else:
+            messages.success(request, 'El evento se ha editado correctamente')
+            return redirect('dashboard', evento.id)
 
     lat = evento.latitud
     lng = evento.longitud
@@ -184,7 +187,7 @@ def preinscripcion_evento(request, id_evento):
                                                                                   "token": participante.token_email,
                                                                                   "request": request})
             email = EmailMessage('Información de inscripción', correo, to=[str(participante.email)])
-            email.send()
+            # email.send()
 
             messages.success(request, "Has sido preinscrito con exito!")
             return redirect('dashboard', evento.id)
@@ -219,6 +222,9 @@ def editar_participante(request, id_participante):
 
                 messages.success(request, "El participante ha sido editado con exito!")
                 return redirect('dashboard', participante.evento_participe)
+        else:
+            messages.success(request, "El participante ha sido editado con exito!")
+            return redirect('dashboard', participante.evento_participe)
 
     participante_form = ParticipanteForm(instance=participante)
     return render(request, 'registrar_preinscrito.html', {'form': participante_form, 'edicion': True})
@@ -315,7 +321,7 @@ def aceptar_candidato(request, id_participante):
                                                                             "request": request})
 
         email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
-        email.send()
+        # email.send()
         messages.success(request, 'Se ha enviado la peticion de confirmación')
         return redirect('listar_participantes', evento.id)
 
@@ -387,7 +393,9 @@ def gestion_pago(request, id_participante):
             participante.pago_registrado = False
         else:
             participante.pago_registrado = True
+
         participante.save()
+        print(participante.pago_registrado)
         messages.success(request, 'Se ha registrado el estado del pago correctamente')
         return redirect('listar_participantes', participante.evento_participe)
 
@@ -473,6 +481,9 @@ def editar_actividad(request, id_actividad):
                 actividad.save()
                 messages.success(request, "La actividad ha sido editada con éxito!")
                 return redirect('registrar_actividad', actividad.evento_perteneciente)
+        else:
+            messages.success(request, "La actividad ha sido editada con éxito!")
+            return redirect('registrar_actividad', actividad.evento_perteneciente)
 
     evento = Evento.objects.get(id=actividad.evento_perteneciente)
     lista_actividades = evento.actividades.all()
@@ -606,6 +617,9 @@ def editar_resultado(request, id_resultado):
                 resultado.save()
                 messages.success(request, "El resultado ha sido editado con exito!")
                 return redirect('registrar_resultado', actividad.id)
+        else:
+            messages.success(request, "El resultado ha sido editado con exito!")
+            return redirect('registrar_resultado', actividad.id)
 
     participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
     resultado_form.fields["paticipante_reconocido"].queryset = participantes_evento
