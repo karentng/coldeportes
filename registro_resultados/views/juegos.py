@@ -598,16 +598,20 @@ def crear_competencias(request, competencias, datemode, juego):
         obj.lugar = competencia[4]
         obj.tipos_participantes = competencia[5]
         obj.deporte = TipoDisciplinaDeportiva.objects.get(id=competencia[6])
+        obj.descripcion =  competencia[9]
+
         try:
             categoria = CategoriaDisciplinaDeportiva.objects.get(id=competencia[7]) or None
-            modalidad = ModalidadDisciplinaDeportiva.objects.get(id=competencia[8]) or None
             obj.categoria = categoria
-            obj.modalidad = modalidad
-            obj.descripcion =  competencia[9] 
+
         except:
             obj.categoria = None
-            obj.modalidad = None
-            obj.descripcion =  None
+            
+        try:
+            modalidad = ModalidadDisciplinaDeportiva.objects.get(id=competencia[8]) or None
+            obj.modalidad = modalidad
+        except:
+            obj.modalidad = None            
 
         obj.juego = juego
         obj.save()
