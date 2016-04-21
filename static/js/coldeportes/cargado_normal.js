@@ -1,5 +1,7 @@
 if(typeof(options)=='undefined'){options=[]}
+if(number_columns==null){columnas = range(5);} else{ console.log(number_columns); columnas = range(number_columns); console.log(columnas);}//
 var table = $('#'+idTabla).DataTable({
+    
     responsive: true,
     dom: 'TRC<"clear">lfrtip',
     tableTools: {
@@ -7,29 +9,31 @@ var table = $('#'+idTabla).DataTable({
         "aButtons": [
             {
                 "sExtends": "copy",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonClass": "btn",
                 "sButtonText": "<i class='fa fa-copy bigger-110 pink'></i> Copiar",
             },
             {
                 "sExtends": "xls",
                 "sButtonClass": "btn",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonText": "<i class='fa fa-file-excel-o bigger-110 green'></i> XLS"
             },
             {
                 "sExtends": "pdf",
                 "sButtonClass": "btn",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonText": "<i class='fa fa-file-pdf-o bigger-110 red'></i> PDF"
             },
             {
                 "sExtends": "print",
                 "sButtonClass": "btn",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonText": "<i class='fa fa-print bigger-110 grey'></i> Imprimir",
             },
         ]
     },
     "columnDefs": options,
 });
+
+function range(number_columns){var arreglo=[]; var numero=0; while(arreglo.push(numero++)<number_columns){}; return arreglo}
