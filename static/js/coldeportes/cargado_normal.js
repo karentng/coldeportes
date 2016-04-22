@@ -1,5 +1,5 @@
 if(typeof(options)=='undefined'){options=[]}
-if(number_columns==null){columnas = range(5);} else{ console.log(number_columns); columnas = range(number_columns); console.log(columnas);}//
+if(typeof (number_columns)=='undefined'){columnas = range(5);} else{ console.log(number_columns); columnas = range(number_columns); console.log(columnas);}//
 var table = $('#'+idTabla).DataTable({
     
     responsive: true,
