@@ -53,7 +53,7 @@ class ReconocimientoDeportivo(models.Model):
         return AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = self)
 
     def cantidad_adjuntos(self):        
-        return len(AdjuntoReconocimiento.objects.filter(solicitud = self, discusion = None))
+        return len(AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = self))
 
     def save(self, *args, **kwargs):
         self.descripcion = self.descripcion.upper()
@@ -87,8 +87,7 @@ class DiscusionReconocimiento(models.Model):
 
 class AdjuntoRequerimientoReconocimiento(models.Model):
     
-    solicitud = models.ForeignKey(ReconocimientoDeportivo)
-    discusion = models.ForeignKey(DiscusionReconocimiento,null=True,blank=True) 
+    solicitud = models.ForeignKey(ReconocimientoDeportivo) 
     archivo = models.FileField(upload_to="adjuntos_reconocimiento_deportivo", null=True) 
     tipo = models.ForeignKey(TipoRequerimientoReconocimientoDeportivo)   
 

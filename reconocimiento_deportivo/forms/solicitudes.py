@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo
 from entidades.models import Entidad, TipoRequerimientoReconocimientoDeportivo
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoReconocimiento, DiscusionReconocimiento
+from reconocimiento_deportivo.modelos.solicitudes import *
 
 class ReconocimientoDeportivoForm(ModelForm):
     required_css_class = 'required'
@@ -40,9 +40,9 @@ class AdjuntoRequerimientoReconocimientoForm(ModelForm):
     required_css_class = 'required'
 
     def __init__(self, solicitud_id,  *args, **kwargs):
-        super(AdjuntoReconocimientoForm, self).__init__(*args, **kwargs)
+        super(AdjuntoRequerimientoReconocimientoForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
-        tipos_de_requerimientos_adjuntados = AdjuntoReconocimiento.objects.filter(solicitud=solicitud_id, discusion=None).values('tipo')  
+        tipos_de_requerimientos_adjuntados = AdjuntoRequerimientoReconocimiento.objects.filter(solicitud=solicitud_id).values('tipo')  
 
         if tipos_de_requerimientos_adjuntados:
             self.fields['tipo'].queryset = TipoRequerimientoReconocimientoDeportivo.objects.exclude(id__in=tipos_de_requerimientos_adjuntados) #TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
@@ -50,8 +50,8 @@ class AdjuntoRequerimientoReconocimientoForm(ModelForm):
             self.fields['tipo'].queryset = TipoRequerimientoReconocimientoDeportivo.objects.all()
 
     class Meta:
-        model = AdjuntoReconocimiento
-        exclude = ('solicitud', 'discusion')
+        model = AdjuntoRequerimientoReconocimiento
+        exclude = ('solicitud',)
 
 
 class DiscusionForm(ModelForm):

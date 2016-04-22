@@ -115,7 +115,7 @@
                             <div class="col-xs-12">
                                 <hr>
                                 <a href="{% url 'reconocimiento_deportivo_solicitar' reconocimiento_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
-                                <a href="{% url 'finalizar_solicitud_reconocimiento' reconocimiento_id %}" class="btn btn-success pull-right" >
+                                <a href="#" data-target="#modal-finalizar" data-toggle="modal" class="btn btn-success pull-right" >
                                     <i class="fa fa-check"></i> Finalizar Solicitud
                                 </a>
                                 <a href="{% url 'listar_reconocimientos' %}" class="btn btn-primary pull-right" style="margin-right: 10px;">
@@ -142,11 +142,28 @@
                 <h4 class="modal-title">Cancelar Solicitud:</h4>
               </div>
               <div class="modal-body">
-                ¿Está seguro que desea cancelar la solicitud de adecuación?
+                ¿Está seguro que desea cancelar la solicitud de reconocimiento deportivo?
               </div>
               <div class="modal-footer">
                 <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
                 <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="modal-finalizar">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Finalizar Solicitud:</h4>
+              </div>
+              <div class="modal-body">
+                ¿Está seguro que desea finalizar la solicitud y enviarla a trámite? Una vez finalizada no se podrá editar más la solicitud, sólamente se podrá cancelar o esperar respuesta.
+              </div>
+              <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                <a id="confirmar-desactivate" href="{% url 'finalizar_solicitud_reconocimiento' reconocimiento_id %}" class="btn btn-sm btn-info">Aceptar</a>
               </div>
             </div>
           </div>

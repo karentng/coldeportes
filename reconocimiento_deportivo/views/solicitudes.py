@@ -1,4 +1,5 @@
 #import json
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
@@ -13,39 +14,33 @@ from solicitudes_escenarios.utilities import comprimir_archivos
 
 @login_required
 #@permission_required('solicitud.add_solicitudescenario')
-def solicitar(request,reconocimiento_id=None):
+def solicitar(request, reconocimiento_id = None):
     """
     Abril 9, 2016
     Autor: Karent Narvaez
 
-    Permite crear una solicitud con sus datos basicos
+    Permite crear una solicitud de reconocimiento deportivo con sus datos basicos
     """
-
     try:
         reconocimiento = ReconocimientoDeportivo.objects.get(id=reconocimiento_id)
     except Exception:
         reconocimiento = None
 
-    validado = validar_reconocimiento(reconocimiento)
+    validado, mensaje = validar_creacion(reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
 
     if validado:
-        form = ReconocimientoDeportivoForm(instance=reconocimiento)
+        form = ReconocimientoDeportivoForm(instance = reconocimiento)
 
         if request.method == 'POST':
-            entidad = request.tenant
-            form = ReconocimientoDeportivoForm(request.POST, instance=reconocimiento)
+            form = ReconocimientoDeportivoForm(request.POST, instance = reconocimiento)
 
             if form.is_valid():
-                nueva_solicitud = form.save()
-
-                if not reconocimiento:
-                    connection.set_tenant(nueva_solicitud.para_quien)
-                    ListaSolicitudesReconocimiento.objects.create(solicitud=nueva_solicitud.id, entidad_solicitante=entidad).save()
-                    connection.set_tenant(entidad)
-
+                nueva_solicitud = form.save(commit = False)
+                nueva_solicitud.fecha_creacion = datetime.now()
+                nueva_solicitud.save()
                 request.session['identidad'] = {
                     'id_solicitud': nueva_solicitud.id,
-                    'id_entidad': entidad.id,
+                    'id_entidad': request.tenant.id,
                     'estado': True
                 }
                 return redirect('adjuntar_requerimientos_reconocimiento', nueva_solicitud.id)
@@ -55,18 +50,31 @@ def solicitar(request,reconocimiento_id=None):
             'wizard_stage': 1
         })
     else:
-        messages.error(request, 'La solicitud no se puede editar porque ya fue completada.')
+        messages.error(request, mensaje)
         return redirect('listar_reconocimientos')
 
 
-def validar_reconocimiento(reconocimiento):
+def validar_creacion(reconocimiento):
+
+    mensaje = ''
+    try:
+        cantidad_solicitudes_por_respuesta = len(ReconocimientoDeportivo.objects.filter(estado = 0))
+        print(cantidad_solicitudes_por_respuesta)
+        if cantidad_solicitudes_por_respuesta > 0:
+            mensaje = 'No puede crear otra solicitud mientras tenga una en espera de respuesta. Si desea crear otra debe cancelarla o esperar que sea contestada.'
+            return False, mensaje
+    except:
+        pass
+
     if reconocimiento:
         if reconocimiento.estado == 1:
-            return True
+            return True, mensaje
         else:
-            return False
+            mensaje = 'La solicitud no se puede editar porque ya fue completada.'
+            return False, mensaje
     else:
-        return True
+        return True, mensaje
+
 
 @login_required
 #@permission_required('solicitud.add_solicitudescenario')
@@ -80,11 +88,17 @@ def cancelar_solicitud(request, reconocimiento_id=None):
     :param reconocimiento_id:
     :return:
     """
+    entidad = request.tenant
     if reconocimiento_id:
         try:
-            solicitud = ReconocimientoDeportivo.objects.get(id=reconocimiento_id)
+            solicitud = ReconocimientoDeportivo.objects.get(id = reconocimiento_id)
             solicitud.estado = 4
             solicitud.save()
+            # Eliminar solicitud en el modelo de la entidad que lo tramitaría
+            connection.set_tenant(solicitud.para_quien) #se cambia al tenant del ente tramitaría la solicitud
+            solicitud_ente = ListaSolicitudesReconocimiento.objects.get(solicitud = solicitud.id, entidad_solicitante = entidad)
+            solicitud_ente.delete()
+            connection.set_tenant(entidad) # se retorna al tenant que realizó solicitud
         except Exception:
             messages.error(request,'No existe la solicitud, proceso no realizado')  
             
@@ -107,8 +121,10 @@ def listar_reconocimientos(request):
 
     """
     solicitudes = ReconocimientoDeportivo.objects.all()
+
     for solicitud in solicitudes:
         solicitud.codigo = solicitud.codigo_unico(request.tenant)
+
     return render(request,'lista_reconocimientos.html',{
         'solicitudes': solicitudes
     })
@@ -148,13 +164,13 @@ def imprimir_solicitud(request, reconocimiento_id):
 
     """
     try:
-        solicitud = ReconocimientoDeportivo.objects.get(id=reconocimiento_id)
+        solicitud = ReconocimientoDeportivo.objects.get(id = reconocimiento_id)
     except:
         messages.error(request,'No existe la solicitud')
         return redirect('listar_reconocimientos')
 
     solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
-    discusiones = DiscusionReconocimiento.objects.filter(solicitud=solicitud)
+    discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud)
 
     return render(request,'imprimir_reconocimiento.html',{
         'solicitud' : solicitud,
@@ -172,21 +188,20 @@ def adjuntar_requerimientos(request, reconocimiento_id):
     Permite adjuntar archivos  de los requerimientos a las solicitudes de reconocimiento deportivo que estan en actual creacion. se verifica la autenticidad de la peticion
     :param reconocimiento_id: id de la solicitud a la que se van a adjuntar archivos
     """
-
     try:
-        solicitud = ReconocimientoDeportivo.objects.get(id=reconocimiento_id)
+        solicitud = ReconocimientoDeportivo.objects.get(id = reconocimiento_id)
     except:
         messages.error(request,'Solicitud no encontrada')
         return redirect('listar_solicitudes')
     
-    validado = validar_reconocimiento(reconocimiento)
+    validado = validar_creacion(solicitud)
 
     if validado:
         #inicializaciones    
         cantidad_maxima_adjuntos = False
-        form = AdjuntoRequerimientoReconocimientoForm(reconocimiento_id)
         adjuntos = solicitud.adjuntos()
         cantidad_adjuntos = solicitud.cantidad_adjuntos()
+        form = AdjuntoRequerimientoReconocimientoForm(reconocimiento_id)
 
         #Se verifica la autenticidad de la solicitud
         try:
@@ -194,21 +209,21 @@ def adjuntar_requerimientos(request, reconocimiento_id):
             if not auth['estado'] or auth['id_solicitud'] != int(reconocimiento_id) or auth['id_entidad'] != request.tenant.id:
                 raise Exception
         except Exception:
-            messages.error(request,'Estas intentando editar una solicitud que ya fue enviada')
+            messages.error(request,'Estas intentando editar una solicitud que ya fue completada.')
             return redirect('listar_reconocimientos')
 
-        if cantidad_adjuntos == 16:
+        if cantidad_adjuntos == 16: #Si la cantidad máxima de archivos es 16 se configura un boolean en True para renderizar cierto contenido en la plantilla
             cantidad_maxima_adjuntos = True
 
         if request.method == 'POST':
             form = AdjuntoRequerimientoReconocimientoForm(reconocimiento_id, request.POST, request.FILES)
-            if form.is_valid() and cantidad_adjuntos < 16:            
+
+            if form.is_valid() and cantidad_adjuntos < 16: #Se valida que la cantidad de archivos sea máximo 16 ya que es la cantidad de archivos que se deben adjuntar de los requerimientos           
                 adjunto = form.save(commit=False)
                 adjunto.solicitud = solicitud
                 adjunto.save()
                 return redirect('adjuntar_requerimientos_reconocimiento', solicitud.id)
 
-        print(cantidad_maxima_adjuntos)
         return render(request,'wizard/wizard_adjuntos.html',{
             'form' : form,
             'reconocimiento_id': reconocimiento_id,
@@ -264,11 +279,19 @@ def finalizar_solicitud(request, solicitud_id):
     Permite guardar y completar la creacion de solicitud. 
     :param solicitud_id: id de la solicitud en creacion
     """
+    entidad = request.tenant
+
     try:
         solicitud = ReconocimientoDeportivo.objects.get(id = solicitud_id)
-        solicitud.estado = 0
+        solicitud.estado = 0 #Se configura solicitud en estado 'En espera de respuesta'
+        solicitud.fecha_creacion = datetime.now() #Se actualiza fecha de creación para que cuenten los 45 días límite para responder, desde que completó la solicitud
         solicitud.save()
-        messages.success(request,'Solicitud enviada con éxito a:'+str(solicitud.para_quien))
+        # Crea solicitud en el modelo de la entidad que la debe tramitar
+        connection.set_tenant(solicitud.para_quien) #se cambia al tenant del ente que debe tramitar solicitud
+        ListaSolicitudesReconocimiento.objects.create(solicitud = solicitud.id, entidad_solicitante = entidad).save()
+        connection.set_tenant(entidad) # se retorna al tenant que realizó solicitud
+
+        messages.success(request,'Solicitud enviada con éxito a:' + str(solicitud.para_quien))
         del request.session['identidad']
     except:
         messages.error(request,'Solicitud no encontrada')
