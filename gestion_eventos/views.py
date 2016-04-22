@@ -428,7 +428,7 @@ def generar_entrada(request, id_participante):
     locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-    p.drawImage('static/img/LogoSND.png', 20, 290, 90, 20)
+    # p.drawImage('static/img/LogoSND.png', 20, 290, 90, 20)
     p.rect(20, 140, 70, 80)
     p.setFontSize(12)
     p.drawCentredString(150, 270, str(evento.titulo_evento.capitalize()))
