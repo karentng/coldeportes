@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib import messages
 from datetime import datetime
-from django.template import RequestContext
-from entidades.models import *
-from django.http import JsonResponse, HttpResponse
-from registro_resultados.models import *
-from registro_resultados.forms import *
+from django.contrib import messages
 from django.db.models import F, Count
+from django.template import RequestContext
+from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required, permission_required
+from entidades.models import *
+from registro_resultados.forms import *
+from registro_resultados.models import *
 from coldeportes.utilities import get_request_or_none
 
 
@@ -71,7 +71,6 @@ def medalleria_genero(request):
         medallas = tipoTenant.ajustar_resultado(medallas)
 
     medallas = cambiarEtiquetasPosiciones(medallas)
-
     visualizaciones = [1, 5 , 6]
     form = FiltrosMedalleriaDeptGenForm(visualizaciones=visualizaciones)    
     nombres_columnas = ["Medallas", "Departamento"]
@@ -83,7 +82,7 @@ def medalleria_genero(request):
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Registro de Resultados',
-        'fecha_generado': datetime.now(),
+        'fecha_generado': datetime.datetime.now(),
         'nombres_columnas': nombres_columnas
 
     })
@@ -169,6 +168,7 @@ def tabla_medalleria(request):
     form = FiltrosTablaMedalleriaForm()    
     total_medallas_general = 0
     resultados = list()
+    filtros = False
 
     if request.method == 'POST':
 
@@ -179,6 +179,7 @@ def tabla_medalleria(request):
             deportes = request.POST.getlist('deportes') or None   
             juego = request.POST.get('juego') or None
             medalleria = buscar_medallas_totales(juego, deportes)
+            filtros = True
 
             for departamento in Departamento.objects.all():
                 if departamento.id in medalleria['medallas_oro'] or departamento.id in medalleria['medallas_plata'] or departamento.id in medalleria['medallas_bronce']:
@@ -205,11 +206,11 @@ def tabla_medalleria(request):
                     
                     total_medallas_general += departamento.total_medallas
                     resultados.append(departamento)
-            print(resultados)
 
     return render(request, 'reportes/tabla_medalleria.html', {
         'resultados': resultados,
         'total_medallas': total_medallas_general,
         'form': form,
+        'filtros': filtros,
         'url_data' : 'reporte_tabla_medalleria',
     })

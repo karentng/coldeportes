@@ -18,6 +18,7 @@
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-entidades";
+        number_columns = 4;
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
@@ -33,16 +34,21 @@
                 <table id="tabla-entidades" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>Logo</th>
                             <th>Nombre</th>
                             <th>Año</th>
                             <th>País</th>
+                            <th>Descripción</th>
+                            <th>Logo</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for juego in juegos %}
                         <tr>
+                            <td>{{juego.nombre}}</td>
+                            <td>{{juego.anio}}</td>
+                            <td>{{juego.pais}}</td>
+                            <td>{% if juego.descripcion %}{{juego.descripcion}}{% endif %}</td>
                             <td align="center">
                                 {% if juego.imagen == "" or juego.imagen == None %}
                                     <img src="{{STATIC_URL}}img/juego.jpg" height='60' width='100'>
@@ -50,9 +56,6 @@
                                     <img src="{{MEDIA_URL}}{{juego.imagen}}" height='60' width='100'>
                                 {% endif %}
                             </td>
-                            <td>{{juego.nombre}}</td>
-                            <td>{{juego.anio}}</td>
-                            <td>{{juego.pais}}</td>
                             <td>
                                 <a href='{% url 'listado_competencias' juego.id %}'>
                                     <i class="fa fa-check"></i> Competencias

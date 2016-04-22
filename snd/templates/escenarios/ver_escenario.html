@@ -118,37 +118,33 @@
                                                 <p><b>Clases de uso:</b>
                                                 {% for uso in caracteristica.clase_uso.all %}  
                                                     {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
-                                                {% endfor %} </p>
-                                                <p><b>Planos escenarios:</b>
-                                                {% if request.tenant.schema_name == 'public' %}
-                                                    No disponible                                                    
-                                                {% else %}
+                                                {% endfor %} </p>                                                
+                                                {% if not request.tenant.schema_name == 'public' %}
+                                                    <p><b>Planos escenarios:</b> 
                                                     {% if caracteristica.plano_archivo %}
                                                          <a href="{{ MEDIA_URL }}{{ caracteristica.plano_archivo }}" target="_blank">{{ caracteristica.plano_archivo.name}}</a>
                                                     {% else %}
                                                     No disponible
-                                                    {% endif %}
-                                                {% endif %}</p>
-                                                <p><b>Ficha catastral: </b>
-                                                {% if request.tenant.schema_name == 'public' %}
-                                                    No disponible                                                    
-                                                {% else %}
+                                                    {% endif %} 
+                                                    </p>
+                                                {% endif %}
+                                                {% if not request.tenant.schema_name == 'public' %}                                                    
                                                     {% if caracteristica.ficha_catastral %}
                                                          <a href="{{ MEDIA_URL }}{{ caracteristica.ficha_catastral }}" target="_blank">{{ caracteristica.ficha_catastral.name}}</a>
                                                     {% else %}
                                                         No disponible
                                                     {% endif %}
-                                                {% endif %}</p>
-                                                <p><b>Certificado de tradicion de libertad:</b>
-                                                {% if request.tenant.schema_name == 'public' %}
-                                                    No disponible                                                    
-                                                {% else %}
+                                                    </p>
+                                                {% endif %}
+                                                {% if not request.tenant.schema_name == 'public' %}  
+                                                    <p><b>Certificado de tradicion de libertad:</b>
                                                     {% if caracteristica.certificado_tradicio_libertad %}
                                                     <a href="{{ MEDIA_URL }}{{ caracteristica.certificado_tradicio_libertad }}" target="_blank">{{ caracteristica.certificado_tradicio_libertad.name}}</a>
                                                     {% else %}
                                                         No disponible
                                                     {% endif %}
-                                                {% endif %}</p>
+                                                    </p>
+                                                {% endif %}
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">

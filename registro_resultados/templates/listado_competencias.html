@@ -51,6 +51,9 @@
                     <tr>
                         <th>Logo</th>
                         <th>Nombre</th>
+                        <th>Lugar</th>
+                        <th>Tipo de Competencia</th>
+                        <th>Tipo de Disciplina</th>
                         <th>Deporte</th>
                         <th>Tipos de Participantes</th>
                         <th>Fecha</th>
@@ -72,6 +75,9 @@
                             {% endif %}
                         </td>
                         <td>{{competencia.nombre}}</td>
+                        <td>{{competencia.lugar}}</td>                       
+                        <td>{{competencia.get_tipo_competencia_display}}</td>                       
+                        <td>{{competencia.deporte}}</td>                       
                         <td>{{competencia.deporte}}</td>
                         <td>{{competencia.get_tipos_participantes_display}}</td>
                         <td>{{competencia.fecha_competencia}}</td>
