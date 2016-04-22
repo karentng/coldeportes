@@ -192,7 +192,7 @@ def preinscripcion_evento(request, id_evento):
                                                                                   "token": participante.token_email,
                                                                                   "request": request})
             email = EmailMessage('Información de inscripción', correo, to=[str(participante.email)])
-            # email.send()
+            email.send()
 
             messages.success(request, "Has sido preinscrito con exito!")
             return redirect('dashboard', evento.id)
@@ -326,7 +326,7 @@ def aceptar_candidato(request, id_participante):
                                                                             "request": request})
 
         email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
-        # email.send()
+        email.send()
         messages.success(request, 'Se ha enviado la peticion de confirmación')
         return redirect('listar_participantes', evento.id)
 
@@ -407,9 +407,11 @@ def gestion_pago(request, id_participante):
 @permission_required('gestion_eventos.change_evento')
 def generar_entrada(request, id_participante):
     from reportlab.pdfgen import canvas
+    from io import BytesIO
     from django.http import HttpResponse
     try:
         participante = Participante.objects.get(id=id_participante)
+        evento = Evento.objects.get(id=participante.evento_participe)
     except Exception:
         messages.error(request, 'El participante al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -417,19 +419,37 @@ def generar_entrada(request, id_participante):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="entrada-' + participante.nombre + '.pdf"'
 
-    # Create the PDF object, using the response object as its "file."
-    p = canvas.Canvas(response, pagesize=(500, 300))
+    buffer = BytesIO()
 
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(buffer, pagesize=(300, 320))
+
+    import locale
+    locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 250, "Tipo Identificación: " + str(participante.tipo_id))
-    p.drawString(100, 200, "Número Identificación: " + str(participante.identificacion))
-    p.drawString(100, 150, "Participante: " + str(participante.nombre) + " " + participante.apellido)
-    p.drawString(100, 100, "Fecha Naciemiento: " + str(participante.fecha_nacimiento))
+    p.drawImage('static/img/LogoSND.png', 20, 290, 90, 20)
+    p.rect(20, 140, 70, 80)
+    p.setFontSize(12)
+    p.drawCentredString(150, 270, str(evento.titulo_evento.capitalize()))
+    p.setFontSize(10)
+    p.drawString(100, 200, "Tipo ID: " + str(participante.get_tipo_id_display()))
+    p.drawString(100, 180, "Número ID: " + str(participante.identificacion))
+    p.drawString(100, 160, "Nombre: " + str(participante.nombre) + " " + str(participante.apellido))
+    p.drawCentredString(150, 100, (evento.fecha_inicio.strftime("%B %d ") + "al " +
+                        evento.fecha_finalizacion.strftime("%d de %Y")).upper())
+    p.setFontSize(14)
+    p.drawCentredString(150, 20, "PARTICIPANTE")
+    p.setFontSize(6)
+    p.drawString(5, 5, "Generado: " + str(datetime.datetime.today()))
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()
     p.save()
+
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
     return response
 
 
