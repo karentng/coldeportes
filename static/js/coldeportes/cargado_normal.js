@@ -1,8 +1,14 @@
 if(typeof(options)=='undefined'){options=[]}
 var columnas = function(dtSettings){
     var api = new $.fn.dataTable.Api(dtSettings);
-    return api.columns(":not(:last)").indexes().toArray();
+    var arrayColumnas = api.columns(":last").context[0].aoColumns;
+    var tituloUltimaColumna = arrayColumnas[arrayColumnas.length-1].sTitle;
+    if(tituloUltimaColumna == 'Opciones') {
+        return api.columns(":not(:last)").indexes().toArray();
+    }
+    return api.columns().indexes().toArray()
 }
+
 var table = $('#'+idTabla).DataTable({
     
     responsive: true,
