@@ -46,6 +46,11 @@ class ParticipanteForm(forms.ModelForm):
 
 
 class ParticipantePagoForm(forms.ModelForm):
+    TIPO_PAGO = (
+        (False, 'PENDIENTE'),
+        (True, 'REGISTRADO')
+    )
+    pago_registrado = forms.ChoiceField(required=True, choices=TIPO_PAGO)
 
     class Meta:
         model = Participante

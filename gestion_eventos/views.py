@@ -154,11 +154,16 @@ def listar_participantes(request, id_evento):
     try:
         evento = Evento.objects.get(id=id_evento)
         participantes = evento.participantes
-    except Exception:
+        forms_p = []
+        for participante in participantes.all():
+            forms_p.append(ParticipantePagoForm(instance=participante,
+                                                initial={"pago_registrado": participante.pago_registrado}))
+        participantes_form = zip(participantes.all(), forms_p)
+    except Exception as e:
+        print(e)
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
-
-    return render(request, 'listar_participantes.html', {'participantes': participantes,
+    return render(request, 'listar_participantes.html', {'participantes': participantes_form,
                                                          'cupo': evento.cupo_candidatos, 'evento': evento})
 
 
@@ -385,16 +390,12 @@ def gestion_pago(request, id_participante):
     except Exception:
         messages.error(request, 'El participante al que trata de acceder no existe!')
         return redirect('listar_eventos')
-
+    print(participante)
     if request.method == "POST":
-        estado_pago = request.POST.get("pago")
-        print(estado_pago)
-        if estado_pago == '0':
-            participante.pago_registrado = False
-        else:
-            participante.pago_registrado = True
+        form_pago = ParticipantePagoForm(request.POST, instance=participante)
+        if form_pago.is_valid():
+            form_pago.save()
 
-        participante.save()
         print(participante.pago_registrado)
         messages.success(request, 'Se ha registrado el estado del pago correctamente')
         return redirect('listar_participantes', participante.evento_participe)
