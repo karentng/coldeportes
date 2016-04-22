@@ -1,5 +1,8 @@
 if(typeof(options)=='undefined'){options=[]}
-if(typeof (number_columns)=='undefined'){columnas = range(5);} else{ console.log(number_columns); columnas = range(number_columns); console.log(columnas);}//
+var columnas = function(dtSettings){
+    var api = new $.fn.dataTable.Api(dtSettings);
+    return api.columns(":not(:last)").indexes().toArray();
+}
 var table = $('#'+idTabla).DataTable({
     
     responsive: true,
@@ -35,5 +38,3 @@ var table = $('#'+idTabla).DataTable({
     },
     "columnDefs": options,
 });
-
-function range(number_columns){var arreglo=[]; var numero=0; while(arreglo.push(numero++)<number_columns){}; return arreglo}
