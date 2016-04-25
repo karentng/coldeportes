@@ -7,13 +7,13 @@ import os
 class SolicitudEscenario(models.Model):
     TIPOS= (
         (0,'ADECUACIÓN'),
-        (1,'DOTACIÓN'),
         (2,'CONSTRUCCIÓN'),
+        (1,'DOTACIÓN'),
     )
     PRIORIDADES = (
+        (2,'ALTA'),
         (0,'BAJA'),
         (1,'MEDIA'),
-        (2,'ALTA'),
     )
     ESTADOS = (
         (0,'ESPERANDO RESPUESTA'),
@@ -24,9 +24,9 @@ class SolicitudEscenario(models.Model):
     )
 
     VINCULOS = (
-        (0,'USUARIO EXTERNO'),
         (1,'CONTRATISTA'),
         (2,'FUNCIONARIO'),
+        (0,'USUARIO EXTERNO'),
     )
 
     ESTADOS_ESCENARIO = (
