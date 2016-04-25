@@ -57,7 +57,7 @@
                             {% for plan in planes %}
                                 <tr>
                                     <td>{{ plan.nombre }}</td>
-                                    <td>$ {{ plan.precio }}</td>
+                                    <td>${{ plan.precio }}</td>
                                     <td>{{ plan.descripcion }}</td>
 
                                     {% if plan.estado == 0 %}
