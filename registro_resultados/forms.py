@@ -79,14 +79,11 @@ class ParticipanteTiempoForm(forms.ModelForm):
     def clean_fecha_nacimiento(self):
 
         fecha = self.cleaned_data['fecha_nacimiento']
-        if fecha:
-            try:
-                if fecha >= datetime.datetime.now():
-                    raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
-                else:
-                    return self.cleaned_data['fecha_nacimiento']
-            except:
+        if fecha:            
+            if fecha >= datetime.date.today():
                 raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
         else:
             pass
 
@@ -131,14 +128,11 @@ class ParticipantePuntosForm(forms.ModelForm):
     def clean_fecha_nacimiento(self):
 
         fecha = self.cleaned_data['fecha_nacimiento']
-        if fecha:
-            try:
-                if fecha >= datetime.datetime.now():
-                    raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
-                else:
-                    return self.cleaned_data['fecha_nacimiento']
-            except:
+        if fecha:            
+            if fecha >= datetime.date.today():
                 raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
         else:
             pass
 
@@ -177,14 +171,11 @@ class ParticipanteMetrosForm(forms.ModelForm):
     def clean_fecha_nacimiento(self):
 
         fecha = self.cleaned_data['fecha_nacimiento']
-        if fecha:
-            try:
-                if fecha >= datetime.datetime.now():
-                    raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
-                else:
-                    return self.cleaned_data['fecha_nacimiento']
-            except:
+        if fecha:            
+            if fecha >= datetime.date.today():
                 raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
         else:
             pass
 
@@ -207,14 +198,11 @@ class ParticipanteEquipoForm(forms.ModelForm):
     def clean_fecha_nacimiento(self):
 
         fecha = self.cleaned_data['fecha_nacimiento']
-        if fecha:
-            try:
-                if fecha >= datetime.datetime.now():
-                    raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
-                else:
-                    return self.cleaned_data['fecha_nacimiento']
-            except:
+        if fecha:            
+            if fecha >= datetime.date.today():
                 raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
         else:
             pass
 

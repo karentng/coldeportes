@@ -58,7 +58,7 @@
                                     <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>
                                     <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
                                     <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>
-                                    <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li>
+                                    {% if not request.tenant.schema_name == 'public' %} <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li> {% endif %}
                                     <li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>
                                     <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                                 </ul>
@@ -309,7 +309,7 @@
                                 {% endif %}
                                 </div>
                             </div>
-                            
+                            {% if not request.tenant.schema_name == 'public' %} 
                             <div class="tab-pane fade" id="nav-tab2-19">
                                 <div class="invoice">
                                 <div class="invoice-company">
@@ -346,6 +346,7 @@
                                 {% endif %}
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="tab-pane fade" id="nav-tab2-18">
                                 <div class="invoice">
                                 <div class="invoice-company">

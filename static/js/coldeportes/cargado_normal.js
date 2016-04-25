@@ -1,4 +1,5 @@
 if(typeof(options)=='undefined'){options=[]}
+
 var columnas = function(dtSettings){
     var api = new $.fn.dataTable.Api(dtSettings);
     var arrayColumnas = api.columns(":last").context[0].aoColumns;
@@ -8,6 +9,7 @@ var columnas = function(dtSettings){
     }
     return api.columns().indexes().toArray()
 }
+
 
 var table = $('#'+idTabla).DataTable({
     
@@ -44,3 +46,5 @@ var table = $('#'+idTabla).DataTable({
     },
     "columnDefs": options,
 });
+
+
