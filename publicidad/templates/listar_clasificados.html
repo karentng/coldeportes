@@ -17,6 +17,7 @@
     <script type="text/javascript">
         var media = {{ MEDIA_URL }};
         var filtro_url = "{% url 'filtro_clasificados' %}";
+        var adicionar_url = "{% url 'adicionar_clasificados' %}";
         var csrf_token = "{{ csrf_token }}";
     </script>
     <script src="{{ STATIC_URL }}js/clasificados/clasificados.js"></script>
@@ -75,6 +76,7 @@
             </div>
         {% endif %}
     </div>
+    <center><button style="margin-bottom: 10px;" class="btn btn-primary" id="adicionar">Cargar más</button></center>
 
 </div>
 <div class="modal fade" id="modal-vermas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

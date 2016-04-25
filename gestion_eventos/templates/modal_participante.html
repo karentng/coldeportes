@@ -1,5 +1,5 @@
 
-<div class="modal fade" id="modal-participante-{{ participante.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modal-participante-{{ participante.0.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,14 +8,14 @@
             </div>
             <div class="modal-body">
                 <p class="datos-participante f-s-14">
-                    <b>Nombre: </b>{{ participante.nombre|upper }}<br>
-                    <b>Apellidos: </b>{{ participante.apellido|upper }}<br>
-                    <b>Tipo de identificación: </b>{{ participante.get_tipo_id_display|upper }}<br>
-                    <b>Identificación: </b>{{ participante.identificacion|upper }}<br>
-                    <b>Correo electrónico: </b>{{ participante.email|upper }}<br>
-                    <b>Fecha de nacimiento: </b>{{ participante.fecha_nacimiento|upper }}<br>
-                    <b>Estado inscripción: </b>{{ participante.get_estado_display|upper }}<br>
-                    <b>Estado pago: </b>{% if participante.pago_registrado %}Realizado{% else %}Pendiente{% endif %}<br>
+                    <b>Nombre: </b>{{ participante.0.nombre|upper }}<br>
+                    <b>Apellidos: </b>{{ participante.0.apellido|upper }}<br>
+                    <b>Tipo de identificación: </b>{{ participante.0.get_tipo_id_display|upper }}<br>
+                    <b>Identificación: </b>{{ participante.0.identificacion|upper }}<br>
+                    <b>Correo electrónico: </b>{{ participante.0.email|upper }}<br>
+                    <b>Fecha de nacimiento: </b>{{ participante.0.fecha_nacimiento|upper }}<br>
+                    <b>Estado inscripción: </b>{{ participante.0.get_estado_display|upper }}<br>
+                    <b>Estado pago: </b>{% if participante.0.pago_registrado %}Realizado{% else %}Pendiente{% endif %}<br>
                 </p>
             </div>
             <div class="modal-footer">

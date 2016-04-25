@@ -1,5 +1,16 @@
 if(typeof(options)=='undefined'){options=[]}
-if(columns_number==null){columnas = range(5);} else{ console.log(columns_number); columnas = range(columns_number); console.log(columnas);}//
+
+var columnas = function(dtSettings){
+    var api = new $.fn.dataTable.Api(dtSettings);
+    var arrayColumnas = api.columns(":last").context[0].aoColumns;
+    var tituloUltimaColumna = arrayColumnas[arrayColumnas.length-1].sTitle;
+    if(tituloUltimaColumna == 'Opciones') {
+        return api.columns(":not(:last)").indexes().toArray();
+    }
+    return api.columns().indexes().toArray()
+}
+
+
 var table = $('#'+idTabla).DataTable({
     
     responsive: true,
@@ -36,4 +47,4 @@ var table = $('#'+idTabla).DataTable({
     "columnDefs": options,
 });
 
-function range(columns_number){var arreglo=[]; var numero=0; while(arreglo.push(numero++)<columns_number){}; return arreglo}
+

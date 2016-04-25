@@ -50,7 +50,7 @@ def editar_caso_doping(request, id_caso_doping):
     return render(request, 'registrar_caso_doping.html', {'form': form,
                                                           'edicion':True})
 
-
+@login_required
 def listar_casos_doping(request):
     if request.user.has_perm("listados_doping.change_casodoping"):
         casos_doping = CasoDoping.objects.all()
