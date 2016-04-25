@@ -39,7 +39,7 @@ class SolicitudEscenario(models.Model):
     tipo = models.IntegerField(choices=TIPOS,verbose_name='Tipo de solicitud')
     prioridad = models.IntegerField(choices=PRIORIDADES)
     estado = models.IntegerField(choices=ESTADOS,default=0)
-    descripcion = models.TextField(verbose_name='Descripción')
+    descripcion = models.TextField(verbose_name='Descripción', max_length=500)
     para_quien = models.ForeignKey(Entidad,verbose_name='Dirigido a')
     estado_actual_escenario = models.CharField(max_length=50,choices=ESTADOS_ESCENARIO)
     nombre_solicitante = models.CharField(max_length=150,verbose_name='Nombre')
