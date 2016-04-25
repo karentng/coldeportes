@@ -148,6 +148,7 @@ def registro(request, tipo, tipoEnte=None):
                     return redirect('entidad_registro', tipo)
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
+                print(e)
                 #return HttpResponse(e)
                 actores.delete()
 
@@ -1041,3 +1042,72 @@ def foto_entidad(request):
         entidad.save()
         return redirect("inicio")
     return redirect("inicio")
+
+@login_required()
+def borrar_schemas(request):
+    import csv
+    from django.core.exceptions import ObjectDoesNotExist
+    mydict = []
+    with open('datos_iniciales/python_prueba.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        mydict = [rows[3] for rows in reader]
+        print(mydict)
+    for schema in mydict:
+        try:
+            entidad = Entidad.objects.get(schema_name=str(schema))
+        except ObjectDoesNotExist as e:
+            print(e)
+            continue
+
+        # club
+        consulta1 = "DELETE FROM entidades_%s WHERE club_id=%d" % ("club_planes_de_costo", entidad.id)
+        consulta2 = "DELETE FROM entidades_%s WHERE club_id=%d" % ("club_socios", entidad.id)
+        consulta3 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("club", entidad.id)
+
+        # club para
+        consulta4 = "DELETE FROM entidades_%s WHERE clubparalimpico_id=%d" % ("clubparalimpico_disciplinas", entidad.id)
+        consulta5 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("clubparalimpico", entidad.id)
+
+        # liga
+        consulta6 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("liga", entidad.id)
+        consulta7 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("ligaparalimpica", entidad.id)
+
+        # federaciones
+        consulta8 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("federacion", entidad.id)
+        consulta9 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("federacionparalimpica", entidad.id)
+
+        # comite
+        consulta10 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("comite", entidad.id)
+
+        # caf
+        consulta11 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("caf", entidad.id)
+
+        # cajadecompensacion
+        consulta12 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("cajadecompensacion", entidad.id)
+
+        # ente
+        consulta13 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("ente", entidad.id)
+
+        # entidad
+        consulta14 = "DELETE FROM entidades_%s WHERE id=%d" % ("entidad", entidad.id)
+
+        cursor = connection.cursor()
+        try:
+            cursor.execute(consulta1)
+            cursor.execute(consulta2)
+            cursor.execute(consulta3)
+            cursor.execute(consulta4)
+            cursor.execute(consulta5)
+            cursor.execute(consulta6)
+            cursor.execute(consulta7)
+            cursor.execute(consulta8)
+            cursor.execute(consulta9)
+            cursor.execute(consulta10)
+            cursor.execute(consulta11)
+            cursor.execute(consulta12)
+            cursor.execute(consulta13)
+            cursor.execute(consulta14)
+            cursor.execute('DROP SCHEMA %s CASCADE' % str(schema))
+        except Exception as e:
+            print(e)
+    return HttpResponse("bien!")
