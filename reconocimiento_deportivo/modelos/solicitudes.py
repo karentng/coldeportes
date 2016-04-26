@@ -37,7 +37,6 @@ class ReconocimientoDeportivo(models.Model):
     tel_solicitante = models.CharField(max_length=150,verbose_name='Teléfono')
     direccion_solicitante = models.CharField(max_length=150,verbose_name='Dirección')
     vinculo_solicitante = models.IntegerField(choices=VINCULOS,verbose_name='Vínculo con la entidad')
-    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia", null=True)
     fecha_modificacion = models.DateTimeField(auto_now=True)
     fecha_creacion = models.DateTimeField()
 

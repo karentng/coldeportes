@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.utils.encoding import smart_str
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required,permission_required
+from django.contrib.auth.decorators import login_required, permission_required
+from entidades.models import Club
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
 from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, DiscusionReconocimiento, AdjuntoReconocimiento
 from reconocimiento_deportivo.forms.respuesta import ResponderSolicitudForm
@@ -32,7 +33,7 @@ def listar_solicitudes_reconocimientos(request):
         solicitud_hecha = ReconocimientoDeportivo.objects.get(id = solicitud_id)
         solicitud_hecha.entidad_solicitante = entidad
         solicitud_hecha.codigo = solicitud_hecha.codigo_unico(entidad)
-        tiempo_a_contestar = solicitud_hecha.fecha_creacion + timedelta(days = 45)
+        tiempo_a_contestar = solicitud_hecha.fecha_creacion + timedelta(days = 46)
         tiempo_restante = tiempo_a_contestar - datetime.now()
         tiempos_respuestas[solicitud_hecha.codigo] = str(tiempo_restante.days)
         resultados_finales.append(solicitud_hecha)
@@ -51,7 +52,7 @@ def obtener_datos_solicitud(request, solicitud_id, entidad_id):
         lista = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
     except Exception:
         messages.error(request,'No existe la solicitud')
-        return False,redirect('listar_solicitudes_reconocimientos_respuesta')
+        return False, redirect('listar_solicitudes_reconocimientos_respuesta')
 
     tenant_actual = request.tenant
     entidad = lista.entidad_solicitante
@@ -184,6 +185,20 @@ def responder_solicitud_reconocimiento(request, solicitud_id, entidad_id):
     })
 
 
+def dar_reconocimiento_deportivo(club):
+    """
+    Abril 26, 2016
+    Autor: Karent Narvaez
+
+    Le da el reconocimiento deportivo a un club por 3 años
+    """
+    club = Club.objects.get(entidad_ptr = club)
+    fecha_actual = datetime.now()
+    club.fecha_vigencia =  datetime(fecha_actual.year + 3, 12, 31)
+    club.reconocimiento = True
+    club.save()
+
+
 @login_required
 #@permission_required('respuesta.add_listasolicitudes')
 def enviar_respuesta(request, solicitud_id, entidad_id):
@@ -196,13 +211,13 @@ def enviar_respuesta(request, solicitud_id, entidad_id):
     if request.method == 'POST':
 
         try:
-            solicitud = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud=int(solicitud_id))
+            solicitud_hecha = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud=int(solicitud_id))
         except:
             messages.error(request,'No existe la solicitud')
             return redirect('listar_solicitudes_reconocimientos')
 
         tenant_actual = request.tenant
-        entidad = solicitud.entidad_solicitante
+        entidad = solicitud_hecha.entidad_solicitante
         connection.set_tenant(entidad)
         solicitud = ReconocimientoDeportivo.objects.get(id = solicitud_id)
         form = ResponderSolicitudForm(request.POST)
@@ -220,7 +235,12 @@ def enviar_respuesta(request, solicitud_id, entidad_id):
 
             solicitud.estado = discusion.estado_actual
             solicitud.save()
-            connection.set_tenant(tenant_actual)
+            #Si es aprobada la solicitud se da el reconocimiento deportivo al club
+            if solicitud.estado == 2:
+                dar_reconocimiento_deportivo(entidad)
+
+            connection.set_tenant(tenant_actual)# se regresa al tenant del ente que respondió
+            solicitud_hecha.delete()# Se remueve del listado del ente            
             messages.success(request,'Su respuesta ha sido enviada con exito')
             return redirect('ver_solicitud_reconocimiento_respuesta', solicitud.id, entidad.id)
 

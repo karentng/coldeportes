@@ -326,7 +326,8 @@ def inicio_tenant(request):
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
         'noticias': noticias,
-        'entidad': entidad
+        'entidad': entidad,
+        'tipoTenant': tipoTenant
 
     })
 
