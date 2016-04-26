@@ -77,7 +77,6 @@ class Evento(models.Model):
         (4, 'CULTURAL'),
         (5, 'RECREATIVO'),
     )
-    campo_aux = models.CharField(max_length=150, null=True, blank=True)
     titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
     categoria = models.IntegerField(choices=CATEGORIA, verbose_name="Categoría del evento")
     ciudad_evento = models.ForeignKey(Ciudad)
