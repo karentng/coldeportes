@@ -50,5 +50,4 @@ urlpatterns = patterns('entidades.views',
     url(r'^deportes$', 'listar_deportes', name='listar_deportes'),
     url(r'^deportes/crear$', 'crear_editar_dep', name='crear_editar_dep'),
     url(r'^deportes/editar/(\d+)$', 'crear_editar_dep', name='crear_editar_dep'),
-    url(r'^borrar-entidades$', 'borrar_schemas', name='borrar_entidades'),
 )

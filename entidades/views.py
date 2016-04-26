@@ -1042,7 +1042,7 @@ def foto_entidad(request):
         entidad.save()
         return redirect("inicio")
     return redirect("inicio")
-
+"""
 @login_required()
 def borrar_schemas(request):
     import csv
@@ -1111,3 +1111,4 @@ def borrar_schemas(request):
         except Exception as e:
             print(e)
     return HttpResponse("bien!")
+"""
