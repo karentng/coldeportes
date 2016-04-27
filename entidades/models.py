@@ -1040,7 +1040,7 @@ class CalendarioNacional(models.Model):
     fecha_finalizacion = models.DateTimeField(verbose_name="Fecha de finalización del evento")
     fecha_inicio_preinscripcion = models.DateTimeField(verbose_name="Fecha de inicio de las preinscripciones")
     fecha_finalizacion_preinscripcion = models.DateTimeField(verbose_name="Fecha de finalización de las preinscripciones")
-    objetivo = models.TextField(verbose_name="Objetivo del evento (cualitativo)")
+    objetivo = models.TextField(verbose_name="Objetivo del evento (cualitativo)", max_length=200)
     cupo_atletas = models.PositiveIntegerField(verbose_name="Cupo para participantes")
     cupo_personas = models.PositiveIntegerField(verbose_name="Cupo total de personas")
     estado = models.IntegerField(choices=ESTADOS,default=2)

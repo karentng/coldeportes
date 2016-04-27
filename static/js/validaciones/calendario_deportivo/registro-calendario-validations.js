@@ -77,6 +77,18 @@ fields = {
                         min: 'fecha_inicio_preinscripcion'
                     }
                 }
+            },
+            objetivo: {
+                validators: {
+                    notEmpty: {
+                        message: 'El evento debe tener un objetivo'
+                    },
+                    stringLength: {
+                        message: 'El tamaño del objetivo debe tener como maximo 200 caracteres',
+                        max: 200
+                    }
+
+                }
             }
 
         };
