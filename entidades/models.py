@@ -89,6 +89,8 @@ class Actores(models.Model):
     listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
+    reconocimiento_solicitud = models.BooleanField(verbose_name="reconocimiento deportivo solicitud", default=False)
+    reconocimiento_respuesta = models.BooleanField(verbose_name="reconocimiento deportivo respuesta", default=False)
 
     def resumen(self):
         actores = []
@@ -990,6 +992,8 @@ class Permisos(models.Model):
     listados_doping = models.IntegerField(choices=ACTORES, default=1)
     solicitud = models.IntegerField(choices=ACTORES, default=1)
     respuesta = models.IntegerField(choices=ACTORES, default=1)
+    reconocimiento_solicitud = models.IntegerField(choices=ACTORES, default=1)
+    reconocimiento_respuesta = models.IntegerField(choices=ACTORES, default=1)
     eventos = models.IntegerField(choices=ACTORES, default=2)
 
     class Meta:
@@ -1007,7 +1011,7 @@ class Permisos(models.Model):
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
-                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'eventos']
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'reconocimiento_solicitud', 'reconocimiento_respuesta', 'eventos']
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
