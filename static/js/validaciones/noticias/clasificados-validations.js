@@ -60,6 +60,16 @@ fields = {
                 min: 'fecha_publicacion'
             }
         }
+    },
+    archivo_adjunto: {
+        validators: {
+            file: {
+                extension: 'pdf,rar,zip,jpeg,jpg,png',
+                type: 'application/pdf,application/x-rar-compressed,application/zip,image/jpeg,image/png',
+                maxSize: 5242880,   // 5120 * 1024
+                message: 'Por favor escoja un archivo en formato pdf, rar, zip, jpeg, jpg o png menor a 5MB'
+            }
+        }
     }
 };
 

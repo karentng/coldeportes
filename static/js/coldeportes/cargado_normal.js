@@ -1,5 +1,18 @@
 if(typeof(options)=='undefined'){options=[]}
+
+var columnas = function(dtSettings){
+    var api = new $.fn.dataTable.Api(dtSettings);
+    var arrayColumnas = api.columns(":last").context[0].aoColumns;
+    var tituloUltimaColumna = arrayColumnas[arrayColumnas.length-1].sTitle;
+    if(tituloUltimaColumna == 'Opciones') {
+        return api.columns(":not(:last)").indexes().toArray();
+    }
+    return api.columns().indexes().toArray()
+}
+
+
 var table = $('#'+idTabla).DataTable({
+    
     responsive: true,
     dom: 'TRC<"clear">lfrtip',
     tableTools: {
@@ -7,29 +20,31 @@ var table = $('#'+idTabla).DataTable({
         "aButtons": [
             {
                 "sExtends": "copy",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonClass": "btn",
                 "sButtonText": "<i class='fa fa-copy bigger-110 pink'></i> Copiar",
             },
             {
                 "sExtends": "xls",
                 "sButtonClass": "btn",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonText": "<i class='fa fa-file-excel-o bigger-110 green'></i> XLS"
             },
             {
                 "sExtends": "pdf",
                 "sButtonClass": "btn",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonText": "<i class='fa fa-file-pdf-o bigger-110 red'></i> PDF"
             },
             {
                 "sExtends": "print",
                 "sButtonClass": "btn",
-                "mColumns": [0, 1, 2, 3, 4],
+                "mColumns": columnas,
                 "sButtonText": "<i class='fa fa-print bigger-110 grey'></i> Imprimir",
             },
         ]
     },
     "columnDefs": options,
 });
+
+

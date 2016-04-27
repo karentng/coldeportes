@@ -2,6 +2,7 @@ from django import forms
 from .models import *
 from coldeportes.utilities import *
 from datetimewidget.widgets import TimeWidget
+from captcha.fields import ReCaptchaField
 
 
 class EventoForm(forms.ModelForm):
@@ -27,6 +28,7 @@ class EventoForm(forms.ModelForm):
 
 class ParticipanteForm(forms.ModelForm):
     required_css_class = 'required'
+    captcha = ReCaptchaField()
 
     def __init__(self, *args, **kwargs):
         super(ParticipanteForm, self).__init__(*args, **kwargs)
@@ -41,6 +43,18 @@ class ParticipanteForm(forms.ModelForm):
         widgets = {
             'fecha_nacimiento': MyDateWidget()
         }
+
+
+class ParticipantePagoForm(forms.ModelForm):
+    TIPO_PAGO = (
+        (False, 'PENDIENTE'),
+        (True, 'REGISTRADO')
+    )
+    pago_registrado = forms.ChoiceField(required=True, choices=TIPO_PAGO)
+
+    class Meta:
+        model = Participante
+        fields = ('pago_registrado',)
 
 
 class ActividadForm(forms.ModelForm):

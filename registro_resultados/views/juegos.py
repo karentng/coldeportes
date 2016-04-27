@@ -598,16 +598,20 @@ def crear_competencias(request, competencias, datemode, juego):
         obj.lugar = competencia[4]
         obj.tipos_participantes = competencia[5]
         obj.deporte = TipoDisciplinaDeportiva.objects.get(id=competencia[6])
+        obj.descripcion =  competencia[9]
+
         try:
             categoria = CategoriaDisciplinaDeportiva.objects.get(id=competencia[7]) or None
-            modalidad = ModalidadDisciplinaDeportiva.objects.get(id=competencia[8]) or None
             obj.categoria = categoria
-            obj.modalidad = modalidad
-            obj.descripcion =  competencia[9] 
+
         except:
             obj.categoria = None
-            obj.modalidad = None
-            obj.descripcion =  None
+            
+        try:
+            modalidad = ModalidadDisciplinaDeportiva.objects.get(id=competencia[8]) or None
+            obj.modalidad = modalidad
+        except:
+            obj.modalidad = None            
 
         obj.juego = juego
         obj.save()
@@ -697,8 +701,7 @@ def crear_participantes(request, participantes, datemode, competencia):
         date = datetime.datetime(1899, 12, 30)
         get_col2 = str(date + datetime.timedelta(participante[4]))[:10]
         d = datetime.datetime.strptime(get_col2, "%Y-%m-%d")
-        obj.fecha_nacimiento = None#d.strftime("%Y-%m-%d")
-
+        obj.fecha_nacimiento = d.strftime("%Y-%m-%d")
         obj.estatura = participante[5] or None
         obj.peso = participante[6] or None
         obj.posicion = participante[7]
@@ -713,5 +716,8 @@ def crear_participantes(request, participantes, datemode, competencia):
                 obj.metros = participante[8]
                 obj.marca = participante[11]                
         else: # Equipos
-            obj.equipo = Equipo.objects.get(id=participante[12]) 
-        obj.save()
+            obj.equipo = Equipo.objects.get(id=participante[12])
+        try: 
+            obj.save()
+        except Exception as e:
+            print(e)

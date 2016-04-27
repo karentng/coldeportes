@@ -101,7 +101,8 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
     try:
         personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
     except Exception:
-        personal_apoyo = None
+        messages.error(request,'Está tratando de editar un personal de apoyo inexistente.')
+        return redirect('personal_apoyo_listar')
 
     personal_apoyo_form = PersonalApoyoForm(instance=personal_apoyo)
 
@@ -154,7 +155,11 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         formacion_deportiva = None
         edicion = False
 
-    personal_apoyo= PersonalApoyo.objects.get(id=id_personal_apoyo)
+    try:
+        personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    except Exception:
+        messages.error(request,'Está tratando de editar un personal de apoyo inexistente.')
+        return redirect('personal_apoyo_listar')
 
     formaciondep_form = FormacionDeportivaForm()
 
@@ -228,7 +233,11 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
         experiencia_laboral = None
         edicion = False
 
-    personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    try:
+        personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    except Exception:
+        messages.error(request,'Está tratando de editar un personal de apoyo inexistente.')
+        return redirect('personal_apoyo_listar')
 
     experiencia_laboral_form = ExperienciaLaboralForm()
 

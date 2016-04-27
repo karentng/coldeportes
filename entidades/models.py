@@ -36,12 +36,14 @@ class Ciudad(models.Model):
     def __str__(self):
         return ("%s (%s)")%(self.nombre, self.departamento.nombre)
 
+
 #General para deportistas y escenarios
 class TipoDisciplinaDeportiva(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name='descripción')
 
     def __str__(self):
         return self.descripcion
+
 
 class ModalidadDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -54,6 +56,7 @@ class ModalidadDisciplinaDeportiva(models.Model):
             return '('+self.general+')-'+self.nombre
         return self.nombre
 
+
 class CategoriaDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
@@ -64,6 +67,7 @@ class CategoriaDisciplinaDeportiva(models.Model):
         if self.general:
             return '('+self.general+')-'+self.nombre
         return self.nombre
+
 
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico", default=False)
@@ -784,7 +788,7 @@ class PlanesDeCostoClub(models.Model):
     )
     nombre=models.CharField(max_length=200)
     precio=models.IntegerField()
-    descripcion = models.TextField(verbose_name="descripción")
+    descripcion = models.TextField(max_length=500, verbose_name="descripción")
     estado =models.IntegerField(choices=ESTADO, default=0)
 
     def __str__(self):

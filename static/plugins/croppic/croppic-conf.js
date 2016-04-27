@@ -92,7 +92,7 @@ $(document).ready(function(){
             $("#labelImg").html("No se ha seleccionado una imagen");
         }else{
 
-            $("#modalTrigger2").removeClass("btn-primary").addClass("btn-success").html("Cambiar Imagen");
+            $("#modalTrigger2").removeClass("btn-info").addClass("btn-success").html("Cambiar Imagen");
             $("#labelImg").html("Imagen lista para subir");
         }
     });

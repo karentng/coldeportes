@@ -123,6 +123,9 @@ def editar_evento(request, id_evento):
 
                 messages.success(request, 'El evento se ha editado correctamente')
                 return redirect('dashboard', evento.id)
+        else:
+            messages.success(request, 'El evento se ha editado correctamente')
+            return redirect('dashboard', evento.id)
 
     lat = evento.latitud
     lng = evento.longitud
@@ -149,14 +152,19 @@ def cambiar_estado_evento(request, id_evento):
 @permission_required('gestion_eventos.view_evento')
 def listar_participantes(request, id_evento):
     try:
-        eventos = Evento.objects.get(id=id_evento)
-        participantes = eventos.participantes
-    except Exception:
+        evento = Evento.objects.get(id=id_evento)
+        participantes = evento.participantes
+        forms_p = []
+        for participante in participantes.all():
+            forms_p.append(ParticipantePagoForm(instance=participante,
+                                                initial={"pago_registrado": participante.pago_registrado}))
+        participantes_form = zip(participantes.all(), forms_p)
+    except Exception as e:
+        print(e)
         messages.error(request, 'El evento al que trata de acceder no existe!')
         return redirect('listar_eventos')
-
-    return render(request, 'listar_participantes.html', {'participantes': participantes,
-                                                         'cupo': eventos.cupo_candidatos, 'evento': eventos.id})
+    return render(request, 'listar_participantes.html', {'participantes': participantes_form,
+                                                         'cupo': evento.cupo_candidatos, 'evento': evento})
 
 
 def preinscripcion_evento(request, id_evento):
@@ -169,6 +177,8 @@ def preinscripcion_evento(request, id_evento):
         participante_form = ParticipanteForm(request.POST)
         if participante_form.is_valid():
             participante = participante_form.save(commit=False)
+            participante.nombre = participante.nombre.upper()
+            participante.apellido = participante.apellido.upper()
             participante.evento_participe = evento.id
             token = binascii.hexlify(os.urandom(25))
             participante.token_email = token
@@ -181,12 +191,13 @@ def preinscripcion_evento(request, id_evento):
                                                                                   "evento": evento,
                                                                                   "token": participante.token_email,
                                                                                   "request": request})
-            email = EmailMessage('Inscripción Aceptada', correo, to=[str(participante.email)])
+            email = EmailMessage('Información de inscripción', correo, to=[str(participante.email)])
             email.send()
 
             messages.success(request, "Has sido preinscrito con exito!")
             return redirect('dashboard', evento.id)
-
+        else:
+            return render(request, 'registrar_preinscrito.html', {'form': participante_form})
     try:
         datos = request.session["datos"]
     except Exception:
@@ -216,6 +227,9 @@ def editar_participante(request, id_participante):
 
                 messages.success(request, "El participante ha sido editado con exito!")
                 return redirect('dashboard', participante.evento_participe)
+        else:
+            messages.success(request, "El participante ha sido editado con exito!")
+            return redirect('dashboard', participante.evento_participe)
 
     participante_form = ParticipanteForm(instance=participante)
     return render(request, 'registrar_preinscrito.html', {'form': participante_form, 'edicion': True})
@@ -376,15 +390,13 @@ def gestion_pago(request, id_participante):
     except Exception:
         messages.error(request, 'El participante al que trata de acceder no existe!')
         return redirect('listar_eventos')
-
+    print(participante)
     if request.method == "POST":
-        estado_pago = request.POST.get("pago")
-        print(estado_pago)
-        if estado_pago == '0':
-            participante.pago_registrado = False
-        else:
-            participante.pago_registrado = True
-        participante.save()
+        form_pago = ParticipantePagoForm(request.POST, instance=participante)
+        if form_pago.is_valid():
+            form_pago.save()
+
+        print(participante.pago_registrado)
         messages.success(request, 'Se ha registrado el estado del pago correctamente')
         return redirect('listar_participantes', participante.evento_participe)
 
@@ -395,9 +407,11 @@ def gestion_pago(request, id_participante):
 @permission_required('gestion_eventos.change_evento')
 def generar_entrada(request, id_participante):
     from reportlab.pdfgen import canvas
+    from io import BytesIO
     from django.http import HttpResponse
     try:
         participante = Participante.objects.get(id=id_participante)
+        evento = Evento.objects.get(id=participante.evento_participe)
     except Exception:
         messages.error(request, 'El participante al que trata de acceder no existe!')
         return redirect('listar_eventos')
@@ -405,19 +419,37 @@ def generar_entrada(request, id_participante):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="entrada-' + participante.nombre + '.pdf"'
 
-    # Create the PDF object, using the response object as its "file."
-    p = canvas.Canvas(response, pagesize=(500, 300))
+    buffer = BytesIO()
 
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(buffer, pagesize=(300, 320))
+
+    import locale
+    locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 250, "Tipo Identificación: " + str(participante.tipo_id))
-    p.drawString(100, 200, "Número Identificación: " + str(participante.identificacion))
-    p.drawString(100, 150, "Participante: " + str(participante.nombre) + " " + participante.apellido)
-    p.drawString(100, 100, "Fecha Naciemiento: " + str(participante.fecha_nacimiento))
+    # p.drawImage('static/img/LogoSND.png', 20, 290, 90, 20)
+    p.rect(20, 140, 70, 80)
+    p.setFontSize(12)
+    p.drawCentredString(150, 270, str(evento.titulo_evento.capitalize()))
+    p.setFontSize(10)
+    p.drawString(100, 200, "Tipo ID: " + str(participante.get_tipo_id_display()))
+    p.drawString(100, 180, "Número ID: " + str(participante.identificacion))
+    p.drawString(100, 160, "Nombre: " + str(participante.nombre) + " " + str(participante.apellido))
+    p.drawCentredString(150, 100, (evento.fecha_inicio.strftime("%B %d ") + "al " +
+                        evento.fecha_finalizacion.strftime("%d de %Y")).upper())
+    p.setFontSize(14)
+    p.drawCentredString(150, 20, "PARTICIPANTE")
+    p.setFontSize(6)
+    p.drawString(5, 5, "Generado: " + str(datetime.datetime.today()))
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()
     p.save()
+
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
     return response
 
 
@@ -470,6 +502,9 @@ def editar_actividad(request, id_actividad):
                 actividad.save()
                 messages.success(request, "La actividad ha sido editada con éxito!")
                 return redirect('registrar_actividad', actividad.evento_perteneciente)
+        else:
+            messages.success(request, "La actividad ha sido editada con éxito!")
+            return redirect('registrar_actividad', actividad.evento_perteneciente)
 
     evento = Evento.objects.get(id=actividad.evento_perteneciente)
     lista_actividades = evento.actividades.all()
@@ -603,6 +638,9 @@ def editar_resultado(request, id_resultado):
                 resultado.save()
                 messages.success(request, "El resultado ha sido editado con exito!")
                 return redirect('registrar_resultado', actividad.id)
+        else:
+            messages.success(request, "El resultado ha sido editado con exito!")
+            return redirect('registrar_resultado', actividad.id)
 
     participantes_evento = Participante.objects.filter(evento_participe=actividad.evento_perteneciente)
     resultado_form.fields["paticipante_reconocido"].queryset = participantes_evento
