@@ -52,7 +52,7 @@
                         {% for event in eventos %}
                             <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ event.titulo_evento }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ event.objetivo }}">
                                 <h5>
-                                    <i style="cursor:pointer;" data-toggle="tooltip" title="Muestra la actividad en el calendario" class="fa fa-calendar fa-lg fa-fw add-tooltip" data-date="{{ event.fecha_inicio|date:"Y-m-d H:i" }}"></i>
+                                    <i class="fa fa-calendar fa-lg fa-fw"></i>
                                     {{ event.titulo_evento }}
                                 </h5>
                                 <p>{{ event.objetivo }}</p>

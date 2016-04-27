@@ -38,7 +38,8 @@ fields = {
                     date: {
                         message: 'El valor ingresado no es una fecha válida, verifique que no sea mayor a la de finalización',
                         format: 'YYYY-MM-DD h:m',
-                        max: 'fecha_finalizacion'
+                        max: 'fecha_finalizacion',
+                        min: ($.datepicker.formatDate('yy-mm-dd h:m', new Date())).toString()
                     }
                 }
             },
@@ -62,7 +63,8 @@ fields = {
                     date: {
                         message: 'El valor ingresado no es una fecha válida, debe ser menor a la de finalización de preinscripción',
                         format: 'YYYY-MM-DD h:m',
-                        max: 'fecha_finalizacion_preinscripcion'
+                        max: 'fecha_inicio',
+                        min: ($.datetimepicker.formatDate('yy-mm-dd h:m', new Date())).toString()
                     }
                 }
             },
@@ -74,7 +76,8 @@ fields = {
                     date: {
                         message: 'El valor ingresado no es una fecha válida, debe ser mayor a la de inicio de la preinscripción',
                         format: 'YYYY-MM-DD h:m',
-                        min: 'fecha_inicio_preinscripcion'
+                        min: 'fecha_inicio_preinscripcion',
+                        max: 'fecha_inicio'
                     }
                 }
             },
