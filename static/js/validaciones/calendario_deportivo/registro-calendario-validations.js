@@ -36,10 +36,10 @@ fields = {
                         message: 'La fecha de inicio del evento no puede ser vacía'
                     },
                     date: {
-                        message: 'El valor ingresado no es una fecha válida, verifique que no sea mayor a la de finalización',
+                        message: 'Verifique que la fecha de inicio sea mayor al día de hoy y  menor a la de finalización',
                         format: 'YYYY-MM-DD h:m',
                         max: 'fecha_finalizacion',
-                        min: ($.datepicker.formatDate('yy-mm-dd h:m', new Date())).toString()
+                        min: hoy()
                     }
                 }
             },
@@ -49,7 +49,7 @@ fields = {
                         message: 'La fecha de finalización del evento no puede ser vacía'
                     },
                     date: {
-                        message: 'El valor ingresado no es una fecha válida',
+                        message: 'La fecha de finalización debe ser mayor a la fecha de inicio',
                         format: 'YYYY-MM-DD h:m',
                         min: 'fecha_inicio'
                     }
@@ -61,10 +61,10 @@ fields = {
                         message: 'La fecha de inicio de la preinscripción del evento no puede ser vacía'
                     },
                     date: {
-                        message: 'El valor ingresado no es una fecha válida, debe ser menor a la de finalización de preinscripción',
+                        message: 'Verifique que la fecha de preinscripcion sea mayor al dia de hoy y menor la fecha de inicio del evento',
                         format: 'YYYY-MM-DD h:m',
                         max: 'fecha_inicio',
-                        min: ($.datetimepicker.formatDate('yy-mm-dd h:m', new Date())).toString()
+                        min: hoy()
                     }
                 }
             },
@@ -74,7 +74,7 @@ fields = {
                         message: 'La fecha de finalización de la preinscripción del evento no puede ser vacía'
                     },
                     date: {
-                        message: 'El valor ingresado no es una fecha válida, debe ser mayor a la de inicio de la preinscripción',
+                        message: 'Verifique que la fecha de cierre de preinscripcion sea mayor a la fecha de inicio de preinscripcion y menor a la fecha de inicio del evento',
                         format: 'YYYY-MM-DD h:m',
                         min: 'fecha_inicio_preinscripcion',
                         max: 'fecha_inicio'
@@ -95,6 +95,12 @@ fields = {
             }
 
         };
+
+function hoy(){
+    var dia = ($.datepicker.formatDate('yy-mm-dd', new Date())).toString();
+    var hora = new Date();
+    return dia+" "+hora.getHours()+":"+hora.getMinutes();
+}
 //Revalidar campos al ser actualizados
     $("#id_fecha_inicio").on('change',function(e){
         $(form).bootstrapValidator('revalidateField', 'fecha_inicio');
