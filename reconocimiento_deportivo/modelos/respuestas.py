@@ -7,5 +7,5 @@ class ListaSolicitudesReconocimiento(models.Model):
 
     class Meta:
         permissions = (
-            ("view_listasolicitudesreconocimientos", "Permite ver las respuestas de las solicitudes de reconocimiento deportivo"),
+            ("view_listasolicitudesreconocimiento", "Permite ver las respuestas de las solicitudes de reconocimiento deportivo"),
         )

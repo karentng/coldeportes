@@ -49,7 +49,8 @@ def asignarPermisosGrupo(request, grupo, permisos):
     for permiso in permisos:
         try:
             grupo.permissions.add(permiso)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ha ocurrido un error al actulizar los permisos de escritura')
 
 def asignarPermisosGrupoLectura(request, grupo, permisos):

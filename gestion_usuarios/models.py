@@ -66,6 +66,14 @@ PERMISOS_DIGITADOR = [
     ['add_listasolicitudes', 'respuesta'],
     ['change_listasolicitudes', 'respuesta'],
     ['view_listasolicitudes', 'respuesta'],
+
+    ['add_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['change_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['view_reconocimientodeportivo', 'reconocimiento_solicitud'],
+
+    ['add_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+    ['change_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+    ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
 ]
 
 PERMISOS_LECTURA = [
@@ -84,5 +92,7 @@ PERMISOS_LECTURA = [
     ['view_casodoping', 'listados_doping'],
     ['view_solicitudescenario', 'solicitud'],
     ['view_listasolicitudes', 'respuesta'],
+    ['view_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
     ['view_evento', 'eventos'],
 ]

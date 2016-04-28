@@ -226,7 +226,7 @@
                                 {% endfor %}
 							</ul>
                         </div>
-                        {%comment %}{% if perms.solicitud.add_solicitudescenario%}{% endcomment %}
+                        {% if perms.reconocimiento_solicitud.add_reconocimientodeportivo %}
                             {% if responder and solicitud.estado == 1 %}
                                 <div class="row">
                                     <h5><strong>Responder</strong></h5>
@@ -247,7 +247,7 @@
                                     </form>
                                 </div>
                             {% endif %}
-                        
+                        {% endif %}
                     </div>
 		            <!-- end wrapper -->
 		            <!-- begin wrapper -->

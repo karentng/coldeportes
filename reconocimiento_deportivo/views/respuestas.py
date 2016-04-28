@@ -161,7 +161,7 @@ def descargar_adjunto(request, solicitud_id, adjunto_id, entidad_id):
 
 
 @login_required
-#@permission_required('respuesta.add_listasolicitudes')
+@permission_required('reconocimiento_deportivo.add_listasolicitudesreconocimiento')
 def responder_solicitud_reconocimiento(request, solicitud_id, entidad_id):
     """
     Abril 19, 2016
@@ -200,7 +200,7 @@ def dar_reconocimiento_deportivo(club):
 
 
 @login_required
-#@permission_required('respuesta.add_listasolicitudes')
+@permission_required('reconocimiento_deportivo.add_listasolicitudesreconocimiento')
 def enviar_respuesta(request, solicitud_id, entidad_id):
     """
     Abril 21, 2016

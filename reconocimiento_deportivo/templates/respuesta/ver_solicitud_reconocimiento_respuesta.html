@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block titulo %}
-    Solicitudes Reconocimientos - SND COLDEPORTES
+    Solicitudes Reconocimiento Deportivo - SND COLDEPORTES
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Solicitud Escenarios
+    Solicitud de Reconocimiento Deportivo
 {% endblock %}
 
 {% block contenido_panel %}
@@ -197,7 +197,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                        {# if perms.respuesta.add_listasolicitudes #}
+                        {% if perms.reconocimiento_respuesta.add_listasolicitudesreconocimientos %}
                             {% if responder and solicitud.estado == 0 %}
                             <div class="row">
                                 <h5><strong>Responder</strong></h5>
@@ -221,13 +221,13 @@
                                 </div>
                             </div>
                             {% endif %}
-                        {# endif #}
+                        {% endif %}
                     </div>
 
                     <!-- end wrapper -->
                     <!-- begin wrapper -->
                     <div class="wrapper bg-silver-lighter text-right clearfix">
-                        Solicitudes de adecuación de escenarios, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+                        Solicitudes de reconocimiento deportivo, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
                     </div>
                     <!-- end wrapper -->
                 </div>

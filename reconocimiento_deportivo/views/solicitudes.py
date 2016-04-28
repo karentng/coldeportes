@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.db import connection
 from django.contrib import messages
 from django.utils.encoding import smart_str
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from reconocimiento_deportivo.forms.solicitudes import ReconocimientoDeportivoForm, AdjuntoRequerimientoReconocimientoForm, DiscusionForm
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
 from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoRequerimientoReconocimiento, DiscusionReconocimiento
@@ -13,7 +13,7 @@ from solicitudes_escenarios.utilities import comprimir_archivos
 # Create your views here.
 
 @login_required
-#@permission_required('solicitud.add_solicitudescenario')
+@permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
 def solicitar(request, reconocimiento_id = None):
     """
     Abril 9, 2016
@@ -77,7 +77,7 @@ def validar_creacion(reconocimiento):
 
 
 @login_required
-#@permission_required('solicitud.add_solicitudescenario')
+@permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
 def cancelar_solicitud(request, reconocimiento_id=None):
     """
     Abril 9, 2016
@@ -112,6 +112,7 @@ def cancelar_solicitud(request, reconocimiento_id=None):
 
 
 @login_required
+@permission_required('reconocimiento_deportivo.view_reconocimientodeportivo')
 def listar_reconocimientos(request):
     """
     Abril 9, 2016
@@ -179,7 +180,7 @@ def imprimir_solicitud(request, reconocimiento_id):
 
 
 @login_required
-#@permission_required('solicitud.add_solicitudescenario')
+@permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
 def adjuntar_requerimientos(request, reconocimiento_id):
     """
     Abril 12,2016
@@ -238,7 +239,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
 
 
 @login_required
-#@permission_required('solicitud.add_solicitudescenario')
+@permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
 def borrar_adjunto(request, reconocimiento_id, adjunto_id):
     """
     Abril 13, 2016
@@ -270,7 +271,7 @@ def borrar_adjunto(request, reconocimiento_id, adjunto_id):
 
 
 @login_required
-#@permission_required('solicitud.add_solicitudescenario')
+@permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
 def finalizar_solicitud(request, solicitud_id):
     """
     Abril 13, 2016
@@ -300,7 +301,7 @@ def finalizar_solicitud(request, solicitud_id):
 
 
 @login_required
-#@permission_required('solicitud.add_solicitudescenario')
+@permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
 def editar_solicitud(request, reconocimiento_id):
     """
     Abril 13, 2016
@@ -330,7 +331,7 @@ def editar_solicitud(request, reconocimiento_id):
 
 
 @login_required
-#@permission_required('solicitud.add_solicitudescenario')
+@permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
 def enviar_comentario(request, id):
     """
     Abril 13, 2016

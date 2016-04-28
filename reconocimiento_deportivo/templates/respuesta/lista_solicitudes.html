@@ -64,14 +64,14 @@
                                 <i class="fa fa-eye"></i> Ver más
                             </a>
                             <br/>
-                            {# {% if perms.respuesta.add_listasolicitudes%} #}<!--verificar permiso para responder solicitudes -->
+                            {% if perms.reconocimiento_respuesta.add_listasolicitudesreconocimiento %}<!--verificar permiso para responder solicitudes  de reconocimiento deportivo-->
                                 {% if solicitud.estado == 0 %}
                                     <a href="{% url 'responder_solicitud_reconocimiento' solicitud.id solicitud.entidad_solicitante.id %}">
                                         <i class="fa fa-send"></i> Responder solicitud
                                     </a>
                                     <br/>
                                 {% endif %}
-                            {# {% endif %} #}
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
