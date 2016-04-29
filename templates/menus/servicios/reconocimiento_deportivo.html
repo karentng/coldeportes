@@ -16,7 +16,7 @@
         {% endif %}
         {% if perms.reconocimiento_deportivo.view_listasolicitudesreconocimiento %}
         <li {% if "/reconocimiento-deportivo/listar-solicitudes$" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'listar_solicitudes_reconocimientos' %}">Listar</a>
+            <a href="{% url 'listar_solicitudes_reconocimientos' %}">Listar solicitudes</a>
         </li>
         {% endif %}
     </ul>
