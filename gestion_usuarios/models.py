@@ -1,5 +1,7 @@
 from django.db import models
-
+"""
+Para Agregar una tupla a la lista de permisos se definió que el primer elemento es el nombre del permiso y el segundo el nombre del campo de actores que le corresponde
+"""
 PERMISOS_DIGITADOR = [
     ['add_cajacompensacion', 'cajas'],
     ['change_cajacompensacion', 'cajas'],

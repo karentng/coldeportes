@@ -548,11 +548,13 @@ def fix_solicitudes_escenarios(request):
 @login_required
 def fix_reconocimiento_deportivo(request):
     #asignar a entes actor de respuesta de reconocimiento deportivo
-    entes = Entidad.objects.filter(tipo=5)
-    for ente in entes:
-        actores = ente.actores
-        actores.reconocimiento_respuesta = True
-        actores.save()
+    entidades = Entidad.objects.filter(tipo=5)
+    for entidad in entidades:
+        ente = entidad.obtenerTenant()
+        if ente.tipo_ente == 1:#ente municipal es tipo 1
+            actores = entidad.actores
+            actores.reconocimiento_respuesta = True
+            actores.save()
     #asignar a clubes actor de solicitud de reconocimiento deportivo    
     clubes = Entidad.objects.filter(tipo=3)
     for club in clubes:
