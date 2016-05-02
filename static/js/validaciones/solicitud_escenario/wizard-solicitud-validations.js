@@ -25,7 +25,12 @@ fields = {
                 validators: {
                     notEmpty: {
                         message: 'Debe describir la solicitud'
+                    },
+                    stringLength: {
+                        message: 'El tamaño de la descripción debe tener como maximo 500 caracteres',
+                        max: 500
                     }
+
                 }
             }
         };
