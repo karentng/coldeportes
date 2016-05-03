@@ -12,7 +12,7 @@
     {% if perms.entidades.add_calendarionacional %}
         {% include "menus/aplicacion/calendario_deportivo.html" %}
     {% endif %}
-    {% if perms.reconocimiento_deportivo.view_listasolicilistasolicitudesreconocimiento or perms.reconocimiento_deportivo.view_reconocimientodeportivo %}
+    {% if request.tenant.schema_name != 'public %}
         {% include "menus/servicios/reconocimiento_deportivo.html" %}
     {% endif %}
     </ul>
