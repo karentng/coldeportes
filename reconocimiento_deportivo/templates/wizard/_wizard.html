@@ -1,0 +1,18 @@
+<ol class="bwizard-steps clearfix" role="tablist">
+    <li role="tab" {% if wizard_stage == 1 %} aria-selected="true" class="active" {% endif %} style="z-index: 7;">
+        <span class="label badge-inverse">1</span>
+        <a class="hidden-phone">
+            <a {% if wizard_stage == 2 %} href="{% url 'generar_solicitud' reconocimiento_id %}" style="cursor:pointer;"{% endif %}>
+                Solicitud <small>Datos de la solicitud de reconocimiento deportivo</small>
+            </a>
+        </a>
+    </li>
+    <li role="tab"  {% if wizard_stage == 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 6;">
+        <span class="label">2</span>
+        <a class="hidden-phone">
+            Archivos Adjuntos <small>Archivos adjuntos para obtener reconocimiento deportivo</small>
+        </a>
+    </li>
+</ol>
+<br/>
+

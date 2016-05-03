@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block contenido_panel %}
-
+  {% include 'wizard_info_juego/_wizard.html' %}
   <div  class="wrapper bg-silver-lighter clearfix">
     <a href="{% url 'listar_participantes' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>    
     <div class="pull-right m-l-15">        

@@ -44,6 +44,12 @@ class TipoDisciplinaDeportiva(models.Model):
     def __str__(self):
         return self.descripcion
 
+#General para deportistas y escenarios
+class TipoRequerimientoReconocimientoDeportivo(models.Model):
+    descripcion = models.CharField(max_length=100, verbose_name='descripción')
+
+    def __str__(self):
+        return self.descripcion
 
 class ModalidadDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -86,6 +92,8 @@ class Actores(models.Model):
     listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
+    reconocimiento_solicitud = models.BooleanField(verbose_name="reconocimiento deportivo solicitud", default=False)
+    reconocimiento_respuesta = models.BooleanField(verbose_name="reconocimiento deportivo respuesta", default=False)
     calendario_deportivo = models.BooleanField(verbose_name="Calendario Deportivo Nacional", default=False)
 
     def resumen(self):
@@ -807,6 +815,8 @@ class Club(ResolucionReconocimiento):
     socios = models.ManyToManyField(SocioClub, blank=True);
     planes_de_costo = models.ManyToManyField(PlanesDeCostoClub, blank=True)
     tipo_club = models.IntegerField(choices=TIPOS_CLUBES, default=0)
+    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia", null=True)    
+    reconocimiento = models.BooleanField(default=False)
 
     def obtener_padre(self):
         return self.liga
@@ -986,6 +996,8 @@ class Permisos(models.Model):
     listados_doping = models.IntegerField(choices=ACTORES, default=1)
     solicitud = models.IntegerField(choices=ACTORES, default=1)
     respuesta = models.IntegerField(choices=ACTORES, default=1)
+    reconocimiento_solicitud = models.IntegerField(choices=ACTORES, default=1)
+    reconocimiento_respuesta = models.IntegerField(choices=ACTORES, default=1)
     eventos = models.IntegerField(choices=ACTORES, default=2)
     calendario_deportivo = models.IntegerField(choices=ACTORES, default=1)
 
@@ -1004,7 +1016,9 @@ class Permisos(models.Model):
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
-                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'eventos','calendario_deportivo']
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'reconocimiento_solicitud', 
+                   'reconocimiento_respuesta','eventos','calendario_deportivo']
+
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)

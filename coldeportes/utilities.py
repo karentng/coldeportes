@@ -134,6 +134,7 @@ def permisosPermitidos(request, permisos):
     permitidos = []
     for i in permisos:
         try:
+            
             valor = getattr(request.tenant.actores, i[1])
             if valor:
                 permitidos.append(i[0])
