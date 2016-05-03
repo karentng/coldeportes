@@ -66,6 +66,10 @@ PERMISOS_DIGITADOR = [
     ['add_listasolicitudes', 'respuesta'],
     ['change_listasolicitudes', 'respuesta'],
     ['view_listasolicitudes', 'respuesta'],
+
+    ['add_calendarionacional', 'calendario_deportivo'],
+    ['change_calendarionacional', 'calendario_deportivo'],
+    ['view_calendarionacional', 'calendario_deportivo'],
 ]
 
 PERMISOS_LECTURA = [
@@ -85,4 +89,5 @@ PERMISOS_LECTURA = [
     ['view_solicitudescenario', 'solicitud'],
     ['view_listasolicitudes', 'respuesta'],
     ['view_evento', 'eventos'],
+    ['view_calendarionacional', 'calendario_deportivo'],
 ]

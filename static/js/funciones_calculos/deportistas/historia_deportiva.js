@@ -3,8 +3,15 @@
  */
 $(document).ready(function() {
     $('#id_fecha_final').prop('required',true);
-    $("#id_categoria").prop("disabled", true);
-    $("#id_modalidad").prop("disabled", true);
+    var categoria = $("#id_categoria");
+    var modalidad = $("#id_modalidad");
+    if (!categoria.val()){
+        categoria.prop("disabled", true);
+    }
+    if (!modalidad.val()){
+        modalidad.prop("disabled", true);
+    }
+
 });
 $("#id_deporte").on('change',function(){
     var val_depor = $(this).val();
