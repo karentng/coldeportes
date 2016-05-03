@@ -547,7 +547,7 @@ def fix_solicitudes_escenarios(request):
 
 @login_required
 def fix_reconocimiento_deportivo(request):
-    #asignar a entes actor de respuesta de reconocimiento deportivo
+    #asignar a entes municipales actor de respuesta de reconocimiento deportivo
     entidades = Entidad.objects.filter(tipo=5)
     for entidad in entidades:
         ente = entidad.obtenerTenant()
@@ -556,7 +556,7 @@ def fix_reconocimiento_deportivo(request):
             actores.reconocimiento_respuesta = True
             actores.save()
     #asignar a clubes actor de solicitud de reconocimiento deportivo    
-    clubes = Entidad.objects.filter(tipo=3)
+    clubes = Entidad.objects.filter(tipo__in=[3,9])
     for club in clubes:
         actores = club.actores
         actores.reconocimiento_solicitud = True
@@ -570,7 +570,7 @@ def fix_calendario_deportivo(request):
     entes = Entidad.objects.filter(tipo__in=[2,7])
     for e in entes:
         actores = e.actores
-        actores.respuesta = True
+        actores.calendario_deportivo = True
         actores.save()
 
     return HttpResponse("Calendario deportivo nacional asignado correctamente ")

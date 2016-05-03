@@ -4,14 +4,16 @@
         <i class="fa fa-plus-circle"></i>
         <span class="colorMenu">SERVICIOS</span>
     </a>
-        <ul class="sub-menu">
+    <ul class="sub-menu">
     {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
             {% include "menus/aplicacion/solicitudescenarios.html" %}
     {%endif%}
-            {% include "menus/servicios/gestion_eventos.html" %}
-        {% if perms.entidades.add_calendarionacional %}
-            {% include "menus/aplicacion/calendario_deportivo.html" %}
-        {% endif %}
-
-        </ul>
+        {% include "menus/servicios/gestion_eventos.html" %}
+    {% if perms.entidades.add_calendarionacional %}
+        {% include "menus/aplicacion/calendario_deportivo.html" %}
+    {% endif %}
+    {% if request.tenant.schema_name != 'public %}
+        {% include "menus/servicios/reconocimiento_deportivo.html" %}
+    {% endif %}
+    </ul>
 </li>
