@@ -12,6 +12,8 @@
     {% if perms.entidades.add_calendarionacional %}
         {% include "menus/aplicacion/calendario_deportivo.html" %}
     {% endif %}
-    {% include "menus/servicios/reconocimiento_deportivo.html" %}
+    {% if request.tenant.schema_name != 'public %}
+        {% include "menus/servicios/reconocimiento_deportivo.html" %}
+    {% endif %}
     </ul>
 </li>
