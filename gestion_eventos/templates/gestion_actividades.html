@@ -20,6 +20,12 @@
 	Actividades
 {% endblock %}
 
+{% block header_contendio %}
+        <h1 class="page-header">
+            {{ evento.titulo_evento|upper }} <small>Gestión de Eventos</small>
+        </h1>
+{% endblock header_contendio %}
+
 {% block contenido_panel %}
     <div class="row">
         {% if "gestion_eventos.change_evento" in perms %}
@@ -54,8 +60,8 @@
                     <table id="tabla-actividades" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Titulo</th>
-                                <th>Descripcion</th>
+                                <th>Título</th>
+                                <th>Descripción</th>
                                 <th>Día actividad</th>
                                 <th>Hora inicio</th>
                                 <th>Hora finalización</th>
@@ -66,21 +72,24 @@
                         <tbody>
                             {% for actividad in lista_actividades %}
                                 <tr>
-                                    <td>{{ actividad.titulo }}</td>
-                                    <td>{{actividad.descripcion}}</td>
+                                    <td>{{ actividad.titulo|upper }}</td>
+                                    <td>{{actividad.descripcion|upper}}</td>
                                     <td>{{actividad.dia_actividad}}</td>
                                     <td>{{ actividad.hora_inicio }}</td>
                                     <td>{{ actividad.hora_fin }}</td>
                                     <td>{% if actividad.estado == 1 %}ACTIVO{% else %}INACTIVO{% endif %}</td>
                                     <td>
-                                        {% if "gestion_eventos.change_evento" in perms %}
-                                        <a href="{% url 'editar_actividad' actividad.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                        {% if actividad.estado == 1 %}
+                                            {% if "gestion_eventos.change_evento" in perms %}
+                                            <a href="{% url 'editar_actividad' actividad.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                            {% endif %}
+                                            <a href="{% url 'registrar_resultado' actividad.id %}"><i class="fa fa-gear"></i>
+                                                {% if "gestion_eventos.change_evento" in perms %}Gestionar resultados{% else %}Listar resultados{% endif %}
+                                            </a><br>
                                         {% endif %}
-                                        <a href="{% url 'registrar_resultado' actividad.id %}"><i class="fa fa-gear"></i>
-                                            {% if "gestion_eventos.change_evento" in perms %}Gestionar resultados{% else %}Listar resultados{% endif %}
-                                        </a><br>
                                         {% if "gestion_eventos.change_evento" in perms %}
-                                            <a href="{% url 'cambiar_estado_actividad' actividad.id %}"><i class="fa fa-ban"></i>
+                                            <a href="#" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_actividad' actividad.id %}" data-toggle="modal" data-target="#modal-desactivate">
+                                                <i class="fa fa-ban"></i>
                                                 A/I <i style="cursor:pointer;" data-toggle="tooltip" title="Activar/Inactivar" class="fa fa-question-circle add-tooltip"></i>
                                             </a><br>
                                         {% endif %}
@@ -90,6 +99,24 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+                <div class="modal fade" id="modal-desactivate">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title">Cambiar de estado actividad:</h4>
+                            </div>
+                            <div class="modal-body">
+                                ¿Está seguro que desea cambiar el estado de esta actividad?
+                            </div>
+                            <div class="modal-footer">
+                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             {% else %}
                 <div class="alert alert-warning fade in m-b-15"><strong>No hay actividades registradas</strong></div>
@@ -103,6 +130,11 @@
         idTabla = "tabla-actividades";
         var fecha_in = '{{ evento.fecha_inicio|date:"Y-m-d" }}';
         var fecha_fn = '{{ evento.fecha_finalizacion|date:"Y-m-d" }}';
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 

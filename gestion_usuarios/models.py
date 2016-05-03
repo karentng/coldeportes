@@ -76,6 +76,11 @@ PERMISOS_DIGITADOR = [
     ['add_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
     ['change_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
     ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+
+    ['add_calendarionacional', 'calendario_deportivo'],
+    ['change_calendarionacional', 'calendario_deportivo'],
+    ['view_calendarionacional', 'calendario_deportivo'],
+
 ]
 
 PERMISOS_LECTURA = [
@@ -97,4 +102,5 @@ PERMISOS_LECTURA = [
     ['view_reconocimientodeportivo', 'reconocimiento_solicitud'],
     ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
     ['view_evento', 'eventos'],
+    ['view_calendarionacional', 'calendario_deportivo'],
 ]

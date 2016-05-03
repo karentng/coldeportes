@@ -27,4 +27,7 @@ urlpatterns = patterns('',
     url(r'^fix-actores-entidades$', 'gestion_usuarios.views.fix_actores_entidades', name='fix_actores_entidades'),
     url(r'^fix-solicitudes-escenarios$', 'gestion_usuarios.views.fix_solicitudes_escenarios', name='fix_solicitudes_escenarios'),
     url(r'^asignar-reconocimiento-deportivo$', 'gestion_usuarios.views.fix_reconocimiento_deportivo', name='fix_reconocimiento_deportivo'),
+    url(r'^fix-calendario-deportivo$', 'gestion_usuarios.views.fix_calendario_deportivo', name='fix_calendario_deportivo'),
+    #Calendario deportivo nacional
+    url(r'^calendario-deportivo/', include('calendario_deportivo.urls_public')),
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

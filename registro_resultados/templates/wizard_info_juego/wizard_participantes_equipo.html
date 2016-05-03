@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-
+{% block titulo %}Participantes por Equipo - SIND-Coldeportes {% endblock %}
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="{% url 'listado_competencias' juego_id %}">Listado de Competencias</a>
@@ -36,13 +36,20 @@
 {% endblock %}
 
 {% block contenido_panel %}
-  {% include 'wizard_info_juego/_wizard.html' %}
-  <div class="row">
-    <div class="email-btn-row col-md-12">
-      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
+  <div  class="wrapper bg-silver-lighter clearfix">
+    <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
+    <div class="pull-right">
+        <div class="btn-group btn-toolbar">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+        </div>
+        <div class="btn-group m-l-5">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
+        </div>
     </div>
   </div>
-  <br>    
+  <br><br>
+  {% include 'wizard_info_juego/_wizard.html' %}  
   <div class="row">
     <div class="col-md-4">
       <fieldset>
@@ -75,6 +82,8 @@
                             <th>Nombre</th>
                             <th>Departamento</th>
                             <th>Género</th>
+                            <th>Estatura (cms)</th>
+                            <th>Peso (kg)</th>
                             <th>Club</th>
                             <th>Fecha Nacimiento</th>
                             <th>Opciones</th>
@@ -86,8 +95,10 @@
                             <td>{{participante.nombre}}</td>
                             <td>{{participante.departamento}}</td>
                             <td>{{participante.get_genero_display}}</td>
-                            <td>{{participante.club}}</td>
-                            <td>{{participante.fecha_nacimiento}}</td>
+                            <td>{% if participante.estatura %}{{participante.estatura}}{% else %}No registra{% endif %}</td>
+                            <td>{% if participante.peso %}{{participante.peso}}{% else %}No registra{% endif %}</td>
+                            <td>{% if participante.club %}{{participante.club}}{% else %}No registra{% endif %}</td>
+                            <td>{% if participante.fecha_nacimiento %}{{participante.fecha_nacimiento}}{% else %} No registra {% endif %}</td>
                             <td>                              
                               <a href='{% url "participante_equipo" competencia_id equipo.id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar

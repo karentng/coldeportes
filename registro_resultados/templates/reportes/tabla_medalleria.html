@@ -16,20 +16,21 @@
 {% endblock %}
 
 {% block js %}
+    
     <script type="text/javascript">
-        idTabla = "tabla-entidades";
-    </script>
-    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            
+        $(document).ready(function(){            
             $("#btn-buscar").on("click", function(){
                 $('#loading').modal('show');
                 $('#loading').modal('hide');
 
             });
         });
+        idTabla = "tabla-medalleria";
+        columns_number = 13;
+
     </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+
 {% endblock %}
 
 {% block css %}
@@ -65,8 +66,8 @@
         </div>        
         <div class="col-md-12">                        
             {% if resultados %}
-            <div id="tabla-medalleria" class="table-responsive">
-                <table id="tabla-entidades" class="table table-striped table-bordered table-hover">
+            <div class="table-responsive">
+                <table id="tabla-medalleria" class="table table-striped table-bordered table-hover" width="100%">
                     <thead>
                         <tr>
                             <th rowspan="2">Departamento</th>
@@ -80,17 +81,17 @@
                             <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
                             <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
                             <th>Total</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro (Femenino) </th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata (Femenino)</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce (Femenino)</th>
                             <th>Total</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro (Masculino)</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata (Masculino)</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce (Masculino)</th>
                             <th>Total</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</th>
-                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro (Mixta)</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata (Mixta)</th>
+                            <th><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce (Mixta)</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -123,11 +124,19 @@
                 </table>
             </div>
             {% else %}
-            <div class="row alert alert-info fade in">                
-                <div align="center" class="col-md-12">
-                    Por favor seleccione un juego 
+                {% if filtros %}
+                <div class="row alert alert-warning fade in">                
+                    <div align="center" class="col-md-12">
+                        No hay resultados encontrados.
+                    </div>
                 </div>
-            </div>
+                {% else %}
+                <div class="row alert alert-info fade in">                
+                    <div align="center" class="col-md-12">
+                        Por favor seleccione un juego
+                    </div>
+                </div>
+                {% endif %}
             {% endif %}
         </div>
     </div>

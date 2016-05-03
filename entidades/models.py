@@ -36,6 +36,7 @@ class Ciudad(models.Model):
     def __str__(self):
         return ("%s (%s)")%(self.nombre, self.departamento.nombre)
 
+
 #General para deportistas y escenarios
 class TipoDisciplinaDeportiva(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name='descripción')
@@ -61,6 +62,7 @@ class ModalidadDisciplinaDeportiva(models.Model):
             return '('+self.general+')-'+self.nombre
         return self.nombre
 
+
 class CategoriaDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
     nombre = models.CharField(max_length=255)
@@ -71,6 +73,7 @@ class CategoriaDisciplinaDeportiva(models.Model):
         if self.general:
             return '('+self.general+')-'+self.nombre
         return self.nombre
+
 
 class Actores(models.Model):
     centros = models.BooleanField(verbose_name="Centros de Acondicionamiento Físico", default=False)
@@ -91,6 +94,7 @@ class Actores(models.Model):
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
     reconocimiento_solicitud = models.BooleanField(verbose_name="reconocimiento deportivo solicitud", default=False)
     reconocimiento_respuesta = models.BooleanField(verbose_name="reconocimiento deportivo respuesta", default=False)
+    calendario_deportivo = models.BooleanField(verbose_name="Calendario Deportivo Nacional", default=False)
 
     def resumen(self):
         actores = []
@@ -792,7 +796,7 @@ class PlanesDeCostoClub(models.Model):
     )
     nombre=models.CharField(max_length=200)
     precio=models.IntegerField()
-    descripcion = models.TextField(verbose_name="descripción")
+    descripcion = models.TextField(max_length=500, verbose_name="descripción")
     estado =models.IntegerField(choices=ESTADO, default=0)
 
     def __str__(self):
@@ -995,6 +999,7 @@ class Permisos(models.Model):
     reconocimiento_solicitud = models.IntegerField(choices=ACTORES, default=1)
     reconocimiento_respuesta = models.IntegerField(choices=ACTORES, default=1)
     eventos = models.IntegerField(choices=ACTORES, default=2)
+    calendario_deportivo = models.IntegerField(choices=ACTORES, default=1)
 
     class Meta:
         unique_together = ('entidad','tipo',)
@@ -1011,8 +1016,58 @@ class Permisos(models.Model):
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
-                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'reconocimiento_solicitud', 'reconocimiento_respuesta', 'eventos']
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'reconocimiento_solicitud', 
+                   'reconocimiento_respuesta','eventos','calendario_deportivo']
+
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
         return(actores_seleccionados)
+
+class CalendarioNacional(models.Model):
+    TIPO = (
+        (0, 'DEPORTIVO'),
+        #(1, 'CAPACITACIÓN'),
+        #(2, 'EDUCATIVO'),
+        #(3, 'CULTURAL'),
+        #(4, 'RECREATIVO'),
+    )
+
+    ESTADOS = (
+        (0,'APROBADO'),
+        (1,'NO APROBADO'),
+        (2,'ESPERANDO APROBACIÓN'),
+        (3,'CANCELADO')
+    )
+
+    titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
+    nombre_lugar = models.CharField(max_length=255, help_text="Nombre del lugar donde se realizará el evento",
+                                    verbose_name="Lugar del evento")
+
+    tipo = models.IntegerField(choices=TIPO)
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name="Deporte del evento")
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva, verbose_name="Categoría del evento",null=True,blank=True)
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva, verbose_name="Modalidad del evento",null=True,blank=True)
+    ciudad = models.ForeignKey(Ciudad,help_text="Ciudad donde se desarrollará el evento")
+    direccion = models.CharField(max_length=255,verbose_name="Dirección", help_text="Dirección del lugar del evento")
+    fecha_inicio = models.DateTimeField(verbose_name="Fecha de inicio del evento")
+    fecha_finalizacion = models.DateTimeField(verbose_name="Fecha de finalización del evento")
+    fecha_inicio_preinscripcion = models.DateTimeField(verbose_name="Fecha de inicio de las preinscripciones")
+    fecha_finalizacion_preinscripcion = models.DateTimeField(verbose_name="Fecha de finalización de las preinscripciones")
+    objetivo = models.TextField(verbose_name="Objetivo del evento (cualitativo)", max_length=200)
+    cupo_atletas = models.PositiveIntegerField(verbose_name="Cupo para participantes")
+    cupo_personas = models.PositiveIntegerField(verbose_name="Cupo total de personas")
+    estado = models.IntegerField(choices=ESTADOS,default=2)
+    entidad = models.ForeignKey(Entidad)
+
+    class Meta:
+        permissions = (
+            ("view_calendarionacional", "Permite ver eventos del calendario deportivo"),
+        )
+
+    def save(self, *args, **kwargs):
+        self.titulo_evento = self.titulo_evento.upper()
+        self.nombre_lugar = self.nombre_lugar.upper()
+        self.direccion = self.direccion.upper()
+        self.objetivo = self.objetivo.upper()
+        super(CalendarioNacional, self).save(*args, **kwargs)

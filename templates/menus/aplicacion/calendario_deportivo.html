@@ -1,0 +1,36 @@
+<li class="has-sub {% if '/calendario-deportivo/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        {% if request.tenant.schema_name == 'public' %}
+            <i class="fa fa-calendar"></i>
+            <span class="colorMenu">CALENDARIO DEPORTIVO</span>
+        {% else %}
+            <span class="colorMenu">Calendario Deportivo</span>
+        {% endif %}
+    </a>
+    <ul class="sub-menu">
+            {% if request.tenant.schema_name == 'public' %}
+                <li {% if "/calendario-deportivo/ver-calendario" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'cargar_calendario_nacional' %}">Ver calendario</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li {% if "/calendario-deportivo/listar-pendientes" in request.path %} class="active" {% endif %}>
+                        <a href="{% url 'listar_aprobar_calendario' %}">Listar eventos pendientes</a>
+                    </li>
+                    <li {% if "/calendario-deportivo/listar-todos" in request.path %} class="active" {% endif %}>
+                        <a href="{% url 'listar_todos_calendario' %}">Listar todos los eventos</a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li {% if "/calendario-deportivo/registro" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'registro_calendario_nacional' %}">Registrar Evento</a>
+                </li>
+                <li {% if "/calendario-deportivo/listar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'listado_calendario_nacional' %}">Listar eventos registrados</a>
+                </li>
+            {% endif %}
+
+
+
+    </ul>
+</li>

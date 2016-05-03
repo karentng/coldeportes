@@ -150,18 +150,62 @@ def listar(request):
     :type request:    WSGIRequest
     """
     items_manual = Articulo.MODULOS
+    items_manual_nueva = []
+    abrir_tree = True
     entidades = TIPOS
     tenant_actual = request.tenant
     mensaje = "No hay artículos registrados."
 
-    
+    if tenant_actual.schema_name=='public':        
+        items_manual_nueva = items_manual
+        abrir_tree = False
+    else: 
+        for item in items_manual:
+            if tenant_actual.actores.centros and item[0] == 'CF':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.cajas and item[0] == 'CC':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.centros_biomedicos and item[0] == 'CE':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.deportistas and item[0] == 'DE':
+                items_manual_nueva += [item]
+            elif item[0] == 'DR':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.dirigentes and item[0] == 'DI':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.escenarios and item[0] == 'ES':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.escuelas_deportivas and item[0] == 'EC':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.eventos and item[0] == 'EV':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.listados_doping and item[0] == 'LD':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.normas and item[0] == 'NO':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.noticias and item[0] == 'NT':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.personal_apoyo and item[0] == 'PA':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.publicidad and item[0] == 'PU':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.selecciones and item[0] == 'SE':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.respuesta and item[0] == 'SR':
+                items_manual_nueva += [item]
+            elif tenant_actual.actores.solicitud and item[0] == 'SS':
+                items_manual_nueva += [item]
+            elif item[0] == 'TR':
+                items_manual_nueva += [item]
+
     articulos = encontrar_articulos_tenant(tenant_actual)
     entidades = filtrar_entidades(entidades, tenant_actual)
 
     return render(request, 'tree_list.html', {
         'articulos': articulos,
         'mensaje': mensaje,
-        'items': items_manual,
-        'entidades': entidades
+        'items': items_manual_nueva,
+        'entidades': entidades,
+        'abrir_tree': abrir_tree
 
     })

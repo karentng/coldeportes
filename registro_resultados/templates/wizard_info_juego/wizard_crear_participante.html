@@ -35,18 +35,24 @@
 {% endblock %}
 
 {% block contenido_panel %}
-  {% include 'wizard_info_juego/_wizard.html' %}
-  <div class="row">
-    <div class="email-btn-row col-md-12">
-
-      {% if individual %}
-      <a href="{% url 'listar_individual' competencia_id %}" class="btn btn-sm btn-primary"><i class="fa fa-arrow-left m-r-5"></i> Listar Participantes</a>
-      {% else %}
-      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary pull-left"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
-      {% endif %}
+  <div  class="wrapper bg-silver-lighter clearfix">
+    {% if individual %}
+      <a href="{% url 'listar_individual' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Participantes</a>
+    {% else %}
+      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
+    {% endif %}
+    <div class="pull-right">
+        <div class="btn-group btn-toolbar">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+        </div>
+        <div class="btn-group m-l-5">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
+        </div>
     </div>
   </div>
-  <br>
+  <br><br>
+  {% include 'wizard_info_juego/_wizard.html' %}
   <div class="row">  
     <div class="col-md-12">
       <fieldset>

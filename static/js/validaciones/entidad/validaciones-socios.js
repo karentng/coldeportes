@@ -49,8 +49,10 @@ fields = {
                 message: "La fecha de incorporación no puede ser vacía"
             },
             date: {
-                format: "YYYY-MM-DD",
-                message: "La fecha no es válida"
+                message: 'La fecha no es válida',
+                format: 'YYYY-MM-DD',
+                message: 'La fecha de incorporación no puede ser mayor a la fecha actual',
+                max: ($.datepicker.formatDate('yy-mm-dd', new Date())).toString()
             }
         }
     }

@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
@@ -32,8 +33,6 @@ def registrar_clasificado(request):
                 clasificado.foto = "clasificados/clasificados-default.png"
             else:
                 clasificado.foto = nueva_foto
-
-            clasificado.fecha_expiracion = datetime.datetime.now() + datetime.timedelta(days=30)
             clasificado.etiquetas = clasificado.etiquetas.upper()
             form.save()
 
@@ -46,7 +45,7 @@ def registrar_clasificado(request):
 
 def listar_clasificados(request):
 
-    clasificados = Clasificado.objects.filter(estado=1, fecha_expiracion__gte=datetime.date.today()).order_by("-fecha_publicacion")
+    clasificados = Clasificado.objects.filter(estado=1, fecha_expiracion__gte=datetime.date.today()).order_by("-fecha_publicacion")[:10]
 
     for clasificado in clasificados:
         clasificado.clase_inclinacion = random.randint(1, 3)
@@ -87,6 +86,7 @@ def editar_clasificado(request, id_clasificado):
                     clasificado_form.foto = nueva_foto
 
                 clasificado_form.titulo = clasificado_form.titulo.upper()
+                clasificado.etiquetas = clasificado.etiquetas.upper()
                 form.save()
                 messages.success(request, 'El clasificado se ha editado correctamente')
                 return redirect('gestionar_clasificados')
@@ -105,13 +105,13 @@ def cambiar_estado_clasificado(request, id_clasificado):
     clasificado.estado = not clasificado.estado
     clasificado.save()
 
-    messages.success(request, 'Se ha cambiado el estado del clasificado correctamente')
+    messages.success(request, 'Clasificado ' + clasificado.get_estado_accion() + ' correctamente')
     return redirect('gestionar_clasificados')
+
 
 @csrf_exempt
 @login_required
 def crop_pic(request):
-    import os
     from django.conf import settings
     response_data = {"status": "error", 'message': 'Only Post Accepted'}
     if request.method == 'POST':
@@ -162,7 +162,6 @@ def crop_pic(request):
 
     # Croppic will parse the information returned into json. content_type needs
     # to be set as 'text/plain'
-    #print(response_data)
     return JsonResponse(response_data)
 
 
@@ -173,11 +172,14 @@ def filtro_clasificados(request):
             categoria = request.POST.get("seleccion")
             palabra = request.POST.get("palabra").upper()
 
-            clasificados = Clasificado.objects.filter(Q(etiquetas__contains=palabra) |
-                                                      Q(descripcion__icontains=palabra) |
-                                                      Q(titulo__icontains=palabra),
-                                                      categoria__contains=categoria, estado=1,
-                                                      fecha_expiracion__gte=datetime.date.today())
+            if categoria == "" and palabra == "":
+                clasificados = Clasificado.objects.all()[:10]
+            else:
+                clasificados = Clasificado.objects.filter(Q(etiquetas__contains=palabra) |
+                                                          Q(descripcion__icontains=palabra) |
+                                                          Q(titulo__icontains=palabra),
+                                                          categoria__contains=categoria, estado=1,
+                                                          fecha_expiracion__gte=datetime.date.today())
 
             for clasificado in clasificados:
                 clasificado.clase_inclinacion = random.randint(1, 3)
@@ -186,6 +188,29 @@ def filtro_clasificados(request):
         except Exception as e:
             print(e)
             messages.error(request, 'Ocurrió un error en el filtro de clasificados')
-            return redirect("listar_clasificados")
+            JsonResponse({'status': 'error'})
     else:
         return render(request, "403.html", {})
+
+
+def adicionar_clasificados(request):
+    from django.template.loader import render_to_string
+    if request.is_ajax():
+        try:
+            count = int(request.POST["count"])
+            clasificados = Clasificado.objects.all()[count:count+9]
+
+            print(clasificados.count())
+            for clasificado in clasificados:
+                clasificado.clase_inclinacion = random.randint(1, 3)
+
+            plantilla = render_to_string('tarjeta_clasificado.html', {"clasificados_filtrados": clasificados},
+                                         context_instance=RequestContext(request))
+            if clasificados.count() == 0:
+                count = -1
+            return JsonResponse({"plantilla": plantilla, "counter": count})
+        except Exception as e:
+            print(e)
+            JsonResponse({'status': 'error'})
+    else:
+        return redirect("listar_clasificados")

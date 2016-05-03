@@ -563,3 +563,15 @@ def fix_reconocimiento_deportivo(request):
         actores.save()
 
     return HttpResponse("Solicitudes y respuestas de reconocimiento deportivo asignadas correctamente")
+
+
+@login_required
+def fix_calendario_deportivo(request):
+    entes = Entidad.objects.filter(tipo__in=[2,7])
+    for e in entes:
+        actores = e.actores
+        actores.respuesta = True
+        actores.save()
+
+    return HttpResponse("Calendario deportivo nacional asignado correctamente ")
+

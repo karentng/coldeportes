@@ -58,7 +58,7 @@
                                     <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>
                                     <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
                                     <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>
-                                    <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li>
+                                    {% if not request.tenant.schema_name == 'public' %} <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li> {% endif %}
                                     <li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>
                                     <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                                 </ul>
@@ -118,25 +118,33 @@
                                                 <p><b>Clases de uso:</b>
                                                 {% for uso in caracteristica.clase_uso.all %}  
                                                     {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
-                                                {% endfor %} </p>
-                                                <p><b>Planos escenarios:</b>
-                                                {% if caracteristica.plano_archivo %}
-                                                     <a href="{{ MEDIA_URL }}{{ caracteristica.plano_archivo }}" target="_blank">{{ caracteristica.plano_archivo.name}}</a>
-                                                {% else %}
+                                                {% endfor %} </p>                                                
+                                                {% if not request.tenant.schema_name == 'public' %}
+                                                    <p><b>Planos escenarios:</b> 
+                                                    {% if caracteristica.plano_archivo %}
+                                                         <a href="{{ MEDIA_URL }}{{ caracteristica.plano_archivo }}" target="_blank">{{ caracteristica.plano_archivo.name}}</a>
+                                                    {% else %}
                                                     No disponible
-                                                {% endif %}</p>
-                                                <p><b>Ficha catastral: </b>
-                                                {% if caracteristica.ficha_catastral %}
-                                                     <a href="{{ MEDIA_URL }}{{ caracteristica.ficha_catastral }}" target="_blank">{{ caracteristica.ficha_catastral.name}}</a>
-                                                {% else %}
-                                                    No disponible
-                                                {% endif %}</p>
-                                                <p><b>Certificado de tradicion de libertad:</b>
-                                                {% if caracteristica.certificado_tradicio_libertad %}
+                                                    {% endif %} 
+                                                    </p>
+                                                {% endif %}
+                                                {% if not request.tenant.schema_name == 'public' %}                                                    
+                                                    {% if caracteristica.ficha_catastral %}
+                                                         <a href="{{ MEDIA_URL }}{{ caracteristica.ficha_catastral }}" target="_blank">{{ caracteristica.ficha_catastral.name}}</a>
+                                                    {% else %}
+                                                        No disponible
+                                                    {% endif %}
+                                                    </p>
+                                                {% endif %}
+                                                {% if not request.tenant.schema_name == 'public' %}  
+                                                    <p><b>Certificado de tradicion de libertad:</b>
+                                                    {% if caracteristica.certificado_tradicio_libertad %}
                                                     <a href="{{ MEDIA_URL }}{{ caracteristica.certificado_tradicio_libertad }}" target="_blank">{{ caracteristica.certificado_tradicio_libertad.name}}</a>
-                                                {% else %}
-                                                    No disponible
-                                                {% endif %}</p>
+                                                    {% else %}
+                                                        No disponible
+                                                    {% endif %}
+                                                    </p>
+                                                {% endif %}
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
@@ -301,7 +309,7 @@
                                 {% endif %}
                                 </div>
                             </div>
-                            
+                            {% if not request.tenant.schema_name == 'public' %} 
                             <div class="tab-pane fade" id="nav-tab2-19">
                                 <div class="invoice">
                                 <div class="invoice-company">
@@ -338,6 +346,7 @@
                                 {% endif %}
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="tab-pane fade" id="nav-tab2-18">
                                 <div class="invoice">
                                 <div class="invoice-company">

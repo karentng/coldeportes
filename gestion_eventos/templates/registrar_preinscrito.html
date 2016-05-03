@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-    {% if edicion %}Editar{% else %}Registrar{% endif %} preincrito
+    {% if edicion %}Editar{% else %}Registrar{% endif %} preinscrito
 {% endblock %}
 
 {% block titulo_panel %}
-    {% if edicion %}Editar{% else %}Registrar{% endif %} preincrito
+    {% if edicion %}Editar{% else %}Registrar{% endif %} preinscrito
 {% endblock %}
 
 {% block js %}
@@ -25,7 +25,9 @@
                 singleField:true,
                 singleFieldDelimiter: ","
             });
+
         });
+
     </script>
 {% endblock %}
 
@@ -41,10 +43,10 @@
             <form id="form-preinscrito" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
                 {% for field in form %}
                     {% bootstrap_field field %}
-                    {% if forloop.last %}
+                    {% if field.name == "email" %}
                         <div class="form-group required has-feedback">
                             <label class="control-label" for="id_confirmacion_mail">Confirmación correo electrónico</label>
-                            <input class="form-control" id="id_confirmacion_mail" maxlength="254" name="confirmacion_mail" placeholder="Correo electronico" required="required" type="email">
+                            <input class="form-control" onpaste="$(this).popover('show');return false;" data-placement="top" title="Función desactivada" data-content="Por seguridad se desactivó la función de pegar, por favor digite otra vez su correo" id="id_confirmacion_mail" maxlength="254" name="confirmacion_mail" placeholder="Correo electronico" required="required" type="email">
                         </div>
                     {% endif %}
                 {% endfor %}

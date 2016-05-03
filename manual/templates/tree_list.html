@@ -20,7 +20,7 @@
             <div id="jstree-default">
                 <ul> 
                     {% for entidad in entidades %}
-                    <li> {{entidad.1}}
+                    <li {% if abrir_tree %}data-jstree='{"opened":true}'{% endif %}> {{entidad.1}}
                         <ul>
                             {% for item in items %}
                             <li>

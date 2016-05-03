@@ -25,7 +25,7 @@ class Participante(models.Model):
     nombre = models.CharField(max_length=155, verbose_name="Nombres")
     apellido = models.CharField(max_length=155, verbose_name="Apellidos")
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
-    email = models.EmailField(verbose_name="Correo electronico")
+    email = models.EmailField(verbose_name="Correo electrónico")
     token_email = models.CharField(max_length=255, null=True)
     pago_registrado = models.BooleanField(default=False)
     estado = models.IntegerField(choices=ESTADO, default=1)
@@ -62,6 +62,9 @@ class Actividad(models.Model):
     estado = models.IntegerField(default=1)
     resultado = models.ManyToManyField(Resultado)
 
+    def get_estado(self):
+        return ("desactivada", "activada")[int(self.estado)]
+
     class Meta:
         unique_together = ('evento_perteneciente', 'id')
 
@@ -74,13 +77,13 @@ class Evento(models.Model):
         (4, 'CULTURAL'),
         (5, 'RECREATIVO'),
     )
-
     titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
     categoria = models.IntegerField(choices=CATEGORIA, verbose_name="Categoría del evento")
     ciudad_evento = models.ForeignKey(Ciudad)
     nombre_lugar = models.CharField(max_length=255, help_text="Nombre del lugar donde se realizará el evento",
                                     verbose_name="Lugar del evento")
-    direccion = models.CharField(max_length=255, help_text="Dirección del lugar del evento (georeferenciado)")
+    direccion = models.CharField(max_length=255, verbose_name="Dirección",
+                                 help_text="Dirección del lugar del evento (georeferenciado)")
     latitud = models.FloatField()
     longitud = models.FloatField()
     fecha_inicio = models.DateField(verbose_name="Fecha de inicio del evento")
@@ -100,6 +103,11 @@ class Evento(models.Model):
     autor = models.CharField(verbose_name="Autor de la noticia", max_length=150,
                              help_text="Se usará como autor para la noticia del evento que se creará")
     estado = models.IntegerField(default=1)
+
+    fecha_creacion = models.DateField(auto_now_add=True)
+
+    def get_estado(self):
+        return ("desactivado", "activado")[int(self.estado)]
 
     class Meta:
         permissions = (
