@@ -116,6 +116,19 @@
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
 
+        <li class="has-sub{% if '/solicitudes-escen/' in request.path %} active {% endif %} {% if '/reconocimiento-deportivo/' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                <i class="fa fa-plus-circle"></i>
+                <span class="colorMenu">SERVICIOS</span>
+            </a>
+            <ul class="sub-menu">
+            {% if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+                {% include "menus/aplicacion/solicitudescenarios.html" %}
+            {%endif%}
+                {% include "menus/servicios/reconocimiento_deportivo.html" %}
+            </ul>            
+        </li>
 
     {% endif %}
 
@@ -139,6 +152,7 @@
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
+        {% include "menus/aplicacion/calendario_deportivo.html" %}
 {% endif %}
 
 {% include "menus/aplicacion/directorio.html" %}

@@ -80,7 +80,7 @@ def imprimir_solicitud(request,id,id_ent):
     if not solicitud:
         return discusiones
 
-    return render(request,'solicitud_imprimir_respuesta.html',{
+    return render(request,'solicitud_imprimir.html',{
         'solicitud' : solicitud,
         'discusiones' : discusiones
     })

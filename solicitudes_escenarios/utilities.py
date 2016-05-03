@@ -2,7 +2,7 @@ import zipfile,tempfile
 from coldeportes.settings import MEDIA_ROOT
 from django.core.servers.basehttp import FileWrapper
 
-def comprimir_archivos(query):
+def comprimir_archivos(query, directorio='/adjuntos_adecuacion_escenarios/'):
     """
     Marzo 6, 2016
     Autor: Daniel Correa
@@ -13,7 +13,7 @@ def comprimir_archivos(query):
     temp = tempfile.TemporaryFile()
     zip_file = zipfile.ZipFile(temp, 'w', zipfile.ZIP_DEFLATED)
     for f in query:
-        zip_file.write(MEDIA_ROOT+'/adjuntos_adecuacion_escenarios/'+f.nombre_archivo(),f.nombre_archivo())
+        zip_file.write(MEDIA_ROOT+directorio+f.nombre_archivo(),f.nombre_archivo())
 
     zip_file.close()
     wrapper = FileWrapper(temp)

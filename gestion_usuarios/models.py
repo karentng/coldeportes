@@ -1,5 +1,7 @@
 from django.db import models
-
+"""
+Para Agregar una tupla a la lista de permisos se definió que el primer elemento es el nombre del permiso y el segundo el nombre del campo de actores que le corresponde
+"""
 PERMISOS_DIGITADOR = [
     ['add_cajacompensacion', 'cajas'],
     ['change_cajacompensacion', 'cajas'],
@@ -66,6 +68,19 @@ PERMISOS_DIGITADOR = [
     ['add_listasolicitudes', 'respuesta'],
     ['change_listasolicitudes', 'respuesta'],
     ['view_listasolicitudes', 'respuesta'],
+
+    ['add_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['change_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['view_reconocimientodeportivo', 'reconocimiento_solicitud'],
+
+    ['add_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+    ['change_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+    ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+
+    ['add_calendarionacional', 'calendario_deportivo'],
+    ['change_calendarionacional', 'calendario_deportivo'],
+    ['view_calendarionacional', 'calendario_deportivo'],
+
 ]
 
 PERMISOS_LECTURA = [
@@ -84,5 +99,8 @@ PERMISOS_LECTURA = [
     ['view_casodoping', 'listados_doping'],
     ['view_solicitudescenario', 'solicitud'],
     ['view_listasolicitudes', 'respuesta'],
+    ['view_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
     ['view_evento', 'eventos'],
+    ['view_calendarionacional', 'calendario_deportivo'],
 ]

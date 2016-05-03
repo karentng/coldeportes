@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Solicitud_{{ solicitud.codigo_unico }}</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="Cedesoft" name="author" />
+
+    <script src="{{STATIC_URL}}plugins/jquery/jquery-1.9.1.min.js"></script>
+
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link rel="icon" type="image/png" href="{{STATIC_URL}}img/favicon.ico">
+    {#<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">#}
+    <link href="{{STATIC_URL}}plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <link href="{{STATIC_URL}}plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/animate.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/style.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/style-responsive.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/theme/default.css" rel="stylesheet" id="theme" />
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/personal.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}plugins/toastr/toastr.css"/>
+    <link href="{{STATIC_URL}}plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <!-- ================== END BASE CSS STYLE ================== -->
+
+    <!-- ================== BEGIN BASE JS ================== -->
+    <!-- ================== END BASE JS ================== -->
+    <style type="text/css">
+        text{
+            font-family: 'Lato', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="{{STATIC_URL}}img/LogoSND.png" alt="logoSND" style="margin-top:5px">
+    <div class="vertical-box">
+        <div class="vertical-box-column bg-white">
+            <div class="wrapper">
+                <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitudes de Reconocimiento Deportivo: Solicitud {{ solicitud.codigo_unico }}</h4>
+                <ul class="media-list underline m-b-20 p-b-15">
+                    <li class="media media-sm clearfix">
+                        <a class="pull-left">
+                            <i class="fa fa-exchange fa-2x modal-icon"></i>
+                        </a>
+                        <div class="media-body">
+                            <span class="email-from text-inverse f-w-600">
+                                Solicitud Para: {{ solicitud.para_quien }}
+
+                            </span><span class="text-muted m-l-5"><i class="fa fa-clock-o fa-fw"></i> {{ solicitud.fecha_creacion }}</span><br />
+                        </div>
+                    </li>
+                </ul>
+                <div class="row">
+                    <h5><strong>Información de la solcitud</strong></h5><br>                    
+                    <div class="col-lg-6">
+                        <strong>Nombre solicitante</strong><br><br>
+                        <p class="f-s-12 text-inverse">
+                            {{ solicitud.nombre_solicitante|upper }}
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <strong>Identificación solicitante</strong><br><br>
+                        <p class="f-s-12 text-inverse">
+                            {{ solicitud.id_solicitante|upper }}
+                        </p>
+                    </div>
+                     <div class="col-lg-6">
+                        <strong>Teléfono solicitante</strong><br><br>
+                        <p class="f-s-12 text-inverse">
+                            {{ solicitud.tel_solicitante|upper }}
+                        </p>
+                    </div>
+                     <div class="col-lg-6">
+                        <strong>Dirección solicitante</strong><br><br>
+                        <p class="f-s-12 text-inverse">
+                            {{ solicitud.direccion_solicitante|upper }}
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <strong>Vinculo del solicitante con la entidad</strong><br><br>
+                        <p class="f-s-12 text-inverse">
+                            {{ solicitud.get_vinculo_solicitante_display|upper }}
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <strong>Descripcion</strong><br><br>
+                        <p class="f-s-12 text-inverse">
+                            {{ solicitud.descripcion }}
+                        </p>
+                    </div>
+                    <h5><strong>Detalles</strong></h5>
+                    <i class="fa fa-barcode fa-fw m-r-5"></i> {{ solicitud.codigo_unico }}
+                    <i class="fa fa-calendar fa-fw m-r-5"></i> {{ solicitud.fecha_creacion }}
+                    <i class="fa fa-gavel fa-fw m-r-5"></i> {{ solicitud.get_estado_display }}
+                    <i class="fa fa-info-circle fa-fw m-r-5"></i> {{ solicitud.get_tipo_display }}
+                </div>
+                <div class="row">
+                    <h5><strong>Archivos Adjuntos</strong></h5><br/>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th align="center">Nombre</th>
+                                    <th align="center">Tipo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for adjunto in solicitud.adjuntos %}
+                                <tr>
+                                    <td>{{adjunto.nombre_archivo}}</td>
+                                    <td>{{adjunto.tipo}}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                        {% if not solicitud.adjuntos %}
+                            <p align="center">No hay adjuntos registrados</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <h5><strong>Discusiones</strong></h5>
+                    <ul class="media-list media-list-with-divider result-list">
+                        {% for discusion in discusiones %}
+                            <li class="media media-sm">
+                                <div class="media-left">
+                                    <i class="fa fa-{% if discusion.respuesta %}send{% else %}envelope{% endif %} fa-3x" style="color: #00acac;"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h5>Enviado por: {{ discusion.entidad }}</h5>
+                                    <p class="location">{{ discusion.fecha }}</p>
+                                    <p class="desc">
+                                        {{ discusion.descripcion }}
+                                    </p>
+                                    <div class="btn-row">
+                                        <a data-toggle="tooltip" data-container="body" data-title="Estado actual"><i class="fa fa-fw fa-tags"></i></a>
+                                        Cambio de estado a: {{ discusion.get_estado_actual_display }}
+                                    </div>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <p> No hay discusiones al momento</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <!-- end wrapper -->
+            <!-- begin wrapper -->
+            <div class="wrapper bg-silver-lighter text-right clearfix">
+                Solicitudes de reconocimiento deportivo, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+            </div>
+            <!-- end wrapper -->
+        </div>
+        <!-- end vertical-box-column -->
+    </div>
+
+    <script>
+        window.print();
+    </script>
+</body>
+
+</html>

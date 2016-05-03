@@ -185,11 +185,11 @@ def eliminar_cargo(request, cargo_id, dirigente_id):
         cargo = DirigenteCargo.objects.get(id=cargo_id, dirigente_id = dirigente_id)
         cargo.delete()
         messages.success(request,'El cargo ha sido eliminado con éxito.')
-        return redirect('dirigentes_cargos', dirigente_id)
+        return redirect('dirigentes_cargos',dirigente_id=dirigente_id, edicion=1)
 
     except DirigenteCargo.DoesNotExist:
         messages.error(request,'Está tratando de eliminar un cargo inexistente.')
-        return redirect('dirigentes_cargos', dirigente_id)
+        return redirect('dirigentes_cargos', dirigente_id=dirigente_id, edicion=1)
 
 
 @login_required
