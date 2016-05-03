@@ -110,7 +110,9 @@ class ParticipanteTiempoForm(forms.ModelForm):
 
 
 class ParticipantePuntosForm(forms.ModelForm):
+
     required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
 
         competencia = kwargs.pop('competencia')
@@ -180,7 +182,9 @@ class ParticipanteMetrosForm(forms.ModelForm):
             pass
 
 class ParticipanteEquipoForm(forms.ModelForm):
+
     required_css_class = 'required'
+    
     def __init__(self, *args, **kwargs):
 
         competencia = kwargs.pop('competencia')
@@ -326,6 +330,8 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
         
         if eliminar:
             del self.fields[eliminar]
+
+        add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
 
 class FiltrosTablaMedalleriaForm(forms.Form):
