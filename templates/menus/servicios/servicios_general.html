@@ -9,6 +9,9 @@
             {% include "menus/aplicacion/solicitudescenarios.html" %}
     {%endif%}
             {% include "menus/servicios/gestion_eventos.html" %}
+        {% if perms.entidades.add_calendarionacional %}
+            {% include "menus/aplicacion/calendario_deportivo.html" %}
+        {% endif %}
 
         </ul>
 </li>

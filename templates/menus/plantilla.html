@@ -139,6 +139,7 @@
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
+        {% include "menus/aplicacion/calendario_deportivo.html" %}
 {% endif %}
 
 {% include "menus/aplicacion/directorio.html" %}

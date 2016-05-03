@@ -8,57 +8,57 @@ from directorio.models import EscenarioPublicView, CAFPublicView, DeportistaPubl
     
 def buscar_contenido(texto):
     listado_resultados = []
-    listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(DirigentePublicView.objects.filter(contenido__icontains=texto).distinct('id'))
-    listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id'))    
+    listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
+    listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
+    listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
+    listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
+    listado_resultados += list(DirigentePublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
+    listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))    
     return listado_resultados
 
 
 def buscar_contenido_ciudad(texto, ciudades):
     listado_resultados = []    
-    listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
-    listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
-    listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto, ciudad_residencia__in=ciudades).distinct('id'))
-    listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
-    listado_resultados += list(DirigentePublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
-    listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
+    listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
+    listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
+    listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto, ciudad_residencia__in=ciudades).distinct('id', 'entidad'))
+    listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
+    listado_resultados += list(DirigentePublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
+    listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
     return listado_resultados
     
 
 def buscar_contenido_actor(texto, actor):
     listado_resultados = []
     if actor == 'ES':
-        listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
     elif actor == 'CA':
-        listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
     elif actor == 'DE':
-        listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
     elif actor == 'DI':
-        listado_resultados += list(DirigentePublicView.objects.filter(nombre__icontains=texto).distinct('id'))
+        listado_resultados += list(DirigentePublicView.objects.filter(nombre__icontains=texto).distinct('id', 'entidad'))
     elif actor == 'PA':
-        listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
     elif actor == 'CF':
-        listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
     return listado_resultados
 
 
 def buscar_contenido_actor_ciudad(actor, ciudades, texto):
     listado_resultados = []
     if actor == 'ES':
-        listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
+        listado_resultados += list(EscenarioPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
     elif actor == 'CA':
-        listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
+        listado_resultados += list(CAFPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
     elif actor == 'DE':
-        listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto, ciudad_residencia__in=ciudades).distinct('id'))
+        listado_resultados += list(DeportistaPublicView.objects.filter(contenido__icontains=texto, ciudad_residencia__in=ciudades).distinct('id', 'entidad'))
     elif actor == 'DI':
-        listado_resultados += list(DirigentePublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
+        listado_resultados += list(DirigentePublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
     elif actor == 'PA':
-        listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id'))
+        listado_resultados += list(PersonalApoyoPublicView.objects.filter(contenido__icontains=texto, ciudad__in=ciudades).distinct('id', 'entidad'))
     elif actor == 'CF':
-        listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id'))
+        listado_resultados += list(CajaCompensacionPublicView.objects.filter(contenido__icontains=texto).distinct('id', 'entidad'))
     return listado_resultados
 
 
