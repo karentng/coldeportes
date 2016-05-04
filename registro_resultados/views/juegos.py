@@ -681,8 +681,7 @@ def cargar_participantes(request, competencia_id):
 
     return render(request, 'cargado_archivos/cargar_participantes.html', {
         'form': form,
-        'competencia_id': competencia.id,
-        'wizard_stage': 3,
+        'competencia_id': competencia.id
     })
 
 
@@ -714,9 +713,10 @@ def crear_participantes(request, participantes, datemode, competencia):
                 obj.puntos = participante[9]                
             else: # Metros
                 obj.metros = participante[8]
-                obj.marca = participante[11]                
+                obj.marca = participante[11]
         else: # Equipos
             obj.equipo = Equipo.objects.get(id=participante[12])
+
         try: 
             obj.save()
         except Exception as e:
