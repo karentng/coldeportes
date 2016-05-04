@@ -65,7 +65,7 @@
                                 <i class="fa fa-eye"></i> Ver más
                             </a>
                             <br/>                            
-                            {% if solicitud.estado == 0 %}
+                            {% if solicitud.estado == 0 or solicitud.estado == 1 %}
                                 <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud_reconocimiento' solicitud.id %}">
                                     <i class="fa fa-trash"></i> Cancelar solicitud
                                 </a>

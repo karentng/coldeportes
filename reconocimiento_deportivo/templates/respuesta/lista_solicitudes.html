@@ -55,10 +55,7 @@
                         <td>{{solicitud.get_estado_display}}</td>
                         <td>{{ solicitud.entidad_solicitante }}</td>
                         <td>{{ solicitud.fecha_creacion }}</td>
-                        <td>{% for key, value in fechas.items %} 
-                          {% if key == solicitud.codigo %}{{value}} días{% endif %}</li>
-                         {% endfor %}
-                        </td>
+                        <td>{{solicitud.tiempo_restante}} días</td>
                         <td>
                             <a href='{% url 'ver_solicitud_reconocimiento_respuesta' solicitud.id solicitud.entidad_solicitante.id %}'>
                                 <i class="fa fa-eye"></i> Ver más

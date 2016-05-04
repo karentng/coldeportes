@@ -22,7 +22,7 @@ def listar_solicitudes_reconocimientos(request):
 
     """
     tenant_actual = request.tenant
-    resultados = ListaSolicitudesReconocimiento.objects.all()
+    resultados = ListaSolicitudesReconocimiento.objects.all().order_by('fecha_creacion')
     resultados_finales = []
     tiempos_respuestas = dict()
 
@@ -31,12 +31,13 @@ def listar_solicitudes_reconocimientos(request):
         solicitud_id = resultado.solicitud
         connection.set_tenant(entidad)
         solicitud_hecha = ReconocimientoDeportivo.objects.get(id = solicitud_id)
-        solicitud_hecha.entidad_solicitante = entidad
-        solicitud_hecha.codigo = solicitud_hecha.codigo_unico(entidad)
-        tiempo_a_contestar = solicitud_hecha.fecha_creacion + timedelta(days = 46)
-        tiempo_restante = tiempo_a_contestar - datetime.now()
-        tiempos_respuestas[solicitud_hecha.codigo] = str(tiempo_restante.days)
-        resultados_finales.append(solicitud_hecha)
+        if solicitud_hecha.estado == 0:
+            solicitud_hecha.entidad_solicitante = entidad
+            solicitud_hecha.codigo = solicitud_hecha.codigo_unico(entidad)
+            tiempo_a_contestar = resultado.fecha_creacion + timedelta(days = 46)
+            tiempo_restante = tiempo_a_contestar - datetime.now()
+            solicitud_hecha.tiempo_restante = str(tiempo_restante.days)
+            resultados_finales.append(solicitud_hecha)
 
     connection.set_tenant(tenant_actual)
     return render(request,'respuesta/lista_solicitudes.html',{
@@ -240,7 +241,7 @@ def enviar_respuesta(request, solicitud_id, entidad_id):
                 dar_reconocimiento_deportivo(entidad)
 
             connection.set_tenant(tenant_actual)# se regresa al tenant del ente que respondió
-            solicitud_hecha.delete()# Se remueve del listado del ente            
+            #solicitud_hecha.delete()# Se remueve del listado del ente            
             messages.success(request,'Su respuesta ha sido enviada con exito')
             return redirect('ver_solicitud_reconocimiento_respuesta', solicitud.id, entidad.id)
 
