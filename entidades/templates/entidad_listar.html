@@ -44,7 +44,7 @@
                     <tbody>
                         {% for entidad in entidades %}
                         <tr>
-                            <td>{{entidad.nombre}}</td>
+                            <td>{{entidad.nombre|upper}}</td>
                             <td>{{entidad.domain_url}}</td>
                             <td>{{entidad.schema_name}}</td>
                             <td>

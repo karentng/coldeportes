@@ -113,7 +113,9 @@ def personas_por_entidad(tipo_entidad,tipo_persona,tenant_incial):
     if tipo_entidad == 1:
         #Liga
         clubes = Club.objects.filter(liga=tenant_incial.id)
-        return obtener_personas(clubes,tipo_persona,tenant_incial)
+        personas = obtener_personas(clubes,tipo_persona,tenant_incial)
+        personas += obtener_personas([tenant_incial],tipo_persona,tenant_incial)
+        return personas
 
     elif tipo_entidad == 2:
         #Fede
@@ -122,6 +124,8 @@ def personas_por_entidad(tipo_entidad,tipo_persona,tenant_incial):
         for l in ligas:
             clubes = Club.objects.filter(liga=l)
             personas += obtener_personas(clubes,tipo_persona,tenant_incial)
+            personas += obtener_personas([l],tipo_persona,tenant_incial)
+        personas += obtener_personas([tenant_incial],tipo_persona,tenant_incial)
         return personas
 
     elif tipo_entidad == 6:
@@ -148,7 +152,9 @@ def personas_por_entidad(tipo_entidad,tipo_persona,tenant_incial):
     elif tipo_entidad == 8:
         #liga paralimpica
         clubes = ClubParalimpico.objects.filter(liga=tenant_incial.id)
-        return obtener_personas(clubes,tipo_persona,tenant_incial)
+        personas = obtener_personas(clubes,tipo_persona,tenant_incial)
+        personas += obtener_personas([tenant_incial],tipo_persona,tenant_incial)
+        return personas
 
     elif tipo_entidad == 7:
         #federacion paralimpica
@@ -157,6 +163,8 @@ def personas_por_entidad(tipo_entidad,tipo_persona,tenant_incial):
         for l in ligas:
             clubes = ClubParalimpico.objects.filter(liga=l)
             personas += obtener_personas(clubes,tipo_persona,tenant_incial)
+            personas += obtener_personas([l],tipo_persona,tenant_incial)
+        personas += obtener_personas([tenant_incial],tipo_persona,tenant_incial)
         return personas
 #Fin metodos abstractos
 

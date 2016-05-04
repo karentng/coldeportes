@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^gestion-usuarios/', include('gestion_usuarios.urls')),
     url(r'^transferencias/',include('transferencias.urls')),#urls del modulo de transferencias
     url(r'^directorio/',include('directorio.entidad_urls')),#urls del modulo de directorio perfil entidad
+    url(r'^reconocimiento-deportivo/',include('reconocimiento_deportivo.urls.solicitudes')),#urls del modulo de directorio perfil entidad
+    url(r'^reconocimiento-deportivo/',include('reconocimiento_deportivo.urls.respuestas')),#urls del modulo de reconocimiento_deportivo
     url(r'^directorio-publico/',include('directorio.publico_urls')),#urls del modulo de directorio publico
     url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
     url(r'^clasificados/',include('publicidad.urls')),#urls del modulo de clasificados
@@ -42,7 +44,16 @@ urlpatterns = patterns('',
     url(r'^cambiar/(\d+)$', 'entidades.views.cambiar_estado_plan_costo', name='cambiar_estado_plan_costo'),
     url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
 
+    #url(r'^calendario-deportivo/', include('calendario_deportivo.urls_tenant')),
+
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += required(
+    tenant_actor('calendarionacional'),
+    patterns('',
+        url(r'^calendario-deportivo/', include('calendario_deportivo.urls_tenant')),
+    ),
+)
 
 urlpatterns += required(
     tenant_actor('solicitudescenario'),

@@ -18,16 +18,18 @@
         <span>Listado de personal de apoyo nacional</span>
     </a>
 </li>
+
 <li class="{% if 'escenarios' in request.path %} active {% endif %}">
     <a href="{% url 'listar_escenarios' %}">
         <span>Listado de escenarios nacionales</span>
     </a>
 </li>
+<!--
 <li class="{% if 'escuelas' in request.path %} active {% endif %}">
-    <a href="{% url 'escuela_deportiva_listar' %}">
+    <a href="#">
         <span>Listado de escuelas de formación deportiva nacionales</span>
     </a>
-</li>
+</li>-->
 <li class="{% if 'cajas' in request.path %} active {% endif %}">
     <a href="{% url 'listar_ccfs' %}">
         <span>Listado de cajas de compensación familiar nacionales</span>

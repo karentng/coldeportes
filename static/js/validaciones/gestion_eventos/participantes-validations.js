@@ -56,12 +56,15 @@ fields = {
                 message: 'El correo electrónico no puede ser vacío'
             },
             emailAddress: {
-                message: 'El valor ingresado no es un correo valido'
+                message: 'El valor ingresado no es un correo válido'
             }
         }
     },
     confirmacion_mail: {
         validators:{
+            emailAddress: {
+                message: 'El valor ingresado no es un correo válido'
+            },
             callback:{
                 message: "Los correos electrónicos no coinciden",
                 callback: function(value, validator){

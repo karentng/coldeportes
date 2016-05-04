@@ -100,7 +100,15 @@
             <div class="col-md-10 col-md-offset-1">
                 <div class="result-container">
                     <ul class="result-list">
-                        <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">
+                        <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">                            
+                            {% if entidad.tipo_tenant == "Club" %}
+                                {% if tipoTenant.reconocimiento %}
+                                <div class="pull-right" align="right">                        
+                                    <img class="img-responsive" style="width:15%; height:15%" src="{{STATIC_URL}}img/reconocimiento_deportivo/blue.jpg?V=1.1" alt="certificado">
+                                    <h6><b>Club Deportivo Reconocido</b></h6>
+                                </div>
+                                {% endif %}
+                            {% endif %} 
                             <div class="result-image" style="background: white !important;">
                                 <img src="{% if entidad.foto %}{{ MEDIA_URL }}{{ entidad.foto }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" class="img-responsive" alt="Info Tenant"/>
                                 {% if request.user.is_superuser  or request.user|has_group:"Digitador" %}
@@ -114,9 +122,10 @@
                                         <button id="submit-crop" hidden></button>
                                     </form>
                                 {% endif %}
-                            </div>
-                            <div class="result-info">
-                                <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>
+                            </div>                            
+                            
+                            <div class="result-info" width="100%">
+                                <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>                                
                                 <p class="location">{{ entidad.tipo_tenant }} {% if entidad.disciplina %} de {{ entidad.disciplina }}{% endif %}</p>
                                 <p class="desc">
                                     {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
@@ -124,7 +133,7 @@
                                 <div class="m-b-10">
                                     {% if entidad.tipo_tenant == "Club" and user.is_authenticated %}
                                         <a href="" data-target="#modal-socios" data-toggle="modal" style="margin-right: 10px;"> <i class="fa fa-group"></i> Ver socios del club</a>
-                                        <a data-toggle="modal" data-target="#modal-planes"  href=""><i class="fa fa-money"></i> Ver planes de costos</a>
+                                        <a data-toggle="modal" data-target="#modal-planes"  href=""><i class="fa fa-money"></i> Ver planes de costos</a>                                        
                                     {% endif %}
                                 </div>
                                 <div class="btn-row">
@@ -145,8 +154,8 @@
                                             <i class="fa fa-fw fa-futbol-o"></i>
                                         </a><span>{% if entidad.deportes %} {{entidad.deportes }} {% else %} No especificado{% endif %}</span>
                                     {% endif %}
-                                </div>
-                            </div>
+                                </div>                                
+                            </div>                        
                         </li>
                     </ul>
                 </div>
@@ -282,8 +291,8 @@
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
-                                    <th>Ciudad</th>
-                                    <th>Empresa</th>
+                                    <th>Fecha de incorporación</th>
+                                    <th>Correo electrónico</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -291,8 +300,8 @@
                                     <tr class="gradeX">
                                         <td>{{ socio.nombre }}</td>
                                         <td>{{ socio.apellido }}</td>
-                                        <td>{{ socio.ciudad }}</td>
-                                        <td>{{ socio.empresa }}</td>
+                                        <td>{{ socio.fecha_incorporacion }}</td>
+                                        <td>{{ socio.correo }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -329,7 +338,7 @@
                                     {% for plan in entidad.planes_de_costo %}
                                         <tr class="gradeX">
                                             <td>{{ plan.nombre }}</td>
-                                            <td>$ {{ plan.precio }}</td>
+                                            <td>${{ plan.precio }}</td>
                                             <td>{{ plan.descripcion }}</td>
                                         </tr>
                                     {% endfor %}

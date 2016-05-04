@@ -133,7 +133,7 @@ def finalizar_solicitud(request,id):
     """
     try:
         solicitud = SolicitudEscenario.objects.get(id=id)
-        messages.success(request,'Solicitud enviada con éxito a:'+str(solicitud.para_quien))
+        messages.success(request,'Solicitud enviada con éxito a: '+str(solicitud.para_quien))
         del request.session['identidad']
     except:
         messages.error(request,'Solicitud no encontrada')

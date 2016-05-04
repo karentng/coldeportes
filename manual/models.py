@@ -7,14 +7,21 @@ class Articulo(models.Model):
     MODULOS = (
         ('CF', 'CAFs'),
         ('CC', 'Caja de Compensaciones'),
+        ('CE', 'Centros Biomédicos'),
         ('DE', 'Deportistas'),
         ('DR', 'Directorio'),
         ('DI', 'Dirigentes'),
         ('ES', 'Escenarios'),
         ('EC', 'Escuelas'),
+        ('EV', 'Eventos'),
+        ('LD', 'Listados Doping'),
         ('NO', 'Normograma'),
         ('NT', 'Noticias'),
         ('PA', 'Personal de Apoyo'),
+        ('PU', 'Publicidad'),
+        ('SE', 'Selecciones'),
+        ('SR', 'Solicitud Adecuación: Respuestas'),
+        ('SS', 'Solicitud Adecuación: Solicitudes'),
         ('TR', 'Transferencias'),
     )
 

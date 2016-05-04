@@ -10,7 +10,7 @@
         </div>
         <div class="panel-collapse collapse in" id="datos-colapse">
             <div class="panel-body">
-                <h1 class="text-center">{{ evento.titulo_evento }}</h1>
+                <h1 class="text-center">{{ evento.titulo_evento|upper }}</h1>
                 <hr class="line-style">
                 <p >Fecha de Publicación: {{ evento.fecha_creacion|date:"l, F j, Y" }}</p>
 
@@ -21,7 +21,7 @@
                         <b>Fecha Finalización: </b>{{ evento.fecha_finalizacion|date:"l, j \d\e F \d\e Y" }}<br>
                         <b>Fecha de Preinscripción: </b>Desde el {{ evento.fecha_inicio_preinscripcion|date:"l, j \d\e F" }}
                                                         hasta el {{ evento.fecha_finalizacion_preinscripcion|date:"l, j \d\e F \d\e Y" }}<br>
-                        <b>Lugar del Evento: </b>{{ evento.nombre_lugar }}, {{ evento.ciudad_evento }}<br>
+                        <b>Lugar del Evento: </b>{{ evento.nombre_lugar|upper }}, {{ evento.ciudad_evento|upper }}<br>
                         <b>Costo Entrada: </b>{% if evento.costo_entrada %}${{ evento.costo_entrada }}{% else %} Libre{% endif %}<br>
                         <b>Cupo Disponible: </b>{{ evento.cupo_disponible }}
                     </p>
@@ -58,7 +58,7 @@
                     {% endif %}
                     <p>{{ evento.descripcion_evento|safe }}</p>
                 </div>
-                <p style="float: right;"><i>{{ evento.autor }}</i></p>
+                <p style="float: right;"><i>{{ evento.autor|upper }}</i></p>
                 <br>
                 <hr>
             </div>

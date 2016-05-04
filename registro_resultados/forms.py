@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import datetime
 from django import forms
 from registro_resultados.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
@@ -75,6 +76,17 @@ class ParticipanteTiempoForm(forms.ModelForm):
         else:
             pass
 
+    def clean_fecha_nacimiento(self):
+
+        fecha = self.cleaned_data['fecha_nacimiento']
+        if fecha:            
+            if fecha >= datetime.date.today():
+                raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
+        else:
+            pass
+
     def clean_tiempo(self):
 
         tiempo = self.cleaned_data['tiempo']
@@ -98,7 +110,9 @@ class ParticipanteTiempoForm(forms.ModelForm):
 
 
 class ParticipantePuntosForm(forms.ModelForm):
+
     required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
 
         competencia = kwargs.pop('competencia')
@@ -113,6 +127,16 @@ class ParticipantePuntosForm(forms.ModelForm):
             'fecha_nacimiento': MyDateWidget(),
         }
 
+    def clean_fecha_nacimiento(self):
+
+        fecha = self.cleaned_data['fecha_nacimiento']
+        if fecha:            
+            if fecha >= datetime.date.today():
+                raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
+        else:
+            pass
 
 class ParticipanteMetrosForm(forms.ModelForm):
 
@@ -146,8 +170,21 @@ class ParticipanteMetrosForm(forms.ModelForm):
             'fecha_nacimiento': MyDateWidget(),
         }
 
+    def clean_fecha_nacimiento(self):
+
+        fecha = self.cleaned_data['fecha_nacimiento']
+        if fecha:            
+            if fecha >= datetime.date.today():
+                raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
+        else:
+            pass
+
 class ParticipanteEquipoForm(forms.ModelForm):
+
     required_css_class = 'required'
+    
     def __init__(self, *args, **kwargs):
 
         competencia = kwargs.pop('competencia')
@@ -161,6 +198,17 @@ class ParticipanteEquipoForm(forms.ModelForm):
         widgets = {
             'fecha_nacimiento': MyDateWidget(),
         }
+
+    def clean_fecha_nacimiento(self):
+
+        fecha = self.cleaned_data['fecha_nacimiento']
+        if fecha:            
+            if fecha >= datetime.date.today():
+                raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
+        else:
+            pass
 
 
 class EquipoTiempoForm(forms.ModelForm):
@@ -282,6 +330,8 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
         
         if eliminar:
             del self.fields[eliminar]
+
+        add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
 
 class FiltrosTablaMedalleriaForm(forms.Form):

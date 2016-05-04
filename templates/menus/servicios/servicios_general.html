@@ -1,0 +1,25 @@
+<li class="has-sub{% if '/solicitudes-escen/' in request.path  or '/evento' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-plus-circle"></i>
+        <span class="colorMenu">SERVICIOS</span>
+    </a>
+    <ul class="sub-menu">        
+    {% if request.tenant.schema_name == 'public' %}
+        {% if user.is_superuser %}
+            {% include "menus/servicios/registro_resultados.html" %}
+        {% endif %}
+    {% else %}
+        {% if user.is_authenticated %}
+            {% include "menus/servicios/reconocimiento_deportivo.html" %}
+            {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+                {% include "menus/aplicacion/solicitudescenarios.html" %}
+            {%endif%}
+        {% endif %}
+        {% include "menus/servicios/gestion_eventos.html" %}        
+    {% endif %}    
+    {% if perms.entidades.add_calendarionacional %}
+        {% include "menus/aplicacion/calendario_deportivo.html" %}
+    {% endif %}
+    </ul>
+</li>

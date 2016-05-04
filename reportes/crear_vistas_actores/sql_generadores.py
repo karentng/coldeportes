@@ -12,14 +12,16 @@ def seleccion_datos_cafs(tenant=''):
         CAF.entidad_id, CAF.fecha_creacion,
         CAF.barrio, CAF.nombre_administrador,
         CLASE.nombre as nombre_clase, SERVICIO.nombre as nombre_servicio,
-        F.foto
+        F.foto,
+        CAF.nombre||' '||EN.nombre as contenido
     FROM
     %ssnd_centroacondicionamiento CAF
     LEFT JOIN %ssnd_centroacondicionamiento_clases CLASES ON CLASES.centroacondicionamiento_id = CAF.id
-    LEFT JOIN public.entidades_caclase CLASE ON CLASE.id = CLASES.caclase_id
     LEFT JOIN %ssnd_centroacondicionamiento_servicios SERVICIOS ON SERVICIOS.centroacondicionamiento_id = CAF.id
-    LEFT JOIN public.entidades_caservicio SERVICIO ON SERVICIO.id = SERVICIOS.caservicio_id
     LEFT JOIN %ssnd_cafoto F on F.centro_id=CAF.id
+    LEFT JOIN public.entidades_caclase CLASE ON CLASE.id = CLASES.caclase_id
+    LEFT JOIN public.entidades_caservicio SERVICIO ON SERVICIO.id = SERVICIOS.caservicio_id
+    LEFT join public.entidades_entidad EN on CAF.entidad_id = EN.id
     """)%(tenant, tenant, tenant, tenant)
 
 def seleccion_datos_escenarios(tenant=''):
@@ -85,8 +87,8 @@ def seleccion_datos_escenarios(tenant=''):
             DH.fecha_inicio,
             DH.fecha_fin,
             DH.descripcion as descripcion_dato_historico,
-            DH.fecha_creacion as fecha_creacion_dato_historico
-
+            DH.fecha_creacion as fecha_creacion_dato_historico,
+            E.nombre||' '||EN.nombre as contenido
     FROM %ssnd_escenario E 
     LEFT join %ssnd_caracterizacionescenario CE on CE.escenario_id=E.id 
     LEFT join %ssnd_caracterizacionescenario_caracteristicas CEC on CEC.caracterizacionescenario_id=E.id 
@@ -100,6 +102,7 @@ def seleccion_datos_escenarios(tenant=''):
     LEFT join %ssnd_video V on V.escenario_id=E.id
     LEFT join %ssnd_datohistorico DH on DH.escenario_id=E.id
     LEFT join %ssnd_mantenimiento M on M.escenario_id=E.id 
+    LEFT join public.entidades_entidad EN on E.entidad_id=EN.id
     """)%(tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant)
 
 
@@ -118,11 +121,13 @@ def seleccion_datos_personal_apoyo(tenant=''):
             PA.lgtbi, PA.fecha_creacion,
             PA.estado, PA.entidad_id, PA.correo_electronico, 
             FD.nivel as nivel_formacion, FD.estado as estado_formacion,
-            FD.fecha_finalizacion
+            FD.fecha_finalizacion,
+            PA.nombres||' '||EN.nombre as contenido
         FROM
         %ssnd_personalapoyo PA
         LEFT JOIN %ssnd_formaciondeportiva FD ON FD.personal_apoyo_id = PA.id
         LEFT JOIN %ssnd_personalapoyo_nacionalidad NAL ON NAL.personalapoyo_id = PA.id 
+        LEFT join public.entidades_entidad EN on PA.entidad_id=EN.id
         """)%(tenant,tenant,tenant)
 
 
@@ -146,7 +151,8 @@ def seleccion_datos_deportistas(tenant=''):
             IA.fecha_finalizacion,
             ID.usa_centros_biomedicos,ID.es_beneficiario_programa_apoyo,
             HL.tipo_lesion,HL.periodo_rehabilitacion, HL.fecha_lesion,
-            HL.segmento_corporal
+            HL.segmento_corporal,
+            DE.nombres||' '||DE.apellidos||' '||EN.nombre as contenido
         FROM
         %ssnd_deportista DE
         LEFT JOIN %ssnd_deportista_nacionalidad NAL ON NAL.deportista_id = DE.id
@@ -155,6 +161,7 @@ def seleccion_datos_deportistas(tenant=''):
         LEFT JOIN %ssnd_informacionacademica IA ON IA.deportista_id = DE.id
         LEFT JOIN %ssnd_informacionadicional ID ON ID.deportista_id = DE.id
         LEFT JOIN %ssnd_historiallesiones HL ON HL.deportista_id = DE.id
+        LEFT join public.entidades_entidad EN on DE.entidad_id=EN.id
         """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant)
 
 def seleccion_datos_dirigentes(tenant=''):
@@ -169,11 +176,13 @@ def seleccion_datos_dirigentes(tenant=''):
             DIR.entidad_id, DIR.fecha_creacion,
             DIR.genero, DIR.telefono_fijo as telefono_contacto,
             DIR.estado, DIR.ciudad_residencia_id AS ciudad_id,
-            C.cargo, DIR.email
+            C.cargo, DIR.email,
+            DIR.nombres||' '||DIR.apellidos||' '||EN.nombre as contenido
         FROM
         {0}snd_dirigente DIR
         LEFT JOIN {0}snd_dirigente_nacionalidad NAL ON NAL.dirigente_id = DIR.id
         LEFT join (SELECT DIC.id, DIC.dirigente_id, DIC.nombre as cargo, max(fecha_posesion) as fecha_posesion_cargo FROM snd_dirigentecargo as DIC group by DIC.id) C on C.dirigente_id=DIR.id
+        LEFT join public.entidades_entidad EN on DIR.entidad_id=EN.id
         """.format(tenant))
 
 def seleccion_datos_escuelas(tenant=''):
@@ -206,11 +215,13 @@ def seleccion_datos_cajas(tenant=''):
             CAJA.telefono_contacto, 
             CAJA.nombre_contacto,
             SERVICIO.categoria,
-            SERVICIO.descripcion
+            SERVICIO.descripcion,
+            CAJA.nombre||' '||EN.nombre as contenido
         FROM
         {0}snd_cajacompensacion CAJA
         LEFT JOIN {0}snd_cajacompensacion_servicios SERVICIOS ON SERVICIOS.cajacompensacion_id = CAJA.id
         LEFT JOIN public.entidades_tiposerviciocajacompensacion SERVICIO ON SERVICIO.id = SERVICIOS.cajacompensacion_id
+        LEFT join public.entidades_entidad EN on CAJA.entidad_id=EN.id
     """.format(tenant))
 
 COMANDOS_GENERADORES_DE_VISTAS_ACTORES = [

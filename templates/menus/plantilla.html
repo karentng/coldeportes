@@ -89,23 +89,25 @@
 {% endif %}
 
 {% if  request.tenant.tipo == 2 %}
-    <li class="has-sub {% if 'casos-doping' in request.path %} active {% endif %}">
-        <a href="javascript:;">
-            <b class="caret pull-right"></b>
-            <i class="fa fa-heartbeat"></i>
-            <span class="colorMenu">CASOS DE DOPING</span>
-        </a>
-        <ul class="sub-menu">
-            {% if perms.listados_doping.add_casodoping %}
-                <li class="{% if 'casos-doping/registrar' in request.path %} active {% endif %}">
-                    <a href="{% url 'registrar_caso_doping' %}">Registrar caso de doping</a>
+    {% if user.is_authenticated %}
+        <li class="has-sub {% if 'casos-doping' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                <i class="fa fa-heartbeat"></i>
+                <span class="colorMenu">CASOS DE DOPING</span>
+            </a>
+            <ul class="sub-menu">
+                {% if perms.listados_doping.add_casodoping %}
+                    <li class="{% if 'casos-doping/registrar' in request.path %} active {% endif %}">
+                        <a href="{% url 'registrar_caso_doping' %}">Registrar caso de doping</a>
+                    </li>
+                {% endif %}
+                <li class="{% if 'casos-doping/listar' in request.path or 'casos-doping/editar' in request.path %} active {% endif %}">
+                    <a href="{% url 'listar_casos_doping' %}">Listar casos de doping</a>
                 </li>
-            {% endif %}
-            <li class="{% if 'casos-doping/listar' in request.path or 'casos-doping/editar' in request.path %} active {% endif %}">
-                <a href="{% url 'listar_casos_doping' %}">Listar casos de doping</a>
-            </li>
-        </ul>
-    </li>
+            </ul>
+        </li>
+    {% endif %}
 {% endif %}
 
 {% if not request.user.is_superuser %}
@@ -151,19 +153,6 @@
         {%endif%}
         {% include "menus/aplicacion/manual.html" %}
 
-        <li class="has-sub{% if '/solicitudes-escen/' in request.path %} active {% endif %}">
-            <a href="javascript:;">
-                <b class="caret pull-right"></b>
-                <i class="fa fa-plus-circle"></i>
-                <span class="colorMenu">SERVICIOS</span>
-            </a>
-            {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
-                <ul class="sub-menu">
-                    {% include "menus/aplicacion/solicitudescenarios.html" %}
-                </ul>
-            {%endif%}
-        </li>
-
     {% endif %}
 
     {% include "menus/aplicacion/reportes.html" %}
@@ -178,13 +167,14 @@
         {% include "menus/aplicacion/entidades.html" %}
         {% include "menus/aplicacion/reportes.html" %}
         {% include "menus/aplicacion/normograma.html" %}
-        {% include "menus/servicios/registro_resultados.html" %}
         {% include "menus/aplicacion/noticias.html" %}
         {% include "menus/aplicacion/publicidad.html" %}
         {% include "menus/aplicacion/manual.html" %}
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
+        {% include "menus/aplicacion/calendario_deportivo.html" %}
 {% endif %}
 
 {% include "menus/aplicacion/directorio.html" %}
+{% include "menus/servicios/servicios_general.html" %}
