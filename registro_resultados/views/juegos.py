@@ -58,11 +58,18 @@ def datos_competencia(request, juego_id, competencia_id=None):
     except Exception:
         competencia = None
 
-    form = CompetenciaForm(instance=competencia)
+    if competencia_id:
+        form = CompetenciaEditarForm(instance=competencia)
+    else:
+        form = CompetenciaForm()
 
     if request.method == "POST":
         deporte_id = request.POST['deporte']
-        form = CompetenciaForm(request.POST, request.FILES, deporte_id=deporte_id, instance=competencia)
+
+        if competencia_id:
+            form = CompetenciaEditarForm(request.POST, request.FILES, deporte_id=deporte_id, instance=competencia)
+        else:
+            form = CompetenciaForm(request.POST, request.FILES, deporte_id=deporte_id, instance=competencia)
 
         if form.is_valid():
             nueva_competencia = form.save(commit=False)

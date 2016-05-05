@@ -10,7 +10,7 @@ class Juego(models.Model):
     anio = models.PositiveIntegerField(verbose_name="año")
     imagen = models.FileField(upload_to=ruta_juegos_imagenes, blank=True, null=True, verbose_name="imagen o logo del juego")
     pais = models.ForeignKey(Nacionalidad, default=52, verbose_name="País")
-    descripcion = models.TextField(null=True, blank=True, verbose_name="descripción")
+    descripcion = models.TextField(null=True, blank=True, verbose_name="descripción", help_text="Ingrese detalles de como se desarrolló el juego, detalles y demás información que considere pertinente en la descripción del juego.")
 
     
     def __str__(self):
@@ -40,7 +40,7 @@ class Competencia(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Disciplina Deportiva')
     categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='categoría')
     modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='modalidad de competencia')
-    descripcion = models.TextField(null=True, blank=True, verbose_name='descripción')
+    descripcion = models.TextField(null=True, blank=True, verbose_name='descripción', help_text="Ingrese detalles de como se desarrollo la competencia, detalles y demás información que considere pertinente en la descripción de la competencia.")
     juego = models.ForeignKey(Juego)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -56,10 +56,10 @@ class Equipo(models.Model):
 
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     tiempo = models.CharField(blank=True, null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
-    puntos = models.IntegerField(default=0, null=True)
-    metros = models.DecimalField(default=0, null=True, max_digits=6, decimal_places=3, help_text='En metros')
+    puntos = models.IntegerField(default=0, null=True, blank=True)
+    metros = models.DecimalField(default=0, null=True, blank=True, max_digits=6, decimal_places=3, help_text='En metros')
     departamento = models.ForeignKey(Departamento)
-    marca = models.CharField(blank=True, null=True, max_length=10, help_text="La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
+    marca = models.CharField(blank=True, null=True, max_length=10, help_text="Este campo se refiere al mejor desempeño que tiene el equipo en esta competencia. La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
     posicion = models.IntegerField(default=0, verbose_name="posición")    
     creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia)
@@ -82,10 +82,10 @@ class Participante(models.Model):
     estatura = models.PositiveIntegerField(verbose_name='estatura (cm)', null=True, blank=True)
     peso = models.DecimalField(max_digits=6, decimal_places=3, verbose_name='peso (kg)', null=True, blank=True)
     posicion = models.IntegerField(default=0, verbose_name="posición")
-    metros = models.DecimalField(default=0, null=True, max_digits=6, decimal_places=3, help_text='En metros')
-    puntos = models.IntegerField(default=0, null=True)
-    tiempo = models.CharField(null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
-    marca = models.CharField(blank=True, null=True, max_length=10, help_text="La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
+    metros = models.DecimalField(default=0, null=True, blank=True, max_digits=6, decimal_places=3, help_text='En metros')
+    puntos = models.IntegerField(default=0, null=True, blank=True)
+    tiempo = models.CharField(null=True, blank=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
+    marca = models.CharField(blank=True, null=True, max_length=10, help_text="Este campo se refiere al mejor desempeño que tiene el participante en esta competencia. La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
     equipo = models.ForeignKey(Equipo, null=True)
     creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia, null=True)

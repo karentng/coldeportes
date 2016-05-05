@@ -86,11 +86,9 @@
                             <a href='{% url 'listar_participantes' competencia.id %}'>
                                 <i class="fa fa-check"></i> Ingresar Resultados
                             </a><br>
-                            {% comment %}
                             <a href='{% url 'datos_competencia' juego_id competencia.id %}'>
                                 <i class="fa fa-edit"></i> Editar
                             </a><br>
-                            {% endcomment %}
 
                             <a href="#" data-target="#modal-eliminar-{{competencia.id}}" data-toggle="modal">
                                 <i class="fa fa-trash"></i> Eliminar
