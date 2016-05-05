@@ -20,5 +20,12 @@
             </a>
         </a>
     </li>
+    <li role="tab"  {% if wizard_stage >= 4 %} aria-selected="true" class="active" {% endif %} style="z-index: 1;"><span class="label">4</span>
+        <a class="hidden-phone">
+            <a {% if edicion == 1 or edicion == '1' %} href="{% url 'dirigentes_formacion_academica' dirigente_id=dirigente_id edicion=edicion %}" style="cursor:pointer;"{% endif %}>
+                Formación Académica <small>Formación académica del dirigente</small>
+            </a>
+        </a>
+    </li>
 </ol>
 <br/>
