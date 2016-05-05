@@ -1,131 +1,231 @@
-from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404
 from django.db import connection
-from snd.formularios.escuela_deportiva  import *
+from snd.formularios.escuela_deportiva import *
 from snd.models import *
 from entidades.models import *
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from coldeportes.utilities import *
 
-#==================================================================
-# Crear / Modificar Escuela de formación deportiva
-#==================================================================
-
-"""a
-Noviembre 02 / 2015
-Autor: Cristian Leonardo Ríos López
-
-Diccionario con los formularios, # de paso, paso anterior, paso siguiente y plantilla del wizard
-"""
-ESCUELA_DEPORTIVA_WIZARD = {
-    "identificacion": [EscuelaDeportivaForm, 1, None, "servicios", "escuela_deportiva/wizard/escuela_deportiva_identificacion.html"],
-    "servicios": [EscuelaDeportivaServiciosForm, 2, "identificacion", None, "escuela_deportiva/wizard/escuela_deportiva_servicios.html"],
-}
-
 
 @login_required
 @all_permission_required('snd.add_escueladeportiva')
-def obtenerDatosPasoDelWizard(request, paso):
-    """
-    Noviembre 02 / 2015
-    Autor: Cristian Leonardo Ríos López
+def wizard_nuevo_sede(request):
+    from django.db import IntegrityError
 
-    Retorna los datos del paso del wizard que recibe
-
-    Retorno el valor del diccionario que se recibe como parámetro
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param paso:      Paso actual del Wizard
-    :type paso:       String
-    :returns:         Lista con los datos del Wizard
-    :rtype:           List
-    """
-    return ESCUELA_DEPORTIVA_WIZARD[paso]
-
-
-@login_required
-@all_permission_required('snd.add_escueladeportiva')
-def crear_editar(request,paso,edicion,escuela_deportiva_id=None):
-    """
-    Noviembre 02 / 2015
-    Autor: Cristian Leonardo Ríos López
-    
-    Crear una Escuela de Formación Deportiva
-
-    Se obtienen los formularios de información de la escuela de formación deportiva con los datos diligenciados y se guardan.
-
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    """
-
-    form, paso_wizard, anterior, siguiente, plantilla = obtenerDatosPasoDelWizard(request, paso)
-
-    try:
-        escuela_deportiva = EscuelaDeportiva.objects.get(id=escuela_deportiva_id)
-    except EscuelaDeportiva.DoesNotExist:
-        if escuela_deportiva_id == None:
-            escuela_deportiva = None
-        else:
-            messages.error(request, "Está tratando de editar una Escuala de Formación Deportiva inexistente.")
-            return redirect('escuela_deportiva_listar')
-
+    escuela_form = EscuelaDeportivaForm()
 
     if request.method == 'POST':
-        form = form(request.POST, request.FILES, instance=escuela_deportiva)
-        if form.is_valid():
-            escuela_deportiva = form.save(commit=False)
-            escuela_deportiva.entidad = request.tenant
-            escuela_deportiva.save()
-            form.save_m2m()
-            if siguiente == None:
-                return finalizar(request,opcion='listar',edicion=edicion)
-            else:
-                return redirect('escuela_deportiva_crear_editar', paso=siguiente, escuela_deportiva_id=escuela_deportiva.id, edicion=edicion)
 
-    form = form(instance=escuela_deportiva)
+        escuela_form = EscuelaDeportivaForm(request.POST)
 
-    return render(request, plantilla, {
-        'wizard_stage': paso_wizard,
-        'anterior': anterior,
-        'escuela_deportiva_id': escuela_deportiva_id,
-        'edicion': edicion,
-        'form': form,
+        if escuela_form.is_valid():
+            try:
+                escuela = escuela_form.save(commit=False)
+                escuela.entidad = request.tenant
+                escuela.save()
+                return redirect('wizard_servicios', escuela.id)
+
+            except IntegrityError as e:
+                if 'unique constraint' in str(e):
+                    messages.error(request, "La sede que trata de registrar ya existe.")
+
+    return render(request, 'escuela_deportiva/wizard/wizard_escuela_sede.html', {
+        'titulo': 'Ingrese los datos de identificación y contacto de la sede de la Escuela de Formación Deportiva',
+        'titulo_panel': 'Registro de Sede de EFD',
+        'wizard_stage': 1,
+        'form': escuela_form,
     })
+
+
+@login_required
+@all_permission_required('snd.add_escenario')
+def wizard_sede(request, escuela_id):
+    from django.db import IntegrityError
+    try:
+        escuela = EscuelaDeportiva.objects.get(id=escuela_id)
+    except EscuelaDeportiva.DoesNotExist:
+        messages.error(request, 'La sede a la que trata de acceder no existe')
+        return redirect('wizard_nuevo_sede')
+
+    escuela_form = EscuelaDeportivaForm(instance=escuela)
+
+    if request.method == 'POST':
+
+        escuela_form = EscuelaDeportivaForm(request.POST, instance=escuela)
+
+        if escuela_form.is_valid():
+
+            try:
+                sede = escuela_form.save(commit=False)
+                sede.entidad = request.tenant
+                sede.save()
+                return redirect('wizard_servicios', escuela.id)
+            except IntegrityError as e:
+                if 'unique constraint' in str(e):
+                    messages.error(request, "La sede que trata de registrar ya existe.")
+
+    return render(request, 'escuela_deportiva/wizard/wizard_escuela_sede.html', {
+        'titulo': 'Ingrese los datos de identificación y contacto de la sede de la Escuela de Formación Deportiva',
+        'titulo_panel': 'Edición de Sede de EFD',
+        'wizard_stage': 1,
+        'form': escuela_form,
+        'escuela_id': escuela_id,
+    })
+
 
 @login_required
 @all_permission_required('snd.add_escueladeportiva')
-def finalizar(request, opcion, edicion):
-    """
-    Noviembre 02 / 2015
-    Autor: Cristian Leonardo Ríos López
-    
-    enviar mensaje de finalizada la creación de la escuela de formación deportiva
+def wizard_servicios_sede(request, escuela_id):
+    try:
+        escuela = EscuelaDeportiva.objects.get(id=escuela_id)
+    except EscuelaDeportiva.DoesNotExist:
+        messages.error(request, 'La sede a la que trata de acceder no existe')
+        return redirect('wizard_nuevo_sede')
+
+    servicios_form = EscuelaDeportivaServiciosForm(instance=escuela)
+
+    if request.method == 'POST':
+
+        servicios_form = EscuelaDeportivaServiciosForm(request.POST, request.FILES, instance=escuela)
+
+        if servicios_form.is_valid():
+            escuela_servicios = servicios_form.save(commit=False)
+            escuela_servicios.save()
+            return redirect('wizard_horarios', escuela_id)
+
+    return render(request, 'escuela_deportiva/wizard/wizard_servicios_sede.html', {
+        'titulo': 'Seleccione los servicios que ofrece la sede de la Escuela de Formación Deportiva',
+        'wizard_stage': 2,
+        'titulo_panel': 'Registro de Servicios de Sede',
+        'form': servicios_form,
+        'escuela_id': escuela_id,
+    })
 
 
-    :param request:   Petición realizada
-    :type request:    WSGIRequest
-    :param opcion: indica si se quiere ir a listar o a registrar una escuela de formación deportiva
-    :type opcion: String
-    :param edicion: indica si se está editando una escuela de formación deportiva existente o si se está registrando una escuela de formación deportiva nueva
-    :type edicion: Integer
-    """
+@login_required
+@all_permission_required('snd.add_escueladeportiva')
+def wizard_horarios_sede(request, escuela_id):
+    try:
+        horarios = HorarioActividadesEscuela.objects.filter(sede=escuela_id)
+    except Exception:
+        horarios = None
 
-    if edicion == 0 or edicion == '0':
-        messages.success(request, "Escual de Formación Deportiva registrada correctamente.")
-    else:
-        messages.success(request, "Escuela de Formación Deportiva editada correctamente.")
+    try:
+        sede = EscuelaDeportiva.objects.get(id=escuela_id)
+    except EscuelaDeportiva.DoesNotExist:
+        messages.error(request, 'La sede a la que trata de acceder no existe')
+        return redirect('wizard_nuevo_sede')
+
+    horarios_form = HorarioActividadesEscuelaForm()
+
+    if request.method == 'POST':
+        horarios_form = HorarioActividadesEscuelaForm(request.POST)
+        if horarios_form.is_valid():
+            horario_nuevo = horarios_form.save(commit=False)
+            horario_nuevo.sede = sede
+            horario_nuevo.save()
+            horarios_form.save_m2m()
+            messages.success(request, "Horario registrado correctamente")
+            return redirect('wizard_horarios_sede', escuela_id)
+        else:
+            print(horarios_form.errors)
+
+    return render(request, 'escuela_deportiva/wizard/wizard_horarios_sede.html', {
+        'titulo': 'Adicione los horarios de actividades de la sede de la EFD',
+        'wizard_stage': 3,
+        'titulo_panel': 'Registro de Horarios de Sede',
+        'form': horarios_form,
+        'horarios': horarios,
+        'escuela_id': escuela_id,
+    })
+
+
+@login_required
+@all_permission_required('snd.add_escueladeportiva')
+def wizard_categorias_sede(request, escuela_id):
+    try:
+        categorias = CategoriaEscuela.objects.filter(sede=escuela_id)
+    except Exception:
+        categorias = None
+
+    try:
+        sede = EscuelaDeportiva.objects.get(id=escuela_id)
+    except EscuelaDeportiva.DoesNotExist:
+        messages.error(request, 'La sede a la que trata de acceder no existe')
+        return redirect('wizard_nuevo_sede')
+
+    categorias_form = CategoriaEscuelaForm()
+
+    if request.method == 'POST':
+        categorias_form = CategoriaEscuelaForm(request.POST)
+        if categorias_form.is_valid():
+            cateforia_nueva = categorias_form.save(commit=False)
+            cateforia_nueva.sede = sede
+            cateforia_nueva.save()
+            messages.success(request, "Categoría registrada correctamente")
+            return redirect('wizard_categorias_sede', escuela_id)
+        else:
+            print(categorias.errors)
+
+    return render(request, 'escuela_deportiva/wizard/wizard_categorias_sede.html', {
+        'titulo': 'Adicione las categorías de la sede de la EFD',
+        'wizard_stage': 4,
+        'titulo_panel': 'Registro de Categorías de Sede',
+        'form': categorias_form,
+        'categorias': categorias,
+        'escuela_id': escuela_id,
+    })
+
+
+@login_required
+@all_permission_required('snd.add_escueladeportiva')
+def eliminar_horario_sede(request, escuela_id, horario_id):
+    try:
+        horario = HorarioActividadesEscuela.objects.get(id=horario_id, sede=escuela_id)
+        horario.delete()
+        messages.success(request, "Horario eliminado correctamente")
+        return redirect('wizard_horarios_sede', escuela_id)
+
+    except Exception as e:
+        return redirect('wizard_horarios_sede', escuela_id)
+
+
+@login_required
+@all_permission_required('snd.add_escueladeportiva')
+def eliminar_categoria_sede(request, escuela_id, categoria_id):
+    try:
+        categorias = CategoriaEscuela.objects.filter(sede=escuela_id)
+        if categorias.count() == 1:
+            messages.error(request, "La sede debe tener almenos 1 categoría")
+            return redirect('wizard_categorias_sede', escuela_id)
+        categoria = categorias.get(id=categoria_id)
+        categoria.delete()
+        messages.success(request, "Horario eliminado correctamente")
+        return redirect('wizard_categorias_sede', escuela_id)
+
+    except Exception as e:
+        return redirect('wizard_categorias_sede', escuela_id)
+
+
+@login_required
+@all_permission_required('snd.add_escueladeportiva')
+def finalizar(request, escuela_id, opcion):
+
+    categorias = CategoriaEscuela.objects.filter(sede=escuela_id)
+    if categorias.count() == 0:
+        messages.error(request, "La sede debe tener almenos 1 categoría")
+        return redirect('wizard_categorias_sede', escuela_id)
+
+    messages.success(request, "Sede de EFD registrada correctamente.")
 
     if opcion == "nuevo":
-        return redirect('escuela_deportiva_crear_editar',paso=identificacion,edicion=0)
-    elif opcion == "listar":
+        return redirect('wizard_nuevo_sede')
+    else:
         return redirect('escuela_deportiva_listar')
+
 
 @login_required
 @all_permission_required('snd.view_escueladeportiva')
-def ver(request,escuela_deportiva_id,id_entidad):
+def ver(request, escuela_deportiva_id, id_entidad):
     """
     Noviembre 02 / 2015
     Autor: Cristian Leonardo Ríos López
@@ -149,13 +249,16 @@ def ver(request,escuela_deportiva_id,id_entidad):
     ContentType.objects.clear_cache()
     try:
         escuela_deportiva = EscuelaDeportiva.objects.get(id=escuela_deportiva_id)
+        horarios = HorarioActividadesEscuela.objects.filter(sede=escuela_deportiva.id)
     except EscuelaDeportiva.DoesNotExist:
         messages.error(request, 'La escuela deportiva que desea ver no existe')
         return redirect('escuela_deportiva_listar')
 
     return render(request, 'escuela_deportiva/escuela_deportiva_ver.html', {
-        'escuela': escuela_deportiva
+        'escuela': escuela_deportiva,
+        'horarios': horarios
     })
+
 
 @login_required
 @all_permission_required('snd.view_escueladeportiva')
@@ -172,7 +275,7 @@ def listar(request):
     :type request:    WSGIRequest
     """
     return render(request, 'escuela_deportiva/escuela_deportiva_lista.html', {
-        'tipo_tenant':request.tenant.tipo
+        'tipo_tenant': request.tenant.tipo
     })
 
 
@@ -199,7 +302,7 @@ def desactivar_escuela_deportiva(request,id_escuela):
         return redirect('escuela_deportiva_listar')
 
     estado_actual = escuela.estado
-    escuela.estado = not(estado_actual)
+    escuela.estado = not estado_actual
     escuela.save()
     if estado_actual:
         message = "Escuela deportiva activada correctamente."
@@ -360,3 +463,58 @@ def cambiar_estado_acudiente(request, id_acudiente):
 
     messages.success(request, "Acudiente "+acudiente.get_estado_accion()+" correctamente")
     return redirect('listar_acudientes')
+
+
+@login_required
+@permission_required('gestion_eventos.view_evento')
+def registrar_categoría(request, id_evento):
+
+    actividad_form = ActividadForm()
+
+    if request.method == 'POST':
+        actividad_form = ActividadForm(request.POST)
+        if actividad_form.is_valid():
+            actividad = actividad_form.save(commit=False)
+            actividad.evento_perteneciente = evento.id
+            actividad.save()
+            evento.actividades.add(actividad)
+            evento.save()
+            messages.success(request, "La actividad ha sido creada con exito!")
+            return redirect('registrar_actividad', id_evento)
+    lista_actividades = evento.actividades.all()
+    return render(request, 'gestion_actividades.html', {'form': actividad_form, 'lista_actividades': lista_actividades,
+                                                        'evento': evento})
+
+
+@login_required
+@permission_required('gestion_eventos.change_evento')
+def editar_actividad(request, id_actividad):
+    try:
+        actividad = Actividad.objects.get(id=id_actividad)
+        if actividad.estado == 0:
+            messages.error(request, 'La actividad a la que trata de acceder no está disponbible')
+            return redirect('listar_eventos')
+
+    except Exception:
+        messages.error(request, 'La actividad a la que trata de acceder no existe!')
+        return redirect('listar_eventos')
+
+    actividad_form = ActividadForm(instance=actividad)
+
+    if request.method == "POST":
+        actividad_form = ActividadForm(request.POST, instance=actividad)
+        if actividad_form.has_changed():
+            if actividad_form.is_valid():
+                actividad = actividad_form.save(commit=False)
+                actividad.save()
+                messages.success(request, "La actividad ha sido editada con éxito!")
+                return redirect('registrar_actividad', actividad.evento_perteneciente)
+        else:
+            messages.success(request, "La actividad ha sido editada con éxito!")
+            return redirect('registrar_actividad', actividad.evento_perteneciente)
+
+    evento = Evento.objects.get(id=actividad.evento_perteneciente)
+    lista_actividades = evento.actividades.all()
+    return render(request, 'gestion_actividades.html', {'form': actividad_form, 'lista_actividades': lista_actividades,
+                                                        'evento': evento, 'edicion': True})
+

@@ -645,8 +645,8 @@ MODELOS_DE_DATOS = (
             ],
             [
                 "Editar",
-                'escuela_deportiva_crear_editar',
-                ['identificacion', '1', 'id'],
+                'wizard_sede',
+                ['id'],
                 'fa-gear',
                 [
                     [

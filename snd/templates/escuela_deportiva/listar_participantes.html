@@ -43,6 +43,7 @@
                             <th>Nombres</th>
                             <th>Apellidos</th>
                             <th>Fecha de nacimiento</th>
+                            <th>Sede</th>
                             <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
@@ -53,6 +54,7 @@
                                 <td>{{ participante.nombres }}</td>
                                 <td>{{ participante.apellidos }}</td>
                                 <td>{{ participante.fecha_nacimiento }}</td>
+                                <td>{{ participante.sede_perteneciente }}</td>
                                 <td>{{ participante.get_estado_display }}</td>
                                 <td>
                                     <a href="{% url 'detalles_participante' participante.id %}"><i class="fa fa-eye"></i> Ver más</a><br>

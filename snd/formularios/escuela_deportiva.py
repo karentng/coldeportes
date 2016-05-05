@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from snd.models import EscuelaDeportiva, Participante, Acudiente
+from snd.models import EscuelaDeportiva, Participante, Acudiente, CategoriaEscuela, HorarioActividadesEscuela
+from datetimewidget.widgets import TimeWidget
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
 
 
@@ -14,6 +15,7 @@ class ParticipanteForm(forms.ModelForm):
         self.fields['eps'] = adicionarClase(self.fields['eps'], 'one')
         self.fields['eps'].widget.attrs.update({'style': 'height: 71px;'})
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
+        self.fields['sede_perteneciente'] = adicionarClase(self.fields['sede_perteneciente'], 'one')
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
 
     class Meta:
@@ -49,6 +51,7 @@ class EscuelaDeportivaForm(forms.ModelForm):
         super(EscuelaDeportivaForm, self).__init__(*args, **kwargs)
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['estrato'] = adicionarClase(self.fields['estrato'], 'one')
+        self.fields['descripcion_lugar'].widget.attrs['rows'] = 3
 
     def clean(self):
         cleaned_data = super(EscuelaDeportivaForm, self).clean()
@@ -72,3 +75,35 @@ class EscuelaDeportivaServiciosForm(forms.ModelForm):
         widgets = {
             'servicios': forms.CheckboxSelectMultiple
         }
+
+
+class HorarioActividadesEscuelaForm(forms.ModelForm):
+
+    required_css_class = 'required'
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
+
+    def __init__(self, *args, **kwargs):
+
+        super(HorarioActividadesEscuelaForm, self).__init__(*args, **kwargs)
+        self.fields['dias'] = adicionarClase(self.fields['dias'], 'many')
+        self.fields['descripcion'].widget.attrs['rows'] = 4
+
+    class Meta:
+
+        model = HorarioActividadesEscuela
+        exclude = ('sede', 'fecha_creacion',)
+
+
+class CategoriaEscuelaForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+
+        super(CategoriaEscuelaForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 4
+
+    class Meta:
+
+        model = CategoriaEscuela
+        exclude = ('sede', 'estado',)

@@ -9,7 +9,7 @@ urlpatterns = patterns(
 
     # urls sedes
     url(r'^sedes/listar$', 'listar', name='escuela_deportiva_listar'),
-    url(r'^sedes/finalizar/(?P<edicion>\d+)$', 'finalizar', name='escuela_deportiva_finalizar'),
+    url(r'^sedes/finalizar/(\d+)/(\w+)$', 'finalizar', name='finalizar_sede'),
     url(r'^sedes/ver/(\d+)/(\d+)$', 'ver', name='escuela_deportiva_ver'),
     url(r'^sedes/desactivar/(\d+)$', 'desactivar_escuela_deportiva',
         name='escuela_deportiva_desactivar'),
@@ -31,6 +31,11 @@ urlpatterns = patterns(
         name='cambiar_estado_acudiente'),
 
     # urls wizard
-    url(r'^sedes/crear_editar/(?P<paso>\w+)/(?P<edicion>\d+)$', 'crear_editar', name='escuela_deportiva_crear_editar'),
-    url(r'^sedes/crear_editar/(?P<paso>\w+)/(?P<edicion>\d+)/(?P<escuela_deportiva_id>\d+)$', 'crear_editar', name='escuela_deportiva_crear_editar'),
+    url(r'^wizard/sede$', 'wizard_nuevo_sede', name='wizard_nuevo_sede'),
+    url(r'^wizard/sede/(\d+)$', 'wizard_sede', name='wizard_sede'),
+    url(r'^wizard/servicios/(\d+)$', 'wizard_servicios_sede', name='wizard_servicios'),
+    url(r'^wizard/categorias/(\d+)$', 'wizard_categorias_sede', name='wizard_categorias_sede'),
+    url(r'^wizard/horarios/(\d+)$', 'wizard_horarios_sede', name='wizard_horarios_sede'),
+    url(r'^eliminar/horario/(\d+)/(\d+)$', 'eliminar_horario_sede', name='eliminar_horario_sede'),
+    url(r'^eliminar/categoria/(\d+)/(\d+)$', 'eliminar_categoria_sede', name='eliminar_categoria_sede'),
 )

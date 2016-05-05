@@ -22,6 +22,85 @@ TIPO_IDENTIDAD = (
 )
 
 
+class EscuelaDeportiva(models.Model):
+
+    def file_name(self, instance, filename):
+
+        ruta = 'aval_escuelas/' + instance.nombre.strip().replace(" ", "") + filename[-4:]
+        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        if os.path.exists(ruta_delete):
+            os.remove(ruta_delete)
+        return ruta
+
+    ESTRATOS = (
+        (1, 'Uno'),
+        (2, 'Dos'),
+        (3, 'Tres'),
+        (4, 'Cuatro'),
+        (5, 'Cinco'),
+        (6, 'Seis'),
+    )
+    TIPO_SEDE = (
+        ("PRINCIPAL", "PRINCIPAL"),
+        ("SECUNDARIA", "SECUNDARIA"),
+    )
+
+    nombre = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100, verbose_name="Dirección")
+    telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo')
+    email = models.EmailField(null=True, blank=True)
+    web = models.URLField(verbose_name="página web", blank=True, null=True)
+    nombre_administrador = models.CharField(max_length=50, blank=True, null=True)
+    telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
+    tipo_sede = models.CharField(max_length=150, choices=TIPO_SEDE, verbose_name="Tipo de sede")
+    ciudad = models.ForeignKey(Ciudad)
+    comuna = models.PositiveIntegerField()
+    barrio = models.CharField(max_length=20)
+    estrato = models.IntegerField(choices=ESTRATOS)
+    aval = models.FileField(upload_to=file_name, null=True, blank=True,
+                            verbose_name="resolución aval de funcionamiento")
+    descripcion_lugar = models.TextField(verbose_name="Descripción del lugar", max_length=500)
+    estado = models.IntegerField(choices=ESTADO, default=0, verbose_name="estado de la EFD")
+    # Pestañas adicionales
+    servicios = models.ManyToManyField(EscuelaDeportivaServicio, blank=True)
+    entidad = models.ForeignKey(Entidad)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        permissions = (
+            ("view_escueladeportiva", "Permite ver escuela deportiva"),
+        )
+
+    def __str__(self):
+        return self.nombre
+
+    def save(self, *args, **kwargs):
+        self.nombre = self.nombre.upper()
+        self.direccion = self.direccion.upper()
+        self.email = self.email.upper()
+        self.barrio = self.barrio.upper()
+        self.nombre_administrador = self.nombre_administrador.upper()
+        super(EscuelaDeportiva, self).save(*args, **kwargs)
+
+
+class CategoriaEscuela(models.Model):
+    sede = models.ForeignKey(EscuelaDeportiva)
+    nombre_categoria = models.CharField(max_length=155, verbose_name="Nombre Categoría")
+    edad_minima = models.PositiveIntegerField(verbose_name="Edad Mínima")
+    edad_maxima = models.PositiveIntegerField(verbose_name="Edad Máxima")
+    descripcion = models.TextField(max_length=500, verbose_name="Descripción", null=True, blank=True)
+    estado = models.IntegerField(default=0, choices=ESTADO)
+
+
+class HorarioActividadesEscuela(models.Model):
+    sede = models.ForeignKey(EscuelaDeportiva)
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+    dias = models.ManyToManyField(Dias, verbose_name='Días')
+    descripcion = models.TextField(max_length=1024, verbose_name='Descripción')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+
 class Participante(models.Model):
     ETNIAS = (
         ('MESTIZO', 'MESTIZO'),
@@ -61,8 +140,9 @@ class Participante(models.Model):
     nacionalidad = models.ManyToManyField(Nacionalidad, verbose_name='Nacionalidad')
     eps = models.ForeignKey(EPS, verbose_name='Sistema de salud afiliado')
     entidad = models.ForeignKey(Entidad)
-
     etnia = models.CharField(max_length=20, choices=ETNIAS, blank=True)
+    sede_perteneciente = models.ForeignKey(EscuelaDeportiva)
+    categoria = models.ForeignKey(CategoriaEscuela, null=True)
     estado = models.IntegerField(default=1, choices=ESTADO)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -121,64 +201,3 @@ class Acudiente(models.Model):
     def get_estado_accion(self):
         return ("desactivado", "activado")[int(self.estado)]
 
-
-class EscuelaDeportiva(models.Model):
-
-    def file_name(self, instance, filename):
-
-        ruta = 'aval_escuelas/' + instance.nombre.strip().replace(" ", "") + filename[-4:]
-        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
-        if os.path.exists(ruta_delete):
-            os.remove(ruta_delete)
-        return ruta
-
-    ESTADOS = (
-        (0, "ACTIVO"),
-        (1, "INACTIVO"),
-    )
-    ESTRATOS = (
-        (1, 'Uno'),
-        (2, 'Dos'),
-        (3, 'Tres'),
-        (4, 'Cuatro'),
-        (5, 'Cinco'),
-        (6, 'Seis'),
-    )
-    TIPO_SEDE = (
-        ("PRINCIPAL", "PRINCIPAL"),
-        ("SECUNDARIA", "SECUNDARIA"),
-    )
-
-    nombre = models.CharField(max_length=100)
-    direccion = models.CharField(max_length=100, verbose_name="dirección")
-    telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo')
-    email = models.EmailField(null=True,blank=True)
-    web = models.URLField(verbose_name="página web", blank=True, null=True)
-    nombre_administrador = models.CharField(max_length=50, blank=True, null=True)
-    telefono_celular = models.CharField(max_length=50, verbose_name='Teléfono celular', blank=True)
-    tipo_sede = models.CharField(max_length=150,choices=TIPO_SEDE, verbose_name="Tipo de sede")
-    ciudad = models.ForeignKey(Ciudad)
-    comuna = models.PositiveIntegerField()
-    barrio = models.CharField(max_length=20)
-    estrato = models.IntegerField(choices=ESTRATOS)
-    aval = models.FileField(upload_to=file_name, null=True, blank=True,
-                            verbose_name="resolución aval de funcionamiento")
-    
-    estado = models.IntegerField(choices=ESTADOS, default=0, verbose_name="estado de la EFD")
-    # Pestañas adicionales
-    servicios = models.ManyToManyField(EscuelaDeportivaServicio, blank=True)
-    entidad = models.ForeignKey(Entidad)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        permissions = (
-            ("view_escueladeportiva", "Permite ver escuela deportiva"),
-        )
-
-    def save(self, *args, **kwargs):
-        self.nombre = self.nombre.upper()
-        self.direccion = self.direccion.upper()
-        self.email = self.email.upper()
-        self.barrio = self.barrio.upper()
-        self.nombre_administrador = self.nombre_administrador.upper()
-        super(EscuelaDeportiva, self).save(*args, **kwargs)
