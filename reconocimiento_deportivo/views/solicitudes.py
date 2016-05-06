@@ -1,5 +1,5 @@
 #import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
@@ -26,7 +26,7 @@ def solicitar(request, reconocimiento_id = None):
     except Exception:
         reconocimiento = None
 
-    validado, mensaje = validar_creacion(reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
+    validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
 
     if validado:
         form = ReconocimientoDeportivoForm(instance = reconocimiento)
@@ -54,14 +54,19 @@ def solicitar(request, reconocimiento_id = None):
         return redirect('listar_reconocimientos')
 
 
-def validar_creacion(reconocimiento):
+def validar_creacion(request, reconocimiento):
 
     mensaje = ''
+    fecha_reconocimiento_actual = request.tenant.obtenerTenant().fecha_vigencia
+    fecha_maxima_renovacion = datetime.now() + timedelta(days = 30)
+
     try:
         cantidad_solicitudes_por_respuesta = len(ReconocimientoDeportivo.objects.filter(estado = 0))
-        print(cantidad_solicitudes_por_respuesta)
         if cantidad_solicitudes_por_respuesta > 0:
             mensaje = 'No puede crear otra solicitud mientras tenga una en espera de respuesta. Si desea crear otra debe cancelarla o esperar que sea contestada.'
+            return False, mensaje
+        elif  fecha_reconocimiento_actual > fecha_maxima_renovacion:
+            mensaje = 'No puede crear otra solicitud mientras tenga reconocimiento deportivo vigente con más de 1 mes.'
             return False, mensaje
     except:
         pass
@@ -195,7 +200,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
         messages.error(request,'Solicitud no encontrada')
         return redirect('listar_solicitudes')
     
-    validado = validar_creacion(solicitud)
+    validado = validar_creacion(request, solicitud)
 
     if validado:
         #inicializaciones    
