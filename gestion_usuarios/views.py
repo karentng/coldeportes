@@ -561,6 +561,12 @@ def fix_reconocimiento_deportivo(request):
         actores = club.actores
         actores.reconocimiento_solicitud = True
         actores.save()
+        #Asigna reconocimiento a los clubes que al crearse ya tenían reconocimiento deportivo
+        atributos_club = club.obtenerTenant()
+        if atributos_club.fecha_vencimiento:
+            atributos_club.fecha_vigencia = atributos_club.fecha_vencimiento
+            atributos_club.reconocimiento = True
+            atributos_club.save()
 
     return HttpResponse("Solicitudes y respuestas de reconocimiento deportivo asignadas correctamente")
 
