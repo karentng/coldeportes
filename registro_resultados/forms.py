@@ -51,6 +51,7 @@ class CompetenciaForm(forms.ModelForm):
             'fecha_competencia': MyDateWidget(),
         }
 
+
 class CompetenciaEditarForm(forms.ModelForm):
 
     required_css_class = 'required'
