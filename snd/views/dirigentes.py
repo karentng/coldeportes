@@ -474,12 +474,15 @@ def ver(request, dirigente_id,id_entidad):
         return redirect('dirigentes_listar')
 
     cargos = DirigenteCargo.objects.filter(dirigente=dirigente)
+    academica = DirigenteFormacionAcademica.objects.filter(dirigente=dirigente)
+
     for cargo in cargos:
         cargo.funciones = DirigenteFuncion.objects.filter(dirigente=dirigente, cargo=cargo.id)
 
     return render(request, 'dirigentes/dirigentes_ver.html', {
         'dirigente': dirigente,
-        'cargos': cargos
+        'cargos': cargos,
+        'academica':academica
     })
 
 
