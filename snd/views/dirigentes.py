@@ -339,8 +339,31 @@ def wizard_formacion_academica(request,dirigente_id, edicion):
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def eliminar_formacion_academica(request):
-    pass
+def eliminar_formacion_academica(request, cargo_id, dirigente_id):
+    """
+    Mayo 06 / 2016
+    Autor: Daniel Correa
+
+    Eliminar formacion academica
+
+    Se obtienen la formacion academica del dirigente de la base de datos y se elimina
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param dirigente_id   Identificador del dirigente
+    :type dirigente_id    String
+    :param cargo_id   Identificador del cargo del dirigente
+    :type cargo_id    String
+    """
+    try:
+        forma_academica = DirigenteFormacionAcademica.objects.get(id=cargo_id, dirigente_id = dirigente_id)
+        forma_academica.delete()
+        messages.success(request,'El registro de formación académica ha sido eliminado con éxito.')
+        return redirect('dirigentes_formacion_academica',dirigente_id=dirigente_id, edicion=1)
+
+    except DirigenteCargo.DoesNotExist:
+        messages.error(request,'Está tratando de eliminar un registro de formación académica inexistente.')
+        return redirect('dirigentes_formacion_academica', dirigente_id=dirigente_id, edicion=1)
 
 @login_required
 def listar(request):
