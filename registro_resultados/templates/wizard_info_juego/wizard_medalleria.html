@@ -33,16 +33,15 @@
 {% endblock %}
 
 {% block contenido_panel %}
-  {% include 'wizard_info_juego/_wizard.html' %}
   <div  class="wrapper bg-silver-lighter clearfix">
-    <a href="{% url 'listar_participantes' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Anterior</a>    
+    <a href="{% url 'listar_participantes' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>    
     <div class="pull-right m-l-15">        
       <div class="btn-group btn-toolbar">
           <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
           <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
       </div>
       <div class="btn-group m-l-5">
-          <a href="{% url 'cargar_participantes' competencia_id  %}" class="btn btn-sm btn-primary p-l-20 p-r-20">Siguiente <i class="fa fa-arrow-right m-r-5"></i></a>
+        <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-warning p-l-20 p-r-20"><i class="fa fa-save m-r-5"></i>Finalizar</a>          
       </div>
     </div>
   </div>

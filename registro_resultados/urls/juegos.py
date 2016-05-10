@@ -9,7 +9,7 @@ urlpatterns = patterns('registro_resultados.views.juegos',
 
 
     url(r'(\d+)/datos-competencia$', 'datos_competencia', name='datos_competencia'),
-    #url(r'(\d+)/datos-competencia/(\d+)$', 'datos_competencia', name='datos_competencia'),
+    url(r'(\d+)/datos-competencia/(\d+)$', 'datos_competencia', name='datos_competencia'),
     url(r'(\d+)/competencia/(\d+)/eliminar$', 'eliminar_competencia', name='eliminar_competencia'),
     url(r'(\d+)/listado-competencias$', 'listado_competencias', name='listado_competencias'),
     

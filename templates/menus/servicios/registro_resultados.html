@@ -1,8 +1,8 @@
 <li class="has-sub {% if "/registro-resultados/" in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        <i class="fa fa-edit"></i>
-        <span class="colorMenu">REG. RESULTADOS</span>
+        <span class="colorMenu">Reg. Resultados
+        </span>
     </a>
     <ul class="sub-menu">        
         <li class="has-sub {% if '/registro-resultados/juegos' in request.path %} active {% endif %}">
@@ -28,7 +28,7 @@
                 <li {% if "/registro-resultados/reporte/medalleria-genero" in request.path  %} class="active" {% endif %}>
                     <a href="{% url 'reporte_medalleria_genero' %}">Medallería Género</a>
                 </li>
-                <li {% if "/registro-resultados/reporte/tabla_medalleria" in request.path  %} class="active" {% endif %}>
+                <li {% if "/registro-resultados/reporte/tabla-medalleria" in request.path  %} class="active" {% endif %}>
                     <a href="{% url 'reporte_tabla_medalleria' %}">Tabla de Medallería</a>
                 </li>
             </ul>
