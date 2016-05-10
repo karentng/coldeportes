@@ -210,7 +210,7 @@ def dar_reconocimiento_deportivo(club):
     """
     club = Club.objects.get(entidad_ptr = club)
     fecha_actual = datetime.now()
-    club.fecha_vigencia =  datetime(fecha_actual.year + 3, 12, 31)
+    club.fecha_vigencia =  datetime(fecha_actual.year + 5, 12, 31)
     club.reconocimiento = True
     club.save()
 
