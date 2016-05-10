@@ -11,8 +11,10 @@
         {% endif %}
     {% else %}
         {% if user.is_authenticated %}
-            {% include "menus/servicios/reconocimiento_deportivo.html" %}
-            {%if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
+            {% if perms.reconocimiento_deportivo.view_listasolicitudesreconocimiento or perms.reconocimiento_deportivo.view_reconocimientodeportivo %}
+                {% include "menus/servicios/reconocimiento_deportivo.html" %}
+            {% endif %}
+            {% if perms.respuesta.view_listasolicitudes or perms.solicitud.view_solicitudescenario %}
                 {% include "menus/aplicacion/solicitudescenarios.html" %}
             {%endif%}
         {% endif %}
