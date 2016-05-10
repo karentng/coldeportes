@@ -61,7 +61,10 @@
                                 <li class="active"><a href="#nav-tab2-11" data-toggle="tab"><i class="fa fa-globe"></i> Datos de Identificación</a></li>
 
                                 {% if cargos %}
-                                <li class=""><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-line-chart"></i> Cargos</a></li>
+                                    <li class=""><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-line-chart"></i> Cargos</a></li>
+                                {% endif %}
+                                {% if academica %}
+                                    <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-graduation-cap"></i> Formación Académica</a></li>
                                 {% endif %}
 
                                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
@@ -177,6 +180,53 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
+
+                        {% if academica %}
+                            <!--INFORMACION ACADEMICA-->
+                            <div class="tab-pane fade" id="nav-tab2-13">
+                                <div class="invoice">
+                                    <div class="invoice-company">
+                                        <b>{{dirigente.nombres}} {{dirigente.apellidos}}</b>
+                                    </div>
+                                    <div class="invoice-header">
+                                        <div class="invoice-from">
+                                            <address class="m-t-5 m-b-5">
+                                                <div class="table-responsive">
+                                                    <table class="table table-invoice">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>INSTITUCIÓN</th>
+                                                                <th>NIVEL</th>
+                                                                <th>ESTADO</th>
+                                                                <th>PROFESIÓN</th>
+                                                                <th>PAÍS</th>
+                                                                <th>AÑO FINALIZACIÓN</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for academico in academica %}
+                                                                <tr>
+                                                                    <td>{{academico.institucion}}</td>
+                                                                    <td>{{academico.nivel}}</td>
+                                                                    <td>{{academico.estado}}</td>
+                                                                    <td>{% if academico.profesion %}{{ academico.profesion }}{% else %}N/A{% endif %}</td>
+                                                                    <td>{{ academico.pais }}</td>
+                                                                    <td>{% if academico.fecha_finalizacion %}{{ academico.fecha_finalizacion }}{% else %}Actual{% endif %}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </address>
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         {% endif %}
 
                     </div>

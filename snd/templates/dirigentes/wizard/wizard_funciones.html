@@ -40,8 +40,7 @@
         <hr>
         <ul class="pager bwizard-buttons">
             <a href="{% url 'dirigentes_cargos' dirigente_id=dirigente_id edicion=edicion %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
-            <a href="{% url 'dirigentes_finalizar' opcion='listar' edicion=edicion %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i>{% trans ' Finalizar' %}</a>
-            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' edicion=edicion %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i>{% trans ' Guardar y registrar otro dirigente →' %}</a>
+            <a href="{% url 'dirigentes_formacion_academica' dirigente_id=dirigente_id edicion=edicion %}" class="btn btn-primary pull-right">{% trans 'Siguiente →' %}</a>
         </ul>
 
 {% endblock %}

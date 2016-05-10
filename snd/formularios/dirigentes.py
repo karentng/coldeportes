@@ -107,3 +107,36 @@ class DirigenteFuncionesForm(ModelForm):
     class Meta:
         model = DirigenteFuncion
         exclude = ('dirigente','fecha_creacion')
+
+class DirigenteFormacionAcademicaForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(DirigenteFormacionAcademicaForm, self).__init__(*args, **kwargs)
+        self.fields['nivel'] = adicionarClase(self.fields['nivel'], 'one')
+        self.fields['estado'] = adicionarClase(self.fields['estado'], 'one')
+        self.fields['pais'] = adicionarClase(self.fields['pais'], 'one')
+
+    class Meta:
+        model = DirigenteFormacionAcademica
+        exclude = ('dirigente','fecha_creacion',)
+
+    def clean(self):
+        cleaned_data = super(DirigenteFormacionAcademicaForm, self).clean()
+        if not self._errors:
+            estado = cleaned_data.get('estado')
+
+            try:
+                anio_finalizacion =cleaned_data.get('fecha_finalizacion')
+            except Exception:
+                anio_finalizacion = None
+            anio_actual = datetime.datetime.now().year
+            if anio_finalizacion:
+                if estado == 'Finalizado' and int(anio_finalizacion) > anio_actual:
+                    msg = 'Usted ha seleccionado el estado FINALIZADO con una fecha mayor a la actual'
+                    self.add_error('fecha_finalizacion',msg)
+                else:
+                    return cleaned_data
+            else:
+                return cleaned_data
+        return cleaned_data
