@@ -323,13 +323,13 @@ def inicio_tenant(request):
     ContentType.objects.clear_cache()
     entidad = tipoTenant.obtener_datos_entidad()
 
-    #Se verifica si el tenant es un Club para notificar en caso de que el reconocimiento deportivo esté vencido
-    if entidad['tipo_tenant'] == 'Club':
+    #Se verifica si el tenant es un Club o Club paralimpico para notificar en caso de que el reconocimiento deportivo esté vencido
+    if entidad['tipo_tenant'] == 'Club' or entidad['tipo_tenant'] == 'ClubParalimpico' and usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists():        
         #Verifica si tiene fecha de vigencia el club, si no la tiene entonces no ha obtenido reconocimiento deportivo previamente
         if tipoTenant.fecha_vigencia:
             vigente = tiene_reconocimiento_deportivo(tipoTenant)
             #Si el reconocimiento deportivo no está vigente se notifica al usuario si está autenticado y es digitador
-            if not vigente and usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists():
+            if not vigente:
                 messages.warning(request, "El reconocimiento deportivo del club no se encuentra vigente.")
         else:
             messages.warning(request, "Este club no cuenta con reconocimiento deportivo.")
@@ -547,7 +547,7 @@ def fix_solicitudes_escenarios(request):
 
 @login_required
 def fix_reconocimiento_deportivo(request):
-    #asignar a entes actor de respuesta de reconocimiento deportivo
+    #asignar a entes municipales actor de respuesta de reconocimiento deportivo
     entidades = Entidad.objects.filter(tipo=5)
     for entidad in entidades:
         ente = entidad.obtenerTenant()
@@ -556,11 +556,17 @@ def fix_reconocimiento_deportivo(request):
             actores.reconocimiento_respuesta = True
             actores.save()
     #asignar a clubes actor de solicitud de reconocimiento deportivo    
-    clubes = Entidad.objects.filter(tipo=3)
+    clubes = Entidad.objects.filter(tipo__in=[3,9])
     for club in clubes:
         actores = club.actores
         actores.reconocimiento_solicitud = True
         actores.save()
+        #Asigna reconocimiento a los clubes que al crearse ya tenían reconocimiento deportivo
+        atributos_club = club.obtenerTenant()
+        if atributos_club.fecha_vencimiento:
+            atributos_club.fecha_vigencia = atributos_club.fecha_vencimiento
+            atributos_club.reconocimiento = True
+            atributos_club.save()
 
     return HttpResponse("Solicitudes y respuestas de reconocimiento deportivo asignadas correctamente")
 
@@ -570,7 +576,7 @@ def fix_calendario_deportivo(request):
     entes = Entidad.objects.filter(tipo__in=[2,7])
     for e in entes:
         actores = e.actores
-        actores.respuesta = True
+        actores.calendario_deportivo = True
         actores.save()
 
     return HttpResponse("Calendario deportivo nacional asignado correctamente ")

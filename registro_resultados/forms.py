@@ -52,6 +52,30 @@ class CompetenciaForm(forms.ModelForm):
         }
 
 
+class CompetenciaEditarForm(forms.ModelForm):
+
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+
+        deporte_id = kwargs.pop('deporte_id',None)
+        super(CompetenciaEditarForm, self).__init__(*args, **kwargs)
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+        self.fields['deporte'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
+        if deporte_id:
+            self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+            self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+
+    class Meta:
+        model = Competencia
+        exclude = ('juego', 'tipo_registro','tipos_participantes')
+        widgets = {
+            'fecha_competencia': MyDateWidget(),
+        }
+
+
 class ParticipanteTiempoForm(forms.ModelForm):
 
     required_css_class = 'required'

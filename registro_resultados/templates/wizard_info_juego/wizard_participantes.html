@@ -40,9 +40,9 @@
 
 {% block contenido_panel %}
   <div  class="wrapper bg-silver-lighter clearfix">
-    <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
+    <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
     <a href="{% url 'crear_participante' competencia_id %}" class="btn btn-sm btn-success p-l-20 p-r-20"><i class="fa fa-plus m-r-5"></i>{% if not individual %} Crear Equipo {% else %} Crear Participante{% endif %}</a>
-    
+    <a href="{% url 'cargar_participantes' competencia_id  %}" class="btn btn-sm btn-success p-l-20 p-r-20 btn-sm"><i class="fa fa-refresh"></i> Cargar Participantes Archivo</a>    
     <div class="pull-right">
       <div class="btn-group btn-toolbar">
           <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>

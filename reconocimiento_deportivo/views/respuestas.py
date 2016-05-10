@@ -13,6 +13,7 @@ from solicitudes_escenarios.utilities import comprimir_archivos
 
 
 @login_required
+@permission_required('reconocimiento_deportivo.view_listasolicitudesreconocimiento')
 def listar_solicitudes_reconocimientos(request):
     """
     Abril 19, 2016
@@ -22,26 +23,41 @@ def listar_solicitudes_reconocimientos(request):
 
     """
     tenant_actual = request.tenant
-    resultados = ListaSolicitudesReconocimiento.objects.all()
+    resultados = ListaSolicitudesReconocimiento.objects.all().order_by('fecha_creacion')
     resultados_finales = []
-    tiempos_respuestas = dict()
+    dashboard = dict()
+    dashboard['total_solicitudes'] = resultados.count()
+    dashboard['total_rechazadas'] = 0
+    dashboard['total_aprobadas'] = 0
+    dashboard['total_esperando_respuesta'] = 0
 
     for resultado in resultados:
         entidad = resultado.entidad_solicitante
         solicitud_id = resultado.solicitud
         connection.set_tenant(entidad)
         solicitud_hecha = ReconocimientoDeportivo.objects.get(id = solicitud_id)
-        solicitud_hecha.entidad_solicitante = entidad
-        solicitud_hecha.codigo = solicitud_hecha.codigo_unico(entidad)
-        tiempo_a_contestar = solicitud_hecha.fecha_creacion + timedelta(days = 46)
-        tiempo_restante = tiempo_a_contestar - datetime.now()
-        tiempos_respuestas[solicitud_hecha.codigo] = str(tiempo_restante.days)
-        resultados_finales.append(solicitud_hecha)
+        #Solicitudes esperando respuesta
+        if solicitud_hecha.estado == 0:
+            solicitud_hecha.entidad_solicitante = entidad
+            solicitud_hecha.codigo = solicitud_hecha.codigo_unico(entidad)
+            tiempo_a_contestar = resultado.fecha_creacion + timedelta(days = 46)
+            tiempo_restante = tiempo_a_contestar - datetime.now()
+            solicitud_hecha.tiempo_restante = str(tiempo_restante.days)
+            resultados_finales.append(solicitud_hecha)
+        #Solicitudes aprobadas
+        elif solicitud_hecha.estado == 2:
+            dashboard['total_aprobadas'] += 1
+        #Solicitudes aprobadas
+        elif solicitud_hecha.estado == 3:
+            dashboard['total_rechazadas'] += 1
+
+    dashboard['total_esperando_respuesta'] = len(resultados_finales)
+
 
     connection.set_tenant(tenant_actual)
     return render(request,'respuesta/lista_solicitudes.html',{
         'solicitudes': resultados_finales,
-        'fechas': tiempos_respuestas,
+        'dashboard': dashboard
 
     })
 
@@ -194,7 +210,7 @@ def dar_reconocimiento_deportivo(club):
     """
     club = Club.objects.get(entidad_ptr = club)
     fecha_actual = datetime.now()
-    club.fecha_vigencia =  datetime(fecha_actual.year + 3, 12, 31)
+    club.fecha_vigencia =  datetime(fecha_actual.year + 5, 12, 31)
     club.reconocimiento = True
     club.save()
 
@@ -240,7 +256,7 @@ def enviar_respuesta(request, solicitud_id, entidad_id):
                 dar_reconocimiento_deportivo(entidad)
 
             connection.set_tenant(tenant_actual)# se regresa al tenant del ente que respondió
-            solicitud_hecha.delete()# Se remueve del listado del ente            
+            #solicitud_hecha.delete()# Se remueve del listado del ente            
             messages.success(request,'Su respuesta ha sido enviada con exito')
             return redirect('ver_solicitud_reconocimiento_respuesta', solicitud.id, entidad.id)
 

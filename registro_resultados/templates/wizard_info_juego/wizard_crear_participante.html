@@ -37,9 +37,9 @@
 {% block contenido_panel %}
   <div  class="wrapper bg-silver-lighter clearfix">
     {% if individual %}
-      <a href="{% url 'listar_individual' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Participantes</a>
+      <a href="{% url 'listar_individual' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
     {% else %}
-      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Equipos</a>
+      <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
     {% endif %}
     <div class="pull-right">
         <div class="btn-group btn-toolbar">

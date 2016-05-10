@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block css %}
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">    
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
 {% endblock %}
 
@@ -28,9 +29,11 @@
     <div class="vertical-box-column bg-white">
       <!-- begin wrapper -->
       <div  class="wrapper bg-silver-lighter clearfix">
+        {% comment %}
         <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud_reconocimiento' %}" class="btn btn-warning p-l-40 p-r-40 btn-sm">
             Cancelar
         </a>
+        {% endcomment %}
         <div class="pull-right">
           <div class="btn-group btn-toolbar">
             <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
@@ -123,8 +126,9 @@
 
 {% block js %}
   <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
-  <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
-  <!--script src="{{ STATIC_URL }}js/validaciones/solicitud_escenario/wizard-solicitud-validations.js"></script-->
+  <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>  
+  <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>    
+  <script src="{{ STATIC_URL }}js/validaciones/reconocimiento_deportivo/reconocimiento_deportivo-validations.js"></script>
 {% endblock %}
 
 {% block script %}

@@ -1,5 +1,5 @@
 #import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
@@ -26,7 +26,7 @@ def solicitar(request, reconocimiento_id = None):
     except Exception:
         reconocimiento = None
 
-    validado, mensaje = validar_creacion(reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
+    validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
 
     if validado:
         form = ReconocimientoDeportivoForm(instance = reconocimiento)
@@ -54,14 +54,19 @@ def solicitar(request, reconocimiento_id = None):
         return redirect('listar_reconocimientos')
 
 
-def validar_creacion(reconocimiento):
+def validar_creacion(request, reconocimiento):
 
     mensaje = ''
+    fecha_reconocimiento_actual = request.tenant.obtenerTenant().fecha_vigencia
+    fecha_maxima_renovacion = datetime.now() + timedelta(days = 30)
+
     try:
         cantidad_solicitudes_por_respuesta = len(ReconocimientoDeportivo.objects.filter(estado = 0))
-        print(cantidad_solicitudes_por_respuesta)
         if cantidad_solicitudes_por_respuesta > 0:
             mensaje = 'No puede crear otra solicitud mientras tenga una en espera de respuesta. Si desea crear otra debe cancelarla o esperar que sea contestada.'
+            return False, mensaje
+        elif  fecha_reconocimiento_actual > fecha_maxima_renovacion:
+            mensaje = 'No puede crear otra solicitud mientras tenga reconocimiento deportivo vigente con más de 1 mes.'
             return False, mensaje
     except:
         pass
@@ -78,7 +83,7 @@ def validar_creacion(reconocimiento):
 
 @login_required
 @permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
-def cancelar_solicitud(request, reconocimiento_id=None):
+def cancelar_solicitud(request, reconocimiento_id = None):
     """
     Abril 9, 2016
     Autor: Karent Narvaez
@@ -195,7 +200,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
         messages.error(request,'Solicitud no encontrada')
         return redirect('listar_solicitudes')
     
-    validado = validar_creacion(solicitud)
+    validado = validar_creacion(request, solicitud)
 
     if validado:
         #inicializaciones    
@@ -256,15 +261,6 @@ def borrar_adjunto(request, reconocimiento_id, adjunto_id):
         messages.error(request,'No existe el archivo adjunto, no se ha realizado ninguna accion')
         return redirect('adjuntar_requerimientos_reconocimiento', reconocimiento_id)
 
-    #Se verifica la autenticidad de la solicitud
-    """try:
-        auth = request.session['identidad']
-        if not auth['estado'] or auth['reconocimiento_id'] != int(reconocimiento_id) or auth['id_entidad'] != request.tenant.id:
-            raise Exception
-    except Exception:
-        messages.error(request,'Estas intentando editar una solicitud que ya fue enviada')
-        return redirect('listar_reconocimientos')"""
-
     adjunto.delete()
     messages.success(request,'Archivo adjunto eliminado satisfactoriamente')
     return redirect('adjuntar_requerimientos_reconocimiento', reconocimiento_id)
@@ -285,11 +281,10 @@ def finalizar_solicitud(request, solicitud_id):
     try:
         solicitud = ReconocimientoDeportivo.objects.get(id = solicitud_id)
         solicitud.estado = 0 #Se configura solicitud en estado 'En espera de respuesta'
-        solicitud.fecha_creacion = datetime.now() #Se actualiza fecha de creación para que cuenten los 45 días límite para responder, desde que completó la solicitud
         solicitud.save()
         # Crea solicitud en el modelo de la entidad que la debe tramitar
         connection.set_tenant(solicitud.para_quien) #se cambia al tenant del ente que debe tramitar solicitud
-        ListaSolicitudesReconocimiento.objects.create(solicitud = solicitud.id, entidad_solicitante = entidad).save()
+        ListaSolicitudesReconocimiento.objects.create(solicitud = solicitud.id, entidad_solicitante = entidad, fecha_creacion = datetime.now()).save()
         connection.set_tenant(entidad) # se retorna al tenant que realizó solicitud
 
         messages.success(request,'Solicitud enviada con éxito a:' + str(solicitud.para_quien))

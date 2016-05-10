@@ -97,18 +97,11 @@
 {% block contenido %}
     {% if entidad.mostrar_info %}
         <div class="row p-b-30">
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-10">
                 <div class="result-container">
                     <ul class="result-list">
-                        <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">                            
-                            {% if entidad.tipo_tenant == "Club" %}
-                                {% if tipoTenant.reconocimiento %}
-                                <div class="pull-right" align="right">                        
-                                    <img class="img-responsive" style="width:15%; height:15%" src="{{STATIC_URL}}img/reconocimiento_deportivo/blue.jpg?V=1.1" alt="certificado">
-                                    <h6><b>Club Deportivo Reconocido</b></h6>
-                                </div>
-                                {% endif %}
-                            {% endif %} 
+                        <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">                           
+                             
                             <div class="result-image" style="background: white !important;">
                                 <img src="{% if entidad.foto %}{{ MEDIA_URL }}{{ entidad.foto }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" class="img-responsive" alt="Info Tenant"/>
                                 {% if request.user.is_superuser  or request.user|has_group:"Digitador" %}
@@ -156,6 +149,22 @@
                                     {% endif %}
                                 </div>                                
                             </div>                        
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="result-container">
+                    <ul class="result-list">
+                        <li id="info-reconocimiento" class="animated fadeInDownBig">
+                            {% if entidad.tipo_tenant == "Club" or entidad.tipo_tenant == "ClupParalimpico" %}
+                                {% if tipoTenant.reconocimiento %}
+                                <div align="center">                        
+                                    <img class="img-responsive" style="width:38%; height:21%" src="{{STATIC_URL}}img/reconocimiento_deportivo/blue.jpg?V=1.1" alt="certificado">
+                                    <h6><b>Club Con Reconocimiento Deportivo</b></h6>
+                                </div>
+                                {% endif %}
+                            {% endif %}
                         </li>
                     </ul>
                 </div>

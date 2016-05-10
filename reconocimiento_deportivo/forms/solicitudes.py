@@ -14,7 +14,7 @@ class ReconocimientoDeportivoForm(ModelForm):
         self.fields['vinculo_solicitante'] = adicionarClase(self.fields['vinculo_solicitante'], 'one')
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
-        self.fields['para_quien'].queryset = Entidad.objects.filter(tipo=5)
+        self.fields['para_quien'].queryset = Entidad.objects.filter(tipo=5).order_by('nombre')
 
     class Meta:
         model = ReconocimientoDeportivo
@@ -45,9 +45,9 @@ class AdjuntoRequerimientoReconocimientoForm(ModelForm):
         tipos_de_requerimientos_adjuntados = AdjuntoRequerimientoReconocimiento.objects.filter(solicitud=solicitud_id).values('tipo')  
 
         if tipos_de_requerimientos_adjuntados:
-            self.fields['tipo'].queryset = TipoRequerimientoReconocimientoDeportivo.objects.exclude(id__in=tipos_de_requerimientos_adjuntados) #TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+            self.fields['tipo'].queryset = TipoRequerimientoReconocimientoDeportivo.objects.exclude(id__in=tipos_de_requerimientos_adjuntados).order_by('descripcion') #TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
         else:
-            self.fields['tipo'].queryset = TipoRequerimientoReconocimientoDeportivo.objects.all()
+            self.fields['tipo'].queryset = TipoRequerimientoReconocimientoDeportivo.objects.all().order_by('descripcion')
 
     class Meta:
         model = AdjuntoRequerimientoReconocimiento
