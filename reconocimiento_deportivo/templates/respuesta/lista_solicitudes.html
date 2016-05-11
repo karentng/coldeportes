@@ -35,6 +35,45 @@
 {% block contenido_panel %}
 
     <div class="row">
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-green">
+                <div class="stats-icon"><i class="fa fa-envelope"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL SOLICITUDES RECIBIDAS</h4>
+                    <p>{{dashboard.total_solicitudes}}</p>    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-blue">
+                <div class="stats-icon"><i class="fa fa-check"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL APROBADAS</h4>
+                    <p>{{dashboard.total_aprobadas}}</p>    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-orange">
+                <div class="stats-icon"><i class="fa fa-times"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL RECHAZADAS</h4>
+                    <p>{{dashboard.total_rechazadas}}</p>    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-red">
+                <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL ESPERANDO RESPUESTA</h4>
+                    <p>{{dashboard.total_esperando_respuesta}}</p>    
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
         <div class="col-sm-12">
             <div class="table-responsive">
             <table id="tabla-solicitudes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
@@ -55,16 +94,13 @@
                         <td>{{solicitud.get_estado_display}}</td>
                         <td>{{ solicitud.entidad_solicitante }}</td>
                         <td>{{ solicitud.fecha_creacion }}</td>
-                        <td>{% for key, value in fechas.items %} 
-                          {% if key == solicitud.codigo %}{{value}} días{% endif %}</li>
-                         {% endfor %}
-                        </td>
+                        <td>{{solicitud.tiempo_restante}} días</td>
                         <td>
                             <a href='{% url 'ver_solicitud_reconocimiento_respuesta' solicitud.id solicitud.entidad_solicitante.id %}'>
                                 <i class="fa fa-eye"></i> Ver más
                             </a>
                             <br/>
-                            {% if perms.reconocimiento_respuesta.add_listasolicitudesreconocimiento %}<!--verificar permiso para responder solicitudes  de reconocimiento deportivo-->
+                            {% if perms.reconocimiento_deportivo.add_listasolicitudesreconocimiento %}<!--verificar permiso para responder solicitudes  de reconocimiento deportivo-->
                                 {% if solicitud.estado == 0 %}
                                     <a href="{% url 'responder_solicitud_reconocimiento' solicitud.id solicitud.entidad_solicitante.id %}">
                                         <i class="fa fa-send"></i> Responder solicitud

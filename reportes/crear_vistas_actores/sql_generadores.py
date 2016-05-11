@@ -177,11 +177,14 @@ def seleccion_datos_dirigentes(tenant=''):
             DIR.genero, DIR.telefono_fijo as telefono_contacto,
             DIR.estado, DIR.ciudad_residencia_id AS ciudad_id,
             C.cargo, DIR.email,
+            IA.nivel as nivel_formacion, IA.estado as estado_formacion,
+            IA.fecha_finalizacion,
             DIR.nombres||' '||DIR.apellidos||' '||EN.nombre as contenido
         FROM
         {0}snd_dirigente DIR
         LEFT JOIN {0}snd_dirigente_nacionalidad NAL ON NAL.dirigente_id = DIR.id
         LEFT join (SELECT DIC.id, DIC.dirigente_id, DIC.nombre as cargo, max(fecha_posesion) as fecha_posesion_cargo FROM snd_dirigentecargo as DIC group by DIC.id) C on C.dirigente_id=DIR.id
+        LEFT JOIN {0}snd_dirigenteformacionacademica IA ON IA.dirigente_id = DIR.id
         LEFT join public.entidades_entidad EN on DIR.entidad_id=EN.id
         """.format(tenant))
 

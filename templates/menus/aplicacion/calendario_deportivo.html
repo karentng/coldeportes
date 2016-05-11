@@ -1,12 +1,7 @@
 <li class="has-sub {% if '/calendario-deportivo/' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        {% if request.tenant.schema_name == 'public' %}
-            <i class="fa fa-calendar"></i>
-            <span class="colorMenu">CALENDARIO DEPORTIVO</span>
-        {% else %}
             <span class="colorMenu">Calendario Deportivo</span>
-        {% endif %}
     </a>
     <ul class="sub-menu">
             {% if request.tenant.schema_name == 'public' %}

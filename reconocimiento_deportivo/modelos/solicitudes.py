@@ -9,24 +9,23 @@ from entidades.models import Entidad, TipoRequerimientoReconocimientoDeportivo
 class ReconocimientoDeportivo(models.Model):
     
     ESTADOS = (
-        (0,'ESPERANDO RESPUESTA'),
-        (1,'INCOMPLETA'),
         (2,'APROBADA'),
         (3,'ANULADA'),
         (4,'CANCELADA POR ENTIDAD'),
+        (0,'ESPERANDO RESPUESTA'),
+        (1,'INCOMPLETA'),
     )
 
     VINCULOS = (
-        (0,'USUARIO EXTERNO'),
         (1,'CONTRATISTA'),
         (2,'FUNCIONARIO'),
+        (0,'USUARIO EXTERNO'),
     )
 
     TIPO_SOLICITUD = (
         (0,'PRIMERA VEZ'),
         (1,'RENOVACIÓN'),
     )
-
     
     estado = models.IntegerField(choices=ESTADOS,default=1)
     descripcion = models.TextField(verbose_name='Descripción')
@@ -49,7 +48,7 @@ class ReconocimientoDeportivo(models.Model):
         return ("RD-%s-%s-%s")%(entidad.id, self.para_quien.id, self.id)
 
     def adjuntos(self):
-        return AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = self)
+        return AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = self).order_by('tipo')
 
     def cantidad_adjuntos(self):        
         return len(AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = self))
@@ -63,12 +62,13 @@ class ReconocimientoDeportivo(models.Model):
 
 
 class DiscusionReconocimiento(models.Model):
+    
     ESTADOS = (
+        (2,'APROBADA'),
+        (4,'EN DISCUSION'),
         (0,'ESPERANDO RESPUESTA'),
         (1,'INCOMPLETA'),
-        (2,'APROBADA'),
         (3,'RECHAZADA'),
-        (4,'EN DISCUSION'),
     )
 
     estado_anterior = models.IntegerField(choices=ESTADOS)

@@ -242,6 +242,10 @@ class PublicDirigenteView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     genero = models.CharField(max_length=11)
+    #campos informacion academica
+    nivel_formacion = models.CharField(max_length=20)
+    estado_formacion = models.CharField(max_length=20)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True)
 
 
 class PublicEscuelaView(models.Model):

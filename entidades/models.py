@@ -460,6 +460,8 @@ class ClubParalimpico(ResolucionReconocimiento):
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,blank=True)
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
+    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia", null=True, default=None)    
+    reconocimiento = models.BooleanField(default=False)
 
     def obtener_padre(self):
         return self.liga
