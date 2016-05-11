@@ -28,7 +28,7 @@ class ReconocimientoDeportivo(models.Model):
     )
     
     estado = models.IntegerField(choices=ESTADOS,default=1)
-    descripcion = models.TextField(verbose_name='Descripción')
+    descripcion = models.TextField(verbose_name='Descripción', max_length=500)
     para_quien = models.ForeignKey(Entidad,verbose_name='Dirigido a')    
     nombre_solicitante = models.CharField(max_length=150,verbose_name='Nombre') 
     tipo = models.IntegerField(choices=TIPO_SOLICITUD, verbose_name='tipo de solicitud')
@@ -73,7 +73,7 @@ class DiscusionReconocimiento(models.Model):
 
     estado_anterior = models.IntegerField(choices=ESTADOS)
     estado_actual = models.IntegerField(choices=ESTADOS, verbose_name='Cambiar estado a')
-    descripcion = models.TextField(verbose_name="Descripción")
+    descripcion = models.TextField(verbose_name="Descripción", max_length=500)
     solicitud = models.ForeignKey(ReconocimientoDeportivo)
     fecha = models.DateTimeField(auto_now=True)
     entidad = models.ForeignKey(Entidad)
