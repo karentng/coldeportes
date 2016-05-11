@@ -265,10 +265,16 @@ def tiene_reconocimiento_deportivo(club):
     :para club: club a verificar
     :type club: Object Club
     """
-    if  club.fecha_vigencia < date.today():
-        club.reconocimiento = False
+    if club.fecha_vigencia:
+        if  club.fecha_vigencia < date.today():
+            club.reconocimiento = False
+            club.save()
+            return False
+    elif club.fecha_vencimiento > date.today() and club.archivo:
+        club.fecha_vigencia = club.fecha_vencimiento
+        club.reconocimiento = True
         club.save()
-        return False
+        return True
     else:
         return True
 
@@ -327,7 +333,7 @@ def inicio_tenant(request):
     if usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists(): 
         if entidad['tipo_tenant'] == 'Club' or entidad['tipo_tenant'] == 'ClubParalimpico':       
             #Verifica si tiene fecha de vigencia el club, si no la tiene entonces no ha obtenido reconocimiento deportivo previamente
-            if tipoTenant.fecha_vigencia:
+            if tipoTenant.fecha_vigencia or tipoTenant.fecha_vencimiento:
                 vigente = tiene_reconocimiento_deportivo(tipoTenant)
                 #Si el reconocimiento deportivo no está vigente se notifica al usuario si está autenticado y es digitador
                 if not vigente:
@@ -564,7 +570,7 @@ def fix_reconocimiento_deportivo(request):
         actores.save()
         #Asigna reconocimiento a los clubes que al crearse ya tenían reconocimiento deportivo
         atributos_club = club.obtenerTenant()
-        if atributos_club.fecha_vencimiento:
+        if atributos_club.fecha_vencimiento and atributos_club.archivo:
             atributos_club.fecha_vigencia = atributos_club.fecha_vencimiento
             atributos_club.reconocimiento = True
             atributos_club.save()
