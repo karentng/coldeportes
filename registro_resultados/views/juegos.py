@@ -58,11 +58,18 @@ def datos_competencia(request, juego_id, competencia_id=None):
     except Exception:
         competencia = None
 
-    form = CompetenciaForm(instance=competencia)
+    if competencia_id:
+        form = CompetenciaEditarForm(instance=competencia)
+    else:
+        form = CompetenciaForm()
 
     if request.method == "POST":
         deporte_id = request.POST['deporte']
-        form = CompetenciaForm(request.POST, request.FILES, deporte_id=deporte_id, instance=competencia)
+
+        if competencia_id:
+            form = CompetenciaEditarForm(request.POST, request.FILES, deporte_id=deporte_id, instance=competencia)
+        else:
+            form = CompetenciaForm(request.POST, request.FILES, deporte_id=deporte_id, instance=competencia)
 
         if form.is_valid():
             nueva_competencia = form.save(commit=False)
@@ -681,8 +688,7 @@ def cargar_participantes(request, competencia_id):
 
     return render(request, 'cargado_archivos/cargar_participantes.html', {
         'form': form,
-        'competencia_id': competencia.id,
-        'wizard_stage': 3,
+        'competencia_id': competencia.id
     })
 
 
@@ -714,9 +720,10 @@ def crear_participantes(request, participantes, datemode, competencia):
                 obj.puntos = participante[9]                
             else: # Metros
                 obj.metros = participante[8]
-                obj.marca = participante[11]                
+                obj.marca = participante[11]
         else: # Equipos
             obj.equipo = Equipo.objects.get(id=participante[12])
+
         try: 
             obj.save()
         except Exception as e:

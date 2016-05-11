@@ -4,6 +4,7 @@ from entidades.models import Entidad
 class ListaSolicitudesReconocimiento(models.Model):
     entidad_solicitante = models.ForeignKey(Entidad)
     solicitud = models.PositiveIntegerField()
+    fecha_creacion = models.DateTimeField()
 
     class Meta:
         permissions = (

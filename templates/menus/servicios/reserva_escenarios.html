@@ -1,0 +1,11 @@
+<li class="has-sub {% if '/reserva-escenarios/' in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <span class="colorMenu">Reserva Escenarios</span>
+    </a>
+    <ul class="sub-menu">
+        <li {% if "/reserva-escenarios/listar-escenarios" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_escenarios_reservas' %}">Solicitar</a>
+        </li>
+    </ul>
+</li>

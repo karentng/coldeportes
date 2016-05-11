@@ -323,13 +323,13 @@ def inicio_tenant(request):
     ContentType.objects.clear_cache()
     entidad = tipoTenant.obtener_datos_entidad()
 
-    #Se verifica si el tenant es un Club para notificar en caso de que el reconocimiento deportivo esté vencido
-    if entidad['tipo_tenant'] == 'Club':
+    #Se verifica si el tenant es un Club o Club paralimpico para notificar en caso de que el reconocimiento deportivo esté vencido
+    if entidad['tipo_tenant'] == 'Club' or entidad['tipo_tenant'] == 'ClubParalimpico' and usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists():        
         #Verifica si tiene fecha de vigencia el club, si no la tiene entonces no ha obtenido reconocimiento deportivo previamente
         if tipoTenant.fecha_vigencia:
             vigente = tiene_reconocimiento_deportivo(tipoTenant)
             #Si el reconocimiento deportivo no está vigente se notifica al usuario si está autenticado y es digitador
-            if not vigente and usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists():
+            if not vigente:
                 messages.warning(request, "El reconocimiento deportivo del club no se encuentra vigente.")
         else:
             messages.warning(request, "Este club no cuenta con reconocimiento deportivo.")
@@ -561,6 +561,12 @@ def fix_reconocimiento_deportivo(request):
         actores = club.actores
         actores.reconocimiento_solicitud = True
         actores.save()
+        #Asigna reconocimiento a los clubes que al crearse ya tenían reconocimiento deportivo
+        atributos_club = club.obtenerTenant()
+        if atributos_club.fecha_vencimiento:
+            atributos_club.fecha_vigencia = atributos_club.fecha_vencimiento
+            atributos_club.reconocimiento = True
+            atributos_club.save()
 
     return HttpResponse("Solicitudes y respuestas de reconocimiento deportivo asignadas correctamente")
 
