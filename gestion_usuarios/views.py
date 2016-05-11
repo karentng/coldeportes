@@ -324,15 +324,16 @@ def inicio_tenant(request):
     entidad = tipoTenant.obtener_datos_entidad()
 
     #Se verifica si el tenant es un Club o Club paralimpico para notificar en caso de que el reconocimiento deportivo esté vencido
-    if entidad['tipo_tenant'] == 'Club' or entidad['tipo_tenant'] == 'ClubParalimpico' and usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists():        
-        #Verifica si tiene fecha de vigencia el club, si no la tiene entonces no ha obtenido reconocimiento deportivo previamente
-        if tipoTenant.fecha_vigencia:
-            vigente = tiene_reconocimiento_deportivo(tipoTenant)
-            #Si el reconocimiento deportivo no está vigente se notifica al usuario si está autenticado y es digitador
-            if not vigente:
-                messages.warning(request, "El reconocimiento deportivo del club no se encuentra vigente.")
-        else:
-            messages.warning(request, "Este club no cuenta con reconocimiento deportivo.")
+    if usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists(): 
+        if entidad['tipo_tenant'] == 'Club' or entidad['tipo_tenant'] == 'ClubParalimpico':       
+            #Verifica si tiene fecha de vigencia el club, si no la tiene entonces no ha obtenido reconocimiento deportivo previamente
+            if tipoTenant.fecha_vigencia:
+                vigente = tiene_reconocimiento_deportivo(tipoTenant)
+                #Si el reconocimiento deportivo no está vigente se notifica al usuario si está autenticado y es digitador
+                if not vigente:
+                    messages.warning(request, "El reconocimiento deportivo del club no se encuentra vigente.")
+            else:
+                messages.warning(request, "Este club no cuenta con reconocimiento deportivo.")
 
 
     if request.tenant.tipo == 3:
