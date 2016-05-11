@@ -208,9 +208,9 @@ def dar_reconocimiento_deportivo(club):
 
     Le da el reconocimiento deportivo a un club por 3 años
     """
-    club = Club.objects.get(entidad_ptr = club)
+    club = club.obtenerTenant()
     fecha_actual = datetime.now()
-    club.fecha_vigencia =  datetime(fecha_actual.year + 3, 12, 31)
+    club.fecha_vigencia =  datetime(fecha_actual.year + 5,  fecha_actual.month + 60 % 12, fecha_actual.day + 28 % 28)
     club.reconocimiento = True
     club.save()
 

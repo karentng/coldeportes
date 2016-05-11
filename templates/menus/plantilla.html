@@ -74,7 +74,7 @@
 
     {% if user.is_authenticated %}
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or 'escenarios' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
+            {% if 'dirigentes' in request.path or 'deportistas' in request.path or '/escenarios/' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
                 {% if 'reportes' not in request.path %}
                 active
                 {% endif %}
