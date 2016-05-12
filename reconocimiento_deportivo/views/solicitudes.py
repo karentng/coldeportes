@@ -83,7 +83,7 @@ def validar_creacion(request, reconocimiento):
 
 @login_required
 @permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
-def cancelar_solicitud(request, reconocimiento_id = None):
+def anular_solicitud(request, reconocimiento_id = None):
     """
     Abril 9, 2016
     Autor: Karent Narvaez

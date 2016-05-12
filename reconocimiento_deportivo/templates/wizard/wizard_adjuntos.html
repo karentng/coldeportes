@@ -34,23 +34,20 @@
                     <div class="btn-group btn-toolbar">
                         <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
                         <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
-                    </div>
-                    <div class="btn-group m-l-5">
-                        <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
+                    </div>                    
                 </div>
             </div>
             <!-- end wrapper -->
             <!-- begin wrapper -->
             <div class="wrapper">
-                <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitud de reconocimiento deprotivo</h4>
+                <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitud de reconocimiento deportivo</h4>
                 {% include 'wizard/_wizard.html' %}
                 <div  class="row alert {% if cantidad_maxima_adjuntos %}alert-warning{% else %}alert-info{% endif %} fade in">                
                     <div align="center" class="col-md-12">
                     {% if cantidad_maxima_adjuntos %}
                         <strong><h4>Atención:</h4></strong> Ya ha adjuntado la máxima cantidad de archivos para los requerimientos del reconocimiento deportivo. Por favor, revise los documentos que va a enviar y pulse click en el botón finalizar solicitud para enviar la petición a trámite. Si desea adjuntar otro documento, debe borrar uno de la lista.
                     {% else %}
-                        <strong>Nota:</strong> Se puede adjuntar únicamente un documento por requerimiento. Si tiene más de un archivo, agrupelos en uno solo antes de subirlo.
+                        <strong>Nota:</strong> Se puede adjuntar únicamente un documento por requerimiento. Si tiene más de un archivo para el mismo requerimiento, agrúpelos en uno solo antes de subirlo.
                     {% endif %}
                     </div>
                 </div>                        
