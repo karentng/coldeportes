@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from snd.modelos.escenarios import Escenario
 from reserva_escenarios.models import ReservaEscenario
+from reserva_escenarios.forms import SolicitarReservaForm
 
 # Create your views here.
 def listar_escenarios(request):
@@ -13,7 +14,7 @@ def listar_escenarios(request):
     })
 
 
-def calendario_reservas(request, escenario_id):
+def agendar_reserva(request, escenario_id):
 
     escenario = Escenario.objects.get(id = escenario_id)
     reservas = ReservaEscenario.objects.filter(escenario = escenario_id, aprobada = True)

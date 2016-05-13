@@ -7,21 +7,22 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('snd', '0002_dirigenteformacionacademica'),
+        ('snd', '0005_dirigenteformacionacademica'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='ReservaEscenario',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
-                ('fecha_inicio', models.DateTimeField()),
-                ('fecha_fin', models.DateTimeField()),
-                ('decripcion', models.TextField(verbose_name='descripción', max_length=500)),
-                ('nombre_solicitante', models.CharField(verbose_name='Nombre', max_length=150)),
-                ('identificacion_solicitante', models.CharField(verbose_name='Número de identificación', max_length=150)),
-                ('telefono_solicitante', models.CharField(verbose_name='Teléfono', max_length=150)),
-                ('direccion_solicitante', models.CharField(verbose_name='Dirección', max_length=150)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
+                ('fecha_inicio', models.DateTimeField(null=True)),
+                ('fecha_fin', models.DateTimeField(null=True)),
+                ('decripcion', models.TextField(max_length=500, verbose_name='descripción')),
+                ('nombre_equipo', models.CharField(max_length=150, verbose_name='nombre de grupo que utilizará el escenario')),
+                ('nombre_solicitante', models.CharField(max_length=150, verbose_name='nombre')),
+                ('identificacion_solicitante', models.CharField(max_length=150, verbose_name='número de identificación')),
+                ('telefono_solicitante', models.CharField(max_length=150, verbose_name='teléfono')),
+                ('direccion_solicitante', models.CharField(max_length=150, verbose_name='dirección')),
                 ('aprobada', models.BooleanField(default=False)),
                 ('escenario', models.ForeignKey(to='snd.Escenario')),
             ],

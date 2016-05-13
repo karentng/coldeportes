@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import ModelForm
 from coldeportes.utilities import adicionarClase
-from reconocimiento_deportivo.modelos.solicitudes import *
+from reserva_escenarios.models import ReservaEscenario
 
 class SolicitarReservaForm(ModelForm):
     required_css_class = 'required'

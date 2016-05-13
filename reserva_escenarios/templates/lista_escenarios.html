@@ -50,7 +50,7 @@
                             <td>{{ escenario.ciudad }}</td>                        
                             <td>{% if escenario.direccion %}{{ escenario.direccion }}{% endif %}</td>                        
                             <td>
-                                <a href='{% url 'solicitar_reserva' escenario.id %}'>
+                                <a href='{% url 'agendar_reserva' escenario.id %}'>
                                     <i class="fa fa-clock-o"></i> Solicitar Reservar
                                 </a>
                                 <br/>
