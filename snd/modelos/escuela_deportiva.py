@@ -89,7 +89,9 @@ class CategoriaEscuela(models.Model):
     edad_minima = models.PositiveIntegerField(verbose_name="Edad Mínima")
     edad_maxima = models.PositiveIntegerField(verbose_name="Edad Máxima")
     descripcion = models.TextField(max_length=500, verbose_name="Descripción", null=True, blank=True)
-    estado = models.IntegerField(default=0, choices=ESTADO)
+
+    def __str__(self):
+        return self.nombre_categoria
 
 
 class HorarioActividadesEscuela(models.Model):
@@ -132,6 +134,8 @@ class Participante(models.Model):
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='TI',
                                verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100, verbose_name='Identificación')
+    talla = models.IntegerField(verbose_name="Talla (estatura) en centímetros")
+    peso = models.IntegerField(verbose_name="Peso (Kg)")
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad de residencia')
     institucion_educativa = models.CharField(max_length=255, verbose_name="Institución educativa actual")
     anho_curso = models.CharField(max_length=100, choices=CURSO, verbose_name="Año que cursa actualmente")
@@ -175,6 +179,25 @@ class Participante(models.Model):
         self.apellidos = self.apellidos.upper()
         self.direccion = self.direccion.upper()
         super(Participante, self).save(*args, **kwargs)
+
+
+class AlertaTemprana(models.Model):
+    NIVEL_DE_ALERTA = (
+        (0, "BAJA"),
+        (1, "MEDIA"),
+        (2, "ALTA"),
+    )
+
+    nivel_alerta = models.IntegerField(choices=NIVEL_DE_ALERTA, verbose_name="Nivel de alerta")
+    referencia_alerta = models.CharField(max_length=150, verbose_name="Referencia de alerta")
+    descripcion = models.TextField(verbose_name="Descripción")
+    fecha_registro = models.DateField(auto_now_add=True)
+    fecha_ultima_actualizacion = models.DateField(null=True)
+    estado = models.IntegerField(default=1, choices=ESTADO)
+    participante = models.ForeignKey(Participante)
+
+    def get_estado_accion(self):
+        return ("desactivada", "activada")[int(self.estado)]
 
 
 class Acudiente(models.Model):

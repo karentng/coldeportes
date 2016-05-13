@@ -13,14 +13,18 @@ urlpatterns = patterns(
     url(r'^sedes/ver/(\d+)/(\d+)$', 'ver', name='escuela_deportiva_ver'),
     url(r'^sedes/desactivar/(\d+)$', 'desactivar_escuela_deportiva',
         name='escuela_deportiva_desactivar'),
+    url(r'^ajax-sedes-categorias', 'ajax_categoria_sede', name='ajax_categoria_sede'),
 
     # urls participantes
     url(r'^participantes/registrar', 'registrar_participante', name='registrar_participante'),
     url(r'^participantes/listar$', 'listar_participante', name='listar_participante'),
     url(r'^participantes/editar/(\d+)$', 'editar_participante', name='editar_participante'),
     url(r'^participantes/detalles/(\d+)$', 'detalles_participante', name='detalles_participante'),
-    url(r'^participantes/cambiar-estado/(\d+)$', 'cambiar_estado_participante',
-        name='cambiar_estado_participante'),
+    url(r'^participantes/cambiar-estado/(\d+)$', 'cambiar_estado_participante', name='cambiar_estado_participante'),
+    url(r'^gestion-alertas/(\d+)$', 'gestion_alertas', name='gestion_alertas'),
+    url(r'^estado-alerta/(\d+)$', 'cambiar_estado_alerta', name='cambiar_estado_alerta'),
+    url(r'^ajax-alerta', 'ajax_alerta', name='ajax_alerta'),
+
 
     # urls acudientes
     url(r'^acudiente/registrar/(\d+)$', 'registrar_acudiente',

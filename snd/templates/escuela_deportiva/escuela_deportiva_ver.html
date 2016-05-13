@@ -59,11 +59,12 @@
                                 </li>
 
                                 <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos del espacio deportivo</a></li>
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-list"></i> Datos del espacio deportivo</a></li>
 
                                 <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-phone"></i> Servicios</a></li>
-                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-phone"></i> Horarios de Actividad</a></li>
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-clock-o"></i> Horarios de Actividad</a></li>
 
+                                <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-tags"></i> Categorías</a></li>
                                 <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-file-pdf-o"></i> Aval funcionamiento</a></li>
                                 
                                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
@@ -151,42 +152,78 @@
                             </div>
                         </div>
 
-                            <div class="tab-pane fade" id="nav-tab2-14">
-                                <div class="invoice">
-                                <div class="invoice-company">
-                                    <b>{{escuela.nombre}}</b>
-                                </div>
-                                {% if horarios %}
-
-                                    <div class="invoice-content">
-                                        <div class="table-responsive">
-                                            <table class="table table-invoice">
-                                                <thead>
-                                                    <tr>
-                                                        <th>HORA INICIO</th>
-                                                        <th>HORA FIN</th>
-                                                        <th>DÍAS</th>
-                                                        <th>DESCRIPCIÓN</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for horario in horarios %}
-                                                    <tr>
-                                                        <td>{{horario.hora_inicio}}</td>
-                                                        <td>{{horario.hora_fin}}</td>
-                                                        <td>{% for dia in horario.dias.all %} {{dia.nombre}} {% endfor %}</td>
-                                                        <td>{{horario.descripcion}}</td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <p>No hay horarios disponibles</p>
-                                {% endif %}
-                                </div>
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                            <div class="invoice-company">
+                                <b>{{escuela.nombre}}</b>
                             </div>
+                            {% if horarios %}
+
+                                <div class="invoice-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>HORA INICIO</th>
+                                                    <th>HORA FIN</th>
+                                                    <th>DÍAS</th>
+                                                    <th>DESCRIPCIÓN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for horario in horarios %}
+                                                <tr>
+                                                    <td>{{horario.hora_inicio}}</td>
+                                                    <td>{{horario.hora_fin}}</td>
+                                                    <td>{% for dia in horario.dias.all %} {{dia.nombre}} {% endfor %}</td>
+                                                    <td>{{horario.descripcion}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <p>No hay horarios disponibles</p>
+                            {% endif %}
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-tab2-17">
+                            <div class="invoice">
+                            <div class="invoice-company">
+                                <b>{{escuela.nombre}}</b>
+                            </div>
+                            {% if categorias %}
+
+                                <div class="invoice-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>NOMBRE CATEGORÍA</th>
+                                                    <th>DESCRIPCIÓN</th>
+                                                    <th>EDAD MÍNIMA</th>
+                                                    <th>EDAD MÁXIMA</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for categoria in categorias %}
+                                                <tr>
+                                                    <td>{{categoria.nombre_categoria}}</td>
+                                                    <td>{{categoria.descripcion}}</td>
+                                                    <td>{{categoria.edad_minima}}</td>
+                                                    <td>{{categoria.edad_maxima}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <p>No hay categorías disponibles</p>
+                            {% endif %}
+                            </div>
+                        </div>
 
                         <div class="tab-pane fade" id="nav-tab2-16">
                             <div class="invoice">

@@ -60,7 +60,7 @@
 
                                 <li class=""><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-stethoscope"></i> Datos Acudiente</a></li>
 
-                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-info-circle"></i> Informe de seguimientos</a></li>
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-info-circle"></i> Informe de alertas</a></li>
 
                                 <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="ion fa-md ion-trophy"></i> Informe de acudiente</a></li>
 
@@ -118,8 +118,10 @@
                                                 <p><strong>Información adicional:</strong></p>
                                                 <p><b>Teléfono:</b> {{participante.telefono}}</p>
                                                 <p><b>Dirección:</b> {{participante.direccion}}</p>
+                                                <p><b>Talla:</b> {{participante.talla}} Cm</p>
+                                                <p><b>Peso:</b> {{participante.peso}} Kg</p>
                                                 <p><b>Institución educativa actual:</b> {{ participante.institucion_educativa }}</p>
-                                                <p><b>año que cursa:</b> {{ participante.anho_curso }} </p>
+                                                <p><b>Año que cursa:</b> {{ participante.anho_curso }} </p>
                                             {% endif %}
                                             </div>
                                         </address>
@@ -179,11 +181,85 @@
                                     <div class="invoice-from">
                                         <div class="row">
                                             <address class="m-t-5 m-b-5">
-                                                <div class="col-lg-6">
-                                                    <p><strong>Información Adicional:</strong></p>
-                                                    <ul>
+                                                <div class="col-lg-12">
+                                                    <p><strong>Alertas tempranas:</strong></p>
+                                                </div>
+                                                {% if perms.snd.change_escueladeportiva %}
+                                                    <div class="col-lg-4">
+                                                        <form action="{% url 'gestion_alertas' participante.id %}" id="form-alerta" method="post">{% csrf_token %}
+                                                            <div class="well row">
+                                                                <div class="col-xs-12" id="cargar_form">
+                                                                    {% bootstrap_form alerta_form %}
+                                                                    <input type="number" hidden name="alerta_id" value="-1">
+                                                                    <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="{% if perms.snd.change_escueladeportiva %}col-lg-8{% else %}col-lg-12{% endif %}">
+                                                {% if alertas %}
+                                                    <div class="table-responsive">
+                                                        <table class="table table-invoice">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>NIVEL ALERTA</th>
+                                                                    <th>REFERENCIA</th>
+                                                                    <th>DESCRIPCIÓN</th>
+                                                                    <th>FECHA DE REGISTRO</th>
+                                                                    <th>FECHA ÚLTIMA ACTUALIZACIÓN</th>
+                                                                    <th>ESTADO</th>
+                                                                    {% if perms.snd.change_escueladeportiva %}
+                                                                    <th>OPCIONES</th>
+                                                                    {% endif %}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for alerta in alertas %}
+                                                                <tr>
+                                                                    <td>{{alerta.get_nivel_alerta_display}}</td>
+                                                                    <td>{{alerta.referencia_alerta}}</td>
+                                                                    <td>{{alerta.descripcion}}</td>
+                                                                    <td>{{alerta.fecha_registro}}</td>
+                                                                    <td>{% if alerta.fecha_ultima_actualizacion %}{{alerta.fecha_ultima_actualizacion}}{% else %}Nunca{% endif %}</td>
+                                                                    <td>{{alerta.get_estado_display}}</td>
+                                                                    {% if perms.snd.change_escueladeportiva %}
+                                                                    <td>
+                                                                        <a href="#" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_alerta' alerta.id %}" data-toggle="modal" data-target="#modal-desactivate">
+                                                                            <i class="fa fa-ban"></i>
+                                                                            A/I <i style="cursor:pointer;" data-toggle="tooltip" title="Activar/Inactivar" class="fa fa-question-circle add-tooltip"></i>
+                                                                        </a><br>
+                                                                        <a href="#" >
+                                                                            <span data-id="{{ alerta.id }}"   id="editar-alerta" onclick="getEdit(this);"><i class="fa fa-edit"></i> Editar</span>
+                                                                        </a>
+                                                                    </td>
+                                                                    {% endif %}
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal fade" id="modal-desactivate">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
 
-                                                    </ul>
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                    <h4 class="modal-title">Cambiar de estado alerta temprana:</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Está seguro que desea cambiar el estado de esta alerta temprana?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="alert alert-warning" role="alert"> No hay alertas tempranas registradas</div>
+                                                {% endif %}
                                                 </div>
                                             </address>
                                         </div>
@@ -228,20 +304,24 @@
 {% block js %}
     <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
-
-{% endblock %}
-
-{% block script %}
     <script>
-        $(document).ready(function() {
-            App.init();
-            console.log("Re holis");
-            $('#modal-video').on('hidden.bs.modal', function () {
-                console.log("Holis");
-                $iframe = $(this).find( "iframe" );
-                $iframe.attr("src", $iframe.attr("src"));
-            });
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
+        function getEdit(a){
+            var alerta_id = $(a).attr("data-id");
+            var url = "{% url 'ajax_alerta' %}";
 
-        });
+            $.get( url, {alerta_id: alerta_id}).success(function(data){
+                        $("#cargar_form").html(data.html);
+                    })
+                    .error(function(data){
+                        console.log(data);
+
+            });
+        }
+
     </script>
 {% endblock %}

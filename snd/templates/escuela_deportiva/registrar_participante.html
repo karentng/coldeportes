@@ -16,10 +16,6 @@
     {% if edicion %}Editar{% else %}Registrar{% endif %} participante
 {% endblock %}
 
-{% block js %}
-    <script src="{{STATIC_URL}}js/validaciones/escuela_deportiva/participantes-validations.js"></script>
-{% endblock %}
-
 {% block css %}
     {{ form.media }}
 {% endblock %}
@@ -46,5 +42,40 @@
             </form>
         </div>
     </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/validaciones/escuela_deportiva/participantes-validations.js"></script>
+    <script>
+        $("#id_sede_perteneciente").select2().change(function(){
+            var sede_id = $(this).val();
+            if(sede_id!=""){
+                $.get("{% url 'ajax_categoria_sede' %}", {sede_id: sede_id})
+                        .success(function(data){
+                            if(data["status"] == "empty"){
+                                toastr.options = {
+                                    "closeButton": true,
+                                    "progressBar": true,
+                                    "showEasing": "swing"
+                                };
+                                toastr["error"]("La sede seleccionada no tiene categorías registradas");
+                            }else {
+                                $("#id_categoria").select2({
+                                    data: data.data
+                                });
+                            }
+                        })
+                        .error(function(data){
+                            toastr.options = {
+                                "closeButton": true,
+                                "progressBar": true,
+                                "showEasing": "swing"
+                            };
+                            toastr["error"](data.error);
+                        });
+            }
+        });
+    </script>
 
 {% endblock %}

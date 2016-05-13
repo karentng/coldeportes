@@ -1,14 +1,14 @@
 {% load has_group %}
 {% if request.tenant.tipo == 11 %}
     {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
-        <li class="has-sub {% if '/escuela-deportiva/sedes' in request.path %} active {% endif %}">
+        <li class="has-sub {% if "wizard/sede" in request.path or '/escuela-deportiva/wizard' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
                 <span>Gestión Sedes</span>
             </a>
             <ul class="sub-menu">
                 {% if perms.snd.add_escueladeportiva %}
-                    <li {% if "/escuela-deportiva/wiziard/crear-sede" in request.path %} class="active" {% endif %}>
+                    <li {% if "/escuela-deportiva/wizard" in request.path %} class="active" {% endif %}>
                         <a href="{% url 'wizard_nuevo_sede' %}">Registro Sede</a>
                     </li>
                 {% endif %}

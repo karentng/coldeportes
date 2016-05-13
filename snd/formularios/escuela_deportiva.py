@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from snd.models import EscuelaDeportiva, Participante, Acudiente, CategoriaEscuela, HorarioActividadesEscuela
+from snd.models import (EscuelaDeportiva, Participante, Acudiente, CategoriaEscuela, HorarioActividadesEscuela,
+                        AlertaTemprana)
 from datetimewidget.widgets import TimeWidget
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
 
@@ -9,6 +10,7 @@ class ParticipanteForm(forms.ModelForm):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
+        sede_id = kwargs.pop('sede_id', None)
         super(ParticipanteForm, self).__init__(*args, **kwargs)
         self.fields['ciudad_residencia'] = adicionarClase(self.fields['ciudad_residencia'], 'one')
         self.fields['anho_curso'] = adicionarClase(self.fields['anho_curso'], 'one')
@@ -17,6 +19,9 @@ class ParticipanteForm(forms.ModelForm):
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
         self.fields['sede_perteneciente'] = adicionarClase(self.fields['sede_perteneciente'], 'one')
         self.fields['etnia'] = adicionarClase(self.fields['etnia'], 'one')
+        self.fields['categoria'].queryset = CategoriaEscuela.objects.none()
+        if sede_id:
+            self.fields['categoria'].queryset = CategoriaEscuela.objects.filter(sede=sede_id)
 
     class Meta:
         model = Participante
@@ -90,7 +95,6 @@ class HorarioActividadesEscuelaForm(forms.ModelForm):
         self.fields['descripcion'].widget.attrs['rows'] = 4
 
     class Meta:
-
         model = HorarioActividadesEscuela
         exclude = ('sede', 'fecha_creacion',)
 
@@ -104,6 +108,19 @@ class CategoriaEscuelaForm(forms.ModelForm):
         self.fields['descripcion'].widget.attrs['rows'] = 4
 
     class Meta:
-
         model = CategoriaEscuela
         exclude = ('sede', 'estado',)
+
+
+class AlertaTempranaForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(AlertaTempranaForm, self).__init__(*args, **kwargs)
+        self.fields['nivel_alerta'] = adicionarClase(self.fields['nivel_alerta'], 'one')
+        self.fields['referencia_alerta'].widget.attrs['placeholder'] = 'Referecia (ej: desnutrición, drogadicción, etc)'
+        self.fields['descripcion'].widget.attrs['rows'] = 4
+
+    class Meta:
+        model = AlertaTemprana
+        exclude = ('participante', 'fecha_registro', 'fecha_ultima_actualizacion', 'estado', )

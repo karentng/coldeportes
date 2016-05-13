@@ -5,6 +5,8 @@ from entidades.models import *
 from django.contrib import messages
 from coldeportes.utilities import *
 
+import datetime
+
 
 @login_required
 @all_permission_required('snd.add_escueladeportiva')
@@ -250,13 +252,15 @@ def ver(request, escuela_deportiva_id, id_entidad):
     try:
         escuela_deportiva = EscuelaDeportiva.objects.get(id=escuela_deportiva_id)
         horarios = HorarioActividadesEscuela.objects.filter(sede=escuela_deportiva.id)
+        categorias = CategoriaEscuela.objects.filter(sede=escuela_deportiva_id)
     except EscuelaDeportiva.DoesNotExist:
         messages.error(request, 'La escuela deportiva que desea ver no existe')
         return redirect('escuela_deportiva_listar')
 
     return render(request, 'escuela_deportiva/escuela_deportiva_ver.html', {
         'escuela': escuela_deportiva,
-        'horarios': horarios
+        'horarios': horarios,
+        'categorias': categorias
     })
 
 
@@ -336,17 +340,19 @@ def editar_participante(request, id_participante):
         participante = Participante.objects.get(id=id_participante)
     except Participante.DoesNotExist:
         messages.error(request, 'El participante al que trata de acceder no existe')
-        return redirect("listar_participantes")
+        return redirect("listar_participante")
 
     if request.method == 'POST':
-        participante_form = ParticipanteForm(request.POST, request.FILES, instance=participante)
+        participante_form = ParticipanteForm(request.POST, request.FILES, instance=participante,
+                                             sede_id=participante.sede_perteneciente.id)
         if participante_form.has_changed():
             if participante_form.is_valid():
                 participante_form.save()
                 messages.success(request, "El participante ha sido editado con exito")
                 return redirect('listar_participante')
-
-    participante_form = ParticipanteForm(instance=participante)
+            else:
+                print(participante_form.errors)
+    participante_form = ParticipanteForm(instance=participante, sede_id=participante.sede_perteneciente.id)
     return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
                                                                              'edicion': True})
 
@@ -364,17 +370,19 @@ def listar_participante(request):
 def detalles_participante(request, id_participante):
     try:
         participante = Participante.objects.get(id=id_participante)
+        alertas = AlertaTemprana.objects.filter(participante=participante)
+        alerta_form = AlertaTempranaForm()
     except Participante.DoesNotExist:
         messages.error(request, 'El participante al que trata de acceder no existe')
-        return redirect("listar_participantes")
+        return redirect("listar_participante")
 
     try:
         acudiente = Acudiente.objects.get(participante_responsable=participante.id)
     except Acudiente.DoesNotExist:
         acudiente = None
-    print(acudiente)
     return render(request, 'escuela_deportiva/ver_participante.html', {'participante': participante,
-                                                                       'acudiente': acudiente})
+                                                                       'acudiente': acudiente, 'alertas': alertas,
+                                                                       'alerta_form': alerta_form})
 
 
 @login_required
@@ -384,13 +392,95 @@ def cambiar_estado_participante(request, id_participante):
         participante = Participante.objects.get(id=id_participante)
     except Participante.DoesNotExist:
         messages.error(request, 'El participante al que trata de acceder no existe')
-        return redirect("listar_participantes")
+        return redirect("listar_participante")
 
     participante.estado = not participante.estado
     participante.save()
 
     messages.success(request, "Participante "+participante.get_estado_accion()+" correctamente")
     return redirect('listar_participante')
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def gestion_alertas(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Participante.DoesNotExist:
+        messages.error(request, 'El participante al que trata de acceder no existe')
+        return redirect("listar_participante")
+
+    if request.method == "POST":
+        try:
+            alerta_editar = AlertaTemprana.objects.get(id=int(request.POST["alerta_id"]))
+        except AlertaTemprana.DoesNotExist:
+            alerta_editar = None
+        alerta_form = AlertaTempranaForm(request.POST, instance=alerta_editar)
+        if alerta_form.is_valid():
+            alerta = alerta_form.save(commit=False)
+            alerta.participante = participante
+            alerta.save()
+            messages.success(request, 'Alerta registrada con éxito')
+            return redirect("detalles_participante", id_participante)
+        else:
+            print(alerta_form.errors)
+
+    return redirect("detalles_participante", id_participante)
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def cambiar_estado_alerta(request, id_alerta):
+    try:
+        alerta = AlertaTemprana.objects.get(id=id_alerta)
+    except Participante.DoesNotExist:
+        messages.error(request, 'La alerta a la que trata de acceder no existe')
+        return redirect("listar_participante")
+
+    alerta.estado = not alerta.estado
+    alerta.fecha_ultima_actualizacion = datetime.datetime.now()
+    alerta.save()
+
+    messages.success(request, "Alerta "+alerta.get_estado_accion()+" correctamente")
+    return redirect("detalles_participante", alerta.participante.id)
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def ajax_alerta(request):
+    from django.http import JsonResponse
+    from django.template.loader import render_to_string
+    if request.is_ajax():
+        alerta_id = int(request.GET["alerta_id"])
+        alerta = AlertaTemprana.objects.get(id=alerta_id)
+        alerta_form = AlertaTempranaForm(instance=alerta)
+        alerta_html = render_to_string("escuela_deportiva/alerta_editar.html",
+                                       {"alerta_form": alerta_form, "participante_id": alerta.participante.id,
+                                        "alerta_id": alerta.id})
+        return JsonResponse({"html": alerta_html})
+
+    return JsonResponse({"status": "error"})
+
+
+@login_required
+@permission_required('snd.add_escueladeportiva')
+def ajax_categoria_sede(request):
+    from django.http import JsonResponse
+    if request.is_ajax():
+        sede_id = int(request.GET["sede_id"])
+        categorias = CategoriaEscuela.objects.filter(sede=sede_id)
+        if categorias.count() == 0:
+            return JsonResponse({"status": "empty"})
+        else:
+            data = []
+            for categoria in categorias.all():
+                dic = {}
+                dic["id"] = categoria.id
+                dic["text"] = categoria.nombre_categoria
+                data.append(dic)
+        return JsonResponse({"data": data})
+
+    return JsonResponse({"status": "error"})
 
 
 @login_required
@@ -466,7 +556,7 @@ def cambiar_estado_acudiente(request, id_acudiente):
 
 
 @login_required
-@permission_required('gestion_eventos.view_evento')
+@permission_required('snd.add_escueladeportiva')
 def registrar_categoría(request, id_evento):
 
     actividad_form = ActividadForm()
@@ -487,7 +577,7 @@ def registrar_categoría(request, id_evento):
 
 
 @login_required
-@permission_required('gestion_eventos.change_evento')
+@permission_required('snd.add_escueladeportiva')
 def editar_actividad(request, id_actividad):
     try:
         actividad = Actividad.objects.get(id=id_actividad)
