@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Reserva de Escenarios</a>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Calendario de Reservas de Escenario
+{% endblock %}
+
+{% block titulo_panel %}
+    ESCENARIO {{ escenario.nombre }} - Calendario de Reservas
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        csrf = '{{ csrf_token }}';
+        calendarEvents = [];
+        {% for reserva in reservas %}
+            calendarEvents.push({
+                id: '{{ reserva.id }}',
+				title: '{{ reserva.nombre_equipo }}',
+				start: '{{ reserva.fecha_inicio|date:"Y-m-d H:i" }}',
+				end: '{{ reserva.fecha_fin|date:"Y-m-d H:i" }}',
+				className: 'bg-blue-darker',
+                allDay: false,
+				media: '<i class="fa fa-trophy"></i>',
+				description: '{{ reserva.descripcion}}'
+            });
+        {% endfor %}
+    </script>
+    <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <script src="{{ STATIC_URL }}js/reserva_escenarios/calendar.reservas.js"></script>
+    <script src="{{ STATIC_URL }}js/apps.min.js"></script>
+{% endblock %}
+
+{% block css %}
+	<link href="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="vertical-box">
+        <div class="vertical-box-column col-sm-3 ">
+            <div class="calendar-event" id="external-events">
+                <h4 class="m-b-20 m-r-5" style="display: inline-block;">Calendario de Reservas</h4>
+                {% if not reservas %}
+                    {% for reserva in reservas %}
+                        <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ reserva.nombre_equipo }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ reserva.descripcion }}">
+                            <h5>
+                                <i class="fa fa-calendar fa-lg fa-fw"></i>
+                                {{ reserva.nombre_equipo }}
+                            </h5>
+                            <p>{{ reserva.descripcion }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-success fade in m-b-15"><strong>No hay reservas registradas.</strong></div>
+                {% endif %}
+                <a href="{% url 'solicitar_reserva' escenario.id %}" class="btn btn-primary btn-sm"><i class="fa fa-calendar"></i> Solicitar Reserva</a>
+            </div>
+        </div>
+        <div id="calendar" class="vertical-box-column p-15 calendar col-sm-9 fc fc-ltr"></div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+    <script>
+		$(document).ready(function() {
+			Calendar.init();
+		});
+    </script>
+{% endblock %}

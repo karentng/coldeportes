@@ -1,0 +1,73 @@
+/*   
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.4
+Version: 1.7.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v1.7/admin/
+*/
+
+var handleCalendarDemo = function () {
+    "use strict";
+    
+    var calendar = $('#calendar').fullCalendar({
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+        dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día'
+        },
+        editable: false,
+        selectable: true,
+        droppable: false, // this allows things to be dropped onto the calendar
+        defaultDate: (new Date().getFullYear() + '-' + (new Date().getMonth()+1) + '-' + new Date().getDate()),
+        eventLimit: true, // allow "more" link when too many events
+        /*eventClick: function(calEvent, jsEvent, view) {
+            //Redireccion a ver mas de evento
+            var id =  calEvent.id;
+            window.location.href = "ver-evento/"+id;
+        },*/
+        select: function(start, end, allDay) {
+            var title = prompt('Nombre del Solicitante:');
+            if (title) {
+                calendar.fullCalendar('renderEvent',
+                    {
+                        title: title,
+                        start: start,
+                        end: end,
+                        allDay: false
+                    },
+                    true // make the event "stick"
+                );
+            }
+            //calendar.fullCalendar('unselect');
+        },
+        eventRender: function(event, element, calEvent) {
+            var mediaObject = (event.media) ? event.media : '';
+            var description = (event.description) ? event.description : '';
+            element.find(".fc-event-title").after($("<span class=\"fc-event-icons\"></span>").html(mediaObject));
+            element.find(".fc-event-title").append('<small>'+ description +'</small>');
+            element.find(".fc-event-title").css('cursor','pointer');
+        },
+        events: calendarEvents
+    });
+
+};
+
+
+var Calendar = function () {
+    "use strict";
+    return {
+        //main function
+        init: function () {
+            handleCalendarDemo();
+        }
+    };
+}();
