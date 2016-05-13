@@ -23,6 +23,8 @@ urlpatterns = patterns(
     url(r'^participantes/cambiar-estado/(\d+)$', 'cambiar_estado_participante', name='cambiar_estado_participante'),
     url(r'^gestion-alertas/(\d+)$', 'gestion_alertas', name='gestion_alertas'),
     url(r'^estado-alerta/(\d+)$', 'cambiar_estado_alerta', name='cambiar_estado_alerta'),
+    url(r'^registro-typ/(\d+)$', 'registrar_typ', name='registrar_typ'),
+    url(r'^eliminacion-typ/(\d+)$', 'eliminar_typ', name='eliminar_typ'),
     url(r'^ajax-alerta', 'ajax_alerta', name='ajax_alerta'),
 
 

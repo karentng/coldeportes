@@ -372,6 +372,8 @@ def detalles_participante(request, id_participante):
         participante = Participante.objects.get(id=id_participante)
         alertas = AlertaTemprana.objects.filter(participante=participante)
         alerta_form = AlertaTempranaForm()
+        seguimientotyp_form = SeguimientoTallaPesoForm()
+        seguimientostyp = SeguimientoTallaPeso.objects.filter(participante=participante)
     except Participante.DoesNotExist:
         messages.error(request, 'El participante al que trata de acceder no existe')
         return redirect("listar_participante")
@@ -382,7 +384,9 @@ def detalles_participante(request, id_participante):
         acudiente = None
     return render(request, 'escuela_deportiva/ver_participante.html', {'participante': participante,
                                                                        'acudiente': acudiente, 'alertas': alertas,
-                                                                       'alerta_form': alerta_form})
+                                                                       'alerta_form': alerta_form,
+                                                                       'seguimientostyp': seguimientostyp,
+                                                                       'seguimientotyp_form': seguimientotyp_form})
 
 
 @login_required
@@ -443,6 +447,46 @@ def cambiar_estado_alerta(request, id_alerta):
 
     messages.success(request, "Alerta "+alerta.get_estado_accion()+" correctamente")
     return redirect("detalles_participante", alerta.participante.id)
+
+
+@login_required
+@permission_required('snd.add_escueladeportiva')
+def registrar_typ(request, id_participante):
+    try:
+        participante = Participante.objects.get(id=id_participante)
+    except Participante.DoesNotExist:
+        messages.error(request, 'El participante al que trata de acceder no existe')
+        return redirect("listar_participante")
+
+    if request.method == 'POST':
+        seguimientotyp_form = SeguimientoTallaPesoForm(request.POST)
+        if seguimientotyp_form.is_valid():
+            seguimientotyp = seguimientotyp_form.save(commit=False)
+            seguimientotyp.participante = participante
+            seguimientotyp.save()
+            participante.talla = seguimientotyp.talla
+            participante.peso = seguimientotyp.peso
+            participante.save()
+            messages.success(request, "El seguimiento ha sido registrado con exito")
+            return redirect("detalles_participante", id_participante)
+
+    return redirect("detalles_participante", id_participante)
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def eliminar_typ(request, id_typ):
+    try:
+        seguimientotyp = SeguimientoTallaPeso.objects.get(id=id_typ)
+    except Participante.DoesNotExist:
+        messages.error(request, 'El seguimiento al que trata de acceder no existe')
+        return redirect("listar_participante")
+
+    id_participante = seguimientotyp.participante.id
+    seguimientotyp.delete()
+
+    messages.success(request, "El seguimiento ha sido eliminado con exito")
+    return redirect("detalles_participante", id_participante)
 
 
 @login_required

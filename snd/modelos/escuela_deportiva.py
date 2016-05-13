@@ -181,6 +181,13 @@ class Participante(models.Model):
         super(Participante, self).save(*args, **kwargs)
 
 
+class SeguimientoTallaPeso(models.Model):
+    participante = models.ForeignKey(Participante)
+    fecha_registro = models.DateField(auto_now_add=True)
+    talla = models.IntegerField(verbose_name="Talla (estatura) en centímetros")
+    peso = models.IntegerField(verbose_name="Peso (Kg)")
+
+
 class AlertaTemprana(models.Model):
     NIVEL_DE_ALERTA = (
         (0, "BAJA"),

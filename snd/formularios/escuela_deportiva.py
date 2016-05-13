@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from snd.models import (EscuelaDeportiva, Participante, Acudiente, CategoriaEscuela, HorarioActividadesEscuela,
-                        AlertaTemprana)
+                        AlertaTemprana, SeguimientoTallaPeso)
 from datetimewidget.widgets import TimeWidget
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
 
@@ -124,3 +124,11 @@ class AlertaTempranaForm(forms.ModelForm):
     class Meta:
         model = AlertaTemprana
         exclude = ('participante', 'fecha_registro', 'fecha_ultima_actualizacion', 'estado', )
+
+
+class SeguimientoTallaPesoForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = SeguimientoTallaPeso
+        exclude = ('participante', 'fecha_registro', )
