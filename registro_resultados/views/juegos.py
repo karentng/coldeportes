@@ -124,6 +124,8 @@ def datos_participante(request, competencia_id):
         return redirect('participante_puntos', competencia_id)
     elif competencia.tipo_registro == 3:
         return redirect('participante_metros', competencia_id)
+    elif competencia.tipo_registro == :
+        return redirect('participante_posicion', competencia_id)
     
 @login_required
 def eliminar_participante(request, competencia_id, participante_id):
@@ -185,6 +187,39 @@ def participante_puntos(request, competencia_id, participante_id=None):
     if request.method == "POST":
 
         form = ParticipantePuntosForm(request.POST, competencia=competencia, instance=participante)
+        if form.is_valid():
+            participante_nuevo = form.save(commit=False)
+            participante_nuevo.competencia = competencia
+            participante_nuevo.save()
+            messages.success(request, "Participante registrado correctamente.")
+            return redirect('listar_individual', competencia_id)
+            
+    return render(request, 'wizard_info_juego/wizard_crear_participante.html', {
+        "form": form,
+        'wizard_stage': 1,
+        'individual': True,
+        'puntos': True,        
+        'competencia_id': competencia_id,
+        'juego_id': competencia.juego.id
+        
+    })
+
+
+@login_required
+def participante_puntos(request, competencia_id, participante_id=None):
+
+    competencia = Competencia.objects.get(id = competencia_id)
+
+    try:
+        participante = Participante.objects.get(id=participante_id)
+    except Exception:
+        participante = None
+
+    form = ParticipantePosicionForm(competencia=competencia, instance=participante)
+
+    if request.method == "POST":
+
+        form = ParticipantePosicionForm(request.POST, competencia=competencia, instance=participante)
         if form.is_valid():
             participante_nuevo = form.save(commit=False)
             participante_nuevo.competencia = competencia

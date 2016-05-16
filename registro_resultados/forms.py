@@ -28,9 +28,10 @@ class CompetenciaForm(forms.ModelForm):
         (1, "Tiempos"),
         (2, "Puntos"),
         (3, "Metros"),
+        (4, "Posición"),
     )
 
-    tipo_registro = forms.ChoiceField(widget=forms.RadioSelect, choices=TIPOS_REGISTROS, label='Registros De Competencia')
+    tipo_registro = forms.ChoiceField(widget=forms.RadioSelect, choices=TIPOS_REGISTROS, label='Marcas de la Competencia')
 
     def __init__(self, *args, **kwargs):
 
@@ -162,6 +163,37 @@ class ParticipantePuntosForm(forms.ModelForm):
         else:
             pass
 
+
+class ParticipantePosicionForm(forms.ModelForm):
+
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+
+        competencia = kwargs.pop('competencia')
+        super(ParticipantePosicionForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+    
+    class Meta:
+
+        model = Participante
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'metros', 'puntos')
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
+
+    def clean_fecha_nacimiento(self):
+
+        fecha = self.cleaned_data['fecha_nacimiento']
+        if fecha:            
+            if fecha >= datetime.date.today():
+                raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
+        else:
+            pass
+
+
 class ParticipanteMetrosForm(forms.ModelForm):
 
     required_css_class = 'required'
@@ -291,6 +323,21 @@ class EquipoPuntosForm(forms.ModelForm):
 
         model = Equipo
         exclude = ("competencia", 'tiempo', 'marca', 'metros')
+
+
+class EquipoPosicionForm(forms.ModelForm):
+
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+
+        super(EquipoPosicionForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+
+    class Meta:
+
+        model = Equipo
+        exclude = ('competencia', 'tiempo', 'marca', 'metros', 'puntos')
 
 
 class EquipoMetrosForm(forms.ModelForm):
