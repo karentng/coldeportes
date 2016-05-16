@@ -337,7 +337,7 @@ class EquipoPosicionForm(forms.ModelForm):
     class Meta:
 
         model = Equipo
-        exclude = ('competencia', 'tiempo', 'marca', 'metros', 'puntos')
+        exclude = ("competencia", 'tiempo', 'marca', 'metros', 'puntos')
 
 
 class EquipoMetrosForm(forms.ModelForm):

@@ -56,16 +56,17 @@ class Equipo(models.Model):
     )
 
     nombre = models.CharField(max_length=255, verbose_name='nombre')
+    posicion = models.IntegerField(default=0, verbose_name="posición")    
     tiempo = models.CharField(blank=True, null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
     puntos = models.IntegerField(default=0, null=True, blank=True)
     metros = models.DecimalField(default=0, null=True, blank=True, max_digits=6, decimal_places=3, help_text='En metros')
     departamento = models.ForeignKey(Departamento)
     marca = models.CharField(blank=True, null=True, max_length=10, help_text="Este campo se refiere al mejor desempeño que tiene el equipo en esta competencia. La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
-    posicion = models.IntegerField(default=0, verbose_name="posición")    
+    genero = models.IntegerField(choices=GENEROS, verbose_name='género de competidores')
     creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia)
-    genero = models.IntegerField(choices=GENEROS, verbose_name='género de competidores')
     medallas_por_integrantes = models.BooleanField(default = False)
+    cantidad_medallas_equipo = models.PositiveIntegerField(null=True, blank=True, verbose_name="cantidad de medallas del equipo ")
 
 
 
