@@ -231,3 +231,20 @@ class Acudiente(models.Model):
     def get_estado_accion(self):
         return ("desactivado", "activado")[int(self.estado)]
 
+
+class ActividadEFD(models.Model):
+    DIRIGIDO = (
+        (0, "ACUDIENTES"),
+        (1, "PARTICIPANTES"),
+    )
+
+    dirigido_a = models.IntegerField(choices=DIRIGIDO)
+    sede = models.ForeignKey(EscuelaDeportiva)
+    titulo = models.CharField(max_length=155, verbose_name="Título de Actividad")
+    descrpcion = models.TextField(verbose_name="Descripción", max_length=500)
+    dia_actividad = models.DateField()
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+    participantes = models.ManyToManyField(Participante)
+    acudientes = models.ManyToManyField(Acudiente)
+    estado = models.IntegerField(choices=ESTADO)

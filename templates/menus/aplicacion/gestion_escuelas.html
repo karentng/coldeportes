@@ -1,7 +1,7 @@
 {% load has_group %}
 {% if request.tenant.tipo == 11 %}
     {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
-        <li class="has-sub {% if "wizard/sede" in request.path or '/escuela-deportiva/wizard' in request.path %} active {% endif %}">
+        <li class="has-sub {% if "sedes/listar" in request.path or '/escuela-deportiva/wizard' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
                 <span>Gestión Sedes</span>
@@ -36,19 +36,19 @@
                 </li>
             </ul>
         </li>
-        <li class="has-sub {% if '/escuela-deportiva/gestion-categorias' in request.path %} active {% endif %}">
+        <li class="has-sub {% if '/escuela-deportiva/gestion-actividades' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
-                <span>Gestión Categoría</span>
+                <span>Gestión Actividades</span>
             </a>
             <ul class="sub-menu">
                 {% if perms.snd.add_escueladeportiva %}
-                    <li {% if "/escuela-deportiva/categorias/registrar" in request.path %} class="active" {% endif %}>
-                        <a href="#">Registro Categoría</a>
+                    <li {% if "/escuela-deportiva/actividades/registrar" in request.path %} class="active" {% endif %}>
+                        <a href="#">Registro Actividad</a>
                     </li>
                 {% endif %}
-                <li {% if "/escuela-deportiva/categorias/listar" in request.path %} class="active" {% endif %}>
-                    <a href="{% url 'escuela_deportiva_listar' %}">Listar Categorias</a>
+                <li {% if "/escuela-deportiva/actividades/listar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'escuela_deportiva_listar' %}">Listar Actividad</a>
                 </li>
             </ul>
         </li>

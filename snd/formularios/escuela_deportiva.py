@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from snd.models import (EscuelaDeportiva, Participante, Acudiente, CategoriaEscuela, HorarioActividadesEscuela,
-                        AlertaTemprana, SeguimientoTallaPeso)
+                        AlertaTemprana, SeguimientoTallaPeso, ActividadEFD)
 from datetimewidget.widgets import TimeWidget
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
 
@@ -132,3 +132,15 @@ class SeguimientoTallaPesoForm(forms.ModelForm):
     class Meta:
         model = SeguimientoTallaPeso
         exclude = ('participante', 'fecha_registro', )
+
+
+class ActividadEFDForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(ActividadEFDForm, self).__init__(*args, **kwargs)
+        self.fields['dirigido_a'] = adicionarClase(self.fields['dirigido_a'], 'one')
+
+    class Meta:
+        model = Acudiente
+        exclude = ('participantes', 'estado', 'acudiente', )

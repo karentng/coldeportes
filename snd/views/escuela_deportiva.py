@@ -199,6 +199,12 @@ def eliminar_categoria_sede(request, escuela_id, categoria_id):
         if categorias.count() == 1:
             messages.error(request, "La sede debe tener almenos 1 categoría")
             return redirect('wizard_categorias_sede', escuela_id)
+
+        participantes = Participante.objects.filter(categoria__in=categorias)
+        if participantes.count() > 0:
+            messages.error(request, "Hay participantes inscritos en esta categoría")
+            return redirect('wizard_categorias_sede', escuela_id)
+
         categoria = categorias.get(id=categoria_id)
         categoria.delete()
         messages.success(request, "Horario eliminado correctamente")
@@ -601,23 +607,17 @@ def cambiar_estado_acudiente(request, id_acudiente):
 
 @login_required
 @permission_required('snd.add_escueladeportiva')
-def registrar_categoría(request, id_evento):
+def registrar_actividad(request, id_evento):
 
-    actividad_form = ActividadForm()
+    actividad_form = ActividadEFDForm()
 
     if request.method == 'POST':
-        actividad_form = ActividadForm(request.POST)
+        actividad_form = ActividadEFDForm(request.POST)
         if actividad_form.is_valid():
-            actividad = actividad_form.save(commit=False)
-            actividad.evento_perteneciente = evento.id
-            actividad.save()
-            evento.actividades.add(actividad)
-            evento.save()
+            actividad_form.save()
             messages.success(request, "La actividad ha sido creada con exito!")
-            return redirect('registrar_actividad', id_evento)
-    lista_actividades = evento.actividades.all()
-    return render(request, 'gestion_actividades.html', {'form': actividad_form, 'lista_actividades': lista_actividades,
-                                                        'evento': evento})
+            return redirect('registrar_actividadefd', id_evento)
+    return render(request, 'escuela_deportiva/registrar_actividad.html', {'form': actividad_form})
 
 
 @login_required
