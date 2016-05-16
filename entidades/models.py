@@ -1048,8 +1048,8 @@ class CalendarioNacional(models.Model):
 
     tipo = models.IntegerField(choices=TIPO)
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name="Deporte del evento")
-    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva, verbose_name="Categoría del evento",null=True,blank=True)
-    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva, verbose_name="Modalidad del evento",null=True,blank=True)
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva, verbose_name="Categoría del deporte",null=True,blank=True)
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva, verbose_name="Modalidad del deporte",null=True,blank=True)
     ciudad = models.ForeignKey(Ciudad,help_text="Ciudad donde se desarrollará el evento")
     direccion = models.CharField(max_length=255,verbose_name="Dirección", help_text="Dirección del lugar del evento")
     fecha_inicio = models.DateTimeField(verbose_name="Fecha de inicio del evento")
