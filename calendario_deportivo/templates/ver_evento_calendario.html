@@ -74,8 +74,8 @@
                                                     <p><b>Lugar del evento:</b> {{ evento.nombre_lugar }}</p>
                                                     <p><b>Tipo:</b> {{ evento.get_tipo_display }}<p/>
                                                     <p><b>Deporte:</b> {{ evento.deporte}}</p>
-                                                    <p><b>Categoria:</b> {{ evento.categoria}}</p>
-                                                    <p><b>Modalidad:</b> {{ evento.modalidad}} </p>
+                                                    <p><b>Categoria:</b> {% if evento.categoria %}{{ evento.categoria}} {% else %} Ninguno {% endif %}</p>
+                                                    <p><b>Modalidad:</b> {% if evento.modalidad %}{{ evento.modalidad}} {% else %} Ninguno {% endif %}</p>
                                                     <p><b>Ciudad donde se desarrollará:</b> {{ evento.ciudad}}</p>
                                                     <p><b>Dirección:</b> {{ evento.direccion}}</p>
                                                     <p><b>Estado:</b> {{ evento.get_estado_display}}</p>
