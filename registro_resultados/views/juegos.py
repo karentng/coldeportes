@@ -165,7 +165,7 @@ def participante_equipo(request, competencia_id, equipo_id, participante_id=None
         "form": form,
         'wizard_stage': 1,
         'participantes': participantes,
-        'competencia_id': competencia_id,
+        'competencia': competencia,
         'juego_id': competencia.juego.id,
         'equipo': equipo
         
@@ -312,7 +312,7 @@ def medalleria_por_competencia(request, competencia_id):
 
     return render(request, 'wizard_info_juego/wizard_medalleria.html', {
         'wizard_stage': 2,
-        'competencia_id': competencia_id,
+        'competencia': competencia,
         'juego_id': competencia.juego.id,
         'resultados1': resultados1,
         'resultados2':resultados2,
@@ -366,7 +366,7 @@ def listar_individual(request, competencia_id):
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         'wizard_stage': 1,
         'participantes': participantes,
-        'competencia_id': competencia_id,
+        'competencia': competencia,
         'juego_id': competencia.juego.id,
         'individual': True,
     })
@@ -381,7 +381,7 @@ def listar_equipos(request, competencia_id):
     return render(request, 'wizard_info_juego/wizard_participantes.html', {
         'wizard_stage': 1,
         'participantes': equipos,
-        'competencia_id': competencia_id,
+        'competencia': competencia,
         'juego_id': competencia.juego.id,
     })
 

@@ -37,7 +37,7 @@
 
 {% block contenido_panel %}
   <div  class="wrapper bg-silver-lighter clearfix">
-    <a href="{% url 'listar_equipos' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
+    <a href="{% url 'listar_equipos' competencia.id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
     <div class="pull-right">
         <div class="btn-group btn-toolbar">
             <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
@@ -97,7 +97,7 @@
                             <td>{% if participante.club %}{{participante.club}}{% else %}No registra{% endif %}</td>
                             <td>{% if participante.fecha_nacimiento %}{{participante.fecha_nacimiento}}{% else %} No registra {% endif %}</td>
                             <td>                              
-                              <a href='{% url "participante_equipo" competencia_id equipo.id participante.id %}'>
+                              <a href='{% url "participante_equipo" competencia.id equipo.id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
                               <a href="#modal-desactivate{{participante.id}}" data-toggle="modal"><i class="fa fa-trash"></i> Eliminar</a>
@@ -113,7 +113,7 @@
                                     </div>
                                     <div class="modal-footer">
                                       <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                      <a href="{% url 'eliminar_participante' competencia_id participante.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                      <a href="{% url 'eliminar_participante' competencia.id participante.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                     </div>
                                   </div>
                                 </div>

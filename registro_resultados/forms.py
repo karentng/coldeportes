@@ -301,8 +301,15 @@ class EquipoTiempoForm(forms.ModelForm):
                     raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
             except:
                 raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
-        pass
     
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
 
     class Meta:
 
@@ -324,6 +331,15 @@ class EquipoPuntosForm(forms.ModelForm):
         model = Equipo
         exclude = ("competencia", 'tiempo', 'marca', 'metros')
 
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
+
 
 class EquipoPosicionForm(forms.ModelForm):
 
@@ -338,6 +354,15 @@ class EquipoPosicionForm(forms.ModelForm):
 
         model = Equipo
         exclude = ("competencia", 'tiempo', 'marca', 'metros', 'puntos')
+
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
 
 
 class EquipoMetrosForm(forms.ModelForm):
@@ -367,6 +392,15 @@ class EquipoMetrosForm(forms.ModelForm):
                 raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
         else:
             pass
+
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
 
     
 class CompetenciasBaseDeDatos(forms.Form):

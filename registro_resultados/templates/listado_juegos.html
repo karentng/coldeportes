@@ -51,7 +51,7 @@
                             <td>{% if juego.descripcion %}{{juego.descripcion}}{% endif %}</td>
                             <td align="center">
                                 {% if juego.imagen == "" or juego.imagen == None %}
-                                    <img src="{{STATIC_URL}}img/juego.jpg" height='60' width='100'>
+                                    <img src="{{STATIC_URL}}img/juego.png" height='60' width='60'>
                                 {% else %}
                                     <img src="{{MEDIA_URL}}{{juego.imagen}}" height='60' width='100'>
                                 {% endif %}
