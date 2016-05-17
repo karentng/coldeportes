@@ -385,6 +385,7 @@ def ver_personal_apoyo_tenantnacional(request,id_personal_apoyo,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -423,6 +424,7 @@ def ver_dirigente_tenantnacional(request,dirigente_id,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -464,6 +466,7 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
 
     if estado != 'TRANSFERIDO':
         tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
@@ -513,7 +516,7 @@ def ver_escenario_tenantnacional(request,escenario_id,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
-
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -569,6 +572,7 @@ def ver_caf_tenantnacional(request,idCAF,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -601,6 +605,7 @@ def ver_cajas_tenantnacional(request,ccf_id,id_entidad):
     :param ccf_id:   Identificador del escenario
     :type ccf_id:    String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -639,6 +644,7 @@ def ver_escuelas_tenantnacional(request,id_escuela,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
