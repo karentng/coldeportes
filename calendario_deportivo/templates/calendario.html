@@ -55,6 +55,7 @@
                                     {{ event.titulo_evento }}
                                 </h5>
                                 <p>{{ event.objetivo }}</p>
+                                <a class="text-white add-tooltip" data-toggle="tooltip" title="Muestra el evento en el calendario" href="#" data-date="{{ event.fecha_inicio|date:"Y-m-d" }}">Mostrar en calendario</a>
                             </div>
                         {% endfor %}
                     {% else %}

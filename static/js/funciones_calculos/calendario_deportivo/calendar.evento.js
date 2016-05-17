@@ -45,6 +45,13 @@ var handleCalendarDemo = function () {
         },
 		events: calendarEvents
 	});
+    $(".external-event a").click(function(){
+		var diaAct = $(this).attr("data-date");
+		var goDate = new Date(diaAct);
+		var anio = goDate.getFullYear();
+		var mes = goDate.getMonth();
+		$("#calendar").fullCalendar('gotoDate', anio, mes);
+	});
 
 };
 
