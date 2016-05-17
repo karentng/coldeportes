@@ -581,11 +581,10 @@ def editar_acudiente(request, id_acudiente):
                                                                           'edicion': True})
 
 
+@login_required
+@permission_required('snd.view_escueladeportiva')
 def listar_acudientes(request):
-    if request.user.has_perm("snd.view_escueladeportiva"):
-        acudientes = Acudiente.objects.all()
-    else:
-        acudientes = Acudiente.objects.filter(estado=1)
+    acudientes = Acudiente.objects.all()
     return render(request, 'escuela_deportiva/listar_acudientes.html', {'acudientes': acudientes})
 
 
@@ -607,7 +606,7 @@ def cambiar_estado_acudiente(request, id_acudiente):
 
 @login_required
 @permission_required('snd.add_escueladeportiva')
-def registrar_actividad(request, id_evento):
+def registrar_actividadefd(request):
 
     actividad_form = ActividadEFDForm()
 
@@ -616,39 +615,116 @@ def registrar_actividad(request, id_evento):
         if actividad_form.is_valid():
             actividad_form.save()
             messages.success(request, "La actividad ha sido creada con exito!")
-            return redirect('registrar_actividadefd', id_evento)
+            return redirect('registrar_actividadefd')
     return render(request, 'escuela_deportiva/registrar_actividad.html', {'form': actividad_form})
 
 
 @login_required
-@permission_required('snd.add_escueladeportiva')
-def editar_actividad(request, id_actividad):
+@permission_required('snd.change_escueladeportiva')
+def editar_actividadefd(request, id_actividad):
     try:
-        actividad = Actividad.objects.get(id=id_actividad)
+        actividad = ActividadEFD.objects.get(id=id_actividad)
         if actividad.estado == 0:
-            messages.error(request, 'La actividad a la que trata de acceder no está disponbible')
-            return redirect('listar_eventos')
-
+            messages.error(request, 'La actividad a la que trata de acceder se encuentra inactiva')
+            return redirect('listar_actividadesefd')
     except Exception:
         messages.error(request, 'La actividad a la que trata de acceder no existe!')
-        return redirect('listar_eventos')
+        return redirect('listar_actividadesefd')
 
-    actividad_form = ActividadForm(instance=actividad)
+    actividad_form = ActividadEFDForm(instance=actividad)
 
     if request.method == "POST":
-        actividad_form = ActividadForm(request.POST, instance=actividad)
+        actividad_form = ActividadEFDForm(request.POST, instance=actividad)
         if actividad_form.has_changed():
             if actividad_form.is_valid():
-                actividad = actividad_form.save(commit=False)
-                actividad.save()
+                actividad_form.save()
                 messages.success(request, "La actividad ha sido editada con éxito!")
-                return redirect('registrar_actividad', actividad.evento_perteneciente)
+                return redirect('listar_actividadesefd')
         else:
             messages.success(request, "La actividad ha sido editada con éxito!")
-            return redirect('registrar_actividad', actividad.evento_perteneciente)
+            return redirect('listar_actividadesefd')
 
-    evento = Evento.objects.get(id=actividad.evento_perteneciente)
-    lista_actividades = evento.actividades.all()
-    return render(request, 'gestion_actividades.html', {'form': actividad_form, 'lista_actividades': lista_actividades,
-                                                        'evento': evento, 'edicion': True})
+    return render(request, 'escuela_deportiva/registrar_actividad.html', {'form': actividad_form, 'edicion': True})
 
+
+@login_required
+@permission_required('snd.view_escueladeportiva')
+def listar_actividadesefd(request):
+    actividades = ActividadEFD.objects.all()
+    return render(request, 'escuela_deportiva/listar_actividades.html', {'actividades': actividades})
+
+
+@login_required
+@permission_required('snd.change_escueladeportiva')
+def cambiar_estado_actividadefd(request, id_actividad):
+    try:
+        actividad = ActividadEFD.objects.get(id=id_actividad)
+    except ActividadEFD.DoesNotExist:
+        messages.error(request, 'La actividad a la que trata de acceder no existe')
+        return redirect("listar_actividadesefd")
+
+    actividad.estado = not actividad.estado
+    actividad.save()
+
+    messages.success(request, "Actividad "+actividad.get_estado_accion()+" correctamente")
+    return redirect('listar_actividadesefd')
+
+
+@login_required
+@permission_required('snd.view_escueladeportiva')
+def listado_asistencia_actividad(request, id_actividad):
+    try:
+        actividad = ActividadEFD.objects.get(id=id_actividad)
+    except Exception:
+        messages.error(request, 'La actividad a la que trata de acceder no existe!')
+        return redirect('listar_actividadesefd')
+
+    if actividad.dirigido_a == 0:
+        asistentes = Acudiente.objects.filter(participante_responsable__sede_perteneciente=actividad.sede).all()
+        for asistente in asistentes:
+            if asistente in actividad.acudientes.all():
+                asistente.asistio = True
+            else:
+                asistente.asistio = False
+    else:
+        asistentes = Participante.objects.filter(sede_perteneciente=actividad.sede).all()
+        for asistente in asistentes:
+            if asistente in actividad.participantes.all():
+                asistente.asistio = True
+            else:
+                asistente.asistio = False
+    return render(request, 'escuela_deportiva/registrar_asistencia_actividad.html',
+                  {'asistentes': asistentes, 'actividad': actividad})
+
+
+@login_required
+@permission_required('snd.add_escueladeportiva')
+def ajax_asistencia(request):
+    from django.http import JsonResponse
+    if request.is_ajax():
+        try:
+            actividad_id = int(request.POST["actividad_id"])
+            asistente_id = int(request.POST["asistente_id"])
+            dirigido_a = int(request.POST["dirigido_a"])
+            asistio = int(request.POST["asistio"])
+
+            actividadefd = ActividadEFD.objects.get(id=actividad_id)
+
+            if dirigido_a == 0:
+                asistente = Acudiente.objects.get(id=asistente_id)
+                if asistio:
+                    actividadefd.acudientes.add(asistente)
+                else:
+                    actividadefd.acudientes.remove(asistente)
+            else:
+                asistente = Participante.objects.get(id=asistente_id)
+                if asistio:
+                    actividadefd.participantes.add(asistente)
+                else:
+                    actividadefd.participantes.remove(asistente)
+        except Exception as e:
+            return JsonResponse({"status": "error", "msj": "Ocurrió un error en el servidor"})
+
+        return JsonResponse({"status": "ok", "msj": "Asistencia registrada correctamente"})
+
+    return JsonResponse({"status": "error"})

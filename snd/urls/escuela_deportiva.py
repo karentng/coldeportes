@@ -35,7 +35,12 @@ urlpatterns = patterns(
     url(r'^acudiente/cambiar-estado/(\d+)$', 'cambiar_estado_acudiente', name='cambiar_estado_acudiente'),
 
     # urls actividades
-    url(r'^actividades/registrar/(\d+)$', 'registrar_acudiente', name='registrar_acudiente'),
+    url(r'^actividades/registrar$', 'registrar_actividadefd', name='registrar_actividadefd'),
+    url(r'^actividades/editar/(\d+)$', 'editar_actividadefd', name='editar_actividadefd'),
+    url(r'^actividades/listar', 'listar_actividadesefd', name='listar_actividadesefd'),
+    url(r'^actividades/cambiar-estado/(\d+)$', 'cambiar_estado_actividadefd', name='cambiar_estado_actividadefd'),
+    url(r'^actividades/asistencia/(\d+)$', 'listado_asistencia_actividad', name='listado_asistencia_actividad'),
+    url(r'^actividades/ajax-asistencia$', 'ajax_asistencia', name='ajax_asistencia'),
 
     # urls wizard
     url(r'^wizard/sede$', 'wizard_nuevo_sede', name='wizard_nuevo_sede'),

@@ -136,11 +136,18 @@ class SeguimientoTallaPesoForm(forms.ModelForm):
 
 class ActividadEFDForm(forms.ModelForm):
     required_css_class = 'required'
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
 
     def __init__(self, *args, **kwargs):
         super(ActividadEFDForm, self).__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['rows'] = 4
         self.fields['dirigido_a'] = adicionarClase(self.fields['dirigido_a'], 'one')
 
     class Meta:
-        model = Acudiente
-        exclude = ('participantes', 'estado', 'acudiente', )
+        model = ActividadEFD
+        fields = ('dirigido_a', 'sede', 'titulo', 'dia_actividad', 'hora_inicio', 'hora_fin', 'descripcion', )
+
+        widgets = {
+            'dia_actividad': MyDateWidget()
+        }

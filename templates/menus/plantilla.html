@@ -21,7 +21,7 @@
 <!-- =============================================== -->
 
 {% if request.tenant.schema_name != 'public' %}
-    {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo|can_manage %}
+    {% if request.user.is_superuser  or request.tenant.tipo == 11 or request.user|has_group:"Digitador" and request.tenant.tipo|can_manage %}
         <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path or 'escuela-deportiva' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>

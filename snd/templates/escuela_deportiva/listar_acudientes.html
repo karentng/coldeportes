@@ -58,13 +58,15 @@
                                 <td>{{ acudiente.get_estado_display }}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modal-acudiente-{{ acudiente.id }}"><i class="fa fa-eye"></i> Ver más</a><br>
-                                    {% if acudiente.estado %}
-                                        <a href="{% url 'editar_acudiente' acudiente.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                    {% if perms.snd.change_escueladeportiva %}
+                                        {% if acudiente.estado %}
+                                            <a href="{% url 'editar_acudiente' acudiente.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                        {% endif %}
+                                        <a href="#" onclick="urlModal(this);" data-target="#modal-desactivate" data-toggle="modal" data-url="{% url 'cambiar_estado_acudiente' acudiente.id %}">
+                                            <i class="fa fa-ban"></i> A/I <i class="fa fa-question-circle add-tooltip" data-toggle="tooltip" title="Activar/Inactivar"></i>
+                                        </a><br>
+                                        {% include "escuela_deportiva/modal_acudiente.html" %}
                                     {% endif %}
-                                    <a href="#" onclick="urlModal(this);" data-target="#modal-desactivate" data-toggle="modal" data-url="{% url 'cambiar_estado_acudiente' acudiente.id %}">
-                                        <i class="fa fa-ban"></i> A/I <i class="fa fa-question-circle add-tooltip" data-toggle="tooltip" title="Activar/Inactivar"></i>
-                                    </a><br>
-                                    {% include "escuela_deportiva/modal_acudiente.html" %}
                                 </td>
                             </tr>
 
