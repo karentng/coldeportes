@@ -28,7 +28,8 @@
 				className: 'bg-blue-darker',
                 allDay:false,
 				media: '<i class="fa fa-trophy"></i>',
-				description: '{{ event.objetivo }}'
+				description: '{{ event.objetivo }}',
+                className: '{{ event.color }}'
             });
         {% endfor %}
     </script>
@@ -49,7 +50,7 @@
                     <h4 class="m-b-20 m-r-5" style="display: inline-block;">Eventos Calendario Nacional</h4>
                     {% if eventos %}
                         {% for event in eventos %}
-                            <div class="external-event bg-blue-darker" data-bg="bg-purple" data-title="{{ event.titulo_evento }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ event.objetivo }}">
+                            <div class="external-event {{ event.color }}" data-bg="bg-purple" data-title="{{ event.titulo_evento }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ event.objetivo }}">
                                 <h5>
                                     <i class="fa fa-calendar fa-lg fa-fw"></i>
                                     {{ event.titulo_evento }}
