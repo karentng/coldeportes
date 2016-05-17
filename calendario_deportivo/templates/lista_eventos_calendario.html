@@ -67,7 +67,7 @@
                                 <i class="fa fa-eye"></i> Ver más
                             </a>
                             <br/>
-                                {% if c.estado == 2 %}
+                                {% if c.estado == 2 or c.estado == 0 %}
                                     <a href="{% url 'editar_calendario_nacional' c.id %}">
                                         <i class="fa fa-edit"></i> Editar evento
                                     </a>
@@ -76,6 +76,7 @@
                                         <i class="fa fa-trash"></i> Cancelar evento
                                     </a>
                                     <br/>
+
                                 {% endif %}
                         </td>
                     </tr>

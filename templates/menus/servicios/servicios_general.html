@@ -7,6 +7,7 @@
     <ul class="sub-menu">        
     {% if request.tenant.schema_name == 'public' %}
 
+        {% include "menus/aplicacion/calendario_deportivo.html" %}
         {% if user.is_superuser %}
             {% include "menus/servicios/registro_resultados.html" %}
         {% endif %}
@@ -24,11 +25,12 @@
 
         {% include "menus/servicios/gestion_eventos.html" %}        
         {# include "menus/servicios/reserva_escenarios.html" #}
-
-    {% endif %}
-
-    {% if perms.entidades.add_calendarionacional %}
+        {% if perms.entidades.add_calendarionacional %}
         {% include "menus/aplicacion/calendario_deportivo.html" %}
     {% endif %}
+
+    {% endif %}
+
+
     </ul>
 </li>
