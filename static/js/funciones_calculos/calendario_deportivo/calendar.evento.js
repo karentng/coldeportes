@@ -24,7 +24,7 @@ var handleCalendarDemo = function () {
             week: 'Semana',
             day: 'Día'
         },
-        allDayHtml:"Todo<br/>el día",
+        allDayText:"Todo el día",
         eventLimitText:"más",
         timeFormat: 'H(:mm)',
 		editable: false,
