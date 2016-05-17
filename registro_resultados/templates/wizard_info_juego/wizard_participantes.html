@@ -68,10 +68,10 @@
                         <th>Posición</th>
                         <th>Género</th>
                         {% if individual %}<th>Club</th>{% endif %}
-                        {% if puntos %}<th>Puntos</th>{% endif %}
-                        {% if not puntos %}<th>Marca</th>{% endif %}
-                        {% if not puntos %}{% if not metros %}<th>Tiempo</th>{% endif %}{% endif %}
-                        {% if metros %}<th>Metros</th>{% endif %}
+                        {% if participate.puntos %}<th>Puntos</th>{% endif %}
+                        <th>Marca</th>
+                        {% if participante.tiempo %}<th>Tiempo</th>{% endif %}
+                        {% if participante.metros %}<th>Metros</th>{% endif %}
                         <th>Opciones</th>
                     </tr>
                 </thead>
@@ -83,59 +83,50 @@
                         <td>{{participante.posicion}}</td>
                         <td>{{participante.get_genero_display}}</td>
                         {% if individual %}<td>{{participante.club}}</td>{% endif %}
-                        {% if puntos %}<td>{{participante.puntos}}</td>{% endif %}
-
-                        {% if not puntos %}
-                          {% if participante.marca %}
-                            <td>{{participante.marca}}</td>
-                          {% else %}
-                            <td> -- </td>
-                          {% endif %}
-                          {% if metros %}
-                          <td>{{participante.metros}}</td>
-                          {% else %}
-                          <td>{{participante.tiempo}}</td>
-                          {% endif %}
-                        {% endif %}
+                        {% if participate.puntos %}<td>{{participante.puntos}}</td>{% endif %}
+                        {% if participante.marca %}<td>{{participante.marca}}</td>{% else %}<td> -- </td>{% endif %}
+                        {% if participante.metros %}<td>{{participante.metros}}</td>{% endif %}
+                        {% if participante.tiempo %}<td>{{participante.tiempo}}</td>{% endif %}
                         <td>
                           {% if individual %}
-                            {% if puntos %}
+                            {% if participante.puntos %}
                               <a href='{% url "participante_puntos" competencia_id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                            {% else %}
-                              {% if metros %}
+                            {% elif participante.metros %}
                               <a href='{% url "participante_metros" competencia_id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                              {% else %}
+                            {% elif participante.tiempo %}
                               <a href='{% url "participante_tiempos" competencia_id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
-                              </a><br>
-                              {% endif %}
+                            {% else%}
+                              <a href='{% url "participante_posicion" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
                             {% endif %}
                             <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_participante" competencia_id participante.id %}'>
                                 <i class="fa fa-trash"></i> Eliminar
                             </a><br>
-
                           {% else %}
                             <a href='{% url "participante_equipo" competencia_id participante.id  %}'>
                                 <i class="fa fa-check"></i> Registrar Integrantes
                             </a><br>
-                            {% if puntos %}
+                            {% if participante.puntos %}
                               <a href='{% url "equipo_puntos" competencia_id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                            {% else %}
-                              {% if metros %}
+                            {% elif participante.metros %}
                               <a href='{% url "equipo_metros" competencia_id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                              {% else %}
+                            {% elif participante.tiempo %}
                               <a href='{% url "equipo_tiempos" competencia_id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                              {% endif %}
+                            {% else %}
+                              <a href='{% url "equipo_posicion" competencia_id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
                             {% endif %}
                             <a href='#' data-target="#modal-eliminar" data-toggle="modal" onclick="urlModal(this);" data-url='{% url "eliminar_equipo" competencia_id participante.id %}'>
                                 <i class="fa fa-trash"></i> Eliminar

@@ -73,7 +73,6 @@
 {% endif %}
 
 {% if not request.user.is_superuser %}
-
     {% if user.is_authenticated %}
         <li class="has-sub
             {% if 'dirigentes' in request.path or 'deportistas' in request.path or '/escenarios/' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path %}
@@ -121,6 +120,9 @@
     {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/noticias.html" %}
     {% include "menus/aplicacion/publicidad.html" %}
+    {% if request.tenant.schema_name != 'public' %}
+        {% include "menus/servicios/servicios_general.html" %}
+    {% endif %}
 
 {% endif %}
 
@@ -132,10 +134,10 @@
         {% include "menus/aplicacion/noticias.html" %}
         {% include "menus/aplicacion/publicidad.html" %}
         {% include "menus/aplicacion/manual.html" %}
+        {% include "menus/servicios/servicios_general.html" %}
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
 {% endif %}
 
 {% include "menus/aplicacion/directorio.html" %}
-{% include "menus/servicios/servicios_general.html" %}
