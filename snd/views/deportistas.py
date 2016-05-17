@@ -220,7 +220,6 @@ def wizard_historia_deportiva(request,id_depor):
 
 #Ajax para modalidad y categoria historia deportiva
 @login_required
-@all_permission_required('snd.add_deportista')
 def get_modalidades(request,id_depor):
     modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=id_depor).order_by('nombre')
     if modalidades:
@@ -237,7 +236,6 @@ def get_modalidades(request,id_depor):
     })
 
 @login_required
-@all_permission_required('snd.add_deportista')
 def get_categorias(request,id_depor):
     categorias = CategoriaDisciplinaDeportiva.objects.filter(deporte=id_depor).order_by('nombre')
     if categorias:
