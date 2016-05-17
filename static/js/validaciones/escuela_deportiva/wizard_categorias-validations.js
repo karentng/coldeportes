@@ -20,6 +20,13 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'La edad mínima no puede ser vacía'
+                    },
+                    callback: {
+                        message: 'La edad mínima debe ser menor a la máxima',
+                        callback: function(fieldValue, validator){
+                            var edad_max= $("#id_edad_maxima").val();
+                            return fieldValue < edad_max
+                        }
                     }
                 }
             },
@@ -27,6 +34,13 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'La edad máxima no puede ser vacía'
+                    },
+                    callback: {
+                        message: 'La edad máxima debe ser mayor a la mínima',
+                        callback: function(fieldValue, validator){
+                            var edad_mi = $("#id_edad_minima").val();
+                            return fieldValue > edad_mi;
+                        }
                     }
                 }
             },
@@ -50,4 +64,5 @@ $(document).ready(function() {
             // Remove the has-success class
             $parent.removeClass('has-success');
         });
+
 });
