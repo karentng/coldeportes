@@ -200,14 +200,14 @@ def eliminar_categoria_sede(request, escuela_id, categoria_id):
             messages.error(request, "La sede debe tener almenos 1 categoría")
             return redirect('wizard_categorias_sede', escuela_id)
 
-        participantes = Participante.objects.filter(categoria__in=categorias)
+        categoria = categorias.get(id=categoria_id)
+        participantes = Participante.objects.filter(categoria=categoria)
         if participantes.count() > 0:
             messages.error(request, "Hay participantes inscritos en esta categoría")
             return redirect('wizard_categorias_sede', escuela_id)
 
-        categoria = categorias.get(id=categoria_id)
         categoria.delete()
-        messages.success(request, "Horario eliminado correctamente")
+        messages.success(request, "Categoría eliminada correctamente")
         return redirect('wizard_categorias_sede', escuela_id)
 
     except Exception as e:
