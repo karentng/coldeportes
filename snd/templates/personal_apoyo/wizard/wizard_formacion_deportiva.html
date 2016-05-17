@@ -45,7 +45,7 @@
     {% include 'personal_apoyo/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form action="" id="form-formacion" method="post">{% csrf_token %}
+                <form action="" id="form-formacion" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>

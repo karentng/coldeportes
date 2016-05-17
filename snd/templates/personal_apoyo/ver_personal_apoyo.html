@@ -90,6 +90,7 @@
                                             <div class="profile-right">
                                             {% if perms.snd.change_personalapoyo and request.tenant.schema_name != 'public' %}
                                                 <p><b>{{personal_apoyo.get_tipo_id_display | title}} </b>: {{personal_apoyo.identificacion}}<br /></p>
+                                                <p><b>Soporte identificación</b>: <a href="{{personal_apoyo.soporte_identificacion.url }}" target="_blank">Soporte</a> <br /></p>
                                                 <p><b>Estado:</b> {{personal_apoyo.get_estado_display}}</p>
                                             {% else %}
                                                 <p> <b>Entidad:</b> {{ personal_apoyo.entidad | upper}}<br/> </p>
