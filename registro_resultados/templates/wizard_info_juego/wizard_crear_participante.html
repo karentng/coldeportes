@@ -24,6 +24,32 @@
   <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
   <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>  
   <script src="{{ STATIC_URL }}js/validaciones/registro_resultados/registro_participante-validations.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+        //inicializa campo cantidad de medallas por equipo
+        if($("#id_medallas_por_integrantes").is(':checked')) {  
+
+          $("#id_cantidad_medallas_equipo").prop('required', true); 
+          $("#cantidad_medallas_equipo").css("display", "block"); 
+          
+        }else {  
+            $("#cantidad_medallas_equipo").css("display", "none"); 
+        }
+        //evento cada que selccionan el checkbox 
+        $("#id_medallas_por_integrantes").click(function() {  
+            if($("#id_medallas_por_integrantes").is(':checked')) { 
+
+              $("#id_cantidad_medallas_equipo").prop('required',true); 
+              $("#cantidad_medallas_equipo").css("display", "block"); 
+
+            } else {  
+
+              $("#cantidad_medallas_equipo").css("display", "none"); 
+
+            }  
+        });
+      });
+  </script>
 
 {% endblock %}
 
@@ -60,7 +86,7 @@
               <h4>{% if individual %}Ingrese Datos del Participante {% else %}Ingrese Datos del Equipo {% endif %}</h4>
               <br>
               {% for field in form %}
-                  <div class="col-md-6">
+                  <div class="col-md-6" id="{{field.name}}">
                       
                       {% bootstrap_field field layout="vertical" %}
                   </div>
