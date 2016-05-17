@@ -327,13 +327,18 @@ def desactivar_escuela_deportiva(request,id_escuela):
 def registrar_participante(request):
 
     if request.method == 'POST':
-        participante_form = ParticipanteForm(request.POST)
+        sede_id = int(request.POST["sede_perteneciente"])
+        participante_form = ParticipanteForm(request.POST, sede_id=sede_id)
+        print(participante_form.fields['categoria'].__dict__)
         if participante_form.is_valid():
             participante = participante_form.save(commit=False)
             participante.entidad = request.tenant
             participante.save()
             messages.success(request, "El participante ha sido registrado con exito")
             return redirect('listar_participante')
+        else:
+            messages.error(request, "Error")
+            return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form})
 
     participante_form = ParticipanteForm()
     return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form})
@@ -363,11 +368,10 @@ def editar_participante(request, id_participante):
                                                                              'edicion': True})
 
 
+@login_required
+@permission_required('snd.view_escueladeportiva')
 def listar_participante(request):
-    if request.user.has_perm("snd.change_escueladeportiva"):
-        participantes = Participante.objects.all()
-    else:
-        participantes = Participante.objects.filter(estado=1)
+    participantes = Participante.objects.all()
     return render(request, 'escuela_deportiva/listar_participantes.html', {'participantes': participantes})
 
 
