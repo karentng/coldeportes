@@ -94,6 +94,13 @@ def ver_evento(request,id):
 #Vistas para tenant nacional
 def cargar_calendario(request):
     eventos = CalendarioNacional.objects.filter(estado=0)
+    colores = ['bg-purple','bg-blue','bg-green','bg-red','bg-yellow-darker','bg-blue-darker','bg-black','bg-red-darker','bg-green-darker']
+    i=0
+    for e in eventos:
+        e.color = colores[i]
+        i+=1
+        if i==9:
+            i=0
     return render(request,'calendario.html',{
         'eventos':eventos
     })
