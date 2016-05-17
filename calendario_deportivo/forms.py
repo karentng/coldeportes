@@ -10,6 +10,7 @@ class CalendarioForm(ModelForm):
         deporte_id = kwargs.pop('deporte_id',None)
         super(CalendarioForm, self).__init__(*args, **kwargs)
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
+        self.fields['tipo'].widget.attrs.update({'readonly': True}) #Mientras se definen los otros tipos
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['modalidad'] = adicionarClase(self.fields['modalidad'], 'one')
         self.fields['categoria'] = adicionarClase(self.fields['categoria'], 'one')
