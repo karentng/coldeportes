@@ -18,7 +18,7 @@
     <script type="text/javascript">
         csrf = '{{ csrf_token }}';
         calendarEvents = [];
-        urlDrop = "{% url 'cambio_fecha_actividad' %}";
+        url_agendar = "{% url 'solicitar_reserva' escenario_id %}";
         {% for reserva in reservas %}
             calendarEvents.push({
                 id: '{{ reserva.id }}',
@@ -48,7 +48,7 @@
             <div class="calendar-event" id="external-events">
                 <br>
                 <h4 class="m-b-20 m-r-5" style="display: inline-block;">Calendario de Reservas del Escenario<br> {{ escenario.nombre }}</h4>
-                <div class="external-event bg-purple" data-bg="bg-purple" data-title="Nueva Reserva" data-media="<i class='fa fa-calendar'></i>" data-desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+                <div class="external-event bg-purple" data-bg="bg-purple" data-title="Nueva Reserva" data-media="<i class='fa fa-calendar'></i>" data-desc="">
                         <h5><i class="fa fa-calendar fa-lg fa-fw"></i> Nueva Reserva</h5>
                         <p>Arrastre y ajuste de acuerdo a la hora y fecha que desee seleccionar</p>
                 </div>

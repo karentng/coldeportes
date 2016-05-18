@@ -33,13 +33,13 @@ var handleCalendarDemo = function () {
             // retrieve the dropped element's stored Event Object
             var originalEventObject = $(this).data('eventObject');            
             // we need to copy it, so that multiple events don't have a reference to the same object
-            var copiedEventObject = $.extend({}, originalEventObject);            
+            var nuevaReserva = $.extend({}, originalEventObject);            
             // assign it the date that was reported
-            copiedEventObject.start = date;
-            copiedEventObject.allDay = false;            
+            nuevaReserva.start = date;
+            nuevaReserva.allDay = false;            
             // render the event on the calendar
             // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);            
+            $('#calendar').fullCalendar('renderEvent', nuevaReserva, true);            
             // is the "remove after drop" checkbox checked?            
             $(this).remove();
             
@@ -60,7 +60,7 @@ var handleCalendarDemo = function () {
         var $modalDiv = $(e.delegateTarget);
 
         $modalDiv.addClass('loading');
-        $.post(urlDrop, data, function(datam){
+        $.post(urlDrop, nuevaReserva, function(datam){
             $modalDiv.modal('hide').removeClass('loading');
 
             setTimeout(function() {
