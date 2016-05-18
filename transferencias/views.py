@@ -385,28 +385,36 @@ def cancelar_transferencia(request,id_objeto):
         messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
         return redirect('deportista_listar')
 
-    entidad_solicitante = request.tenant
-    entidades = Entidad.objects.exclude(schema_name__in=['public',entidad_solicitante.schema_name])
+    if obj_trans.estado == 4:
+        transferencia = Transferencia.objects.get(id_objeto=obj_trans.id,estado='Internacional')
+        transferencia.delete()
+        obj_trans.estado = 0
+        obj_trans.save()
+        messages.success(request,'Tranferencia cancelada exitosamente')
+        return redirect('deportista_listar')
+    else:
+        entidad_solicitante = request.tenant
+        entidades = Entidad.objects.exclude(schema_name__in=['public',entidad_solicitante.schema_name])
 
-    string = ""
-    from django.http import HttpResponse
-    for ent in entidades:
-        try:
-            string += ent.schema_name +" "+ent.nombre+" || "
-            connection.set_tenant(ent)
-            ContentType.objects.clear_cache()
-            trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
+        string = ""
+        from django.http import HttpResponse
+        for ent in entidades:
+            try:
+                string += ent.schema_name +" "+ent.nombre+" || "
+                connection.set_tenant(ent)
+                ContentType.objects.clear_cache()
+                trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
 
-            if len(trans) != 0:
-                trans.delete()
-                connection.set_tenant(entidad_solicitante)
-                obj_trans.estado = 0
-                obj_trans.save()
-                messages.success(request,'Tranferencia cancelada exitosamente')
-                return redirect('deportista_listar')
-        except Exception as e:
-            string += str(e)
-            return HttpResponse(string)
+                if len(trans) != 0:
+                    trans.delete()
+                    connection.set_tenant(entidad_solicitante)
+                    obj_trans.estado = 0
+                    obj_trans.save()
+                    messages.success(request,'Tranferencia cancelada exitosamente')
+                    return redirect('deportista_listar')
+            except Exception as e:
+                string += str(e)
+                return HttpResponse(string)
 
     messages.error(request,'Error: No existe la transferencia solicitada, La entidad a la cual se envío el deportista ya proceso la transferencia pendiente')
     return redirect('deportista_listar')

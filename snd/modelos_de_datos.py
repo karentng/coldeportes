@@ -179,8 +179,8 @@ MODELOS_DE_DATOS = (
                     ],
                     [
                         ['estado'],
-                        ['EN TRANSFERENCIA'],
-                        lambda x, y: operator.eq(x[0], y[0])
+                        ['EN TRANSFERENCIA','TRANSFERIDO INTERNACIONAL'],
+                        lambda x, y: operator.eq(x[0], y[0]) or operator.eq(x[0], y[1])
                     ]
                 ]
 
