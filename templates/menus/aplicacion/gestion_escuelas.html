@@ -1,0 +1,54 @@
+{% load has_group %}
+{% if request.tenant.tipo == 11 %}
+    <li class="has-sub {% if "sedes/listar" in request.path or '/escuela-deportiva/wizard' in request.path %} active {% endif %}">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <span>Gestión Sedes</span>
+        </a>
+        <ul class="sub-menu">
+            {% if perms.snd.add_escueladeportiva %}
+                <li {% if "/escuela-deportiva/wizard" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'wizard_nuevo_sede' %}">Registro Sede</a>
+                </li>
+            {% endif %}
+            <li {% if "/escuela-deportiva/sedes/listar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'escuela_deportiva_listar' %}">Listar Sedes</a>
+            </li>
+        </ul>
+    </li>
+    <li class="has-sub {% if '/escuela-deportiva/participantes' in request.path or '/escuela-deportiva/acudiente' in request.path %} active {% endif %}">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <span>Gestión Participantes</span>
+        </a>
+        <ul class="sub-menu">
+            {% if perms.snd.add_escueladeportiva %}
+                <li {% if "/escuela-deportiva/participantes/registrar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'registrar_participante' %}">Registro Participante</a>
+                </li>
+            {% endif %}
+            <li {% if "/escuela-deportiva/participantes/listar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'listar_participante' %}">Listar Participantes</a>
+            </li>
+            <li {% if "/escuela-deportiva/acudiente/listar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'listar_acudientes' %}">Listar Acudientes</a>
+            </li>
+        </ul>
+    </li>
+    <li class="has-sub {% if 'escuela-deportiva/actividades' in request.path %} active {% endif %}">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <span>Gestión Actividades</span>
+        </a>
+        <ul class="sub-menu">
+            {% if perms.snd.add_escueladeportiva %}
+                <li {% if "/escuela-deportiva/actividades/registrar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'registrar_actividadefd' %}">Registro Actividad</a>
+                </li>
+            {% endif %}
+            <li {% if "actividades/listar" in request.path %} class="active" {% endif %}>
+                <a href="{% url 'listar_actividadesefd' %}">Listar Actividades</a>
+            </li>
+        </ul>
+    </li>
+{% endif %}

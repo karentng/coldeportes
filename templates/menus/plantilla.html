@@ -1,4 +1,5 @@
 {% load has_group %}
+{% load can_manage %}
 
 <!-- ESTE MENÚ NO TIENE RESTRICCIONES NI DE USUARIOS NI DE TENANTS -->
 <li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
@@ -20,8 +21,8 @@
 <!-- =============================================== -->
 
 {% if request.tenant.schema_name != 'public' %}
-    {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo == 3%}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path%} active {% endif %}">
+    {% if request.user.is_superuser  or request.tenant.tipo == 11 or request.user|has_group:"Digitador" and request.tenant.tipo|can_manage %}
+        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path or 'escuela-deportiva' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
                 <i class="fa fa-cogs"></i>
@@ -43,6 +44,7 @@
                         </li>
                     {% endif %}
                 {% endif %}
+                {% include "menus/aplicacion/gestion_escuelas.html" %}
             </ul>
         </li>
     {% endif %}
@@ -73,7 +75,7 @@
 {% if not request.user.is_superuser %}
     {% if user.is_authenticated %}
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or '/escenarios/' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
+            {% if 'dirigentes' in request.path or 'deportistas' in request.path or '/escenarios/' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path %}
                 {% if 'reportes' not in request.path %}
                 active
                 {% endif %}
@@ -104,9 +106,6 @@
                 {% endif %}
                 {% if perms.snd.view_centrobiomedico %}
                     {% include "menus/aplicacion/centro_biomedico.html" %}
-                {% endif %}
-                {% if perms.snd.view_escueladeportiva %}
-                    {% include "menus/aplicacion/escuela_deportiva.html" %}
                 {% endif %}
             </ul>
         </li>

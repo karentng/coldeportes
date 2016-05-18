@@ -70,6 +70,6 @@ fields = {
                 maxSize: 5242880 //5MB
             }
         }
-    },
+    }
 };
 $.getScript(base+"js/validaciones/validations-base.js");
