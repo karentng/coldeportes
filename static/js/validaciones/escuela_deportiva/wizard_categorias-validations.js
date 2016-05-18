@@ -24,8 +24,8 @@ $(document).ready(function() {
                     callback: {
                         message: 'La edad mínima debe ser menor a la máxima',
                         callback: function(fieldValue, validator){
-                            var edad_max= $("#id_edad_maxima").val();
-                            return fieldValue < edad_max
+                            var edad_max= parseInt($("#id_edad_maxima").val());
+                            return parseInt(fieldValue) < edad_max
                         }
                     }
                 }
@@ -38,8 +38,8 @@ $(document).ready(function() {
                     callback: {
                         message: 'La edad máxima debe ser mayor a la mínima',
                         callback: function(fieldValue, validator){
-                            var edad_mi = $("#id_edad_minima").val();
-                            return fieldValue > edad_mi;
+                            var edad_mi = parseInt($("#id_edad_minima").val());
+                            return parseInt(fieldValue) > edad_mi;
                         }
                     }
                 }
@@ -65,4 +65,11 @@ $(document).ready(function() {
             $parent.removeClass('has-success');
         });
 
+    //Revalidar campos que usan plugins al ser actualizados
+    $("#id_edad_maxima").on('change',function(){
+        $("#form-wizard-categorias").bootstrapValidator('revalidateField', 'edad_minima');
+    });
+    $("#id_edad_minima").on('change',function(){
+        $("#form-wizard-categorias").bootstrapValidator('revalidateField', 'edad_maxima');
+    });
 });
