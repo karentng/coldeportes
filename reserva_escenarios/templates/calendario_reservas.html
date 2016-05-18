@@ -18,6 +18,7 @@
     <script type="text/javascript">
         csrf = '{{ csrf_token }}';
         calendarEvents = [];
+        urlDrop = "{% url 'cambio_fecha_actividad' %}";
         {% for reserva in reservas %}
             calendarEvents.push({
                 id: '{{ reserva.id }}',
@@ -49,12 +50,31 @@
                 <h4 class="m-b-20 m-r-5" style="display: inline-block;">Calendario de Reservas del Escenario<br> {{ escenario.nombre }}</h4>
                 <div class="external-event bg-purple" data-bg="bg-purple" data-title="Nueva Reserva" data-media="<i class='fa fa-calendar'></i>" data-desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
                         <h5><i class="fa fa-calendar fa-lg fa-fw"></i> Nueva Reserva</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>Arrastre y ajuste de acuerdo a la hora y fecha que desee seleccionar</p>
                 </div>
-                <a href="{% url 'solicitar_reserva' escenario.id %}" class="btn btn-primary btn-sm"><i class="fa fa-check"></i> Registrar Reserva</a>
+                <a id="btn-registrar-reserva" href="#" class="btn btn-primary btn-sm"><i class="fa fa-check"></i> Registrar Reserva</a>
             </div>
         </div>
         <div id="calendar" class="vertical-box-column p-15 calendar col-sm-9 fc fc-ltr"></div>
+        <div class="modal fade" id="modal-confirmacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title" id="titulo-modal">¿Esta seguro de agendar la reserva?</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p id="nuevo-dia">
+                            <b>Asegurese que la reserva tenga la fecha que ud desea. </b><span></span>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning btn-not" data-dismiss="modal">Cancelar</button>
+                        <button type="button"  class="btn btn-primary btn-ok" style="margin-left: 15px;">Solicitar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -63,6 +83,9 @@
     <script>
 		$(document).ready(function() {
 			Calendar.init();
+            $("#btn-registrar-reserva").on('click', function(e){
+                $('#modal-confirmacion').modal("show");
+            });
 		});
     </script>
 {% endblock %}

@@ -55,6 +55,38 @@ var handleCalendarDemo = function () {
     
     /* initialize the external events
     -----------------------------------------------------------------*/
+    $('#modal-confirmacion').on('click', '.btn-ok', function(e) {
+
+        var $modalDiv = $(e.delegateTarget);
+
+        $modalDiv.addClass('loading');
+        $.post(urlDrop, data, function(datam){
+            $modalDiv.modal('hide').removeClass('loading');
+
+            setTimeout(function() {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "showEasing": "swing"
+                };
+                toastr["success"]("Actividad actualizada exitosamente");
+            },500);
+        }).fail(function(datam){
+            setTimeout(function() {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "showEasing": "swing"
+                };
+                toastr["success"]("Actividad actualizada exitosamente");
+            },500);
+        });
+    });
+    
+    $('#modal-confirmacion').on('click', '.btn-not', function(e) {
+        revert();
+    });
+
     $('#external-events .external-event').each(function() {
         var eventObject = {
             title: $.trim($(this).attr('data-title')),
