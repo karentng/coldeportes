@@ -33,7 +33,7 @@ class Competencia(models.Model):
         (4, "Posición")
     )
     
-    nombre = models.CharField(max_length=255, verbose_name='nombre')
+    nombre = models.CharField(max_length=255, verbose_name='nombre', null=True, blank=True)
     fecha_competencia = models.DateField(verbose_name="fecha de la competencia")
     tipo_competencia = models.IntegerField(choices=TIPOS_COMPETENCIAS, verbose_name="tipo de competencia")
     lugar = models.CharField(max_length=150)
@@ -46,8 +46,29 @@ class Competencia(models.Model):
     juego = models.ForeignKey(Juego)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+    
+
+    def save(self, *args, **kwargs):
+        self.lugar = self.lugar.upper()
+        self.descripcion = self.descripcion.upper()
+        if not self.nombre:
+            if self.categoria and self.modalidad:
+                self.nombre = self.deporte.descripcion.upper() + " - "+ self.categoria.nombre.upper() + " - " + self.modalidad.nombre.upper()
+            elif self.categoria:
+                self.nombre = self.deporte.descripcion.upper() + " - "+ self.categoria.nombre.upper()
+            elif self.modalidad:
+                self.nombre = self.deporte.descripcion.upper() + " - "+ self.modalidad.nombre.upper()
+            else:
+                self.nombre = self.deporte.descripcion.upper()
+        else:
+            self.nombre = self.nombre.upper()
+        super(Competencia, self).save(*args, **kwargs)
+
+
+
     def __str__(self):
         return self.nombre
+
 
 class Equipo(models.Model):
     GENEROS = (
@@ -68,8 +89,6 @@ class Equipo(models.Model):
     competencia = models.ForeignKey(Competencia)
     medallas_por_integrantes = models.BooleanField(default = False)
     cantidad_medallas_equipo = models.PositiveIntegerField(null=True, blank=True, validators=[MinValueValidator(2)], verbose_name="cantidad de medallas del equipo * ")
-
-
 
 
 class Participante(models.Model):
