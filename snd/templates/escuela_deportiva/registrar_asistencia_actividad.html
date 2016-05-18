@@ -26,18 +26,19 @@
 
 {% block contenido_panel %}
     <div class="well row">
-        <div class="row">
-            <div class="col-xs-12">
-                <h4><b>Nombre de la Actividad:</b> {{ actividad.titulo|upper }}</h4>
+        <div class="row ">
+            <div class="wrapper bg-silver clearfix">
+                <div class="col-xs-12">
+                    <h4><b>Nombre de la Actividad:</b> {{ actividad.titulo|upper }}</h4>
+                </div>
+                <div class="col-lg-6">
+                    <h5><b>Fecha de la Actividad:</b> {{ actividad.dia_actividad }}</h5>
+                    <h5><b>Dirigido a:</b> {{ actividad.get_dirigido_a_display|lower|capfirst }}</h5>
+                </div>
+                <div class="col-lg-6">
+                    <h5 class="text-justify"><b>Descripción:</b> {{ actividad.descripcion }}</h5>
+                </div>
             </div>
-            <div class="col-lg-6">
-                <h5><b>Fecha de la Actividad:</b> {{ actividad.dia_actividad }}</h5>
-                <h5><b>Dirigido a:</b> {{ actividad.get_dirigido_a_display|lower|capfirst }}</h5>
-            </div>
-            <div class="col-lg-6">
-                <h5 class="text-justify"><b>Descripción:</b> {{ actividad.descripcion }}</h5>
-            </div>
-            <div class="col-xs-12">
             <hr>
                 <div class="table-responsive">
                     <table id="tabla-asistentes" class="table table-bordered table-hover">
