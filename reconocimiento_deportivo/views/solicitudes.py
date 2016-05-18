@@ -57,7 +57,7 @@ def validar_creacion(request, reconocimiento):
 
     mensaje = ''
     fecha_reconocimiento_actual = request.tenant.obtenerTenant().fecha_vigencia
-    fecha_maxima_renovacion = date(fecha_reconocimiento_actual.year, fecha_reconocimiento_actual.month - 1, fecha_reconocimiento_actual.day)
+    fecha_maxima_renovacion = date(fecha_reconocimiento_actual.year, fecha_reconocimiento_actual.month - 1, fecha_reconocimiento_actual.day%28)
     
     try:
         cantidad_solicitudes_por_respuesta = len(ReconocimientoDeportivo.objects.filter(estado = 0))

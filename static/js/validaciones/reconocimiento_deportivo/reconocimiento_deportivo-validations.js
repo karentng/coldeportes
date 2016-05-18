@@ -82,7 +82,7 @@ $(document).ready(function() {
                 archivo: {
                     validators:{
                         file: {
-                            extension: 'pdf, PDF, png, PNG, jpg, JPEG',
+                            extension: 'pdf,PDF,png,PNG,jpg,JPEG',
                             message: 'Seleccione una imagen con alguno de los siguientes formatos (pdf, png, jpg, JPEG) cuyo tamaño sea menor a 5MB',
                             maxSize: 5242880,
                         }                        
