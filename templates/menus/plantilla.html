@@ -21,32 +21,34 @@
 <!-- =============================================== -->
 
 {% if request.tenant.schema_name != 'public' %}
-    {% if request.user.is_superuser  or request.tenant.tipo == 11 or request.user|has_group:"Digitador" and request.tenant.tipo|can_manage %}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path or 'escuela-deportiva' in request.path %} active {% endif %}">
-            <a href="javascript:;">
-                <b class="caret pull-right"></b>
-                <i class="fa fa-cogs"></i>
-                <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
-            </a>
-            <ul class="sub-menu">
-                {% if request.user.is_superuser %}
-                    <li {% if 'datos-basicos-entidad' in request.path %} class="active" {% endif %}>
-                        <a href="{% url 'datos_basicos_entidad' %}"><span >Modificar datos básicos de la entidad</span></a>
-                    </li>
-                {% endif %}
-                {% if request.tenant.tipo == 3 %}
-                    {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
-                        <li {% if 'socio' in request.path %} class="active" {% endif %}>
-                            <a href="{% url 'gestion_socios' %}"><span>Gestionar socios del club</span></a>
-                        </li>
-                        <li {% if 'planes' in request.path %} class="active" {% endif %}>
-                            <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
+    {% if request.user.is_superuser or request.user.is_authenticated and request.tenant.tipo|can_manage  %}
+        {% if request.user.is_superuser or request.user|has_group:"Digitador" or request.user|has_group:"Solo lectura" and  not request.tenant.tipo = 3 %}
+            <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path or 'escuela-deportiva' in request.path %} active {% endif %}">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-cogs"></i>
+                    <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
+                </a>
+                <ul class="sub-menu">
+                    {% if request.user.is_superuser %}
+                        <li {% if 'datos-basicos-entidad' in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'datos_basicos_entidad' %}"><span >Modificar datos básicos de la entidad</span></a>
                         </li>
                     {% endif %}
-                {% endif %}
-                {% include "menus/aplicacion/gestion_escuelas.html" %}
-            </ul>
-        </li>
+                    {% if request.tenant.tipo == 3 %}
+                        {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
+                            <li {% if 'socio' in request.path %} class="active" {% endif %}>
+                                <a href="{% url 'gestion_socios' %}"><span>Gestionar socios del club</span></a>
+                            </li>
+                            <li {% if 'planes' in request.path %} class="active" {% endif %}>
+                                <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    {% include "menus/aplicacion/gestion_escuelas.html" %}
+                </ul>
+            </li>
+        {% endif %}
     {% endif %}
 {% endif %}
 
