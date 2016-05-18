@@ -150,19 +150,30 @@
                         <form action="" method="POST">{% csrf_token %}
                             <!-- begin email subject -->
                             <div class="col-lg-8">
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label for="id_internacional">
+                                            <input id="id_internacional" class name="internacional" type="checkbox">
+                                            "¿Es una transferencia internacional?"
+                                        </label>
+                                    </div>
+                                </div>
+                                <div id="entidades">
                                 <select class="form-control one" id="id_entidad" name="entidad" required title tabindex="-1" style="display: none;" >
                                     {% for en in entidades %}
                                         <option value="{{ en.id }}">{{ en.nombre }}</option>
                                     {% endfor %}
                                 </select>
+                                </div>
+                                <input class="form-control" id="id_nombre" name="nombre" placeholder="Nombre de la entidad" required="required" title="" type="hidden" data-bv-field="nombre">
                             </div>
                             <!-- end email subject -->
                             <br/>
                             <br/>
                             <br/>
                             <br/>
+                            <br/>
                             <p class="f-s-12 text-inverse">
-
                                 Coordialmente,<br />
                                 {{objeto.entidad}}.<br />
                                 Entidad del SIND,<br />
@@ -184,4 +195,24 @@
 		        <!-- end vertical-box-column -->
 		    </div>
 		    <!-- end vertical-box -->
+{% endblock %}
+
+{% block js %}
+    <script>
+        $("#id_internacional").on('change',function(){
+            var check = $(this).is(":checked");
+            if(check){
+                $("#id_nombre").attr('type','text');
+                $("#id_nombre").prop('required',true);
+                $("#entidades").css('display','none');
+                $("#id_entidad").prop('required',false);
+
+            }else{
+                $("#id_nombre").attr('type','hidden');
+                $("#id_nombre").prop('required',false);
+                $("#entidades").css('display','block');
+                $("#id_entidad").prop('required',true);
+            }
+        })
+    </script>
 {% endblock %}
