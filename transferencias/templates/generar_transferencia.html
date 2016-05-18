@@ -198,21 +198,5 @@
 {% endblock %}
 
 {% block js %}
-    <script>
-        $("#id_internacional").on('change',function(){
-            var check = $(this).is(":checked");
-            if(check){
-                $("#id_nombre").attr('type','text');
-                $("#id_nombre").prop('required',true);
-                $("#entidades").css('display','none');
-                $("#id_entidad").prop('required',false);
-
-            }else{
-                $("#id_nombre").attr('type','hidden');
-                $("#id_nombre").prop('required',false);
-                $("#entidades").css('display','block');
-                $("#id_entidad").prop('required',true);
-            }
-        })
-    </script>
+    <script src="{{ STATIC_URL }}js/funciones_calculos/transferencias/transferencia_internacional.js"></script>
 {% endblock %}
