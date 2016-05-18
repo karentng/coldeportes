@@ -51,7 +51,6 @@
                         <th>Lugar</th>
                         <th>Tipo de Competencia</th>
                         <th>Tipo de Disciplina</th>
-                        <th>Deporte</th>
                         <th>Tipos de Participantes</th>
                         <th>Fecha</th>
                         <th>Categoría</th>
@@ -74,8 +73,7 @@
                         <td>{{competencia.nombre}}</td>
                         <td>{{competencia.lugar}}</td>                       
                         <td>{{competencia.get_tipo_competencia_display}}</td>                       
-                        <td>{{competencia.deporte}}</td>                       
-                        <td>{{competencia.deporte}}</td>
+                        <td>{{competencia.deporte}}</td> 
                         <td>{{competencia.get_tipos_participantes_display}}</td>
                         <td>{{competencia.fecha_competencia}}</td>
                         <td>{%if competencia.categoria %}{{competencia.categoria}}{% else %}No registra{% endif %}</td>
