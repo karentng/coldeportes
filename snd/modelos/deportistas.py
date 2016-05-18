@@ -37,6 +37,7 @@ class Deportista(models.Model):
         (1,'INACTIVO'),
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
+        (4,'TRANSFERIDO INTERNACIONAL'),
     )
 
     ETNIAS = (

@@ -13,6 +13,7 @@ from entidades.models import *
 from django.contrib import messages
 from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required,tenant_required
 from django.http import JsonResponse,HttpResponse
+from transferencias.models import Transferencia
 
 @login_required
 #@tenant_required
@@ -448,6 +449,9 @@ def ver_deportista(request,id_depor,id_entidad,estado):
     except:
         messages.error(request, "Error: No existe el deportista solicitado")
         return redirect('deportista_listar')
+    if deportista.estado == 4:
+        info_transferencia_internacional = Transferencia.objects.get(id_objeto=deportista.id,estado='Internacional')
+        deportista.entidad_actual = info_transferencia_internacional.nombre_entidad
     composicion = ComposicionCorporal.objects.filter(deportista=deportista)
     if len(composicion) != 0:
         composicion = composicion[0]

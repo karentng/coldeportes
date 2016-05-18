@@ -103,11 +103,13 @@
                                                         <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
                                                     {% endif %}</p>
                                                     {% if request.tenant.schema_name != 'public' %}
-                                                        {% ifequal deportista.estado 3 %}
+                                                        {% if deportista.estado == 3%}
                                                             <p><b>Estado:</b> {{deportista.get_estado_display}} A {{ deportista.entidad | upper  }}</p>
+                                                        {% elif deportista.estado == 4 %}
+                                                            <p><b>Estado:</b> {{deportista.get_estado_display}} A {{ deportista.entidad_actual | upper  }}</p>
                                                         {% else %}
                                                             <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
-                                                        {% endifequal %}
+                                                        {% endif %}
                                                     {% endif %}
                                                     <p><b>Género:</b> {{deportista.get_genero_display}}</p>
                                                     <p><b>Edad:</b> {{ deportista.edad }}</p>
@@ -121,7 +123,7 @@
                                                     </p>
                                                     <p><b>Nacionalidades:</b> {{deportista.nacionalidad_str}}</p>
                                                     <p><b>Ciudad (Departamento) de Residencia:</b> {{ deportista.ciudad_residencia}}</p>
-                                                    <p><b>Club Deportivo Actual:</b> {{ deportista.entidad }}</p>
+                                                    <p><b>Club Deportivo Actual:</b> {% if deportista.estado == 4 %}{{ deportista.entidad_actual }}{% else %}{{ deportista.entidad }}{% endif %}</p>
                                                 </div>
                                             {% if perms.snd.change_deportista and request.tenant.schema_name != 'public' %}
                                                 <p><strong>Contacto:</strong></p>

@@ -53,24 +53,46 @@ def generar_transferencia(request,id):
     objeto.tipo_objeto = objeto.__class__.__name__
 
     if request.method == 'POST':
-        id_entidad_cambio = request.POST['entidad']
-        entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
-        connection.set_tenant(entidad_cambio)
-        ContentType.objects.clear_cache()
-        transferencia = Transferencia(
-            entidad=entidad_solicitante,
-            fecha_solicitud = objeto.fecha,
-            id_objeto = objeto.id,
-            tipo_objeto = objeto.tipo_objeto
-        )
-        transferencia.save()
-        #Cambiar estado de objeto a "En Transferencia"
-        connection.set_tenant(request.tenant)
-        ContentType.objects.clear_cache()
-        objeto.estado = 2
-        objeto.save()
-        #
-        messages.success(request,'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud')
+        try:
+            request.POST['internacional']
+            internacional = True
+        except:
+            internacional = False
+
+        if internacional:
+            nombre_entidad = request.POST['nombre']
+            transferencia = Transferencia(
+                entidad=entidad_solicitante,
+                fecha_solicitud = objeto.fecha,
+                id_objeto = objeto.id,
+                tipo_objeto = objeto.tipo_objeto,
+                nombre_entidad = nombre_entidad,
+                estado = 'Internacional'
+            )
+            transferencia.save()
+            objeto.estado = 4
+            objeto.save()
+            mensaje = 'Transferencia internacional exitosa. El deportista pertenece ahora a: '+nombre_entidad
+        else:
+            id_entidad_cambio = request.POST['entidad']
+            entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
+            connection.set_tenant(entidad_cambio)
+            ContentType.objects.clear_cache()
+            transferencia = Transferencia(
+                entidad=entidad_solicitante,
+                fecha_solicitud = objeto.fecha,
+                id_objeto = objeto.id,
+                tipo_objeto = objeto.tipo_objeto,
+                nombre_entidad = entidad_cambio.nombre
+            )
+            transferencia.save()
+            #Cambiar estado de objeto a "En Transferencia"
+            connection.set_tenant(request.tenant)
+            ContentType.objects.clear_cache()
+            objeto.estado = 2
+            objeto.save()
+            mensaje = 'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud'
+        messages.success(request,mensaje)
         return redirect('deportista_listar')
 
     return render(request,'generar_transferencia.html',{
