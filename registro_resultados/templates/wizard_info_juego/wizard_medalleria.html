@@ -34,7 +34,7 @@
 
 {% block contenido_panel %}
   <div  class="wrapper bg-silver-lighter clearfix">
-    <a href="{% url 'listar_participantes' competencia_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>    
+    <a href="{% url 'listar_participantes' competencia.id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>    
     <div class="pull-right m-l-15">        
       <div class="btn-group btn-toolbar">
           <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
@@ -67,6 +67,7 @@
                       <td>{{resultado.nombre}}</td>
                       <td>{{resultado.posicion}}</td>
                       <td><img src="{{STATIC_URL}}img/registro_resultados/gold_medal.png"> Oro</td>
+                      <td>{% if resultado.medallas_por_integrantes %}{{resultado.cantidad_medallas_equipo}}{% else %}1{% endif %}</td>
                   </tr>
                   {% endfor %}
                   {% for resultado in resultados2 %}
@@ -74,6 +75,7 @@
                       <td>{{resultado.nombre}}</td>
                       <td>{{resultado.posicion}}</td>
                       <td><img src="{{STATIC_URL}}img/registro_resultados/silver_medal.png"> Plata</td>
+                      <td>{% if resultado.medallas_por_integrantes %}{{resultado.cantidad_medallas_equipo}}{% else %}1{% endif %}</td>                      
                   </tr>
                   {% endfor %}
                   {% for resultado in resultados3 %}
@@ -81,6 +83,7 @@
                       <td>{{resultado.nombre}}</td>
                       <td>{{resultado.posicion}}</td>
                       <td><img src="{{STATIC_URL}}img/registro_resultados/bronze_medal.png"> Bronce</td>
+                      <td>{% if resultado.medallas_por_integrantes %}{{resultado.cantidad_medallas_equipo}}{% else %}1{% endif %}</td>                      
                   </tr>
                   {% endfor %}
               </tbody>

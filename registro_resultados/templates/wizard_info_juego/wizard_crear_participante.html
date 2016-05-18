@@ -28,8 +28,7 @@
       $(document).ready(function(){
         //inicializa campo cantidad de medallas por equipo
         if($("#id_medallas_por_integrantes").is(':checked')) {  
-
-          $("#id_cantidad_medallas_equipo").prop('required', true); 
+ 
           $("#cantidad_medallas_equipo").css("display", "block"); 
           
         }else {  
@@ -38,10 +37,7 @@
         //evento cada que selccionan el checkbox 
         $("#id_medallas_por_integrantes").click(function() {  
             if($("#id_medallas_por_integrantes").is(':checked')) { 
-
-              $("#id_cantidad_medallas_equipo").prop('required',true); 
-              $("#cantidad_medallas_equipo").css("display", "block"); 
-
+              $("#cantidad_medallas_equipo").css("display", "block");
             } else {  
 
               $("#cantidad_medallas_equipo").css("display", "none"); 

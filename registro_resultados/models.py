@@ -1,5 +1,6 @@
 from django.db import models
 from entidades.models import *
+from django.core.validators import MinValueValidator
 
 def ruta_juegos_imagenes(instance, filename):
     return "juegos/imagenes/%s"%(filename.encode('ascii','ignore').decode('ascii'))
@@ -66,7 +67,7 @@ class Equipo(models.Model):
     creado = models.DateTimeField(auto_now_add=True)
     competencia = models.ForeignKey(Competencia)
     medallas_por_integrantes = models.BooleanField(default = False)
-    cantidad_medallas_equipo = models.PositiveIntegerField(null=True, blank=True, verbose_name="cantidad de medallas del equipo ")
+    cantidad_medallas_equipo = models.PositiveIntegerField(null=True, blank=True, validators=[MinValueValidator(2)], verbose_name="cantidad de medallas del equipo * ")
 
 
 
