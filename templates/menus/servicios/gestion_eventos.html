@@ -1,7 +1,7 @@
 <li class="has-sub {% if 'eventos' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
-        <span class="colorMenu">Gestión eventos</span>
+        <span class="colorMenu">Gestión eventos <span class="label label-theme m-l-5">NEW</span></span>
     </a>
     <ul class="sub-menu">
         {% if perms.gestion_eventos.add_evento %}

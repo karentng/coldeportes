@@ -70,12 +70,14 @@
                                     <i class="fa fa-trash"></i> Cancelar solicitud
                                 </a>
                                 <br/>
-                            {% endif %}
+                            {% endif %}                                
                             {% if solicitud.estado == 1 %}
+                                {% if not club.reconocimiento %}
                                 <a href="{% url 'reconocimiento_deportivo_solicitar' solicitud.id %}">
                                     <i class="fa fa-envelope"></i> Completar solicitud
                                 </a>
                                 <br/>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

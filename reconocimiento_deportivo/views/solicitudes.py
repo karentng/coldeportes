@@ -131,7 +131,8 @@ def listar_reconocimientos(request):
         solicitud.codigo = solicitud.codigo_unico(request.tenant)
 
     return render(request,'lista_reconocimientos.html',{
-        'solicitudes': solicitudes
+        'solicitudes': solicitudes,
+        'club': request.tenant.obtenerTenant()
     })
 
 

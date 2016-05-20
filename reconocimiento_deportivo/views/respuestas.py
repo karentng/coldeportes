@@ -65,10 +65,10 @@ def listar_solicitudes_reconocimientos(request):
 
 def obtener_datos_solicitud(request, solicitud_id, entidad_id):
     try:
-        lista = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
+        lista = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = solicitud_id)
     except Exception:
         messages.error(request,'No existe la solicitud')
-        return False, redirect('listar_solicitudes_reconocimientos_respuesta')
+        return False, redirect('listar_solicitudes_reconocimientos')
 
     tenant_actual = request.tenant
     entidad = lista.entidad_solicitante
@@ -237,7 +237,7 @@ def enviar_respuesta(request, solicitud_id, entidad_id):
         connection.set_tenant(entidad)
         solicitud = ReconocimientoDeportivo.objects.get(id = solicitud_id)
         form = ResponderSolicitudForm(request.POST)
-
+        incompleta = False
         if form.is_valid():
             discusion = form.save(commit=False)
             discusion.solicitud = solicitud
@@ -254,9 +254,12 @@ def enviar_respuesta(request, solicitud_id, entidad_id):
             #Si es aprobada la solicitud se da el reconocimiento deportivo al club
             if solicitud.estado == 2:
                 dar_reconocimiento_deportivo(entidad)
-
+            if discusion.estado_actual ==  1:
+                incompleta = True
             connection.set_tenant(tenant_actual)# se regresa al tenant del ente que respondió
-            #solicitud_hecha.delete()# Se remueve del listado del ente            
+            if incompleta:
+                solicitud_hecha.delete()# Se remueve del listado del ente si la solicitud fue definida como incompleta
+
             messages.success(request,'Su respuesta ha sido enviada con exito')
             return redirect('ver_solicitud_reconocimiento_respuesta', solicitud.id, entidad.id)
 
