@@ -26,7 +26,7 @@ var handleCalendarDemo = function () {
         },
         allDayText:"Todo el día",
         eventLimitText:"más",
-        timeFormat: 'H(:mm)',
+        timeFormat: 'H:mm',
 		editable: false,
         droppable: false, // this allows things to be dropped onto the calendar
         defaultDate: (new Date().getFullYear() + '-' + (new Date().getMonth()+1) + '-' + new Date().getDate()),

@@ -84,6 +84,6 @@
 	<script src="{{STATIC_URL}}js/funciones_calculos/deportistas/historia_deportiva.js"></script>
     <script src="{{STATIC_URL}}js/validaciones/calendario_deportivo/registro-calendario-validations.js"></script>
     <script> <!-- Mientras se definen los otros tipos de eventos -->
-        $("#id_tipo").prop("disabled", true);
+        $('#id_tipo').css('pointer-events','none');
     </script>
 {% endblock %}
