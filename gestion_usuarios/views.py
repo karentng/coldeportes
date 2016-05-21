@@ -273,6 +273,8 @@ def tiene_reconocimiento_deportivo(club):
             club.reconocimiento = False
             club.save()
             return False
+        else:
+            return True
     elif club.fecha_vencimiento > date.today() and club.archivo:
         club.fecha_vigencia = club.fecha_vencimiento
         club.reconocimiento = True

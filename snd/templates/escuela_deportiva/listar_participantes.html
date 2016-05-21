@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">EFD</a></li>
+    <li ><a href="">Participantes</a></li>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de participantes
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de participantes
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-participantes";
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-participantes" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Fecha de nacimiento</th>
+                            <th>Sede</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participante in participantes.all %}
+                            <tr>
+                                <td>{{ participante.nombres }}</td>
+                                <td>{{ participante.apellidos }}</td>
+                                <td>{{ participante.fecha_nacimiento }}</td>
+                                <td>{{ participante.sede_perteneciente }}</td>
+                                <td>{{ participante.get_estado_display }}</td>
+                                <td>
+                                    <a href="{% url 'detalles_participante' participante.id %}"><i class="fa fa-eye"></i> Ver más</a><br>
+                                    {% if perms.snd.change_escueladeportiva %}
+                                        {% if participante.estado %}
+                                            <a href="{% url 'editar_participante' participante.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                        {% endif %}
+                                        <a href="#" onclick="urlModal(this);" data-target="#modal-desactivate" data-toggle="modal" data-url="{% url 'cambiar_estado_participante' participante.id %}">
+                                            <i class="fa fa-ban"></i> A/I <i class="fa fa-question-circle add-tooltip" data-toggle="tooltip" title="Activar/Inactivar"></i>
+                                        </a><br>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal fade" id="modal-desactivate">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">Cambiar de estado participante:</h4>
+                        </div>
+                        <div class="modal-body">
+                            ¿Está seguro que desea cambiar el estado de este participante?
+                        </div>
+                        <div class="modal-footer">
+                            <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                            <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

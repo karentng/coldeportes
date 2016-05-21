@@ -44,7 +44,7 @@
     {% include 'personal_apoyo/wizard/_wizard.html' %}
         <div class="row">
             <fieldset class="col-md-7" >
-                <form id="form-experiencia" action="" method="post">{% csrf_token %}
+                <form id="form-experiencia" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="well row">
                     <div class="col-md-12">
                         <h3>{{titulo}}</h3>
@@ -61,12 +61,15 @@
                                 {% bootstrap_field form.fecha_comienzo layout="vertical" %}
                             </div>
                             <div class="col-md-6 p-t-10">
-                                {% bootstrap_field form.actual layout="vertical" %}
+                                {% bootstrap_field form.soporte_hoja_de_vida layout="vertical" %}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 {% bootstrap_field form.fecha_fin layout="vertical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.actual layout="vertical" %}
                             </div>
                         </div>
                         <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Añadir</button>

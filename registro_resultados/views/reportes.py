@@ -88,10 +88,14 @@ def medalleria_genero(request):
     })
 
 
-def contar_registros(consulta):
+def contar_registros(consulta, individual=False):
 
-    consulta = consulta.values('departamento').annotate(cantidad = Count('id'))
-    cantidades = { int(entry['departamento']) : entry['cantidad'] for entry in consulta }
+    if individual:
+        consulta = consulta.values('departamento', 'cantidad_medallas_equipo')
+        cantidades = { int(entry['departamento']) : entry['cantidad_medallas_equipo'] for entry in consulta }
+    else:
+        consulta = consulta.values('departamento').annotate(cantidad = Count('id'))
+        cantidades = { int(entry['departamento']) : entry['cantidad'] for entry in consulta }
 
     return cantidades
 
@@ -112,22 +116,29 @@ def buscar_medallas_por_categoria(posicion, juego, deportes=None, genero=None):
     if deportes:
         if genero:
             medallas_participante = contar_registros(Participante.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego, competencia__deporte__in=deportes))
-            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego, competencia__deporte__in=deportes))
+            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego, competencia__deporte__in=deportes, medallas_por_integrantes=False))
+            medallas_equipo_individual = contar_registros(Equipo.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego, competencia__deporte__in=deportes, medallas_por_integrantes=True), True)
             medallas = verificar_agrupar_listas_por_departamento(medallas_participante, medallas_equipo)
+            medallas = verificar_agrupar_listas_por_departamento(medallas_equipo_individual, medallas)
         else:
             medallas_participante = contar_registros(Participante.objects.filter(posicion__in=[posicion], competencia__juego=juego, competencia__deporte__in=deportes))
-            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], competencia__juego=juego, competencia__deporte__in=deportes))
+            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], competencia__juego=juego, competencia__deporte__in=deportes, medallas_por_integrantes=False))
+            medallas_equipo_individual = contar_registros(Equipo.objects.filter(posicion__in=[posicion], competencia__juego=juego, competencia__deporte__in=deportes, medallas_por_integrantes=True), True)
             medallas = verificar_agrupar_listas_por_departamento(medallas_participante, medallas_equipo)
+            medallas = verificar_agrupar_listas_por_departamento(medallas_equipo_individual, medallas)
     else:
         if genero:
             medallas_participante = contar_registros(Participante.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego))
-            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego))
+            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego, medallas_por_integrantes=False))
+            medallas_equipo_individual = contar_registros(Equipo.objects.filter(posicion__in=[posicion], genero=genero, competencia__juego=juego, medallas_por_integrantes=True), True)
             medallas = verificar_agrupar_listas_por_departamento(medallas_participante, medallas_equipo)
+            medallas = verificar_agrupar_listas_por_departamento(medallas_equipo_individual, medallas)            
         else:
             medallas_participante = contar_registros(Participante.objects.filter(posicion__in=[posicion], competencia__juego=juego))
-            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], competencia__juego=juego))
+            medallas_equipo = contar_registros(Equipo.objects.filter(posicion__in=[posicion], competencia__juego=juego, medallas_por_integrantes=False))
+            medallas_equipo_individual = contar_registros(Equipo.objects.filter(posicion__in=[posicion], competencia__juego=juego, medallas_por_integrantes=True), True)
             medallas = verificar_agrupar_listas_por_departamento(medallas_participante, medallas_equipo)
-        #print(medallas)
+            medallas = verificar_agrupar_listas_por_departamento(medallas_equipo_individual, medallas)
 
     return medallas
 

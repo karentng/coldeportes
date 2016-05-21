@@ -37,6 +37,19 @@ fields = {
                 min: 'fecha_comienzo'
             }
         }
+    },
+    soporte_hoja_de_vida: {
+        validators: {
+            notEmpty: {
+                message: 'El Soporte de hoja de vida no puede ser vació'
+            },
+            file: {
+                extension: 'pdf,jpeg,jpg,png',
+                type: 'application/pdf,image/jpeg,image/png',
+                maxSize: 5242880,   // 5120 * 1024,
+                message: 'Por favor seleccione un archivo valido en formato pdf, jpg, o png no mayor a 5MB'
+            }
+        }
     }
 };
 //Revalidar campos al ser actualizados
