@@ -245,7 +245,6 @@ def inicio_public(request):
         noticias = []
 
     eventos = CalendarioNacional.objects.filter(estado=0)
-    print(eventos)
 
     return render(request, 'index_public.html', {
         'deportistas': cantidad_deportistas,

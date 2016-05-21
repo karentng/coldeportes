@@ -99,7 +99,7 @@
                 '{{ evento.titulo_evento }}',
                 '#',
                 '#008a8a',
-                '{{ evento.objetivo }}'
+                '{{ evento.objetivo }} <div class="text-right"><a href="calendario-deportivo/ver-evento/{{ evento.id }}"><i class="fa fa-calendar"></i> Ver mas</a></div>'
 
             ]);
         {% endfor %}
@@ -208,7 +208,7 @@
                             <div class="panel-icono">
                                 <img src="{{ STATIC_URL }}img/cono_calendario.png" class="img-responsive">
                             </div>
-                            <div class="f-w-600 titulo-panel">Calendario de Actividades</div>
+                            <div class="f-w-600 titulo-panel">Calendario de Eventos</div>
 
                         </div>
                         <div class="col-md-6 col-md-offset-1">
