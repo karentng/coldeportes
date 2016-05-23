@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
 from snd.modelos.escenarios import Escenario
 from reserva_escenarios.models import ReservaEscenario
@@ -45,42 +46,20 @@ def solicitar_reserva(request, escenario_id):
 
 
 def guardar_fechas_reserva(request, escenario_id):
-    
+
     if request.is_ajax():
+
         response = {
             'status': 'error',
             'message': 'actividad no existe'
         }
 
         escenario = Escenario.objects.get(id =  escenario_id)
-        
         fecha_inicio = request.POST.get("fecha_inicio")
-        fecha_fin = request.POST.get("fecha_fin")
+        fecha_inicio = datetime.strptime(fecha_inicio, "%a, %d %b %Y %H:%M:%S %Z")
+        fecha_inicio.strftime('%Y-%m-%d %H:%M:%S')
+        #fecha_fin = request.POST.get("fecha_fin")
 
-        reserva = ReservaEscenario(escenario=escenario, fecha_inicio=fecha_inicio, fecha_fin=fecha_fin).save()
+        reserva = ReservaEscenario(escenario = escenario, fecha_inicio = fecha_inicio).save()
 
-        if not mins:
-            actividad.dia_actividad = actividad.dia_actividad + datetime.timedelta(days=int(dias))
-            actividad.save()
-            message = "ok"
-        else:
-            try:
-                actividad.hora_inicio = (
-                datetime.datetime.combine(actividad.dia_actividad, actividad.hora_inicio) + datetime.timedelta(
-                    minutes=int(mins))).time()
-                actividad.hora_fin = (
-                datetime.datetime.combine(actividad.dia_actividad, actividad.hora_fin) + datetime.timedelta(
-                    minutes=int(mins))).time()
-                actividad.dia_actividad = actividad.dia_actividad + datetime.timedelta(days=int(dias))
-                actividad.save()
-                message = "ok"
-            except Exception as e:
-                print(e)
-                message = e
-        response = {
-            'status': 'ok',
-            'message': message
-        }
-        return JsonResponse(response)
-
-    return redirect('listar_escenarios_reservas')
+        return redirect('solicitar_reserva', escenario_id)

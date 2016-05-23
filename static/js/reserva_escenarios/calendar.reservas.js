@@ -8,7 +8,7 @@ Website: http://www.seantheme.com/color-admin-v1.7/admin/
 var handleCalendarDemo = function () {
     "use strict";
     var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,agendaWeek,agendaDay'};
-    var nuevaReserva = {};
+    var data = {};
     var date = new Date();
     var m = date.getMonth();
     var y = date.getFullYear();
@@ -30,20 +30,15 @@ var handleCalendarDemo = function () {
         selectHelper: false,
         droppable: true,
         editable: true,
-        drop: function(date, allDay) { // this function is called when something is dropped        
-            // retrieve the dropped element's stored Event Object
-            var originalEventObject = $(this).data('eventObject');            
-            // we need to copy it, so that multiple events don't have a reference to the same object
-            nuevaReserva = $.extend({}, originalEventObject);            
-            // assign it the date that was reported
-            nuevaReserva.start = date;
-            nuevaReserva.allDay = false;            
-            // render the event on the calendar
-            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-            $('#calendar').fullCalendar('renderEvent', nuevaReserva, true);            
-            // is the "remove after drop" checkbox checked?            
-            $(this).remove();
+        drop: function(date, allDay) { // this function is called when something is dropped
 
+            var nuevaReserva = $(this).data('eventObject');
+            nuevaReserva.start = date;
+            nuevaReserva.allDay = false;   
+            data = {fecha_inicio: date.toUTCString(), csrfmiddlewaretoken: csrf};         
+            
+            $('#calendar').fullCalendar('renderEvent', nuevaReserva, true);
+            $(this).remove();
             
         },
         eventRender: function(event, element, calEvent) {
@@ -62,19 +57,15 @@ var handleCalendarDemo = function () {
         var $modalDiv = $(e.delegateTarget);
 
         $modalDiv.addClass('loading');
-        $.post(urlAgendar, nuevaReserva, function(datam){
+
+        $.post(urlAgendar, data, function(datam){
 
             $modalDiv.modal('hide').removeClass('loading');
+
+            
             
         }).fail(function(datam){
-            setTimeout(function() {
-                toastr.options = {
-                    "closeButton": true,
-                    "progressBar": true,
-                    "showEasing": "swing"
-                };
-                toastr["success"]("No se pudo");
-            },500);
+            
         });
     });
 
