@@ -20,10 +20,11 @@
                     data: {'departamentos': departamentos,'generos':generos, 'juegos':juegos},
                     dataType: 'json',
                     success: function(data) {
-                        var inicio = "Medallería por Género y Departamento de ";                        
+                        var inicio = "MEDALLERÍA POR GÉNERO Y DEPARTAMENTO DE ";                        
                         Reportes.modificarDatos(data,  inicio.concat($("#id_juegos option:selected").text()));
                         id = $("#id_juegos").prop('selectedIndex');
-                        
+                        $(".titulo").html(inicio.concat($("#id_juegos option:selected").text()));
+
                         tablaDeDatos.setDatos(data);
                         tablaDeDatos.verificarActualizacion();
                         $('#loading').modal('hide');

@@ -66,24 +66,26 @@ def medalleria_genero(request):
         else:           
             pass
 
+        medallas = cambiarEtiquetasPosiciones(medallas)
     else:
-        medallas = list(Participante.objects.filter(posicion__in=[1,2,3]).annotate(descripcion=F('posicion')).values('descripcion', 'departamento').annotate(cantidad=Count('id')))
-        medallas = tipoTenant.ajustar_resultado(medallas)
-
-    medallas = cambiarEtiquetasPosiciones(medallas)
+        #medallas = list(Participante.objects.filter(posicion__in=[1,2,3]).annotate(descripcion=F('posicion')).values('descripcion', 'departamento').annotate(cantidad=Count('id')))
+        #medallas = tipoTenant.ajustar_resultado(medallas)
+        medallas = list()
+    
     visualizaciones = [1, 5 , 6]
     form = FiltrosMedalleriaDeptGenForm(visualizaciones=visualizaciones)    
     nombres_columnas = ["Medallas", "Departamento"]
 
     return render(request, 'reportes/medalleria_genero.html', {
-        'nombre_reporte' : 'Medallería de Juegos por Género y Departamento',
+        'nombre_reporte' : 'Por favor seleccione un juego',
         'url_data' : 'reporte_medalleria_genero',
         'datos': medallas,
         'visualizaciones': visualizaciones,
         'form': form,
         'actor': 'Registro de Resultados',
         'fecha_generado': datetime.datetime.now(),
-        'nombres_columnas': nombres_columnas
+        'nombres_columnas': nombres_columnas,
+        'titulo_inicial_tabla': 'Por favor seleccione un juego'
 
     })
 
