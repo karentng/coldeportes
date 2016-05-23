@@ -1048,6 +1048,50 @@ def foto_entidad(request):
         entidad.save()
         return redirect("inicio")
     return redirect("inicio")
+
+def obtener_clubes_jerarquicas(entidad_actual,clase_hijos):
+    hijos = clase_hijos.objects.filter(entidad_actual["id"])
+    hijos_array = []
+    for h in hijos:
+        json_h = {}
+        json_h["id"] = h.id
+        json_h["text"] = h.nombre
+        json_h["a_attr"] = {"href":h.schema_name, "target":"_blank"}
+        json_h["state"]= {"opened": True}
+        hijos_array.append(json_h)
+
+    entidad_actual["children"] = hijos_array
+    return entidad_actual
+
+
+def vista_jerarquica(request):
+
+    #Vista unicamente para ligas y federaciones
+    if not request.tenant.tipo in [1,2]:
+        return redirect("/inicio")
+
+    entidades = []
+
+    if request.tenant == 1:
+        entidad_actual = {
+            "id" : request.tenant.id,
+            "text" : request.tenant.nombre,
+             "icon": "fa fa-sort-amount-desc fa-lg text-inverse"
+        }
+        entidad_actual = obtener_clubes_jerarquicas(entidad_actual,Club)
+        entidades = [entidad_actual]
+
+    elif request.tenant == 2:
+        pass
+
+    return render(request,'jerarquia_entidades.html',{
+        'entidades' : entidades,
+        'nombre_entidad': request.tenant.nombre
+    })
+
+def buscar_entidades(request):
+    pass
+
 """
 @login_required()
 def borrar_schemas(request):

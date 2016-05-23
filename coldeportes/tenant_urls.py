@@ -45,7 +45,8 @@ urlpatterns = patterns('',
     url(r'^cambiar/(\d+)$', 'entidades.views.cambiar_estado_plan_costo', name='cambiar_estado_plan_costo'),
     url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
 
-    #url(r'^calendario-deportivo/', include('calendario_deportivo.urls_tenant')),
+    #VISTA JERARQUICA
+    url(r'^jerarquia$', 'entidades.views.vista_jerarquica', name='vista_jerarquica_tenant'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
