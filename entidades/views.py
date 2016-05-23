@@ -20,7 +20,7 @@ from django.forms import modelformset_factory, modelform_factory
 from django.http import HttpResponse
 from datos_iniciales.disciplinas_deportivas.script_disciplina import *
 from datos_iniciales.disciplinas_deportivas.script_log_deportivo import *
-
+from coldeportes.settings import SUBDOMINIO_URL
 @login_required
 def tipo(request):
     return render(request, 'entidad_tipo.html', {
@@ -1049,15 +1049,16 @@ def foto_entidad(request):
         return redirect("inicio")
     return redirect("inicio")
 
-def obtener_clubes_jerarquicas(entidad_actual,clase_hijos):
-    hijos = clase_hijos.objects.filter(entidad_actual["id"])
+def obtener_jerarquicas(entidad_actual,hijos,icono ):
+
     hijos_array = []
     for h in hijos:
         json_h = {}
         json_h["id"] = h.id
-        json_h["text"] = h.nombre
-        json_h["a_attr"] = {"href":h.schema_name, "target":"_blank"}
-        json_h["state"]= {"opened": True}
+        json_h["text"] = h.__class__.__name__+": " + h.nombre
+        json_h["a_attr"] = {"href": "http://" + h.domain_url, "target":"_blank"}
+        json_h["state"]= {"opened": 'true'}
+        json_h["icon"] = icono
         hijos_array.append(json_h)
 
     entidad_actual["children"] = hijos_array
@@ -1071,18 +1072,26 @@ def vista_jerarquica(request):
         return redirect("/inicio")
 
     entidades = []
-
-    if request.tenant == 1:
-        entidad_actual = {
+    entidad_actual = {
             "id" : request.tenant.id,
             "text" : request.tenant.nombre,
-             "icon": "fa fa-sort-amount-desc fa-lg text-inverse"
+             "icon": "fa fa-sort-amount-desc fa-lg text-inverse",
+            "state": {"opened": 'true'}
         }
-        entidad_actual = obtener_clubes_jerarquicas(entidad_actual,Club)
+    if request.tenant.tipo == 1:
+
+        hijos = Club.objects.filter(liga=entidad_actual["id"])
+        entidad_actual = obtener_jerarquicas(entidad_actual,hijos,"fa fa-dribbble text-warning fa-lg")
         entidades = [entidad_actual]
 
-    elif request.tenant == 2:
-        pass
+    elif request.tenant.tipo == 2:
+        hijos = Liga.objects.filter(federacion=entidad_actual["id"])
+        entidad_actual = obtener_jerarquicas(entidad_actual,hijos, "fa fa-trophy text-info fa-lg")
+        hijos_array = entidad_actual["children"]
+        for liga in hijos_array:
+            hijos_liga = Club.objects.filter(liga = liga["id"])
+            obtener_jerarquicas(liga,hijos_liga, "fa fa-dribbble text-warning fa-lg")
+        entidades = [entidad_actual]
 
     return render(request,'jerarquia_entidades.html',{
         'entidades' : entidades,

@@ -24,52 +24,14 @@
                     "themes": {
                         "responsive": false
                     },
-                    'data': [{
-                        "text": "Same but with checkboxes",
-                        "children": [{
-                            "text": "initially selected",
-                            "state": { "selected": true }
-                        }, {
-                            "id" : 9,
-                            "text": "Folder 1",
-                            "a_attr" : {"href":"http://google.com", "target":"_blank"}
-                        }, {
-                            "text": "Folder 2"
-                        }, {
-                            "text": "Folder 3"
-                        }, {
-                            "text": "initially open",
-                            "icon": "fa fa-folder fa-lg",
-                            "state": {
-                                "opened": true
-                            },
-                            "children": [{
-                                "text": "Another node"
-                            }, {
-                                "text": "disabled node",
-                                "state": {
-                                    "disabled": true
-                                }
-                            }]
-                        }, {
-                            "text": "custom icon",
-                            "icon": "fa fa-cloud-download fa-lg text-inverse"
-                        }, {
-                            "text": "disabled node",
-                            "state": {
-                                "disabled": true
-                            }
-                        }
-                    ]},
-                    "Root node 2"
-                    ]
+                    'data': {{ entidades|safe }}
                 },
                 "types": {
                     "default": {
-                        "icon": "fa fa-archive text-warning fa-lg"
+                        "icon": "fa fa-dribbble text-warning fa-lg"
                     },
                     "file": {
-                        "icon": "fa fa-asterisk text-inverse fa-lg"
+                        "icon": "fa fa-dribbble text-inverse fa-lg"
                     }
                 },
                 "plugins": ["types"]
