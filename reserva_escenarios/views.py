@@ -45,6 +45,7 @@ def solicitar_reserva(request, escenario_id):
 
 
 def guardar_fechas_reserva(request, escenario_id):
+    
     if request.is_ajax():
         response = {
             'status': 'error',

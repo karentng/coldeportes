@@ -8,6 +8,7 @@ Website: http://www.seantheme.com/color-admin-v1.7/admin/
 var handleCalendarDemo = function () {
     "use strict";
     var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,agendaWeek,agendaDay'};
+    var nuevaReserva = {};
     var date = new Date();
     var m = date.getMonth();
     var y = date.getFullYear();
@@ -33,7 +34,7 @@ var handleCalendarDemo = function () {
             // retrieve the dropped element's stored Event Object
             var originalEventObject = $(this).data('eventObject');            
             // we need to copy it, so that multiple events don't have a reference to the same object
-            var nuevaReserva = $.extend({}, originalEventObject);            
+            nuevaReserva = $.extend({}, originalEventObject);            
             // assign it the date that was reported
             nuevaReserva.start = date;
             nuevaReserva.allDay = false;            
@@ -42,6 +43,7 @@ var handleCalendarDemo = function () {
             $('#calendar').fullCalendar('renderEvent', nuevaReserva, true);            
             // is the "remove after drop" checkbox checked?            
             $(this).remove();
+
             
         },
         eventRender: function(event, element, calEvent) {
@@ -60,17 +62,10 @@ var handleCalendarDemo = function () {
         var $modalDiv = $(e.delegateTarget);
 
         $modalDiv.addClass('loading');
-        $.post(urlDrop, nuevaReserva, function(datam){
-            $modalDiv.modal('hide').removeClass('loading');
+        $.post(urlAgendar, nuevaReserva, function(datam){
 
-            setTimeout(function() {
-                toastr.options = {
-                    "closeButton": true,
-                    "progressBar": true,
-                    "showEasing": "swing"
-                };
-                toastr["success"]("Actividad actualizada exitosamente");
-            },500);
+            $modalDiv.modal('hide').removeClass('loading');
+            
         }).fail(function(datam){
             setTimeout(function() {
                 toastr.options = {
@@ -78,13 +73,9 @@ var handleCalendarDemo = function () {
                     "progressBar": true,
                     "showEasing": "swing"
                 };
-                toastr["success"]("Actividad actualizada exitosamente");
+                toastr["success"]("No se pudo");
             },500);
         });
-    });
-    
-    $('#modal-confirmacion').on('click', '.btn-not', function(e) {
-        revert();
     });
 
     $('#external-events .external-event').each(function() {

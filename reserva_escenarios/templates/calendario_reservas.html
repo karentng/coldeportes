@@ -18,7 +18,7 @@
     <script type="text/javascript">
         csrf = '{{ csrf_token }}';
         calendarEvents = [];
-        url_agendar = "{% url 'solicitar_reserva' escenario_id %}";
+        urlAgendar = "{% url 'solicitar_reserva' escenario.id %}";
         {% for reserva in reservas %}
             calendarEvents.push({
                 id: '{{ reserva.id }}',
