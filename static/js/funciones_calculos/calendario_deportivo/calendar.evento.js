@@ -24,6 +24,9 @@ var handleCalendarDemo = function () {
             week: 'Semana',
             day: 'Día'
         },
+        allDayText:"Todo el día",
+        eventLimitText:"más",
+        timeFormat: 'H:mm',
 		editable: false,
         droppable: false, // this allows things to be dropped onto the calendar
         defaultDate: (new Date().getFullYear() + '-' + (new Date().getMonth()+1) + '-' + new Date().getDate()),
@@ -41,6 +44,13 @@ var handleCalendarDemo = function () {
 			element.find(".fc-event-title").css('cursor','pointer');
         },
 		events: calendarEvents
+	});
+    $(".external-event a").click(function(){
+		var diaAct = $(this).attr("data-date");
+		var goDate = new Date(diaAct);
+		var anio = goDate.getFullYear();
+		var mes = goDate.getMonth();
+		$("#calendar").fullCalendar('gotoDate', anio, mes);
 	});
 
 };

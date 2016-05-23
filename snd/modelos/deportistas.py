@@ -37,6 +37,7 @@ class Deportista(models.Model):
         (1,'INACTIVO'),
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
+        (4,'TRANSFERIDO INTERNACIONAL'),
     )
 
     ETNIAS = (
@@ -175,10 +176,10 @@ class HistorialDeportivo(models.Model):
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato')
     puesto = models.IntegerField(verbose_name='Puesto obtenido')
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
-    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad de competencia')
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad del deporte')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Deporte en el que participó')
-    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría en la que participó')
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría del deporte')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
     fecha_creacion = models.DateTimeField(auto_now_add=True)

@@ -53,24 +53,46 @@ def generar_transferencia(request,id):
     objeto.tipo_objeto = objeto.__class__.__name__
 
     if request.method == 'POST':
-        id_entidad_cambio = request.POST['entidad']
-        entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
-        connection.set_tenant(entidad_cambio)
-        ContentType.objects.clear_cache()
-        transferencia = Transferencia(
-            entidad=entidad_solicitante,
-            fecha_solicitud = objeto.fecha,
-            id_objeto = objeto.id,
-            tipo_objeto = objeto.tipo_objeto
-        )
-        transferencia.save()
-        #Cambiar estado de objeto a "En Transferencia"
-        connection.set_tenant(request.tenant)
-        ContentType.objects.clear_cache()
-        objeto.estado = 2
-        objeto.save()
-        #
-        messages.success(request,'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud')
+        try:
+            request.POST['internacional']
+            internacional = True
+        except:
+            internacional = False
+
+        if internacional:
+            nombre_entidad = request.POST['nombre']
+            transferencia = Transferencia(
+                entidad=entidad_solicitante,
+                fecha_solicitud = objeto.fecha,
+                id_objeto = objeto.id,
+                tipo_objeto = objeto.tipo_objeto,
+                nombre_entidad = nombre_entidad,
+                estado = 'Internacional'
+            )
+            transferencia.save()
+            objeto.estado = 4
+            objeto.save()
+            mensaje = 'Transferencia internacional exitosa. El deportista pertenece ahora a: '+nombre_entidad
+        else:
+            id_entidad_cambio = request.POST['entidad']
+            entidad_cambio = Entidad.objects.get(id=id_entidad_cambio)
+            connection.set_tenant(entidad_cambio)
+            ContentType.objects.clear_cache()
+            transferencia = Transferencia(
+                entidad=entidad_solicitante,
+                fecha_solicitud = objeto.fecha,
+                id_objeto = objeto.id,
+                tipo_objeto = objeto.tipo_objeto,
+                nombre_entidad = entidad_cambio.nombre
+            )
+            transferencia.save()
+            #Cambiar estado de objeto a "En Transferencia"
+            connection.set_tenant(request.tenant)
+            ContentType.objects.clear_cache()
+            objeto.estado = 2
+            objeto.save()
+            mensaje = 'Transferencia generada exitosamente, se le informara cuando la entidad acepte su solicitud'
+        messages.success(request,mensaje)
         return redirect('deportista_listar')
 
     return render(request,'generar_transferencia.html',{
@@ -363,28 +385,36 @@ def cancelar_transferencia(request,id_objeto):
         messages.error(request,'Error: No se puede procesar la solicitud, Deportista no existe')
         return redirect('deportista_listar')
 
-    entidad_solicitante = request.tenant
-    entidades = Entidad.objects.exclude(schema_name__in=['public',entidad_solicitante.schema_name])
+    if obj_trans.estado == 4:
+        transferencia = Transferencia.objects.get(id_objeto=obj_trans.id,estado='Internacional')
+        transferencia.delete()
+        obj_trans.estado = 0
+        obj_trans.save()
+        messages.success(request,'Tranferencia cancelada exitosamente')
+        return redirect('deportista_listar')
+    else:
+        entidad_solicitante = request.tenant
+        entidades = Entidad.objects.exclude(schema_name__in=['public',entidad_solicitante.schema_name])
 
-    string = ""
-    from django.http import HttpResponse
-    for ent in entidades:
-        try:
-            string += ent.schema_name +" "+ent.nombre+" || "
-            connection.set_tenant(ent)
-            ContentType.objects.clear_cache()
-            trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
+        string = ""
+        from django.http import HttpResponse
+        for ent in entidades:
+            try:
+                string += ent.schema_name +" "+ent.nombre+" || "
+                connection.set_tenant(ent)
+                ContentType.objects.clear_cache()
+                trans = Transferencia.objects.filter(id_objeto=id_objeto,estado='Pendiente',entidad=entidad_solicitante,tipo_objeto='Deportista')
 
-            if len(trans) != 0:
-                trans.delete()
-                connection.set_tenant(entidad_solicitante)
-                obj_trans.estado = 0
-                obj_trans.save()
-                messages.success(request,'Tranferencia cancelada exitosamente')
-                return redirect('deportista_listar')
-        except Exception as e:
-            string += str(e)
-            return HttpResponse(string)
+                if len(trans) != 0:
+                    trans.delete()
+                    connection.set_tenant(entidad_solicitante)
+                    obj_trans.estado = 0
+                    obj_trans.save()
+                    messages.success(request,'Tranferencia cancelada exitosamente')
+                    return redirect('deportista_listar')
+            except Exception as e:
+                string += str(e)
+                return HttpResponse(string)
 
     messages.error(request,'Error: No existe la transferencia solicitada, La entidad a la cual se envío el deportista ya proceso la transferencia pendiente')
     return redirect('deportista_listar')

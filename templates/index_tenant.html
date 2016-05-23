@@ -105,10 +105,10 @@
 {% block contenido %}
     {% if entidad.mostrar_info %}
         <div class="row p-b-30">
-            <div class="col-md-10 {% if entidad.tipo_tenant == 'Club' or entidad.tipo_tenant == 'ClubParalimpico' %} {% else %}col-md-offset-1 {% endif %} ">
+            <div class="col-md-10 {% if not tipoTenant.reconocimiento %}col-md-offset-1 {% endif %} ">
                 <div class="result-container">
                     <ul class="result-list">
-                        <li id="info-tenant" class="animated fadeInDownBig {% if entidad.tipo_tenant == 'Club' or entidad.tipo_tenant == 'ClubParalimpico' %} mismoalto {% endif %}" style="display:none;">                           
+                        <li id="info-tenant" class="animated fadeInDownBig {% if tipoTenant.reconocimiento %} mismoalto {% endif %}" style="display:none;">                           
                              
                             <div class="result-image" style="background: white !important;">
                                 <img src="{% if entidad.foto %}{{ MEDIA_URL }}{{ entidad.foto }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" class="img-responsive" alt="Info Tenant"/>
@@ -161,17 +161,15 @@
                     </ul>
                 </div>
             </div>
-            {% if entidad.tipo_tenant == "Club" or entidad.tipo_tenant == "ClubParalimpico" %}
+            {% if tipoTenant.reconocimiento %}
             <div class="col-md-2">
                 <div class="result-container">
                     <ul class="result-list mismoalto">
                         <li id="info-reconocimiento" class="animated mismoalto fadeInDownBig">
-                            {% if tipoTenant.reconocimiento %}
                             <div align="center">                        
-                                <img class="img-responsive" style="height: 65px; width: 60px;" src="{{STATIC_URL}}img/reconocimiento_deportivo/reconocimiento_deportivo.png?V=1.1" alt="certificado">
+                                <img class="img-responsive"  style="height: 100px; width: 95px;"src="{{STATIC_URL}}img/reconocimiento_deportivo/reconocimiento_deportivo.png?V=1.1" alt="certificado">
                                 <h6><b>Club Con Reconocimiento Deportivo</b></h6>
                             </div>
-                            {% endif %}
                         </li>
                     </ul>
                 </div>                

@@ -324,8 +324,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('[data-toggle=tooltip]').tooltip();
-            $("select.one").select2({width: 'resolve',});
-            $("select.many").select2({multiple:true});
+            $("select.one").select2({width: '100%'});
+            $("select.many").select2({multiple:true, width: '100%'});
             $('.fecha').datetimepicker({
                 timepicker:false,
                 format:'Y-m-d',

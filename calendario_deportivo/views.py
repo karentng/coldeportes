@@ -36,12 +36,14 @@ def registro_calendario(request,id=None):
         connection.set_tenant(public)
         deporte_id = request.POST['deporte']
         form = CalendarioForm(request.POST,instance=evento,deporte_id=deporte_id)
-        ev = form.save(commit=False)
-        ev.entidad = yo
-        ev.save()
+        if form.is_valid():
+            ev = form.save(commit=False)
+            ev.entidad = yo
+            ev.save()
+            connection.set_tenant(yo)
+            messages.success(request, "El evento a sido enviado al Calendario Deportivo Nacional con exito!, Aparecera cuando COLDEPORTES lo apruebe")
+            return redirect('listado_calendario_nacional')
         connection.set_tenant(yo)
-        messages.success(request, "El evento a sido enviado al Calendario Deportivo Nacional con exito!, Aparecera cuando COLDEPORTES lo apruebe")
-        return redirect('listado_calendario_nacional')
     return render(request,'registro_calendario.html',{
         'form': form,
         'edicion':editar
@@ -94,6 +96,13 @@ def ver_evento(request,id):
 #Vistas para tenant nacional
 def cargar_calendario(request):
     eventos = CalendarioNacional.objects.filter(estado=0)
+    colores = ['bg-purple','bg-blue','bg-green','bg-red','bg-yellow-darker','bg-blue-darker','bg-black','bg-red-darker','bg-green-darker']
+    i=0
+    for e in eventos:
+        e.color = colores[i]
+        i+=1
+        if i==9:
+            i=0
     return render(request,'calendario.html',{
         'eventos':eventos
     })

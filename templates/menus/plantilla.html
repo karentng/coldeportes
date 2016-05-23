@@ -1,4 +1,5 @@
 {% load has_group %}
+{% load can_manage %}
 
 <!-- ESTE MENÚ NO TIENE RESTRICCIONES NI DE USUARIOS NI DE TENANTS -->
 <li class="has-sub {% if 'inicio' in request.path %} active {% endif %}">
@@ -20,31 +21,34 @@
 <!-- =============================================== -->
 
 {% if request.tenant.schema_name != 'public' %}
-    {% if request.user.is_superuser  or request.user|has_group:"Digitador" and request.tenant.tipo == 3%}
-        <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path%} active {% endif %}">
-            <a href="javascript:;">
-                <b class="caret pull-right"></b>
-                <i class="fa fa-cogs"></i>
-                <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
-            </a>
-            <ul class="sub-menu">
-                {% if request.user.is_superuser %}
-                    <li {% if 'datos-basicos-entidad' in request.path %} class="active" {% endif %}>
-                        <a href="{% url 'datos_basicos_entidad' %}"><span >Modificar datos básicos de la entidad</span></a>
-                    </li>
-                {% endif %}
-                {% if request.tenant.tipo == 3 %}
-                    {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
-                        <li {% if 'socio' in request.path %} class="active" {% endif %}>
-                            <a href="{% url 'gestion_socios' %}"><span>Gestionar socios del club</span></a>
-                        </li>
-                        <li {% if 'planes' in request.path %} class="active" {% endif %}>
-                            <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
+    {% if request.user.is_superuser or request.user.is_authenticated and request.tenant.tipo|can_manage  %}
+        {% if request.user.is_superuser or request.user|has_group:"Digitador" or request.user|has_group:"Solo lectura" and  not request.tenant.tipo = 3 %}
+            <li class="has-sub {% if 'datos-basicos-entidad' in request.path or 'socio' in request.path or 'planes' in request.path or 'escuela-deportiva' in request.path %} active {% endif %}">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-cogs"></i>
+                    <span class="colorMenu">GESTIONAR MI ENTIDAD</span>
+                </a>
+                <ul class="sub-menu">
+                    {% if request.user.is_superuser %}
+                        <li {% if 'datos-basicos-entidad' in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'datos_basicos_entidad' %}"><span >Modificar datos básicos de la entidad</span></a>
                         </li>
                     {% endif %}
-                {% endif %}
-            </ul>
-        </li>
+                    {% if request.tenant.tipo == 3 %}
+                        {% if request.user|has_group:"Digitador" or request.user.is_superuser %}
+                            <li {% if 'socio' in request.path %} class="active" {% endif %}>
+                                <a href="{% url 'gestion_socios' %}"><span>Gestionar socios del club</span></a>
+                            </li>
+                            <li {% if 'planes' in request.path %} class="active" {% endif %}>
+                                <a href="{% url 'crear_plan_de_costo' %}"><span>Gestionar planes de costos del club</span></a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    {% include "menus/aplicacion/gestion_escuelas.html" %}
+                </ul>
+            </li>
+        {% endif %}
     {% endif %}
 {% endif %}
 
@@ -71,10 +75,9 @@
 {% endif %}
 
 {% if not request.user.is_superuser %}
-
     {% if user.is_authenticated %}
         <li class="has-sub
-            {% if 'dirigentes' in request.path or 'deportistas' in request.path or '/escenarios/' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path or 'escuela' in request.path %}
+            {% if 'dirigentes' in request.path or 'deportistas' in request.path or '/escenarios/' in request.path or 'caf' in request.path or 'personal-apoyo' in request.path or 'ccf' in request.path or 'centro-biomedico' in request.path %}
                 {% if 'reportes' not in request.path %}
                 active
                 {% endif %}
@@ -106,9 +109,6 @@
                 {% if perms.snd.view_centrobiomedico %}
                     {% include "menus/aplicacion/centro_biomedico.html" %}
                 {% endif %}
-                {% if perms.snd.view_escueladeportiva %}
-                    {% include "menus/aplicacion/escuela_deportiva.html" %}
-                {% endif %}
             </ul>
         </li>
         {%if perms.snd.view_seleccion %}
@@ -122,6 +122,9 @@
     {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/noticias.html" %}
     {% include "menus/aplicacion/publicidad.html" %}
+    {% if request.tenant.schema_name != 'public' %}
+        {% include "menus/servicios/servicios_general.html" %}
+    {% endif %}
 
 {% endif %}
 
@@ -133,10 +136,10 @@
         {% include "menus/aplicacion/noticias.html" %}
         {% include "menus/aplicacion/publicidad.html" %}
         {% include "menus/aplicacion/manual.html" %}
+        {% include "menus/servicios/servicios_general.html" %}
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
 {% endif %}
 
 {% include "menus/aplicacion/directorio.html" %}
-{% include "menus/servicios/servicios_general.html" %}

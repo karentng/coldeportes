@@ -1,4 +1,4 @@
-<li class="has-sub{% if '/solicitudes-escen/' in request.path  or '/evento' in request.path or '/reconocimiento-deportivo/' in request.path or '/registro-resultados/' in request.path or '/reserva-escenarios/' in request.path %} active {% endif %}">
+<li class="has-sub{% if '/solicitudes-escen/' in request.path  or '/evento' in request.path or '/reconocimiento-deportivo/' in request.path or '/registro-resultados/' in request.path or '/reserva-escenarios/' in request.path or '/calendario-deportivo/' in request.path %} active {% endif %}">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="fa fa-plus-circle"></i>
@@ -7,6 +7,7 @@
     <ul class="sub-menu">        
     {% if request.tenant.schema_name == 'public' %}
 
+        {% include "menus/aplicacion/calendario_deportivo.html" %}
         {% if user.is_superuser %}
             {% include "menus/servicios/registro_resultados.html" %}
         {% endif %}
@@ -24,11 +25,12 @@
 
         {% include "menus/servicios/gestion_eventos.html" %}        
         {% include "menus/servicios/reserva_escenarios.html" %}
+        {% if perms.entidades.add_calendarionacional %}
+            {% include "menus/aplicacion/calendario_deportivo.html" %}
 
+        {% endif %}
     {% endif %}
 
-    {% if perms.entidades.add_calendarionacional %}
-        {% include "menus/aplicacion/calendario_deportivo.html" %}
-    {% endif %}
+
     </ul>
 </li>
