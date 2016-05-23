@@ -1050,7 +1050,19 @@ def foto_entidad(request):
     return redirect("inicio")
 
 def obtener_jerarquicas(entidad_actual,hijos,icono ):
+    """
+    Mayo 23, 2016
+    Autor: Daniel Correa
 
+    Permite orgnizar la informacion de los hijos de una entidad en el formato estandar JSON para renderizacion en el template de tree view
+
+    :param entidad_actual: entidad a añadir hijos en JSON
+    :type entidad_actual: JSON
+    :param hijos: listado de entidades hijas
+     :type hijos: QuerySet
+    :param icono: icono de hijos
+    :type icono: String
+    """
     hijos_array = []
     for h in hijos:
         json_h = {}
@@ -1066,7 +1078,15 @@ def obtener_jerarquicas(entidad_actual,hijos,icono ):
 
 
 def vista_jerarquica(request):
+    """
+    Mayo 23, 2016
+    Autor: Daniel Correa
 
+    Permite organizar la jerarquia de ligas y federaciones para su visualizacion en forma de tree view
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
     #Vista unicamente para ligas y federaciones
     if not request.tenant.tipo in [1,2]:
         return redirect("/inicio")

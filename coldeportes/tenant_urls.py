@@ -46,7 +46,7 @@ urlpatterns = patterns('',
     url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
 
     #VISTA JERARQUICA
-    url(r'^jerarquia$', 'entidades.views.vista_jerarquica', name='vista_jerarquica_tenant'),
+    url(r'^jerarquia$', 'entidades.views.vista_jerarquica', name='vista_jerarquica'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
