@@ -4,7 +4,8 @@
         <span class="colorMenu">Reg. Resultados <span class="label label-theme m-l-5">NEW</span>
         </span>
     </a>
-    <ul class="sub-menu">        
+    <ul class="sub-menu"> 
+        {% if user.is_superuser %}       
         <li class="has-sub {% if '/registro-resultados/juegos' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>
@@ -19,6 +20,7 @@
                 </li>
             </ul>
         </li>
+        {% endif %}
         <li class="has-sub {% if '/registro-resultados/reporte/' in request.path %} active {% endif %}">
             <a href="javascript:;">
                 <b class="caret pull-right"></b>

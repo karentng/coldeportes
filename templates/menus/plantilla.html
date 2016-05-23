@@ -122,9 +122,8 @@
     {% include "menus/aplicacion/normograma.html" %}
     {% include "menus/aplicacion/noticias.html" %}
     {% include "menus/aplicacion/publicidad.html" %}
-    {% if request.tenant.schema_name != 'public' %}
-        {% include "menus/servicios/servicios_general.html" %}
-    {% endif %}
+    {% include "menus/servicios/servicios_general.html" %}
+   
 
 {% endif %}
 

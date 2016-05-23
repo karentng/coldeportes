@@ -25,7 +25,6 @@ def cambiarEtiquetasPosiciones(medallas):
     return auxiliar_medallas
 
 
-@login_required
 def medalleria_genero(request):
     """
     Marzo 10, 2015
@@ -169,7 +168,6 @@ def buscar_medallas_totales(juego, deportes):
     return resultados
 
 
-@login_required
 def tabla_medalleria(request):
 
     """
