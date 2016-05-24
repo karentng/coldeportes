@@ -4,6 +4,7 @@ from django.forms import *
 from django import forms
 from entidades.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
+from entidades.models import TIPOS
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
@@ -388,3 +389,19 @@ class PlanDeCostoForm(ModelForm):
     class Meta:
         model = PlanesDeCostoClub
         exclude = ('estado', )
+
+#Formulario para busqueda de entidades
+#Autor: Daniel Correa
+#Fecha: 24 Mayo 2016
+
+class BuscarEntidadForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(BuscarEntidadForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'many')
+        self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'many')
+        self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'many')
+
+    nombre = forms.CharField(label="Nombre de la Entidad",widget=forms.TextInput(attrs={'placeholder': 'Ingrese nombre de la entidad y/o palabras claves'}),required=False)
+    departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(),widget=forms.SelectMultiple(attrs={'placeholder': 'Departamento de la entidad'}) ,required=False)
+    disciplina = forms.ModelMultipleChoiceField(label="Disciplina Deportiva",queryset=TipoDisciplinaDeportiva.objects.all(),widget=forms.SelectMultiple(attrs={'placeholder': 'Disciplina de la entidad'}) ,required=False)
+    tipo = forms.MultipleChoiceField(choices=TIPOS, label="Tipo de Entidad", widget=forms.SelectMultiple(attrs={'placeholder': 'Tipo de la entidad'}),required=False)

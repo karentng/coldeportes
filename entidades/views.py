@@ -20,7 +20,7 @@ from django.forms import modelformset_factory, modelform_factory
 from django.http import HttpResponse
 from datos_iniciales.disciplinas_deportivas.script_disciplina import *
 from datos_iniciales.disciplinas_deportivas.script_log_deportivo import *
-from coldeportes.settings import SUBDOMINIO_URL
+
 @login_required
 def tipo(request):
     return render(request, 'entidad_tipo.html', {
@@ -1119,7 +1119,11 @@ def vista_jerarquica(request):
     })
 
 def buscar_entidades(request):
-    pass
+    form_busqueda = BuscarEntidadForm()
+
+    return render(request,'entidades_buscar.html',{
+        'form':form_busqueda
+    })
 
 """
 @login_required()
