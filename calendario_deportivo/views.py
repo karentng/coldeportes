@@ -16,7 +16,7 @@ def registro_calendario(request,id=None):
     if id:
         try:
             evento = CalendarioNacional.objects.get(id=id)
-            if evento.estado != 2:
+            if not evento.estado in [2,0]:
                 raise Exception
         except:
             messages.error(request,'El evento no exite o intentas editar un evento que no esta disponible')
