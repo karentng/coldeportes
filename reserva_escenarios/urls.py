@@ -8,4 +8,5 @@ urlpatterns = patterns('reserva_escenarios.views',
     url(r'^solicitar/(\d+)$', 'solicitar_reserva', name='solicitar_reserva'),
     url(r'^agendar-reserva/(\d+)$', 'agendar_reserva', name='agendar_reserva'),
     url(r'^guardar/(\d+)$', 'guardar_fechas_reserva', name='guardar_fechas_reserva'),
+    url(r'^configurar-reservas/(\d+)$', 'configurar_reservas', name='configurar_reservas'),
 )

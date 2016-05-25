@@ -2,7 +2,8 @@
 from django import forms
 from django.forms import ModelForm
 from coldeportes.utilities import adicionarClase
-from reserva_escenarios.models import ReservaEscenario
+from reserva_escenarios.models import ReservaEscenario, ConfiguracionReservaEscenario
+
 
 class SolicitarReservaForm(ModelForm):
     required_css_class = 'required'
@@ -14,3 +15,11 @@ class SolicitarReservaForm(ModelForm):
     class Meta:
         model = ReservaEscenario
         exclude = ('escenario', 'aprobada', 'fecha_inicio', 'fecha_fin')
+
+
+class ConfiguracionReservaEscenarioForm(ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = ConfiguracionReservaEscenario
+        exclude = ('escenario',)

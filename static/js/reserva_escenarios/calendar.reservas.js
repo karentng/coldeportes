@@ -35,11 +35,28 @@ var handleCalendarDemo = function () {
             var nuevaReserva = $(this).data('eventObject');
             nuevaReserva.start = date;
             nuevaReserva.allDay = false;   
-            data = {fecha_inicio: date.toUTCString(), csrfmiddlewaretoken: csrf};         
+            data = {fecha_inicio: date, csrfmiddlewaretoken: csrf};         
             
             $('#calendar').fullCalendar('renderEvent', nuevaReserva, true);
             $(this).remove();
             
+        },
+        eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
+
+            data = {fecha_inicio: event.start, fecha_fin: event.end, csrfmiddlewaretoken: csrf};
+            alert(
+                " ResizeFecha inicio " + event.start + " fin " + event.end
+            );
+
+        },
+        eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+
+            data = {fecha_inicio: event.start, fecha_fin: event.end, csrfmiddlewaretoken: csrf};
+            //revert = revertFunc;
+            alert(
+                "Fecha inicio " + event.start + " fin " + event.end 
+            );
+
         },
         eventRender: function(event, element, calEvent) {
                 var mediaObject = (event.media) ? event.media : '';
@@ -60,13 +77,15 @@ var handleCalendarDemo = function () {
 
         $.post(urlAgendar, data, function(datam){
 
-            $modalDiv.modal('hide').removeClass('loading');
-
-            
+            $modalDiv.modal('hide').removeClass('loading');            
             
         }).fail(function(datam){
             
         });
+    });
+
+    $('#modal-confirmacion').on('click', '.btn-not', function(e) {
+        revert();
     });
 
     $('#external-events .external-event').each(function() {

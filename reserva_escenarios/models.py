@@ -14,3 +14,11 @@ class ReservaEscenario(models.Model):
     direccion_solicitante = models.CharField(max_length = 150,verbose_name = 'dirección de contacto')
     descripcion = models.TextField(max_length = 500, verbose_name = 'descripción de la actividad')
     aprobada = models.BooleanField(default = False)
+
+
+class ConfiguracionReservaEscenario(models.Model):
+    escenario = models.OneToOneField(Escenario)
+    cantidad_maxima_horas = models.PositiveIntegerField(verbose_name = "cantidad máxima de horas que se puede reservar el escenario")
+    cantidad_minima_horas = models.PositiveIntegerField(default = 1, verbose_name = "cantidad mínima de horas que se puede reservar el escenario")
+
+
