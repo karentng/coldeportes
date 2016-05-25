@@ -1120,12 +1120,19 @@ def vista_jerarquica(request):
 
 def buscar_entidades(request):
     form_busqueda = BuscarEntidadForm()
-
+    entidades = []
+    cantidad = 0
     if request.method == 'POST':
-        pass
+        form_busqueda = BuscarEntidadForm(request.POST)
+        if form_busqueda.is_valid():
+            entidades = Entidad.objects.all()
+
+            cantidad =  len(entidades)
 
     return render(request,'entidades_buscar.html',{
-        'form':form_busqueda
+        'form':form_busqueda,
+        'listado_resultados' : entidades,
+        'cantidad_resultados' : cantidad
     })
 
 """

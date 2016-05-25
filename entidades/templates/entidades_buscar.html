@@ -47,30 +47,29 @@
         </form>
     </div>
     <h4>Resultados</h4>
-    {% if primer_resultado %}
+    {% if listado_resultados %}
         <ul class="result-list">    
-        {% for listado in listado_resultados %}
-            {% for resultado in listado %}
+
+            {% for entidad in listado_resultados %}
             <li>
-                
-                <div class="result-info col-md-9">
-                    <h4 class="title">Título de Norma: {{resultado.norma}}</h4>
-                    <p class="location"><b>{% if resultado.sectores.all %}Sector:{% for sector in resultado.sectores.all %} {{sector.nombre}}, {% endfor %}{% endif %} Año: {{resultado.anio}}</b></p>
+                <div class="result-image col-md-1">
+                    <a href="http://{{ entidad.domain_url }}"><img src="{% if entidad.foto_info %}{{ MEDIA_URL }}{{ entidad.foto_info }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" alt="Foto Entidas" /></a>
+                </div>
+                <div class="result-info col-md-6">
+                    <h4 class="title"><a href="http://{{ entidad.domain_url }}">{{entidad.nombre|upper}}</a></h4>
+                    <p class="location"><b>info</b></p>
                     <p class="desc">
-                        {{resultado.descripcion}}
+                        {{entidad.descripcion}}
                     </p>
-                    Palabras Clave: <b>{{resultado.palabras_clave}}</b> <br/>
-                    Archivo Soporte Norma: <a target="_blank" href="{{MEDIA_URL}}{{resultado.archivo}}"><b>{{resultado.archivo}}</b></a>
+                    Palabras Clave: <b>aqui va</b> <br/>
+                    Archivo Soporte Norma: <a target="_blank" href=""><b>archivo</b></a>
                 </div>
                 <div class="result-price col-md-1">
-                    <small>JURISDICCIÓN:</small> {{resultado.get_jurisdiccion_display}}
-                    {% if perms.normograma.add_norma %}
-                    <a href="{% url 'editar_norma' resultado.id %}" class="btn btn-inverse btn-block" >Editar Norma</a>
-                    {% endif %}
+                    <small>Tipo:</small> {% if entidad.tipo == 5 %}{{ entidad.obtenerTenant.get_tipo_ente_display }}{% else %}{{ entidad.get_tipo_display }} {% endif %}
                 </div>
             </li>
+
             {% endfor %}
-        {% endfor %}
         </ul>
         {% else %}
         <div class="col-md-5"><h5>No hay resultados para la búsqueda.</h5></div><br/><br/><br/><br/><br/>
