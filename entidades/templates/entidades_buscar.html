@@ -24,17 +24,14 @@
     <div class="row">
         <form  method="POST">{% csrf_token %}
             <div class="col-md-10">       
-                <div class="col-md-12 add-tooltip"  data-placement="top" data-toggle="tooltip" data-original-title="Ingrese un nombre o palabras claves para buscar una entidad">
+                <div class="col-md-6 add-tooltip"  data-placement="top" data-toggle="tooltip" data-original-title="Ingrese un nombre o palabras claves para buscar una entidad">
                     {% bootstrap_field form.nombre layout="vertical" %}
                 </div>
-                <h4>Filtros</h4>
-                <div class="col-md-4 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione uno o más tipos de entidad">
+                <div class="col-md-3 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione uno o más tipos de entidad">
                     {% bootstrap_field form.tipo layout="vertical" %}
                 </div>
-                <div class="col-md-4 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione una o más disciplinas deportivas">
-                    {% bootstrap_field form.disciplina layout="vertical" %}
-                </div>
-                 <div class="col-md-4 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione una o más departamentos">
+
+                 <div class="col-md-3 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione una o más departamentos">
                     {% bootstrap_field form.departamento layout="vertical" %}
                 </div>
             </div>
@@ -118,16 +115,6 @@
     <script src="{{STATIC_URL}}js/form-plugins.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
 
-    <script>
-        var entidades = 0;
-        $("#id_disciplina").on('change',function(){
-            var selected = $(this).val();
-            console.log(selected);
-            console.log($.inArray("52",selected));
-            console.log("52" in selected);
-        });
-
-    </script>
 {% endblock %}
 
 {% block script %}

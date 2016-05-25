@@ -1135,7 +1135,6 @@ def buscar_entidades(request):
             if departamentos:
                 entidades = entidades.filter(ciudad__departamento__id__in=departamentos)
 
-
             entidades = entidades.filter(nombre__icontains = nombre)
 
             cantidad = len(entidades)
@@ -1143,7 +1142,7 @@ def buscar_entidades(request):
     return render(request,'entidades_buscar.html',{
         'form':form_busqueda,
         'listado_resultados' : entidades,
-        'cantidad_resultados' : cantidad
+        'cantidad_resultados' : cantidad,
     })
 
 """
