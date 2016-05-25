@@ -7,5 +7,8 @@
         <li {% if "/reserva-escenarios/listar-escenarios" in request.path %} class="active" {% endif %}>
             <a href="{% url 'listar_escenarios_reservas' %}">Listar Escenarios</a>
         </li>
+        <li {% if "/reserva-escenarios/listar-solicitudes" in request.path %} class="active" {% endif %}>
+            <a href="{% url 'listar_solicitudes_reservas' %}">Listar Solicitudes</a>
+        </li>
     </ul>
 </li>

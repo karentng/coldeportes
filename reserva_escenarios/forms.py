@@ -14,7 +14,7 @@ class SolicitarReservaForm(ModelForm):
 
     class Meta:
         model = ReservaEscenario
-        exclude = ('escenario', 'aprobada', 'fecha_inicio', 'fecha_fin')
+        exclude = ('escenario', 'aprobada', 'fecha_inicio', 'fecha_fin', 'estado', 'comentarios')
 
 
 class ConfiguracionReservaEscenarioForm(ModelForm):
@@ -23,3 +23,15 @@ class ConfiguracionReservaEscenarioForm(ModelForm):
     class Meta:
         model = ConfiguracionReservaEscenario
         exclude = ('escenario',)
+
+
+class ResponderSolicitudReservaForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(ResponderSolicitudReservaForm, self).__init__(*args, **kwargs)
+        self.fields['comentarios_respuesta'].widget.attrs['rows'] = 3
+
+    class Meta:
+        model = ReservaEscenario
+        fields = ('estado', 'comentarios_respuesta')

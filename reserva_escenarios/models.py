@@ -3,7 +3,12 @@ from snd.modelos.escenarios import Escenario
 
 # Create your models here.
 
-class ReservaEscenario(models.Model):
+class ReservaEscenario(models.Model):  
+    ESTADOS = (
+        (1,'APROBADA'),
+        (2,'ESPERANDO RESPUESTA'),
+        (3,'RECHAZADA'),
+    )  
     escenario = models.ForeignKey(Escenario)
     fecha_inicio = models.DateTimeField(null=True)
     fecha_fin = models.DateTimeField(null=True)
@@ -12,8 +17,22 @@ class ReservaEscenario(models.Model):
     identificacion_solicitante = models.CharField(max_length = 150,verbose_name = 'número de identificación del solicitante')
     telefono_solicitante = models.CharField(max_length = 150,verbose_name = 'teléfono de contacto')
     direccion_solicitante = models.CharField(max_length = 150,verbose_name = 'dirección de contacto')
+    correo_solicitante = models.EmailField(verbose_name = 'correo electrónico de contacto')
     descripcion = models.TextField(max_length = 500, verbose_name = 'descripción de la actividad')
-    aprobada = models.BooleanField(default = False)
+    comentarios_respuesta = models.TextField(max_length = 500, verbose_name = 'comentarios')
+    estado = models.IntegerField(choices=ESTADOS)
+    fecha_creacion = models.DateField(auto_now_add=True)
+
+    def codigo_unico(self, entidad):
+        return ("RE-%s-%s-%s")%(entidad.id, self.escenario.id, self.id)
+
+    def save(self, *args, **kwargs):
+        self.nombre_equipo = self.nombre_equipo.upper()
+        self.nombre_solicitante = self.nombre_solicitante.upper()
+        self.direccion_solicitante = self.direccion_solicitante.upper()
+        self.identificacion_solicitante = self.identificacion_solicitante.upper()
+        self.descripcion = self.descripcion.upper()
+        super(ReservaEscenario, self).save(*args, **kwargs)
 
 
 class ConfiguracionReservaEscenario(models.Model):

@@ -1,8 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib import messages
 from snd.modelos.escenarios import Escenario
 from reserva_escenarios.models import ReservaEscenario, ConfiguracionReservaEscenario
-from reserva_escenarios.forms import SolicitarReservaForm, ConfiguracionReservaEscenarioForm
+from reserva_escenarios.forms import SolicitarReservaForm, ConfiguracionReservaEscenarioForm, ResponderSolicitudReservaForm
+
 
 # Create your views here.
 def listar_escenarios(request):
@@ -21,6 +24,28 @@ def listar_escenarios(request):
     })
 
 
+def listar_solicitudes(request):
+    """
+    Mayo 25, 2016
+    Autor: Karent Narvaez
+
+    Permite listar las solicitudes de reservas de escenarios
+    """
+
+    solicitudes = ReservaEscenario.objects.filter(estado = 2).exclude(correo_solicitante = '')
+    dashboard = dict()
+    dashboard['total_solicitudes'] = ReservaEscenario.objects.exclude(correo_solicitante = '').count() or 0
+    dashboard['total_rechazadas'] = ReservaEscenario.objects.filter(estado = 3).count() or 0
+    dashboard['total_aprobadas'] = ReservaEscenario.objects.filter(estado = 1).count() or 0
+    dashboard['total_esperando_respuesta'] = solicitudes.count() or 0
+
+    return render(request,'lista_solicitudes.html',{
+        'solicitudes': solicitudes,
+        'dashboard': dashboard
+
+    })
+
+
 def agendar_reserva(request, escenario_id):
     """
     Mayo 18, 2016
@@ -30,7 +55,7 @@ def agendar_reserva(request, escenario_id):
     """
 
     escenario = Escenario.objects.get(id = escenario_id)
-    reservas = ReservaEscenario.objects.filter(escenario = escenario_id, aprobada = True)
+    reservas = ReservaEscenario.objects.filter(escenario = escenario_id, estado = 1)
 
     return render(request,'calendario_reservas.html',{
         'reservas': reservas,
@@ -38,7 +63,7 @@ def agendar_reserva(request, escenario_id):
     })
 
 
-def solicitar_reserva(request, escenario_id):
+def solicitar_reserva(request):
     """
     Mayo 20, 2016
     Autor: Karent Narvaez
@@ -46,20 +71,26 @@ def solicitar_reserva(request, escenario_id):
     Permite guardar la información de contacto de una reserva
     """
 
-    escenario = Escenario.objects.get(id = escenario_id)
-    form = SolicitarReservaForm()
+    try:
+        reserva = ReservaEscenario.objects.get(id = request.session['reserva_id'])
+    except Exception as e:
+        print(e)
+
+    form = SolicitarReservaForm(instance = reserva)
+    reserva.codigo_unico = reserva.codigo_unico(request.tenant)
 
     if request.method == 'POST':
-            form = SolicitarReservaForm(request.POST)
+            form = SolicitarReservaForm(request.POST, instance = reserva)
 
             if form.is_valid():
                 nueva_solicitud = form.save(commit = False)
-                nueva_solicitud.escenario = escenario
                 nueva_solicitud.save()
-                #return redirect('adjuntar_requerimientos_reconocimiento', nueva_solicitud.id)
+                messages.success(request, "La reserva ha sido enviada al administrador del escenario con éxito. Aparecerá en el calendario si es aprobada y usted recibirá notificación.")
+                return redirect('listar_escenarios_reservas')
 
     return render(request,'solicitar_reserva.html',{
         'form': form,
+        'reserva': reserva
     })
 
 
@@ -74,33 +105,44 @@ def guardar_fechas_reserva(request, escenario_id):
 
         response = {
             'status': 'error',
-            'message': 'actividad no existe'
+            'message': 'Escenario no existe.'
+        }
+        try:
+            escenario = Escenario.objects.get(id = escenario_id)
+        except Exception:
+            return JsonResponse(response)
+
+        try:
+            fecha_inicio = request.POST.get("fecha_inicio")
+            fecha_inicio = fecha_inicio.split(" ")
+            fecha_inicio = fecha_inicio[:6]
+            fecha_inicio = " ".join(fecha_inicio)
+            fecha_inicio = datetime.strptime(fecha_inicio, "%a %b %d %Y %H:%M:%S %Z%z")
+
+            fecha_fin = request.POST.get("fecha_fin")
+            if fecha_fin:
+                fecha_fin = fecha_fin.split(" ")
+                fecha_fin = fecha_fin[:6]
+                fecha_fin = " ".join(fecha_fin)
+                fecha_fin = datetime.strptime(fecha_fin, "%a %b %d %Y %H:%M:%S %Z%z")
+            else:
+                fecha_fin = fecha_inicio + timedelta(minutes = 120)        
+
+            reserva = ReservaEscenario.objects.create(escenario = escenario, fecha_inicio = fecha_inicio, fecha_fin = fecha_fin, estado = 2)
+            reserva.save()
+            request.session["reserva_id"] = reserva.id
+            message = "Reserva creada correctamente."
+            
+        except Exception as e:
+            print(e)
+            message = e
+
+        response = {
+            'status': 'error',
+            'message': message
         }
 
-        escenario = Escenario.objects.get(id =  escenario_id)
-
-        fecha_inicio = request.POST.get("fecha_inicio")
-        fecha_inicio = fecha_inicio.split(" ")
-        fecha_inicio = fecha_inicio[:6]
-        fecha_inicio = " ".join(fecha_inicio)
-        fecha_inicio = datetime.strptime(fecha_inicio, "%a %b %d %Y %H:%M:%S %Z%z")
-        #print(fecha_inicio)
-
-        fecha_fin = request.POST.get("fecha_fin")
-        if fecha_fin != '':
-            fecha_fin = fecha_fin.split(" ")
-            fecha_fin = fecha_fin[:6]
-            fecha_fin = " ".join(fecha_fin)
-            fecha_fin = datetime.strptime(fecha_fin, "%a %b %d %Y %H:%M:%S %Z%z")
-        else:
-            fecha_fin = fecha_inicio + timedelta(minutes = 120)
-            
-        #print(fecha_fin)
-        
-
-        reserva = ReservaEscenario(escenario = escenario, fecha_inicio = fecha_inicio, fecha_fin = fecha_fin).save()
-
-        return redirect('solicitar_reserva', escenario_id)
+        return JsonResponse(response)
 
 
 def configurar_reservas(request, escenario_id):
@@ -129,4 +171,24 @@ def configurar_reservas(request, escenario_id):
 
     return render(request,'configuracion_reserva.html',{
         'form': form
+    })
+
+
+def responder_solicitud(request, solicitud_id):
+    """
+    Mayo 25, 2016
+    Autor: Karent Narvaez
+
+    Permite cargar la información de la solicitud de reserva y el formulario para responder.
+
+    """
+    solicitud = ReservaEscenario.objects.get(id = solicitud_id)
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+
+    form = ResponderSolicitudReservaForm(instance = solicitud)
+
+    return render(request,'responder_solicitud.html',{
+        'solicitud' : solicitud,
+        'form' : form,
+        'responder': True
     })

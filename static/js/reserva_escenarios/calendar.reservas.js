@@ -43,19 +43,29 @@ var handleCalendarDemo = function () {
         },
         eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
 
-            data = {fecha_inicio: event.start, fecha_fin: event.end, csrfmiddlewaretoken: csrf};
-            alert(
-                " ResizeFecha inicio " + event.start + " fin " + event.end
-            );
+            if (event.end !== null)
+            {
+                data = {fecha_inicio: event.start, fecha_fin: event.end, csrfmiddlewaretoken: csrf};
+                
+            } else
+            {
+                data = {fecha_inicio: event.start, csrfmiddlewaretoken: csrf};
+                
+            }
 
         },
         eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-
-            data = {fecha_inicio: event.start, fecha_fin: event.end, csrfmiddlewaretoken: csrf};
+            if (event.end !== null)
+            {
+                data = {fecha_inicio: event.start, fecha_fin: event.end, csrfmiddlewaretoken: csrf};
+                
+            } else
+            {
+                data = {fecha_inicio: event.start, csrfmiddlewaretoken: csrf};
+                
+            }
             //revert = revertFunc;
-            alert(
-                "Fecha inicio " + event.start + " fin " + event.end 
-            );
+            
 
         },
         eventRender: function(event, element, calEvent) {
@@ -77,7 +87,9 @@ var handleCalendarDemo = function () {
 
         $.post(urlAgendar, data, function(datam){
 
-            $modalDiv.modal('hide').removeClass('loading');            
+            $modalDiv.modal('hide').removeClass('loading');
+
+            window.location.replace(urlRedirect);           
             
         }).fail(function(datam){
             
