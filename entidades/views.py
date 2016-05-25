@@ -1125,9 +1125,20 @@ def buscar_entidades(request):
     if request.method == 'POST':
         form_busqueda = BuscarEntidadForm(request.POST)
         if form_busqueda.is_valid():
-            entidades = Entidad.objects.all()
+            entidades = Entidad.objects.exclude(tipo=0)
+            tipos = request.POST.getlist('tipo') or []
+            departamentos = request.POST.getlist('departamento') or []
+            nombre = request.POST.get('nombre') or ''
 
-            cantidad =  len(entidades)
+            if tipos:
+                entidades = entidades.filter(tipo__in=tipos)
+            if departamentos:
+                entidades = entidades.filter(ciudad__departamento__id__in=departamentos)
+
+
+            entidades = entidades.filter(nombre__icontains = nombre)
+
+            cantidad = len(entidades)
 
     return render(request,'entidades_buscar.html',{
         'form':form_busqueda,

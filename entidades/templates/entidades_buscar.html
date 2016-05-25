@@ -57,15 +57,37 @@
                 </div>
                 <div class="result-info col-md-6">
                     <h4 class="title"><a href="http://{{ entidad.domain_url }}">{{entidad.nombre|upper}}</a></h4>
-                    <p class="location"><b>info</b></p>
-                    <p class="desc">
-                        {{entidad.descripcion}}
+                    <p class="location">
+                        {% if entidad.obtenerTenant.discapacidad %}
+                            <b>Discapacidad: {{entidad.obtenerTenant.get_discapacidad_display }}</b>
+                        {% elif entidad.obtenerTenant.disciplina %}
+                            <b>Disciplina Deportiva: {{entidad.obtenerTenant.disciplina }}</b>
+                        {% else %}
+                            <b>No hay disponible ninguna discapacidad/disciplina</b>
+                        {% endif %}
                     </p>
-                    Palabras Clave: <b>aqui va</b> <br/>
-                    Archivo Soporte Norma: <a target="_blank" href=""><b>archivo</b></a>
+                    <p class="desc">
+                        {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
+                    </p>
+
+                    <div class="btn-row">
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Ciudad(Departamento)">
+                            <i class="fa fa-fw fa-globe"></i>
+                        </a><span>{% if entidad.ciudad %} {{entidad.ciudad }} {% else %} No especificada{% endif %}</span>
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Dirección">
+                            <i class="fa fa-fw fa-home"></i>
+                        </a><span>{% if entidad.direccion %} {{entidad.direccion }} {% else %} No especificada{% endif %}</span>
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Teléfono">
+                            <i class="fa fa-fw fa-phone"></i>
+                        </a><span>{% if entidad.telefono %} {{entidad.telefono }} {% else %} No especificado{% endif %}</span>
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Pagina web">
+                            <i class="fa fa-fw fa-link"></i>
+                        </a><span>{% if entidad.pagina_web %} {{entidad.pagina_web }} {% else %} No especificado{% endif %}</span>
+                    </div>
                 </div>
                 <div class="result-price col-md-1">
-                    <small>Tipo:</small> {% if entidad.tipo == 5 %}{{ entidad.obtenerTenant.get_tipo_ente_display }}{% else %}{{ entidad.get_tipo_display }} {% endif %}
+                    {% if entidad.tipo == 5 %}{{ entidad.obtenerTenant.get_tipo_ente_display }}{% else %}{{ entidad.get_tipo_display }} {% endif %}
+                    <a href="http://{{ entidad.domain_url }}" class="btn btn-success btn-block">Ir a la entidad</a>
                 </div>
             </li>
 
@@ -96,6 +118,16 @@
     <script src="{{STATIC_URL}}js/form-plugins.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/tooltip.js"></script>
 
+    <script>
+        var entidades = 0;
+        $("#id_disciplina").on('change',function(){
+            var selected = $(this).val();
+            console.log(selected);
+            console.log($.inArray("52",selected));
+            console.log("52" in selected);
+        });
+
+    </script>
 {% endblock %}
 
 {% block script %}
