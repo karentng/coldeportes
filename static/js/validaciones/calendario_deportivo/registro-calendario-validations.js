@@ -2,9 +2,6 @@ form = "#form-registro-calendario";
 fields = {
             cupo_atletas: {
                 validators: {
-                    notEmpty: {
-                        message: 'El evento debe tener un cupo de atletas'
-                    },
                     numeric: {
                         message: 'El cupo debe ser numérico'
                     },
@@ -17,9 +14,6 @@ fields = {
             },
             cupo_personas: {
                 validators: {
-                    notEmpty: {
-                        message: 'El evento debe tener un cupo de personas'
-                    },
                     numeric: {
                         message: 'El cupo debe ser numérico'
                     },
