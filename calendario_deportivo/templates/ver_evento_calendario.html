@@ -70,25 +70,26 @@
                                     <div class="invoice-from">
                                         <div class="row">
                                             <address class="m-t-5 m-b-5">
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-12 col-md-offset-1">
+                                                    <p><b>Federación:</b> {{ evento.entidad |upper }}</p>
+                                                    <p><b>Fecha del evento:</b> Desde {{ evento.fecha_inicio}} hasta {{ evento.fecha_finalizacion}}<p/>
+                                                    <p><b>Ciudad del evento:</b> {{ evento.ciudad}}</p>
                                                     <p><b>Lugar del evento:</b> {{ evento.nombre_lugar }}</p>
+                                                    <p><b>Dirección:</b> {{ evento.direccion}}</p><br/>
+                                                    <strong><h4>Información del evento</h4></strong>
+                                                </div>
+
+                                                <div class="col-lg-5 col-md-offset-1">
                                                     <p><b>Tipo:</b> {{ evento.get_tipo_display }}<p/>
                                                     <p><b>Deporte:</b> {{ evento.deporte}}</p>
                                                     <p><b>Categoria:</b> {% if evento.categoria %}{{ evento.categoria}} {% else %} Ninguno {% endif %}</p>
                                                     <p><b>Modalidad:</b> {% if evento.modalidad %}{{ evento.modalidad}} {% else %} Ninguno {% endif %}</p>
-                                                    <p><b>Ciudad donde se desarrollará:</b> {{ evento.ciudad}}</p>
-                                                    <p><b>Dirección:</b> {{ evento.direccion}}</p>
-                                                    <p><b>Estado:</b> {{ evento.get_estado_display}}</p>
                                                 </div>
-                                                <div class="col-lg-6">
-                                                    <p><b>Fecha de Inicio:</b> {{ evento.fecha_inicio}}</p>
-                                                    <p><b>Fecha de Finalización:</b> {{ evento.fecha_finalizacion}}</p>
-                                                    <p><b>Fecha de Inicio de Preinscripciones:</b> {{ evento.fecha_inicio_preinscripcion}}</p>
-                                                    <p><b>Fecha de Finalización de Preinscripciones:</b> {{ evento.fecha_finalizacion_preinscripcion}}</p>
+                                                <div class="col-lg-5">
                                                     <p><b>Objetivo:</b> {{ evento.objetivo}}</p>
                                                     <p><b>Cupo total de competidores:</b> {{ evento.cupo_atletas}}</p>
                                                     <p><b>Cupo total de asistentes:</b> {{ evento.cupo_personas}}</p>
-                                                    <p><b>Entidad que publica:</b> {{ evento.entidad}}</p>
+                                                    <p><b>Estado:</b> {{ evento.get_estado_display}}</p>
                                                 </div>
                                             </address>
                                         </div>
