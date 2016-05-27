@@ -143,3 +143,12 @@
 {% endif %}
 
 {% include "menus/aplicacion/directorio.html" %}
+<!-- VISTA JERARQUICA PARA LIGAS, FEDERACIONES Y BUSCADOR DE ENTIDADES PUBLICO-->
+{% if request.tenant.tipo == 1 or request.tenant.tipo == 2 %}
+    <li class="has-sub {% if 'jerarquia' in request.path %} active {% endif %}">
+        <a href="{% url 'vista_jerarquica' %}">
+            <i class="fa fa-sitemap"></i>
+            <span class="colorMenu">JERARQUÍA DE ENTIDADES</span>
+        </a>
+    </li>
+{% endif %}
