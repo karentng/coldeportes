@@ -626,6 +626,7 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda, request):
 
 def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion,multiples_tenant):
     columna = columna.split(" ")[0]
+    print(columna)
     if multiples_tenant:
         orden = False
         if direccion == 'desc':

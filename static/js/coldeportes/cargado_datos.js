@@ -129,7 +129,7 @@ $.ajax( {
 		columnas.push({"title": aux, "targets": parseInt(i), "orderable": true});
 	}
 	if (opciones){
-		columnas.push({"title": "Opciones", "targets": columnas.length, "orderable": true});
+		columnas.push({"title": "Opciones", "targets": columnas.length, "orderable": false, "searchable":false});
 	}
 
     $('#'+idTabla).dataTable({

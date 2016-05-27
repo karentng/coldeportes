@@ -166,7 +166,6 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
                 valor = obtenerDato(objeto, atributo)
                 aux.append(valor)
 
-
         urls = []
 
         for i in urlsOpciones:
@@ -185,8 +184,7 @@ def generarFilas(objetos, atributos, configuracionDespliegue, urlsOpciones):
 
         acciones = render_to_string("configuracionDataTables.html", {"tipo": "urlsOpciones", "urls": urls})
         aux.append(acciones)
-        
-        
+
         datos.append(aux)
     return datos
 
@@ -256,7 +254,6 @@ def realizarFiltroDeCampos(modeloTipo, atributos, busqueda):
 def definirCantidadDeObjetos(objetos, inicio, fin, columna, direccion):
     from operator import methodcaller
     import operator
-
     columna = columna.split(" ")[0]
     orden = False
     if direccion == 'desc':
