@@ -34,7 +34,9 @@
                     </h3>
                     <div class="well row">
                         <strong><h4>Número de Reserva {{reserva.codigo_unico}}</h4></strong>
-                        <br>
+                        <strong><h5>Fecha de Inicio de reserva:</h5></strong> {{reserva.fecha_inicio}}
+                        <strong><h5>Fecha Final de reserva:</h5></strong> {{reserva.fecha_fin}}
+                        <br><br><br>
                         <div class="row">
                             {% for field in form %}
                                 <div class="col-md-6">

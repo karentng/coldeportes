@@ -24,7 +24,7 @@
             calendarEvents.push({
                 id: '{{ reserva.id }}',
 				title: '{{ reserva.nombre_equipo }}',
-				start: '{{ reserva.fecha_inicio|date:"Y-m-d H:i" }}',
+				start: '{{ reserva.fecha_inicio|date:"Y-m-d H:i" }} ',
 				end: '{{ reserva.fecha_fin|date:"Y-m-d H:i" }}',
 				className: 'bg-blue-darker',
                 allDay: false,

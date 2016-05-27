@@ -14,7 +14,7 @@ class SolicitarReservaForm(ModelForm):
 
     class Meta:
         model = ReservaEscenario
-        exclude = ('escenario', 'aprobada', 'fecha_inicio', 'fecha_fin', 'estado', 'comentarios')
+        exclude = ('escenario', 'aprobada', 'fecha_inicio', 'fecha_fin', 'estado', 'comentarios_respuesta')
 
 
 class ConfiguracionReservaEscenarioForm(ModelForm):

@@ -11,4 +11,5 @@ urlpatterns = patterns('reserva_escenarios.views',
     url(r'^responder-solicitud/(\d+)$', 'responder_solicitud', name='responder_solicitud_reserva'),
     url(r'^guardar/(\d+)$', 'guardar_fechas_reserva', name='guardar_fechas_reserva'),
     url(r'^configurar-reservas/(\d+)$', 'configurar_reservas', name='configurar_reservas'),
+    url(r'^imprimir-reserva/(\d+)$', 'imprimir_solicitud', name='imprimir_solicitud_reservas'),
 )

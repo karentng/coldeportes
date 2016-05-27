@@ -48,6 +48,7 @@
                             <li><a><i class="fa fa-barcode fa-fw m-r-5"></i> {{ solicitud.codigo_unico }}</a></li>
                                 <li><a ><i class="fa fa-calendar fa-fw m-r-5"></i> {{ solicitud.fecha_inicio }}</a></li>
                                 <li><a ><i class="fa fa-gavel fa-fw m-r-5"></i> {{ solicitud.fecha_fin }}</a></li>
+                                <li><a ><i class="fa fa-circle fa-fw m-r-5"></i> {{ solicitud.get_estado_display }}</a></li>
                         </ul>
                     </div>
                     <!-- end wrapper -->
@@ -65,7 +66,7 @@
                                 <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
                             </div>
                             <div class="btn-group m-l-5">
-                                <a href="" target="_blank" class="btn btn-warning p-l-40 p-r-40 btn-sm pull-right">
+                                <a href="{% url 'imprimir_solicitud_reservas' solicitud.id %}" target="_blank" class="btn btn-warning p-l-40 p-r-40 btn-sm pull-right">
                                     <i class="fa fa-print"></i> Imprimir
                                 </a>
                             </div>
@@ -93,13 +94,13 @@
                             <div class="col-lg-6">
                                 <strong>Fecha de Inicio</strong><br><br>
                                 <p class="f-s-12 text-inverse">
-                                    {{ solicitud.nombre_equipo }}
+                                    {{ solicitud.fecha_inicio }}
                                 </p>
                             </div>
                             <div class="col-lg-6">
                                 <strong>Fecha Fin</strong><br><br>
                                 <p class="f-s-12 text-inverse">
-                                    {{ solicitud.nombre_equipo }}
+                                    {{ solicitud.fecha_fin }}
                                 </p>
                             </div>
                             <div class="col-lg-6">
@@ -144,6 +145,14 @@
                                     {{ solicitud.descripcion|upper }}
                                 </p>
                             </div>
+                            {% if solicitud.comentarios_respuesta %}
+                            <div class="col-lg-6">
+                                <strong>Comentarios al contestar solicitud</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.comentarios_respuesta|upper }}
+                                </p>
+                            </div>
+                            {% endif %}
                         </div>
                         
                         {% if responder and solicitud.estado == 2 %}

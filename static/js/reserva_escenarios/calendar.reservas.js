@@ -11,7 +11,7 @@ var handleCalendarDemo = function () {
     var data = {};
     var date = new Date();
     var m = date.getMonth();
-    var y = date.getFullYear();
+    var y = date.getFullYear();    
     
     var calendar = $('#calendar').fullCalendar({
         header: buttonSetting,
@@ -30,6 +30,7 @@ var handleCalendarDemo = function () {
         selectHelper: false,
         droppable: true,
         editable: true,
+        eventOverlap : false,
         drop: function(date, allDay) { // this function is called when something is dropped
 
             var nuevaReserva = $(this).data('eventObject');
@@ -41,7 +42,7 @@ var handleCalendarDemo = function () {
             $(this).remove();
             
         },
-        eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
+        eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
 
             if (event.end !== null)
             {
@@ -50,11 +51,31 @@ var handleCalendarDemo = function () {
             } else
             {
                 data = {fecha_inicio: event.start, csrfmiddlewaretoken: csrf};
+                event.end = new Date(event.start);
+                event.end.setHours(event.end.getHours()+2)
                 
             }
+
+            var overlap = isOverlapping(event); 
+            function isOverlapping(event){
+                var eventos = calendar.fullCalendar('clientEvents');
+                var i;
+                for(i in eventos){                    
+                    if(eventos[i].id != event.id){
+                        if(event.end > eventos[i].start && event.start < eventos[i].end){
+                            revertFunc();
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
 
         },
-        eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+        eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
+
+
             if (event.end !== null)
             {
                 data = {fecha_inicio: event.start, fecha_fin: event.end, csrfmiddlewaretoken: csrf};
@@ -62,14 +83,29 @@ var handleCalendarDemo = function () {
             } else
             {
                 data = {fecha_inicio: event.start, csrfmiddlewaretoken: csrf};
+                event.end = new Date(event.start);
+                event.end.setHours(event.end.getHours()+2)
+                //console.log(event.end)
                 
             }
-            //revert = revertFunc;
-            
+            var overlap = isOverlapping(event); 
+            function isOverlapping(event){
+                var eventos = calendar.fullCalendar('clientEvents');
+                var i;
+                for(i in eventos){                    
+                    if(eventos[i].id != event.id){
+                        if(event.end > eventos[i].start && event.start < eventos[i].end){
+                            revertFunc();
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
 
         },
         eventRender: function(event, element, calEvent) {
-                var mediaObject = (event.media) ? event.media : '';
+                var mediaObject = (event.media) ? event.media : 'asas';
                 var description = (event.description) ? event.description : '';
             element.find(".fc-event-title").after($("<span class=\"fc-event-icons\"></span>").html(mediaObject));
             element.find(".fc-event-title").append('<small>'+ description +'</small>');

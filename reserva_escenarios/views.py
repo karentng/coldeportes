@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from snd.modelos.escenarios import Escenario
 from reserva_escenarios.models import ReservaEscenario, ConfiguracionReservaEscenario
 from reserva_escenarios.forms import SolicitarReservaForm, ConfiguracionReservaEscenarioForm, ResponderSolicitudReservaForm
@@ -187,8 +188,39 @@ def responder_solicitud(request, solicitud_id):
 
     form = ResponderSolicitudReservaForm(instance = solicitud)
 
+    if request.method == 'POST':
+        form = ResponderSolicitudReservaForm(request.POST, instance = solicitud)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'La respuesta se almacenado correctamente. Se enviará un correo electrónico al solicitante.')
+            return redirect('listar_escenarios_reservas')
+
     return render(request,'responder_solicitud.html',{
         'solicitud' : solicitud,
         'form' : form,
         'responder': True
+    })
+
+
+
+@login_required
+def imprimir_solicitud(request, reserva_id):
+    """
+    Mayo 26, 2016
+    Autor: Karent Narvaez
+
+    Permite renderizar el html imprimible de la solicitud de reserva|
+
+    """
+    try:
+        solicitud = ReservaEscenario.objects.get(id = reserva_id)
+    except:
+        messages.error(request,'No existe la solicitud')
+        return redirect('listar_solicitudes_reservas')
+
+    solicitud.codigo_unico = solicitud.codigo_unico(request.tenant)
+
+    return render(request,'imprimir_solicitud.html',{
+        'solicitud' : solicitud,
     })
