@@ -244,6 +244,8 @@ def inicio_public(request):
     except Exception:
         noticias = []
 
+    eventos = CalendarioNacional.objects.filter(estado=0)
+
     return render(request, 'index_public.html', {
         'deportistas': cantidad_deportistas,
         'escenarios': cantidad_escenarios,
@@ -251,6 +253,7 @@ def inicio_public(request):
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
         'noticias': noticias,
+        'eventos' : eventos
     })
 
 

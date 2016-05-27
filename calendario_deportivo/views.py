@@ -16,10 +16,10 @@ def registro_calendario(request,id=None):
     if id:
         try:
             evento = CalendarioNacional.objects.get(id=id)
-            if evento.estado != 2:
+            if not evento.estado in [2,0]:
                 raise Exception
         except:
-            messages.error(request,'El evento no exite o intentas editar un evento que no esta disponible')
+            messages.error(request,'El evento no existe o intenta editar un evento que no esta disponible')
             return redirect('listado_calendario_nacional')
 
         editar = True
@@ -41,7 +41,7 @@ def registro_calendario(request,id=None):
             ev.entidad = yo
             ev.save()
             connection.set_tenant(yo)
-            messages.success(request, "El evento a sido enviado al Calendario Deportivo Nacional con exito!, Aparecera cuando COLDEPORTES lo apruebe")
+            messages.success(request, "El evento ha sido enviado al Calendario Deportivo Nacional con éxito!, Aparecera cuando COLDEPORTES lo apruebe")
             return redirect('listado_calendario_nacional')
         connection.set_tenant(yo)
     return render(request,'registro_calendario.html',{
@@ -131,7 +131,7 @@ def aprobar_evento(request,id):
 
     evento.estado = 0
     evento.save()
-    messages.success(request,'El evento ha sido aprobado con exito!')
+    messages.success(request,'El evento ha sido aprobado con éxito!')
     return redirect('listar_aprobar_calendario')
 
 @login_required
@@ -144,7 +144,7 @@ def reprobar_evento(request,id):
 
     evento.estado = 1
     evento.save()
-    messages.warning(request,'El evento ha sido rechazado con exito')
+    messages.warning(request,'El evento ha sido rechazado con éxito')
     return redirect('listar_aprobar_calendario')
 
 def ver_evento_nacional(request,id):
