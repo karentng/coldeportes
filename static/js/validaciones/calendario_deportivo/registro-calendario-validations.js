@@ -49,32 +49,7 @@ fields = {
                     }
                 }
             },
-            fecha_inicio_preinscripcion: {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de inicio de la preinscripción del evento no puede ser vacía'
-                    },
-                    date: {
-                        message: 'Verifique que la fecha de preinscripcion sea mayor al dia de hoy y menor la fecha de inicio del evento',
-                        format: 'YYYY-MM-DD h:m',
-                        max: 'fecha_inicio',
-                        min: hoy()
-                    }
-                }
-            },
-            fecha_finalizacion_preinscripcion: {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de finalización de la preinscripción del evento no puede ser vacía'
-                    },
-                    date: {
-                        message: 'Verifique que la fecha de cierre de preinscripcion sea mayor a la fecha de inicio de preinscripcion y menor a la fecha de inicio del evento',
-                        format: 'YYYY-MM-DD h:m',
-                        min: 'fecha_inicio_preinscripcion',
-                        max: 'fecha_inicio'
-                    }
-                }
-            },
+
             objetivo: {
                 validators: {
                     notEmpty: {
@@ -103,15 +78,5 @@ function hoy(){
     $("#id_fecha_finalizacion").on('change',function(e){
         $(form).bootstrapValidator('revalidateField', 'fecha_inicio');
         $(form).bootstrapValidator('revalidateField', 'fecha_finalizacion');
-    });
-
-//Revalidar campos al ser actualizados
-    $("#id_fecha_inicio_preinscripcion").on('change',function(e){
-        $(form).bootstrapValidator('revalidateField', 'fecha_inicio_preinscripcion');
-    });
-//Revalidar campos al ser actualizados
-    $("#id_fecha_finalizacion_preinscripcion").on('change',function(e){
-        $(form).bootstrapValidator('revalidateField', 'fecha_inicio_preinscripcion');
-        $(form).bootstrapValidator('revalidateField', 'fecha_finalizacion_preinscripcion');
     });
 $.getScript(base+"js/validaciones/validations-base.js");
