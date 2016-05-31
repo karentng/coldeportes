@@ -45,11 +45,12 @@
             <table id="tabla-calendario" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
                 <thead>
                     <tr>
+                        <th>Federación</th>
                         <th>Titulo</th>
                         <th>Fecha de inicio</th>
                         <th>Fecha de finalización</th>
                         <th>Ciudad</th>
-                        <th>Cupo total</th>
+                        <th>Cupo atletas</th>
                         <th>Estado</th>
                         <th>Opciones</th>
                     </tr>
@@ -57,11 +58,12 @@
                 <tbody>
                     {% for c in eventos %}
                     <tr>
+                        <td>{{ c.entidad | upper }}</td>
                         <td>{{ c.titulo_evento }}</td>
                         <td>{{c.fecha_inicio}}</td>
                         <td>{{c.fecha_finalizacion}}</td>
                         <td>{{c.ciudad}}</td>
-                        <td>{{ c.cupo_personas }} Personas</td>
+                        <td>{% if c.cupo_personas %}{{ c.cupo_personas }}{% else %} No disponible {% endif %}</td>
                         <td>{{ c.get_estado_display }}</td>
                         <td>
                             <a href='{% url 'ver_evento_nacional' c.id %}'>
