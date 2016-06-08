@@ -9,8 +9,8 @@ class CalendarioForm(ModelForm):
     def __init__(self, *args, **kwargs):
         deporte_id = kwargs.pop('deporte_id',None)
         super(CalendarioForm, self).__init__(*args, **kwargs)
-        #self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
-        self.fields['tipo'].widget.attrs.update({'readonly': True}) #Mientras se definen los otros tipos
+        self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
+        #self.fields['tipo'].widget.attrs.update({'readonly': True}) #Mientras se definen los otros tipos
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['modalidad'] = adicionarClase(self.fields['modalidad'], 'one')
         self.fields['categoria'] = adicionarClase(self.fields['categoria'], 'one')
@@ -24,16 +24,10 @@ class CalendarioForm(ModelForm):
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_inicio']
         fecha_fin = self.cleaned_data['fecha_finalizacion']
-        fecha_comienzo_pre = self.cleaned_data['fecha_inicio_preinscripcion']
-        fecha_fin_pre = self.cleaned_data['fecha_finalizacion_preinscripcion']
         if fecha_fin < fecha_comienzo:
             msg = "La fecha de finalización es menor a la fecha de comienzo"
             self.add_error('fecha_inicio', msg)
             self.add_error('fecha_finalizacion', msg)
-        if fecha_fin_pre < fecha_comienzo_pre:
-            msg = "La fecha de finalización de preinscripcion es menor a la fecha de comienzo"
-            self.add_error('fecha_inicio_preinscripcion', msg)
-            self.add_error('fecha_finalizacion_preinscripcion', msg)
 
     class Meta:
         model = CalendarioNacional
@@ -41,6 +35,4 @@ class CalendarioForm(ModelForm):
         widgets = {
             'fecha_inicio': MyDateTimeWidget(),
             'fecha_finalizacion': MyDateTimeWidget(),
-            'fecha_inicio_preinscripcion': MyDateTimeWidget(),
-            'fecha_finalizacion_preinscripcion': MyDateTimeWidget()
         }

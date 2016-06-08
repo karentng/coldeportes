@@ -18,7 +18,7 @@
                 {% endif %}
             {% else %}
                 <li {% if "/calendario-deportivo/registro" in request.path %} class="active" {% endif %}>
-                    <a href="{% url 'registro_calendario_nacional' %}">Registrar Evento</a>
+                    <a href="{% url 'registro_calendario_nacional' %}">Registrar evento</a>
                 </li>
                 <li {% if "/calendario-deportivo/listar" in request.path %} class="active" {% endif %}>
                     <a href="{% url 'listado_calendario_nacional' %}">Listar eventos registrados</a>

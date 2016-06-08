@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Entidades</a>
+    <li class="active">Buscar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Entidades
+{% endblock %}
+
+{% block titulo_panel %}
+    <i class="fa fa-qrcode"></i> Buscador de entidades
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido %}
+    <br/>
+    <h1 class="page-header">Buscador de Entidades <small>{% if listado_resultados %}{{cantidad_resultados}} {% if cantidad_resultados > 1 %}fueron encontrados {% else %} fue encontrado {% endif %}{% endif %}</small></h1>
+    <div class="row">
+        <form  method="POST">{% csrf_token %}
+            <div class="col-md-10">       
+                <div class="col-md-6 add-tooltip"  data-placement="top" data-toggle="tooltip" data-original-title="Ingrese un nombre o palabras claves para buscar una entidad">
+                    {% bootstrap_field form.nombre layout="vertical" %}
+                </div>
+                <div class="col-md-3 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione uno o más tipos de entidad">
+                    {% bootstrap_field form.tipo layout="vertical" %}
+                </div>
+
+                 <div class="col-md-3 add-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="Seleccione una o más departamentos">
+                    {% bootstrap_field form.departamento layout="vertical" %}
+                </div>
+            </div>
+            </br>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary">
+                    <span class="fa fa-search"></span> Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+    <h4>Resultados</h4>
+    {% if listado_resultados %}
+        <ul class="result-list">    
+
+            {% for entidad in listado_resultados %}
+            <li>
+                <div class="result-image col-md-1">
+                    <a href="http://{{ entidad.domain_url }}"><img src="{% if entidad.foto_info %}{{ MEDIA_URL }}{{ entidad.foto_info }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" alt="Foto Entidas" /></a>
+                </div>
+                <div class="result-info col-md-6">
+                    <h4 class="title"><a href="http://{{ entidad.domain_url }}">{{entidad.nombre|upper}}</a></h4>
+                    <p class="location">
+                        {% if entidad.obtenerTenant.discapacidad %}
+                            <b>Discapacidad: {{entidad.obtenerTenant.get_discapacidad_display }}</b>
+                        {% elif entidad.obtenerTenant.disciplina %}
+                            <b>Disciplina Deportiva: {{entidad.obtenerTenant.disciplina }}</b>
+                        {% else %}
+                            <b>No hay disponible ninguna discapacidad/disciplina</b>
+                        {% endif %}
+                    </p>
+                    <p class="desc">
+                        {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
+                    </p>
+
+                    <div class="btn-row">
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Ciudad(Departamento)">
+                            <i class="fa fa-fw fa-globe"></i>
+                        </a><span>{% if entidad.ciudad %} {{entidad.ciudad }} {% else %} No especificada{% endif %}</span>
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Dirección">
+                            <i class="fa fa-fw fa-home"></i>
+                        </a><span>{% if entidad.direccion %} {{entidad.direccion }} {% else %} No especificada{% endif %}</span>
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Teléfono">
+                            <i class="fa fa-fw fa-phone"></i>
+                        </a><span>{% if entidad.telefono %} {{entidad.telefono }} {% else %} No especificado{% endif %}</span>
+                        <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Pagina web">
+                            <i class="fa fa-fw fa-link"></i>
+                        </a><span>{% if entidad.pagina_web %} {{entidad.pagina_web }} {% else %} No especificado{% endif %}</span>
+                    </div>
+                </div>
+                <div class="result-price col-md-1">
+                    {% if entidad.tipo == 5 %}{{ entidad.obtenerTenant.get_tipo_ente_display }}{% else %}{{ entidad.get_tipo_display }} {% endif %}
+                    <a href="http://{{ entidad.domain_url }}" class="btn btn-success btn-block">Ir a la entidad</a>
+                </div>
+            </li>
+
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="col-md-5"><h5>No hay resultados para la búsqueda.</h5></div><br/><br/><br/><br/><br/>
+    {% endif %}
+
+{% endblock %}
+
+{% block css %}       
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/masked-input/masked-input.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/password-indicator/js/password-indicator.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-combobox/js/bootstrap-combobox.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/moment.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="{{STATIC_URL}}js/form-plugins.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            FormPlugins.init();
+        });
+    </script>
+
+{% endblock %}

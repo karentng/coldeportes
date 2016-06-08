@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Entidades</a>
+    <li class="active">Jerarquía</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Jerarquía de Entidades
+{% endblock %}
+
+{% block titulo_panel %}
+    Jerarquía de Entidades
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/jstree/dist/jstree.min.js"></script>
+    <script>
+        var handleJstreeDefault = function() {
+            $('#jstree-jerarquia').jstree({
+                "core": {
+                    "themes": {
+                        "responsive": false
+                    },
+                    'data': {{ entidades|safe }}
+                },
+                "types": {
+                    "default": {
+                        "icon": "fa fa-dribbble text-warning fa-lg"
+                    },
+                    "file": {
+                        "icon": "fa fa-dribbble text-inverse fa-lg"
+                    }
+                },
+                "plugins": ["types"]
+            });
+
+            $('#jstree-jerarquia').on('select_node.jstree', function(e,data) {
+                var link = $('#' + data.selected).find('a');
+                if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
+                    if (link.attr("target") == "_blank") {
+                        link.attr("href").target = "_blank";
+                    }
+                    document.location.href = link.attr("href");
+                    return false;
+                }
+            });
+        };
+        var TreeView = function () {
+            "use strict";
+            return {
+                //main function
+                init: function () {
+                    handleJstreeDefault();
+                }
+            };
+        }();
+    </script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+{% endblock %}
+
+{% block css %}
+<link href="{{STATIC_URL}}plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block script %}
+    <script>
+		$(document).ready(function() {
+			App.init();
+			TreeView.init();
+		});
+	</script>
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="page-header"> Jerarquía de Entidades</h1>
+            <p>A continuación se presenta un mapa jerarquico de las entidades que dependen de la entidad <b>{{ nombre_entidad }}</b>, puede dar click en los nombres para ir a la entidad:</p> <br/>
+
+            <div id="jstree-jerarquia"></div>
+        </div>
+    </div>
+{% endblock %}

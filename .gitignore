@@ -26,3 +26,5 @@ gestion_eventos/migrations
 listados_doping/migrations
 reconocimiento_deportivo/migrations
 reserva_escenarios/migrations
+settings.py
+.DS_Store
