@@ -26,7 +26,11 @@ def solicitar(request, reconocimiento_id = None):
     except Exception:
         reconocimiento = None
 
-    validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
+    if reconocimiento:
+        validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
+    else:
+        validado = True
+        mensaje = ''
     if validado:
         form = ReconocimientoDeportivoForm(instance = reconocimiento)
 
@@ -76,8 +80,6 @@ def validar_creacion(request, reconocimiento):
         else:
             mensaje = 'La solicitud no se puede editar porque ya fue completada.'
             return False, mensaje
-    else:
-        return True, mensaje
 
 
 @login_required
