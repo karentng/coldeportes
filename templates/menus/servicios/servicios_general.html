@@ -8,9 +8,7 @@
     {% if request.tenant.schema_name == 'public' %}
 
         {% include "menus/aplicacion/calendario_deportivo.html" %}
-        {% if user.is_superuser %}
-            {% include "menus/servicios/registro_resultados.html" %}
-        {% endif %}
+        {% include "menus/servicios/registro_resultados.html" %}
 
     {% else %}
 
@@ -26,8 +24,8 @@
         {% include "menus/servicios/gestion_eventos.html" %}        
         {# include "menus/servicios/reserva_escenarios.html" #}
         {% if perms.entidades.add_calendarionacional %}
-        {% include "menus/aplicacion/calendario_deportivo.html" %}
-    {% endif %}
+            {% include "menus/aplicacion/calendario_deportivo.html" %}
+        {% endif %}
 
     {% endif %}
 

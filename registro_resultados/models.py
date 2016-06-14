@@ -15,7 +15,12 @@ class Juego(models.Model):
 
     
     def __str__(self):
-        return self.nombre+", Año: "+str(self.anio)
+        return self.nombre +", AÑO: "+str(self.anio)
+
+    def save(self, *args, **kwargs):
+        self.nombre = self.nombre.upper()
+        self.descripcion = self.descripcion.upper()
+        super(Juego, self).save(*args, **kwargs)
 
 class Competencia(models.Model):
     TIPOS_PARTICIPANTES = (
