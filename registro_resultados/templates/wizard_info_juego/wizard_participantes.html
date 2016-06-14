@@ -63,6 +63,7 @@
             <table id="tabla-participantes" class="table table-bordered table-hover">
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Nombre</th>
                         <th>Departamento</th>
                         <th>Posición</th>
@@ -78,30 +79,31 @@
                 <tbody>
                     {% for participante in participantes %}
                     <tr>
+                        <td>{{participante.id}}</td>
                         <td>{{participante.nombre}}</td>
                         <td>{{participante.departamento}}</td>
                         <td>{{participante.posicion}}</td>
                         <td>{{participante.get_genero_display}}</td>
                         {% if individual %}<td>{{participante.club}}</td>{% endif %}
-                        {% if participante.tiempo %}<td>{{participante.tiempo}}</td>
-                        {% elif participante.puntos %}<td>{{participante.puntos}}</td>
-                        {% elif participante.metros %}<td>{{participante.metros}}</td>{% endif %}
+                        {% if competencia.tipo_registro == 1 %}<td>{% if participante.tiempo %}{{participante.tiempo}}{% else %} No Registra {% endif %}</td>
+                        {% elif competencia.tipo_registro == 2 %}<td>{% if participante.puntos %}{{participante.puntos}}{% else %}No registra{% endif %}</td>
+                        {% elif competencia.tipo_registro == 3 %}<td>{% if participante.metros %}{{participante.metros}}{% else %}No Registra{% endif %}</td>{% endif %}
                         {% if participante.marca %}<td>{{participante.marca}}</td>{% else %}<td> -- </td>{% endif %}
                         <td>
                           {% if individual %}
-                            {% if participante.puntos %}
-                              <a href='{% url "participante_puntos" competencia.id participante.id %}'>
-                                  <i class="fa fa-edit"></i> Editar
-                              </a><br>
-                            {% elif participante.metros %}
-                              <a href='{% url "participante_metros" competencia.id participante.id %}'>
-                                  <i class="fa fa-edit"></i> Editar
-                              </a><br>
-                            {% elif participante.tiempo %}
+                            {% if competencia.tipo_registro == 1 %}
                               <a href='{% url "participante_tiempos" competencia.id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                            {% else%}
+                            {% elif competencia.tipo_registro == 2 %}
+                              <a href='{% url "participante_puntos" competencia.id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
+                            {% elif competencia.tipo_registro == 3 %}
+                              <a href='{% url "participante_metros" competencia.id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>                            
+                            {% else %}
                               <a href='{% url "participante_posicion" competencia.id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
@@ -113,15 +115,15 @@
                             <a href='{% url "participante_equipo" competencia.id participante.id  %}'>
                                 <i class="fa fa-check"></i> Registrar Integrantes
                             </a><br>
-                            {% if participante.puntos %}
+                            {% if competencia.tipo_registro == 2 %}
                               <a href='{% url "equipo_puntos" competencia.id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                            {% elif participante.metros %}
+                            {% elif competencia.tipo_registro == 3 %}
                               <a href='{% url "equipo_metros" competencia.id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
-                            {% elif participante.tiempo %}
+                            {% elif competencia.tipo_registro == 1 %}
                               <a href='{% url "equipo_tiempos" competencia.id participante.id %}'>
                                   <i class="fa fa-edit"></i> Editar
                               </a><br>
