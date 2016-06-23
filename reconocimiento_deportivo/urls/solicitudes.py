@@ -4,8 +4,8 @@ from django.views.generic.base import TemplateView
 from reconocimiento_deportivo.views import solicitudes
 
 urlpatterns = patterns('reconocimiento_deportivo.views.solicitudes',
-    url(r'^registro$', 'solicitar', name='reconocimiento_deportivo_solicitar'),
-    url(r'^registro/(\d+)$', 'solicitar', name='reconocimiento_deportivo_solicitar'),
+    url(r'^tramitar$', 'tramitar', name='reconocimiento_deportivo_tramitar'),
+    url(r'^tramitar/(\d+)$', 'tramitar', name='reconocimiento_deportivo_tramitar'),
     url(r'^discusion/(\d+)$', 'editar_solicitud', name='editar_solicitud_reconocimiento'),
     url(r'^listar$', 'listar_reconocimientos', name='listar_reconocimientos'),
     url(r'^anular/(\d+)$', 'anular_solicitud', name='cancelar_solicitud_reconocimiento'),
