@@ -1,16 +1,16 @@
 from django import forms
 from .models import Noticia
-from coldeportes.utilities import verificar_tamano_archivo
+from coldeportes.utilities import MyDateWidget
 
 
 class NoticiaForm(forms.ModelForm):
     required_css_class = 'required'
 
-    def clean(self):
-        cleaned_data = super(NoticiaForm, self).clean()
-        self = verificar_tamano_archivo(self, cleaned_data, "foto")
-        return self.cleaned_data
-
     class Meta:
         model = Noticia
-        fields = '__all__'
+        fields = ('titulo', 'fecha_inicio', 'fecha_expiracion', 'autor', 'video', 'cuerpo_noticia', 'etiquetas')
+
+        widgets = {
+            'fecha_inicio': MyDateWidget(),
+            'fecha_expiracion': MyDateWidget()
+        }

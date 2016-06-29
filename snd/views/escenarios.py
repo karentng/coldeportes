@@ -11,6 +11,7 @@ from entidades.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from coldeportes.utilities import *
+import json
 
 
 @login_required
@@ -122,8 +123,13 @@ def ver_escenario(request, escenario_id, id_entidad):
     fotos = Foto.objects.filter(escenario=escenario)
     videos =  Video.objects.filter(escenario=escenario)
     historicos =  DatoHistorico.objects.filter(escenario=escenario)
-    mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
+    mantenimientos =  Mantenimiento.objects.filter(escenario=escenario).order_by("-fecha_ultimo_mantenimiento")
     contactos = Contacto.objects.filter(escenario=escenario)
+
+    datos_georreferenciacion = escenario.obtener_atributos()
+    posicion_inicial = escenario.posicionInicialMapa()
+
+    #print(datos_georreferenciacion[0])
 
     return render(request, 'escenarios/ver_escenario.html', {
         'escenario': escenario,
@@ -134,7 +140,9 @@ def ver_escenario(request, escenario_id, id_entidad):
         'videos': videos,
         'mantenimientos': mantenimientos,
         'escenario_id': escenario_id,
-        'contactos': contactos
+        'contactos': contactos,
+        'datosMostrar': json.dumps(datos_georreferenciacion),
+        'posicionInicial': json.dumps(posicion_inicial),
     })
 
 @login_required
@@ -152,6 +160,7 @@ def wizard_nuevo_identificacion(request):
     :param request:   Petición realizada
     :type request:    WSGIRequest
     """
+    from django.db import IntegrityError
 
     identificacion_form = IdentificacionForm( )
 
@@ -160,14 +169,21 @@ def wizard_nuevo_identificacion(request):
         identificacion_form = IdentificacionForm(request.POST)
 
         if identificacion_form.is_valid():
-            escenario = identificacion_form.save(commit=False)
-            escenario.entidad =  request.tenant
-            escenario.nombre = escenario.nombre.upper()
-            escenario.direccion = escenario.direccion.upper()
-            escenario.barrio = escenario.barrio.upper()
-            escenario.nombre_administrador = escenario.nombre_administrador.upper()
-            escenario.save()
-            return redirect('wizard_caracterizacion', escenario.id)
+            try:
+                escenario = identificacion_form.save(commit=False)
+                escenario.entidad =  request.tenant
+                escenario.nombre = escenario.nombre.upper()
+                escenario.direccion = escenario.direccion.upper()
+                escenario.barrio = escenario.barrio.upper()
+                escenario.nombre_administrador = escenario.nombre_administrador.upper()
+                escenario.save()
+                return redirect('wizard_caracterizacion', escenario.id)
+
+            except IntegrityError as e:
+                if 'unique constraint' in str(e):
+                    escenario = identificacion_form.save(commit=False)
+                    identificacion_form = IdentificacionForm(instance=escenario)
+                    messages.error(request, "El nombre del escenario que intenta crear ya fue registrado.")
 
 
     return render(request, 'escenarios/wizard/wizard_escenario.html', {
@@ -194,27 +210,34 @@ def wizard_identificacion(request, escenario_id):
     :param escenario_id:   Identificador del escenario
     :type escenario_id:    String
     """
-
+    from django.db import IntegrityError
     try:
         escenario = Escenario.objects.get(id=escenario_id)
     except Exception:
         escenario = None
 
-    identificacion_form = IdentificacionForm(instance=escenario)
+    identificacion_form = IdentificacionEditarForm(instance=escenario)
 
     if request.method == 'POST':
 
-        identificacion_form = IdentificacionForm(request.POST, instance=escenario)
+        identificacion_form = IdentificacionEditarForm(request.POST, instance=escenario)
 
         if identificacion_form.is_valid():
-            escenario = identificacion_form.save(commit=False)
-            escenario.entidad =  request.tenant
-            escenario.nombre = escenario.nombre.upper()
-            escenario.direccion = escenario.direccion.upper()
-            escenario.barrio = escenario.barrio.upper()
-            escenario.nombre_administrador = escenario.nombre_administrador.upper()
-            escenario.save()
-            return redirect('wizard_caracterizacion', escenario_id)
+
+            try:
+                escenario = identificacion_form.save(commit=False)
+                escenario.entidad =  request.tenant            
+                escenario.nombre = escenario.nombre.upper()
+                escenario.direccion = escenario.direccion.upper()
+                escenario.barrio = escenario.barrio.upper()
+                escenario.nombre_administrador = escenario.nombre_administrador.upper()
+                escenario.save()
+                return redirect('wizard_caracterizacion', escenario_id)
+            except IntegrityError as e:
+                if 'unique constraint' in str(e):
+                    escenario = identificacion_form.save(commit=False)
+                    identificacion_form = IdentificacionForm(request.POST, instance=escenario)
+                    messages.error(request, "El nombre del escenario que intenta crear ya fue registrado.")
 
 
     return render(request, 'escenarios/wizard/wizard_escenario.html', {
@@ -249,13 +272,17 @@ def wizard_caracterizacion(request, escenario_id):
     except Exception:
         caracteristicas = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     caracterizacion_form = CaracterizacionForm(instance=caracteristicas)
     
     if request.method == 'POST':
         
-        caracterizacion_form = CaracterizacionForm(request.POST, instance=caracteristicas)
+        caracterizacion_form = CaracterizacionForm(request.POST, request.FILES, instance=caracteristicas)
 
         if caracterizacion_form.is_valid():
             caracteristicas = caracterizacion_form.save(commit=False)
@@ -297,7 +324,11 @@ def wizard_horarios(request, escenario_id):
     except Exception:
         horarios = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     horarios_form = HorariosDisponibleForm()
 
@@ -345,7 +376,11 @@ def wizard_historicos(request, escenario_id):
     except Exception:
         historicos = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     historico_form = DatoHistoricoForm()
 
@@ -398,7 +433,11 @@ def wizard_fotos(request, escenario_id):
     except Exception:
         videos = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     fotos_form = FotoEscenarioForm()
     videos_form = VideoEscenarioForm()
@@ -454,10 +493,12 @@ def wizard_videos(request, escenario_id):
         videos = Video.objects.filter(escenario=escenario_id)
     except Exception:
         videos = None
-
-
-
-    escenario = Escenario.objects.get(id=escenario_id)
+        
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     fotos_form = FotoEscenarioForm()
     videos_form = VideoEscenarioForm()
@@ -496,6 +537,10 @@ def wizard_mantenimiento(request, escenario_id):
     """
     Octubre 13 / 2015
     Autor: Karent Narvaez Grisales
+
+    Marzo 28 / 2016
+    Modificado por: Diego Monsalve
+    Se podrán registrar y visualizar todos los mantenimientos del escenario
     
     Mantenimiento de un escenario
 
@@ -508,30 +553,33 @@ def wizard_mantenimiento(request, escenario_id):
     :type escenario_id:    String
     """
     
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     try:
-        mantenimiento = Mantenimiento.objects.get(escenario=escenario_id)
+        mantenimientos = Mantenimiento.objects.filter(escenario=escenario_id).order_by('-fecha_ultimo_mantenimiento')
     except Exception:
-        mantenimiento = None
+        mantenimientos = None
 
-    mantenimiento_form = MantenimientoEscenarioForm(instance=mantenimiento)
+    mantenimiento_form = MantenimientoEscenarioForm()
 
     if request.method == 'POST':
-        mantenimiento_form = MantenimientoEscenarioForm(request.POST, instance=mantenimiento)
+        mantenimiento_form = MantenimientoEscenarioForm(request.POST)
 
         if mantenimiento_form.is_valid():
-            ultimo_mantenimiento = mantenimiento_form.save(commit=False) 
-
-            ultimo_mantenimiento.escenario = escenario
-            ultimo_mantenimiento.save()
-            return redirect('wizard_contactos', escenario_id)
-
+            mantenimiento = mantenimiento_form.save(commit=False)
+            mantenimiento.escenario = escenario
+            mantenimiento.save()
+            return redirect('wizard_mantenimiento', escenario_id)
 
     return render(request, 'escenarios/wizard/wizard_mantenimiento.html', {
-        'titulo': 'Mantenimiento del Escenario',
+        'titulo': 'Mantenimientos del Escenario',
         'wizard_stage': 6,
         'form': mantenimiento_form,
+        'mantenimientos': mantenimientos,
         'escenario_id': escenario_id,
     })
 
@@ -560,7 +608,11 @@ def wizard_contactos(request, escenario_id):
     except Exception:
         contactos = None
 
-    escenario = Escenario.objects.get(id=escenario_id)
+    try:
+        escenario = Escenario.objects.get(id=escenario_id)
+    except:
+        messages.error(request, 'El escenario que intenta acceder no existe')
+        return redirect('wizard_nuevo_identificacion')
 
     contactos_form = ContactoForm()
 
@@ -639,6 +691,34 @@ def eliminar_historico(request, escenario_id, historico_id):
 
     except Exception:
         return redirect('wizard_historicos', escenario_id)
+
+@login_required
+#@tenant_required
+@all_permission_required('snd.add_escenario')
+def eliminar_mantenimiento(request, escenario_id, mantenimiento_id):
+    """
+    Marzo 28 / 2016
+    Autor: Diego Monsalve
+
+    Eliminar mantenimiento
+
+    Se obtiene el mantenimiento de la base de datos y se elimina
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param escenario_id:   Identificador del escenario
+    :type escenario_id:    String
+    :param mantenimiento_id:   Identificador del dato historico
+    :type mantenimiento_id:    String
+    """
+
+    try:
+        mantenimiento = Mantenimiento.objects.get(id=mantenimiento_id, escenario=escenario_id)
+        mantenimiento.delete()
+        return redirect('wizard_mantenimiento', escenario_id)
+
+    except Exception:
+        return redirect('wizard_mantenimiento', escenario_id)
 
 @login_required
 #@tenant_required

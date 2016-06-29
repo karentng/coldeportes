@@ -17,11 +17,6 @@ class PersonalApoyoForm(ModelForm):
         self.fields['actividad'] = adicionarClase(self.fields['actividad'], 'one')
         self.fields['nacionalidad'] = adicionarClase(self.fields['nacionalidad'], 'many')
 
-    def clean(self):
-        cleaned_data = super(PersonalApoyoForm, self).clean()
-        self = verificar_tamano_archivo(self, cleaned_data, "foto")
-        return self.cleaned_data
-
     class Meta:
         model = PersonalApoyo
         exclude = ('estado','entidad',)
@@ -48,7 +43,6 @@ class VerificarExistenciaForm(forms.Form):
             self.add_error('tipo_id',msg)
         else:
             return True
-
 
 
 class FormacionDeportivaForm(ModelForm):

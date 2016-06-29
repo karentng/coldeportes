@@ -16,8 +16,8 @@
                 if (municipios == '""'){
                     municipios = null;
                 }
-                var disciplinas = JSON.stringify($("#id_disciplinas").val());
                 var reporte = JSON.stringify($("#id_reporte").val());
+                var disciplinas = JSON.stringify($("#id_disciplinas").val());
                 $('#loading').modal('show');
                 $.ajax({
                     url: url,
@@ -51,7 +51,32 @@
                 realizarConsulta();
 
                 var titulo =  $("#id_reporte option:selected").text();
-                $(".titulo").html(titulo); 
+                $(".titulo").html(titulo);
+
+                var visualizacionActual = $("#id_visualizacion").val();
+
+                var reporteSeleccionado = $("#id_reporte").val();
+                var posiblesVisualizaciones = [
+                        {id:1, titulo:"Dona"},
+                        {id:5, titulo:"Gráfica de cilindros"},
+                        {id:6, titulo:"Gráfica de cono"},
+                        
+                ];
+                
+                if(reporteSeleccionado === 'CE' || reporteSeleccionado === 'DT') {
+                    posiblesVisualizaciones = [{id:1, titulo:"Dona"}];
+                }
+
+                $("#id_visualizacion").empty();
+                for(var i in posiblesVisualizaciones) {
+                    var opt = posiblesVisualizaciones[i];
+                    $("#id_visualizacion").append($("<option>").attr("value", opt.id).text(opt.titulo));
+                }
+
+                var opcion = $("#id_visualizacion option[value="+visualizacionActual+"]");
+                opcion.attr("selected","selected");
+
+                $("#id_visualizacion").change();
             });
 
               

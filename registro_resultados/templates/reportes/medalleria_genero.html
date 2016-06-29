@@ -1,0 +1,60 @@
+{% extends "base_reportes.html" %}
+{% load bootstrap3 %}
+
+{% block filtros %}
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            columnas = [nombres_columnas[0], "Cantidad"];
+            tablaDeDatos = TablaDeDatos("tabla", columnas);
+            tablaDeDatos.setDatos(datos);
+            $('#loading').modal('show');
+            url = "{% url url_data %}";
+            realizarConsulta = function realizarConsulta(){
+                var departamentos = JSON.stringify($("#id_departamentos").val());
+                var generos = JSON.stringify($("#id_generos").val());
+                var juegos = JSON.stringify($("#id_juegos").val());
+                $('#loading').modal('show');
+                $.ajax({
+                    url: url,
+                    data: {'departamentos': departamentos,'generos':generos, 'juegos':juegos},
+                    dataType: 'json',
+                    success: function(data) {
+                        var inicio = "MEDALLERÍA POR GÉNERO Y DEPARTAMENTO DE ";                        
+                        Reportes.modificarDatos(data,  inicio.concat($("#id_juegos option:selected").text()));
+                        id = $("#id_juegos").prop('selectedIndex');
+                        $(".titulo").html(inicio.concat($("#id_juegos option:selected").text()));
+
+                        tablaDeDatos.setDatos(data);
+                        tablaDeDatos.verificarActualizacion();
+                        $('#loading').modal('hide');
+                    }, error: function(err){
+                        console.log(err);
+                        $('#loading').modal('hide');
+                    }
+                });
+                $('#loading').modal('hide');
+                
+
+            }
+            $("#id_departamentos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_generos").on("change", function(){
+                realizarConsulta();
+            });
+            $("#id_juegos").on("change", function(){
+                realizarConsulta();
+            });
+               
+              
+        });
+
+        nombreReporte = "{{ nombre_reporte }}";
+        visualizaciones = {{visualizaciones|safe}};
+        nombres_columnas = {{nombres_columnas|safe}};
+        datos = {{datos|safe}};
+
+    </script>
+    
+{% endblock %}

@@ -1,8 +1,10 @@
 # -*- encoding: utf-8 -*-
+import datetime
 from django.forms import *
 from django import forms
 from entidades.models import *
 from coldeportes.utilities import adicionarClase, MyDateWidget
+from entidades.models import TIPOS
 # ----------------------------------------------------- Tenant ----------------------------------------------------------
 
 class LigaForm(forms.ModelForm):
@@ -72,6 +74,7 @@ class ClubForm(forms.ModelForm):
         self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
         self.fields['liga'] = adicionarClase(self.fields['liga'], 'one')
         self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'one')
+        self.fields['tipo_club'] = adicionarClase(self.fields['tipo_club'], 'one')
 
         if instancia != None:
             del self.fields['pagina']
@@ -88,7 +91,7 @@ class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
         exclude = ('schema_name', 'domain_url', 'tipo', 'actores',)
-        fields = ('nombre', 'pagina', 'pagina_web', 'ciudad', 'disciplina','liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
+        fields = ('nombre', 'tipo_club', 'pagina', 'pagina_web', 'ciudad', 'disciplina','liga', 'direccion', 'telefono', 'descripcion', "resolucion", "fecha_resolucion", "fecha_vencimiento", "archivo",)
         widgets = {
             'fecha_resolucion': MyDateWidget(),
             'fecha_vencimiento': MyDateWidget(),
@@ -288,11 +291,11 @@ class PermisosForm(forms.ModelForm):
         ([1,0], 'Liga'),
         ([3,0], 'Club'),
         ([6,2], 'Comité Paralímpico Colombiano'),
-        ([7,0],'Federación Paralimpica'),
-        ([8,0],'Liga Paralimpica'),
-        ([9,0],'Club Paralimpico'),
+        ([7,0], 'Federación Paralimpica'),
+        ([8,0], 'Liga Paralimpica'),
+        ([9,0], 'Club Paralimpico'),
         ([4,0], 'Cajas de Compensación'),
-        ([10,0],'Centro de Acondicionamiento'),
+        ([10,0], 'Centro de Acondicionamiento'),
         ([11,0], 'Escuela de Formación Deportiva'),
     )
 
@@ -306,3 +309,99 @@ class PermisosForm(forms.ModelForm):
     class Meta:
         model = Permisos
         exclude = ('entidad','tipo')
+
+#####TEMPORAL REGISTRO DE MODALIDADES Y CATEOGORIAS####
+class ModalidadForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ModalidadForm, self).__init__(*args, **kwargs)
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+
+    class Meta:
+        model = ModalidadDisciplinaDeportiva
+        exclude = ('',)
+
+class CategoriaForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CategoriaForm, self).__init__(*args, **kwargs)
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+
+    class Meta:
+        model = CategoriaDisciplinaDeportiva
+        exclude = ('',)
+
+class DeporteForm(ModelForm):
+
+    class Meta:
+        model = TipoDisciplinaDeportiva
+        exclude = ('',)
+
+#Formulario Socio de un club
+#Autor: Diego Monsalve
+#Fecha: 02/03/2016
+class SocioClubForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(SocioClubForm, self).__init__(*args, **kwargs)
+        self.fields['ciudad'] = adicionarClase(self.fields['ciudad'], 'one')
+
+    class Meta:
+        model = SocioClub
+        exclude = ('estado','club_id')
+        widgets = {
+            'fecha_incorporacion': MyDateWidget(),
+        }
+
+    def clean(self):
+
+        cleaned_data = super(SocioClubForm, self).clean()
+        if not self._errors:
+            try:
+                fecha_incorporacion = cleaned_data.get('fecha_incorporacion')
+            except Exception:
+                fecha_incorporacion = None
+
+            fecha_actual = datetime.date.today()
+            if fecha_incorporacion:
+                if fecha_incorporacion >= fecha_actual:
+                    mensaje = 'La fecha no es válida, debe ser igual o anterior a la fecha actual'
+                    self.add_error('fecha_incorporacion', mensaje)
+                else:
+                    return cleaned_data
+            else:
+                return cleaned_data
+
+        return cleaned_data
+        
+        
+#Formulario Planes de Costo de un club.
+#Autor: Yalile Bermudes
+#Fecha: 02/03/2016
+class PlanDeCostoForm(ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(PlanDeCostoForm, self).__init__(*args, **kwargs)
+        self.fields['precio'].widget.attrs.update({'min':0})
+
+    class Meta:
+        model = PlanesDeCostoClub
+        exclude = ('estado', )
+
+#Formulario para busqueda de entidades
+#Autor: Daniel Correa
+#Fecha: 24 Mayo 2016
+
+class BuscarEntidadForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(BuscarEntidadForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'many')
+       #self.fields['disciplina'] = adicionarClase(self.fields['disciplina'], 'many')
+        self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'many')
+
+    nombre = forms.CharField(label="Nombre de la Entidad",widget=forms.TextInput(attrs={'placeholder': 'Ingrese nombre de la entidad y/o palabras claves'}),required=False)
+    departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all().order_by('nombre'),widget=forms.SelectMultiple(attrs={'placeholder': 'Departamento de la entidad'}) ,required=False)
+    #disciplina = forms.ModelMultipleChoiceField(label="Disciplina Deportiva",queryset=TipoDisciplinaDeportiva.objects.all().order_by('descripcion'),widget=forms.SelectMultiple(attrs={'placeholder': 'Disciplina de la entidad'}) ,required=False)
+    tipo = forms.MultipleChoiceField(choices=TIPOS, label="Tipo de Entidad", widget=forms.SelectMultiple(attrs={'placeholder': 'Tipo de la entidad'}),required=False)

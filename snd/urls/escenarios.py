@@ -29,5 +29,6 @@ urlpatterns = patterns('snd.views.escenarios',
     url(r'^eliminar/historico/(\d+)/(\d+)$', 'eliminar_historico', name='eliminar_historico'), 
     url(r'^eliminar/foto/(\d+)/(\d+)$', 'eliminar_foto', name='eliminar_foto'), 
     url(r'^eliminar/video/(\d+)/(\d+)$', 'eliminar_video', name='eliminar_video'), 
-    url(r'^eliminar/contacto/(\d+)/(\d+)$', 'eliminar_contacto', name='eliminar_contacto'), 
+    url(r'^eliminar/contacto/(\d+)/(\d+)$', 'eliminar_contacto', name='eliminar_contacto'),
+    url(r'^eliminar/mantenimiento/(\d+)/(\d+)$', 'eliminar_mantenimiento', name='eliminar_mantenimiento'),
 )

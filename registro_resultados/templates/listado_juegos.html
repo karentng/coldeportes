@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block titulo %}Juegos-SIND-Coldeportes{% endblock %} 
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Listado de Juegos</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de Juegos
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de Juegos
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-entidades";
+        columns_number = 4;
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Año</th>
+                            <th>País</th>
+                            <th>Descripción</th>
+                            <th>Logo</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for juego in juegos %}
+                        <tr>
+                            <td>{{juego.nombre}}</td>
+                            <td>{{juego.anio}}</td>
+                            <td>{{juego.pais}}</td>
+                            <td>{% if juego.descripcion %}{{juego.descripcion}}{% endif %}</td>
+                            <td align="center">
+                                {% if juego.imagen == "" or juego.imagen == None %}
+                                    <img src="{{STATIC_URL}}img/juego.png" height='60' width='60'>
+                                {% else %}
+                                    <img src="{{MEDIA_URL}}{{juego.imagen}}" height='60' width='100'>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href='{% url 'listado_competencias' juego.id %}'>
+                                    <i class="fa fa-check"></i> Competencias
+                                </a><br>
+                                <a href='{% url 'registrar_juego' juego.id %}'>
+                                    <i class="fa fa-edit"></i> Editar
+                                </a><br>
+                                <a href="#" data-target="#modal-eliminar-{{juego.id}}" data-toggle="modal">
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </a><br>
+
+                                <div class="modal fade" id="modal-eliminar-{{juego.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Eliminar Competencia</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar el juego con el nombre: "<i>{{juego.nombre}}</i>"?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
+                                                <a href="{% url 'eliminar_juego' juego.id  %}" class="btn btn-sm btn-danger">Si</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

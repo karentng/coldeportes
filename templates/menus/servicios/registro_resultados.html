@@ -1,0 +1,40 @@
+<li class="has-sub {% if "/registro-resultados/" in request.path %} active {% endif %}">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <span class="colorMenu">Reg. Resultados <span class="label label-theme m-l-5">NEW</span>
+        </span>
+    </a>
+    <ul class="sub-menu"> 
+        {% if user.is_superuser %}       
+        <li class="has-sub {% if '/registro-resultados/juegos' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                Juegos
+            </a>
+            <ul class="sub-menu">
+                <li {% if "/registro-resultados/juegos/registro" in request.path  %} class="active" {% endif %}>
+                    <a href="{% url 'registrar_juego' %}">Registrar Juego</a>
+                </li>
+                <li {% if "/registro-resultados/juegos/listar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'listar_juegos' %}">Listar Juegos</a>
+                </li>
+            </ul>
+        </li>
+        {% endif %}
+        <li class="has-sub {% if '/registro-resultados/reporte/' in request.path %} active {% endif %}">
+            <a href="javascript:;">
+                <b class="caret pull-right"></b>
+                Reportes
+            </a>
+            <ul class="sub-menu">
+                <li {% if "/registro-resultados/reporte/medalleria-genero" in request.path  %} class="active" {% endif %}>
+                    <a href="{% url 'reporte_medalleria_genero' %}">Medallería Género</a>
+                </li>
+                <li {% if "/registro-resultados/reporte/tabla-medalleria" in request.path  %} class="active" {% endif %}>
+                    <a href="{% url 'reporte_tabla_medalleria' %}">Tabla de Medallería</a>
+                </li>
+            </ul>
+        </li>
+       
+    </ul>
+</li>

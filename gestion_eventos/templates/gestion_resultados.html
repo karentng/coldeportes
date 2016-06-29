@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{%  url 'listar_eventos' %}">Eventos</a>
+	<li><a href="{%  url 'registrar_actividad' actividad.evento_perteneciente%}">Actividades</a>
+	<li class="active">Resultados</li>
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'registrar_actividad' actividad.evento_perteneciente %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
+{% block css %}
+    {{ form.media }}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block titulo_panel %}
+	Resultados
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+    {% if "gestion_eventos.change_evento" in perms %}
+        <div class="col-md-4" >
+            <h3>Actividad: {{ actividad.titulo }}</h3>
+            <form id="form-resultado" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        {% if edicion %}
+                            <h3>Modificar resultado</h3>
+                        {% else %}
+                            <h3>Registrar resultado</h3>
+                        {% endif %}
+                        {% bootstrap_form form %}
+                        {% if edicion %}
+                            <button class="pull-right row btn btn-primary m-l-15" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar</button>
+                            <a href="{% url 'registrar_resultado' actividad.id %}" class="pull-right row btn btn-warning" type="button" style="margin-top:10px"><i class="fa fa-ban"></i> Cancelar</a>
+                        {% else %}
+                            <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+        <div class="{% if "gestion_eventos.change_evento" in perms %}col-md-8{% else %}col-md-12{% endif %}">
+            <h3>Resultados Registrados Actualmente:</h3>
+
+            {% if lista_resultados %}
+                <div class="table-responsive">
+                    <table id="tabla-resultados" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Reconocimiento</th>
+                                <th>Participante Ganador</th>
+                                <th>Estado</th>
+                                {% if "gestion_eventos.change_evento" in perms %}
+                                    <th>Opciones</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resultado in lista_resultados %}
+                                <tr>
+                                    <td>{% if resultado.titulo %}{{ resultado.titulo|upper }}{% else %}{{ actividad.titulo|upper }}{% endif %}</td>
+                                    <td>{{resultado.reconocimiento|upper}}</td>
+                                    <td>
+                                        {{ resultado.paticipante_reconocido|upper }}
+                                    </td>
+                                    <td>
+                                        {% if resultado.estado == 1 %}
+                                            ACTIVO
+                                        {% else %}
+                                            INACTIVO
+                                        {% endif %}
+                                    </td>
+                                {% if "gestion_eventos.change_evento" in perms %}
+                                    <td>
+                                        {% if resultado.estado == 1 %}
+                                            <a href="{% url 'editar_resultado' resultado.id %}"><i class="fa fa-edit"></i> Editar</a><br>
+                                        {% endif %}
+                                        <a data-toggle="modal" data-target="#modal-desactivate" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_resultado' resultado.id %}">
+                                            <span class=" add-tooltip" data-toggle="tooltip" title="Activar/Inactivar" href="#">
+                                                <i class="fa fa-ban"></i> A/I
+                                            </span>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                                </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="modal-desactivate">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h4 class="modal-title">Cambiar de estado resultado:</h4>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Está seguro que desea cambiar el estado de este resultado?
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning fade in m-b-15"><strong>No hay resultados registrados</strong></div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-resultados";
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
+        $(document).ready(function(){
+            $("#id_cantidad_puestos").change(function(){
+                var val = $(this).val();
+                if(val){
+                    $(".form-group.animated").removeClass("fadeInDown");
+                    $(".form-group.animated:lt("+val+")").addClass("fadeInDown");
+                }
+            });
+        });
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+
+    <script src="{{ STATIC_URL }}js/validaciones/gestion_eventos/validaciones-resultados.js"></script>
+
+    <script src="{{STATIC_URL}}plugins/DataTables/js/jquery.dataTables.js"></script>
+    <script src="{{STATIC_URL}}plugins/DataTables/js/dataTables.tableTools.js"></script>
+{% endblock %}

@@ -1,0 +1,24 @@
+
+<!-- Modal -->
+<div class="modal fade" id="myModalCrop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close " data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Imagen</h4>
+            </div>
+
+            <div class="modal-body">
+                <div id='cropContainerHeader'>
+                    <div id='image-upload'></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="reset-crop">
+                    Cambiar Foto
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="UploadImg">{% if foto %}Cambiar{% else %}Subir{% endif %}</button>
+            </div>
+        </div>
+    </div>
+</div>

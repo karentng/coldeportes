@@ -1,0 +1,79 @@
+{% extends 'dirigentes/wizard/wizard_identificacion.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/validaciones/dirigentes/wizard_formacademica_validations.js"></script>
+    <script src="{{STATIC_URL}}js/funciones_calculos/deportistas/historia_academica.js"></script>
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'dirigentes/wizard/_wizard.html' %}
+        <div class="row">
+            <fieldset class="col-md-6" >
+                <form id="form-wizard-formacademica" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <legend class="pull-left width-full">
+                            {% include 'dirigentes/wizard/_mensajes.html' %}
+                        </legend>
+                        {% bootstrap_form form layout='vertical' %}
+
+                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
+                    </div>
+                </div>
+                </form>
+            </fieldset>
+            <div class="col-md-6">
+                <h4>Formación Académica:</h4>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th align="center">Nivel</th>
+                            <th align="center">Institución</th>
+                            <th align="center">Fecha Finalización</th>
+                            <th align="center">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for historico in historicos %}
+                        <tr>
+                            <td align="center">{{historico.nivel}}</td>
+                            <td align="center">{{historico.institucion}}</td>
+                            <td align="center">{% if historico.fecha_finalizacion %} {{historico.fecha_finalizacion}} {%else%} Actual {%endif%}</td>
+                            <td align="center">{{historico.estado}}</td>
+                            <td align="center">
+                                <a href="#modal-desactivate-{{ historico.id }}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate-{{ historico.id }}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Eliminar Historial Académico:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar este historial académico?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                <a href="{% url 'dirigentes_eliminar_formacademica' dirigente_id edicion %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <ul class="pager bwizard-buttons">
+            <a href="{% url 'dirigentes_funciones' dirigente_id=dirigente_id edicion=edicion %}" class="btn btn-primary pull-left">{% trans '← Anterior' %}</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='listar' edicion=edicion %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i>{% trans ' Finalizar' %}</a>
+            <a href="{% url 'dirigentes_finalizar' opcion='nuevo' edicion=edicion %}" class="btn btn-warning pull-right" style="margin-right: 20px;"><i class="fa fa-circle-o-notch"></i>{% trans ' Guardar y registrar otro dirigente →' %}</a>
+        </ul>
+
+{% endblock %}
+

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Registro de Competencia</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Registro de Competencia
+{% endblock %}
+
+{% block titulo_panel %}
+    Registro de Competencia por Modalidad
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/funciones_calculos/registro_resultados/registro_competencia.js?version=1.1"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>   
+    <script src="{{ STATIC_URL }}js/validaciones/registro_resultados/registro_competencia-validations.js?version=1.1"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">    
+    {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block contenido_panel %}
+<div  class="wrapper bg-silver-lighter clearfix">
+    <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
+    <div class="pull-right">
+        <div class="btn-group btn-toolbar">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+        </div>
+    </div>
+</div>
+<br><br>
+<div class="row">
+    <div class="col-md-12">
+        <fieldset>
+            <form id="form-competencia" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="well row">
+                    <div class="row">
+                        <h3>{{titulo}}</h3>
+                        
+                        {% for field in form %}
+                            <div class="col-md-6">
+                                
+                                {% bootstrap_field field layout="vertical" %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr>
+                    <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-check-square-o"></i> Registrar</button>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+        
+</div>                        
+                    
+{% endblock %}

@@ -15,4 +15,16 @@ reportes/migrations
 entidades/migrations
 transferencias/migrations
 gestion_usuarios/migrations
-
+registro_resultados/migrations
+reconocimiento_deportivo/migrations
+solicitudes_escenarios/solicitud/migrations
+solicitudes_escenarios/respuesta/migrations
+publicidad/migrations
+listados_doping/migrations
+buscador/migrations
+gestion_eventos/migrations
+listados_doping/migrations
+reconocimiento_deportivo/migrations
+reserva_escenarios/migrations
+settings.py
+.DS_Store

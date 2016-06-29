@@ -36,22 +36,27 @@
 {% block contenido_panel %}
     {% include 'escenarios/wizard/_wizard.html' %}
     <fieldset>
-        <form id="form-wizard-escenarios" action="" method="post">{% csrf_token %}
+        <form id="form-wizard-escenarios" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="well row">
-                <div class="col-xs-12">
+                <div class="row">
                     <h3>{{titulo}}</h3>
                     
                     {% for field in form %}
-                        <div class="col-md-6">
-                            
-                            {% bootstrap_field field layout="vertical" %}
-                        </div>
+                        {% if field.name == "plano_archivo" %}
+                            <div class="col-md-6 {% if form.tiene_planos.value  %}fadeInDown{% endif %} display-none animated planos-contenedor">
+                                {% bootstrap_field field layout="vertical" %}
+                            </div>
+                        {% else %}
+                            <div class="col-md-6">
+                                {% bootstrap_field field layout="vertical" %}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
+                <hr>
+                <a href="{% url 'wizard_identificacion' escenario_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+                <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
             </div>
-            <hr>
-            <a href="{% url 'wizard_identificacion' escenario_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
-            <button class="btn btn-primary pull-right" type="submit">Siguiente →</button>
         </form>
     </fieldset>
     
@@ -62,7 +67,7 @@
     <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
-    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_escenario-validations.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_caracteristicas-validations.js"></script>
 {% endblock %}
 
 {% block script %}
@@ -70,6 +75,10 @@
         $(document).ready(function() {
             App.init();
             FormWizard.init();
+
+            $("#id_tiene_planos").click(function(){
+                $(".planos-contenedor").toggleClass("fadeInDown");
+            });
         });
     </script>
 {% endblock %}

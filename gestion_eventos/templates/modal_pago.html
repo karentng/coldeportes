@@ -1,0 +1,27 @@
+
+{% load bootstrap3 %}
+<div class="modal fade" id="modal-pago-{{ participante.0.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="titulo-modal">Gestión pago:</h2>
+            </div>
+            <div class="modal-body">
+                <p class="datos-participante">
+                    Participante: {{ participante.0|upper }}<br>
+                    Evento: {{ evento.titulo_evento|upper }}
+                </p>
+                <hr>
+                <form id="pago_form" method="post" action="{% url 'gestion_pago' participante.0.id %}">
+                {% csrf_token %}
+                    {% bootstrap_form participante.1 %}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" style="margin-left: 15px;">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,8 @@
 from django.db import models
-
+"""
+Para Agregar una tupla a la lista de permisos se definió que el primer elemento es el nombre del permiso y el segundo el nombre del 
+campo de actores que le corresponde
+"""
 PERMISOS_DIGITADOR = [
     ['add_cajacompensacion', 'cajas'],
     ['change_cajacompensacion', 'cajas'],
@@ -42,9 +45,43 @@ PERMISOS_DIGITADOR = [
     ['delete_noticia', 'noticias'],
     ['view_noticia', 'noticias'],
 
+
+    ['add_evento', 'eventos'],
+    ['change_evento', 'eventos'],
+    ['view_evento', 'eventos'],
+
     ['add_escueladeportiva', 'escuelas_deportivas'],
     ['change_escueladeportiva', 'escuelas_deportivas'],
-    ['view_escueladeportiva', 'escuelas_deportivas']
+    ['view_escueladeportiva', 'escuelas_deportivas'],
+
+    ['add_clasificado', 'publicidad'],
+    ['change_clasificado', 'publicidad'],
+    ['view_clasificado', 'publicidad'],
+
+    ['add_casodoping', 'listados_doping'],
+    ['change_casodoping', 'listados_doping'],
+    ['view_casodoping', 'listados_doping'],
+
+    ['add_solicitudescenario', 'solicitud'],
+    ['change_solicitudescenario', 'solicitud'],
+    ['view_solicitudescenario', 'solicitud'],
+
+    ['add_listasolicitudes', 'respuesta'],
+    ['change_listasolicitudes', 'respuesta'],
+    ['view_listasolicitudes', 'respuesta'],
+
+    ['add_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['change_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['view_reconocimientodeportivo', 'reconocimiento_solicitud'],
+
+    ['add_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+    ['change_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+    ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+
+    ['add_calendarionacional', 'calendario_deportivo'],
+    ['change_calendarionacional', 'calendario_deportivo'],
+    ['view_calendarionacional', 'calendario_deportivo'],
+
 ]
 
 PERMISOS_LECTURA = [
@@ -58,5 +95,13 @@ PERMISOS_LECTURA = [
     ['view_centrobiomedico', 'centros_biomedicos'],
     ['view_norma', 'normas'],
     ['view_noticia', 'noticias'],
-    ['view_escueladeportiva', 'escuelas_deportivas']
+    ['view_escueladeportiva', 'escuelas_deportivas'],
+    ['view_clasificado', 'publicidad'],
+    ['view_casodoping', 'listados_doping'],
+    ['view_solicitudescenario', 'solicitud'],
+    ['view_listasolicitudes', 'respuesta'],
+    ['view_reconocimientodeportivo', 'reconocimiento_solicitud'],
+    ['view_listasolicitudesreconocimiento', 'reconocimiento_respuesta'],
+    ['view_evento', 'eventos'],
+    ['view_calendarionacional', 'calendario_deportivo'],
 ]

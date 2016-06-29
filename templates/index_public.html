@@ -90,10 +90,39 @@
             $("#noticias").css("display","block");
 
         });
+
+        calendarEvents = [];
+        {% for evento in eventos %}
+            calendarEvents.push([
+
+                '{{ evento.fecha_inicio|date:"j/n/Y" }}',
+                '{{ evento.titulo_evento }}',
+                '#',
+                '#008a8a',
+                '{{ evento.objetivo }} <div class="text-right"><a href="calendario-deportivo/ver-evento/{{ evento.id }}"> Ver mas <i class="fa fa-angle-double-right"></i></a></div>'
+
+            ]);
+        {% endfor %}
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}plugins/bootstrap-calendar/js/bootstrap_calendar.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/gestion_eventos/calendar.dashboard.js"></script>
+
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+    <script>
+		$(document).ready(function() {
+			Dashboard.init();
+            $(".calendar table:nth-child(2)").addClass("table-striped table-hover");
+		});
     </script>
 {% endblock %}
 
+
 {% block css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}plugins/bootstrap-calendar/css/bootstrap_calendar.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/gestion_eventos/dashboard.css">
     <style>
         .profile-image {
             border: 0;
@@ -111,15 +140,29 @@
             top: 0;
             bottom: 0;
         }
+
+        #presentacion-calendario{
+            text-align: center;
+        }
+
+        #titulo-calendario{
+            font-size: 25px;
+            color: #337ab7;
+        }
+
+        #img-calendario{
+            width: 70%;
+            height: 70%;
+        }
     </style>
 {% endblock %}
 
 {% block contenido %}
     <div class="row">
         <div class="col-sm-4">
-            <b><h4>SISTEMA NACIONAL DEL DEPORTE</h4></b>
+            <h4><b>SISTEMA DE INFORMACIÓN NACIONAL DEL DEPORTE</b></h4>
         </div>
-        <div class="col-sm-3" align="right" style="font-size:15px">
+        <div class="col-sm-3"  style="font-size:15px; text-align: right;">
             <div class="row">
                 <div class="col-sm-12">
                     DEPORTISTAS
@@ -132,9 +175,9 @@
             </div>
         </div>
         <div class="hidden-xs col-sm-1">
-            <img src="{{STATIC_URL}}img/grafica1.png">
+            <img src="{{STATIC_URL}}img/grafica1.png" alt="grafica.png">
         </div>
-        <div class="col-sm-3" align="right" style="font-size:15px">
+        <div class="col-sm-3" style="font-size:15px; text-align: right;">
             <div class="row">
                 <div class="col-sm-12">
                     ESCENARIOS
@@ -147,7 +190,7 @@
             </div>
         </div>
         <div class="hidden-xs col-sm-1">
-            <img src="{{STATIC_URL}}img/grafica2.png">
+            <img src="{{STATIC_URL}}img/grafica2.png" alt="grafica.png">
         </div>
     </div>
 
@@ -164,11 +207,31 @@
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"><i class="fa fa-times"></i></a>
                     </div>
                     <h4 class="panel-title">
-                        Entidades registradas en el SIND
+                        {% if user.is_authenticated %}
+                            Entidades registradas en el SIND
+                        {% else %}
+                            Eventos del Calendario Deportivo Nacional
+                        {% endif %}
                     </h4>
                 </div>
-                <div class="panel-body"style="padding:0;">
-                    <div id="chartdiv" style="width:100%; height:400px"></div>
+                <div class="panel-body" style="padding:0;">
+                    {% if user.is_authenticated %}
+                        <div id="chartdiv" style="width:100%; height:400px"></div>
+                    {% else %}
+                        <div id="presentacion-calendario" class="col-md-4 col-md-offset-1">
+                            <br/>
+                            <div class="panel-icono">
+                                <img src="{{ STATIC_URL }}img/cono_calendario.png" id="img-calendario" class="img-responsive">
+                            </div>
+                            <div id="titulo-calendario" class="f-w-600">Calendario de Eventos</div><br/>
+                            <a id="gestion-calendario" type="button" href="{% url 'cargar_calendario_nacional' %}" class="btn btn-primary">
+                                <i class="fa fa-calendar"></i> Ver calendario
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-md-offset-1">
+                            <div id="schedule-calendar" class="bootstrap-calendar"></div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -187,7 +250,7 @@
                                 Noticias
                             </h4>
                         </div>
-                        <div class="panel-body"style="padding:0;">
+                        <div class="panel-body" style="padding:0;">
                             <div id="carrusel-noticias" class="carousel slide" data-ride="carousel">
                           <!-- Indicators -->
                           <ol class="carousel-indicators">
@@ -200,10 +263,12 @@
                           <div class="carousel-inner" role="listbox">
                             {% for noticia in noticias %}
                                 <div class="item {% if forloop.first %}active{% endif %}">
-                                  <img style="height:400px;margin:0 auto;" src="{{ noticia.foto.url }}" alt="imagen-noticia">
+                                  <img class="img-responsive" style="width: 100%" src="{% if noticia.foto != "" %}{{ MEDIA_URL }}{{ noticia.foto }}{% else %}{{ MEDIA_URL }}clasificados/clasificados-default.png{% endif %}"
+                                       alt="imagen-noticia">
                                     <div class="carousel-caption">
                                       <h3 style="color:lightslategray;">{{ noticia.titulo }}</h3>
-                                      <p>{{ noticia.cuerpo_noticia|truncatewords:10 }}... <a href="javascript:;" data-target="#modal-noticia-{{ noticia.id }}" data-toggle="modal">Leer más <i class="fa fa-search"></i></a></p>
+                                      <p>{{ noticia.previsualizacion }}...</p>
+                                        <a href="{% url 'detalles_noticia' noticia.id %}">Leer más <i class="fa fa-search"></i></a>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -223,9 +288,6 @@
                     </div>
 
                 </div>
-                {% for noticia in noticias %}
-                    {% include 'modal_noticia.html' %}
-                {% endfor %}
             {% endif %}
         </div>
     </div>
@@ -245,7 +307,7 @@
                     Georreferenciación de Escenarios Deportivos
                 </h4>
             </div>
-            <div class="panel-body"style="padding:0;">
+            <div class="panel-body" style="padding:0;">
                 <div id="mapa"></div>
             </div>
         </div>  

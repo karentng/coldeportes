@@ -146,8 +146,9 @@ class TenantPersonalApoyoView(models.Model):
     entidad = models.ForeignKey(Entidad)
     genero = models.CharField(max_length=11)
     tipo_id = models.CharField(max_length=5)
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_nacimiento = models.DateField()
-    nacionalidad = models.ManyToManyField(Nacionalidad)
+    nacionalidad = models.ForeignKey(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad)
     etnia = models.CharField(max_length=20)
     lgtbi = models.BooleanField()
@@ -155,8 +156,7 @@ class TenantPersonalApoyoView(models.Model):
     estado = models.IntegerField()
     nivel_formacion = models.CharField(max_length=20)
     estado_formacion = models.CharField(max_length=20)
-    ano_final_formacion = models.IntegerField()
-    creacion_formacion = models.DateField()
+    fecha_finalizacion = models.IntegerField()
 
 class TenantDeportistaView(models.Model):
 
@@ -164,6 +164,7 @@ class TenantDeportistaView(models.Model):
         managed = False
 
     #campos modelo deportista
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -195,8 +196,6 @@ class TenantDeportistaView(models.Model):
     fecha_lesion = models.DateField()
     segmento_corporal = models.IntegerField()
 
-    #campos doping
-    fecha_doping = models.DateField()
     fecha_participacion = models.DateField()
 
 class TenantDirigenteView(models.Model):
@@ -204,6 +203,7 @@ class TenantDirigenteView(models.Model):
     class Meta:
         managed = False
 
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_creacion = models.DateTimeField()
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
@@ -212,6 +212,10 @@ class TenantDirigenteView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     genero = models.CharField(max_length=11)
+    #campos informacion academica
+    nivel_formacion = models.CharField(max_length=20)
+    estado_formacion = models.CharField(max_length=20)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True)
 
 class TenantEscuelaView(models.Model):
 
@@ -220,6 +224,7 @@ class TenantEscuelaView(models.Model):
 
     nombre = models.CharField(max_length=100)
     telefono_fijo = models.CharField(max_length=100)
+    tipo_sede = models.CharField(max_length=150)
     email = models.CharField(max_length=100)
     web = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField()
@@ -231,6 +236,7 @@ class TenantEscuelaView(models.Model):
 
 
 class TenantCajasView(models.Model):
+    clases = (('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
 
     class Meta:
         managed = False
@@ -239,6 +245,6 @@ class TenantCajasView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     email = models.CharField(max_length=100)
-    clasificacion = models.CharField(max_length=100)
+    clasificacion = models.CharField(max_length=100, choices=clases)
     entidad = models.ForeignKey(Entidad)
     nombre_servicio = models.CharField(max_length=255)

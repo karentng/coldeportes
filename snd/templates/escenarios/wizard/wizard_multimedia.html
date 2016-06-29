@@ -38,24 +38,33 @@
         <div class="row">
             <fieldset class="col-md-6" >
                 <form id="form-wizard-fotos" action="{% url 'wizard_fotos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <div class="well row">
-                    <div class="col-xs-12">
-                        <h3>{{titulo}}</h3>
-                        {% bootstrap_form form layout="vertical" %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-upload"></i> Cargar</button>              
+                    <div class="well row">
+                        <div class="col-xs-12">
+                            <h3>{{titulo}}</h3>
+                            {% bootstrap_form form layout="vertical" %}
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-upload"></i> Cargar</button>
+                        </div>
                     </div>
-                </div>
+                </form>
+                <form id="form-wizard-videos" action="{% url 'wizard_videos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="well row">
+                        <div class="col-xs-12">
+                            <h3>{{titulo_videos}}</h3>
+                            {% bootstrap_form form_videos layout="vertical" %}
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>
+                        </div>
+                    </div>
                 </form>
             </fieldset>             
-            <div class="col-md-6">
+            <div class="col-md-6" style="overflow: auto;">
                 <h4>Contenido Actual:</h4>
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Foto</th>
-                            <th align="center">Título</th>
-                            <th align="center">Descripción</th>
-                            <th align="center"></th>
+                            <th style="text-align:center">Foto</th>
+                            <th style="text-align:center">Título</th>
+                            <th style="text-align:center">Descripción</th>
+                            <th style="text-align:center"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,7 +73,7 @@
                         <tr>
                             <td align="center"><img src="{{MEDIA_URL}}{{foto.foto}}" width="100" /></td>
                             <td align="center">{{foto.titulo}}</td>
-                            <td align="center">{{foto.descripcion}}</td>
+                            <td align="center">{{foto.descripcion_foto}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate{{foto.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate{{foto.id}}">
@@ -96,19 +105,41 @@
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Video</th>
-                            <th align="center">Descripción</th>
-                            <th align="center"></th>
-                            <th align="center"></th>
+                            <th style="text-align:center">Video</th>
+                            <th style="text-align:center">Descripción</th>
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
                         </tr>
                     </thead>
                     <tbody>
                     {% if videos %}
                     {% for video in videos %}
                         <tr>
-                            <td align="center" ><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
-                            <td align="center">{% if video.descripcion %}{{video.descripcion}}{% endif %}</td>
-                            <td align="center" class="col-md-3"><iframe width="150" height="75" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
+                            <td align="center"><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
+                            <td align="center">{% if video.descripcion_video %}{{video.descripcion_video}}{% endif %}</td>
+                            <td align="center"><iframe width="100" height="75" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe></td>
+                            <td>
+                                <a class="btn btn-md btn-info" href="#modal-{{video.id}}" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
+                                <div class="modal fade" id="modal-{{video.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">VIDEO DEL ESCENARIO {{ escenario.nombre }}:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div align="center">
+                                                    <iframe  width="500" height="400" src="https://www.youtube.com/embed/{{video.url}}" frameborder="0" allowfullscreen></iframe>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-md btn-info" data-dismiss="modal">Cerrar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                             <td align="center">
                                 <a href="#modal-desactivate{{video.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate{{video.id}}">
@@ -138,19 +169,6 @@
                 </table>      
             </div>
         </div>
-        <div class="row">
-            <fieldset class="col-md-6">
-                <form id="form-wizard-videos" action="{% url 'wizard_videos' escenario_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <div class="well row">
-                    <div class="col-xs-12">
-                        <h3>{{titulo_videos}}</h3>
-                        {% bootstrap_form form_videos layout="vertical" %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-save"></i> Guardar</button>              
-                    </div>
-                </div>
-                </form>
-            </fieldset>
-        </div>
         
         <hr>
         {% if wizard_stage > 1 %}
@@ -166,6 +184,7 @@
     <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
     <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
     <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_fotos-validations.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/escenarios/wizard_videos-validations.js"></script>
     
     
 {% endblock %}

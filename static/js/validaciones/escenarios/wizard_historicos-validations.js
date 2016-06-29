@@ -15,7 +15,7 @@ $(document).ready(function() {
                         message: 'La fecha de inicio no puede ser vacío'
                     }
                 }
-            }
+            },
             descripcion: {
                 validators: {
                     notEmpty: {

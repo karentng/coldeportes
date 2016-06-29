@@ -16,22 +16,44 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/validaciones/noticias/noticias-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/ckeditor/ckeditor.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
+    <script src="{{STATIC_URL}}js/form-wysiwyg.demo.min.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
+    <script src="{{STATIC_URL}}plugins/jquery-tag-it/js/tag-it.min.js"></script>
+    <script>
+        $(document).ready(function(){
+                
+            $("#id_palabras_clave").tagit({
+                singleField:true,
+                singleFieldDelimiter: ",",
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block css %}
-
+    {{ form.media }}
+    <link href="{{STATIC_URL}}plugins/jquery-tag-it/css/jquery.tagit.css" rel="stylesheet">
+    
 {% endblock %}
 
 {% block contenido_panel %}
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <form id="noticia" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+<div class="row">   
+    <div class="container">
+        <div class="col-md-10">
+            <form id="noticia" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
                 {% bootstrap_form form %}
-                <button class="btn btn-primary pull-right" type="submit" style="margin-left:5px;">
-                    {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+                <button class="btn btn-primary pull-right" type="submit">
+                    <i class="fa fa-save"></i> {% if edicion %}Guardar{% else %}Registrar{% endif %}
                 </button>
             </form>
         </div>
     </div>
+</div>
+
+
 {% endblock %}

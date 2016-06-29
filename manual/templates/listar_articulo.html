@@ -20,24 +20,33 @@
         <div class="panel-body">
             <div id="jstree-default">
                 <ul>
-                    {% for item in items %}
-                    <li {% if articulo.modulo == item.0 %} data-jstree='{"opened":true}' {% endif %}>
-                        {{item.1}}
-                        
-                        {% for entrada in articulos %}
-                            {% if entrada.modulo == item.0 %}
-                            <ul>
-                                <li {% if entrada.id == articulo.id %} data-jstree='{"opened":true, "selected":true, "icon" : "fa fa-book fa-lg text-primary" }' {% else %} data-jstree='{ "icon" : "fa fa-book fa-lg text-primary"}' {% endif %}>
+                    {% for entidad in entidades %}
+                    <li> {{entidad.1}}
+                        <ul>
+                            {% for item in items %}
+                            <li {% if articulo.modulo == item.0 %} data-jstree='{"opened":true}' {% endif %}>
+                                {{item.1}}
+                                
+                                {% for entrada in articulos %}
+                                    {% if entrada.modulo == item.0 %}
+                                        {% if entrada.entidad == entidad.0 %}
 
-                                    <a href="{% url 'listar_articulo_manual' entrada.id %}">{{entrada.titulo}}</a>
+                                        <ul>
+                                            <li {% if entrada.id == articulo.id %} data-jstree='{"opened":true, "selected":true, "icon" : "fa fa-book fa-lg text-primary" }' {% else %} data-jstree='{ "icon" : "fa fa-book fa-lg text-primary"}' {% endif %}>
 
-                                </li>
-                            </ul>
-                            {% endif %}
-                        {% endfor %}
+                                                <a href="{% url 'listar_articulo_manual' entrada.id %}">{{entrada.titulo}}</a>
 
+                                            </li>
+                                        </ul>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </li>
-                    {% endfor %}
+                    {% endfor %}            
                 </ul>
             </div>
         </div>
@@ -49,20 +58,51 @@
             <h4 class="panel-title">Visualizando{% if articulo %}: {{articulo.titulo}} {% endif %}</h4>
         </div>
         <div class="panel-body">
-            <fieldset>
-                <div class="well row">
-                    <h3>{{articulo.titulo}}</h3>
-                    <br>
-                    <h4>{{articulo.subtitulo}}:</h4>
-                    <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5><br>
-                    <div class="col-md-8">
-                        <p align="justify">{{articulo.contenido}}</p>
-                    </div>
-                    <div class="col-md-4">
-                        {% if articulo.imagen %}<img src="{{STATIC_URL}}{{articulo.imagen}}">{% endif %}
+            {% if request.tenant.schema_name == 'public' %}
+                {% if articulo %}
+                <div class="btn-group m-r-5 m-b-5 pull-right">
+                    <a href="javascript:;" class="btn btn-info">Gestionar</a>
+                    <a href="javascript:;" data-toggle="dropdown" class="btn btn-info dropdown-toggle">
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="{% url 'editar_articulo_manual' articulo.id %}">Editar</a></li>
+                        <li><a href="#" data-target="#modal-eliminar-{{articulo.id}}" data-toggle="modal">Eliminar</a></li>
+                    </ul>
+                </div>
+
+                <div class="modal fade" id="modal-eliminar-{{articulo.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title">Eliminar Artículo</h4>
+                            </div>
+                            <div class="modal-body">
+                                ¿Está seguro que desea eliminar el artículo {{artículo.titulo}}?
+                            </div>
+                            <div class="modal-footer">
+                                <a href="" class="btn btn-sm btn-white" data-dismiss="modal">No</a>
+                                <a href="{% url 'eliminar_articulo_manual' articulo.id %}" class="btn btn-sm btn-danger">Sí</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </fieldset>
+                {% endif %}            
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <div class="well row">
+                            <h3>{{articulo.titulo}}</h3>
+                            <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5>
+                            <div class="col-md-12">
+                                <p align="justify">{{articulo.contenido|safe}}</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>    
+            </div>
         </div>
     </div>    
 </div>
@@ -82,7 +122,9 @@
     <script src="{{STATIC_URL}}plugins/jstree/dist/jstree.min.js"></script>
     <script src="{{STATIC_URL}}js/ui-tree.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
+
     <!-- ================== END PAGE LEVEL JS ================== --> 
+    
     
 {% endblock %}
 
@@ -91,6 +133,7 @@
         $(document).ready(function() {
             App.init();
             TreeView.init();
+            $( "img" ).addClass( "img-responsive" );
         });
     </script>
 

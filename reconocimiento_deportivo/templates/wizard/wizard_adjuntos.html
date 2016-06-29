@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Reconocimiento Deportivo - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Solicitudes Reconocimiento Deportivo
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    {{form.media}}
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li>Adecuación Escenarios</li>
+{% endblock %}
+
+{% block titulo_panel %}
+    Solicitudes Reconocimiento Deportivo
+{% endblock %}
+
+{% block contenido_panel %}
+    <!-- begin vertical-box -->
+    <div class="vertical-box">
+        <div class="vertical-box-column bg-white">
+            <!-- begin wrapper -->
+            <div  class="wrapper bg-silver-lighter clearfix">
+                
+                <div class="pull-right">
+                    <div class="btn-group btn-toolbar">
+                        <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+                        <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+                    </div>                    
+                </div>
+            </div>
+            <!-- end wrapper -->
+            <!-- begin wrapper -->
+            <div class="wrapper">
+                <h4 class="m-b-15 m-t-0 p-b-10 underline">Solicitud de reconocimiento deportivo</h4>
+                {% include 'wizard/_wizard.html' %}
+                <div  class="row alert {% if cantidad_maxima_adjuntos %}alert-warning{% else %}alert-info{% endif %} fade in">                
+                    <div align="center" class="col-md-12">
+                    {% if cantidad_maxima_adjuntos %}
+                        <strong><h4>Atención:</h4></strong> Ya ha adjuntado la máxima cantidad de archivos para los requerimientos del reconocimiento deportivo. Por favor, revise los documentos que va a enviar y pulse click en el botón finalizar solicitud para enviar la petición a trámite. Si desea adjuntar otro documento, debe borrar uno de la lista.
+                    {% else %}
+                        <strong>Nota:</strong> Se puede adjuntar únicamente un documento por requerimiento. Si tiene más de un archivo para el mismo requerimiento, agrúpelos en un solo documento antes de subirlo.
+                    {% endif %}
+                    </div>
+                </div>                        
+                {% if not cantidad_maxima_adjuntos %}
+                <div class="col-md-5">
+                    <form action="" method="POST" id="form-reconocimiento-deportivo" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h4><strong>Archivos Adjuntos</strong></h4>
+                        <fieldset>
+                            <legend></legend>
+                            {% for field in form %}
+                                <div class="col-md-12">                                            
+                                    {% bootstrap_field field layout="vertical" %}
+                                </div>
+                            {% endfor %}
+                        </fieldset>
+                        <hr>
+                        <div class="row">
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                <div {% if cantidad_maxima_adjuntos %} class="col-md-12" {% else %}class="col-md-7" {% endif %}>
+                    <!--h5><strong>Registrados</strong></h5-->
+                    <!--fieldset>
+                        <legend></legend-->
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th align="center">Nombre</th>
+                                        <th align="center">Tipo</th>
+                                        <th align="center">Extensión</th>
+                                        <th align="center">Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for adjunto in adjuntos %}
+                                    <tr>
+                                        <td>{{adjunto.nombre_archivo}}</td>
+                                        <td>{{adjunto.tipo}}</td>
+                                        <td align="center"><i class="fa fa-2x fa-{% if  adjunto.icon_extension != 'file' %}file-{% endif %}{{ adjunto.icon_extension }}-o"></i></td>
+                                        <td><a href="{% url 'borrar_adjunto_reconocimiento' reconocimiento_id adjunto.id %}"><i class="fa fa-lg fa-trash"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            {% if not adjuntos %}
+                                <p align="center">No hay adjuntos registrados</p>
+                            {% endif %}
+                        </div>
+                    <!--/fieldset-->
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <hr>
+                        <a href="{% url 'reconocimiento_deportivo_solicitar' reconocimiento_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+                        <a href="#" data-target="#modal-finalizar" data-toggle="modal" class="btn btn-success pull-right" >
+                            <i class="fa fa-check"></i> Finalizar Solicitud
+                        </a>
+                        <a href="{% url 'listar_reconocimientos' %}" class="btn btn-primary pull-right" style="margin-right: 10px;">
+                            <i class="fa fa-save"></i> Guardar y Completar Después
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <!-- end wrapper -->
+        <!-- begin wrapper -->
+            <div class="wrapper bg-silver-lighter text-right clearfix">
+                Solicitudes Reconocimiento Deportivo, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+            </div>
+        <!-- end wrapper -->
+        </div>
+        <!-- end vertical-box-column -->
+    </div>
+        <!-- end vertical-box -->
+    
+    <div class="modal fade" id="modal-finalizar">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">Finalizar Solicitud:</h4>
+          </div>
+          <div class="modal-body">
+            ¿Está seguro que desea finalizar la solicitud y enviarla a trámite? Una vez finalizada no se podrá editar más la solicitud, sólamente se podrá cancelar o esperar respuesta.
+          </div>
+          <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+            <a id="confirmar-desactivate" href="{% url 'finalizar_solicitud_reconocimiento' reconocimiento_id %}" class="btn btn-sm btn-info">Aceptar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>    
+    <script src="{{ STATIC_URL }}js/validaciones/reconocimiento_deportivo/reconocimiento_deportivo-validations.js"></script>
+{% endblock %}
+
+{% block script %}
+  <script>
+    $(document).ready(function() {
+      App.init();
+      FormWizard.init();
+    });
+
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        };
+  </script>
+{% endblock %}

@@ -139,6 +139,7 @@ class PublicPersonalApoyoView(models.Model):
     class Meta:
         managed = False
 
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     actividad = models.IntegerField(choices=ACTIVIDADES)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
@@ -146,7 +147,7 @@ class PublicPersonalApoyoView(models.Model):
     genero = models.CharField(max_length=11)
     tipo_id = models.CharField(max_length=5)
     fecha_nacimiento = models.DateField()
-    nacionalidad = models.ManyToManyField(Nacionalidad)
+    nacionalidad = models.ForeignKey(Nacionalidad)
     ciudad = models.ForeignKey(Ciudad)
     etnia = models.CharField(max_length=20)
     lgtbi = models.BooleanField()
@@ -154,8 +155,7 @@ class PublicPersonalApoyoView(models.Model):
     estado = models.IntegerField()
     nivel_formacion = models.CharField(max_length=20)
     estado_formacion = models.CharField(max_length=20)
-    ano_final_formacion = models.IntegerField()
-    creacion_formacion = models.DateField()
+    fecha_finalizacion = models.IntegerField()
 
 
 class PublicDeportistaView(models.Model):
@@ -181,6 +181,7 @@ class PublicDeportistaView(models.Model):
         managed = False
 
     #campos modelo deportista
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     genero = models.CharField(max_length=11)
     ciudad_residencia = models.ForeignKey(Ciudad)
     tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -212,8 +213,6 @@ class PublicDeportistaView(models.Model):
     fecha_lesion = models.DateField()
     segmento_corporal = models.IntegerField()
 
-    #campos doping
-    fecha_doping = models.DateField()
     fecha_participacion = models.DateField()
 
     def return_display_lesion(self,dic,is_tipo):
@@ -234,6 +233,7 @@ class PublicDirigenteView(models.Model):
     class Meta:
         managed = False
 
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
     fecha_creacion = models.DateTimeField()
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
@@ -242,6 +242,10 @@ class PublicDirigenteView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     genero = models.CharField(max_length=11)
+    #campos informacion academica
+    nivel_formacion = models.CharField(max_length=20)
+    estado_formacion = models.CharField(max_length=20)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True)
 
 
 class PublicEscuelaView(models.Model):
@@ -251,6 +255,7 @@ class PublicEscuelaView(models.Model):
 
     nombre = models.CharField(max_length=100)
     telefono_fijo = models.CharField(max_length=100)
+    tipo_sede = models.CharField(max_length=150)
     email = models.CharField(max_length=100)
     web = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField()
@@ -262,6 +267,7 @@ class PublicEscuelaView(models.Model):
 
 
 class PublicCajasView(models.Model):
+    clases = (('G', 'Grande'), ('M', 'Mediana'), ('P', 'Pequeña'), )
 
     class Meta:
         managed = False
@@ -270,7 +276,7 @@ class PublicCajasView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     email = models.CharField(max_length=100)
-    clasificacion = models.CharField(max_length=100)
+    clasificacion = models.CharField(max_length=100, choices=clases)
     entidad = models.ForeignKey(Entidad)
     categoria = models.CharField(max_length=255)
     descripcion = models.CharField(max_length=255)

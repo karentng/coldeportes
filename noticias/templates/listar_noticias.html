@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
+{% block titulo %}
+    Noticias - SND Coldeportes
+{% endblock %}
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
     <li><a href="">Noticias</a>
@@ -18,6 +21,11 @@
 {% block js %}
     <script type="text/javascript">
         idTabla = "tabla-noticias";
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
     </script>
     <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
 {% endblock %}
@@ -35,37 +43,70 @@
                         <tr>
                             <th>Título</th>
                             <th>Fecha de publicación</th>
+                            <th>Fecha de expiración</th>
+                            {% if perms.publicidad.change_clasificado %}
+                                <th>Estado</th>
+                            {% endif %}
+                            <th>Palabras clave</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for noticia in noticias %}
                             <tr>
-                                <td>{{noticia.titulo}}</td>
-                                <td>{{noticia.fecha_publicacion}}</td>
+                                <td>{{noticia.titulo|upper}}</td>
+                                <td>{{noticia.fecha_inicio}}</td>
+                                <td>{{noticia.fecha_expiracion}}</td>
+                                {% if perms.publicidad.change_clasificado %}
+                                    <td>
+                                        {% if noticia.estado == 1 %}
+                                            ACTIVO
+                                        {% else %}
+                                           INACTIVO
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                <td>{{noticia.etiquetas}}</td>
                                 <td>
-                                    <a href="javascript:;" data-target='#modal-noticia-{{ noticia.id }}' data-toggle="modal">
-                                        <i class="fa fa-eye"></i> Vista previa
+                                    <a href="{% url 'detalles_noticia' noticia.id %}">
+                                        <i class="fa fa-eye"></i> Ver más
                                     </a>
-                                    <br/>
-                                    {% if 'noticias.change_noticia' in perms %}
+                                    {% if 'noticias.change_noticia' in perms and noticia.estado == 1%}
                                         <br/>
                                         <a href='{% url 'editar_noticia' noticia.id %}'>
                                             <i class="fa fa-edit"></i> Editar
                                         </a>
                                     {% endif %}
-                                    {% if 'noticias.delete_noticia' in perms %}
+                                    {% if 'noticias.change_noticia' in perms %}
                                         <br/>
-                                        <a href='{% url 'eliminar_noticia' noticia.id %}'>
-                                            <i class="fa fa-trash-o"></i> Eliminar
-                                        </a>
+                                        <a href="#" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_noticia' noticia.id %}" data-toggle="modal" data-target="#modal-desactivate">
+                                            <i class="fa fa-ban"></i>
+                                            A/I <i style="cursor:pointer;" data-toggle="tooltip" title="Activar/Inactivar" class="fa fa-question-circle add-tooltip"></i>
+                                        </a><br>
                                     {% endif %}
                                 </td>
                             </tr>
-                            {% include 'modal_noticia.html' %}
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-desactivate">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Cambiar de estado noticia:</h4>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro que desea cambiar el estado de esta noticia?
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                </div>
             </div>
         </div>
     </div>

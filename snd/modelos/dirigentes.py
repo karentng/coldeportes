@@ -98,4 +98,32 @@ class DirigenteFuncion(models.Model):
     descripcion = models.TextField(max_length=500, verbose_name="Función")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+class DirigenteFormacionAcademica(models.Model):
+    tipo_academica = (
+        ('Jardin','Jardin'),
+        ('Primaria','Primaria'),
+        ('Bachillerato','Bachillerato'),
+        ('Técnico','Técnico'),
+        ('Tecnólogo','Tecnólogo'),
+        ('Pregrado','Pregrado'),
+        ('Postgrado','Postgrado'),
+    )
+    tipo_estado = (
+        ('Actual','Actual'),
+        ('Finalizado','Finalizado'),
+        ('Incompleto','Incompleto'),
+    )
+    pais = models.ForeignKey(Nacionalidad,verbose_name='País')
+    institucion = models.CharField(max_length=100,verbose_name='Institución')
+    nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
+    estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
+    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
+    grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
+    dirigente = models.ForeignKey(Dirigente)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        self.institucion = self.institucion.upper()
+        self.profesion = self.profesion.upper()
+        super(DirigenteFormacionAcademica, self).save(*args, **kwargs)

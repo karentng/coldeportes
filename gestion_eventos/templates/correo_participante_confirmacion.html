@@ -1,0 +1,9 @@
+Tu participación en el evento "{{ evento.titulo_evento }}" ha sido aceptada.
+
+Para confirmar tu participación por favor ingrese al siguiente enlace:
+http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{% url 'confirmar_participacion' participante.id %}?token={{ token }}&acp=1
+
+De lo contrario, si desea rechazar la decisión y no participar en el evento, puedes ingresar en este enlace:
+http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{% url 'confirmar_participacion' participante.id %}?token={{ token }}&acp=2
+
+

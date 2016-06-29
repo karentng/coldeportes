@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Calendario Nacional</a>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Calendario Deportivo Nacional
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de Eventos - Calendario Deportivo Nacional
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-eventos";
+        csrf = '{{ csrf_token }}';
+        calendarEvents = [];
+            {% for event in eventos %}
+            calendarEvents.push({
+                id: '{{event.id }}',
+				title: '{{ event.titulo_evento }}',
+				start: '{{ event.fecha_inicio|date:"Y-m-d H:i" }}',
+				end: '{{ event.fecha_finalizacion|date:"Y-m-d H:i" }}',
+				className: 'bg-blue-darker',
+                allDay:false,
+				media: '<i class="fa fa-trophy"></i>',
+				description: '{{ event.objetivo }}',
+                className: '{{ event.color }}'
+            });
+        {% endfor %}
+    </script>
+    <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <script src="{{ STATIC_URL }}js/funciones_calculos/calendario_deportivo/calendar.evento.js"></script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+	<link href="{{STATIC_URL}}plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+        <div class="vertical-box">
+            <div class="vertical-box-column col-sm-3 ">
+                <div class="calendar-event" id="external-events">
+                    <h4 class="m-b-20 m-r-5" style="display: inline-block;">Eventos Calendario Nacional</h4>
+                    {% if eventos %}
+                        {% for event in eventos %}
+                            <div class="external-event {{ event.color }}" data-bg="bg-purple" data-title="{{ event.titulo_evento }}" data-media="<i class='fa fa-comments'></i>" data-desc="{{ event.objetivo }}">
+                                <h5>
+                                    <i class="fa fa-calendar fa-lg fa-fw"></i>
+                                    {{ event.titulo_evento }}
+                                </h5>
+                                <p>{{ event.objetivo }}</p>
+                                <a class="text-white add-tooltip" data-toggle="tooltip" title="Muestra el evento en el calendario" href="#" data-date="{{ event.fecha_inicio|date:"Y-m-d" }}">Mostrar en calendario</a>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-warning fade in m-b-15"><strong>No hay eventos registradas</strong></div>
+                    {% endif %}
+                </div>
+            </div>
+            <div id="calendar" class="vertical-box-column p-15 calendar col-sm-9 fc fc-ltr"></div>
+        </div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+    <script>
+		$(document).ready(function() {
+			Calendar.init();
+		});
+    </script>
+{% endblock %}

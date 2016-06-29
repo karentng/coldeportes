@@ -1,0 +1,6 @@
+{% load bootstrap3 %}
+
+{% bootstrap_form alerta_form %}
+<input type="number" hidden name="alerta_id" value="{{ alerta_id }}">
+<button class="pull-right row m-l-15 btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-check"></i> Guardar</button>
+<a href="{% url 'detalles_participante' participante_id %}" class="pull-right row btn btn-warning" type="button" style="margin-top:10px"><i class="fa fa-ban"></i> Cancelar</a>

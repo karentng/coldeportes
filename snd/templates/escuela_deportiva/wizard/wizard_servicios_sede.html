@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+    Sedes EFD - SND COLDEPORTES
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/build.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
+    
+    
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'escuela_deportiva_listar' %}">Sedes</a>
+    {% if escuela_id %}
+        <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
+{% endblock %}
+
+{% block titulo_contenido %}
+    Sedes EFD
+{% endblock %}
+
+{% block titulo_panel %}
+    {{titulo_panel}}
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'escuela_deportiva/wizard/_wizard.html' %}
+
+    <form action="" method="post">{% csrf_token %}
+        <fieldset>
+            <div class="well row">
+                <legend class="pull-left width-full">
+                    <h3>{{ titulo }}</h3>
+                </legend>
+                {% for servicio in form.servicios %}
+                    <div class="col-sm-3">
+                        <div class="checkbox checkbox-primary">
+                            {{servicio.tag}}
+                            {{servicio}}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="col-xs-12">
+                    <hr>
+                    {% if wizard_stage > 1 %}
+                        <input class="btn btn-primary pull-left" type="button" value="← Anterior" name="volver atrás2" onclick="history.back()" />
+                    {% endif %}
+                    <input class="btn btn-primary pull-right" type="submit" value="Siguiente →"/>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    
+    <script src="{{ STATIC_URL }}js/validaciones/escuela_deportiva/wizard_identificacion-validations.js"></script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            FormWizard.init();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+
+#map_canvas {
+    height: 450px;
+    width: 100%;
+}
+#chartdiv{
+    height: 380px;
+    width: 100%;
+}
+
+.panel-dash{
+    height:auto;
+}
+
+#cont-header{
+    width:100%;
+    height: auto;
+    text-align: center;
+}
+
+.panel-icono{
+    height: auto;
+    width:80px;
+    display:inline-block;
+    vertical-align: middle;
+}
+
+.titulo-panel{
+    display: inline-block;
+    font-size: 30px;
+    color: #337ab7;
+}
+
+#gestion-calendario{
+    display: inline-block;
+    background-color:#337ab7;
+}
+

@@ -20,7 +20,6 @@ from entidades.models import Entidad
 from reportes.utilities import atributos_actor_vista
 from django.http import HttpResponse
 
-from django.http import HttpResponse
 
 def cambiarNombreDePermisos():
     permisos = Permission.objects.filter(
@@ -50,7 +49,8 @@ def asignarPermisosGrupo(request, grupo, permisos):
     for permiso in permisos:
         try:
             grupo.permissions.add(permiso)
-        except Exception:
+        except Exception as e:
+            print(e)
             print('Ha ocurrido un error al actulizar los permisos de escritura')
 
 def asignarPermisosGrupoLectura(request, grupo, permisos):
@@ -111,25 +111,34 @@ def fix_actores_entidades(request):
             entidad.save()
             entidad.actores.save()
 
+        for actor_true in permisos.get_actores('O'):
+            setattr(entidad.actores,actor_true,True)
+            entidad.save()
+            entidad.actores.save()
 
-        modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
+        #Se comenta para que no se siga intentando borrar ya que no es necesario
+        #modelos_a_borrar = [obtener_modelo_actor(actor) for actor in permisos.get_actores('--')]
         connection.set_tenant(entidad)
         request.tenant = entidad
+
+        ##Se comenta para que no se siga intentando borrar ya que no es necesario
+        """
         for modelo in modelos_a_borrar:
             try:
                 modelo.objects.all().delete()
             except Exception as e:
                 print(e)
+        """
 
         try:
             #si llegan a editar el nombre del grupo, tendremos un error
             digitador = Group.objects.get(name="Digitador")
             lectura = Group.objects.get(name='Solo lectura')
         except Group.DoesNotExist:
-            pass
+            digitador = None
+            lectura = None
 
         if digitador and lectura:#sólo si se encuentran los grupos se actualizan sus permisos
-            print(entidad)
             asignarPermisosGrupo(request, digitador, PERMISOS_DIGITADOR)
             asignarPermisosGrupo(request, lectura, PERMISOS_LECTURA)
             asignarPermisosGrupoLectura(request, digitador, PERMISOS_LECTURA)
@@ -198,15 +207,6 @@ def inicio(request):
         comiteParalimpico.domain_url = 'cpc' + settings.SUBDOMINIO_URL
         comiteParalimpico.save()
 
-    if request.user.is_authenticated():
-        # lectura y creación de vistas del directorio sql
-        if schema_name == "public":
-            return redirect('entidad_tipo')
-        else:
-            if request.user.is_superuser:
-                return redirect('usuarios_lista')
-            else:
-                return redirect('inicio_tenant')
 
     if schema_name == 'public':
         return redirect('inicio_public')
@@ -220,7 +220,7 @@ def inicio_public(request):
     from django.db.models import Count
 
     import json
-
+    import datetime
 
     ubicaciones = atributos_actor_vista(PublicEscenarioView)
     cantidad_deportistas = PublicDeportistaView.objects.filter(estado__in=[0,2]).order_by('id','entidad').distinct('id','entidad').count()
@@ -234,26 +234,59 @@ def inicio_public(request):
     posicionInicial = tipoTenant.posicionInicialMapa()
 
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
-        if len(noticias_todas)>5:
+        noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
+                                                Q(fecha_expiracion__gte=datetime.date.today()),
+                                                estado=1).order_by("-fecha_inicio")
+        if len(noticias_todas) > 5:
             noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
     except Exception:
         noticias = []
 
-    return render(request,'index_public.html',{
+    eventos = CalendarioNacional.objects.filter(estado=0)
+
+    return render(request, 'index_public.html', {
         'deportistas': cantidad_deportistas,
         'escenarios': cantidad_escenarios,
         'cantidad_entes': json.dumps(cantidad_entes),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias,
+        'noticias': noticias,
+        'eventos' : eventos
     })
+
+
+def tiene_reconocimiento_deportivo(club):
+    from datetime import date
+    """
+    Abril 27 / 2016
+
+    Autor: Karent Narvaez
+    Permite verificar si un club tiene reconocimiento deportivo o no.
+
+    :para club: club a verificar
+    :type club: Object Club
+    """
+    if club.fecha_vigencia:
+        if  club.fecha_vigencia < date.today():
+            club.reconocimiento = False
+            club.save()
+            return False
+        else:
+            return True
+    elif club.fecha_vencimiento > date.today() and club.archivo:
+        club.fecha_vigencia = club.fecha_vencimiento
+        club.reconocimiento = True
+        club.save()
+        return True
+    else:
+        return True
 
 
 def inicio_tenant(request):
     import json
+    import datetime
     """
     Julio 14 / 2015
     Autor: Daniel Correa
@@ -269,6 +302,7 @@ def inicio_tenant(request):
     #Inicio consulta de transferencias
     transferencias = Transferencia.objects.filter(estado='Pendiente')
     transfer_personas = []
+    usuario = request.user
 
     for t in transferencias:
         connection.set_tenant(t.entidad)
@@ -284,7 +318,6 @@ def inicio_tenant(request):
     #Fin consulta de transferencias
 
     actoresAsociados = request.tenant.cantidadActoresAsociados()
-
     tipoTenant = request.tenant.obtenerTenant()
 
     #Mejorado con uso de vistas
@@ -299,24 +332,45 @@ def inicio_tenant(request):
 
     connection.set_tenant(request.tenant)
     ContentType.objects.clear_cache()
-
     entidad = tipoTenant.obtener_datos_entidad()
+
+    #Se verifica si el tenant es un Club o Club paralimpico para notificar en caso de que el reconocimiento deportivo esté vencido
+    if usuario.is_authenticated() and usuario.groups.filter(name='Digitador').exists(): 
+        if entidad['tipo_tenant'] == 'Club' or entidad['tipo_tenant'] == 'ClubParalimpico':       
+            #Verifica si tiene fecha de vigencia el club, si no la tiene entonces no ha obtenido reconocimiento deportivo previamente
+            if tipoTenant.fecha_vigencia or tipoTenant.fecha_vencimiento:
+                vigente = tiene_reconocimiento_deportivo(tipoTenant)
+                #Si el reconocimiento deportivo no está vigente se notifica al usuario si está autenticado y es digitador
+                if not vigente:
+                    messages.warning(request, "El reconocimiento deportivo del club no se encuentra vigente.")
+            else:
+                messages.warning(request, "Este club no cuenta con reconocimiento deportivo.")
+
+
+    if request.tenant.tipo == 3:
+        entidad['planes_de_costo']= entidad['planes_de_costo'].filter(estado=0)
+        entidad['socios'] = entidad['socios'].filter(estado=0)
     try:
-        noticias_todas = Noticia.objects.order_by('-fecha_publicacion')
-        if len(noticias_todas)>5:
+        noticias_todas = Noticia.objects.filter(Q(fecha_inicio__lte=datetime.date.today()) &
+                                                Q(fecha_expiracion__gte=datetime.date.today()),
+                                                estado=1).order_by("-fecha_inicio")
+        if len(noticias_todas) > 5:
             noticias = noticias_todas[:5]
         else:
             noticias = noticias_todas
     except Exception:
         noticias = []
-    return render(request,'index_tenant.html',{
-        'transfer_persona' : transfer_personas,
+
+
+    return render(request, 'index_tenant.html', {
+        'transfer_persona': transfer_personas,
         'actoresAsociados': actoresAsociados,
-        #'actoresAsociadosJSON': json.dumps(actoresAsociados),
+        # 'actoresAsociadosJSON': json.dumps(actoresAsociados),
         'ubicaciones': json.dumps(ubicaciones),
         'posicionInicial': json.dumps(posicionInicial),
-        'noticias':noticias,
-        'entidad':entidad
+        'noticias': noticias,
+        'entidad': entidad,
+        'tipoTenant': tipoTenant
 
     })
 
@@ -482,3 +536,60 @@ def datos_basicos_entidad(request):
         'nombre': nombre,
         'form': form,
     })
+
+
+@login_required
+def fix_solicitudes_escenarios(request):
+    #respuesta
+    entes = Entidad.objects.filter(tipo=5)
+    for e in entes:
+        actores = e.actores
+        actores.respuesta = True
+        actores.save()
+
+    #solicitud
+    tiene_escenario = Actores.objects.filter(escenarios=True)
+    for a in tiene_escenario:
+        a.solicitud = True
+        a.save()
+
+    #termino
+    return HttpResponse("Solicitud y Respuesta asignadas correctamente ")
+
+
+@login_required
+def fix_reconocimiento_deportivo(request):
+    #asignar a entes municipales actor de respuesta de reconocimiento deportivo
+    entidades = Entidad.objects.filter(tipo=5)
+    for entidad in entidades:
+        ente = entidad.obtenerTenant()
+        if ente.tipo_ente == 1:#ente municipal es tipo 1
+            actores = entidad.actores
+            actores.reconocimiento_respuesta = True
+            actores.save()
+    #asignar a clubes actor de solicitud de reconocimiento deportivo    
+    clubes = Entidad.objects.filter(tipo__in=[3,9])
+    for club in clubes:
+        actores = club.actores
+        actores.reconocimiento_solicitud = True
+        actores.save()
+        #Asigna reconocimiento a los clubes que al crearse ya tenían reconocimiento deportivo
+        atributos_club = club.obtenerTenant()
+        if atributos_club.fecha_vencimiento and atributos_club.archivo:
+            atributos_club.fecha_vigencia = atributos_club.fecha_vencimiento
+            atributos_club.reconocimiento = True
+            atributos_club.save()
+
+    return HttpResponse("Solicitudes y respuestas de reconocimiento deportivo asignadas correctamente")
+
+
+@login_required
+def fix_calendario_deportivo(request):
+    entes = Entidad.objects.filter(tipo__in=[2,7])
+    for e in entes:
+        actores = e.actores
+        actores.calendario_deportivo = True
+        actores.save()
+
+    return HttpResponse("Calendario deportivo nacional asignado correctamente ")
+

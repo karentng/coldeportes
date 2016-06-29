@@ -10,7 +10,7 @@ def checkear_inicializacion_directorio():
         CajaCompensacionView.objects.all().exists()
 
     except Exception:"""
-    crear_vistas()
+    #crear_vistas()
 
 def crear_vistas():
     sql = """create or replace view directorio_escenarioview as 

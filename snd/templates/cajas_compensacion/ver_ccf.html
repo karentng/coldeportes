@@ -56,21 +56,21 @@
                         <div class="tab-pane fade active in" id="nav-tab2-12">
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    
-                                    {{ccf.nombre}}
+                                    <b>{{ccf.nombre}}</b>
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <address class="m-t-5 m-b-5">
-                                            <b>Clasificación de CCF:</b> {{ccf.get_clasificacion_display}}<br/>
-                                            <b>Región:</b> {{ccf.get_region_display}}<br /><br/>
-                                            <b>Público:</b> {{ccf.get_publico_display}}, Tipo de Infraestructura: {{ccf.get_infraestructura_display}}<br />
-                                            <b>Nombre de Contacto:</b> {{ccf.nombre_contacto}}, Teléfono: {{ccf.telefono_contacto}} <br />
-                                            <b>Correo electrónico:</b> {{ccf.email}}<br/>
-                                            <b>Tipo de Institución:</b> {{ccf.get_tipo_institucion_display}}
+                                            <p><b>Clasificación de CCF:</b> {{ccf.get_clasificacion_display}}</p>
+                                            <p><b>Región:</b> {{ccf.get_region_display}}</p>
+                                            <p><b>Público:</b> {{ccf.get_publico_display}}</p>
+                                            <p><b>Tipo de Infraestructura:</b> {{ccf.get_infraestructura_display}}</p>
+                                            <p><b>Nombre de Contacto:</b> {{ccf.nombre_contacto}}, Teléfono: {{ccf.telefono_contacto}}</p>
+                                            <p><b>Correo electrónico:</b> {{ccf.email}}</p>
+                                            <p><b>Tipo de Institución:</b> {{ccf.get_tipo_institucion_display}}</p>
                                         </address>
                                         <br/>
-                                        <h5 class="m-t-10">Servicios:</h5>
+                                        <h5 class="m-t-10"><b>Servicios:</b></h5>
                                         <ul>
                                         {% for servicio in ccf.servicios.all %}
                                         <li>{{servicio.descripcion}}</li>
@@ -89,7 +89,7 @@
                             {% if horarios %}
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    {{ccf.nombre}}
+                                    <b>{{ccf.nombre}}</b>
                                 </div>
                                 <div class="invoice-content">
                                     <div class="table-responsive">
@@ -124,7 +124,7 @@
                             {% if tarifas %}                            
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    {{ccf.nombre}}
+                                    <b>{{ccf.nombre}}</b>
                                 </div>
                                 <div class="invoice-content">
                                     <div class="table-responsive">

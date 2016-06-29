@@ -1,0 +1,153 @@
+.tablero-clasificados{
+    background: url("../../img/fondo-clasificados.png") !important;
+}
+#card-container{
+    padding-left: 5%;
+    min-height: 800px;
+
+}
+.descripcionCla {
+    padding: 25px 10% 25px 25px;
+    color: #000000;
+    position: relative;
+    height: auto;
+    word-wrap: break-word;
+    text-align: justify;
+    overflow: hidden;
+}
+
+.verMas{
+    position: absolute;
+    bottom: 10px;
+    left: 25px;
+}
+.card {
+    width: 250px;
+    height: auto;
+    margin-top: 20px;
+    font-size: 1em;
+    background:#fefabc;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px #333;
+    -moz-box-shadow: 0px 4px 6px #333;
+    -webkit-box-shadow: 0px 4px 6px #333;
+    margin-bottom: 10px;
+}
+
+.inclinacionIzq{
+
+    -moz-transform: rotate(3deg);
+    -webkit-transform: rotate(3deg);
+    -o-transform: rotate(3deg);
+    -ms-transform: rotate(3deg);
+    transform: rotate(3deg);
+
+}
+.inclinacionDer{
+
+    -moz-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -o-transform: rotate(-3deg);
+    -ms-transform: rotate(-3deg);
+    transform: rotate(-3deg);
+
+}
+
+
+.chincheImg{
+    position: absolute;
+    top:1px;
+}
+
+.card.inclinacionIzq .chincheImg{
+    left:5px;
+}
+.card.inclinacionDer .chincheImg{
+    left:180px;
+}
+
+.folded-corner {
+   width: 0px;
+   height: 0px;
+   position: absolute;
+    cursor: pointer;
+   bottom: -1px;
+   right: -1px;
+    z-index: 1;
+    background: white;
+   border-radius: 15px 0 0 0;
+    border: 1px solid #ECE797;
+    border-right-color: white;
+    border-bottom-color: white;
+    -webkit-transition: border-width 0.3s ease-out;
+   -moz-transition: border-width 0.3s ease-out;
+   -o-transition: border-width 0.3s ease-out;
+   transition: border-width 0.3s ease-out;
+}
+.card:hover .folded-corner {border-width: 80px  80px 70px  80px;}
+
+
+.sociaPlugins{
+    position: relative;
+    height:auto;
+}
+.modal-body{
+    padding:4%;
+}
+
+.modal-body img, .modal-body .datos-clasificado{
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.descripcion-clasificado{
+    font-size: 1.3em;
+    word-wrap: break-word;
+    text-align: justify;
+}
+
+.modal-body img, .modal-body .datos-clasificado{
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+.palabras-claves{
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+.edicion-clasificados{
+    position: absolute;
+    top: 10px;
+    left: 25px;
+    width: 80%;
+    height: 40px;
+    z-index: 99;
+}
+.edicion-clasificados > i{
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+}
+
+#modal-eliminar{
+    margin-top: 20% !important;
+}
+.filter-container{
+    position: relative;
+}
+
+#refrescar{
+    cursor: pointer;
+}
+
+#clasificados-vacio{
+    left: 35% !important;
+    top: 30% !important;
+}

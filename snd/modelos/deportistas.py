@@ -5,8 +5,21 @@ from django.db import models
 from coldeportes.utilities import calculate_age,extraer_codigo_video
 from django.db.models.fields.files import ImageFieldFile, FileField
 from coldeportes.settings import STATIC_URL
+from django.conf import settings
+import os
+
 
 class Deportista(models.Model):
+
+    def foto_name(instance, filename):
+        #el nombre de la imagen es la identificación del deportista, filename[-4:] indica la extensión del archivo
+        #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
+        ruta = 'fotos_deportistas/' + instance.identificacion + filename[-4:]
+        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
+        if(os.path.exists(ruta_delete)):
+            os.remove(ruta_delete)
+        return ruta
+
     #Datos personales
         #Identificacion
     tipo_sexo = (
@@ -24,6 +37,7 @@ class Deportista(models.Model):
         (1,'INACTIVO'),
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
+        (4,'TRANSFERIDO INTERNACIONAL'),
     )
 
     ETNIAS = (
@@ -57,7 +71,7 @@ class Deportista(models.Model):
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,verbose_name='Disciplinas Deportivas')
     nacionalidad = models.ManyToManyField(Nacionalidad,verbose_name='Nacionalidad')
-    foto = models.ImageField(upload_to='fotos_deportistas', null=True, blank=True)
+    foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -162,10 +176,10 @@ class HistorialDeportivo(models.Model):
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato')
     puesto = models.IntegerField(verbose_name='Puesto obtenido')
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
-    modalidad = models.CharField(max_length=100,blank=True,verbose_name='Modalidad de competencia')
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad del deporte')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
-    prueba = models.CharField(max_length=100,blank=True,verbose_name='Prueba en la que participó')
-    categoria = models.CharField(max_length=100,verbose_name='Categoría en la que participó')
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Deporte en el que participó')
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría del deporte')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
     deportista = models.ForeignKey(Deportista)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -195,10 +209,7 @@ class HistorialDeportivo(models.Model):
     def save(self, *args, **kwargs):
         self.nombre = self.nombre.upper()
         self.marca = self.marca.upper()
-        self.modalidad = self.modalidad.upper()
         self.division = self.division.upper()
-        self.prueba = self.prueba.upper()
-        self.categoria = self.categoria.upper()
         self.institucion_equipo = self.institucion_equipo.upper()
 
         super(HistorialDeportivo, self).save(*args, **kwargs)
@@ -257,11 +268,11 @@ class InformacionAdicional(models.Model):
 
 class HistorialLesiones(models.Model):
     TIPOS_LESION = (
+        (5,'ESGUINCE'),
         (1,'FRACTURA'),
+        (4,'LESIÓN MENISCAL'),
         (2,'LUXACIÓN'),
         (3,'RUPTURA'),
-        (4,'LESIÓN MENISCAL'),
-        (5,'ESGUINCE'),
     )
     PERIODOS_REHABILITACION = (
         (1,'MENOR A 1 MES'),
@@ -270,10 +281,10 @@ class HistorialLesiones(models.Model):
         (4,'MAYOR A 6 MESES'),
     )
     SEGMENTOS = (
-        (1,'EXTREMIDADES SUPERIORES'),
-        (2,'EXTREMIDADES INFERIORES'),
         (3,'CABEZA'),
         (4,'CUELLO'),
+        (2,'EXTREMIDADES INFERIORES'),
+        (1,'EXTREMIDADES SUPERIORES'),
         (5,'PELVIS'),
     )
     deportista = models.ForeignKey(Deportista)
@@ -283,18 +294,3 @@ class HistorialLesiones(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     segmento_corporal = models.IntegerField(verbose_name='Segmento Corporal', choices=SEGMENTOS,blank=True,null=True)
 
-class HistorialDoping(models.Model):
-    TIPO_IDENTIDAD = (
-        ('TI', 'TARJETA DE IDENTIDAD'),
-        ('CC', 'CÉDULA DE CIUDADANÍA'),
-        ('CE', 'CÉDULA DE EXTRANJERÍA'),
-        ('PS', 'PASAPORTE'),
-    )
-    deportista = models.ForeignKey(Deportista)
-    nombre_delegado = models.CharField(max_length=100,verbose_name='Nombre del delegado')
-    tipo_identidad_delegado = models.CharField(max_length=2,choices=TIPO_IDENTIDAD,verbose_name='Tipo de identificación del delegado')
-    identificacion_delegado = models.CharField(max_length=30,verbose_name='Número de identificación del delegado')
-    evento = models.CharField(max_length=300,verbose_name='Evento en el que se detectó el doping')
-    fecha = models.DateField(verbose_name='Fecha en la que se detectó el doping')
-    observaciones = models.TextField(blank=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)

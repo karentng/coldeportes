@@ -1,5 +1,4 @@
 from django.contrib.contenttypes.models import ContentType
-from django.core.serializers import json
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -13,7 +12,8 @@ from snd.models import *
 from entidades.models import *
 from django.contrib import messages
 from coldeportes.utilities import calculate_age,all_permission_required,not_transferido_required,tenant_required
-
+from django.http import JsonResponse,HttpResponse
+from transferencias.models import Transferencia
 
 @login_required
 #@tenant_required
@@ -77,8 +77,9 @@ def wizard_deportista(request,id_depor):
 
     try:
         deportista = Deportista.objects.get(id=id_depor)
-    except Exception:
-        deportista = None
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     deportista_form = DeportistaForm( instance=deportista)
 
@@ -131,7 +132,11 @@ def wizard_corporal(request,id_depor):
         corporal = None
         edicion=False
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -180,8 +185,11 @@ def wizard_historia_deportiva(request,id_depor):
     """
 
     hist_depor = HistorialDeportivo.objects.filter(deportista=id_depor)
-
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -190,7 +198,8 @@ def wizard_historia_deportiva(request,id_depor):
     hist_depor_form = HistorialDeportivoForm()
 
     if request.method == 'POST':
-        hist_depor_form = HistorialDeportivoForm(request.POST)
+        d_id = request.POST['deporte']
+        hist_depor_form = HistorialDeportivoForm(request.POST,deporte_id=d_id)
 
         if hist_depor_form.is_valid():
             hist_depor_nuevo = hist_depor_form.save(commit=False)
@@ -210,6 +219,38 @@ def wizard_historia_deportiva(request,id_depor):
         'edicion':True
     })
 
+#Ajax para modalidad y categoria historia deportiva
+@login_required
+def get_modalidades(request,id_depor):
+    modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=id_depor).order_by('nombre')
+    if modalidades:
+        data = []
+        for m in modalidades:
+            dic = {}
+            dic['id'] = m.id
+            dic['text'] = m.__str__()
+            data.append(dic)
+    else:
+        return HttpResponse('Modalidades no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
+
+@login_required
+def get_categorias(request,id_depor):
+    categorias = CategoriaDisciplinaDeportiva.objects.filter(deporte=id_depor).order_by('nombre')
+    if categorias:
+        data = []
+        for c in categorias:
+            dic = {}
+            dic['id'] = c.id
+            dic['text'] = c.__str__()
+            data.append(dic)
+    else:
+        return HttpResponse('Categorias no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
 #Eliminacion Historia Deportiva
 @login_required
 #@tenant_required
@@ -260,7 +301,11 @@ def wizard_historia_academica(request,id_depor):
 
     inf_academ = InformacionAcademica.objects.filter(deportista=id_depor)
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -404,6 +449,9 @@ def ver_deportista(request,id_depor,id_entidad,estado):
     except:
         messages.error(request, "Error: No existe el deportista solicitado")
         return redirect('deportista_listar')
+    if deportista.estado == 4:
+        info_transferencia_internacional = Transferencia.objects.get(id_objeto=deportista.id,estado='Internacional')
+        deportista.entidad_actual = info_transferencia_internacional.nombre_entidad
     composicion = ComposicionCorporal.objects.filter(deportista=deportista)
     if len(composicion) != 0:
         composicion = composicion[0]
@@ -411,7 +459,6 @@ def ver_deportista(request,id_depor,id_entidad,estado):
     if len(info_adicional) != 0:
         info_adicional = info_adicional[0]
     historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
-    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
@@ -420,7 +467,6 @@ def ver_deportista(request,id_depor,id_entidad,estado):
             'info_adicional':info_adicional,
             'historial_deportivo':historial_deportivo,
             'historial_lesiones':historial_lesiones,
-            'historial_doping':historial_doping,
             'informacion_academica':informacion_academica
     })
 
@@ -588,6 +634,7 @@ def cambio_tipo_documento_deportista(request,id):
         'form': form
     })
 
+
 def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
     """
     Agosto 28 /2015
@@ -607,6 +654,7 @@ def obtener_historiales_por_liga(liga,tenant_actual,tipo,tipo_club):
         historiales += c.historiales_para_avalar(tipo)
     connection.set_tenant(tenant_actual)
     return historiales
+
 
 @login_required
 #permiso de aval deportivo
@@ -729,32 +777,6 @@ def rechazar_logros_deportivos(request,id_tenant,id_hist):
     return redirect('deportista_listar')
 
 
-@login_required
-#@tenant_required
-@all_permission_required('snd.add_deportista')
-def eliminar_historia_doping(request,id_depor,id_historia):
-    """
-    Octubre 5 / 2015
-    Autor: Milton Lenis
-
-    Eliminar Historial de Doping
-
-    Se obtiene el id del historial y el del deportista, se busca y se elimina de la base de datos
-
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param id_depor: Llave primaria del deportista
-    :type id_depor: String
-    :param id_historia: Llave primaria del historial de doping
-    :type id_historia: String
-    """
-    try:
-        doping = HistorialDoping.objects.get(id=id_historia, deportista=id_depor)
-        doping.delete()
-        return redirect('wizard_historia_doping', id_depor)
-
-    except Exception:
-        return redirect('wizard_historia_doping', id_depor)
 
 
 @login_required
@@ -777,12 +799,12 @@ def eliminar_historia_lesion(request,id_depor,id_historia):
     :type id_historia: String
     """
     try:
-        doping = HistorialLesiones.objects.get(id=id_historia, deportista=id_depor)
-        doping.delete()
-        return redirect('wizard_historia_doping', id_depor)
+        lesion = HistorialLesiones.objects.get(id=id_historia, deportista=id_depor)
+        lesion.delete()
+        return redirect('wizard_historia_lesiones', id_depor)
 
     except Exception:
-        return redirect('wizard_historia_doping', id_depor)
+        return redirect('wizard_historia_lesiones', id_depor)
 
 @login_required
 #@tenant_required
@@ -811,7 +833,11 @@ def wizard_informacion_adicional(request,id_depor):
         info_adicional = None
         edicion=False
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:
@@ -841,53 +867,6 @@ def wizard_informacion_adicional(request,id_depor):
 @login_required
 #@tenant_required
 @all_permission_required('snd.add_deportista')
-def wizard_historia_doping(request,id_depor):
-    """
-    5 Octubre / 2015
-    Autor: Milton Lenis
-
-    Paso 6: Historial de doping, se obtiene un historial de doping, se almacena y asigna al deportista.
-    Si no hay historial se inicializa en nulo
-
-    :param request: Petición Realizada
-    :type request: WSGIRequest
-    :param id_depor: Llave primaria del deportista
-    :type id_depor: String
-    """
-
-    historial_doping = HistorialDoping.objects.filter(deportista=id_depor)
-
-    deportista = Deportista.objects.get(id=id_depor)
-
-    non_permission = not_transferido_required(request,deportista)
-    if non_permission:
-        return non_permission
-
-    historial_doping_form = HistorialDopingForm()
-
-    if request.method == 'POST':
-        historial_doping_form = HistorialDopingForm(request.POST)
-
-        if historial_doping_form.is_valid():
-            historial_doping_nuevo = historial_doping_form.save(commit=False)
-            historial_doping_nuevo.deportista = deportista
-            historial_doping_nuevo.save()
-            historial_doping_form.save()
-            return redirect('wizard_historia_doping', id_depor)
-
-    return render(request, 'deportistas/wizard/wizard_historia_doping.html', {
-        'titulo': 'Historial de doping',
-        'wizard_stage': 7,
-        'form': historial_doping_form,
-        'historicos': historial_doping,
-        'id_deportista': id_depor,
-        'edicion':True
-    })
-
-
-@login_required
-#@tenant_required
-@all_permission_required('snd.add_deportista')
 def wizard_historia_lesiones(request,id_depor):
     """
     5 Octubre / 2015
@@ -903,7 +882,11 @@ def wizard_historia_lesiones(request,id_depor):
     """
     historial_lesiones = HistorialLesiones.objects.filter(deportista=id_depor)
 
-    deportista = Deportista.objects.get(id=id_depor)
+    try:
+        deportista = Deportista.objects.get(id=id_depor)
+    except:
+        messages.error(request,'Está tratando de editar un deportista inexistente.')
+        return redirect('deportista_listar')
 
     non_permission = not_transferido_required(request,deportista)
     if non_permission:

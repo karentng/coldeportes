@@ -43,11 +43,14 @@
                         <h3>{{titulo}}</h3>
                         {% for field in form %}
                             <div class="col-lg-6">
-                                
                                 {% bootstrap_field field layout="vertical" %}
                             </div>
                         {% endfor %}
-                        <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>              
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 </form>
@@ -57,9 +60,11 @@
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th align="center">Fecha Inicio</th>
-                            <th align="center">Fecha Fin</th>
-                            <th align="center">Descripción</th>
+                            <th align="center">Fecha Inicio del Suceso Histórico</th>
+                            <th align="center">Fecha Fin del Suceso Histórico</th>
+                            <th align="center">Tipo de suceso histórico</th>
+                            <th align="center">Descripción del Suceso Histórico</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -67,6 +72,7 @@
                         <tr>
                             <td align="center">{{historico.fecha_inicio}}</td>
                             <td align="center">{% if historico.fecha_fin %}{{historico.fecha_fin}}{% endif %}</td>
+                            <td align="center">{{historico.tipo_suceso}}</td>
                             <td align="center">{{historico.descripcion}}</td>
                             <td align="center">
                                 <a href="#modal-desactivate{{historico.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>

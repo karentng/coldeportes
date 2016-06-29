@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block titulo %}Participantes por Equipo - SIND-Coldeportes {% endblock %}
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listado_competencias' juego_id %}">Listado de Competencias</a>
+    <li class="active">Registro de Resultados</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Registro de Competencia
+{% endblock %}
+
+{% block titulo_panel %}
+    Registro de Competencia
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript">
+    idTabla = "tabla-entidades";
+  </script>
+  <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+  <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+  <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+  <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>  
+  <script src="{{ STATIC_URL }}js/validaciones/registro_resultados/registro_participante-validations.js"></script>
+
+{% endblock %}
+
+{% block css %}
+  <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+  <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+  <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet"> 
+  
+  {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block contenido_panel %}
+  <div  class="wrapper bg-silver-lighter clearfix">
+    <a href="{% url 'listar_equipos' competencia.id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
+    <div class="pull-right">
+        <div class="btn-group btn-toolbar">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+        </div>
+    </div>
+  </div>
+  <br><br>
+  {% include 'wizard_info_juego/_wizard.html' %}  
+  <div class="row">
+    <div class="col-md-4">
+      <fieldset>
+        <form id="form-participante" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+          <div class="well row">
+            <div class="row">
+              <h4>Ingrese Datos del Participante del Equipo {{equipo.nombre}}</h4>
+              <br>
+              {% for field in form %}
+                  <div class="col-md-6">
+                      
+                      {% bootstrap_field field layout="vertical" %}
+                  </div>
+              {% endfor %}
+            </div>
+            <hr>
+            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-save"></i> Guardar</button>
+          </div>
+        </form>
+      </fieldset>
+    </div>
+    <div class="col-md-8">
+      <fieldset>
+        <div class="well row">
+          <div class="table-responsive">
+                <table id="tabla-entidades" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Departamento</th>
+                            <th>Género</th>
+                            <th>Estatura (cms)</th>
+                            <th>Peso (kg)</th>
+                            <th>Club</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participante in participantes %}
+                        <tr>
+                            <td>{{participante.nombre}}</td>
+                            <td>{{participante.departamento}}</td>
+                            <td>{{participante.get_genero_display}}</td>
+                            <td>{% if participante.estatura %}{{participante.estatura}}{% else %}No registra{% endif %}</td>
+                            <td>{% if participante.peso %}{{participante.peso}}{% else %}No registra{% endif %}</td>
+                            <td>{% if participante.club %}{{participante.club}}{% else %}No registra{% endif %}</td>
+                            <td>{% if participante.fecha_nacimiento %}{{participante.fecha_nacimiento}}{% else %} No registra {% endif %}</td>
+                            <td>                              
+                              <a href='{% url "participante_equipo" competencia.id equipo.id participante.id %}'>
+                                  <i class="fa fa-edit"></i> Editar
+                              </a><br>
+                              <a href="#modal-desactivate{{participante.id}}" data-toggle="modal"><i class="fa fa-trash"></i> Eliminar</a>
+                              <div class="modal fade" id="modal-desactivate{{participante.id}}">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                      <h4 class="modal-title">Eliminar Participante:</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Está seguro que desea eliminar este participante?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                      <a href="{% url 'eliminar_participante' competencia.id participante.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>                             
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </fieldset>
+        
+    </div>
+  </div>
+                            
+                    
+{% endblock %}

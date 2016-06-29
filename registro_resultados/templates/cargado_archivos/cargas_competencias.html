@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Registro de Resultados</a>
+    <li class="active">Cargar competencias</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Cargar competencias
+{% endblock %}
+
+{% block titulo_panel %}
+    Cargar competencias
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+<div  class="wrapper bg-silver-lighter clearfix">
+    <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary  p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>   
+    <div class="pull-right m-l-15">        
+        <div class="btn-group btn-toolbar">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+        </div>
+        <div class="btn-group m-l-5">
+            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+<br><br>
+<div class="row">
+        <div class="col-xs-12">
+            <b>Archivo de Competencias para Cargar</b>
+        </div>
+        <hr>
+        <div class="col-sm-12">
+            <p>
+                El archivo que vaya a cargar debe tener las columnas en el siguiente orden:
+                <ol type="1" start="1">
+                    <li> Nombre (obligatorio)</li>
+                    <li> Fecha de Competencia (AAAA-MM-DD) (obligatorio)</li>
+                    <li> Tipo de Competencia (obligatorio): <b>1</b> para <b>Olímpica</b> y <b>2</b> para <b>Paralímpica</b> </li>
+                    <li> Tipo de Registro (obligatorio): <b>1</b> para <b>Tiempos</b>, <b>2</b> para <b>Metros</b> y <b>3</b> para <b>Puntos</b> </li>
+                    <li> Lugar (obligatorio)</li>
+                    <li> Tipos de Participantes (obligatorio): <b>1</b> para <b>Individual</b> y <b>2</b> para <b>Equipos</b></li>
+                    <li> Tipo de Disciplina Deportiva (obligatorio): debe tener el identificador de la disciplina deportiva del sistema (Contácte el administrador si no los tiene)</li>
+                    <li> Categoría: debe tener el identificador de la categoría deportiva del sistema (Contácte el administrador si no los tiene)</li>
+                    <li> Modalidad: debe tener el identificador de la modalidad deportiva del sistema (Contácte el administrador si no los tiene)</li>
+                    <li> Descripción de la competencia</li>
+                </ol>
+                <td><a href="{{STATIC_URL}}files/ejemplo_competencias.xls"><i class="fa fa-download"></i> Descargar Archivo de Ejemplo</a></td></br></br>
+                <div class="alert alert-info fade in">                    
+                    <b >Nota:</b> La primera fila del archivo debe tener los encabezados de la columna o dejarla vacía, para evitar que no se deje de registrar la información de dicha fila.
+                </div>
+            </p>
+            <div align="center">
+                <form class="form-vertical" enctype="multipart/form-data" method="post">{% csrf_token %}
+                    {% bootstrap_form form layout="vertical" %}
+                    <button class="btn btn-primary" type="submit">
+                        Cargar <i class="fa fa-angle-right"></i>
+                    </button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}

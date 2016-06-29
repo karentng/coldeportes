@@ -12,13 +12,11 @@ urlpatterns = patterns('snd.views.deportistas',
     url(r'^wizard/historia-deportiva/(\d+)$', 'wizard_historia_deportiva', name='wizard_historia_deportiva'),
     url(r'^wizard/historia-academica/(\d+)$', 'wizard_historia_academica', name='wizard_historia_academica'),
     url(r'^wizard/historia-lesiones/(\d+)$', 'wizard_historia_lesiones', name='wizard_historia_lesiones'),
-    url(r'^wizard/historia-doping/(\d+)$', 'wizard_historia_doping', name='wizard_historia_doping'),
 
     #Urls de eliminacion de muchos en el wizard
     url(r'^eliminar/historia-deportiva/(\d+)/(\d+)$', 'eliminar_historia_deportiva', name='eliminar_historia_deportiva'),
     url(r'^eliminar/historia-academica/(\d+)/(\d+)$', 'eliminar_historia_academica', name='eliminar_historia_academica'),
     url(r'^eliminar/historia-lesion/(\d+)/(\d+)$', 'eliminar_historia_lesion', name='eliminar_historia_lesion'),
-    url(r'^eliminar/historia-doping/(\d+)/(\d+)$', 'eliminar_historia_doping', name='eliminar_historia_doping'),
 
     #Urls generales
     url(r'^listar$', 'listar_deportista', name='deportista_listar'),
@@ -32,4 +30,8 @@ urlpatterns = patterns('snd.views.deportistas',
     url(r'^avalar-record$','avalar_logros_deportivos',name='avalar_logros_deportivos'),
     url(r'^avalar-record/aceptar/(\d+)/(\d+)$','aceptar_logros_deportivos',name='aceptar_logros_deportivos'),
     url(r'^avalar-record/rechazar/(\d+)/(\d+)$','rechazar_logros_deportivos',name='rechazar_logros_deportivos'),
+
+    #Urls ajax para categoria y modalidad
+    url(r'^modalidades/get/(\d+)$','get_modalidades',name='get_modalidades'),
+    url(r'^categorias/get/(\d+)$','get_categorias',name='get_categorias'),
 )

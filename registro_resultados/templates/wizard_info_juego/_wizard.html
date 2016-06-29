@@ -1,0 +1,19 @@
+<ol class="bwizard-steps clearfix" role="tablist">
+    <li role="tab" {% if wizard_stage >= 1 %} aria-selected="true" class="active" {% endif %} style="z-index: 7;"><span class="label badge-inverse">1</span><a class="hidden-phone">
+            <a href="{% url 'listar_participantes' competencia.id %}" style="cursor:pointer;">
+                
+                Participantes <small>Registro de participantes individuales o por équipos</small>
+            </a>
+        </a>
+    </li>
+    <li role="tab"  {% if wizard_stage >= 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 6;"><span class="label">2</span>
+        <a class="hidden-phone">
+            <a href="{% url 'medalleria_por_competencia' competencia.id %}" style="cursor:pointer;">
+                
+                Medallería <small>Medallería final de la competencia</small>                
+            </a>
+        </a>
+    </li>      
+</ol>
+<br/>
+

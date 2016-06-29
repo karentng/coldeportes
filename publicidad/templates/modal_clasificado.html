@@ -1,0 +1,38 @@
+
+<div class="modal fade" id="modal-clasificado-{{ clasificado.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="titulo-modal">{{ clasificado.titulo }}</h2>
+            </div>
+            <div class="modal-body">
+                <img src="{{ MEDIA_URL }}{{ clasificado.foto }}" id="id-foto" class="img-responsive">
+                <p class="datos-clasificado">
+                    <b>Fecha Publicación:</b><br>
+                    <i id="fecha-pub">{{ clasificado.fecha_publicacion }}</i><br><br>
+                    <b>Categoria:</b><br>
+                    <i id="categoria">{{ clasificado.categoria }}</i><br><br>
+                    <b>Contacto:</b><br>
+                    <i id="contacto">{{ clasificado.contacto }}</i><br><br>
+                    <!-- If del valor -->
+                    {% if clasificado.valor %}
+                        <b class="ver">Valor:</b><br>
+                        <i class="ver" id='valor'>${{ clasificado.valor }}</i>
+                    {% endif %}
+                </p>
+                <hr>
+                <p class="descripcion-clasificado" id="descripcion">
+                    {{ clasificado.descripcion }}
+                </p>
+                <p class="palabras-claves" id="etiquetas">
+                    <b>Palabras Claves:</b><br>
+                    <span>{{ clasificado.etiquetas }}</span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

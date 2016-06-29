@@ -72,29 +72,29 @@
             </div>
         </br></br>
         <div id="gallery" class="gallery">
-        {% for tupla in listado_resultados %}
-            {% for resultado in tupla %}
-                <div class="image {{resultado.grupo}}" >
-                    <div class="image-inner">
-                        <a href="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" data-lightbox="{{resultado.grupo}}">
-                            <img src="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" alt="" />
-                        </a>
-                    </div>
-                    <div class="image-info">
-                        <h5 class="title">{{resultado.nombre}} {{resultado.nombres}} {{resultado.apellidos}}</h5>                        
-                        Entidad: {{resultado.entidad.nombre}}<br>                  
-                        {% if resultado.direccion %}{{resultado.direccion}}<br>{% endif %}
-                        {% if resultado.cargo %}Cargo: {{resultado.cargo}} <br>{% endif %}
-                        Ciudad: {{resultado.ciudad.nombre}} {{resultado.ciudad_residencia.nombre}}<br>
-                        <button class="btn-link" data-html="true" data-container="body" data-toggle="popover" data-placement="top" 
-                            data-content="Teléfono: {% if resultado.telefono_contacto %}{{resultado.telefono_contacto}}{% else %}No hay información.{% endif %}<br/>                            
-                            Contacto: {% if resultado.nombre_contacto %}{{resultado.nombre_contacto}} {% else %}No hay información.{% endif %}">
-                          Ver Teléfonos
-                        </button>                        
-                    </div>
+        {% for resultado in listado_resultados %}
+            <div class="image {{resultado.grupo}}" >
+                <div class="image-inner">
+                    <a href="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" data-lightbox="{{resultado.grupo}}">
+                        <img src="{% if not resultado.foto %}{{STATIC_URL}}img/actores/{{resultado.grupo}}.PNG{% else %}{{MEDIA_URL}}{{resultado.foto}}{% endif %}" alt="" />
+                    </a>
                 </div>
-            {% endfor %}                    
-        {% endfor %}
+                <div class="image-info">
+                    <h5 class="title">{{resultado.nombre}} {{resultado.nombres}} {{resultado.apellidos}}</h5>                        
+
+                    Entidad: {{resultado.entidad.nombre}}<br>                  
+                    {% if resultado.direccion %}{{resultado.direccion}}<br>{% endif %}
+                    {% if resultado.cargo %}Cargo: {{resultado.cargo}} <br>{% endif %}
+
+                    Ciudad: {{resultado.ciudad.nombre}} {{resultado.ciudad_residencia.nombre}}<br>
+                    <button class="btn-link" data-html="true" data-container="body" data-toggle="popover" data-placement="top" 
+                        data-content="Teléfono: {% if resultado.telefono_contacto %}{{resultado.telefono_contacto}}{% else %}No hay información.{% endif %}<br/>                            
+                        Contacto: {% if resultado.nombre_contacto %}{{resultado.nombre_contacto}} {% else %}No hay información.{% endif %}">
+                      Ver Teléfonos
+                    </button>                        
+                </div>
+            </div>
+        {% endfor %} 
         </div>
         {% else %}
         <div class="container"><h5>{{mensaje}}</h5></div>

@@ -15,6 +15,12 @@
 {% endblock %}
 
 {% block css %}
+    <style>
+        #mapa {
+            height: 250px;
+            width: 100%;
+          }
+    </style>
 {% endblock %}
 
 {% block titulo_panel %}
@@ -35,7 +41,8 @@
         <div class="panel-body" style="padding:0">
             <div class="row">
                 <div class="col-sm-12">
-                    <img src="http://www.conwayark.com/images/resized/images/stories/slideshow/sports_1200_300.jpg" alt="gimnasio" style="width:100%; height:250px">
+                    <!--<img src="http://www.conwayark.com/images/resized/images/stories/slideshow/sports_1200_300.jpg" alt="gimnasio" style="width:100%; height:250px">-->
+                    <div id="mapa"></div>
                     <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
                         <div class="panel-heading p-0">
                             <div class="panel-heading-btn m-r-10 m-t-10">
@@ -51,7 +58,7 @@
                                     <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-history"></i> Datos Históricos</a></li>
                                     <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-camera"></i> Fotos</a></li>
                                     <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-video-camera"></i> Videos</a></li>
-                                    <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li>
+                                    {% if not request.tenant.schema_name == 'public' %} <li class=""><a href="#nav-tab2-19" data-toggle="tab"><i class="fa fa-wrench"></i> Mantenimiento</a></li> {% endif %}
                                     <li class=""><a href="#nav-tab2-18" data-toggle="tab"><i class="fa fa-phone"></i> Contactos</a></li>
                                     <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                                 </ul>
@@ -66,20 +73,25 @@
                                     <div class="invoice-header">
                                         <div class="invoice-from">
                                             <address class="m-t-5 m-b-5">
-                                                <strong>{{escenario.direccion}}, Barrio {{escenario.barrio}}</strong><br/>
-                                                {{escenario.ciudad.nombre}}, {{escenario.ciudad.departamento.nombre}}<br/>
-                                                Latitud: {{escenario.latitud}} Longitud: {{escenario.longitud}} Altura: {{escenario.altura}} <br/>
-                                                Estrato: {{escenario.estrato}} Comuna: {{escenario.comuna}}<br/>
-                                                Nombre del Administrador: {{escenario.nombre_administrador}}
+                                                <p><b>Dirección:</b> {{escenario.direccion}}</p>
+                                                <p><b>Barrio:</b> {{escenario.barrio}}</p>
+                                                <p><b>Ciudad:</b> {{escenario.ciudad.nombre}}</p>
+                                                <p><b>Departamento:</b> {{escenario.ciudad.departamento.nombre}}</p>
+                                                <p><b>Latitud:</b>{% if escenario.latitud %}{{escenario.latitud}}{% else %} No especificado{% endif %}</p>
+                                                <p><b>Longitud:</b>{% if escenario.longitud %}{{escenario.longitud}}{% else %} No especificado{% endif %}</p>
+                                                <p><b>Altura:</b>{% if escenario.altura %}{{escenario.altura}}{% else %} No especificado{% endif %}</p>
+                                                <p><b>Estrato:</b> {{escenario.estrato}}</p>
+                                                <p><b>Comuna:</b> {{escenario.comuna}}</p>
+                                                <p><b>Nombre del Administrador:</b> {{escenario.nombre_administrador}}</p>
                                             </address>
-                                            <div align="right">
-                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
-                                            </div>
-                                        </div>
-                                        <h5 class="m-t-10"><strong>Descripción:</strong></h5>
-                                        <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% endif %}</p>
-                                    </div>
 
+                                        </div>
+                                        <h5 class="m-t-10"><b>Descripción:</b></h5>
+                                        <p>{% if escenario.descripcion %}{{escenario.descripcion}}{% else %}No especificado{% endif %}</p>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>                                   
                                 </div>
                             </div>
                             
@@ -93,21 +105,54 @@
                                     <div class="invoice-header">
                                         <div class="invoice-from">
                                             <address class="m-t-5 m-b-5">
-                                                <strong>{{caracteristica.tipo_escenario.descripcion}}</strong><br />
-                                                Capacidad de zona espectadores: {{caracteristica.capacidad_espectadores}}<br>Metros construídos: {{caracteristica.metros_construidos}}<br />
-                                                Disciplinas: {% for disciplina in caracteristica.tipo_disciplinas.all %} {{disciplina.descripcion}}, {% endfor %}<br />
-                                                Tipo de Superficie: {% for superficie in caracteristica.tipo_superficie_juego.all %} {{superficie.descripcion}}, {% endfor %}<br/>
-                                                Clase de Acceso: {{caracteristica.get_clase_acceso_display}} <br/>
-                                                Características del escenario: {% for caracteristica in caracteristica.caracteristicas.all %} {{caracteristica.descripcion}}, {% endfor %} <br/>
-                                                Clases de uso: {% for uso in caracteristica.clase_uso.all %} {{uso.descripcion}}, {% endfor %}                    
+                                                <p><b>Tipo de escenario:</b> {{caracteristica.tipo_escenario.descripcion}}</p>
+                                                <p><b>Capacidad de zona espectadores:</b> {{caracteristica.capacidad_espectadores}}</p>
+                                                <p><b>Metros construídos:</b> {{caracteristica.metros_construidos}}</p>
+                                                <p><b>Disciplinas:</b> {% for disciplina in caracteristica.tipo_disciplinas.all %} {{disciplina.descripcion}} {% if not forloop.last %},{% endif %} {% endfor %}</p>
+                                                <p><b>Tipo de Superficie:</b> {% for superficie in caracteristica.tipo_superficie_juego.all %} {{superficie.descripcion}} {% if not forloop.last %},{% endif %} {% endfor %}</p>
+                                                <p><b>Clase de Acceso:</b> {{caracteristica.get_clase_acceso_display}}</p>
+                                                <p><b>Características del escenario:</b>
+                                                {% for caracteristica in caracteristica.caracteristicas.all %}  
+                                                    {{caracteristica.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %} </p>
+                                                <p><b>Clases de uso:</b>
+                                                {% for uso in caracteristica.clase_uso.all %}  
+                                                    {{uso.descripcion}}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %} </p>                                                
+                                                {% if not request.tenant.schema_name == 'public' %}
+                                                    <p><b>Planos escenarios:</b> 
+                                                    {% if caracteristica.plano_archivo %}
+                                                         <a href="{{ MEDIA_URL }}{{ caracteristica.plano_archivo }}" target="_blank">{{ caracteristica.plano_archivo.name}}</a>
+                                                    {% else %}
+                                                    No disponible
+                                                    {% endif %} 
+                                                    </p>
+                                                {% endif %}
+                                                {% if not request.tenant.schema_name == 'public' %}                                                    
+                                                    {% if caracteristica.ficha_catastral %}
+                                                         <a href="{{ MEDIA_URL }}{{ caracteristica.ficha_catastral }}" target="_blank">{{ caracteristica.ficha_catastral.name}}</a>
+                                                    {% else %}
+                                                        No disponible
+                                                    {% endif %}
+                                                    </p>
+                                                {% endif %}
+                                                {% if not request.tenant.schema_name == 'public' %}  
+                                                    <p><b>Certificado de tradicion de libertad:</b>
+                                                    {% if caracteristica.certificado_tradicio_libertad %}
+                                                    <a href="{{ MEDIA_URL }}{{ caracteristica.certificado_tradicio_libertad }}" target="_blank">{{ caracteristica.certificado_tradicio_libertad.name}}</a>
+                                                    {% else %}
+                                                        No disponible
+                                                    {% endif %}
+                                                    </p>
+                                                {% endif %}
                                             </address>
                                             <div align="right">
                                                 <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                             </div>
                                         </div>
                                         <h5 class="m-t-10"><b>Descripción:</b></h5>
-                                        <p>{{caracteristica.descripcion}}</p>
-                                    </div>
+                                        <p>{% if caracteristica.descripcion %}{{caracteristica.descripcion}}{% else %} No especificado{% endif %}</p>
+                                    </div>                                    
                                     {% endfor %}
                                 {% else %}
                                     <p>No hay características disponibles</p>
@@ -173,7 +218,7 @@
                                                     {% for historico in historicos %}
                                                     <tr>
                                                         <td>{{historico.fecha_inicio}}</td>
-                                                        <td>{{historico.fecha_fin}}</td>
+                                                        {% if historico.fecha_fin %}<td>{{historico.fecha_fin}}</td>{% endif %}
                                                         <td>{{historico.descripcion}}</td>
                                                     </tr> 
                                                     {% endfor %}                               
@@ -221,10 +266,10 @@
                                         <table class="table table-invoice">
                                             <thead>
                                                 <tr>
-                                                    <th>VISUALIZACION</th>
-                                                    <th>URL</th>
-                                                    <th>DESCRIPCIÓN</th>
-                                                    <th>VER VÍDEO</th>
+                                                    <th style="text-align:center">VISUALIZACIÓN</th>
+                                                    <th style="text-align:center">URL</th>
+                                                    <th style="text-align:center">DESCRIPCIÓN</th>
+                                                    <th style="text-align:center">VER VÍDEO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -234,8 +279,8 @@
                                                     <td align="center" ><a target="_blank" href="https://www.youtube.com/watch?v={{video.url}}">https://www.youtube.com/watch?v={{video.url}}</a></td>
                                                     <td>{{video.descripcion}}</td>
                                                     <td>
-                                                        <a class="btn btn-md btn-info" href="#modal-video" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
-                                                        <div class="modal fade" id="modal-video">
+                                                        <a class="btn btn-md btn-info" href="#modal-{{video.id}}" data-toggle="modal"><i class="fa fa-play"></i> Ver Video</a>
+                                                        <div class="modal fade" id="modal-{{video.id}}">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -264,7 +309,7 @@
                                 {% endif %}
                                 </div>
                             </div>
-                            
+                            {% if not request.tenant.schema_name == 'public' %} 
                             <div class="tab-pane fade" id="nav-tab2-19">
                                 <div class="invoice">
                                 <div class="invoice-company">
@@ -273,34 +318,35 @@
                                 {% if mantenimientos %}
                                     <!-- end page-header -->
                                     <div class="table-responsive">
-                                        <table class="table table-invoice">
+                                        <table id="tabla-mantenimientos" class="table table-invoice">
                                             <thead>
                                                 <tr>
-                                                    <th>FECHA ÚLTIMO MANTENIMIENTO</th>
-                                                    <th>DESCRIPCIÓN ÚLTIMO MANTENIMIENTO</th>
+                                                    <th>FECHA MANTENIMIENTO</th>
+                                                    <th>DESCRIPCIÓN MANTENIMIENTO</th>
                                                     <th>PERIODICIDAD</th>
-                                                    <th>¿TIENE PLANOS?</th>
-                                                    <th>RAZONES NO MANTENIMIENTO</th>
+                                                    <th>INVERSIONISTA</th>
+                                                    <th>CONVENIO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for matenimiento in mantenimientos %}
-                                                <tr> 
-                                                    <td>{% if matenimiento.fecha_ultimo_mantenimiento %}{{matenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
-                                                    <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{matenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
-                                                    <td>{% if mantenimiento.get_periodicidad_display %}{{matenimiento.get_periodicidad_display}}{% endif %}</td>
-                                                    <td>{% if matenimiento.tiene_planos %} Sí {% else %} No {% endif %}</td>
-                                                    <td>{% if mantenimiento.razones_no_mantenimiento %}{{matenimiento.razones_no_mantenimiento}}{% endif %}</td>
-                                                </tr> 
-                                                {% endfor %}                               
+                                                {% for mantenimiento in mantenimientos %}
+                                                <tr>
+                                                    <td>{% if mantenimiento.fecha_ultimo_mantenimiento %}{{mantenimiento.fecha_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.descripcion_ultimo_mantenimiento %}{{mantenimiento.descripcion_ultimo_mantenimiento}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.get_periodicidad_display %}{{mantenimiento.get_periodicidad_display}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.inversionista %}{{mantenimiento.inversionista}}{% endif %}</td>
+                                                    <td>{% if mantenimiento.convenio %}{{mantenimiento.convenio}}{% endif %}</td>
+                                                </tr>
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>
                                 {% else %}
-                                    <p>No hay último mantenimiento registrado</p>
+                                    <p>No hay mantenimientos registrados</p>
                                 {% endif %}
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="tab-pane fade" id="nav-tab2-18">
                                 <div class="invoice">
                                 <div class="invoice-company">
@@ -348,7 +394,16 @@
     <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
     <script src="{{STATIC_URL}}js/gallery-v2.demo.min.js"></script>
     <script src="{{STATIC_URL}}js/apps.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/arrayToJson.js"></script>
 
+    <script type="text/javascript">
+        datosMostrar = "{{datosMostrar}}";
+        posicionInicial = "{{posicionInicial}}";
+        mapa = "mapa";
+    </script>
+
+    <script type="text/javascript" src="{{STATIC_URL}}js/coldeportes/ver_mas_georreferenciacion.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
 {% endblock %}
 
 {% block script %}

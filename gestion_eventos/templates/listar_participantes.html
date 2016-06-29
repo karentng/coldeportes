@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Eventos</a></li>
+    <li><a href="">Participantes</a></li>
+    <li class="active">Listar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Listado de participantes
+{% endblock %}
+
+{% block titulo_panel %}
+    Listado de participantes
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'dashboard' evento.id %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-participantes";
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block header_contendio %}
+        <h1 class="page-header">
+            {{ evento.titulo_evento|upper }} <small>Gestión de Eventos</small>
+        </h1>
+{% endblock header_contendio %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <div class="m-b-20" style="font-size: 25px;">
+                    Cupo Disponible: {{ cupo }}
+                </div>
+                <table id="tabla-participantes" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Fecha de nacimiento</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participante in participantes %}
+                            <tr>
+                                <td>{{ participante.0.nombre|upper }}</td>
+                                <td>{{ participante.0.apellido|upper }}</td>
+                                <td>{{ participante.0.fecha_nacimiento|upper }}</td>
+                                <td>{{ participante.0.get_estado_display|upper }}</td>
+                                    <td>
+                                        <a href="#" data-toggle="modal" data-target="#modal-participante-{{ participante.0.id }}" ><i class="fa fa-eye"></i> Ver más</a><br>
+                                        {% include 'modal_participante.html' %}
+                                    {% if 'gestion_eventos.change_evento' in perms %}
+                                        {% if participante.0.estado == 1 %}
+                                            <a href="{% url 'aceptar_candidato' participante.0.id %}"><i class="fa fa-check"></i> Aceptar inscripción</a><br>
+                                        {% elif evento.costo_entrada %}
+                                            {%if participante.0.estado == 3 %}
+                                                <a href="#" data-toggle="modal" data-target="#modal-pago-{{ participante.0.id }}" ><i class="fa fa-dollar"></i> Gestión de pago</a><br>
+                                                {% include 'modal_pago.html' %}
+                                                {% if participante.0.pago_registrado %}
+                                                    <a href="{% url 'generar_entrada' participante.0.id %}" ><i class="fa fa-file"></i> Generar escarapela</a><br>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            {%if participante.0.estado == 3 %}
+                                                <a href="{% url 'generar_entrada' participante.0.id %}" ><i class="fa fa-file"></i> Generar escarapela</a><br>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                    </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

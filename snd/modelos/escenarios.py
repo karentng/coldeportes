@@ -23,7 +23,7 @@ class Escenario(models.Model):
         ('ZR','ZONA RURAL'),
         ('ZU','ZONA URBANA'),
     )
-    nombre =  models.CharField(max_length=100,unique=True)
+    nombre =  models.CharField(max_length=100, unique=True)
     direccion = models.CharField(max_length=100, verbose_name='dirección')
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
@@ -36,7 +36,8 @@ class Escenario(models.Model):
     estado = models.IntegerField(choices=ESTADOS, verbose_name="estado del Escenario")
     ciudad = models.ForeignKey(Ciudad)
     division_territorial = models.CharField(choices=DIVISIONES, max_length=2, verbose_name="división territorial")    
-    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True)
+    razon_social = models.CharField(max_length=255, verbose_name="Razón social", blank=True)
+    descripcion = models.CharField(max_length=1024, verbose_name='descripción', null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -55,6 +56,41 @@ class Escenario(models.Model):
 
     def tipo_escenario(self):
         return self.caracteristicas().tipo_escenario
+
+    def posicionInicialMapa(self):
+        if self.latitud != None and self.longitud != None:
+            coordenadas = [self.latitud, self.longitud]
+        else:
+            try:
+                ciudad = self.ciudad
+            except Exception:
+                ciudad = Ciudad.objects.get(nombre="Bogotá D.C.")
+
+            coordenadas = [ciudad.latitud, ciudad.longitud]
+
+        return coordenadas
+
+    def obtener_atributos(self):
+        from django.conf import settings
+        imagen = None
+        if len(self.fotos()) != 0:
+            imagen = ("%s%s")%(settings.MEDIA_URL, self.fotos()[0].__str__())
+        else:
+            imagen = ("%s%s")%(settings.STATIC_URL, "img/actores/EscenarioView.PNG")
+        atributos = [
+            ["Nombre", self.nombre],
+            ["Ciudad", self.ciudad.nombre],
+            ["Comuna", self.comuna],
+            ["Barrio", self.barrio],
+            ["Estrato", self.estrato],
+            ["Dirección", self.direccion],
+            ["Latitud", self.latitud],
+            ["Longitud", self.longitud],
+        ]
+        return [imagen, atributos, self.latitud, self.longitud, "Escenario!"]
+
+    def __str__(self):
+        return self.nombre
 
 
 class CaracterizacionEscenario(models.Model):   
@@ -85,6 +121,10 @@ class CaracterizacionEscenario(models.Model):
     clase_uso = models.ManyToManyField(TipoUsoEscenario)
     tipo_propietario = models.CharField(max_length=2, verbose_name='tipo de propietario', choices=PROPIETARIOS)
     descripcion = models.TextField(verbose_name='descripción',  max_length=1024, null=True)
+    tiene_planos = models.BooleanField(verbose_name='¿Se cuenta con los planos del escenario?', default=False)
+    plano_archivo = models.FileField(upload_to="archivos_escenarios/", verbose_name="Plano del escenario (opcional)", null=True, blank=True)
+    ficha_catastral = models.FileField(upload_to="archivos_escenarios/", verbose_name="Ficha catastral (opcional)", null=True, blank=True)
+    certificado_tradicio_libertad = models.FileField(upload_to="archivos_escenarios/", verbose_name="Certificado de tradición y libertad (opcional)", null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HorarioDisponibilidad(models.Model):
@@ -125,18 +165,20 @@ class Mantenimiento(models.Model):
         ('an', 'ANUAL'),
     )
     escenario = models.ForeignKey(Escenario)
-    fecha_ultimo_mantenimiento = models.DateField( verbose_name="fecha del último mantenimiento", null=True, blank=True)
-    descripcion_ultimo_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name='descripción del último mantenimiento')
-    periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True, blank=True)    
-    razones_no_mantenimiento = models.TextField(null=True, blank=True, max_length=1024, verbose_name="Si no se realiza mantenimiento, mencione las razones")
-    tiene_planos = models.BooleanField(verbose_name='¿se cuenta con los planos del escenario?')
+    fecha_ultimo_mantenimiento = models.DateField(verbose_name="Fecha del mantenimiento", null=True)
+    descripcion_ultimo_mantenimiento = models.TextField(null=True, max_length=1024, verbose_name='Descripción del mantenimiento')
+    periodicidad = models.CharField(choices=PERIODICIDADES, max_length=2, null=True)
+    inversionista = models.CharField(max_length=255, verbose_name="¿Quién invirtió en el mantenimiento?", null=True, blank=True)
+    convenio = models.CharField(max_length=255, verbose_name="Convenio mediante el cual se realizó el mantenimiento", null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+
 
 class DatoHistorico(models.Model):
     escenario = models.ForeignKey(Escenario)
-    fecha_inicio = models.DateField()
+    fecha_inicio = models.DateField(verbose_name="fecha inicio del suceso histórico")
     fecha_fin = models.DateField(null=True, blank=True)
-    descripcion = models.TextField(max_length=1024, verbose_name="descripción")
+    tipo_suceso = models.CharField(verbose_name="Tipo de suceso histórico", max_length=50)
+    descripcion = models.TextField(max_length=1024, verbose_name="descripción del suceso histórico")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class Contacto(models.Model):

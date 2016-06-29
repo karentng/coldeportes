@@ -185,11 +185,11 @@ def eliminar_cargo(request, cargo_id, dirigente_id):
         cargo = DirigenteCargo.objects.get(id=cargo_id, dirigente_id = dirigente_id)
         cargo.delete()
         messages.success(request,'El cargo ha sido eliminado con éxito.')
-        return redirect('dirigentes_cargos', dirigente_id)
+        return redirect('dirigentes_cargos',dirigente_id=dirigente_id, edicion=1)
 
     except DirigenteCargo.DoesNotExist:
         messages.error(request,'Está tratando de eliminar un cargo inexistente.')
-        return redirect('dirigentes_cargos', dirigente_id)
+        return redirect('dirigentes_cargos', dirigente_id=dirigente_id, edicion=1)
 
 
 @login_required
@@ -290,6 +290,80 @@ def eliminar_funcion(request, dirigente_id, cargo_id, funcion_id):
         messages.error(request,'Está tratando de eliminar un función inexistente.')
         return redirect('dirigentes_funciones', dirigente_id, cargo_id)
 
+@login_required
+@all_permission_required('snd.add_dirigente')
+def wizard_formacion_academica(request,dirigente_id, edicion):
+    """
+    Mayo 05 / 2016
+    Autor: Daniel Correa
+
+    Formacion academica de un dirigente
+
+    Se obtiene el formulario de la formacion academica del dirigente y se muestra el historial actualmente añadido
+    y si hay nuevos registros se guardan.
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param dirigente_id:   Identificador del dirigente
+    :type dirigente_id:    String
+    """
+
+    info_acad = DirigenteFormacionAcademica.objects.filter(dirigente=dirigente_id)
+
+    try:
+        dirigente = Dirigente.objects.get(id=dirigente_id)
+    except:
+        messages.error(request,'Está tratando de editar un dirigente inexistente.')
+        return redirect('dirigentes_listar')
+
+    info_acad_form = DirigenteFormacionAcademicaForm()
+
+    if request.method == 'POST':
+        info_acad_form = DirigenteFormacionAcademicaForm(request.POST)
+
+        if info_acad_form.is_valid():
+            inf_academ_nuevo = info_acad_form.save(commit=False)
+            inf_academ_nuevo.dirigente = dirigente
+            inf_academ_nuevo.save()
+            info_acad_form.save()
+            return redirect('dirigentes_formacion_academica', dirigente_id=dirigente_id, edicion=edicion)
+
+    return render(request, 'dirigentes/wizard/wizard_formacion_academica.html', {
+        'titulo': 'Formación académica',
+        'wizard_stage': 4,
+        'form': info_acad_form,
+        'historicos': info_acad,
+        'dirigente_id': dirigente_id,
+        'edicion':edicion
+    })
+
+@login_required
+@all_permission_required('snd.add_dirigente')
+def eliminar_formacion_academica(request, cargo_id, dirigente_id):
+    """
+    Mayo 06 / 2016
+    Autor: Daniel Correa
+
+    Eliminar formacion academica
+
+    Se obtienen la formacion academica del dirigente de la base de datos y se elimina
+
+    :param request:   Petición realizada
+    :type request:    WSGIRequest
+    :param dirigente_id   Identificador del dirigente
+    :type dirigente_id    String
+    :param cargo_id   Identificador del cargo del dirigente
+    :type cargo_id    String
+    """
+    try:
+        forma_academica = DirigenteFormacionAcademica.objects.get(id=cargo_id, dirigente_id = dirigente_id)
+        forma_academica.delete()
+        messages.success(request,'El registro de formación académica ha sido eliminado con éxito.')
+        return redirect('dirigentes_formacion_academica',dirigente_id=dirigente_id, edicion=1)
+
+    except DirigenteCargo.DoesNotExist:
+        messages.error(request,'Está tratando de eliminar un registro de formación académica inexistente.')
+        return redirect('dirigentes_formacion_academica', dirigente_id=dirigente_id, edicion=1)
 
 @login_required
 def listar(request):
@@ -400,12 +474,15 @@ def ver(request, dirigente_id,id_entidad):
         return redirect('dirigentes_listar')
 
     cargos = DirigenteCargo.objects.filter(dirigente=dirigente)
+    academica = DirigenteFormacionAcademica.objects.filter(dirigente=dirigente)
+
     for cargo in cargos:
         cargo.funciones = DirigenteFuncion.objects.filter(dirigente=dirigente, cargo=cargo.id)
 
     return render(request, 'dirigentes/dirigentes_ver.html', {
         'dirigente': dirigente,
-        'cargos': cargos
+        'cargos': cargos,
+        'academica':academica
     })
 
 

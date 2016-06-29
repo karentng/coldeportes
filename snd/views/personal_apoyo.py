@@ -101,7 +101,8 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
     try:
         personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
     except Exception:
-        personal_apoyo = None
+        messages.error(request,'Está tratando de editar un personal de apoyo inexistente.')
+        return redirect('personal_apoyo_listar')
 
     personal_apoyo_form = PersonalApoyoForm(instance=personal_apoyo)
 
@@ -129,7 +130,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
 
 @login_required
 @permission_required('snd.change_personalapoyo')
-def wizard_formacion_deportiva(request,id_personal_apoyo):
+def wizard_formacion_deportiva(request, id_personal_apoyo):
     """
 
     Junio 9 / 2015
@@ -154,18 +155,23 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         formacion_deportiva = None
         edicion = False
 
-    personal_apoyo= PersonalApoyo.objects.get(id=id_personal_apoyo)
+    try:
+        personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    except Exception:
+        messages.error(request,'Está tratando de editar un personal de apoyo inexistente.')
+        return redirect('personal_apoyo_listar')
 
     formaciondep_form = FormacionDeportivaForm()
 
     if request.method == 'POST':
-        formaciondep_form = FormacionDeportivaForm(request.POST)
+        formaciondep_form = FormacionDeportivaForm(request.POST, request.FILES)
         if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
             formacion_deportiva.personal_apoyo = personal_apoyo
             formacion_deportiva.save()
             formaciondep_form.save()
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)
+        print(formaciondep_form.errors)
 
     return render(request, 'personal_apoyo/wizard/wizard_formacion_deportiva.html', {
         'titulo': 'Formación académica',
@@ -173,7 +179,7 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         'form': formaciondep_form,
         'historicos': formacion_deportiva,
         'id_personal_apoyo': id_personal_apoyo,
-        'edicion':edicion
+        'edicion': edicion
     })
 
 @login_required
@@ -206,7 +212,7 @@ def eliminar_formacion_deportiva(request,id_personal_apoyo,id_formacion):
 
 @login_required
 @permission_required('snd.change_personalapoyo')
-def wizard_experiencia_laboral(request,id_personal_apoyo):
+def wizard_experiencia_laboral(request, id_personal_apoyo):
     """
     Junio 9 / 2015
     Autor: Milton Lenis
@@ -228,12 +234,16 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
         experiencia_laboral = None
         edicion = False
 
-    personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    try:
+        personal_apoyo = PersonalApoyo.objects.get(id=id_personal_apoyo)
+    except Exception:
+        messages.error(request,'Está tratando de editar un personal de apoyo inexistente.')
+        return redirect('personal_apoyo_listar')
 
     experiencia_laboral_form = ExperienciaLaboralForm()
 
     if request.method == 'POST':
-        experiencia_laboral_form = ExperienciaLaboralForm(request.POST)
+        experiencia_laboral_form = ExperienciaLaboralForm(request.POST, request.FILES)
 
         if experiencia_laboral_form.is_valid():
             experiencia_laboral_nuevo = experiencia_laboral_form.save(commit=False)

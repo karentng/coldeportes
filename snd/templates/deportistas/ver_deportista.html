@@ -68,8 +68,6 @@
 
                                 <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-md fa-medkit"></i> Historial Lesiones</a></li>
 
-                                <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-md fa-heartbeat"></i> Historial Doping</a></li>
-
                                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
                             </ul>
                         </div>
@@ -105,11 +103,13 @@
                                                         <b>Entidad:</b> {{ deportista.entidad | upper}}<br/>
                                                     {% endif %}</p>
                                                     {% if request.tenant.schema_name != 'public' %}
-                                                        {% ifequal deportista.estado 3 %}
+                                                        {% if deportista.estado == 3%}
                                                             <p><b>Estado:</b> {{deportista.get_estado_display}} A {{ deportista.entidad | upper  }}</p>
+                                                        {% elif deportista.estado == 4 %}
+                                                            <p><b>Estado:</b> {{deportista.get_estado_display}} A {{ deportista.entidad_actual | upper  }}</p>
                                                         {% else %}
                                                             <p><b>Estado:</b> {{deportista.get_estado_display}}</p>
-                                                        {% endifequal %}
+                                                        {% endif %}
                                                     {% endif %}
                                                     <p><b>Género:</b> {{deportista.get_genero_display}}</p>
                                                     <p><b>Edad:</b> {{ deportista.edad }}</p>
@@ -123,7 +123,7 @@
                                                     </p>
                                                     <p><b>Nacionalidades:</b> {{deportista.nacionalidad_str}}</p>
                                                     <p><b>Ciudad (Departamento) de Residencia:</b> {{ deportista.ciudad_residencia}}</p>
-                                                    <p><b>Club Deportivo Actual:</b> {{ deportista.entidad }}</p>
+                                                    <p><b>Club Deportivo Actual:</b> {% if deportista.estado == 4 %}{{ deportista.entidad_actual }}{% else %}{{ deportista.entidad }}{% endif %}</p>
                                                 </div>
                                             {% if perms.snd.change_deportista and request.tenant.schema_name != 'public' %}
                                                 <p><strong>Contacto:</strong></p>
@@ -262,13 +262,13 @@
                                                     <thead>
                                                         <tr>
                                                             <th>NOMBRE COMPETENCIA</th>
-                                                            <th>FECHA INICIAL</th>
+                                                            <th>FECHA INICIACIÓN</th>
                                                             <th>FECHA FINALIZACIÓN</th>
                                                             <th>PAÍS</th>
-                                                            <th>INSTITUCIÓN O EQUIPO</th>
-                                                            <th>TIPO</th>
-                                                            <th>PUESTO</th>
-                                                            <th>CATEGORIA</th>
+                                                            <th>DEPORTE</th>
+                                                            <th>CLASE DE CAMPEONATO</th>
+                                                            <th>CLUB DEPORTIVO</th>
+                                                            <th>MAS DETALLE</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -278,6 +278,8 @@
                                                                 <td>{{historial.fecha_inicial}}</td>
                                                                 <td>{{ historial.fecha_final }}</td>
                                                                 <td>{{historial.pais}}</td>
+                                                                <td>{{historial.deporte}}</td>
+                                                                <td>{{historial.tipo}}</td>
                                                                 <td>
                                                                     {% if historial.institucion_equipo %}
                                                                         {{ historial.institucion_equipo }}
@@ -285,9 +287,73 @@
                                                                         Ninguno
                                                                     {% endif %}
                                                                 </td>
-                                                                <td>{{historial.tipo}}</td>
-                                                                <td>{{historial.puesto}}</td>
-                                                                <td>{{historial.categoria}}</td>
+                                                                <td>
+                                                                    <a class="btn btn-md btn-info" href="#modal-masdetalle-{{historial.id}}" data-toggle="modal"><i class="fa fa-binoculars"></i> Ver mas</a>
+                                                                    <div class="modal fade" id="modal-masdetalle-{{historial.id}}">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                                    <h4 class="modal-title">Detalle historial deportivo de {{ deportista.full_name }}:</h4>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="table-responsive">
+                                                                                        <table class="table table table-striped table-bordered table-hover">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th>DEPORTE</th>
+                                                                                                    <th>CATEGORÍA</th>
+                                                                                                    <th>MODALIDAD</th>
+                                                                                                    <th>PUESTO OBTENIDO</th>
+                                                                                                    <th>MARCA OBTENIDA</th>
+                                                                                                    <th>DIVISIÓN DE COMPETENCIA</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>{{historial.deporte}}</td>
+                                                                                                    <td>
+                                                                                                        {% if historial.categoria %}
+                                                                                                            {{ historial.categoria }}
+                                                                                                        {% else %}
+                                                                                                            No hay categoría registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {% if historial.modalidad %}
+                                                                                                            {{ historial.modalidad }}
+                                                                                                        {% else %}
+                                                                                                            No hay modalidad registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                    <td>{{ historial.puesto }}</td>
+                                                                                                    <td>
+                                                                                                        {% if historial.marca %}
+                                                                                                            {{ historial.marca }}
+                                                                                                        {% else %}
+                                                                                                            No hay marca registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {% if historial.division %}
+                                                                                                            {{ historial.division }}
+                                                                                                        {% else %}
+                                                                                                            No hay división registrada
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <a href="javascript:;" class="btn btn-md btn-warning" data-dismiss="modal">Cerrar</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
                                                             </tr>
                                                         {% endfor %}
                                                     </tbody>
@@ -350,6 +416,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!--HISTORIAL LESIONES-->
                         <div class="tab-pane fade" id="nav-tab2-16">
                             <div class="invoice">
@@ -366,6 +433,7 @@
                                                             <th>TIPO LESIÓN</th>
                                                             <th>FECHA LESIÓN</th>
                                                             <th>PERIODO REHABILITACIÓN</th>
+                                                            <th>SEGMENTO CORPORAL</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -374,54 +442,12 @@
                                                                 <td>{{historial.get_tipo_lesion_display}}</td>
                                                                 <td>{{historial.fecha_lesion}}</td>
                                                                 <td>{{historial.get_periodo_rehabilitacion_display}}</td>
+                                                                <td>{{ historial.get_segmento_corporal_display }}</td>
                                                             </tr>
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>
                                                 {%if not historial_lesiones%}
-                                                    <p align="center">No hay resultados disponibles</p>
-                                                {%endif%}
-                                            </div>
-                                        </address>
-                                        <div align="right">
-                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--HISTORIAL DOPING-->
-                        <div class="tab-pane fade" id="nav-tab2-17">
-                            <div class="invoice">
-                                <div class="invoice-company">
-                                    <b>{{deportista.nombres}} {{deportista.apellidos}}</b>
-                                </div>
-                                <div class="invoice-header">
-                                    <div class="invoice-from">
-                                        <address class="m-t-5 m-b-5">
-                                            <div class="table-responsive">
-                                                <table class="table table-invoice">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>FECHA</th>
-                                                            <th>EVENTO</th>
-                                                            <th>DELEGADO</th>
-                                                            <th>OBSERVACIONES</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for historial in historial_doping %}
-                                                            <tr>
-                                                                <td>{{historial.fecha}}</td>
-                                                                <td>{{historial.evento}}</td>
-                                                                <td>{% if request.tenant.schema_name != 'public' %}{{historial.tipo_identidad_delegado}}:{{historial.identificacion_delegado}}
-                                                                    ,{% endif %} {{ historial.nombre_delegado }}</td>
-                                                                <td>{{historial.observaciones}}</td>
-                                                            </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                                {%if not historial_doping%}
                                                     <p align="center">No hay resultados disponibles</p>
                                                 {%endif%}
                                             </div>

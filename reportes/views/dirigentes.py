@@ -94,3 +94,123 @@ def nacionalidad_dirigentes(request):
         'nombre_columna': 'Nacionalidades'
     })
 
+def ejecutar_filtros(consultas,departamentos,genero,tipoTenant):
+    """
+    Noviembre 13, 2015
+    Autor: Daniel Correa
+
+    Permite ejecutar los diferentes filtros de casos de acuerdo a un arreglo de consultas
+    CONSULTAS LLEVA EL SIGUIENTE FORMATO [contulta caso 1, consulta caso 2 , consulta caso 3, ... ,consulta caso n]
+    LOS CASOS EMPIEZAN EN 1 EL DE MAS ARRIBA HASTA N EL DE MAS ABAJO
+    """
+    if departamentos and genero:
+        resultado = eval(consultas[0]%(departamentos,genero))
+    elif departamentos:
+        resultado = eval(consultas[1]%(departamentos))
+    elif genero:
+        resultado = eval(consultas[2]%(genero))
+    else:
+        resultado = eval(consultas[3])
+    return resultado
+
+def cantidad_dirigentes(request):
+    """
+    Marzo 8 de 2016
+    Autor: Yalile Bermudes Saavedra
+
+    Permite conocer la cantidad de dirigentes por municipio o departamento.
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDirigenteView
+    else:
+        tabla = TenantDirigenteView
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null' else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+
+        consultas = [
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s,genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,ciudad__departamento__id__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0,genero__in=%s).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado = 0).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))",
+        ]
+
+        total_dirigentes = len(ejecutar_filtros(consultas,departamentos,genero, tipoTenant))
+
+        resultado = {
+            'Total Dirigentes':total_dirigentes
+        }
+
+        return JsonResponse(resultado)
+
+    else:
+        total_dirigentes = len(tabla.objects.filter(estado = 0).values('id','entidad').annotate(cantidad=Count('id',distinct=True)))
+
+        resultado = {
+            'Total Dirigentes':total_dirigentes
+        }
+
+    visualizaciones = [1]
+    form = NacionalidadForm(visualizaciones=visualizaciones)
+    return render(request, 'dirigentes/base_dirigentes.html', {
+        'nombre_reporte' : 'Cantidad total de dirigentes',
+        'url_data' : 'reportes_cantidad_dirigentes',
+        'datos': resultado,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Dirigentes',
+        'fecha_generado': datetime.now(),
+        'nombres_columnas':"Descripción"
+    })
+
+def formacion_academica_dirigentes(request):
+    """
+    Mayo 6, 2016
+    Autor: Daniel Correa
+
+    Permite conocer la formacion academica de los dirigentes caracterizadas por niveles de formacion
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDirigenteView
+    else:
+        tabla = TenantDirigenteView
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',ciudad__departamento__id__in=%s).annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',genero__in=%s).annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado').annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+        ]
+
+        formaciones = ejecutar_filtros(consultas,departamentos,genero,tipoTenant)
+        formaciones = tipoTenant.ajustar_resultado(formaciones)
+
+        return JsonResponse(formaciones)
+
+    else:
+        formaciones = list(tabla.objects.filter(estado=0,estado_formacion='Finalizado').annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))
+        formaciones = tipoTenant.ajustar_resultado(formaciones)
+
+
+    visualizaciones = [1, 3, 5, 6]
+    form = NacionalidadForm(visualizaciones=visualizaciones)
+    return render(request, 'dirigentes/base_dirigentes.html', {
+        'nombre_reporte' : 'Formación Académica de los dirigentes',
+        'url_data' : 'reportes_formacion_academica_dirigentes',
+        'datos': formaciones,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Dirigentes',
+        'fecha_generado': datetime.now(),
+        'nombre_columna': 'Niveles de Formación'
+    })

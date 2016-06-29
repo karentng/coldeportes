@@ -29,7 +29,6 @@ function valoresEnCero(datos){
 
 
 AmCharts.checkEmptyData = function (chart) {
-    console.log(valoresEnCero(chart.dataProvider));
     if ( 0 == chart.dataProvider.length || valoresEnCero(chart.dataProvider)) {
         // set min/max on the value axis
         try{
@@ -119,7 +118,7 @@ function ClaseReportes(){
         chart.addChartCursor(chartCursor);
 
         chart.exportConfig = exportConfig();
-    
+        chart.responsive = { "enabled": true };
         // WRITE
         chart.write(nombreDiv);
         charts.push([chart, nombreDiv]);
@@ -144,7 +143,7 @@ function ClaseReportes(){
         chart.depth3D = 15;
         chart.angle = 30;
         chart.exportConfig = exportConfig();
-
+        chart.responsive = { "enabled": true };
         // WRITE
         chart.write(nombreDiv); 
         charts.push([chart, nombreDiv]);
@@ -198,7 +197,7 @@ function ClaseReportes(){
         chart.creditsPosition = "top-right";
 
         chart.exportConfig = exportConfig();
-
+        chart.responsive = { "enabled": true };
         // WRITE
         chart.write(nombreDiv);
         charts.push([chart, nombreDiv]);
@@ -420,7 +419,7 @@ function ClaseReportes(){
         chart.creditsPosition = "top-right";
 
         chart.exportConfig = exportConfig();
-
+        chart.responsive = { "enabled": true };
         // WRITE
         chart.write(nombreDiv);
         charts.push([chart, nombreDiv]);
@@ -448,7 +447,7 @@ function ClaseReportes(){
         chart.labelPosition = "right";
         chart.balloonText = "<b>[[descripcion]]</b>: [[valor]]";
         chart.exportConfig = exportConfig();
-
+        chart.responsive = { "enabled": true };
         // WRITE
         chart.write(nombreDiv);
         charts.push([chart, nombreDiv]);
@@ -481,7 +480,7 @@ function ClaseReportes(){
         chart.addGraph(graph1);
 
         chart.categoryField = "descripcion"
-
+        chart.responsive = { "enabled": true };
         // WRITE
         chart.write(nombreDiv);
         charts.push([chart, nombreDiv]);

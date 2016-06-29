@@ -1,5 +1,5 @@
 import os
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from entidades.models import *
 from entidades.forms import *
@@ -19,6 +19,7 @@ from reportes.crear_vistas_actores import *
 from django.forms import modelformset_factory, modelform_factory
 from django.http import HttpResponse
 from datos_iniciales.disciplinas_deportivas.script_disciplina import *
+from datos_iniciales.disciplinas_deportivas.script_log_deportivo import *
 
 @login_required
 def tipo(request):
@@ -134,6 +135,10 @@ def registro(request, tipo, tipoEnte=None):
 
             try:
                 obj.save()
+                #Condicion para que siempre que hayan escenarios exista solicitud
+                if actores.escenarios:
+                    actores.solicitud = True
+                    actores.save()
                 messages.success(request, ("%s registrado correctamente.")%(nombre))
                 from reportes.crear_vistas_actores.creacion_vistas import generar_vistas
                 generar_vistas(obj, obj.obtener_padre())
@@ -143,6 +148,8 @@ def registro(request, tipo, tipoEnte=None):
                     return redirect('entidad_registro', tipo)
             except Exception as e:
                 form.add_error('pagina', "Por favor ingrese otro URL dentro del SIND")
+                print(e)
+                #return HttpResponse(e)
                 actores.delete()
 
     return render(request, 'entidad_registro.html', {
@@ -178,6 +185,9 @@ def editar(request, idEntidad, tipo):
         if form.is_valid() and form2.is_valid():
             actores = form2.save(commit=False)
             add_actores(actores,permisos.get_actores('O'))
+            #Condicion para que siempre que hayan escenarios exista solicitud
+            if actores.escenarios:
+                actores.solicitud = True
             actores.save()
             obj = form.save()
             messages.success(request, ("%s editado correctamente.")%(nombre))
@@ -375,6 +385,7 @@ def ver_personal_apoyo_tenantnacional(request,id_personal_apoyo,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -413,6 +424,7 @@ def ver_dirigente_tenantnacional(request,dirigente_id,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -454,6 +466,7 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
 
     if estado != 'TRANSFERIDO':
         tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
@@ -471,7 +484,6 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
     if len(info_adicional) != 0:
         info_adicional = info_adicional[0]
     historial_lesiones = HistorialLesiones.objects.filter(deportista=deportista)
-    historial_doping = HistorialDoping.objects.filter(deportista=deportista)
     historial_deportivo = HistorialDeportivo.objects.filter(deportista=deportista,estado='Aprobado')
     informacion_academica = InformacionAcademica.objects.filter(deportista=deportista)
     return render(request,'deportistas/ver_deportista.html',{
@@ -480,7 +492,6 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
             'info_adicional':info_adicional,
             'historial_deportivo':historial_deportivo,
             'historial_lesiones':historial_lesiones,
-            'historial_doping':historial_doping,
             'informacion_academica':informacion_academica
     })
 
@@ -505,7 +516,7 @@ def ver_escenario_tenantnacional(request,escenario_id,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
-
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -523,6 +534,9 @@ def ver_escenario_tenantnacional(request,escenario_id,id_entidad):
     mantenimientos =  Mantenimiento.objects.filter(escenario=escenario)
     contactos = Contacto.objects.filter(escenario=escenario)
 
+    datos_georreferenciacion = escenario.obtener_atributos()
+    posicion_inicial = escenario.posicionInicialMapa()
+
     return render(request, 'escenarios/ver_escenario.html', {
         'escenario': escenario,
         'caracteristicas': caracteristicas,
@@ -532,7 +546,9 @@ def ver_escenario_tenantnacional(request,escenario_id,id_entidad):
         'videos': videos,
         'mantenimientos': mantenimientos,
         'escenario_id': escenario_id,
-        'contactos': contactos
+        'contactos': contactos,
+        'datosMostrar': json.dumps(datos_georreferenciacion),
+        'posicionInicial': json.dumps(posicion_inicial),
     })
 
 
@@ -556,6 +572,7 @@ def ver_caf_tenantnacional(request,idCAF,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -588,6 +605,7 @@ def ver_cajas_tenantnacional(request,ccf_id,id_entidad):
     :param ccf_id:   Identificador del escenario
     :type ccf_id:    String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -626,6 +644,7 @@ def ver_escuelas_tenantnacional(request,id_escuela,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -645,7 +664,6 @@ def ver_escuelas_tenantnacional(request,id_escuela,id_entidad):
 @superuser_only
 def permisos(request):
     PermisosFormSet = modelformset_factory(Permisos, form = PermisosForm, max_num=1)
-
     if request.method == 'POST':
         formset = PermisosFormSet(request.POST)
         if formset.is_valid():
@@ -686,3 +704,514 @@ def cambio_disciplinas(request):
     insertar_actualizar_deportes()
     insertar_modalidades_categorias()
     return HttpResponse("Deportes, modalidades y categorias insertados en base de datos")
+
+@login_required
+def log_disciplinas(request):
+    j = create_log_deportivo()
+    return JsonResponse(j)
+    #return HttpResponse("Log creado exitosamente en datos_iniciales/disciplinas_deportivas/log_deportivo.txt")
+
+#TEMPORAL MODALIDADES CATEGORIAS
+@login_required
+def listar_modalidades(request):
+    modal = ModalidadDisciplinaDeportiva.objects.all()
+    return render(request,'modalidades_categorias/listar.html',{
+        'listado': modal,
+        'url': 'crear_editar_mod'
+    })
+
+@login_required
+def listar_categorias(request):
+    categ = CategoriaDisciplinaDeportiva.objects.all()
+    return render(request,'modalidades_categorias/listar.html',{
+        'listado': categ,
+        'url': 'crear_editar_cat'
+    })
+
+@login_required
+def crear_editar_mod(request,id=None):
+    mod = None
+    if id:
+        mod = ModalidadDisciplinaDeportiva.objects.get(id=id)
+
+    form = ModalidadForm(instance=mod)
+
+    if request.method == 'POST':
+        form = ModalidadForm(request.POST,instance=mod)
+        form.save()
+        messages.success(request,'creado/editado correctamente')
+        return redirect('listar_modalidades')
+
+    return render(request,'modalidades_categorias/registro.html',{
+        'form':form,
+        'nombre': 'MODALIDADES',
+        'url' : 'listar_modalidades'
+    })
+
+@login_required
+def crear_editar_cat(request,id=None):
+    cat = None
+    if id:
+        cat = CategoriaDisciplinaDeportiva.objects.get(id=id)
+
+    form = CategoriaForm(instance=cat)
+
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST,instance=cat)
+        form.save()
+        messages.success(request,'creado/editado correctamente')
+        return redirect('listar_categorias')
+
+    return render(request,'modalidades_categorias/registro.html',{
+        'form':form,
+        'nombre': 'CATEGORIAS',
+        'url' : 'listar_categorias'
+    })
+
+@login_required
+def listar_deportes(request):
+    dep = TipoDisciplinaDeportiva.objects.all()
+    return render(request,'modalidades_categorias/listar_dep.html',{
+        'listado': dep,
+        'url': 'crear_editar_dep'
+    })
+
+@login_required
+def crear_editar_dep(request,id=None):
+    dep = None
+    if id:
+        dep = TipoDisciplinaDeportiva.objects.get(id=id)
+
+    form = DeporteForm(instance=dep)
+
+    if request.method == 'POST':
+        form = DeporteForm(request.POST,instance=dep)
+        form.save()
+        messages.success(request,'creado/editado correctamente')
+        return redirect('listar_deportes')
+
+    return render(request,'modalidades_categorias/registro.html',{
+        'form':form,
+        'nombre': 'DEPORTES',
+        'url' : 'listar_deportes'
+    })
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def mostrar_gestion_socios(request):
+    """
+    Marzo 02 / 2016
+    Autor: Diego Monsalve
+
+    Gestion de socios
+
+    Se permite crear un nuevo socio y se muestran los socios que ya se han registrado en el club.
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+    if request.method == 'POST':
+        form = SocioClubForm(request.POST)
+        if form.is_valid():
+            socio = form.save(commit=False)
+            club = request.tenant.obtenerTenant()
+
+            club_id = club.id
+            num_doc = socio.numero_documento
+
+            if club.socios.filter(club_id = club_id, numero_documento = num_doc).count() > 0:
+                messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+                lista_socios = club.socios.all()
+                form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
+                return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
+            else:
+                socio.club_id = club.id
+                socio = form.save()
+                club.socios.add(socio)
+                messages.success(request, "Socio registrado correctamente.")
+                return redirect('gestion_socios')
+        else:
+            messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+            club = request.tenant.obtenerTenant()
+            lista_socios = club.socios.all()
+            return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
+    else:
+        club = request.tenant.obtenerTenant()
+        lista_socios = club.socios.all()
+        form = SocioClubForm()
+        return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios})
+
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def desactivar_socio(request, id_socio):
+    """
+    Marzo 02 / 2016
+    Autor: Diego Monsalve
+
+    Desactivar o activar socio
+
+    Permite cambiar el estado de un socio
+
+    :param request:     Petición realizada
+    :type request:      WSGIRequest
+    :param id_socio:    Identificador del socio
+    :type id_socio:     String
+    """
+    try:
+        club = request.tenant.obtenerTenant()
+        socio = club.socios.get(id=id_socio)
+    except:
+        messages.error(request, 'No se pudo encontrar el socio.')
+        return redirect('gestion_socios')
+
+    if socio.estado == 0:
+        socio.estado = 1
+        messages.success(request, "Socio desactivado correctamente.")
+    else:
+        socio.estado = 0
+        messages.success(request, "Socio activado correctamente.")
+    socio.save()
+    return redirect('gestion_socios')
+
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def editar_socio(request, id_socio):
+    from django.db import IntegrityError
+
+    """
+    Marzo 03 / 2016
+    Autor: Diego Monsalve
+
+    Editar información de un socio
+
+    Permite actualizar la información de un socio
+
+    :param request:     Petición realizada
+    :type request:      WSGIRequest
+    :param id_socio:    Identificador del socio
+    :type id_socio:     String
+    """
+    try:
+        club = request.tenant.obtenerTenant()
+        socio = club.socios.get(id=id_socio)
+    except:
+        messages.error(request, 'No se pudo encontrar el socio.')
+        return redirect('gestion_socios')
+
+    if request.method == 'POST':
+        form = SocioClubForm(request.POST, instance=socio)
+        if form.has_changed():
+            if form.is_valid():
+                try:
+                    form.save()
+                    messages.success(request, "Socio editado correctamente.")
+                    return redirect('gestion_socios')
+                except IntegrityError:
+                    form.add_error('numero_documento', "Ya existe un socio con este número de documento.")
+                    messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+                    club = request.tenant.obtenerTenant()
+                    lista_socios = club.socios.all()
+                    return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
+            else:
+                messages.warning(request, 'Error: Algunos datos no son válidos, por favor verifique el formulario.')
+                club = request.tenant.obtenerTenant()
+                lista_socios = club.socios.all()
+                return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
+        else:
+            return redirect('gestion_socios')
+    else:
+        form = SocioClubForm(instance=socio)
+        lista_socios = club.socios.all()
+        return render(request, 'gestion_socios.html', {'form':form, 'lista_socios':lista_socios, 'edicion':True})
+    
+    
+@login_required
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def crear_plan_de_costo(request):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Registrar Plan
+
+    Se almacena la informacion requerida para un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+    club_actual = request.tenant.obtenerTenant()
+    planes = club_actual.planes_de_costo.all()
+
+    if request.method == 'POST':
+        planesForm = PlanDeCostoForm(request.POST)
+        if planesForm.is_valid():
+            plan = planesForm.save()
+            club_actual.planes_de_costo.add(plan)
+
+            messages.success(request, "Plan de costo registrado")
+            return redirect('crear_plan_de_costo')
+        else:
+            messages.warning(request, "Error: Los datos no son validos, por favor vuelva a llenar el formulario")
+            return redirect('crear_plan_de_costo')
+    else:
+        planesForm = PlanDeCostoForm()
+        return render(request, 'planes_costo.html', {'form': planesForm,'planes': planes})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def editar_plan_de_costo(request, id):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Editar Plan
+
+    Se almacena la informacion editada para un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param id:             Identificador Plan de costo
+    :type id:              String
+    """
+    club_actual = request.tenant.obtenerTenant()
+    planes = club_actual.planes_de_costo.all()
+    try:
+        plan = PlanesDeCostoClub.objects.get(id=id)
+        planForm = PlanDeCostoForm(instance=plan)
+    except Exception:
+        messages.warning(request, "Error: El plan no fue encontrado")
+        return redirect('crear_plan_de_costo')
+
+    if request.method == 'POST':
+        planForm = PlanDeCostoForm(request.POST, instance=plan)
+        if planForm.is_valid():
+            planForm.save()
+            messages.success(request, "Datos del plan de costo guardados correctamente.")
+            return redirect('crear_plan_de_costo')
+        else:
+            messages.warning(request, "Erro: No se pudo editar el plan de costo.")
+            return redirect('editar_plan_de_costo', id)
+
+
+    return render(request, 'planes_costo.html', {'form': planForm, 'planes': planes, 'edicion': True})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def cambiar_estado_plan_costo(request, id):
+    """
+    Marzo 01 / 2016
+    Autor: Yalile Bermudes
+
+    Cambiar estado del Plan
+
+    Se almacena el cambio del estado de un plan de costo de un club
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    :param id:             Identificador Plan de costo
+    :type id:              String
+    """
+    try:
+        plan = PlanesDeCostoClub.objects.get(id=id)
+    except Exception:
+        messages.warning(request, "Error: Plan no encontrado")
+        return redirect('crear_plan_de_costo')
+
+    if plan.estado == 0:
+        plan.estado = 1
+        plan.save()
+        messages.success(request, "Estado de plan cambiado")
+        return redirect('crear_plan_de_costo')
+    else:
+        plan.estado = 0
+        plan.save()
+        messages.success(request, "Estado de plan cambiado")
+        return redirect('crear_plan_de_costo')
+
+
+@login_required()
+@user_passes_test(lambda u: u.is_superuser or (True if u.groups.filter(name="Digitador").count() else False))
+def foto_entidad(request):
+    if request.method == "POST":
+        entidad = request.tenant
+        nueva_foto = request.POST.get('imagen-crop')
+
+        if nueva_foto == "No":
+            entidad.foto_info = ""
+        else:
+            entidad.foto_info = nueva_foto
+
+        entidad.save()
+        return redirect("inicio")
+    return redirect("inicio")
+
+def obtener_jerarquicas(entidad_actual,hijos,icono ):
+    """
+    Mayo 23, 2016
+    Autor: Daniel Correa
+
+    Permite orgnizar la informacion de los hijos de una entidad en el formato estandar JSON para renderizacion en el template de tree view
+
+    :param entidad_actual: entidad a añadir hijos en JSON
+    :type entidad_actual: JSON
+    :param hijos: listado de entidades hijas
+     :type hijos: QuerySet
+    :param icono: icono de hijos
+    :type icono: String
+    """
+    hijos_array = []
+    for h in hijos:
+        json_h = {}
+        json_h["id"] = h.id
+        json_h["text"] = h.__class__.__name__+": " + h.nombre
+        json_h["a_attr"] = {"href": "http://" + h.domain_url, "target":"_blank"}
+        json_h["state"]= {"opened": 'true'}
+        json_h["icon"] = icono
+        hijos_array.append(json_h)
+
+    entidad_actual["children"] = hijos_array
+    return entidad_actual
+
+
+def vista_jerarquica(request):
+    """
+    Mayo 23, 2016
+    Autor: Daniel Correa
+
+    Permite organizar la jerarquia de ligas y federaciones para su visualizacion en forma de tree view
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+    #Vista unicamente para ligas y federaciones
+    if not request.tenant.tipo in [1,2]:
+        return redirect("/inicio")
+
+    entidades = []
+    entidad_actual = {
+            "id" : request.tenant.id,
+            "text" : request.tenant.nombre,
+             "icon": "fa fa-sort-amount-desc fa-lg text-inverse",
+            "state": {"opened": 'true'}
+        }
+    if request.tenant.tipo == 1:
+
+        hijos = Club.objects.filter(liga=entidad_actual["id"])
+        entidad_actual = obtener_jerarquicas(entidad_actual,hijos,"fa fa-dribbble text-warning fa-lg")
+        entidades = [entidad_actual]
+
+    elif request.tenant.tipo == 2:
+        hijos = Liga.objects.filter(federacion=entidad_actual["id"])
+        entidad_actual = obtener_jerarquicas(entidad_actual,hijos, "fa fa-trophy text-info fa-lg")
+        hijos_array = entidad_actual["children"]
+        for liga in hijos_array:
+            hijos_liga = Club.objects.filter(liga = liga["id"])
+            obtener_jerarquicas(liga,hijos_liga, "fa fa-dribbble text-warning fa-lg")
+        entidades = [entidad_actual]
+
+    return render(request,'jerarquia_entidades.html',{
+        'entidades' : entidades,
+        'nombre_entidad': request.tenant.nombre
+    })
+
+def buscar_entidades(request):
+    form_busqueda = BuscarEntidadForm()
+    entidades = []
+    cantidad = 0
+    if request.method == 'POST':
+        form_busqueda = BuscarEntidadForm(request.POST)
+        if form_busqueda.is_valid():
+            entidades = Entidad.objects.exclude(tipo=0)
+            tipos = request.POST.getlist('tipo') or []
+            departamentos = request.POST.getlist('departamento') or []
+            nombre = request.POST.get('nombre') or ''
+
+            if tipos:
+                entidades = entidades.filter(tipo__in=tipos)
+            if departamentos:
+                entidades = entidades.filter(ciudad__departamento__id__in=departamentos)
+
+            entidades = entidades.filter(nombre__icontains = nombre)
+
+            cantidad = len(entidades)
+
+    return render(request,'entidades_buscar.html',{
+        'form':form_busqueda,
+        'listado_resultados' : entidades,
+        'cantidad_resultados' : cantidad,
+    })
+
+"""
+@login_required()
+def borrar_schemas(request):
+    import csv
+    from django.core.exceptions import ObjectDoesNotExist
+    mydict = []
+    with open('datos_iniciales/python_prueba.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        mydict = [rows[3] for rows in reader]
+        print(mydict)
+    for schema in mydict:
+        try:
+            entidad = Entidad.objects.get(schema_name=str(schema))
+        except ObjectDoesNotExist as e:
+            print(e)
+            continue
+
+        # club
+        consulta1 = "DELETE FROM entidades_%s WHERE club_id=%d" % ("club_planes_de_costo", entidad.id)
+        consulta2 = "DELETE FROM entidades_%s WHERE club_id=%d" % ("club_socios", entidad.id)
+        consulta3 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("club", entidad.id)
+
+        # club para
+        consulta4 = "DELETE FROM entidades_%s WHERE clubparalimpico_id=%d" % ("clubparalimpico_disciplinas", entidad.id)
+        consulta5 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("clubparalimpico", entidad.id)
+
+        # liga
+        consulta6 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("liga", entidad.id)
+        consulta7 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("ligaparalimpica", entidad.id)
+
+        # federaciones
+        consulta8 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("federacion", entidad.id)
+        consulta9 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("federacionparalimpica", entidad.id)
+
+        # comite
+        consulta10 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("comite", entidad.id)
+
+        # caf
+        consulta11 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("caf", entidad.id)
+
+        # cajadecompensacion
+        consulta12 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("cajadecompensacion", entidad.id)
+
+        # ente
+        consulta13 = "DELETE FROM entidades_%s WHERE entidad_ptr_id=%d" % ("ente", entidad.id)
+
+        # entidad
+        consulta14 = "DELETE FROM entidades_%s WHERE id=%d" % ("entidad", entidad.id)
+
+        cursor = connection.cursor()
+        try:
+            cursor.execute(consulta1)
+            cursor.execute(consulta2)
+            cursor.execute(consulta3)
+            cursor.execute(consulta4)
+            cursor.execute(consulta5)
+            cursor.execute(consulta6)
+            cursor.execute(consulta7)
+            cursor.execute(consulta8)
+            cursor.execute(consulta9)
+            cursor.execute(consulta10)
+            cursor.execute(consulta11)
+            cursor.execute(consulta12)
+            cursor.execute(consulta13)
+            cursor.execute(consulta14)
+            cursor.execute('DROP SCHEMA %s CASCADE' % str(schema))
+        except Exception as e:
+            print(e)
+    return HttpResponse("bien!")
+"""

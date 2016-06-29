@@ -18,23 +18,31 @@
         </div>
         <div class="panel-body">
             <div id="jstree-default">
-                <ul>
-                    {% for item in items %}
-                    <li>
-                        {{item.1}}
-                        
-                        {% for entrada in articulos %}
-                            {% if entrada.modulo == item.0 %}
-                            <ul>
-                                <li data-jstree='{ "icon" : "fa fa-book fa-lg text-primary"}'>
+                <ul> 
+                    {% for entidad in entidades %}
+                    <li {% if abrir_tree %}data-jstree='{"opened":true}'{% endif %}> {{entidad.1}}
+                        <ul>
+                            {% for item in items %}
+                            <li>
+                                {{item.1}}
+                                
+                                {% for entrada in articulos %}
+                                    {% if entrada.modulo == item.0 %}
+                                        {% if entrada.entidad == entidad.0 %}
+                                        <ul>
+                                            <li data-jstree='{ "icon" : "fa fa-book fa-lg text-primary"}'>
 
-                                    <a href="{% url 'listar_articulo_manual' entrada.id %}">{{entrada.titulo}}</a>
+                                                <a href="{% url 'listar_articulo_manual' entrada.id %}">{{entrada.titulo}}</a>
 
-                                </li>
-                            </ul>
-                            {% endif %}
-                        {% endfor %}
+                                            </li>
+                                        </ul>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
 
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </li>
                     {% endfor %}
                 </ul>
@@ -53,7 +61,6 @@
                 <div class="well row">
                     <h3>{{articulo.titulo}}</h3>
                     <br>
-                    <h4>{{articulo.subtitulo}}:</h4>
                     <h5>Palabras Clave: <b>{{articulo.palabras_clave}}</b></h5><br>
                     <div class="col-md-8">
                         <p align="justify">{{articulo.contenido}}</p>
