@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from snd.modelos.escenarios import Escenario
 
 # Create your models here.
@@ -21,6 +22,7 @@ class ReservaEscenario(models.Model):
     descripcion = models.TextField(max_length = 500, verbose_name = 'descripción de la actividad')
     comentarios_respuesta = models.TextField(max_length = 500, verbose_name = 'comentarios')
     estado = models.IntegerField(choices=ESTADOS)
+    usuario_respuesta = models.ForeignKey(User, null = True)
     fecha_creacion = models.DateField(auto_now_add=True)
 
     def codigo_unico(self, entidad):

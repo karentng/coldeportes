@@ -175,6 +175,7 @@ def configurar_reservas(request, escenario_id):
     })
 
 
+@login_required
 def responder_solicitud(request, solicitud_id):
     """
     Mayo 25, 2016
@@ -192,7 +193,10 @@ def responder_solicitud(request, solicitud_id):
         form = ResponderSolicitudReservaForm(request.POST, instance = solicitud)
 
         if form.is_valid():
-            form.save()
+            respuesta = form.save(commit = False)
+            print(request.user)
+            respuesta.usuario_respuesta = request.user
+            respuesta.save()
             messages.success(request, 'La respuesta se almacenado correctamente. Se enviará un correo electrónico al solicitante.')
             return redirect('listar_escenarios_reservas')
 
