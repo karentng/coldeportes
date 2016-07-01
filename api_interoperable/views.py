@@ -8,51 +8,28 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import Http404
+from rest_framework import generics
 # Create your views here.
 
-class DeportistasList(APIView):
+class DeportistasList(generics.ListCreateAPIView):
     """
     Clase encargada de get y post de deportistas
     """
+    queryset = Deportista.objects.all()
+    serializer_class = DeportistaSerializable
 
-    def get(self,request,format=None):
-        deportistas = Deportista.objects.all()
-        serializer = DeportistaSerializable(deportistas, many=True)
-        return Response(serializer.data)
-
-    def post(self,request,format=None):
-        serializer = DeportistaSerializable(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-class DeportistaDetail(APIView):
+class DeportistaDetail(generics.RetrieveUpdateAPIView):
     """
     Clase encargada del put, delete y get personal
     """
-
-    def get_object(self,pk):
-        try:
-            return Deportista.objects.get(id=pk)
-        except Deportista.DoesNotExist:
-            raise Http404
-
-    def get(self,request,pk,format=None):
-        deportista = self.get_object(pk)
-        serializer = DeportistaSerializable(deportista)
-        return Response(serializer.data)
-
-    def put(self,request, pk, format=None):
-        deportista = self.get_object(pk)
-        serializer = DeportistaSerializable(deportista,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    queryset = Deportista.objects.all()
+    serializer_class = DeportistaSerializable
 
     def delete(self,request,pk, format=None):
-        deportista = self.get_object(pk)
+        try:
+            deportista = self.queryset.get(id=pk)
+        except Deportista.DoesNotExist:
+            raise Http404
         deportista.estado = 1
         deportista.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
