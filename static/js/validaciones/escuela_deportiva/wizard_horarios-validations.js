@@ -4,7 +4,7 @@ $(document).ready(function() {
         invalid: 'fa fa-times-circle fa-lg',
         validating: 'fa fa-refresh'
     };
-
+    $.getScript(base+"plugins/moment/moment.min.js");
     $('#form-wizard-horarios').bootstrapValidator({
             feedbackIcons: faIcon,
             excluded: ':disabled',
@@ -21,9 +21,21 @@ $(document).ready(function() {
                     notEmpty: {
                         message: 'La hora final no puede ser vacía'
                     },
-                    date:{
-                        message: 'La hora final debe ser mayor a la de inicio',
-                        min: 'hora_inicio'
+                    callback:{
+                        message: "El valor ingresado no es una hora válida, debe ser mayor a la hora de inicio",
+                        callback: function(field, validator){
+                            var inicio = $("input#id_hora_inicio").val();
+
+                            var momento = new moment(field, 'HH:mm', true);
+                            var momentInit = new moment(inicio, 'HH:mm', true);
+                                console.log(field);
+                            if (!momento.isValid()) {
+                                console.log(momento);
+                                return false;
+                            }
+                            return momento.isAfter(momentInit);
+
+                        }
                     }
                 }
             },
@@ -56,11 +68,13 @@ $(document).ready(function() {
         });
 
     //Revalidar campos que usan plugins al ser actualizados
+    var $formWizard = $("#form-wizard-horarios");
     $("#id_hora_inicio").on('change',function(e){
-        $("#form-wizard-horarios").bootstrapValidator('revalidateField', 'hora_inicio');
-        $("#form-wizard-horarios").bootstrapValidator('revalidateField', 'hora_fin');
+        $formWizard.bootstrapValidator('revalidateField', 'hora_inicio');
+        $formWizard.bootstrapValidator('revalidateField', 'hora_fin');
     });
     $("#id_hora_fin").on('change',function(e){
-        $("#form-wizard-horarios").bootstrapValidator('revalidateField', 'hora_fin');
+        $formWizard.bootstrapValidator('revalidateField', 'hora_inicio');
+        $formWizard.bootstrapValidator('revalidateField', 'hora_fin');
     });
 });

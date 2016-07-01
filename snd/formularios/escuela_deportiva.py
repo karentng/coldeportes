@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from datetime import datetime
 from snd.models import (EscuelaDeportiva, Participante, Acudiente, CategoriaEscuela, HorarioActividadesEscuela,
                         AlertaTemprana, SeguimientoTallaPeso, ActividadEFD)
 from datetimewidget.widgets import TimeWidget
@@ -94,8 +95,10 @@ class EscuelaDeportivaServiciosForm(forms.ModelForm):
 class HorarioActividadesEscuelaForm(forms.ModelForm):
 
     required_css_class = 'required'
-    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
-    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es',
+                                                             'startDate': datetime.now().strftime("%Y-%m-%d")}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es',
+                                                          'startDate': datetime.now().strftime("%Y-%m-%d")}))
 
     def __init__(self, *args, **kwargs):
 
