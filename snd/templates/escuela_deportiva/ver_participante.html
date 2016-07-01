@@ -144,20 +144,17 @@
                                         <div class="row">
                                             <address class="m-t-5 m-b-5">
                                                 <div class="col-lg-6">
-                                                    {% if acudiente %}
-                                                        <p><strong>Datos:</strong></p>
-                                                        {% if perms.snd.view_escueladeportiva %}
-                                                            <p><b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}</p>
-                                                            <p><b>Soporte Identificación:</b> <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a></p>
-                                                        {% endif %}
-                                                        <p><b>Genero:</b> {{ acudiente.get_genero_display | upper}}</p>
-                                                        <p><b>Fecha Nacimiento:</b> {{acudiente.fecha_nacimiento}} </p>
-                                                        <p><b>Sistema de salud afiliado:</b> {{ acudiente.eps }} </p>
-                                                    {% else %}
-                                                        <p><b>NO SE HA REGISTRADO EL ACUDIENTE</b></p>
-                                                        {% if perms.snd.change_escueladeportiva %}
-                                                            <p><a type="button" class="btn btn-primary" href="{% url 'registrar_acudiente' participante.id %}">Regsitrar</a> </p>
-                                                        {% endif %}
+                                                    {% if acudientes %}
+                                                        {% for acudiente in acudientes %}
+                                                            <p><strong>Datos:</strong></p>
+                                                            {% if perms.snd.view_escueladeportiva %}
+                                                                <p><b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}</p>
+                                                                <p><b>Soporte Identificación:</b> <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a></p>
+                                                            {% endif %}
+                                                            <p><b>Genero:</b> {{ acudiente.get_genero_display | upper}}</p>
+                                                            <p><b>Fecha Nacimiento:</b> {{acudiente.fecha_nacimiento}} </p>
+                                                            <p><b>Sistema de salud afiliado:</b> {{ acudiente.eps }} </p>
+                                                        {% endfor %}
                                                     {% endif %}
                                                 </div>
                                             </address>

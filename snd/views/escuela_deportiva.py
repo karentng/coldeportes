@@ -388,12 +388,10 @@ def detalles_participante(request, id_participante):
         messages.error(request, 'El participante al que trata de acceder no existe')
         return redirect("listar_participante")
 
-    try:
-        acudiente = Acudiente.objects.get(participante_responsable=participante.id)
-    except Acudiente.DoesNotExist:
-        acudiente = None
+    acudientes = Acudiente.objects.filter(participante_responsable=participante.id)
+
     return render(request, 'escuela_deportiva/ver_participante.html', {'participante': participante,
-                                                                       'acudiente': acudiente, 'alertas': alertas,
+                                                                       'acudientes': acudientes, 'alertas': alertas,
                                                                        'alerta_form': alerta_form,
                                                                        'seguimientostyp': seguimientostyp,
                                                                        'seguimientotyp_form': seguimientotyp_form})
@@ -539,27 +537,17 @@ def ajax_categoria_sede(request):
 
 @login_required
 @permission_required('snd.add_escueladeportiva')
-def registrar_acudiente(request, id_participante):
+def registrar_acudiente(request):
 
     if request.method == 'POST':
-        try:
-            participante = Participante.objects.get(id=id_participante)
-        except Participante.DoesNotExist:
-            messages.error(request, 'El participante al que trata de acceder no existe')
-            return redirect("listar_participante")
         acudiente_form = AcudienteForm(request.POST, request.FILES)
         if acudiente_form.is_valid():
             acudiente = acudiente_form.save(commit=False)
-            acudiente.participante_responsable = participante
             acudiente.save()
             messages.success(request, "El acudiente ha sido registrado con exito")
-            return redirect('detalles_participante', id_participante)
+            return redirect('listar_acudientes')
 
     acudiente_form = AcudienteForm()
-    participantes_sin_acudiente = Participante.objects.exclude(id__in=(
-        Acudiente.objects.all().values_list('participante_responsable', flat=True)
-    ))
-    acudiente_form.fields["participante_responsable"].queryset = participantes_sin_acudiente
     return render(request, 'escuela_deportiva/registrar_acudiente.html', {'form': acudiente_form})
 
 

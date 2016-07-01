@@ -13,7 +13,12 @@
                     <b>Genero: </b>{{ acudiente.get_genero_display }}<br>
                     {% if perms.snd.view_escueladeportiva %}
                         <b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}<br>
-                        <b>Soporte Identificación:</b> <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a><br>
+                        <b>Soporte Identificación:</b>
+                        {% if acudiente.soporte_id  %}
+                            <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a>
+                        {% else %}
+                            No disponible
+                        {% endif %}<br>
                     {% endif %}
                     <b>Fecha de nacimiento: </b>{{ acudiente.fecha_nacimiento }}<br>
                     <b>Sistema de salud afiliado:</b> {{ acudiente.eps }}
