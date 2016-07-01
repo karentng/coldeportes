@@ -92,7 +92,7 @@ def wizard_servicios_sede(request, escuela_id):
         if servicios_form.is_valid():
             escuela_servicios = servicios_form.save(commit=False)
             escuela_servicios.save()
-            return redirect('wizard_horarios', escuela_id)
+            return redirect('wizard_horarios_sede', escuela_id)
 
     return render(request, 'escuela_deportiva/wizard/wizard_servicios_sede.html', {
         'titulo': 'Seleccione los servicios que ofrece la sede de la Escuela de Formación Deportiva',
