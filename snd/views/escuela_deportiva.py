@@ -66,7 +66,7 @@ def wizard_sede(request, escuela_id):
                     messages.error(request, "La sede que trata de registrar ya existe.")
 
     return render(request, 'escuela_deportiva/wizard/wizard_escuela_sede.html', {
-        'titulo': 'Ingrese los datos de identificación y contacto de la sede de la Escuela de Formación Deportiva',
+        'titulo': 'Identificación y contacto de la Sede',
         'titulo_panel': 'Edición de Sede de EFD',
         'wizard_stage': 1,
         'form': escuela_form,
@@ -95,7 +95,7 @@ def wizard_servicios_sede(request, escuela_id):
             return redirect('wizard_horarios_sede', escuela_id)
 
     return render(request, 'escuela_deportiva/wizard/wizard_servicios_sede.html', {
-        'titulo': 'Seleccione los servicios que ofrece la sede de la Escuela de Formación Deportiva',
+        'titulo': 'Servicios que ofrece la Sede',
         'wizard_stage': 2,
         'titulo_panel': 'Registro de Servicios de Sede',
         'form': servicios_form,
@@ -132,7 +132,7 @@ def wizard_horarios_sede(request, escuela_id):
             print(horarios_form.errors)
 
     return render(request, 'escuela_deportiva/wizard/wizard_horarios_sede.html', {
-        'titulo': 'Adicione los horarios de actividades de la sede de la EFD',
+        'titulo': 'Horarios de actividades de la Sede',
         'wizard_stage': 3,
         'titulo_panel': 'Registro de Horarios de Sede',
         'form': horarios_form,
@@ -169,7 +169,7 @@ def wizard_categorias_sede(request, escuela_id):
             print(categorias.errors)
 
     return render(request, 'escuela_deportiva/wizard/wizard_categorias_sede.html', {
-        'titulo': 'Adicione las categorías de la sede de la EFD',
+        'titulo': 'Categorías de la Sede',
         'wizard_stage': 4,
         'titulo_panel': 'Registro de Categorías de Sede',
         'form': categorias_form,
