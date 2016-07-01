@@ -149,7 +149,13 @@
                                                             <p><strong>Datos:</strong></p>
                                                             {% if perms.snd.view_escueladeportiva %}
                                                                 <p><b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}</p>
-                                                                <p><b>Soporte Identificación:</b> <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a></p>
+                                                                <p><b>Soporte Identificación:</b>
+                                                                    {% if acudiente.soporte_id  %}
+                                                                        <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a>
+                                                                    {% else %}
+                                                                        No disponible
+                                                                    {% endif %}
+                                                                </p>
                                                             {% endif %}
                                                             <p><b>Genero:</b> {{ acudiente.get_genero_display | upper}}</p>
                                                             <p><b>Fecha Nacimiento:</b> {{acudiente.fecha_nacimiento}} </p>
