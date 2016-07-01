@@ -60,7 +60,7 @@ class EscuelaDeportiva(models.Model):
     aval = models.FileField(upload_to=file_name, null=True, blank=True,
                             verbose_name="resolución aval de funcionamiento")
     descripcion_lugar = models.TextField(verbose_name="Descripción del lugar", max_length=500)
-    estado = models.IntegerField(choices=ESTADO, default=0, verbose_name="estado de la EFD")
+    estado = models.IntegerField(choices=ESTADO, default=1, verbose_name="estado de la EFD")
     # Pestañas adicionales
     servicios = models.ManyToManyField(EscuelaDeportivaServicio, blank=True)
     entidad = models.ForeignKey(Entidad)
