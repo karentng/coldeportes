@@ -91,7 +91,7 @@ class CategoriaEscuela(models.Model):
     descripcion = models.TextField(max_length=500, verbose_name="Descripción", null=True, blank=True)
 
     def __str__(self):
-        return self.nombre_categoria
+        return self.nombre_categoria + " -- " + str(self.edad_minima) + "-" + str(self.edad_maxima)
 
 
 class HorarioActividadesEscuela(models.Model):

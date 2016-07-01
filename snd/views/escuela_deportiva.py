@@ -329,7 +329,6 @@ def registrar_participante(request):
     if request.method == 'POST':
         sede_id = int(request.POST["sede_perteneciente"])
         participante_form = ParticipanteForm(request.POST, sede_id=sede_id)
-        print(participante_form.fields['categoria'].__dict__)
         if participante_form.is_valid():
             participante = participante_form.save(commit=False)
             participante.entidad = request.tenant
@@ -363,6 +362,8 @@ def editar_participante(request, id_participante):
                 return redirect('listar_participante')
             else:
                 print(participante_form.errors)
+                return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
+                                                                                         'edicion': True})
     participante_form = ParticipanteForm(instance=participante, sede_id=participante.sede_perteneciente.id)
     return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
                                                                              'edicion': True})
