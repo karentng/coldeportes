@@ -34,7 +34,7 @@ urlpatterns = patterns('',
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
     url(r'^manual/',include('manual.urls')),
     url(r'^reportes/', include('reportes.urls.publico')),
-    url(r'^api-int/', include('api_interoperable.urls', namespace='rest_framework')),
+    url(r'^rest/', include('api_interoperable.urls', namespace='rest_framework')),
 
     url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
     url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),

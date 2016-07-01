@@ -1,15 +1,23 @@
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse,JsonResponse
 from snd.models import Deportista
 from api_interoperable.models import DeportistaSerializable
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.http import Http404
 from rest_framework import generics
+from rest_framework import permissions
 # Create your views here.
+class AddChangePermission(permissions.BasePermission):
+    """
+    Clase que define el permiso para editar , crear y eliminar deportistas
+    """
+    SAFE_METHODS=['POST','PUT','DELETE','PATCH']
+
+    def has_permission(self, request, view):
+        if request.method in self.SAFE_METHODS:
+            return request.user.has_perm("snd.add_deportista")
+        return True
+
 
 class DeportistasList(generics.ListCreateAPIView):
     """
@@ -17,6 +25,18 @@ class DeportistasList(generics.ListCreateAPIView):
     """
     queryset = Deportista.objects.all()
     serializer_class = DeportistaSerializable
+    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
+
+    def perform_create(self, serializer):
+        """
+        Permite validar si la entidad proveniente del deportista corresponde a la del request
+        :param serializer: clase encargada de serializar el objeto
+        """
+        entidad_registrada = serializer.data["entidad"]
+        entidad_request = self.request.tenant.id
+        if entidad_registrada != entidad_request:
+            raise serializer.ValidationError("Entidad no corresponde")
+        serializer.save()
 
 class DeportistaDetail(generics.RetrieveUpdateAPIView):
     """
@@ -24,6 +44,7 @@ class DeportistaDetail(generics.RetrieveUpdateAPIView):
     """
     queryset = Deportista.objects.all()
     serializer_class = DeportistaSerializable
+    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
 
     def delete(self,request,pk, format=None):
         try:
