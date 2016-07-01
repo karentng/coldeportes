@@ -60,7 +60,7 @@ fields = {
     genero: {
         validators: {
             notEmpty: {
-                message: 'El correo electrónico no puede ser vacío'
+                message: 'El género del participante no puede ser vacío'
             }
         }
     },
@@ -110,6 +110,20 @@ fields = {
         validators: {
             notEmpty: {
                 message: 'El Sistema de salud afiliado no puede ser vacío'
+            }
+        }
+    },
+    categoria: {
+        validators: {
+            notEmpty:{
+                message: 'La Categoría no puede ser vacía'
+            }
+        }
+    },
+    sede_perteneciente: {
+        validators: {
+            notEmpty:{
+                message: 'La sede no puede ser vacía'
             }
         }
     }
