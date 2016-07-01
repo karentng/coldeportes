@@ -197,7 +197,7 @@ class AlertaTemprana(models.Model):
 
     nivel_alerta = models.IntegerField(choices=NIVEL_DE_ALERTA, verbose_name="Nivel de alerta")
     referencia_alerta = models.CharField(max_length=150, verbose_name="Referencia de alerta")
-    descripcion = models.TextField(verbose_name="Descripción")
+    descripcion = models.TextField(verbose_name="Descripción", max_length=500)
     fecha_registro = models.DateField(auto_now_add=True)
     fecha_ultima_actualizacion = models.DateField(auto_now=True, null=True)
     estado = models.IntegerField(default=1, choices=ESTADO)
