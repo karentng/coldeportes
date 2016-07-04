@@ -48,7 +48,7 @@
                         <th>Fecha de inicio</th>
                         <th>Fecha de finalización</th>
                         <th>Ciudad</th>
-                        <th>Cupo total</th>
+                        <th>Cupo atletas</th>
                         <th>Estado</th>
                         <th>Opciones</th>
                     </tr>
@@ -60,7 +60,7 @@
                         <td>{{c.fecha_inicio}}</td>
                         <td>{{c.fecha_finalizacion}}</td>
                         <td>{{c.ciudad}}</td>
-                        <td>{{ c.cupo_personas }} Personas</td>
+                        <td>{% if c.cupo_personas %}{{ c.cupo_personas }}{% else %} No disponible {% endif %}</td>
                         <td>{{ c.get_estado_display }}</td>
                         <td>
                             <a href='{% url 'ver_evento_calendario_nacional' c.id %}'>

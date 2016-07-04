@@ -35,13 +35,13 @@ $('#id_porcentaje_grasa').change(function () {
 });
 
 function calculo_cuello() {
-    var cintura = $('#id_cintura').val();
-    var altura = $('#id_estatura').val();
-    var cuello = $('#id_cuello').val();
+    var cintura = parseInt($('#id_cintura').val());
+    var altura = parseInt($('#id_estatura').val());
+    var cuello = parseInt($('#id_cuello').val());
     if (mujer == true){
-        var cadera = $('#id_cadera').val()/100;
+        var cadera = parseInt($('#id_cadera').val());
         if(cintura != undefined && cadera!=undefined){
-            var grasa = ((495 / (1.29579- 0.35004 * (Math.log10(cintura+cadera - cuello))  +0.22100*(Math.log10(altura))) )-450).toFixed(2);
+            var grasa = (495/(1.29579 - 0.35004 * (Math.log10(cintura+cadera-cuello)) + 0.22100 * (Math.log10(altura)))) - 450;
             $('#id_porcentaje_grasa').val(grasa);
             masa_magra();
              $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');
@@ -58,13 +58,13 @@ function calculo_cuello() {
 };
 
 function calculo_cintura() {
-    var cuello = $('#id_cuello').val();
-    var altura = $('#id_estatura').val();
-    var cintura = $('#id_cintura').val();
+    var cuello = parseInt($('#id_cuello').val());
+    var altura = parseInt($('#id_estatura').val());
+    var cintura = parseInt($('#id_cintura').val());
     if (mujer){
-        var cadera = $('#id_cadera').val();
+        var cadera = parseInt($('#id_cadera').val());
         if(cuello != undefined && cadera!=undefined){
-            var grasa = ((495/(1.29579-0.35004*(Math.log10(cintura+cadera-cuello))+0.22100*(Math.log10(altura))))-450).toFixed(2);
+            var grasa = (495/(1.29579 - 0.35004 * (Math.log10(cintura+cadera-cuello)) + 0.22100 * (Math.log10(altura)))) - 450;
             $('#id_porcentaje_grasa').val(grasa);
             masa_magra();
             $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');
@@ -80,11 +80,13 @@ function calculo_cintura() {
 
 };
 function calculo_cadera() {
-    var cintura = $('#id_cintura').val();
-    var altura = $('#id_estatura').val();
-    var cuello = $('#id_cuello').val();
+
+    var cintura = parseInt($('#id_cintura').val());
+    var altura = parseInt($('#id_estatura').val());
+    var cuello = parseInt($('#id_cuello').val());
+    var cadera = parseInt($('#id_cadera').val());
     if(cintura != undefined && altura !=undefined && cuello!=undefined){
-        var grasa = ((495/(1.29579-0.35004*(Math.log10(cintura+$('#id_cadera').val()-cuello))+0.22100*(Math.log10(altura))))-450).toFixed(2);
+        var grasa = (495/(1.29579 - 0.35004 * (Math.log10(cintura+cadera-cuello)) + 0.22100 * (Math.log10(altura)))) - 450;
         $('#id_porcentaje_grasa').val(grasa);
         masa_magra();
         $(form).bootstrapValidator('revalidateField', 'porcentaje_grasa');

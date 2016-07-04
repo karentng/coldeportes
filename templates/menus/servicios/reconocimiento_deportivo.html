@@ -6,7 +6,7 @@
     <ul class="sub-menu">
         {% if perms.reconocimiento_deportivo.add_reconocimientodeportivo %}
         <li {% if "/reconocimiento-deportivo/solicitar$" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'reconocimiento_deportivo_solicitar' %}">Enviar solicitud</a>
+            <a href="{% url 'reconocimiento_deportivo_tramitar' %}">Enviar solicitud</a>
         </li>
         {% endif %}
         {% if perms.reconocimiento_deportivo.view_reconocimientodeportivo %}

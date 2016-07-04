@@ -14,7 +14,7 @@ from solicitudes_escenarios.utilities import comprimir_archivos
 
 @login_required
 @permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
-def solicitar(request, reconocimiento_id = None):
+def tramitar(request, reconocimiento_id = None):
     """
     Abril 9, 2016
     Autor: Karent Narvaez
@@ -26,7 +26,12 @@ def solicitar(request, reconocimiento_id = None):
     except Exception:
         reconocimiento = None
 
-    validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
+    if reconocimiento:
+        validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
+    else:
+        validado = True
+        mensaje = ''
+
     if validado:
         form = ReconocimientoDeportivoForm(instance = reconocimiento)
 
@@ -57,18 +62,20 @@ def validar_creacion(request, reconocimiento):
 
     mensaje = ''
     fecha_reconocimiento_actual = request.tenant.obtenerTenant().fecha_vigencia
-    fecha_maxima_renovacion = date(fecha_reconocimiento_actual.year, fecha_reconocimiento_actual.month - 1, fecha_reconocimiento_actual.day%28)
+
+    if fecha_reconocimiento_actual:
+        fecha_maxima_renovacion = date(fecha_reconocimiento_actual.year, fecha_reconocimiento_actual.month - 1, fecha_reconocimiento_actual.day%28)
     
-    try:
-        cantidad_solicitudes_por_respuesta = len(ReconocimientoDeportivo.objects.filter(estado = 0))
-        if cantidad_solicitudes_por_respuesta > 0:
-            mensaje = 'No puede crear otra solicitud mientras tenga una en espera de respuesta. Si desea crear otra debe cancelarla o esperar que sea contestada.'
-            return False, mensaje
-        elif  date.today() < fecha_maxima_renovacion:
-            mensaje = 'No puede crear otra solicitud mientras tenga reconocimiento deportivo vigente con más de 1 mes.'
-            return False, mensaje
-    except:
-        pass
+        try:
+            cantidad_solicitudes_por_respuesta = len(ReconocimientoDeportivo.objects.filter(estado = 0))
+            if cantidad_solicitudes_por_respuesta > 0:
+                mensaje = 'No puede crear otra solicitud mientras tenga una en espera de respuesta. Si desea crear otra debe cancelarla o esperar que sea contestada.'
+                return False, mensaje
+            elif  date.today() < fecha_maxima_renovacion:
+                mensaje = 'No puede crear otra solicitud mientras tenga reconocimiento deportivo vigente con más de 1 mes.'
+                return False, mensaje
+        except:
+            pass
 
     if reconocimiento:
         if reconocimiento.estado == 1:
@@ -76,8 +83,6 @@ def validar_creacion(request, reconocimiento):
         else:
             mensaje = 'La solicitud no se puede editar porque ya fue completada.'
             return False, mensaje
-    else:
-        return True, mensaje
 
 
 @login_required
