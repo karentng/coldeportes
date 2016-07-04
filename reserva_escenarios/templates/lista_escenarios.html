@@ -54,9 +54,11 @@
                                     <i class="fa fa-clock-o"></i> Solicitar Reservar
                                 </a>
                                 <br/>
+                                {% if request.user.username %}
                                 <a href='{% url 'configurar_reservas' escenario.id %}'>
                                     <i class="fa fa-cog"></i> Configurar Reservas
                                 </a>
+                                {% endif %}
                                 <br/>
                             </td>
                         </tr>

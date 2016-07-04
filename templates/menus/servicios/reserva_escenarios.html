@@ -5,10 +5,12 @@
     </a>
     <ul class="sub-menu">
         <li {% if "/reserva-escenarios/listar-escenarios" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'listar_escenarios_reservas' %}">Listar Escenarios</a>
+            <a href="{% url 'listar_escenarios_reservas' %}">Escenarios</a>
         </li>
+        {% if user.is_authenticated %}
         <li {% if "/reserva-escenarios/listar-solicitudes" in request.path %} class="active" {% endif %}>
-            <a href="{% url 'listar_solicitudes_reservas' %}">Listar Solicitudes</a>
+            <a href="{% url 'listar_solicitudes_reservas' %}">Solicitudes Pendientes</a>
         </li>
+        {% endif %}
     </ul>
 </li>

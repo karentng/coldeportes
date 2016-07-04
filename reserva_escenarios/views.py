@@ -24,7 +24,7 @@ def listar_escenarios(request):
 
     })
 
-
+@login_required
 def listar_solicitudes(request):
     """
     Mayo 25, 2016
@@ -198,7 +198,7 @@ def responder_solicitud(request, solicitud_id):
             respuesta.usuario_respuesta = request.user
             respuesta.save()
             messages.success(request, 'La respuesta se almacenado correctamente. Se enviará un correo electrónico al solicitante.')
-            return redirect('listar_escenarios_reservas')
+            return redirect('listar_solicitudes_reservas')
 
     return render(request,'responder_solicitud.html',{
         'solicitud' : solicitud,
@@ -228,3 +228,22 @@ def imprimir_solicitud(request, reserva_id):
     return render(request,'imprimir_solicitud.html',{
         'solicitud' : solicitud,
     })
+
+
+
+@login_required
+def barra_notificaciones_reservas_escenarios(request):
+    """
+    Julio 4, 2016
+    Autor: Karent Narvaez
+
+    Permite cargar el numero de notificaciones de solicitudes de reserva de escenarios pendientes por responder de un tenant dado
+    en la barra superior de la aplicación.
+    """
+    dashboard = dict()  
+    try:  
+        dashboard['total_esperando_respuesta'] = ReservaEscenario.objects.filter(estado = 2).exclude(correo_solicitante = '').count() 
+    except:
+        dashboard['total_esperando_respuesta'] = 0
+
+    return JsonResponse(dashboard)
