@@ -41,5 +41,6 @@ class ConfiguracionReservaEscenario(models.Model):
     escenario = models.OneToOneField(Escenario)
     cantidad_maxima_horas = models.PositiveIntegerField(verbose_name = "cantidad máxima de horas que se puede reservar el escenario")
     cantidad_minima_horas = models.PositiveIntegerField(default = 1, verbose_name = "cantidad mínima de horas que se puede reservar el escenario")
+    permitir_eventos_mismo_tiempo = models.BooleanField(default = True)
 
 

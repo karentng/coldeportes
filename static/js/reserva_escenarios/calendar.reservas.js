@@ -9,6 +9,7 @@ var handleCalendarDemo = function () {
     "use strict";
     var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,agendaWeek,agendaDay'};
     var data = {};
+    var revert;
     var date = new Date();
     var m = date.getMonth();
     var y = date.getFullYear();    
@@ -37,6 +38,7 @@ var handleCalendarDemo = function () {
             nuevaReserva.start = date;
             nuevaReserva.allDay = false;   
             data = {fecha_inicio: date, csrfmiddlewaretoken: csrf};         
+            //revert = $('#modal-confirmacion').modal('hide');
             
             $('#calendar').fullCalendar('renderEvent', nuevaReserva, true);
             $(this).remove();
@@ -55,6 +57,8 @@ var handleCalendarDemo = function () {
                 event.end.setHours(event.end.getHours()+2)
                 
             }
+
+            revert = revertFunc;
 
             var overlap = isOverlapping(event); 
             function isOverlapping(event){
@@ -88,6 +92,7 @@ var handleCalendarDemo = function () {
                 //console.log(event.end)
                 
             }
+            revert = revertFunc;
             var overlap = isOverlapping(event); 
             function isOverlapping(event){
                 var eventos = calendar.fullCalendar('clientEvents');
@@ -133,7 +138,8 @@ var handleCalendarDemo = function () {
     });
 
     $('#modal-confirmacion').on('click', '.btn-not', function(e) {
-        revert();
+        //revert();
+        $('#modal-confirmacion').modal('hide');
     });
 
     $('#external-events .external-event').each(function() {
