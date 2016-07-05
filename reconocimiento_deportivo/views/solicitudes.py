@@ -235,7 +235,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
                 adjunto.save()
                 return redirect('adjuntar_requerimientos_reconocimiento', solicitud.id)
 
-        return render(request,'wizard/wizard_adjuntos.html',{
+        return render(request,'wizard/wizard_adjuntos_reconocimiento.html',{
             'form' : form,
             'reconocimiento_id': reconocimiento_id,
             'wizard_stage': 2,
