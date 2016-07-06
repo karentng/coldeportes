@@ -4,45 +4,42 @@ from rest_framework import serializers
 
 # Create your models here.
 class DeportistaSerializable(serializers.ModelSerializer):
-    entidad = serializers.ReadOnlyField(source='entidad.id')
+    entidad = serializers.ReadOnlyField(source='entidad.schema_name')
 
     class Meta:
         model = Deportista
         exclude = ('fecha_creacion',)
 
 class ComposicionCorporalSerializable(serializers.ModelSerializer):
-    #deportista = serializers.HyperlinkedRelatedField(
-    #    read_only=True,
-    #    view_name='deportista-detail'
-    #)
-    deportista = serializers.ReadOnlyField(source='deportista.identificacion')
+    entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+
     class Meta:
         model = ComposicionCorporal
         exclude = ('fecha_creacion',)
 
 class HistorialDeportivoSerializable(serializers.ModelSerializer):
-    deportista = serializers.ReadOnlyField(source='deportista.identificacion')
+    entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
 
     class Meta:
         model = HistorialDeportivo
         exclude = ('fecha_creacion',)
 
 class InformacionAcademicaSerializable(serializers.ModelSerializer):
-    deportista = serializers.ReadOnlyField(source='deportista.identificacion')
+    entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
 
     class Meta:
         model = InformacionAcademica
         exclude = ('fecha_creacion',)
 
 class InformacionAdicionalSerializable(serializers.ModelSerializer):
-    deportista = serializers.ReadOnlyField(source='deportista.identificacion')
+    entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
 
     class Meta:
         model = InformacionAdicional
         exclude = ('fecha_creacion',)
 
 class HistorialLesionesSerializable(serializers.ModelSerializer):
-    deportista = serializers.ReadOnlyField(source='deportista.identificacion')
+    entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
 
     class Meta:
         model = HistorialLesiones

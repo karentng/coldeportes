@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from entidades.models import Federacion,Liga,Entidad,Club,ClubParalimpico
 from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,InformacionAdicional,HistorialLesiones
 from api_interoperable.models import DeportistaSerializable,ComposicionCorporalSerializable,HistorialDeportivoSerializable,InformacionAcademicaSerializable,HistorialLesionesSerializable,InformacionAdicionalSerializable
 from rest_framework import status
@@ -8,8 +9,33 @@ from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework import viewsets,mixins
+from django.db import connection
+from django.shortcuts import get_object_or_404
+from entidades.modelos_vistas_reportes import PublicDeportistaView
+from reportes.models import TenantDeportistaView
 
 # Create your views here.
+def get_deportista(entidades):
+    pass
+
+def organizar_deportistas(tenant):
+    """
+    Hacer peticiones get a cada uno de los tenants y juntar los json en un arreglo
+    :param tenant:
+    :return:
+    """
+    if tenant.obtenerTenant.__class__ == Entidad:
+        clubs = [club.nombre for club in Club.objects.all()]
+        clubs_paralimpicos = [club.nombre for club in ClubParalimpico.objects.all()]
+
+    elif tenant.obtenerTenant.__class__ == Federacion:
+        ligas = tenant.ligas_asociadas()
+    elif tenant.obtenerTenant.__class__ == Liga:
+        pass
+    else:
+        pass
+
+
 @api_view(['GET'])
 def api_root(request, format=None):
     """
@@ -46,7 +72,16 @@ class DeportistaViewSet(viewsets.ModelViewSet):
     queryset = Deportista.objects.all()
     serializer_class = DeportistaSerializable
     permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
+    """
+    def list(self,request):
+        if request.tenant == 'public':
+            queryset = TenantDeportistaView.objects.distinct('id')
+        else:
+            queryset = PublicDeportistaView.objects.distinct('id')
 
+        serializer = DeportistaSerializable(queryset,many=True)
+        return Response(serializer.data)
+    """
     def perform_create(self, serializer):
         """
         Permite validar si la entidad proveniente del deportista corresponde a la del request
