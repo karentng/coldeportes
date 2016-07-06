@@ -8,7 +8,7 @@ from django.utils.encoding import smart_str
 from django.contrib.auth.decorators import login_required, permission_required
 from reconocimiento_deportivo.forms.solicitudes import ReconocimientoDeportivoForm, AdjuntoRequerimientoReconocimientoForm, DiscusionForm
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoRequerimientoReconocimiento, DiscusionReconocimiento
+from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoRequerimientoReconocimiento, DiscusionReconocimiento, AdjuntoReconocimiento
 from solicitudes_escenarios.utilities import comprimir_archivos
 # Create your views here.
 
@@ -400,7 +400,7 @@ def descargar_adjuntos(request, reconocimiento_id):
 def descargar_adjunto(request, reconocimiento_id, adjunto_id):
     """
     Abril 13, 2016
-    Autor: Daniel Correa
+    Autor: Karent Narvaez
 
     Permite descargar algun archivo adjunto de una solicitud reconocimiento deportivo
 
@@ -425,11 +425,13 @@ def descargar_adjunto_discusion(request, reconocimiento_id, discusion_id):
 
     Permite descargar los archivos adjuntos de una discusion a una solicitud
     """
-    directorio = '/adjuntos_reconocimiento_deportivo/'    
-    adjunto = AdjuntoRequerimientoReconocimiento.objects.get(solicitud = reconocimiento_id, discucion = discusion_id)
-    zip,temp = comprimir_archivos(adjunto, directorio)
-    response = HttpResponse(zip,content_type="application/zip")
-    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjunto[0].solicitud.codigo_unico(request.tenant))
-    temp.seek(0)
-    response.write(temp.read())
+    try:
+        adjunto = AdjuntoReconocimiento.objects.get(solicitud = reconocimiento_id, discusion = discusion_id)
+    except:
+        messages.error(request,'No existe el archivo adjunto solicitado')
+        return redirect('listar_reconocimientos')
+
+    response = HttpResponse(adjunto.archivo.read(),content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adjunto.nombre_archivo())
+    response['X-Sendfile'] = smart_str(adjunto.archivo)
     return response

@@ -177,18 +177,42 @@
                                             <i class="fa fa-{% if discusion.respuesta %}send{% else %}envelope{% endif %} fa-3x" style="color: #00acac;"></i>
                                         </div>
                                         <div class="media-body">
-                                            <h5>Enviado por: {{ discusion.entidad_nombre }}</h5>
+                                            <h5>Enviado por: {{ request.tenant }}</h5>
                                             <p class="location">{{ discusion.fecha }}</p>
                                             <p class="desc">
                                                 {{ discusion.descripcion }}
                                             </p>
+                                            {% if discusion.adjunto %}
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th align="center">Nombre</th>
+                                                        <th align="center">Extensión</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{discusion.adjunto.nombre_archivo}}</td>
+                                                        <td ><i class="fa fa-2x fa-{% if  discusion.adjunto.icon_extension != 'file' %}file-{% endif %}{{ discusion.adjunto.icon_extension }}-o"></i></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                                {% comment %}
+                                                <tfoot>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><a href="{% url 'descargar_adjuntos_reconocimiento_respuesta' solicitud.id discusion.entidad_id discusion.id %}"><i class="fa fa-cloud-download"></i> Descargar todos los adjuntos</a></td>
+                                                    </tr>
+
+                                                </tfoot>
+                                                {% endcomment %}
+                                            </table>
+                                            {% endif %}
                                             <div class="btn-row">
                                                 <a data-toggle="tooltip" data-container="body" data-title="Estado actual"><i class="fa fa-fw fa-tags"></i></a>
-                                                Cambio de estado a: {{ discusion.estado_actual }}
-                                                {% if discusion.tiene_adjuntos %}
-                                                    <a href="{% url 'descargar_adjuntos_reconocimiento_respuesta' solicitud.id solicitud.entidad_solicitante.id d.id %}" data-toggle="tooltip" data-container="body" data-title="Descargar adjuntos en archivo comprimido"><i class="fa fa-fw fa-cloud-download"></i></a>
-                                                    Descargar los adjuntos de esta discusion
-                                                {% endif %}
+                                                Cambio de estado a: {{ discusion.get_estado_actual_display }}
                                             </div>
                                         </div>
                                     </li>
