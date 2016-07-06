@@ -1,5 +1,5 @@
 from django.db import models
-from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,InformacionAdicional,HistorialLesiones,HistorialDoping
+from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,InformacionAdicional,HistorialLesiones
 from rest_framework import serializers
 
 # Create your models here.
@@ -36,9 +36,4 @@ class InformacionAdicionalSerializable(serializers.ModelSerializer):
 class HistorialLesionesSerializable(serializers.ModelSerializer):
     class Meta:
         model = HistorialLesiones
-        exclude = ('fecha_creacion',)
-
-class HistorialDopingSerializable(serializers.ModelSerializer):
-    class Meta:
-        model = HistorialDoping
         exclude = ('fecha_creacion',)
