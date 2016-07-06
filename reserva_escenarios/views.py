@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 from snd.modelos.escenarios import Escenario
 from reserva_escenarios.models import ReservaEscenario, ConfiguracionReservaEscenario
 from reserva_escenarios.forms import SolicitarReservaForm, ConfiguracionReservaEscenarioForm, ResponderSolicitudReservaForm
@@ -17,7 +18,7 @@ def listar_escenarios(request):
     Permite listar los escenarios deportivos del tenant
     """
 
-    escenarios = Escenario.objects.all()
+    escenarios = Escenario.objects.filter(estado =  0)
 
     return render(request,'lista_escenarios.html',{
         'escenarios': escenarios
@@ -84,16 +85,40 @@ def solicitar_reserva(request):
             form = SolicitarReservaForm(request.POST, instance = reserva)
 
             if form.is_valid():
-                nueva_solicitud = form.save(commit = False)
-                nueva_solicitud.save()
-                messages.success(request, "La reserva ha sido enviada al administrador del escenario con éxito. Aparecerá en el calendario si es aprobada y usted recibirá notificación.")
-                return redirect('listar_escenarios_reservas')
+                try:
+                    nueva_solicitud = form.save(commit = False)
+                    nueva_solicitud.save()
+                    correo_enviado = enviar_correo_orden_solicitud(request, nueva_solicitud)
+                    #print(correo_enviado)
+                    messages.success(request, "La reserva ha sido enviada al administrador del escenario con éxito. Aparecerá en el calendario si es aprobada y usted recibirá notificación.")
+                    return redirect('listar_escenarios_reservas')
+                except Exception as e:
+                    print (e, "excepción de solicitar_reserva, coldeportes.reserva_escenarios")
+                
 
     return render(request,'solicitar_reserva.html',{
         'form': form,
         'reserva': reserva
     })
 
+def enviar_correo_orden_solicitud(request, solicitud):
+
+    mensaje = ("""
+                Gracias %s por usar el sistema de reserva de escenarios de Coldeportes.
+
+
+                El número de su orden de reservación es "RE-%s-%s-%s" realizada para el escenario %s. la reserva fue programada para el %s hasta %s, 
+                para el grupo %s.
+
+
+                Una vez haya sido contestada su solicitud, recibirá un correo electrónico con la respuesta.
+
+                _________________________________________________________________________________________
+                       POR FAVOR NO RESPONDA ESTE CORREO ELECTRÓNICO, FUE GENERADO AUTOMÁTICAMENTE.""")%(solicitud.nombre_solicitante, request.tenant.id, solicitud.escenario.id, solicitud.id, solicitud.escenario, solicitud.fecha_inicio, solicitud.fecha_fin, solicitud.nombre_equipo)
+    #print(mensaje)
+    email = EmailMessage('Confirmación de Reserva de Escenario', mensaje, to=[str(solicitud.correo_participante)])
+    email.send()
+    return True
 
 def guardar_fechas_reserva(request, escenario_id):
     """
@@ -193,12 +218,15 @@ def responder_solicitud(request, solicitud_id):
         form = ResponderSolicitudReservaForm(request.POST, instance = solicitud)
 
         if form.is_valid():
-            respuesta = form.save(commit = False)
-            print(request.user)
-            respuesta.usuario_respuesta = request.user
-            respuesta.save()
-            messages.success(request, 'La respuesta se almacenado correctamente. Se enviará un correo electrónico al solicitante.')
-            return redirect('listar_solicitudes_reservas')
+            try:
+                respuesta = form.save(commit = False)
+                respuesta.usuario_respuesta = request.user
+                respuesta.save()
+                enviado = enviar_respuesta_solicitud(request, respuesta)
+                messages.success(request, 'La respuesta se almacenado correctamente. Se enviará un correo electrónico al solicitante.')
+                return redirect('listar_solicitudes_reservas')
+            except Exception as e:
+                print(e)
 
     return render(request,'responder_solicitud.html',{
         'solicitud' : solicitud,
@@ -206,6 +234,26 @@ def responder_solicitud(request, solicitud_id):
         'responder': True
     })
 
+
+def enviar_respuesta_solicitud(request, solicitud):
+    estado = 'APROBADA' if solicitud.estado == 1 else 'RECHAZADA'
+
+    mensaje = ("""
+                Hola %s,
+
+
+                Su orden de reservación con número "RE-%s-%s-%s" realizada para el escenario %s fue %s, la reserva fue programada para el %s hasta %s, 
+                para el grupo %s. Para mayor información comuniquese con el encargado del escenario que reservó.
+                
+                Los comentarios realizados por el encargado fueron: "%s"
+
+                Gracias por usar el sistema de reserva de escenarios de Coldeportes.
+                _________________________________________________________________________________________
+                       POR FAVOR NO RESPONDA ESTE CORREO ELECTRÓNICO, FUE GENERADO AUTOMÁTICAMENTE.""")%(solicitud.nombre_solicitante, request.tenant.id, solicitud.escenario.id, solicitud.id, solicitud.escenario, estado, solicitud.fecha_inicio, solicitud.fecha_fin, solicitud.nombre_equipo, solicitud.comentarios_respuesta)
+    #print(mensaje)
+    email = EmailMessage('Confirmación de Reserva de Escenario', mensaje, to=[str(solicitud.correo_participante)])
+    email.send()
+    return True
 
 
 @login_required
