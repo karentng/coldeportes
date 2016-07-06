@@ -3,20 +3,30 @@ from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,Informa
 from api_interoperable.models import DeportistaSerializable,ComposicionCorporalSerializable,HistorialDeportivoSerializable,InformacionAcademicaSerializable,HistorialLesionesSerializable,InformacionAdicionalSerializable
 from rest_framework import status
 from rest_framework.response import Response
-from django.http import Http404
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
+from rest_framework import viewsets,mixins
+
 # Create your views here.
-"""@api_view(['GET'])
+@api_view(['GET'])
 def api_root(request, format=None):
+    """
+    Vista encargada de mostrar la estructura de la API REST
+    """
     return Response(
         {
-            'deportistas': reverse('deportista-list',request=request,format=format)
+            'basico': reverse('deportista-list',request=request,format=format),
+            'corporal': reverse('corporal-list',request=request,format=format),
+            'deportivo': reverse('deportivo-list',request=request,format=format),
+            'academico': reverse('academico-list',request=request,format=format),
+            'adicional': reverse('adicional-list',request=request,format=format),
+            'lesiones': reverse('lesiones-list',request=request,format=format),
+
         }
     )
-"""
+
 class AddChangePermission(permissions.BasePermission):
     """
     Clase que define el permiso para editar , crear y eliminar deportistas
@@ -28,10 +38,10 @@ class AddChangePermission(permissions.BasePermission):
             return request.user.has_perm("snd.add_deportista")
         return True
 
-#API REST para modelo Deportista
-class DeportistasList(generics.ListCreateAPIView):
+
+class DeportistaViewSet(viewsets.ModelViewSet):
     """
-    Clase encargada de get y post de deportistas
+    Vista encargada de get, post, put, delete , patch de modelo deportista
     """
     queryset = Deportista.objects.all()
     serializer_class = DeportistaSerializable
@@ -44,15 +54,6 @@ class DeportistasList(generics.ListCreateAPIView):
         """
         serializer.save(entidad=self.request.tenant)
 
-
-class DeportistaDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Clase encargada del put, delete y get personal
-    """
-    queryset = Deportista.objects.all()
-    serializer_class = DeportistaSerializable
-    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
-
     def perform_destroy(self,instance):
         """
         Permite cambiar el estado del deportista en vez de eliminarlo de la base de datos (Borrado logico)
@@ -62,88 +63,69 @@ class DeportistaDetail(generics.RetrieveUpdateDestroyAPIView):
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 #API REST para modelo Composicion Corporal
-class ComposcionCorporalList(generics.ListCreateAPIView):
+class ComposcionCorporalViewSet(mixins.CreateModelMixin,
+                                mixins.ListModelMixin,
+                                mixins.UpdateModelMixin,
+                                mixins.RetrieveModelMixin,
+                                viewsets.GenericViewSet):
     """
-        Clase encargada de get y post de composicion corporal de deportista
-        """
+    Vista encargada de get, post, put , patch de modelo composicion corporal
+    """
     queryset = ComposicionCorporal.objects.all()
     serializer_class = ComposicionCorporalSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
-
-class ComposcionCorporalDetail(generics.RetrieveUpdateAPIView):
-    """
-    Clase encargada del put y get personal de composicion corporal de deportista
-    """
-    queryset = ComposicionCorporal.objects.all()
-    serializer_class = ComposicionCorporalSerializable
-    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
 
 
 #API REST para modelo historial deportivo
-class HistorialDeportivolList(generics.ListCreateAPIView):
+class HistorialDeportivolViewSet(mixins.CreateModelMixin,
+                              mixins.ListModelMixin,
+                              mixins.UpdateModelMixin,
+                              mixins.RetrieveModelMixin,
+                              viewsets.GenericViewSet):
     """
-        Clase encargada de get y post de composicion corporal de deportista
-        """
+    Vista encargada de get, post, put , patch de historial deportivo de deportista
+    """
     queryset = HistorialDeportivo.objects.all()
     serializer_class = HistorialDeportivoSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
-
-class HistorialDeportivoDetail(generics.RetrieveUpdateAPIView):
-    """
-    Clase encargada del put y get personal de composicion corporal de deportista
-    """
-    queryset = HistorialDeportivo.objects.all()
-    serializer_class = HistorialDeportivoSerializable
-    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
 
 #API REST para modelo informacion academica
-class InformacionAcademicaList(generics.ListCreateAPIView):
+class InformacionAcademicaViewSet(mixins.CreateModelMixin,
+                               mixins.ListModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.RetrieveModelMixin,
+                               viewsets.GenericViewSet):
     """
-        Clase encargada de get y post de composicion corporal de deportista
-        """
+    Vista encargada de get, post, put , patch de informacion academica de deportista
+    """
     queryset = HistorialDeportivo.objects.all()
     serializer_class = HistorialDeportivoSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
-class InformacionAcademicaDetail(generics.RetrieveUpdateAPIView):
-    """
-    Clase encargada del put y get personal de composicion corporal de deportista
-    """
-    queryset = InformacionAcademica.objects.all()
-    serializer_class = InformacionAcademicaSerializable
-    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
-
 #API REST para modelo informacion adicional
-class InformacionAdicionalList(generics.ListCreateAPIView):
+class InformacionAdicionalViewSet(mixins.CreateModelMixin,
+                              mixins.ListModelMixin,
+                              mixins.UpdateModelMixin,
+                              mixins.RetrieveModelMixin,
+                              viewsets.GenericViewSet):
     """
-        Clase encargada de get y post de composicion corporal de deportista
-        """
+    Clase encargada de get, post, put, patch de informacion adicional de deportista
+    """
     queryset = InformacionAdicional.objects.all()
     serializer_class = InformacionAdicionalSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
-
-class InformacionAdicionalDetail(generics.RetrieveUpdateAPIView):
-    """
-    Clase encargada del put y get personal de composicion corporal de deportista
-    """
-    queryset = InformacionAdicional.objects.all()
-    serializer_class = InformacionAdicionalSerializable
-    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
 
 #API REST para modelo historial lesiones
-class HistorialLesionesList(generics.ListCreateAPIView):
+class HistorialLesionesViewSet(mixins.CreateModelMixin,
+                              mixins.ListModelMixin,
+                              mixins.UpdateModelMixin,
+                              mixins.RetrieveModelMixin,
+                              viewsets.GenericViewSet):
     """
-        Clase encargada de get y post de composicion corporal de deportista
-        """
+    Clase encargada de get , post, put , patch de historial lesioaes de deportista
+    """
     queryset = HistorialLesiones.objects.all()
     serializer_class = HistorialLesionesSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
-
-class HistorialLesionesDetail(generics.RetrieveUpdateAPIView):
-    """
-    Clase encargada del put y get personal de composicion corporal de deportista
-    """
-    queryset = HistorialLesiones.objects.all()
-    serializer_class = HistorialLesionesSerializable
-    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)

@@ -4,15 +4,18 @@ from rest_framework import serializers
 
 # Create your models here.
 class DeportistaSerializable(serializers.ModelSerializer):
-    entidad = serializers.ReadOnlyField(source='entidad.nombre')
+    entidad = serializers.ReadOnlyField(source='entidad.id')
 
     class Meta:
         model = Deportista
         exclude = ('fecha_creacion',)
 
 class ComposicionCorporalSerializable(serializers.ModelSerializer):
+    #deportista = serializers.HyperlinkedRelatedField(
+    #    read_only=True,
+    #    view_name='deportista-detail'
+    #)
     deportista = serializers.ReadOnlyField(source='deportista.identificacion')
-
     class Meta:
         model = ComposicionCorporal
         exclude = ('fecha_creacion',)

@@ -1,23 +1,18 @@
 #-*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
 from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework.routers import DefaultRouter
 from api_interoperable import views
 
-urlpatterns = patterns('api_interoperable.views',
-    #url(r'^$', views.api_root, name='rest_root'),
-    url(r'^deportistas/$', views.DeportistasList.as_view()),
-    url(r'^deportistas/(?P<pk>[0-9]+)$', views.DeportistaDetail.as_view()),
-    url(r'^deportistas/corporal$', views.ComposcionCorporalList.as_view()),
-    url(r'^deportistas/corporal/(?P<pk>[0-9]+)$', views.ComposcionCorporalDetail.as_view()),
-    url(r'^deportistas/historialdeportivo', views.HistorialDeportivolList.as_view()),
-    url(r'^deportistas/historialdeportivo/(?P<pk>[0-9]+)$', views.HistorialDeportivoDetail.as_view()),
-    url(r'^deportistas/infoacademica', views.InformacionAcademicaList.as_view()),
-    url(r'^deportistas/infoacademica/(?P<pk>[0-9]+)$', views.InformacionAcademicaDetail.as_view()),
-    url(r'^deportistas/infoadicional', views.InformacionAdicionalList.as_view()),
-    url(r'^deportistas/infoadicional/(?P<pk>[0-9]+)$', views.InformacionAdicionalDetail.as_view()),
-    url(r'^deportistas/historiallesiones', views.HistorialLesionesList.as_view()),
-    url(r'^deportistas/historiallesiones/(?P<pk>[0-9]+)$', views.HistorialLesionesDetail.as_view()),
-    url(r'^api-auth/',include('rest_framework.urls',namespace='rest_framework')),
+router_deportistas = DefaultRouter()
+router_deportistas.register(r'basico', views.DeportistaViewSet)
+router_deportistas.register(r'corporal', views.ComposcionCorporalViewSet)
+router_deportistas.register(r'deportivo', views.HistorialDeportivolViewSet)
+router_deportistas.register(r'academico', views.InformacionAcademicaViewSet)
+router_deportistas.register(r'adicional', views.InformacionAdicionalViewSet)
+router_deportistas.register(r'lesiones', views.HistorialLesionesViewSet)
 
-)
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = [
+    url(r'^deportistas/', include(router_deportistas.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+]
