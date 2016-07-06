@@ -53,13 +53,13 @@ class DeportistaDetail(generics.RetrieveUpdateAPIView):
     serializer_class = DeportistaSerializable
     permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
 
-    def delete(self,request,pk, format=None):
-        try:
-            deportista = self.queryset.get(id=pk)
-        except Deportista.DoesNotExist:
-            raise Http404
-        deportista.estado = 1
-        deportista.save()
+    def perform_destroy(self,instance):
+        """
+        Permite cambiar el estado del deportista en vez de eliminarlo de la base de datos (Borrado logico)
+        :param instance: instancia a aplicar DELETE
+        """
+        instance.estado = 1
+        instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 #API REST para modelo Composicion Corporal
