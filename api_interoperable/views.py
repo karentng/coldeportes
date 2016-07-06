@@ -45,7 +45,7 @@ class DeportistasList(generics.ListCreateAPIView):
         serializer.save(entidad=self.request.tenant)
 
 
-class DeportistaDetail(generics.RetrieveUpdateAPIView):
+class DeportistaDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Clase encargada del put, delete y get personal
     """
@@ -73,14 +73,12 @@ class ComposcionCorporalList(generics.ListCreateAPIView):
 
 class ComposcionCorporalDetail(generics.RetrieveUpdateAPIView):
     """
-    Clase encargada del put, delete y get personal de composicion corporal de deportista
+    Clase encargada del put y get personal de composicion corporal de deportista
     """
     queryset = ComposicionCorporal.objects.all()
     serializer_class = ComposicionCorporalSerializable
     permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
 
-    def perform_destroy(self,instance):
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 #API REST para modelo historial deportivo
 class HistorialDeportivolList(generics.ListCreateAPIView):
@@ -93,11 +91,59 @@ class HistorialDeportivolList(generics.ListCreateAPIView):
 
 class HistorialDeportivoDetail(generics.RetrieveUpdateAPIView):
     """
-    Clase encargada del put, delete y get personal de composicion corporal de deportista
+    Clase encargada del put y get personal de composicion corporal de deportista
     """
     queryset = HistorialDeportivo.objects.all()
     serializer_class = HistorialDeportivoSerializable
     permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
 
-    def perform_destroy(self, instance):
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#API REST para modelo informacion academica
+class InformacionAcademicaList(generics.ListCreateAPIView):
+    """
+        Clase encargada de get y post de composicion corporal de deportista
+        """
+    queryset = HistorialDeportivo.objects.all()
+    serializer_class = HistorialDeportivoSerializable
+    permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
+
+class InformacionAcademicaDetail(generics.RetrieveUpdateAPIView):
+    """
+    Clase encargada del put y get personal de composicion corporal de deportista
+    """
+    queryset = InformacionAcademica.objects.all()
+    serializer_class = InformacionAcademicaSerializable
+    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
+
+#API REST para modelo informacion adicional
+class InformacionAdicionalList(generics.ListCreateAPIView):
+    """
+        Clase encargada de get y post de composicion corporal de deportista
+        """
+    queryset = InformacionAdicional.objects.all()
+    serializer_class = InformacionAdicionalSerializable
+    permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
+
+class InformacionAdicionalDetail(generics.RetrieveUpdateAPIView):
+    """
+    Clase encargada del put y get personal de composicion corporal de deportista
+    """
+    queryset = InformacionAdicional.objects.all()
+    serializer_class = InformacionAdicionalSerializable
+    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
+
+#API REST para modelo historial lesiones
+class HistorialLesionesList(generics.ListCreateAPIView):
+    """
+        Clase encargada de get y post de composicion corporal de deportista
+        """
+    queryset = HistorialLesiones.objects.all()
+    serializer_class = HistorialLesionesSerializable
+    permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
+
+class HistorialLesionesDetail(generics.RetrieveUpdateAPIView):
+    """
+    Clase encargada del put y get personal de composicion corporal de deportista
+    """
+    queryset = HistorialLesiones.objects.all()
+    serializer_class = HistorialLesionesSerializable
+    permission_classes = (permissions.IsAuthenticated,AddChangePermission,)

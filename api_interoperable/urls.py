@@ -11,6 +11,12 @@ urlpatterns = patterns('api_interoperable.views',
     url(r'^deportistas/corporal/(?P<pk>[0-9]+)$', views.ComposcionCorporalDetail.as_view()),
     url(r'^deportistas/historialdeportivo', views.HistorialDeportivolList.as_view()),
     url(r'^deportistas/historialdeportivo/(?P<pk>[0-9]+)$', views.HistorialDeportivoDetail.as_view()),
+    url(r'^deportistas/infoacademica', views.InformacionAcademicaList.as_view()),
+    url(r'^deportistas/infoacademica/(?P<pk>[0-9]+)$', views.InformacionAcademicaDetail.as_view()),
+    url(r'^deportistas/infoadicional', views.InformacionAdicionalList.as_view()),
+    url(r'^deportistas/infoadicional/(?P<pk>[0-9]+)$', views.InformacionAdicionalDetail.as_view()),
+    url(r'^deportistas/historiallesiones', views.HistorialLesionesList.as_view()),
+    url(r'^deportistas/historiallesiones/(?P<pk>[0-9]+)$', views.HistorialLesionesDetail.as_view()),
     url(r'^api-auth/',include('rest_framework.urls',namespace='rest_framework')),
 
 )
