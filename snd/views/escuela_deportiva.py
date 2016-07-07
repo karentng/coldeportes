@@ -315,9 +315,9 @@ def desactivar_escuela_deportiva(request,id_escuela):
     escuela.estado = not estado_actual
     escuela.save()
     if estado_actual:
-        message = "Escuela deportiva activada correctamente."
-    else:
         message = "Escuela deportiva desactivada correctamente."
+    else:
+        message = "Escuela deportiva activada correctamente."
     messages.success(request, message)
     return redirect('escuela_deportiva_listar')
 
