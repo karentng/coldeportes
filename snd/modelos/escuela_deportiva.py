@@ -88,7 +88,7 @@ class CategoriaEscuela(models.Model):
     nombre_categoria = models.CharField(max_length=155, verbose_name="Nombre Categoría")
     edad_minima = models.PositiveIntegerField(verbose_name="Edad Mínima")
     edad_maxima = models.PositiveIntegerField(verbose_name="Edad Máxima")
-    descripcion = models.TextField(max_length=500, verbose_name="Descripción", null=True, blank=True)
+    descripcion = models.TextField(max_length=500, verbose_name="Descripción")
 
     def __str__(self):
         return self.nombre_categoria + " -- " + str(self.edad_minima) + "-" + str(self.edad_maxima)
