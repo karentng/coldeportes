@@ -10,7 +10,7 @@ class ReconocimientoDeportivo(models.Model):
     
     ESTADOS = (
         (2,'APROBADA'),
-        (3,'ANULADA'),
+        (3,'RECHAZADA'),
         (4,'CANCELADA POR ENTIDAD'),
         (0,'ESPERANDO RESPUESTA'),
         (1,'INCOMPLETA'),
@@ -80,7 +80,7 @@ class DiscusionReconocimiento(models.Model):
     respuesta = models.BooleanField()
 
     def tiene_adjunto(self):
-        adjunto = AdjuntoReconocimiento.objects.get(discusion=self)
+        adjunto = AdjuntoReconocimiento.objects.get(discusion = self)
         return adjunto
 
 
