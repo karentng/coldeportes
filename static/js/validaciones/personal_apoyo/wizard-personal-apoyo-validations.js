@@ -74,6 +74,19 @@ fields = {
                         message: 'Por favor escoja una ciudad'
                         }
                     }
+            },
+            soporte_identificacion: {
+                validators: {
+                    notEmpty: {
+                        message: 'El soporte de identificación no puede ser vacío'
+                    },
+                    file: {
+                        extension: 'pdf,jpeg,jpg,png',
+                        type: 'application/pdf,image/jpeg,image/png',
+                        maxSize: 5242880,   // 5120 * 1024,
+                        message: 'Por favor seleccione un archivo valido en formato pdf, jpg, o png no mayor a 5MB'
+                    }
+                }
             }
 
 

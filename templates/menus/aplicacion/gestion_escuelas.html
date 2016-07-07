@@ -30,6 +30,11 @@
             <li {% if "/escuela-deportiva/participantes/listar" in request.path %} class="active" {% endif %}>
                 <a href="{% url 'listar_participante' %}">Listar Participantes</a>
             </li>
+            {% if perms.snd.add_escueladeportiva %}
+                <li {% if "/escuela-deportiva/acudiente/registrar" in request.path %} class="active" {% endif %}>
+                    <a href="{% url 'registrar_acudiente' %}">Registrar Acudiente</a>
+                </li>
+            {% endif %}
             <li {% if "/escuela-deportiva/acudiente/listar" in request.path %} class="active" {% endif %}>
                 <a href="{% url 'listar_acudientes' %}">Listar Acudientes</a>
             </li>

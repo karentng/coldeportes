@@ -60,7 +60,7 @@ class EscuelaDeportiva(models.Model):
     aval = models.FileField(upload_to=file_name, null=True, blank=True,
                             verbose_name="resolución aval de funcionamiento")
     descripcion_lugar = models.TextField(verbose_name="Descripción del lugar", max_length=500)
-    estado = models.IntegerField(choices=ESTADO, default=0, verbose_name="estado de la EFD")
+    estado = models.IntegerField(choices=ESTADO, default=1, verbose_name="estado de la EFD")
     # Pestañas adicionales
     servicios = models.ManyToManyField(EscuelaDeportivaServicio, blank=True)
     entidad = models.ForeignKey(Entidad)
@@ -88,10 +88,10 @@ class CategoriaEscuela(models.Model):
     nombre_categoria = models.CharField(max_length=155, verbose_name="Nombre Categoría")
     edad_minima = models.PositiveIntegerField(verbose_name="Edad Mínima")
     edad_maxima = models.PositiveIntegerField(verbose_name="Edad Máxima")
-    descripcion = models.TextField(max_length=500, verbose_name="Descripción", null=True, blank=True)
+    descripcion = models.TextField(max_length=500, verbose_name="Descripción")
 
     def __str__(self):
-        return self.nombre_categoria
+        return self.nombre_categoria + " -- " + str(self.edad_minima) + "-" + str(self.edad_maxima)
 
 
 class HorarioActividadesEscuela(models.Model):
@@ -129,24 +129,24 @@ class Participante(models.Model):
 
     nombres = models.CharField(max_length=100, verbose_name='Nombres')
     apellidos = models.CharField(max_length=100, verbose_name='Apellidos')
-    genero = models.CharField(choices=tipo_sexo, max_length=11, verbose_name='Genero del Participante')
+    genero = models.CharField(choices=tipo_sexo, max_length=11, verbose_name='Género del Participante')
     fecha_nacimiento = models.DateField(verbose_name='Fecha de nacimiento')
     tipo_id = models.CharField(max_length=10, choices=TIPO_IDENTIDAD, default='TI',
                                verbose_name='Tipo de Identificación')
     identificacion = models.CharField(max_length=100, verbose_name='Identificación')
-    talla = models.IntegerField(verbose_name="Talla (estatura) en centímetros")
+    talla = models.IntegerField(verbose_name="Estatura (cm)")
     peso = models.IntegerField(verbose_name="Peso (Kg)")
     ciudad_residencia = models.ForeignKey(Ciudad, verbose_name='Ciudad de residencia')
     institucion_educativa = models.CharField(max_length=255, verbose_name="Institución educativa actual")
     anho_curso = models.CharField(max_length=100, choices=CURSO, verbose_name="Año que cursa actualmente")
     telefono = models.CharField(max_length=100, verbose_name='Teléfono')
-    direccion = models.CharField(max_length=100, verbose_name='Dirección')
+    direccion = models.CharField(max_length=100, verbose_name='Dirección de residencia')
     nacionalidad = models.ManyToManyField(Nacionalidad, verbose_name='Nacionalidad')
     eps = models.ForeignKey(EPS, verbose_name='Sistema de salud afiliado')
     entidad = models.ForeignKey(Entidad)
     etnia = models.CharField(max_length=20, choices=ETNIAS, blank=True)
-    sede_perteneciente = models.ForeignKey(EscuelaDeportiva)
-    categoria = models.ForeignKey(CategoriaEscuela, null=True)
+    sede_perteneciente = models.ForeignKey(EscuelaDeportiva, verbose_name="Sede a la que pertenece")
+    categoria = models.ForeignKey(CategoriaEscuela, null=True, verbose_name="Categoría")
     estado = models.IntegerField(default=1, choices=ESTADO)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -184,7 +184,7 @@ class Participante(models.Model):
 class SeguimientoTallaPeso(models.Model):
     participante = models.ForeignKey(Participante)
     fecha_registro = models.DateField(auto_now_add=True)
-    talla = models.IntegerField(verbose_name="Talla (estatura) en centímetros")
+    talla = models.IntegerField(verbose_name="Estatura (cm)")
     peso = models.IntegerField(verbose_name="Peso (Kg)")
 
 
@@ -197,9 +197,9 @@ class AlertaTemprana(models.Model):
 
     nivel_alerta = models.IntegerField(choices=NIVEL_DE_ALERTA, verbose_name="Nivel de alerta")
     referencia_alerta = models.CharField(max_length=150, verbose_name="Referencia de alerta")
-    descripcion = models.TextField(verbose_name="Descripción")
+    descripcion = models.TextField(verbose_name="Descripción", max_length=500)
     fecha_registro = models.DateField(auto_now_add=True)
-    fecha_ultima_actualizacion = models.DateField(null=True)
+    fecha_ultima_actualizacion = models.DateField(auto_now=True, null=True)
     estado = models.IntegerField(default=1, choices=ESTADO)
     participante = models.ForeignKey(Participante)
 

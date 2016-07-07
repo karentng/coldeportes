@@ -35,7 +35,7 @@
                     <h5><b>Fecha de la Actividad:</b> {{ actividad.dia_actividad }}</h5>
                     <h5><b>Dirigido a:</b> {{ actividad.get_dirigido_a_display|lower|capfirst }}</h5>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6" style="word-break: break-all;">
                     <h5 class="text-justify"><b>Descripción:</b> {{ actividad.descripcion }}</h5>
                 </div>
             </div>
@@ -59,6 +59,7 @@
                                     <td>
                                         {% if perms.snd.change_escueladeportiva %}
                                             <input title="Asistió?" {% if asistente.asistio %}checked{% endif %} id="{{ asistente.id }}" type="checkbox" data-group-cls="btn-group-sm">
+                                            <span style="visibility: hidden">{% if asistente.asistio %}SI{% else %}NO{% endif %}</span>
                                         {% else %}
                                             {% if asistente.asistio %}SI{% else %}NO{% endif %}
                                         {% endif %}

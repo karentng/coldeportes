@@ -66,7 +66,7 @@ def wizard_sede(request, escuela_id):
                     messages.error(request, "La sede que trata de registrar ya existe.")
 
     return render(request, 'escuela_deportiva/wizard/wizard_escuela_sede.html', {
-        'titulo': 'Ingrese los datos de identificación y contacto de la sede de la Escuela de Formación Deportiva',
+        'titulo': 'Identificación y contacto de la Sede',
         'titulo_panel': 'Edición de Sede de EFD',
         'wizard_stage': 1,
         'form': escuela_form,
@@ -92,10 +92,10 @@ def wizard_servicios_sede(request, escuela_id):
         if servicios_form.is_valid():
             escuela_servicios = servicios_form.save(commit=False)
             escuela_servicios.save()
-            return redirect('wizard_horarios', escuela_id)
+            return redirect('wizard_horarios_sede', escuela_id)
 
     return render(request, 'escuela_deportiva/wizard/wizard_servicios_sede.html', {
-        'titulo': 'Seleccione los servicios que ofrece la sede de la Escuela de Formación Deportiva',
+        'titulo': 'Servicios que ofrece la Sede',
         'wizard_stage': 2,
         'titulo_panel': 'Registro de Servicios de Sede',
         'form': servicios_form,
@@ -132,7 +132,7 @@ def wizard_horarios_sede(request, escuela_id):
             print(horarios_form.errors)
 
     return render(request, 'escuela_deportiva/wizard/wizard_horarios_sede.html', {
-        'titulo': 'Adicione los horarios de actividades de la sede de la EFD',
+        'titulo': 'Horarios de actividades de la Sede',
         'wizard_stage': 3,
         'titulo_panel': 'Registro de Horarios de Sede',
         'form': horarios_form,
@@ -169,7 +169,7 @@ def wizard_categorias_sede(request, escuela_id):
             print(categorias.errors)
 
     return render(request, 'escuela_deportiva/wizard/wizard_categorias_sede.html', {
-        'titulo': 'Adicione las categorías de la sede de la EFD',
+        'titulo': 'Categorías de la Sede',
         'wizard_stage': 4,
         'titulo_panel': 'Registro de Categorías de Sede',
         'form': categorias_form,
@@ -315,9 +315,9 @@ def desactivar_escuela_deportiva(request,id_escuela):
     escuela.estado = not estado_actual
     escuela.save()
     if estado_actual:
-        message = "Escuela deportiva activada correctamente."
-    else:
         message = "Escuela deportiva desactivada correctamente."
+    else:
+        message = "Escuela deportiva activada correctamente."
     messages.success(request, message)
     return redirect('escuela_deportiva_listar')
 
@@ -329,11 +329,11 @@ def registrar_participante(request):
     if request.method == 'POST':
         sede_id = int(request.POST["sede_perteneciente"])
         participante_form = ParticipanteForm(request.POST, sede_id=sede_id)
-        print(participante_form.fields['categoria'].__dict__)
         if participante_form.is_valid():
             participante = participante_form.save(commit=False)
             participante.entidad = request.tenant
             participante.save()
+            participante_form.save()
             messages.success(request, "El participante ha sido registrado con exito")
             return redirect('listar_participante')
         else:
@@ -363,6 +363,8 @@ def editar_participante(request, id_participante):
                 return redirect('listar_participante')
             else:
                 print(participante_form.errors)
+                return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
+                                                                                         'edicion': True})
     participante_form = ParticipanteForm(instance=participante, sede_id=participante.sede_perteneciente.id)
     return render(request, 'escuela_deportiva/registrar_participante.html', {'form': participante_form,
                                                                              'edicion': True})
@@ -388,12 +390,10 @@ def detalles_participante(request, id_participante):
         messages.error(request, 'El participante al que trata de acceder no existe')
         return redirect("listar_participante")
 
-    try:
-        acudiente = Acudiente.objects.get(participante_responsable=participante.id)
-    except Acudiente.DoesNotExist:
-        acudiente = None
+    acudientes = Acudiente.objects.filter(participante_responsable=participante.id)
+
     return render(request, 'escuela_deportiva/ver_participante.html', {'participante': participante,
-                                                                       'acudiente': acudiente, 'alertas': alertas,
+                                                                       'acudientes': acudientes, 'alertas': alertas,
                                                                        'alerta_form': alerta_form,
                                                                        'seguimientostyp': seguimientostyp,
                                                                        'seguimientotyp_form': seguimientotyp_form})
@@ -530,7 +530,7 @@ def ajax_categoria_sede(request):
             for categoria in categorias.all():
                 dic = {}
                 dic["id"] = categoria.id
-                dic["text"] = categoria.nombre_categoria
+                dic["text"] = categoria.__str__()
                 data.append(dic)
         return JsonResponse({"data": data})
 
@@ -539,27 +539,17 @@ def ajax_categoria_sede(request):
 
 @login_required
 @permission_required('snd.add_escueladeportiva')
-def registrar_acudiente(request, id_participante):
+def registrar_acudiente(request):
 
     if request.method == 'POST':
-        try:
-            participante = Participante.objects.get(id=id_participante)
-        except Participante.DoesNotExist:
-            messages.error(request, 'El participante al que trata de acceder no existe')
-            return redirect("listar_participante")
         acudiente_form = AcudienteForm(request.POST, request.FILES)
         if acudiente_form.is_valid():
             acudiente = acudiente_form.save(commit=False)
-            acudiente.participante_responsable = participante
             acudiente.save()
             messages.success(request, "El acudiente ha sido registrado con exito")
-            return redirect('detalles_participante', id_participante)
+            return redirect('listar_acudientes')
 
     acudiente_form = AcudienteForm()
-    participantes_sin_acudiente = Participante.objects.exclude(id__in=(
-        Acudiente.objects.all().values_list('participante_responsable', flat=True)
-    ))
-    acudiente_form.fields["participante_responsable"].queryset = participantes_sin_acudiente
     return render(request, 'escuela_deportiva/registrar_acudiente.html', {'form': acudiente_form})
 
 
