@@ -529,7 +529,7 @@ def ajax_categoria_sede(request):
             for categoria in categorias.all():
                 dic = {}
                 dic["id"] = categoria.id
-                dic["text"] = categoria.nombre_categoria
+                dic["text"] = categoria.__str__()
                 data.append(dic)
         return JsonResponse({"data": data})
 
