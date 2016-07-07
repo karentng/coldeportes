@@ -43,7 +43,7 @@
     <div class="panel-body" style="padding:0">
         <div class="row">
             <div class="col-sm-12">
-                <img src="http://www.podiumns.com/i-img/es/servicios/medicina-deportiva/md-medicina-deportiva-pamplona-navarra.jpg" alt="gimnasio" style="width:100%; height:250px">
+                <img src="{{ STATIC_URL }}img/escuelas.deportivas.jpg" alt="gimnasio" style="width:100%; height:250px">
                 <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
                     <div class="panel-heading p-0">
                         <div class="panel-heading-btn m-r-10 m-t-10">
@@ -59,7 +59,7 @@
                                 </li>
 
                                 <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
-                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-list"></i> Datos del espacio deportivo</a></li>
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-list"></i> Datos de Ubicación de la Escuela</a></li>
 
                                 <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-phone"></i> Servicios</a></li>
                                 <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-clock-o"></i> Horarios de Actividad</a></li>
@@ -79,7 +79,6 @@
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
-                                        <h5 class="m-t-10"><b>Información de contacto:</b></h5>
                                         <p><b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}</p>
                                         <p><b>Teléfono:</b> {% if escuela.telefono_fijo %} {{escuela.telefono_fijo}} {% else %} No especificado {% endif %}</p>
                                         <p><b>Teléfono celular:</b> {% if escuela.telefono_celular %} {{escuela.telefono_celular}} {% else %} No especificado {% endif %}</p>
@@ -98,33 +97,21 @@
                             <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
                                 <div class="invoice-company">
                                     <b>{{escuela.nombre}}</b><br>
-                                    <b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <address class="m-t-5 m-b-5">
-                                                    <h5 class="m-t-10"><b>Datos del espacio:</b></h5>
-                                                    <p><b>Dirección:</b> {% if escuela.direccion %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
-                                                    <p><b>Barrio:</b> {% if escuela.barrio %} {{escuela.barrio}} {% else %} No especificado {% endif %}</p>
-                                                    <p><b>Ciudad:</b> {% if escuela.ciudad %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
-                                                    <p><b>Estrato:</b> {% if escuela.estrato %} {{escuela.estrato}} {% else %} No especificado {% endif %}</p>
-                                                    <p><b>Comuna:</b> {% if escuela.comuna %} {{escuela.comuna}} {% else %} No especificado {% endif %}</p>
-                                                </address>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <h5 class="m-t-10"><b>Descripción del espacio:</b></h5>
-                                                <p class="text-justify">{{ escuela.descripcion_lugar }}</p>
-                                            </div>
-                                        </div>
-                                        <br/>
+                                        <p><b>Dirección:</b> {% if escuela.direccion %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Barrio:</b> {% if escuela.barrio %} {{escuela.barrio}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Ciudad:</b> {% if escuela.ciudad %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Estrato:</b> {% if escuela.estrato %} {{escuela.estrato}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Comuna:</b> {% if escuela.comuna %} {{escuela.comuna}} {% else %} No especificado {% endif %}</p><br>
+                                        <h5 class="m-t-10"><b>Descripción:</b></h5>
+                                        <p class="text-justify">{{ escuela.descripcion_lugar }}</p>
                                         <div align="right">
                                             <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         
@@ -132,7 +119,6 @@
                             <div class="invoice">
                                 <div class="invoice-company">
                                     <b>{{escuela.nombre}}</b><br>
-                                    <b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
