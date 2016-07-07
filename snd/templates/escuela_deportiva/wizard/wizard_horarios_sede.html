@@ -74,7 +74,7 @@
                             <td>{{horario.hora_inicio}}</td>
                             <td>{{horario.hora_fin}}</td>
                             <td>{{horario.dias.all|join:", "}}</td>
-                            <td>{{horario.descripcion}}</td>
+                            <td style="word-break: break-all;">{{horario.descripcion}}</td>
                             <td>
                                 <a href="#modal-desactivate{{horario.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
                                 <div class="modal fade" id="modal-desactivate{{horario.id}}">
