@@ -333,6 +333,7 @@ def registrar_participante(request):
             participante = participante_form.save(commit=False)
             participante.entidad = request.tenant
             participante.save()
+            participante_form.save()
             messages.success(request, "El participante ha sido registrado con exito")
             return redirect('listar_participante')
         else:
