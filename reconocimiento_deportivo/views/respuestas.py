@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from entidades.models import Club
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, DiscusionReconocimiento, AdjuntoReconocimiento
+from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, DiscusionReconocimiento, AdjuntoReconocimiento, AdjuntoRequerimientoReconocimiento
 from reconocimiento_deportivo.forms.respuesta import ResponderSolicitudForm
 from solicitudes_escenarios.utilities import comprimir_archivos
 
@@ -90,6 +90,9 @@ def obtener_datos_solicitud(request, solicitud_id, entidad_id):
 
     solicitud.adjuntos = array
     discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud_id)
+    for discusion in discusiones:
+        discusion.adjunto= discusion.tiene_adjunto()
+
 
     for discusion in discusiones:
         discusion.estado_actual = discusion.get_estado_actual_display()
@@ -163,7 +166,7 @@ def descargar_adjunto(request, solicitud_id, adjunto_id, entidad_id):
     connection.set_tenant(entidad)
 
     try:
-        adjunto = AdjuntoReconocimiento.objects.get(solicitud = solicitud_id, id = adjunto_id)
+        adjunto = AdjuntoRequerimientoReconocimiento.objects.get(solicitud = solicitud_id, id = adjunto_id)
     except:
         messages.error(request,'No existe el archivo adjunto solicitado')
         return redirect('listar_solicitudes_reconocimientos')
@@ -278,7 +281,7 @@ def descargar_todos_adjuntos(request, solicitud_id, entidad_id):
 
     """
     try:
-        solicitud = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = int(solicitud_id))
+        solicitud = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = solicitud_id)
     except:
         messages.error(request,'No existe la solicitud')
         return redirect('listar_solicitudes_respuesta')
@@ -286,13 +289,12 @@ def descargar_todos_adjuntos(request, solicitud_id, entidad_id):
     tenant_actual = request.tenant
     entidad = solicitud.entidad_solicitante
     connection.set_tenant(entidad)
-
+    
+    adjuntos = AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = solicitud_id)
     directorio = '/adjuntos_reconocimiento_deportivo/'
-    adjunto = AdjuntoReconocimiento.objects.filter(solicitud = solicitud_id)
-    zip,temp = comprimir_archivos(adjunto, directorio)
-
+    zip,temp = comprimir_archivos(adjuntos, directorio)
     response = HttpResponse(zip,content_type="application/zip")
-    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjunto[0].solicitud.codigo_unico(entidad))
+    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjuntos[0].solicitud.codigo_unico(request.tenant))
     temp.seek(0)
     response.write(temp.read())
     connection.set_tenant(tenant_actual)
@@ -319,7 +321,7 @@ def descargar_adjuntos_respuesta(request, solicitud_id, entidad_id, discusion_id
     connection.set_tenant(entidad)
 
     directorio = '/adjuntos_reconocimiento_deportivo/'
-    adjunto = AdjuntoRequerimientoReconocimiento.objects.filter(solicitud = solicitud_id, discusion = discusion_id)
+    adjunto = AdjuntoReconocimiento.objects.filter(solicitud = solicitud_id, discusion = discusion_id)
     zip, temp = comprimir_archivos(adjunto, directorio)
 
     response = HttpResponse(zip,content_type="application/zip")

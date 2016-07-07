@@ -200,17 +200,15 @@
                                                 <thead>
                                                     <tr>
                                                         <th align="center">Nombre</th>
-                                                        <th align="center">Tipo</th>
                                                         <th align="center">Extensión</th>
-                                                        {% comment %}<th align="center">Descargar</th>{% endcomment %}
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <td>{{discusion.tiene_adjunto.nombre_archivo}}</td>
-                                                        <td>{{discusion.tiene_adjunto.tipo}}</td>
                                                         <td ><i class="fa fa-2x fa-{% if  discusion.tiene_adjunto.icon_extension != 'file' %}file-{% endif %}{{ discusion.tiene_adjunto.icon_extension }}-o"></i></td>
-                                                        {% comment %}<td><a href="{% url 'descargar_adjunto_discusion_reconocimiento' solicitud.id discusion.id %}"><i class="fa fa-cloud-download"></i> Descargar Adjunto</a></td>{% endcomment %}
+                                                        <td><a href="{% url 'descargar_adjunto_discusion_reconocimiento' solicitud.id discusion.id %}"><i class="fa fa-cloud-download"></i> Descargar Adjunto</a></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
