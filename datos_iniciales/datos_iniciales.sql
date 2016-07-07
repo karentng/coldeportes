@@ -31,7 +31,7 @@ INSERT INTO "entidades_departamento" ("id", "nombre", "codigo", "latitud", "long
 (30,    'Valle del Cauca',  '76',   3.75,   -76.5),
 (31,    'Vaupés',   '97',   0.25,   -70.75),
 (33,    'Bogotá D.C',   '11',   -74.11, 4.38),
-(33,    'Federación Deportiva Militar',	'88',	-74.11,	4.38),
+(33,    'Federación Deportiva Militar',	'000',	-74.11,	4.38),
 (32,	'Vichada',	'99',	5,	-69.5);
 
 
