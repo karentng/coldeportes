@@ -67,7 +67,7 @@ def obtener_datos_solicitud(request, solicitud_id, entidad_id):
     try:
         lista = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud = solicitud_id)
     except Exception:
-        messages.error(request,'No existe la solicitud')
+        #messages.error(request,'No existe la solicitud')
         return False, redirect('listar_solicitudes_reconocimientos')
 
     tenant_actual = request.tenant
@@ -89,15 +89,18 @@ def obtener_datos_solicitud(request, solicitud_id, entidad_id):
         array.append(resultado)
 
     solicitud.adjuntos = array
-    discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud_id)
-    for discusion in discusiones:
-        discusion.adjunto= discusion.tiene_adjunto()
+    discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud_id) 
 
 
     for discusion in discusiones:
-        discusion.estado_actual = discusion.get_estado_actual_display()
-        discusion.entidad_nombre = discusion.entidad.nombre
-        #discusion.tiene_adjunto = discusion.tiene_adjunto()
+        try:
+            discusion.estado_actual = discusion.get_estado_actual_display()
+            discusion.entidad_nombre = discusion.entidad.nombre
+            discusion.adjunto= discusion.tiene_adjunto()
+            #discusion.tiene_adjunto = discusion.tiene_adjunto()
+        except:
+            pass
+
     discusiones = [discusion.__dict__ for discusion in discusiones]
     connection.set_tenant(tenant_actual)
 
@@ -232,7 +235,7 @@ def enviar_respuesta(request, solicitud_id, entidad_id):
         try:
             solicitud_hecha = ListaSolicitudesReconocimiento.objects.get(entidad_solicitante = entidad_id, solicitud=int(solicitud_id))
         except:
-            messages.error(request,'No existe la solicitud')
+            #messages.error(request,'No existe la solicitud')
             return redirect('listar_solicitudes_reconocimientos')
 
         tenant_actual = request.tenant
