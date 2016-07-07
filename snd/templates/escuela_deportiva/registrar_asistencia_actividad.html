@@ -59,6 +59,7 @@
                                     <td>
                                         {% if perms.snd.change_escueladeportiva %}
                                             <input title="Asistió?" {% if asistente.asistio %}checked{% endif %} id="{{ asistente.id }}" type="checkbox" data-group-cls="btn-group-sm">
+                                            <span style="visibility: hidden">{% if asistente.asistio %}SI{% else %}NO{% endif %}</span>
                                         {% else %}
                                             {% if asistente.asistio %}SI{% else %}NO{% endif %}
                                         {% endif %}
