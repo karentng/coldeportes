@@ -76,11 +76,11 @@
                             <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
                                 <div class="invoice-company">
                                     <b>{{escuela.nombre}}</b><br>
-                                    <b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
                                         <h5 class="m-t-10"><b>Información de contacto:</b></h5>
+                                        <p><b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}</p>
                                         <p><b>Teléfono:</b> {% if escuela.telefono_fijo %} {{escuela.telefono_fijo}} {% else %} No especificado {% endif %}</p>
                                         <p><b>Teléfono celular:</b> {% if escuela.telefono_celular %} {{escuela.telefono_celular}} {% else %} No especificado {% endif %}</p>
                                         <p><b>Email:</b> {% if escuela.email %} {{escuela.email}} {% else %} No especificado {% endif %}</p>
