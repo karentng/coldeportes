@@ -137,7 +137,7 @@
                         <div class="tab-pane fade" id="nav-tab2-12">
                             <div class="invoice">
                                 <div class="invoice-company">
-                                    <b>{{acudiente.full_name}}</b>
+                                    <b>ACUDIENTES DEL PARTICIPANTE</b>
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
@@ -147,6 +147,7 @@
                                                     {% if acudientes %}
                                                         {% for acudiente in acudientes %}
                                                             <p><strong>Datos:</strong></p>
+                                                            <p><b>Nombre:</b> {{ acudiente.full_name | upper}}</p>
                                                             {% if perms.snd.view_escueladeportiva %}
                                                                 <p><b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}</p>
                                                                 <p><b>Soporte Identificación:</b>
@@ -160,6 +161,7 @@
                                                             <p><b>Genero:</b> {{ acudiente.get_genero_display | upper}}</p>
                                                             <p><b>Fecha Nacimiento:</b> {{acudiente.fecha_nacimiento}} </p>
                                                             <p><b>Sistema de salud afiliado:</b> {{ acudiente.eps }} </p>
+                                                            <hr>
                                                         {% endfor %}
                                                     {% endif %}
                                                 </div>
