@@ -41,7 +41,7 @@ def registro_calendario(request,id=None):
             ev.entidad = yo
             ev.save()
             connection.set_tenant(yo)
-            messages.success(request, "El evento ha sido enviado al Calendario Deportivo Nacional con éxito!, Aparecera cuando COLDEPORTES lo apruebe")
+            messages.success(request, "El evento ha sido enviado al Calendario Deportivo Nacional con éxito!, Aparecerá cuando COLDEPORTES lo apruebe")
             return redirect('listado_calendario_nacional')
         connection.set_tenant(yo)
     return render(request,'registro_calendario.html',{
