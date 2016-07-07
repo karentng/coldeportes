@@ -15,7 +15,12 @@ class Juego(models.Model):
 
     
     def __str__(self):
-        return self.nombre+", Año: "+str(self.anio)
+        return self.nombre +", AÑO: "+str(self.anio)
+
+    def save(self, *args, **kwargs):
+        self.nombre = self.nombre.upper()
+        self.descripcion = self.descripcion.upper()
+        super(Juego, self).save(*args, **kwargs)
 
 class Competencia(models.Model):
     TIPOS_PARTICIPANTES = (
@@ -79,7 +84,7 @@ class Equipo(models.Model):
 
     nombre = models.CharField(max_length=255, verbose_name='nombre')
     posicion = models.IntegerField(default=0, verbose_name="posición")    
-    tiempo = models.CharField(blank=True, null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
+    tiempo = models.CharField(default='0', blank=True, null=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
     puntos = models.IntegerField(default=0, null=True, blank=True)
     metros = models.DecimalField(default=0, null=True, blank=True, max_digits=6, decimal_places=3, help_text='En metros')
     departamento = models.ForeignKey(Departamento)
@@ -107,7 +112,7 @@ class Participante(models.Model):
     posicion = models.IntegerField(default=0, verbose_name="posición")
     metros = models.DecimalField(default=0, null=True, blank=True, max_digits=6, decimal_places=3, help_text='En metros')
     puntos = models.IntegerField(default=0, null=True, blank=True)
-    tiempo = models.CharField(null=True, blank=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
+    tiempo = models.CharField(default='0', null=True, blank=True, max_length=10, help_text="El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.105")
     marca = models.CharField(verbose_name = "Mejor Registro", blank=True, null=True, max_length=10, help_text="Este campo se refiere al mejor desempeño que tiene el participante en esta competencia. La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05")
     equipo = models.ForeignKey(Equipo, null=True)
     creado = models.DateTimeField(auto_now_add=True)
