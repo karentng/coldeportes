@@ -139,12 +139,13 @@
         {# Se comenta esta parte ya que no se usa activamente y da una mala vista al superusuario en el tenant público #}
         {% comment %}<li><a href="{% url "permisos" %}">Permisos</a></li>{% endcomment %}
     {% endif %}
+    {% include "menus/servicios/buscador_entidades.html" %}
 {% endif %}
 
 {% include "menus/aplicacion/directorio.html" %}
 <!-- VISTA JERARQUICA PARA LIGAS, FEDERACIONES Y BUSCADOR DE ENTIDADES PUBLICO-->
-{% comment %}
-{% if request.tenant.tipo == 1 or request.tenant.tipo == 2 %}
+
+{% if request.tenant.schema_name != 'public' and request.tenant.tipo == 1 or request.tenant.tipo == 2 %}
     <li class="has-sub {% if 'jerarquia' in request.path %} active {% endif %}">
         <a href="{% url 'vista_jerarquica' %}">
             <i class="fa fa-sitemap"></i>
@@ -152,4 +153,4 @@
         </a>
     </li>
 {% endif %}
-{% endcomment %}
+
