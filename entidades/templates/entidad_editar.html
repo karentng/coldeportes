@@ -36,7 +36,7 @@
 {% block contenido_panel %}
 	<div class="row">
 		<div class="col-sm-12">
-			<form id="entidad" class="form-horizontal" action="" method="post">{% csrf_token %}
+			<form id="entidad" class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
 				{% bootstrap_form form layout="horizontal" %}
 				{% if nombre != 'Centro de Acondicionamiento Físico' %}
                     <b>Seleccione los tipos de actores que podrá registrar la entidad:</b>
