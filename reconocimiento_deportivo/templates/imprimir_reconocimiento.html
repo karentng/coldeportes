@@ -109,7 +109,7 @@
                             <tr>
                                 <td>
                                     {% for adjunto in solicitud.adjuntos %}
-                                        <b>Nombre: </b>{{adjunto.nombre_archivo}}<br>
+                                        <b>Requerimiento: </b>{{adjunto.tipo_archivo}}<br>
                                         {% empty %}
                                         <p align="center">No hay adjuntos registrados</p>
                                     {% endfor %}

@@ -80,17 +80,18 @@ def obtener_datos_solicitud(request, solicitud_id, entidad_id):
     adjuntos = solicitud.adjuntos()
     array = []
 
+    print(adjuntos)
     for adjunto in adjuntos:
         resultado={
             'nombre_archivo' : adjunto.nombre_archivo(),
+            'tipo_archivo' : adjunto.tipo_archivo(),
             'icon_extension' : adjunto.icon_extension(),
             'id' : adjunto.id
         }
         array.append(resultado)
 
     solicitud.adjuntos = array
-    discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud_id) 
-
+    discusiones = DiscusionReconocimiento.objects.filter(solicitud = solicitud_id)
 
     for discusion in discusiones:
         try:
@@ -143,7 +144,7 @@ def imprimir_solicitud(request, solicitud_id, entidad_id):
     if not solicitud:
         return discusiones
 
-    return render(request,'respuesta/imprimir_solicitud_reconocimiento_respuesta.html',{
+    return render(request,'imprimir_reconocimiento.html',{
         'solicitud' : solicitud,
         'discusiones' : discusiones
     })

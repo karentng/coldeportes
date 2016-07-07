@@ -96,6 +96,9 @@ class AdjuntoRequerimientoReconocimiento(models.Model):
     def nombre_archivo(self):
         return os.path.basename(self.archivo.name)
 
+    def tipo_archivo(self):
+        return self.tipo
+
     def icon_extension(self):
         name, extension = os.path.splitext(self.archivo.name)
         if extension in ['.pdf','.PDF']:
