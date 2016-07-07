@@ -70,7 +70,7 @@
                                     <div class="invoice-from">
                                         <div class="row">
                                             <address class="m-t-5 m-b-5">
-                                                <div class="col-lg-12 col-md-offset-1">
+                                                <div class="col-lg-12">
                                                     <p><b>Federación:</b> {{ evento.entidad |upper }}</p>
                                                     <p><b>Fecha del evento:</b> Desde {{ evento.fecha_inicio}} hasta {{ evento.fecha_finalizacion}}<p/>
                                                     <p><b>Ciudad del evento:</b> {{ evento.ciudad}}</p>
@@ -79,7 +79,7 @@
                                                     <strong><h4>Información del evento</h4></strong>
                                                 </div>
 
-                                                <div class="col-lg-5 col-md-offset-1">
+                                                <div class="col-lg-5">
                                                     <p><b>Tipo:</b> {{ evento.get_tipo_display }}<p/>
                                                     <p><b>Deporte:</b> {{ evento.deporte}}</p>
                                                     <p><b>Categoria:</b> {% if evento.categoria %}{{ evento.categoria}} {% else %} Ninguno {% endif %}</p>
@@ -89,7 +89,7 @@
                                                     <p><b>Objetivo:</b> {{ evento.objetivo}}</p>
                                                     <p><b>Cupo total de competidores:</b> {{ evento.cupo_atletas}}</p>
                                                     <p><b>Cupo total de asistentes:</b> {{ evento.cupo_personas}}</p>
-                                                    <p><b>Estado:</b> {{ evento.get_estado_display}}</p>
+                                                    <p><b>Estado del evento:</b> {{ evento.get_estado_display}}</p>
                                                 </div>
                                             </address>
                                         </div>

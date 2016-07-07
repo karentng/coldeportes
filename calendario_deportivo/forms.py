@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django import forms
 from django.forms import ModelForm
-from coldeportes.utilities import adicionarClase,MyDateTimeWidget
+from coldeportes.utilities import adicionarClase,MyDateWidget
 from entidades.models import Entidad,CalendarioNacional,TipoDisciplinaDeportiva,CategoriaDisciplinaDeportiva,ModalidadDisciplinaDeportiva
 
 class CalendarioForm(ModelForm):
@@ -33,6 +33,6 @@ class CalendarioForm(ModelForm):
         model = CalendarioNacional
         exclude = ('estado','entidad',)
         widgets = {
-            'fecha_inicio': MyDateTimeWidget(),
-            'fecha_finalizacion': MyDateTimeWidget(),
+            'fecha_inicio': MyDateWidget(),
+            'fecha_finalizacion': MyDateWidget(),
         }
