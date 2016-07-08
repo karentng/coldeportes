@@ -39,11 +39,15 @@ def organizar_deportistas(tenant):
     :param tenant:
     :return:
     """
-    if tenant.obtenerTenant.__class__ == Entidad:
+    print("adentro")
+    print(type(tenant.obtenerTenant()) is Entidad)
+    if type(tenant.obtenerTenant()) is Entidad:
+        print("public")
         clubs = [club.nombre for club in Club.objects.all()]
         clubs_paralimpicos = [club.nombre for club in ClubParalimpico.objects.all()]
+        print(clubs + clubs_paralimpicos)
         listado = get_deportista(clubs + clubs_paralimpicos)
-    elif tenant.obtenerTenant.__class__ == Federacion:
+    elif type(tenant.obtenerTenant()) is Federacion:
         #ligas = tenant.ligas_asociadas()
         listado = []
     elif tenant.obtenerTenant.__class__ == Liga:
@@ -96,10 +100,10 @@ class DeportistaViewSet(viewsets.ModelViewSet):
         Permite retornar el listado de deportistas de acuerdo al tenant actual
         :param request: peticion
     """
-    """def list(self,request):
-
+    def list(self,request):
+        print ("test")
         return Response(organizar_deportistas(request.tenant))
-    """
+
     def perform_create(self, serializer):
         """
         Permite validar si la entidad proveniente del deportista corresponde a la del request
