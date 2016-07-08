@@ -90,7 +90,12 @@
                                             <div class="profile-right">
                                             {% if perms.snd.change_personalapoyo and request.tenant.schema_name != 'public' %}
                                                 <p><b>{{personal_apoyo.get_tipo_id_display | title}} </b>: {{personal_apoyo.identificacion}}<br /></p>
-                                                <p><b>Soporte identificación</b>: <a href="{{personal_apoyo.soporte_identificacion.url }}" target="_blank">Soporte</a> <br /></p>
+                                                <p><b>Soporte identificación</b>:
+                                                    {% if personal_apoyo.soporte_identificacion %}
+                                                        <a href="{{personal_apoyo.soporte_identificacion.url }}" target="_blank">Soporte</a> <br/></p>
+                                                    {% else %}
+                                                        No disponible
+                                                    {% endif %}
                                                 <p><b>Estado:</b> {{personal_apoyo.get_estado_display}}</p>
                                             {% else %}
                                                 <p> <b>Entidad:</b> {{ personal_apoyo.entidad | upper}}<br/> </p>
@@ -169,6 +174,7 @@
                                                             <th>ESTADO</th>
                                                             <th>PROFESIÓN</th>
                                                             <th>PAÍS</th>
+                                                            <th>SOPORTE CUALIFICACIÓN</th>
                                                             <th>AÑO FINALIZACIÓN</th>
                                                         </tr>
                                                     </thead>
@@ -180,6 +186,12 @@
                                                             <td>{{formacion.estado}}</td>
                                                             <td>{% if formacion.profesion %}{{ formacion.profesion }}{% else %}N/A{% endif %}</td>
                                                             <td>{{ formacion.pais }}</td>
+                                                            <td>{% if formacion.soporte_cualificacion %}
+                                                                    <a href="{{formacion.soporte_cualificacion.url }}" target="_blank">Soporte</a>
+                                                                {% else %}
+                                                                    No disponible
+                                                                {% endif %}
+                                                            </td>
                                                             <td>{% if formacion.fecha_finalizacion %}{{ formacion.fecha_finalizacion }}{% else %}Actual{% endif %}</td>
                                                         </tr>
                                                         {% endfor %}
@@ -212,6 +224,7 @@
                                                         <tr>
                                                             <th>NOMBRE CARGO</th>
                                                             <th>INSTITUCIÓN</th>
+                                                            <th>SOPORTE HOJA DE VIDA</th>
                                                             <th>FECHA COMIENZO</th>
                                                             <th>FECHA FIN</th>
                                                         </tr>
@@ -221,12 +234,18 @@
                                                         <tr>
                                                             <td>{{experiencia.nombre_cargo}}</td>
                                                             <td>{{experiencia.institucion}}</td>
+                                                            <td>{% if experiencia.soporte_hoja_de_vida %}
+                                                                    <a href="{{experiencia.soporte_hoja_de_vida.url }}" target="_blank">Soporte</a>
+                                                                {% else %}
+                                                                    No disponible
+                                                                {% endif %}
+                                                            </td>
                                                             <td>{{experiencia.fecha_comienzo}}</td>
                                                             <td>
-                                                                {% if formacion.fecha_fin == None %}
+                                                                {% if experiencia.fecha_fin == None %}
                                                                     ACTUAL
                                                                 {% else %}
-                                                                    {{ formacion.fecha_fin }}
+                                                                    {{ experiencia.fecha_fin }}
                                                                 {% endif %}
                                                             </td>
                                                         </tr>

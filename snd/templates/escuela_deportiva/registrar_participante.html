@@ -61,7 +61,9 @@
                                 };
                                 toastr["error"]("La sede seleccionada no tiene categorías registradas");
                             }else {
-                                $("#id_categoria").select2({
+                                var $selector = $('#id_categoria');
+                                $selector.empty();
+                                $selector.select2({
                                     data: data.data
                                 });
                             }

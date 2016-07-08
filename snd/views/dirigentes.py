@@ -339,7 +339,7 @@ def wizard_formacion_academica(request,dirigente_id, edicion):
 
 @login_required
 @all_permission_required('snd.add_dirigente')
-def eliminar_formacion_academica(request, cargo_id, dirigente_id):
+def eliminar_formacion_academica(request, academica_id, dirigente_id):
     """
     Mayo 06 / 2016
     Autor: Daniel Correa
@@ -356,14 +356,15 @@ def eliminar_formacion_academica(request, cargo_id, dirigente_id):
     :type cargo_id    String
     """
     try:
-        forma_academica = DirigenteFormacionAcademica.objects.get(id=cargo_id, dirigente_id = dirigente_id)
-        forma_academica.delete()
-        messages.success(request,'El registro de formación académica ha sido eliminado con éxito.')
-        return redirect('dirigentes_formacion_academica',dirigente_id=dirigente_id, edicion=1)
+        forma_academica = DirigenteFormacionAcademica.objects.get(id=academica_id, dirigente_id = dirigente_id)
 
-    except DirigenteCargo.DoesNotExist:
+    except DirigenteFormacionAcademica.DoesNotExist:
         messages.error(request,'Está tratando de eliminar un registro de formación académica inexistente.')
         return redirect('dirigentes_formacion_academica', dirigente_id=dirigente_id, edicion=1)
+
+    forma_academica.delete()
+    messages.success(request, 'El registro de formación académica ha sido eliminado con éxito.')
+    return redirect('dirigentes_formacion_academica', dirigente_id=dirigente_id, edicion=1)
 
 @login_required
 def listar(request):

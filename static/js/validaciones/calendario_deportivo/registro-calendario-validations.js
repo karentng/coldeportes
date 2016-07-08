@@ -31,9 +31,9 @@ fields = {
                     },
                     date: {
                         message: 'Verifique que la fecha de inicio sea mayor al día de hoy y  menor a la de finalización',
-                        format: 'YYYY-MM-DD h:m',
+                        format: 'YYYY-MM-DD',
                         max: 'fecha_finalizacion',
-                        min: hoy()
+                        min: ($.datepicker.formatDate('yy-mm-dd', new Date())).toString()
                     }
                 }
             },
@@ -44,7 +44,7 @@ fields = {
                     },
                     date: {
                         message: 'La fecha de finalización debe ser mayor a la fecha de inicio',
-                        format: 'YYYY-MM-DD h:m',
+                        format: 'YYYY-MM-DD',
                         min: 'fecha_inicio'
                     }
                 }

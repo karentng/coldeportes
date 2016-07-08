@@ -29,7 +29,7 @@ urlpatterns = patterns(
 
 
     # urls acudientes
-    url(r'^acudiente/registrar/(\d+)$', 'registrar_acudiente', name='registrar_acudiente'),
+    url(r'^acudiente/registrar$', 'registrar_acudiente', name='registrar_acudiente'),
     url(r'^acudiente/listar$', 'listar_acudientes', name='listar_acudientes'),
     url(r'^acudiente/editar/(\d+)$', 'editar_acudiente', name='editar_acudiente'),
     url(r'^acudiente/cambiar-estado/(\d+)$', 'cambiar_estado_acudiente', name='cambiar_estado_acudiente'),

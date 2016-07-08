@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from datetime import datetime
 from snd.models import (EscuelaDeportiva, Participante, Acudiente, CategoriaEscuela, HorarioActividadesEscuela,
                         AlertaTemprana, SeguimientoTallaPeso, ActividadEFD)
 from datetimewidget.widgets import TimeWidget
-from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget
+from coldeportes.utilities import adicionarClase, verificar_tamano_archivo, MyDateWidget, calculate_age
 
 
 class ParticipanteForm(forms.ModelForm):
@@ -22,6 +23,15 @@ class ParticipanteForm(forms.ModelForm):
         self.fields['categoria'].queryset = CategoriaEscuela.objects.none()
         if sede_id:
             self.fields['categoria'].queryset = CategoriaEscuela.objects.filter(sede=sede_id)
+
+    def clean(self):
+        cleaned_data = super(ParticipanteForm, self).clean()
+        edad = int(calculate_age(cleaned_data['fecha_nacimiento']))
+        categoria = cleaned_data['categoria']
+        if edad < categoria.edad_minima or edad > categoria.edad_maxima:
+            self.add_error('categoria',
+                           'La edad del participante no está entre las edades de la categoría seleccionada')
+        return cleaned_data
 
     class Meta:
         model = Participante
@@ -85,8 +95,10 @@ class EscuelaDeportivaServiciosForm(forms.ModelForm):
 class HorarioActividadesEscuelaForm(forms.ModelForm):
 
     required_css_class = 'required'
-    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
-    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es'}))
+    hora_inicio = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es',
+                                                             'startDate': datetime.now().strftime("%Y-%m-%d")}))
+    hora_fin = forms.TimeField(widget=TimeWidget(options={'format': 'hh:ii', 'language': 'es',
+                                                          'startDate': datetime.now().strftime("%Y-%m-%d")}))
 
     def __init__(self, *args, **kwargs):
 

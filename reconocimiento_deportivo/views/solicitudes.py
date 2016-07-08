@@ -8,13 +8,13 @@ from django.utils.encoding import smart_str
 from django.contrib.auth.decorators import login_required, permission_required
 from reconocimiento_deportivo.forms.solicitudes import ReconocimientoDeportivoForm, AdjuntoRequerimientoReconocimientoForm, DiscusionForm
 from reconocimiento_deportivo.modelos.respuestas import ListaSolicitudesReconocimiento
-from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoRequerimientoReconocimiento, DiscusionReconocimiento
+from reconocimiento_deportivo.modelos.solicitudes import ReconocimientoDeportivo, AdjuntoRequerimientoReconocimiento, DiscusionReconocimiento, AdjuntoReconocimiento
 from solicitudes_escenarios.utilities import comprimir_archivos
 # Create your views here.
 
 @login_required
 @permission_required('reconocimiento_deportivo.add_reconocimientodeportivo')
-def solicitar(request, reconocimiento_id = None):
+def tramitar(request, reconocimiento_id = None):
     """
     Abril 9, 2016
     Autor: Karent Narvaez
@@ -26,11 +26,11 @@ def solicitar(request, reconocimiento_id = None):
     except Exception:
         reconocimiento = None
 
-    if reconocimiento:
-        validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
-    else:
-        validado = True
-        mensaje = ''
+    
+    validado, mensaje = validar_creacion(request, reconocimiento) #Válida si no hay otra solicitud en espera de respuesta o si ya fue finalizada la solicitud que se intenta acceder
+    print(validado)
+
+
     if validado:
         form = ReconocimientoDeportivoForm(instance = reconocimiento)
 
@@ -61,25 +61,29 @@ def validar_creacion(request, reconocimiento):
 
     mensaje = ''
     fecha_reconocimiento_actual = request.tenant.obtenerTenant().fecha_vigencia
-    fecha_maxima_renovacion = date(fecha_reconocimiento_actual.year, fecha_reconocimiento_actual.month - 1, fecha_reconocimiento_actual.day%28)
+    #restricción que no permite crear solicitud si tiene un reconocimiento vigente con fecha mayor a un mes
+    if fecha_reconocimiento_actual:
+        fecha_maxima_renovacion = date(fecha_reconocimiento_actual.year, fecha_reconocimiento_actual.month - 1, fecha_reconocimiento_actual.day%28)
     
+        if  date.today() < fecha_maxima_renovacion:
+            mensaje = 'No puede crear otra solicitud mientras tenga reconocimiento deportivo vigente con más de 1 mes.'
+            return False, mensaje
+
+    #restricción que no permite crear solicitud si tiene una en espera de respuesta
     try:
         cantidad_solicitudes_por_respuesta = len(ReconocimientoDeportivo.objects.filter(estado = 0))
         if cantidad_solicitudes_por_respuesta > 0:
             mensaje = 'No puede crear otra solicitud mientras tenga una en espera de respuesta. Si desea crear otra debe cancelarla o esperar que sea contestada.'
             return False, mensaje
-        elif  date.today() < fecha_maxima_renovacion:
-            mensaje = 'No puede crear otra solicitud mientras tenga reconocimiento deportivo vigente con más de 1 mes.'
-            return False, mensaje
     except:
         pass
-
-    if reconocimiento:
-        if reconocimiento.estado == 1:
-            return True, mensaje
-        else:
+    #restricción que no le permite editar una solicitud que fue finalizada
+    """if reconocimiento:
+        if reconocimiento.estado !=1:
             mensaje = 'La solicitud no se puede editar porque ya fue completada.'
-            return False, mensaje
+            return False, mensaje"""
+    
+    return True, mensaje
 
 
 @login_required
@@ -106,7 +110,8 @@ def anular_solicitud(request, reconocimiento_id = None):
             solicitud_ente.delete()
             connection.set_tenant(entidad) # se retorna al tenant que realizó solicitud
         except Exception:
-            messages.error(request,'No existe la solicitud, proceso no realizado')  
+            pass
+            #messages.error(request,'No existe la solicitud, proceso no realizado')  
             
     try:
         del request.session['identidad']
@@ -232,7 +237,7 @@ def adjuntar_requerimientos(request, reconocimiento_id):
                 adjunto.save()
                 return redirect('adjuntar_requerimientos_reconocimiento', solicitud.id)
 
-        return render(request,'wizard/wizard_adjuntos.html',{
+        return render(request,'wizard/wizard_adjuntos_reconocimiento.html',{
             'form' : form,
             'reconocimiento_id': reconocimiento_id,
             'wizard_stage': 2,
@@ -289,7 +294,7 @@ def finalizar_solicitud(request, solicitud_id):
         ListaSolicitudesReconocimiento.objects.create(solicitud = solicitud.id, entidad_solicitante = entidad, fecha_creacion = datetime.now()).save()
         connection.set_tenant(entidad) # se retorna al tenant que realizó solicitud
 
-        messages.success(request,'Solicitud enviada con éxito a:' + str(solicitud.para_quien))
+        messages.success(request,'Solicitud enviada con éxito a: ' + str(solicitud.para_quien))
         del request.session['identidad']
     except:
         messages.error(request,'Solicitud no encontrada')
@@ -395,7 +400,7 @@ def descargar_adjuntos(request, reconocimiento_id):
 def descargar_adjunto(request, reconocimiento_id, adjunto_id):
     """
     Abril 13, 2016
-    Autor: Daniel Correa
+    Autor: Karent Narvaez
 
     Permite descargar algun archivo adjunto de una solicitud reconocimiento deportivo
 
@@ -420,11 +425,13 @@ def descargar_adjunto_discusion(request, reconocimiento_id, discusion_id):
 
     Permite descargar los archivos adjuntos de una discusion a una solicitud
     """
-    directorio = '/adjuntos_reconocimiento_deportivo/'    
-    adjunto = AdjuntoRequerimientoReconocimiento.objects.get(solicitud = reconocimiento_id, discucion = discusion_id)
-    zip,temp = comprimir_archivos(adjunto, directorio)
-    response = HttpResponse(zip,content_type="application/zip")
-    response['Content-Disposition'] = 'attachment; filename=adjuntos_solicitud_%s.zip'%(adjunto[0].solicitud.codigo_unico(request.tenant))
-    temp.seek(0)
-    response.write(temp.read())
+    try:
+        adjunto = AdjuntoReconocimiento.objects.get(solicitud = reconocimiento_id, discusion = discusion_id)
+    except:
+        messages.error(request,'No existe el archivo adjunto solicitado')
+        return redirect('listar_reconocimientos')
+
+    response = HttpResponse(adjunto.archivo.read(),content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(adjunto.nombre_archivo())
+    response['X-Sendfile'] = smart_str(adjunto.archivo)
     return response

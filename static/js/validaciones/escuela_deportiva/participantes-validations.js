@@ -1,4 +1,5 @@
 form = "#form-participante";
+$.getScript(base+"plugins/moment/moment.min.js");
 fields = {
     nombres: {
         validators: {
@@ -35,16 +36,22 @@ fields = {
             },
             date: {
                 message: 'El valor ingresado no es una fecha válida, debe ser menor al dia de hoy',
-                format: 'YYYY-MM-DD',
-                max: function(field, validator){
+                format: 'YYYY-MM-DD'
+            },
+            callback:{
+                message: "El valor ingresado no es una fecha válida, debe ser menor al dia de hoy",
+                callback: function(field, validator){
                     var d = new Date();
-
                     var curr_date = d.getDate();
-
                     var curr_month = d.getMonth() + 1;
-
                     var curr_year = d.getFullYear();
-                    return curr_year + "-" + curr_month + "-" + curr_date;
+                    var today = curr_year + "-" + curr_month + "-" + curr_date;
+
+                    var momento = new moment(field, 'YYYY-MM-DD', true);
+                    if (!momento.isValid()) {
+                        return false;
+                    }
+                    return momento.isBefore(today);
 
                 }
             }
@@ -53,7 +60,7 @@ fields = {
     genero: {
         validators: {
             notEmpty: {
-                message: 'El correo electrónico no puede ser vacío'
+                message: 'El género del participante no puede ser vacío'
             }
         }
     },
@@ -103,6 +110,20 @@ fields = {
         validators: {
             notEmpty: {
                 message: 'El Sistema de salud afiliado no puede ser vacío'
+            }
+        }
+    },
+    categoria: {
+        validators: {
+            notEmpty:{
+                message: 'La Categoría no puede ser vacía'
+            }
+        }
+    },
+    sede_perteneciente: {
+        validators: {
+            notEmpty:{
+                message: 'La sede no puede ser vacía'
             }
         }
     }
