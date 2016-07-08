@@ -13,10 +13,25 @@ from django.db import connection
 from django.shortcuts import get_object_or_404
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
+import urllib.request, base64
 
 # Create your views here.
 def get_deportista(entidades):
-    pass
+    """
+    Realiza peticiones a cada entidad pasada por parametro
+    :param entidades:
+    :return:
+    """
+    listado = []
+    for entidad in entidades:
+        usuario = 'admin'
+        contrasena = 'admin'
+        req = urllib.request.Request("http://%s/rest/deportistas/basico" % entidad.domain_url)
+        credenciales = base64.b64decode(bytes('%s:%s' % (usuario,contrasena)))
+        req.add_header("Authorization", "Basic %s" % credenciales)
+        result = urllib.request.urlopen(req)
+        listado += result["results"]
+    return listado
 
 def organizar_deportistas(tenant):
     """
@@ -27,14 +42,18 @@ def organizar_deportistas(tenant):
     if tenant.obtenerTenant.__class__ == Entidad:
         clubs = [club.nombre for club in Club.objects.all()]
         clubs_paralimpicos = [club.nombre for club in ClubParalimpico.objects.all()]
-
+        listado = get_deportista(clubs + clubs_paralimpicos)
     elif tenant.obtenerTenant.__class__ == Federacion:
-        ligas = tenant.ligas_asociadas()
+        #ligas = tenant.ligas_asociadas()
+        listado = []
     elif tenant.obtenerTenant.__class__ == Liga:
-        pass
+        listado = []
     else:
-        pass
+        queryset = Deportista.objects.all()
+        serializer = DeportistaSerializable(queryset, many=True)
+        listado = serializer.data
 
+    return listado
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -72,15 +91,14 @@ class DeportistaViewSet(viewsets.ModelViewSet):
     queryset = Deportista.objects.all()
     serializer_class = DeportistaSerializable
     permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
-    """
-    def list(self,request):
-        if request.tenant == 'public':
-            queryset = TenantDeportistaView.objects.distinct('id')
-        else:
-            queryset = PublicDeportistaView.objects.distinct('id')
 
-        serializer = DeportistaSerializable(queryset,many=True)
-        return Response(serializer.data)
+    """
+        Permite retornar el listado de deportistas de acuerdo al tenant actual
+        :param request: peticion
+    """
+    """def list(self,request):
+
+        return Response(organizar_deportistas(request.tenant))
     """
     def perform_create(self, serializer):
         """
