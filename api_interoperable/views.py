@@ -26,8 +26,8 @@ def get_deportista(entidades):
     for entidad in entidades:
         usuario = 'admin'
         contrasena = 'admin'
-        req = urllib.request.Request("http://%s/rest/deportistas/basico" % entidad.domain_url)
-        credenciales = base64.b64decode(bytes('%s:%s' % (usuario,contrasena)))
+        req = urllib.request.Request("http://%s:8089/rest/deportistas/basico" % entidad.domain_url)
+        credenciales = base64.b64encode(bytes('%s:%s' % (usuario,contrasena), 'UTF-8'))
         req.add_header("Authorization", "Basic %s" % credenciales)
         result = urllib.request.urlopen(req)
         listado += result["results"]
@@ -39,18 +39,12 @@ def organizar_deportistas(tenant):
     :param tenant:
     :return:
     """
-    print("adentro")
-    print(type(tenant.obtenerTenant()) is Entidad)
     if type(tenant.obtenerTenant()) is Entidad:
-        print("public")
-        clubs = [club.nombre for club in Club.objects.all()]
-        clubs_paralimpicos = [club.nombre for club in ClubParalimpico.objects.all()]
-        print(clubs + clubs_paralimpicos)
-        listado = get_deportista(clubs + clubs_paralimpicos)
+        listado = get_deportista(list(Club.objects.all()) + list(ClubParalimpico.objects.all()))
     elif type(tenant.obtenerTenant()) is Federacion:
         #ligas = tenant.ligas_asociadas()
         listado = []
-    elif tenant.obtenerTenant.__class__ == Liga:
+    elif type(tenant.obtenerTenant()) is Liga:
         listado = []
     else:
         queryset = Deportista.objects.all()
