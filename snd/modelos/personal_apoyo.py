@@ -127,7 +127,7 @@ class FormacionDeportiva(models.Model):
     estado = models.CharField(choices=tipo_estado, max_length=20, verbose_name='Estado')
     profesion = models.CharField(max_length=100, blank=True, null=True, verbose_name='Profesión')
     grado_semestre = models.IntegerField(verbose_name='Grado, año o semestre', null=True, blank=True)
-    soporte_cualificacion = models.FileField(upload_to="Personal_apoyo/soporte_cualificación/",
+    soporte_cualificacion = models.FileField(upload_to="Personal_apoyo/soporte_cualificacion/",
                                              verbose_name="Soporte cualificación y formación (escaneado)")
     fecha_finalizacion = models.IntegerField(blank=True, null=True, verbose_name='Año finalización')
     fecha_creacion = models.DateField(auto_now_add=True)
