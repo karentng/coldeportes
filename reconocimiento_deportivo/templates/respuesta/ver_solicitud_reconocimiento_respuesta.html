@@ -145,7 +145,7 @@
                                     {% for adjunto in solicitud.adjuntos %}
                                         <tr>
                                             <td>{{adjunto.nombre_archivo}}</td>
-                                            <td>{{adjunto.tipo}}</td>
+                                            <td>{{adjunto.tipo_archivo}}</td>
                                             <td ><i class="fa fa-2x fa-{% if  adjunto.icon_extension != 'file' %}file-{% endif %}{{ adjunto.icon_extension }}-o"></i></td>
                                             <td><a href="{% url  'descargar_adjunto_reconocimiento_respuesta' solicitud.id adjunto.id solicitud.entidad_solicitante.id %}"><i class="fa fa-download"></i> Descargar</a></td>
                                         </tr>

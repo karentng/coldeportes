@@ -126,11 +126,12 @@
                             </div>                            
                             
                             <div class="result-info" width="100%">
-                                <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>                                
+                                <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4> 
                                 <p class="location">{{ entidad.tipo_tenant }} {% if entidad.disciplina %} de {{ entidad.disciplina }}{% endif %}</p>
                                 <p class="desc">
                                     {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
                                 </p>
+                                <p>{% if tipoTenant.reconocimiento %}Vigencia de Reconocimiento Deportivo Hasta El <b>{{tipoTenant.fecha_vigencia}}</b>{% endif %}</p>                               
                                 <div class="m-b-10">
                                     {% if entidad.tipo_tenant == "Club" and user.is_authenticated %}
                                         <a href="" data-target="#modal-socios" data-toggle="modal" style="margin-right: 10px;"> <i class="fa fa-group"></i> Ver socios del club</a>
