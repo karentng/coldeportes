@@ -79,8 +79,7 @@ def obtener_datos_solicitud(request, solicitud_id, entidad_id):
     solicitud.codigo_unico = solicitud.codigo_unico(entidad)
     adjuntos = solicitud.adjuntos()
     array = []
-
-    print(adjuntos)
+    
     for adjunto in adjuntos:
         resultado={
             'nombre_archivo' : adjunto.nombre_archivo(),
