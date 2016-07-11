@@ -14,6 +14,8 @@ from django.shortcuts import get_object_or_404
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
 import urllib.request, base64
+from rest_framework.test import APIRequestFactory, force_authenticate
+from entidades.models import *
 
 # Create your views here.
 def get_deportista(entidades):
@@ -94,10 +96,9 @@ class DeportistaViewSet(viewsets.ModelViewSet):
         Permite retornar el listado de deportistas de acuerdo al tenant actual
         :param request: peticion
     """
-    def list(self,request):
-        print ("test")
+    """def list(self,request):
         return Response(organizar_deportistas(request.tenant))
-
+    """
     def perform_create(self, serializer):
         """
         Permite validar si la entidad proveniente del deportista corresponde a la del request

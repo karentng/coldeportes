@@ -1,6 +1,8 @@
 from django.db import models
 from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,InformacionAdicional,HistorialLesiones
 from rest_framework import serializers
+from reportes.models import TenantDeportistaView
+from entidades.modelos_vistas_reportes import PublicDeportistaView
 
 # Create your models here.
 class DeportistaSerializable(serializers.ModelSerializer):
@@ -8,6 +10,20 @@ class DeportistaSerializable(serializers.ModelSerializer):
 
     class Meta:
         model = Deportista
+        exclude = ('fecha_creacion',)
+
+class DeportistaListSerializable(serializers.ModelSerializer):
+    entidad = serializers.ReadOnlyField(source='entidad.schema_name')
+
+    class Meta:
+        model = TenantDeportistaView
+        exclude = ('fecha_creacion',)
+
+class DeportistasPublicSerializable(serializers.ModelSerializer):
+    entidad = serializers.ReadOnlyField(source='entidad.schema_name')
+
+    class Meta:
+        model = PublicDeportistaView
         exclude = ('fecha_creacion',)
 
 class ComposicionCorporalSerializable(serializers.ModelSerializer):
