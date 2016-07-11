@@ -38,7 +38,7 @@ class AddChangePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method in self.SAFE_METHODS:
-            if request.tenant == Club or request.tenant == ClubParalimpico:
+            if type(request.tenant.obtenerTenant()) == Club or type(request.tenant.obtenerTenant()) == ClubParalimpico:
                 return request.user.has_perm("snd.add_deportista")
             else:
                 return False
@@ -111,6 +111,16 @@ class ComposcionCorporalViewSet(mixins.CreateModelMixin,
                                 status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
             return super(ComposcionCorporalViewSet,self).list(request,*args, **kwargs)
+
+    """def perform_create(self, serializer):
+        id_depor = serializer.data['deportista']
+        print (id_depor)
+        #serializer.data.pop("deportista",None)
+        print("success")
+        print (serializer.errors)
+        serializer.save(deportista=id_depor)"""
+
+
 
 #API REST para modelo historial deportivo
 class HistorialDeportivolViewSet(mixins.CreateModelMixin,

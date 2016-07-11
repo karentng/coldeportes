@@ -30,6 +30,7 @@ class DeportistasPublicSerializable(serializers.ModelSerializer):
 
 class ComposicionCorporalSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+    #deportista = serializers.ReadOnlyField()
 
     class Meta:
         model = ComposicionCorporal
