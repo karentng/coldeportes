@@ -38,7 +38,10 @@ class AddChangePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method in self.SAFE_METHODS:
-            return request.user.has_perm("snd.add_deportista")
+            if request.tenant == Club or request.tenant == ClubParalimpico:
+                return request.user.has_perm("snd.add_deportista")
+            else:
+                return False
         return True
 
 class DeportistaViewSet(viewsets.ModelViewSet):
