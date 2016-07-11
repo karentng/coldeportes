@@ -1,21 +1,17 @@
 from django.shortcuts import render
-from entidades.models import Federacion,Liga,Entidad,Club,ClubParalimpico
 from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,InformacionAcademica,InformacionAdicional,HistorialLesiones
-from api_interoperable.models import DeportistaSerializable,ComposicionCorporalSerializable,HistorialDeportivoSerializable,InformacionAcademicaSerializable,HistorialLesionesSerializable,InformacionAdicionalSerializable
+from api_interoperable.models import DeportistaSerializable,ComposicionCorporalSerializable,HistorialDeportivoSerializable,InformacionAcademicaSerializable,HistorialLesionesSerializable,InformacionAdicionalSerializable, DeportistasPublicSerializable, DeportistaListSerializable
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework import viewsets,mixins
-from django.db import connection
-from django.shortcuts import get_object_or_404
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
 import urllib.request, base64
-from rest_framework.test import APIRequestFactory, force_authenticate
 from entidades.models import *
+from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
 def get_deportista(entidades):
@@ -91,14 +87,25 @@ class DeportistaViewSet(viewsets.ModelViewSet):
     queryset = Deportista.objects.all()
     serializer_class = DeportistaSerializable
     permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
+    pagination_class = PageNumberPagination
 
     """
         Permite retornar el listado de deportistas de acuerdo al tenant actual
         :param request: peticion
     """
-    """def list(self,request):
-        return Response(organizar_deportistas(request.tenant))
-    """
+    def list(self,request):
+        if type(request.tenant.obtenerTenant()) is Entidad:
+            queryset = PublicDeportistaView.objects.distinct('id')
+            serializer = DeportistasPublicSerializable(queryset,many=True)
+        elif type(request.tenant.obtenerTenant()) is Federacion or type(request.tenant.obtenerTenant()) is Liga:
+            print("liga")
+            queryset = TenantDeportistaView.objects.distinct('id','entidad')
+            serializer = DeportistaListSerializable(queryset,many=True)
+        else:
+            queryset = Deportista.objects.all()
+            serializer = DeportistaSerializable(queryset, many=True)
+        return Response(serializer.data)
+
     def perform_create(self, serializer):
         """
         Permite validar si la entidad proveniente del deportista corresponde a la del request
@@ -152,8 +159,8 @@ class InformacionAcademicaViewSet(mixins.CreateModelMixin,
     """
     Vista encargada de get, post, put , patch de informacion academica de deportista
     """
-    queryset = HistorialDeportivo.objects.all()
-    serializer_class = HistorialDeportivoSerializable
+    queryset = InformacionAcademica.objects.all()
+    serializer_class = InformacionAcademicaSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
 #API REST para modelo informacion adicional
