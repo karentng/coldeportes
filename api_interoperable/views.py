@@ -14,43 +14,6 @@ from entidades.models import *
 from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
-def get_deportista(entidades):
-    """
-    Realiza peticiones a cada entidad pasada por parametro
-    :param entidades:
-    :return:
-    """
-    listado = []
-    for entidad in entidades:
-        usuario = 'admin'
-        contrasena = 'admin'
-        req = urllib.request.Request("http://%s:8089/rest/deportistas/basico" % entidad.domain_url)
-        credenciales = base64.b64encode(bytes('%s:%s' % (usuario,contrasena), 'UTF-8'))
-        req.add_header("Authorization", "Basic %s" % credenciales)
-        result = urllib.request.urlopen(req)
-        listado += result["results"]
-    return listado
-
-def organizar_deportistas(tenant):
-    """
-    Hacer peticiones get a cada uno de los tenants y juntar los json en un arreglo
-    :param tenant:
-    :return:
-    """
-    if type(tenant.obtenerTenant()) is Entidad:
-        listado = get_deportista(list(Club.objects.all()) + list(ClubParalimpico.objects.all()))
-    elif type(tenant.obtenerTenant()) is Federacion:
-        #ligas = tenant.ligas_asociadas()
-        listado = []
-    elif type(tenant.obtenerTenant()) is Liga:
-        listado = []
-    else:
-        queryset = Deportista.objects.all()
-        serializer = DeportistaSerializable(queryset, many=True)
-        listado = serializer.data
-
-    return listado
-
 @api_view(['GET'])
 def api_root(request, format=None):
     """
@@ -79,7 +42,6 @@ class AddChangePermission(permissions.BasePermission):
             return request.user.has_perm("snd.add_deportista")
         return True
 
-
 class DeportistaViewSet(viewsets.ModelViewSet):
     """
     Vista encargada de get, post, put, delete , patch de modelo deportista
@@ -87,23 +49,28 @@ class DeportistaViewSet(viewsets.ModelViewSet):
     queryset = Deportista.objects.all()
     serializer_class = DeportistaSerializable
     permission_classes = (permissions.IsAuthenticated,AddChangePermission,)
-    pagination_class = PageNumberPagination
 
-    """
-        Permite retornar el listado de deportistas de acuerdo al tenant actual
-        :param request: peticion
-    """
     def list(self,request):
+        """
+            Permite retornar el listado de deportistas de acuerdo al tenant actual
+            :param request: peticion
+        """
         if type(request.tenant.obtenerTenant()) is Entidad:
-            queryset = PublicDeportistaView.objects.distinct('id')
-            serializer = DeportistasPublicSerializable(queryset,many=True)
+            queryset = PublicDeportistaView.objects.exclude(estado=3).distinct('id','entidad')
+            serializer = DeportistasPublicSerializable
         elif type(request.tenant.obtenerTenant()) is Federacion or type(request.tenant.obtenerTenant()) is Liga:
-            print("liga")
-            queryset = TenantDeportistaView.objects.distinct('id','entidad')
-            serializer = DeportistaListSerializable(queryset,many=True)
+            queryset = TenantDeportistaView.objects.exclude(estado=3).distinct('id','entidad')
+            serializer = DeportistaListSerializable
         else:
             queryset = Deportista.objects.all()
-            serializer = DeportistaSerializable(queryset, many=True)
+            serializer = DeportistaSerializable
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = serializer(queryset, many=True)
         return Response(serializer.data)
 
     def perform_create(self, serializer):
@@ -135,7 +102,6 @@ class ComposcionCorporalViewSet(mixins.CreateModelMixin,
     queryset = ComposicionCorporal.objects.all()
     serializer_class = ComposicionCorporalSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
-
 
 #API REST para modelo historial deportivo
 class HistorialDeportivolViewSet(mixins.CreateModelMixin,
