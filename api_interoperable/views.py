@@ -9,9 +9,8 @@ from rest_framework.reverse import reverse
 from rest_framework import viewsets,mixins
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
-import urllib.request, base64
 from entidades.models import *
-from rest_framework.pagination import PageNumberPagination
+from django.http import HttpResponse
 
 # Create your views here.
 @api_view(['GET'])
@@ -103,6 +102,13 @@ class ComposcionCorporalViewSet(mixins.CreateModelMixin,
     serializer_class = ComposicionCorporalSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
+    def list(self, request, *args, **kwargs):
+        if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
+            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
+                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        else:
+            return super(ComposcionCorporalViewSet,self).list(request,*args, **kwargs)
+
 #API REST para modelo historial deportivo
 class HistorialDeportivolViewSet(mixins.CreateModelMixin,
                               mixins.ListModelMixin,
@@ -115,6 +121,14 @@ class HistorialDeportivolViewSet(mixins.CreateModelMixin,
     queryset = HistorialDeportivo.objects.all()
     serializer_class = HistorialDeportivoSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
+
+
+    def list(self, request, *args, **kwargs):
+        if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
+            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
+                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        else:
+            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
 
 #API REST para modelo informacion academica
 class InformacionAcademicaViewSet(mixins.CreateModelMixin,
@@ -129,6 +143,13 @@ class InformacionAcademicaViewSet(mixins.CreateModelMixin,
     serializer_class = InformacionAcademicaSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
+    def list(self, request, *args, **kwargs):
+        if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
+            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
+                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        else:
+            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
+
 #API REST para modelo informacion adicional
 class InformacionAdicionalViewSet(mixins.CreateModelMixin,
                               mixins.ListModelMixin,
@@ -142,6 +163,14 @@ class InformacionAdicionalViewSet(mixins.CreateModelMixin,
     serializer_class = InformacionAdicionalSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
+
+    def list(self, request, *args, **kwargs):
+        if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
+            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
+                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        else:
+            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
+
 #API REST para modelo historial lesiones
 class HistorialLesionesViewSet(mixins.CreateModelMixin,
                               mixins.ListModelMixin,
@@ -154,3 +183,10 @@ class HistorialLesionesViewSet(mixins.CreateModelMixin,
     queryset = HistorialLesiones.objects.all()
     serializer_class = HistorialLesionesSerializable
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
+
+    def list(self, request, *args, **kwargs):
+        if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
+            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
+                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        else:
+            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
