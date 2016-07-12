@@ -93,7 +93,7 @@ class AddChangePermission(permissions.BasePermission):
                 return request.user.has_perm("snd.add_deportista")
             else:
                 return False
-        return True
+        return request.user.has_perm("snd.view_deportista")
 
 class DeportistaViewSet(viewsets.ModelViewSet):
     """
@@ -174,6 +174,12 @@ class ComposicionCorporalViewSet(mixins.CreateModelMixin,
         :return: Listado de composiciones corporales
         """
         return list_model_by_tenant(self,request,ComposicionCorporalViewSet)
+
+    def retrieve(self, request, *args, **kwargs):
+        if type(request.tenant.obtenerTenant()) in [LigaParalimpica,Liga,Federacion,FederacionParalimpica,Entidad]:
+            pass
+        else:
+            return super(ComposicionCorporalViewSet,self).retrieve(request,*args,**kwargs)
 
     """def perform_create(self, serializer):
         id_depor = serializer.data['deportista']
