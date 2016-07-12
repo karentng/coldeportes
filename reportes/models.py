@@ -164,19 +164,35 @@ class TenantDeportistaView(models.Model):
         managed = False
 
     #campos modelo deportista
-    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
-    genero = models.CharField(max_length=11)
-    ciudad_residencia = models.ForeignKey(Ciudad)
-    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    fecha_nacimiento = models.DateField()
-    fecha_creacion = models.DateTimeField()
-    lgtbi = models.BooleanField()
-    etnia = models.CharField(max_length=20)
-    nacionalidad = models.ForeignKey(Nacionalidad)
-    estado = models.IntegerField()
     nombres = models.CharField(max_length=100, verbose_name='Nombres')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
+    tipo_id = models.CharField(max_length=10,verbose_name='Tipo de Identificación')
+    genero = models.CharField(max_length=11)
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
+    fecha_nacimiento = models.DateField()
+    ciudad_residencia = models.ForeignKey(Ciudad)
+    barrio = models.CharField(max_length=100,verbose_name='Barrio')
+    comuna = models.CharField(max_length=100,verbose_name='Comuna')
+    email = models.EmailField(null=True,blank=True)
+    telefono = models.CharField(max_length=100,verbose_name='Teléfono')
+    direccion = models.CharField(max_length=100,verbose_name='Dirección')
+    lgtbi = models.BooleanField()
     entidad = models.ForeignKey(Entidad)
+    estado = models.IntegerField()
+    etnia = models.CharField(max_length=20)
+    video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
+
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    foto = models.ImageField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField()
+
+
+
+
+
+
     #campos historial deportivo
     tipo_participacion = models.CharField(max_length=100)
     estado_participacion = models.CharField(max_length=50)
