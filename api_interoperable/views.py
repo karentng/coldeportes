@@ -94,7 +94,7 @@ class DeportistaViewSet(viewsets.ModelViewSet):
 
 
 #API REST para modelo Composicion Corporal
-class ComposcionCorporalViewSet(mixins.CreateModelMixin,
+class ComposicionCorporalViewSet(mixins.CreateModelMixin,
                                 mixins.ListModelMixin,
                                 mixins.UpdateModelMixin,
                                 mixins.RetrieveModelMixin,
@@ -123,7 +123,7 @@ class ComposcionCorporalViewSet(mixins.CreateModelMixin,
                     except Entidad.DoesNotExist:
                         return Response("No existe la entidad solicitada",status=status.HTTP_404_NOT_FOUND)
                     connection.set_tenant(entidad)
-                    response = super(ComposcionCorporalViewSet,self).list(request,*args,**kwargs)
+                    response = super(ComposicionCorporalViewSet,self).list(request,*args,**kwargs)
                     connection.set_tenant(request.tenant)
                     return response
                 else:
@@ -132,7 +132,7 @@ class ComposcionCorporalViewSet(mixins.CreateModelMixin,
                 return Response("Método solo permitido para entidad de tipo CLUB, LIGA, FEDERACION o PUBLICO (incluyendo paralimpicos) dentro del sistema",
                                     status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
-            return super(ComposcionCorporalViewSet,self).list(request,*args, **kwargs)
+            return super(ComposicionCorporalViewSet,self).list(request,*args, **kwargs)
 
     """def perform_create(self, serializer):
         id_depor = serializer.data['deportista']
@@ -159,11 +159,35 @@ class HistorialDeportivolViewSet(mixins.CreateModelMixin,
 
 
     def list(self, request, *args, **kwargs):
+        """
+            Funcion encargada de retornar el listado de historial deportivo de una entidad:
+            *En caso de ser CLUB o CLUB PARALIMPICO - Retorna el listado de historial deportivo del club
+            *En caso de ser LIGA , FEDERACION, PUBLIC - Se debe pasar por parametro el valor entidad, si esa entidad pertenece a la liga o federacion se retorna el listado de dicha entidad (debe ser un club)
+            :param request: peticion
+            :return: Listado de historial deportivo
+            """
         if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
-            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
-                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            if type(request.tenant.obtenerTenant()) in [Liga, LigaParalimpica, Federacion, FederacionParalimpica,
+                                                        Entidad]:
+                if 'entidad' in request.query_params:
+                    entidad_name = request.query_params.get('entidad')
+                    try:
+                        entidad = Entidad.objects.get(schema_name=entidad_name)
+                    except Entidad.DoesNotExist:
+                        return Response("No existe la entidad solicitada", status=status.HTTP_404_NOT_FOUND)
+                    connection.set_tenant(entidad)
+                    response = super(HistorialDeportivolViewSet, self).list(request, *args, **kwargs)
+                    connection.set_tenant(request.tenant)
+                    return response
+                else:
+                    return Response("Debe especificarse el valor entidad por parametro: entidad=schema_name",
+                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+            else:
+                return Response(
+                    "Método solo permitido para entidad de tipo CLUB, LIGA, FEDERACION o PUBLICO (incluyendo paralimpicos) dentro del sistema",
+                    status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
-            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
+            return super(HistorialDeportivolViewSet, self).list(request, *args, **kwargs)
 
 #API REST para modelo informacion academica
 class InformacionAcademicaViewSet(mixins.CreateModelMixin,
@@ -179,11 +203,35 @@ class InformacionAcademicaViewSet(mixins.CreateModelMixin,
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
     def list(self, request, *args, **kwargs):
+        """
+            Funcion encargada de retornar el listado de informacion academica de una entidad:
+            *En caso de ser CLUB o CLUB PARALIMPICO - Retorna el listado de informacion academica del club
+            *En caso de ser LIGA , FEDERACION, PUBLIC - Se debe pasar por parametro el valor entidad, si esa entidad pertenece a la liga o federacion se retorna el listado de dicha entidad (debe ser un club)
+            :param request: peticion
+            :return: Listado de informacion academica
+            """
         if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
-            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
-                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            if type(request.tenant.obtenerTenant()) in [Liga, LigaParalimpica, Federacion, FederacionParalimpica,
+                                                        Entidad]:
+                if 'entidad' in request.query_params:
+                    entidad_name = request.query_params.get('entidad')
+                    try:
+                        entidad = Entidad.objects.get(schema_name=entidad_name)
+                    except Entidad.DoesNotExist:
+                        return Response("No existe la entidad solicitada", status=status.HTTP_404_NOT_FOUND)
+                    connection.set_tenant(entidad)
+                    response = super(InformacionAcademicaViewSet, self).list(request, *args, **kwargs)
+                    connection.set_tenant(request.tenant)
+                    return response
+                else:
+                    return Response("Debe especificarse el valor entidad por parametro: entidad=schema_name",
+                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+            else:
+                return Response(
+                    "Método solo permitido para entidad de tipo CLUB, LIGA, FEDERACION o PUBLICO (incluyendo paralimpicos) dentro del sistema",
+                    status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
-            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
+            return super(InformacionAcademicaViewSet, self).list(request, *args, **kwargs)
 
 #API REST para modelo informacion adicional
 class InformacionAdicionalViewSet(mixins.CreateModelMixin,
@@ -200,11 +248,35 @@ class InformacionAdicionalViewSet(mixins.CreateModelMixin,
 
 
     def list(self, request, *args, **kwargs):
+        """
+            Funcion encargada de retornar el listado de informacion adicional de una entidad:
+            *En caso de ser CLUB o CLUB PARALIMPICO - Retorna el listado de informacion adicional del club
+            *En caso de ser LIGA , FEDERACION, PUBLIC - Se debe pasar por parametro el valor entidad, si esa entidad pertenece a la liga o federacion se retorna el listado de dicha entidad (debe ser un club)
+            :param request: peticion
+            :return: Listado de informacion adicional
+            """
         if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
-            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
-                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            if type(request.tenant.obtenerTenant()) in [Liga, LigaParalimpica, Federacion, FederacionParalimpica,
+                                                        Entidad]:
+                if 'entidad' in request.query_params:
+                    entidad_name = request.query_params.get('entidad')
+                    try:
+                        entidad = Entidad.objects.get(schema_name=entidad_name)
+                    except Entidad.DoesNotExist:
+                        return Response("No existe la entidad solicitada", status=status.HTTP_404_NOT_FOUND)
+                    connection.set_tenant(entidad)
+                    response = super(InformacionAdicionalViewSet, self).list(request, *args, **kwargs)
+                    connection.set_tenant(request.tenant)
+                    return response
+                else:
+                    return Response("Debe especificarse el valor entidad por parametro: entidad=schema_name",
+                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+            else:
+                return Response(
+                    "Método solo permitido para entidad de tipo CLUB, LIGA, FEDERACION o PUBLICO (incluyendo paralimpicos) dentro del sistema",
+                    status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
-            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
+            return super(InformacionAdicionalViewSet, self).list(request, *args, **kwargs)
 
 #API REST para modelo historial lesiones
 class HistorialLesionesViewSet(mixins.CreateModelMixin,
@@ -220,8 +292,32 @@ class HistorialLesionesViewSet(mixins.CreateModelMixin,
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
     def list(self, request, *args, **kwargs):
+        """
+            Funcion encargada de retornar el listado de historial de lesiones de una entidad:
+            *En caso de ser CLUB o CLUB PARALIMPICO - Retorna el listado de historial de lesiones del club
+            *En caso de ser LIGA , FEDERACION, PUBLIC - Se debe pasar por parametro el valor entidad, si esa entidad pertenece a la liga o federacion se retorna el listado de dicha entidad (debe ser un club)
+            :param request: peticion
+            :return: Listado de historial de lesiones
+            """
         if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
-            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
-                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            if type(request.tenant.obtenerTenant()) in [Liga, LigaParalimpica, Federacion, FederacionParalimpica,
+                                                        Entidad]:
+                if 'entidad' in request.query_params:
+                    entidad_name = request.query_params.get('entidad')
+                    try:
+                        entidad = Entidad.objects.get(schema_name=entidad_name)
+                    except Entidad.DoesNotExist:
+                        return Response("No existe la entidad solicitada", status=status.HTTP_404_NOT_FOUND)
+                    connection.set_tenant(entidad)
+                    response = super(HistorialLesionesViewSet, self).list(request, *args, **kwargs)
+                    connection.set_tenant(request.tenant)
+                    return response
+                else:
+                    return Response("Debe especificarse el valor entidad por parametro: entidad=schema_name",
+                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+            else:
+                return Response(
+                    "Método solo permitido para entidad de tipo CLUB, LIGA, FEDERACION o PUBLICO (incluyendo paralimpicos) dentro del sistema",
+                    status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
-            return super(ComposcionCorporalViewSet, self).list(request, *args, **kwargs)
+            return super(HistorialLesionesViewSet, self).list(request, *args, **kwargs)
