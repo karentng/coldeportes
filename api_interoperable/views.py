@@ -108,20 +108,7 @@ class DeportistaViewSet(viewsets.ModelViewSet):
 
         if type(request.tenant.obtenerTenant()) in [Entidad,LigaParalimpica,Liga,FederacionParalimpica,Federacion]:
             if 'entidad' in request.query_params:
-                entidad_name = request.query_params.get('entidad')
-                try:
-                    entidad = Entidad.objects.get(schema_name=entidad_name)
-                    if not type(entidad.obtenerTenant()) in [Club, ClubParalimpico]:
-                        raise Entidad.DoesNotExist
-                except Entidad.DoesNotExist:
-                    return Response("No existe el Club o Club Paralimpico solicitado", status=status.HTTP_404_NOT_FOUND)
-                if not validate_hierarchy(entidad.obtenerTenant(), request.tenant.obtenerTenant()):
-                    return Response("El club solicitado NO esta dentro de la jerarquia de la entidad quien solicita",
-                                    status=status.HTTP_401_UNAUTHORIZED)
-                connection.set_tenant(entidad)
-                response = super(DeportistaViewSet, self).list(request)
-                connection.set_tenant(request.tenant)
-                return response
+                return get_model_by_tenant(request,super(DeportistaViewSet,self).list)
             else:
                 clase = PublicDeportistaView if type(request.tenant.obtenerTenant()) == Entidad else TenantDeportistaView
                 self.queryset = clase.objects.exclude(estado=3).distinct('id','entidad')
