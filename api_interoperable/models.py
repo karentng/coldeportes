@@ -30,7 +30,16 @@ class DeportistasPublicSerializable(serializers.ModelSerializer):
 
 class ComposicionCorporalSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
-    #deportista = serializers.ReadOnlyField()
+
+    def validate(self, data):
+        """
+        Permite validar que no se cambie la llave a deportista en actualizacion de datos
+        :param data: Datos del serializador
+        :return: datos validados
+        """
+        if self.context['request'].method in ['PUT', 'PATCH']:
+            del data['deportista']
+        return data
 
     class Meta:
         model = ComposicionCorporal
@@ -39,12 +48,32 @@ class ComposicionCorporalSerializable(serializers.ModelSerializer):
 class HistorialDeportivoSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
 
+    def validate(self, data):
+        """
+            Permite validar que no se cambie la llave a deportista en actualizacion de datos
+            :param data: Datos del serializador
+            :return: datos validados
+            """
+        if self.context['request'].method in ['PUT', 'PATCH']:
+            del data['deportista']
+        return data
+
     class Meta:
         model = HistorialDeportivo
         exclude = ('fecha_creacion',)
 
 class InformacionAcademicaSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+
+    def validate(self, data):
+        """
+            Permite validar que no se cambie la llave a deportista en actualizacion de datos
+            :param data: Datos del serializador
+            :return: datos validados
+            """
+        if self.context['request'].method in ['PUT', 'PATCH']:
+            del data['deportista']
+        return data
 
     class Meta:
         model = InformacionAcademica
@@ -53,12 +82,32 @@ class InformacionAcademicaSerializable(serializers.ModelSerializer):
 class InformacionAdicionalSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
 
+    def validate(self, data):
+        """
+            Permite validar que no se cambie la llave a deportista en actualizacion de datos
+            :param data: Datos del serializador
+            :return: datos validados
+            """
+        if self.context['request'].method in ['PUT', 'PATCH']:
+            del data['deportista']
+        return data
+
     class Meta:
         model = InformacionAdicional
         exclude = ('fecha_creacion',)
 
 class HistorialLesionesSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+
+    def validate(self, data):
+        """
+            Permite validar que no se cambie la llave a deportista en actualizacion de datos
+            :param data: Datos del serializador
+            :return: datos validados
+            """
+        if self.context['request'].method in ['PUT', 'PATCH']:
+            del data['deportista']
+        return data
 
     class Meta:
         model = HistorialLesiones
