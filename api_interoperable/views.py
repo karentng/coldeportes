@@ -11,6 +11,7 @@ from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
 from entidades.models import *
 from django.http import HttpResponse
+from django.db import connection
 
 # Create your views here.
 @api_view(['GET'])
@@ -106,9 +107,30 @@ class ComposcionCorporalViewSet(mixins.CreateModelMixin,
     permission_classes = (permissions.IsAuthenticated, AddChangePermission,)
 
     def list(self, request, *args, **kwargs):
+        """
+        Funcion encargada de retornar el listado de composicion corporal de una entidad:
+        *En caso de ser CLUB o CLUB PARALIMPICO - Retorna el listado de composicion corporal del club
+        *En caso de ser LIGA , FEDERACION, PUBLIC - Se debe pasar por parametro el valor entidad, si esa entidad pertenece a la liga o federacion se retorna el listado de dicha entidad (debe ser un club)
+        :param request: peticion
+        :return: Listado de composiciones corporales
+        """
         if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
-            return HttpResponse("Método solo permitido para entidad de tipo CLUB dentro del sistema",
-                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            if type(request.tenant.obtenerTenant()) in [Liga,LigaParalimpica,Federacion,FederacionParalimpica,Entidad]:
+                if 'entidad' in request.query_params:
+                    entidad_name = request.query_params.get('entidad')
+                    try:
+                        entidad = Entidad.objects.get(schema_name=entidad_name)
+                    except Entidad.DoesNotExist:
+                        return Response("No existe la entidad solicitada",status=status.HTTP_404_NOT_FOUND)
+                    connection.set_tenant(entidad)
+                    response = super(ComposcionCorporalViewSet,self).list(request,*args,**kwargs)
+                    connection.set_tenant(request.tenant)
+                    return response
+                else:
+                    return Response("Debe especificarse el valor entidad por parametro: entidad=schema_name",status=status.HTTP_406_NOT_ACCEPTABLE)
+            else:
+                return Response("Método solo permitido para entidad de tipo CLUB, LIGA, FEDERACION o PUBLICO (incluyendo paralimpicos) dentro del sistema",
+                                    status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
             return super(ComposcionCorporalViewSet,self).list(request,*args, **kwargs)
 
