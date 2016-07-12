@@ -51,7 +51,7 @@ def list_model_by_tenant(self,request,viewset):
                         raise Entidad.DoesNotExist
                 except Entidad.DoesNotExist:
                     return Response("No existe el Club o Club Paralimpico solicitado", status=status.HTTP_404_NOT_FOUND)
-                if entidad.obtenerTenant().liga != request.tenant.obtenerTenant():
+                if not validate_hierarchy(entidad.obtenerTenant(),request.tenant.obtenerTenant()):
                     return Response("El club solicitado NO esta dentro de la jerarquia de la entidad quien solicita",status=status.HTTP_401_UNAUTHORIZED)
                 connection.set_tenant(entidad)
                 response = super(viewset, self).list(request)
@@ -66,6 +66,20 @@ def list_model_by_tenant(self,request,viewset):
                 status=status.HTTP_405_METHOD_NOT_ALLOWED)
     else:
         return super(viewset, self).list(request)
+
+def validate_hierarchy(club,tenant):
+    """
+    Funcion que permite validar la jerarquia de consultas, es decir, permita saber si se puede retornar la informacion del club que se solicita al tenant que lo solicita
+    :param club: club al cual se va a consultar
+    :param tenant: tenant quien solicita
+    :return: permitido o no
+    """
+    if type(tenant) == Entidad:
+        return True
+    liga_federacion = club.liga if club.liga == None or type(tenant) in [Liga,LigaParalimpica] else club.liga.federacion
+    return liga_federacion == tenant
+
+#Fin funciones generales para listado de modelos adicionales a deportistas
 
 class AddChangePermission(permissions.BasePermission):
     """
@@ -91,29 +105,35 @@ class DeportistaViewSet(viewsets.ModelViewSet):
 
     def list(self,request):
         """
-            Permite retornar el listado de deportistas de acuerdo al tenant actual
+            Permite retornar el listado de deportistas de acuerdo al tenant actual.
+            En caso de ser Liga, Federacion o Publico se utilizan las vistas para obtencion de datos
+            Para obtener un listado de una entidad particular dentro de la jerarquia debe pasarse como parametro el valor de entidad
             :param request: peticion
         """
-        if 'entidad' in request.query_params:
-            pass
-        else:
-            if type(request.tenant.obtenerTenant()) is Entidad:
-                queryset = PublicDeportistaView.objects.exclude(estado=3).distinct('id','entidad')
-                serializer = DeportistasPublicSerializable
-            elif type(request.tenant.obtenerTenant()) is Federacion or type(request.tenant.obtenerTenant()) is Liga:
-                queryset = TenantDeportistaView.objects.exclude(estado=3).distinct('id','entidad')
-                serializer = DeportistaListSerializable
+
+        if type(request.tenant.obtenerTenant()) in [Entidad,LigaParalimpica,Liga,FederacionParalimpica,Federacion]:
+            if 'entidad' in request.query_params:
+                entidad_name = request.query_params.get('entidad')
+                try:
+                    entidad = Entidad.objects.get(schema_name=entidad_name)
+                    if not type(entidad.obtenerTenant()) in [Club, ClubParalimpico]:
+                        raise Entidad.DoesNotExist
+                except Entidad.DoesNotExist:
+                    return Response("No existe el Club o Club Paralimpico solicitado", status=status.HTTP_404_NOT_FOUND)
+                if not validate_hierarchy(entidad.obtenerTenant(), request.tenant.obtenerTenant()):
+                    return Response("El club solicitado NO esta dentro de la jerarquia de la entidad quien solicita",
+                                    status=status.HTTP_401_UNAUTHORIZED)
+                connection.set_tenant(entidad)
+                response = super(DeportistaViewSet, self).list(request)
+                connection.set_tenant(request.tenant)
+                return response
             else:
-                queryset = Deportista.objects.all()
-                serializer = DeportistaSerializable
-
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-
-            serializer = serializer(queryset, many=True)
-            return Response(serializer.data)
+                clase = PublicDeportistaView if type(request.tenant.obtenerTenant()) == Entidad else TenantDeportistaView
+                self.queryset = clase.objects.exclude(estado=3).distinct('id','entidad')
+                self.serializer_class = DeportistasPublicSerializable if type(request.tenant.obtenerTenant()) == Entidad else DeportistaListSerializable
+                return super(DeportistaViewSet,self).list(request)
+        else:
+            return super(DeportistaViewSet,self).list(request)
 
     def perform_create(self, serializer):
         """
