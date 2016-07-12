@@ -16,6 +16,11 @@
 
 {% block css %}
     <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <style>
+        div.table-responsive table td{
+            text-transform: uppercase;
+        }
+    </style>
 {% endblock %}
 
 {% block js %}

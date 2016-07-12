@@ -25,7 +25,7 @@
                         <b>Costo Entrada: </b>{% if evento.costo_entrada %}${{ evento.costo_entrada }}{% else %} Libre{% endif %}<br>
                         <b>Cupo Disponible: </b>{{ evento.cupo_disponible }}
                     </p>
-                    <a type="button" class="btn btn-primary" href="{% url 'verificar_participante' evento.id %}">Resgistrarse</a>
+                    <a type="button" class="btn btn-primary" href="{% url 'verificar_participante' evento.id %}">Registrarse</a>
                 </div>
             </div>
         </div>

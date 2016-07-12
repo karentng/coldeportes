@@ -31,7 +31,7 @@ def wizard_nuevo_sede(request):
                     messages.error(request, "La sede que trata de registrar ya existe.")
 
     return render(request, 'escuela_deportiva/wizard/wizard_escuela_sede.html', {
-        'titulo': 'Ingrese los datos de identificación y contacto de la sede de la Escuela de Formación Deportiva',
+        'titulo': 'Identificación y contacto de la Sede',
         'titulo_panel': 'Registro de Sede de EFD',
         'wizard_stage': 1,
         'form': escuela_form,

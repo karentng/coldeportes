@@ -50,6 +50,7 @@ def tramitar(request, reconocimiento_id = None):
 
         return render(request,'wizard/wizard_reconocimiento.html',{
             'form': form,
+            'reconocimiento_id': reconocimiento_id,
             'wizard_stage': 1
         })
     else:
