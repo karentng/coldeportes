@@ -31,41 +31,36 @@ def api_root(request, format=None):
         }
     )
 #Funciones generales para listado y recuperacion de deportistas en modelo adicionales a deportista
-def list_model_by_tenant(self,request,viewset):
+def get_model_by_tenant(request,method):
     """
-    Funcion general. Permite seguir el comportamiento de listado jerarquico para Ligas, Federaciones y Publico.
-    Busca retornar el listado de modelos adicionales a deportista segun la entidad solicitada por parametro
+    Funcion general. Permite seguir el comportamiento de listado o recuperacion jerarquico para Ligas, Federaciones y Publico.
+    Busca retornar el listado o objeto de modelos adicionales a deportista segun la entidad solicitada por parametro
     Valida que la entidad a la que se quiere consultar petenezca a la jerarquia de la entidad quien solicita
     :param self: Objeto de modelo adicional a deportista
     :param request: Peticion
     :param viewset: Clase viewset del modelo adicional a deportista
-    :return: Litado de modelos adicional a deportistas de una entidad pasada por parametro
+    :return: Litado (o objeto) de modelos adicional a deportistas (o modelo deportista) de una entidad pasada por parametro o de un club que requiera consultarse a si mismo
     """
-    if type(request.tenant.obtenerTenant()) != Club and type(request.tenant.obtenerTenant()) != ClubParalimpico:
-        if type(request.tenant.obtenerTenant()) in [Liga, LigaParalimpica, Federacion, FederacionParalimpica, Entidad]:
-            if 'entidad' in request.query_params:
-                entidad_name = request.query_params.get('entidad')
-                try:
-                    entidad = Entidad.objects.get(schema_name=entidad_name)
-                    if not type(entidad.obtenerTenant()) in [Club,ClubParalimpico]:
-                        raise Entidad.DoesNotExist
-                except Entidad.DoesNotExist:
-                    return Response("No existe el Club o Club Paralimpico solicitado", status=status.HTTP_404_NOT_FOUND)
-                if not validate_hierarchy(entidad.obtenerTenant(),request.tenant.obtenerTenant()):
-                    return Response("El club solicitado NO esta dentro de la jerarquia de la entidad quien solicita",status=status.HTTP_401_UNAUTHORIZED)
-                connection.set_tenant(entidad)
-                response = super(viewset, self).list(request)
-                connection.set_tenant(request.tenant)
-                return response
-            else:
-                return Response("Debe especificarse el valor entidad por parametro: entidad=schema_name",
-                                status=status.HTTP_406_NOT_ACCEPTABLE)
+    if type(request.tenant.obtenerTenant()) in [Liga, LigaParalimpica, Federacion, FederacionParalimpica, Entidad]:
+        if 'entidad' in request.query_params:
+            entidad_name = request.query_params.get('entidad')
+            try:
+                entidad = Entidad.objects.get(schema_name=entidad_name)
+                if not type(entidad.obtenerTenant()) in [Club,ClubParalimpico]:
+                    raise Entidad.DoesNotExist
+            except Entidad.DoesNotExist:
+                return Response("No existe el Club o Club Paralimpico solicitado", status=status.HTTP_404_NOT_FOUND)
+            if not validate_hierarchy(entidad.obtenerTenant(),request.tenant.obtenerTenant()):
+                return Response("El club solicitado NO esta dentro de la jerarquia de la entidad quien solicita",status=status.HTTP_401_UNAUTHORIZED)
+            connection.set_tenant(entidad)
+            response = method(request)
+            connection.set_tenant(request.tenant)
+            return response
         else:
-            return Response(
-                "Método solo permitido para entidad de tipo CLUB, LIGA, FEDERACION o PUBLICO (incluyendo paralimpicos) dentro del sistema",
-                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response("Para hacer este tipo de consultas al nivel de jerarquia que se encuentra, es necesario que ingrese por parametro la entidad a consultar: entidad=schema_name",
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
     else:
-        return super(viewset, self).list(request)
+        return method(request)
 
 def validate_hierarchy(club,tenant):
     """
@@ -135,6 +130,14 @@ class DeportistaViewSet(viewsets.ModelViewSet):
         else:
             return super(DeportistaViewSet,self).list(request)
 
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Funcion que permite hacer la recuperacion de un objeto deportista de acuerdo a su id. Soporta busquedas jerarquicas pasando como parametro el valor entidad
+        :param request: Peticion realizada
+        :return: Objeto deportista del club solicitante o de una entidad pasada por parametro
+        """
+        return get_model_by_tenant(request,super(DeportistaViewSet,self).retrieve)
+
     def perform_create(self, serializer):
         """
         Permite validar si la entidad proveniente del deportista corresponde a la del request
@@ -173,26 +176,18 @@ class ComposicionCorporalViewSet(mixins.CreateModelMixin,
         :param request: peticion
         :return: Listado de composiciones corporales
         """
-        return list_model_by_tenant(self,request,ComposicionCorporalViewSet)
+        return get_model_by_tenant(request,super(ComposicionCorporalViewSet,self).list)
 
     def retrieve(self, request, *args, **kwargs):
-        if type(request.tenant.obtenerTenant()) in [LigaParalimpica,Liga,Federacion,FederacionParalimpica,Entidad]:
-            pass
-        else:
-            return super(ComposicionCorporalViewSet,self).retrieve(request,*args,**kwargs)
-
-    """def perform_create(self, serializer):
-        id_depor = serializer.data['deportista']
-        print (id_depor)
-        #serializer.data.pop("deportista",None)
-        print("success")
-        print (serializer.errors)
-        serializer.save(deportista=id_depor)"""
-
-
+        """
+            Funcion que permite hacer la recuperacion de un objeto composicion corporal de acuerdo a su id. Soporta busquedas jerarquicas pasando como parametro el valor entidad
+            :param request: Peticion realizada
+            :return: Objeto composicion corporal del club solicitante o de una entidad pasada por parametro
+            """
+        return get_model_by_tenant(request,super(ComposicionCorporalViewSet,self).retrieve)
 
 #API REST para modelo historial deportivo
-class HistorialDeportivolViewSet(mixins.CreateModelMixin,
+class HistorialDeportivoViewSet(mixins.CreateModelMixin,
                               mixins.ListModelMixin,
                               mixins.UpdateModelMixin,
                               mixins.RetrieveModelMixin,
@@ -213,7 +208,15 @@ class HistorialDeportivolViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de historial deportivo
             """
-        return list_model_by_tenant(self, request, HistorialDeportivolViewSet)
+        return get_model_by_tenant(request, super(HistorialDeportivoViewSet,self).list)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+            Funcion que permite hacer la recuperacion de un objeto historial deportivo de acuerdo a su id. Soporta busquedas jerarquicas pasando como parametro el valor entidad
+            :param request: Peticion realizada
+            :return: Objeto historial deportivo del club solicitante o de una entidad pasada por parametro
+            """
+        return get_model_by_tenant(request, super(HistorialDeportivoViewSet,self).retrieve)
 
 #API REST para modelo informacion academica
 class InformacionAcademicaViewSet(mixins.CreateModelMixin,
@@ -236,7 +239,15 @@ class InformacionAcademicaViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de informacion academica
             """
-        return list_model_by_tenant(self, request, InformacionAcademicaViewSet)
+        return get_model_by_tenant(request, super(InformacionAcademicaViewSet,self).list)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+            Funcion que permite hacer la recuperacion de un objeto informacion academica de acuerdo a su id. Soporta busquedas jerarquicas pasando como parametro el valor entidad
+            :param request: Peticion realizada
+            :return: Objeto informacion academica del club solicitante o de una entidad pasada por parametro
+            """
+        return get_model_by_tenant(request, super(InformacionAcademicaViewSet,self).retrieve)
 
 #API REST para modelo informacion adicional
 class InformacionAdicionalViewSet(mixins.CreateModelMixin,
@@ -260,7 +271,15 @@ class InformacionAdicionalViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de informacion adicional
             """
-        return list_model_by_tenant(self, request, InformacionAdicionalViewSet)
+        return get_model_by_tenant(request, super(InformacionAdicionalViewSet,self).list)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+            Funcion que permite hacer la recuperacion de un objeto informacion adicional de acuerdo a su id. Soporta busquedas jerarquicas pasando como parametro el valor entidad
+            :param request: Peticion realizada
+            :return: Objeto informacion adicional del club solicitante o de una entidad pasada por parametro
+            """
+        return get_model_by_tenant(request, super(InformacionAdicionalViewSet, self).retrieve)
 
 #API REST para modelo historial lesiones
 class HistorialLesionesViewSet(mixins.CreateModelMixin,
@@ -283,4 +302,12 @@ class HistorialLesionesViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de historial de lesiones
             """
-        return list_model_by_tenant(self, request, HistorialLesionesViewSet)
+        return get_model_by_tenant(request, super(HistorialLesionesViewSet,self).list)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+            Funcion que permite hacer la recuperacion de un objeto historial lesiones de acuerdo a su id. Soporta busquedas jerarquicas pasando como parametro el valor entidad
+            :param request: Peticion realizada
+            :return: Objeto historial lesiones del club solicitante o de una entidad pasada por parametro
+            """
+        return get_model_by_tenant(request, super(HistorialLesionesViewSet, self).retrieve())

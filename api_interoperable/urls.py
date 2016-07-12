@@ -7,7 +7,7 @@ from api_interoperable import views
 router_deportistas = DefaultRouter()
 router_deportistas.register(r'basico', views.DeportistaViewSet)
 router_deportistas.register(r'corporal', views.ComposicionCorporalViewSet)
-router_deportistas.register(r'deportivo', views.HistorialDeportivolViewSet)
+router_deportistas.register(r'deportivo', views.HistorialDeportivoViewSet)
 router_deportistas.register(r'academico', views.InformacionAcademicaViewSet)
 router_deportistas.register(r'adicional', views.InformacionAdicionalViewSet)
 router_deportistas.register(r'lesiones', views.HistorialLesionesViewSet)
