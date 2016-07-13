@@ -5,7 +5,7 @@ from entidades.models import Entidad
 from entidades.models import Ciudad, Entidad, Nacionalidad
 from coldeportes.utilities import calculate_age
 from django.conf import settings
-import os
+import os,unicodedata
 # ======================= ================================================================================
 # Modelos para PersonalApoyo
 
@@ -13,14 +13,13 @@ import os
 class PersonalApoyo(models.Model):
 
     def foto_name(instance, filename):
-        # el nombre de la imagen es la identificación del personal de apoyo, filename[-4:] indica la extensión
-        # del archivo, primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene
-        # una extensión distinta a la nueva se crea una copia
-        ruta = 'fotos_personal_apoyo/' + instance.identificacion + filename[-4:]
-        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
-        if os.path.exists(ruta_delete):
-            os.remove(ruta_delete)
-        return ruta
+        """
+        Se implementa funcion encargada de eliminar tildes de nombres
+        :param filename: nombre del archivo
+        :return: ruta del archivo sin tildes
+        """
+        sin_tilde = 'fotos_personal_apoyo/' + ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
+        return sin_tilde
 
     ESTADOS = (
         (0, "ACTIVO"),
