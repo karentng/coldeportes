@@ -137,7 +137,7 @@ class ComposicionCorporal(models.Model):
         ('XL','XL'),
         ('XXL','XXL'),
     )
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista, related_name='corporal')
     peso = models.FloatField(help_text="En kg", verbose_name="Peso (kg)")
     estatura = models.IntegerField(help_text="En cm", verbose_name="Estatura (cm)")
     RH = models.CharField(max_length=4,choices=tipos_rh,verbose_name='Tipo de sangre')
@@ -181,7 +181,7 @@ class HistorialDeportivo(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Deporte en el que participó')
     categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría del deporte')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='deportivo')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def obtener_info_aval(self):
@@ -237,7 +237,7 @@ class InformacionAcademica(models.Model):
     profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='academico')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -261,7 +261,7 @@ class CambioDocumentoDeportista(models.Model):
 
 
 class InformacionAdicional(models.Model):
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='adicional')
     usa_centros_biomedicos = models.BooleanField(verbose_name='¿Usa centros biomédicos?')
     es_beneficiario_programa_apoyo = models.BooleanField(verbose_name='¿Es beneficiario de algún programa de apoyo?')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -287,7 +287,7 @@ class HistorialLesiones(models.Model):
         (1,'EXTREMIDADES SUPERIORES'),
         (5,'PELVIS'),
     )
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='lesiones')
     fecha_lesion = models.DateField(verbose_name='Fecha de la lesión')
     tipo_lesion = models.IntegerField(choices=TIPOS_LESION,verbose_name='Tipo de lesión')
     periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')

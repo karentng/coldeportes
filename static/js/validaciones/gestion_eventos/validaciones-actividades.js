@@ -41,30 +41,49 @@ fields = {
     hora_inicio: {
         validators: {
             notEmpty: {
-                message: 'La hora de inicio de la actividad no puede ser vacía'
+                message: 'La hora del inicio no puede ser vacío'
             }
         }
     },
     hora_fin: {
         validators: {
             notEmpty: {
-                message: 'La hora de finalización de la actividad no puede ser vacía'
+                message: 'La hora final no puede ser vacía'
+            },
+            callback:{
+                message: "El valor ingresado no es una hora válida, debe ser mayor a la hora de inicio",
+                callback: function(field, validator){
+                    var inicio = $("input#id_hora_inicio").val();
+
+                    var momento = new moment(field, 'HH:mm', true);
+                    var momentInit = new moment(inicio, 'HH:mm', true);
+                        console.log(field);
+                    if (!momento.isValid()) {
+                        console.log(momento);
+                        return false;
+                    }
+                    return momento.isAfter(momentInit);
+
+                }
             }
         }
     }
 };
 
-
+$form_e = $(form);
 
 //Revalidar campos al ser actualizados
 $("#id_dia_actividad").on('change',function(e){
-    $(form).bootstrapValidator('revalidateField', 'dia_actividad');
+    $form_e.bootstrapValidator('revalidateField', 'dia_actividad');
 });
 $("#id_hora_inicio").on('change',function(e){
-    $(form).bootstrapValidator('revalidateField', 'hora_inicio');
+    $form_e.bootstrapValidator('revalidateField', 'hora_inicio');
+    $form_e.bootstrapValidator('revalidateField', 'hora_fin');
 });
 $("#id_hora_fin").on('change',function(e){
-    $(form).bootstrapValidator('revalidateField', 'hora_fin');
+    $form_e.bootstrapValidator('revalidateField', 'hora_inicio');
+    $form_e.bootstrapValidator('revalidateField', 'hora_fin');
 });
+
 
 $.getScript(base+"js/validaciones/validations-base.js");

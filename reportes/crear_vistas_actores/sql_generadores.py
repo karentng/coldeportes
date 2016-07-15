@@ -137,14 +137,13 @@ def seleccion_datos_deportistas(tenant=''):
     return (
         """
         SELECT
-            DE.id, DE.genero,
-            DE.ciudad_residencia_id,DIS.tipodisciplinadeportiva_id,
-            DE.fecha_nacimiento,DE.fecha_creacion,
-            DE.lgtbi,DE.etnia, DE.barrio, DE.comuna,
-            DE.email, DE.telefono as telefono_contacto,
-            DE.direccion, DE.foto, DE.identificacion,
-            DE.nombres, DE.apellidos, DE.entidad_id,
-            NAL.nacionalidad_id,DE.estado,
+            DE.id, DE.nombres, DE.apellidos,DE.genero,DE.tipo_id,
+            DE.identificacion,DE.fecha_nacimiento,DE.ciudad_residencia_id,
+            DE.barrio,DE.comuna,DE.email,DE.telefono,DE.direccion,
+            DE.lgtbi,DE.entidad_id,DE.estado,DE.etnia, DE.video,
+            DIS.tipodisciplinadeportiva_id,NAL.nacionalidad_id,DE.foto,DE.fecha_creacion,
+            DE.telefono as telefono_contacto,
+
             HD.tipo as tipo_participacion, HD.estado as estado_participacion ,
             HD.fecha_inicial as fecha_participacion,
             IA.nivel as nivel_formacion, IA.estado as estado_formacion,
