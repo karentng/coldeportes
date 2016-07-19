@@ -137,7 +137,10 @@ class DeportistaViewSet(viewsets.ModelViewSet):
         Permite cambiar el estado del deportista en vez de eliminarlo de la base de datos (Borrado logico)
         :param instance: instancia a aplicar DELETE
         """
-        instance.estado = 1
+        if instance.estado == 0:
+            instance.estado = 1
+        else:
+            instance.estado = 0
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
