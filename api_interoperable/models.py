@@ -12,6 +12,7 @@ class DeportistaSerializable(serializers.ModelSerializer):
     nacionalidad = serializers.SlugRelatedField(many=True,queryset=Nacionalidad.objects.all(),slug_field='nombre')
     ciudad_residencia = serializers.SlugRelatedField(many=False, queryset=Ciudad.objects.all(), slug_field='nombre')
     disciplinas = serializers.SlugRelatedField(many=True, queryset=TipoDisciplinaDeportiva.objects.all(), slug_field='descripcion')
+    departamento = serializers.ReadOnlyField(source='ciudad_residencia.departamento.nombre')
 
     class Meta:
         model = Deportista
@@ -23,12 +24,12 @@ class DeportistaListSerializable(serializers.ModelSerializer):
     estado = serializers.ReadOnlyField(source='get_estado_display')
     nacionalidad = serializers.SlugRelatedField(many=False, read_only=True, slug_field='nombre')
     ciudad_residencia = serializers.SlugRelatedField(many=False, read_only=True, slug_field='nombre')
-    tipodisciplinadeportiva = serializers.SlugRelatedField(many=False, read_only=True,
-                                               slug_field='descripcion')
+    disciplinas = serializers.ReadOnlyField(source='tipodisciplinadeportiva.descripcion')
+    departamento = serializers.ReadOnlyField(source='ciudad_residencia.departamento.nombre')
 
     class Meta:
         model = TenantDeportistaView
-        fields = ('id','nombres','apellidos','tipo_id','genero','identificacion','fecha_nacimiento','ciudad_residencia','barrio','comuna','email','telefono','direccion','lgtbi','entidad','estado','etnia','video','tipodisciplinadeportiva','nacionalidad','foto',)
+        fields = ('id','nombres','apellidos','tipo_id','genero','identificacion','fecha_nacimiento','ciudad_residencia','barrio','comuna','email','telefono','direccion','lgtbi','entidad','estado','etnia','video','nacionalidad','foto','departamento','disciplinas',)
 
 #Modelo para tenant público
 class DeportistasPublicSerializable(serializers.ModelSerializer):
@@ -36,12 +37,12 @@ class DeportistasPublicSerializable(serializers.ModelSerializer):
     estado = serializers.ReadOnlyField(source='get_estado_display')
     nacionalidad = serializers.SlugRelatedField(many=False, read_only=True, slug_field='nombre')
     ciudad_residencia = serializers.SlugRelatedField(many=False, read_only=True, slug_field='nombre')
-    tipodisciplinadeportiva = serializers.SlugRelatedField(many=False, read_only=True,
-                                               slug_field='descripcion')
+    disciplinas = serializers.ReadOnlyField(source='tipodisciplinadeportiva.descripcion')
+    departamento = serializers.ReadOnlyField(source='ciudad_residencia.departamento.nombre')
 
     class Meta:
         model = PublicDeportistaView
-        fields = ('id','nombres','apellidos','tipo_id','genero','identificacion','fecha_nacimiento','ciudad_residencia','barrio','comuna','email','telefono','direccion','lgtbi','entidad','estado','etnia','video','tipodisciplinadeportiva','nacionalidad','foto',)
+        fields = ('id','nombres','apellidos','tipo_id','genero','identificacion','fecha_nacimiento','ciudad_residencia','barrio','comuna','email','telefono','direccion','lgtbi','entidad','estado','etnia','video','nacionalidad','foto','disciplinas','departamento',)
 
 class ComposicionCorporalSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
