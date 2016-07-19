@@ -3,10 +3,13 @@ from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,Informa
 from rest_framework import serializers
 from reportes.models import TenantDeportistaView
 from entidades.modelos_vistas_reportes import PublicDeportistaView
+from entidades.models import Ciudad
 
 # Create your models here.
 class DeportistaSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='entidad.schema_name')
+    #ciudad_residencia = serializers.PrimaryKeyRelatedField(queryset=Ciudad.objects.all(), source="__str__")
+    estado = serializers.ReadOnlyField(source='get_estado_display')
 
     class Meta:
         model = Deportista

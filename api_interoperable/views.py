@@ -130,7 +130,7 @@ class DeportistaViewSet(viewsets.ModelViewSet):
         Permite validar si la entidad proveniente del deportista corresponde a la del request
         :param serializer: clase encargada de serializar el objeto
         """
-        serializer.save(entidad=self.request.tenant)
+        serializer.save(entidad=self.request.tenant, estado=0)
 
     def perform_destroy(self,instance):
         """
