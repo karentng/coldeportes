@@ -148,9 +148,9 @@
                                     <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Teléfono">
                                         <i class="fa fa-fw fa-phone"></i>
                                     </a><span>{% if entidad.telefono %} {{entidad.telefono }} {% else %} No especificado{% endif %}</span>
-                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Pagina web">
+                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Página web">
                                         <i class="fa fa-fw fa-link"></i>
-                                    </a><span>{% if entidad.pagina_web %} {{entidad.pagina_web }} {% else %} No especificado{% endif %}</span>
+                                    </a><span>{% if entidad.pagina_web %}<a href="{{entidad.pagina_web}}" target="_blank" style="font-size: 14px; color: #337ab7; opacity: inherit;"> {{entidad.pagina_web }} </a>{% else %} No especificado{% endif %}</span>
                                     {% if entidad.has_deportes %}
                                         <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Disciplinas deportivas">
                                             <i class="fa fa-fw fa-futbol-o"></i>
