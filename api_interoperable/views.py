@@ -14,22 +14,7 @@ from django.http import HttpResponse
 from django.db import connection
 
 # Create your views here.
-@api_view(['GET'])
-def api_root(request, format=None):
-    """
-    Vista encargada de mostrar la estructura de la API REST
-    """
-    return Response(
-        {
-            'basico': reverse('deportista-list',request=request,format=format),
-            'corporal': reverse('corporal-list',request=request,format=format),
-            'deportivo': reverse('deportivo-list',request=request,format=format),
-            'academico': reverse('academico-list',request=request,format=format),
-            'adicional': reverse('adicional-list',request=request,format=format),
-            'lesiones': reverse('lesiones-list',request=request,format=format),
 
-        }
-    )
 #Funciones generales para listado y recuperacion de deportistas en modelo adicionales a deportista
 def get_model_by_tenant(request,method):
     """
@@ -166,6 +151,8 @@ class ComposicionCorporalViewSet(mixins.CreateModelMixin,
         :param request: peticion
         :return: Listado de composiciones corporales
         """
+        if 'deportista' in request.query_params:
+            self.queryset = ComposicionCorporal.objects.filter(deportista = request.query_params.get('deportista'))
         return get_model_by_tenant(request,super(ComposicionCorporalViewSet,self).list)
 
     def retrieve(self, request, *args, **kwargs):
@@ -198,6 +185,8 @@ class HistorialDeportivoViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de historial deportivo
             """
+        if 'deportista' in request.query_params:
+            self.queryset = HistorialDeportivo.objects.filter(deportista=request.query_params.get('deportista'))
         return get_model_by_tenant(request, super(HistorialDeportivoViewSet,self).list)
 
     def retrieve(self, request, *args, **kwargs):
@@ -229,6 +218,8 @@ class InformacionAcademicaViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de informacion academica
             """
+        if 'deportista' in request.query_params:
+            self.queryset = InformacionAcademica.objects.filter(deportista=request.query_params.get('deportista'))
         return get_model_by_tenant(request, super(InformacionAcademicaViewSet,self).list)
 
     def retrieve(self, request, *args, **kwargs):
@@ -261,6 +252,8 @@ class InformacionAdicionalViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de informacion adicional
             """
+        if 'deportista' in request.query_params:
+            self.queryset = InformacionAdicional.objects.filter(deportista=request.query_params.get('deportista'))
         return get_model_by_tenant(request, super(InformacionAdicionalViewSet,self).list)
 
     def retrieve(self, request, *args, **kwargs):
@@ -292,6 +285,8 @@ class HistorialLesionesViewSet(mixins.CreateModelMixin,
             :param request: peticion
             :return: Listado de historial de lesiones
             """
+        if 'deportista' in request.query_params:
+            self.queryset = HistorialLesiones.objects.filter(deportista=request.query_params.get('deportista'))
         return get_model_by_tenant(request, super(HistorialLesionesViewSet,self).list)
 
     def retrieve(self, request, *args, **kwargs):

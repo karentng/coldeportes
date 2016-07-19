@@ -13,6 +13,8 @@ class DeportistaSerializable(serializers.ModelSerializer):
     ciudad_residencia = serializers.SlugRelatedField(many=False, queryset=Ciudad.objects.all(), slug_field='nombre')
     disciplinas = serializers.SlugRelatedField(many=True, queryset=TipoDisciplinaDeportiva.objects.all(), slug_field='descripcion')
     departamento = serializers.ReadOnlyField(source='ciudad_residencia.departamento.nombre')
+    #Relaciones enlazadas
+    #corporal = serializers.HyperlinkedRelatedField(many=True,read_only=True,view_name='composicioncorporal-detail', lookup_field='deportista')
 
     class Meta:
         model = Deportista
