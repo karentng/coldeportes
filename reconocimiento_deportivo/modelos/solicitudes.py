@@ -3,7 +3,7 @@ import os
 from django.db import models
 from django.db.models import Count
 from snd.models import Escenario
-from entidades.models import Entidad, TipoRequerimientoReconocimientoDeportivo
+from entidades.models import Ente, Entidad, TipoRequerimientoReconocimientoDeportivo
 
 # Create your models here.
 class ReconocimientoDeportivo(models.Model):
@@ -29,7 +29,7 @@ class ReconocimientoDeportivo(models.Model):
     
     estado = models.IntegerField(choices=ESTADOS,default=1)
     descripcion = models.TextField(verbose_name='Descripción', max_length=500)
-    para_quien = models.ForeignKey(Entidad,verbose_name='Dirigido a')    
+    para_quien = models.ForeignKey(Ente,verbose_name='Dirigido a')    
     nombre_solicitante = models.CharField(max_length=150,verbose_name='Nombre') 
     tipo = models.IntegerField(choices=TIPO_SOLICITUD, verbose_name='tipo de solicitud')
     id_solicitante = models.CharField(max_length=150,verbose_name='Número de identificación')
