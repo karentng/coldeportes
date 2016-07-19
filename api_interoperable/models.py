@@ -3,7 +3,7 @@ from snd.models import Deportista,ComposicionCorporal,HistorialDeportivo,Informa
 from rest_framework import serializers
 from reportes.models import TenantDeportistaView
 from entidades.modelos_vistas_reportes import PublicDeportistaView
-from entidades.models import Ciudad,Nacionalidad,TipoDisciplinaDeportiva
+from entidades.models import Ciudad,Nacionalidad,TipoDisciplinaDeportiva,EPS,ModalidadDisciplinaDeportiva,CategoriaDisciplinaDeportiva
 
 # Create your models here.
 class DeportistaSerializable(serializers.ModelSerializer):
@@ -48,6 +48,7 @@ class DeportistasPublicSerializable(serializers.ModelSerializer):
 
 class ComposicionCorporalSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+    eps = serializers.SlugRelatedField(many=False,queryset=EPS.objects.all(),slug_field='nombre')
 
     def validate(self, data):
         """
@@ -65,6 +66,11 @@ class ComposicionCorporalSerializable(serializers.ModelSerializer):
 
 class HistorialDeportivoSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+    pais = serializers.SlugRelatedField(queryset=Nacionalidad.objects.all(), many=False, slug_field='nombre')
+    deporte = serializers.SlugRelatedField(queryset=TipoDisciplinaDeportiva.objects.all(),many=False, slug_field='descripcion')
+    categoria = serializers.SlugRelatedField(queryset=CategoriaDisciplinaDeportiva.objects.all(),many=False, slug_field='nombre')
+    modalidad = serializers.SlugRelatedField(queryset=ModalidadDisciplinaDeportiva.objects.all(),
+                                             many=False, slug_field='nombre')
 
     def validate(self, data):
         """
@@ -82,6 +88,7 @@ class HistorialDeportivoSerializable(serializers.ModelSerializer):
 
 class InformacionAcademicaSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+    pais = serializers.SlugRelatedField(queryset=Nacionalidad.objects.all(), many=False, slug_field='nombre')
 
     def validate(self, data):
         """
@@ -116,6 +123,7 @@ class InformacionAdicionalSerializable(serializers.ModelSerializer):
 
 class HistorialLesionesSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
+    #tipo_lesion = serializers.SerializerMethodField(source='get_tipo_lesion_display')
 
     def validate(self, data):
         """
