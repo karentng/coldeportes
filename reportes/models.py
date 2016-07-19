@@ -159,6 +159,13 @@ class TenantPersonalApoyoView(models.Model):
     fecha_finalizacion = models.IntegerField()
 
 class TenantDeportistaView(models.Model):
+    ESTADOS = (
+        (0, 'ACTIVO'),
+        (1, 'INACTIVO'),
+        (2, 'EN TRANSFERENCIA'),
+        (3, 'TRANSFERIDO'),
+        (4, 'TRANSFERIDO INTERNACIONAL'),
+    )
 
     class Meta:
         managed = False
@@ -178,7 +185,7 @@ class TenantDeportistaView(models.Model):
     direccion = models.CharField(max_length=100,verbose_name='Dirección')
     lgtbi = models.BooleanField()
     entidad = models.ForeignKey(Entidad)
-    estado = models.IntegerField()
+    estado = models.IntegerField(choices=ESTADOS)
     etnia = models.CharField(max_length=20)
     video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
 
