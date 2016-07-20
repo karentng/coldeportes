@@ -13,8 +13,6 @@ class DeportistaSerializable(serializers.ModelSerializer):
     ciudad_residencia = serializers.SlugRelatedField(many=False, queryset=Ciudad.objects.all(), slug_field='nombre')
     disciplinas = serializers.SlugRelatedField(many=True, queryset=TipoDisciplinaDeportiva.objects.all(), slug_field='descripcion')
     departamento = serializers.ReadOnlyField(source='ciudad_residencia.departamento.nombre')
-    #Relaciones enlazadas
-    #corporal = serializers.HyperlinkedRelatedField(many=True,read_only=True,view_name='composicioncorporal-detail', lookup_field='deportista')
 
     class Meta:
         model = Deportista
@@ -71,6 +69,7 @@ class HistorialDeportivoSerializable(serializers.ModelSerializer):
     categoria = serializers.SlugRelatedField(allow_null=True,queryset=CategoriaDisciplinaDeportiva.objects.all(),many=False, slug_field='nombre')
     modalidad = serializers.SlugRelatedField(allow_null=True,queryset=ModalidadDisciplinaDeportiva.objects.all(),
                                              many=False, slug_field='nombre')
+    #estado = serializers.ReadOnlyField(source="get_estado_display")
 
     def validate(self, data):
         """
@@ -131,14 +130,14 @@ class InformacionAdicionalSerializable(serializers.ModelSerializer):
 
 class HistorialLesionesSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
-    #tipo_lesion = serializers.SerializerMethodField(source='get_tipo_lesion_display')
+    #tipo_lesion = serializers.ChoiceField(choices=((5,'ESGUINCE'),(1,'FRACTURA'),(4,'LESIÓN MENISCAL'),(2,'LUXACIÓN'),(3,'RUPTURA'),),source='get_tipo_lesion_display',read_only=False)
 
     def validate(self, data):
         """
-            Permite validar que no se cambie la llave a deportista en actualizacion de datos
-            :param data: Datos del serializador
-            :return: datos validados
-            """
+        Permite validar que no se cambie la llave a deportista en actualizacion de datos
+        :param data: Datos del serializador
+        :return: datos validados
+        """
         if self.context['request'].method in ['PUT', 'PATCH']:
             del data['deportista']
         return data

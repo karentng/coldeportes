@@ -197,6 +197,17 @@ class HistorialDeportivoViewSet(mixins.CreateModelMixin,
             """
         return get_model_by_tenant(request, super(HistorialDeportivoViewSet,self).retrieve)
 
+    #def perform_create(self, serializer):
+    #    print(serializer)
+    #    if serializer.data['tipo'] not in ['Campeonato Municipal', 'Campeonato Departamental']:
+    #        print("pendiente")
+    #        print(serializer.errors)
+    #        serializer.save(entidad=self.request.tenant, estado='Pendiente')
+    #    else:
+    #        print("aproao")
+    #        print(serializer.errors)
+    #        serializer.save(entidad=self.request.tenant, estado='Aprobado')
+
 #API REST para modelo informacion academica
 class InformacionAcademicaViewSet(mixins.CreateModelMixin,
                                mixins.ListModelMixin,
