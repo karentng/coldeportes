@@ -68,8 +68,8 @@ class HistorialDeportivoSerializable(serializers.ModelSerializer):
     entidad = serializers.ReadOnlyField(source='deportista.entidad.schema_name')
     pais = serializers.SlugRelatedField(queryset=Nacionalidad.objects.all(), many=False, slug_field='nombre')
     deporte = serializers.SlugRelatedField(queryset=TipoDisciplinaDeportiva.objects.all(),many=False, slug_field='descripcion')
-    categoria = serializers.SlugRelatedField(queryset=CategoriaDisciplinaDeportiva.objects.all(),many=False, slug_field='nombre')
-    modalidad = serializers.SlugRelatedField(queryset=ModalidadDisciplinaDeportiva.objects.all(),
+    categoria = serializers.SlugRelatedField(allow_null=True,queryset=CategoriaDisciplinaDeportiva.objects.all(),many=False, slug_field='nombre')
+    modalidad = serializers.SlugRelatedField(allow_null=True,queryset=ModalidadDisciplinaDeportiva.objects.all(),
                                              many=False, slug_field='nombre')
 
     def validate(self, data):
@@ -78,6 +78,14 @@ class HistorialDeportivoSerializable(serializers.ModelSerializer):
             :param data: Datos del serializador
             :return: datos validados
             """
+        if data['modalidad'] != None:
+            if data['modalidad'].deporte != data['deporte']:
+                raise serializers.ValidationError("La categoria y modalidad deben corresponder al deporte")
+
+        if data['categoria'] !=None:
+            if data['categoria'].deporte != data['deporte']:
+                raise serializers.ValidationError("La categoria y modalidad deben corresponder al deporte")
+
         if self.context['request'].method in ['PUT', 'PATCH']:
             del data['deportista']
         return data
