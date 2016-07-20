@@ -176,6 +176,7 @@ class PersonalApoyoView(models.Model):
         db_table = 'reportes_tenantpersonalapoyoview'
     #campos deportista
     nombre = models.CharField(max_length=100, db_column='nombres', verbose_name='Nombres')
+    cargo = models.CharField(max_length=100, verbose_name="Nombre del cargo")
     telefono_contacto = models.CharField(max_length=100,verbose_name='Telefono')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
     genero = models.CharField(verbose_name='Género', max_length=11)
@@ -197,6 +198,7 @@ class PersonalApoyoPublicView(models.Model):
         db_table = 'entidades_publicpersonalapoyoview'
     #campos deportista
     nombre = models.CharField(max_length=100, db_column='nombres', verbose_name='Nombres')
+    cargo = models.CharField(max_length=100, verbose_name="Nombre del cargo")    
     telefono_contacto = models.CharField(max_length=100,verbose_name='Telefono')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
     genero = models.CharField(verbose_name='Género', max_length=11)
