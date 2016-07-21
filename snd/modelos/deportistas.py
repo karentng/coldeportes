@@ -234,7 +234,7 @@ class InformacionAcademica(models.Model):
     institucion = models.CharField(max_length=100,verbose_name='Institución')
     nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
     estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
-    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
+    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='título obtenido')
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     deportista = models.ForeignKey(Deportista,related_name='academico')
