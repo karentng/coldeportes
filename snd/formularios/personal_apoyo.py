@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from entidades.models import TipoDisciplinaDeportiva
+from entidades.models import TipoDisciplinaDeportiva, ModalidadDisciplinaDeportiva
 from django.forms import ModelForm
 from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
 from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo
@@ -85,8 +85,8 @@ class ExperienciaLaboralForm(ModelForm):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
-        super(ExperienciaLaboralForm, self).__init__(*args, **kwargs)
         deporte_id = kwargs.pop('deporte_id', None)
+        super(ExperienciaLaboralForm, self).__init__(*args, **kwargs)
         self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
         self.fields['modalidad'] = adicionarClase(self.fields['modalidad'], 'one')  
         self.fields['deporte'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')      
