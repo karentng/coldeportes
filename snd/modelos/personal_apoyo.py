@@ -1,7 +1,7 @@
 # encoding:utf-8
 
 from django.db import models
-from entidades.models import Entidad
+from entidades.models import Entidad, TipoDisciplinaDeportiva, ModalidadDisciplinaDeportiva
 from entidades.models import Ciudad, Entidad, Nacionalidad
 from coldeportes.utilities import calculate_age
 from django.conf import settings
@@ -150,6 +150,8 @@ class FormacionDeportiva(models.Model):
 class ExperienciaLaboral(models.Model):
     nombre_cargo = models.CharField(max_length=50, verbose_name='Nombre del cargo')
     institucion = models.CharField(max_length=150, verbose_name='Institución donde se desempeñó')
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='disciplina deportiva')
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='modalidad del deporte')
     fecha_comienzo = models.DateField()
     actual = models.BooleanField(verbose_name='¿Aún en el cargo?', default=False)
     fecha_fin = models.DateField(blank=True, null=True)

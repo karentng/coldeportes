@@ -1,5 +1,6 @@
 import datetime
 from django import forms
+from entidades.models import TipoDisciplinaDeportiva
 from django.forms import ModelForm
 from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
 from coldeportes.utilities import adicionarClase,MyDateWidget, verificar_tamano_archivo
@@ -85,6 +86,12 @@ class ExperienciaLaboralForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ExperienciaLaboralForm, self).__init__(*args, **kwargs)
+        deporte_id = kwargs.pop('deporte_id', None)
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+        self.fields['modalidad'] = adicionarClase(self.fields['modalidad'], 'one')  
+        self.fields['deporte'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')      
+        if deporte_id:
+            self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte = deporte_id).order_by('nombre')
 
     def clean(self):
         fecha_comienzo = self.cleaned_data['fecha_comienzo']
