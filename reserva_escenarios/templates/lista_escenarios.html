@@ -39,6 +39,7 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Ciudad</th>
+                            <th>Dirección</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -47,10 +48,17 @@
                         <tr>
                             <td><strong>{{ escenario.nombre }}</strong></td>
                             <td>{{ escenario.ciudad }}</td>                        
+                            <td>{% if escenario.direccion %}{{ escenario.direccion }}{% endif %}</td>                        
                             <td>
-                                <a href='{# url 'ver_solicitud_reconocimiento' solicitud.id #}'>
-                                    <i class="fa fa-clock-o"></i> Reservar
+                                <a href='{% url 'agendar_reserva' escenario.id %}'>
+                                    <i class="fa fa-clock-o"></i> Solicitar Reservar
                                 </a>
+                                <br/>
+                                {% if request.user.username %}
+                                <a href='{% url 'configurar_reservas' escenario.id %}'>
+                                    <i class="fa fa-cog"></i> Configurar Reservas
+                                </a>
+                                {% endif %}
                                 <br/>
                             </td>
                         </tr>

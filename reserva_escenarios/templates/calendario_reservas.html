@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">Reserva de Escenarios</a>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Calendario de Reservas de Escenario
+{% endblock %}
+
+{% block titulo_panel %}
+    Calendario de Reservas
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        csrf = '{{ csrf_token }}';
+        urlRedirect = "{% url 'solicitar_reserva' %}"
+        calendarEvents = [];
+        urlAgendar = "{% url 'guardar_fechas_reserva' escenario.id %}";
+        {% for reserva in reservas %}
+            calendarEvents.push({
+                id: '{{ reserva.id }}',
+				title: '{{ reserva.nombre_equipo }}',
+				start: '{{ reserva.fecha_inicio|date:"Y-m-d H:i" }} ',
+				end: '{{ reserva.fecha_fin|date:"Y-m-d H:i" }}',
+				className: 'bg-blue-darker',
+                allDay: false,
+				media: '<i class="fa fa-trophy"></i>',
+				description: '{{ reserva.descripcion}}',
+                editable: false,
+            });
+        {% endfor %}
+    </script>
+    <script src="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.js?v=1.1"></script>
+    <script src="{{ STATIC_URL }}js/reserva_escenarios/calendar.reservas.js?V=1.2"></script>
+    <script src="{{ STATIC_URL }}js/apps.min.js"></script>
+{% endblock %}
+
+{% block css %}
+	<link href="{{ STATIC_URL }}plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="vertical-box">
+        <div class="vertical-box-column col-sm-3 ">
+            <div class="calendar-event" id="external-events">
+                <br>
+                <h4 class="m-b-20 m-r-5" style="display: inline-block;">Calendario de Reservas del Escenario<br> {{ escenario.nombre }}</h4>
+                <div class="external-event bg-purple" data-bg="bg-purple" data-title="Nueva Reserva" data-media="<i class='fa fa-calendar'></i>" data-desc="">
+                        <h5><i class="fa fa-calendar fa-lg fa-fw"></i> Nueva Reserva</h5>
+                        <p>Arrastre y ajuste de acuerdo a la hora y fecha que desee seleccionar</p>
+                </div>
+                <a id="btn-registrar-reserva" href="#" class="btn btn-primary btn-sm"><i class="fa fa-check"></i> Registrar Reserva</a>
+            </div>
+        </div>
+        <div id="calendar" class="vertical-box-column p-15 calendar col-sm-9 fc fc-ltr"></div>
+        <div class="modal fade" id="modal-confirmacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title" id="titulo-modal">¿Esta seguro de agendar la reserva?</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p id="nuevo-dia">
+                            <b>Asegurese que la reserva tenga la fecha que ud desea. </b><span></span>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning btn-not" data-dismiss="modal">Cancelar</button>
+                        <button type="button"  class="btn btn-primary btn-ok" style="margin-left: 15px;">Solicitar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+    <script>
+		$(document).ready(function() {
+			Calendar.init();
+            $("#btn-registrar-reserva").on('click', function(e){
+                $('#modal-confirmacion').modal("show");
+            });
+		});
+    </script>
+{% endblock %}
