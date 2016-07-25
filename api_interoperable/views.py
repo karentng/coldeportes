@@ -4,16 +4,38 @@ from api_interoperable.models import DeportistaSerializable,ComposicionCorporalS
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import permissions
-from rest_framework.decorators import api_view
-from rest_framework.reverse import reverse
 from rest_framework import viewsets,mixins
 from entidades.modelos_vistas_reportes import PublicDeportistaView
 from reportes.models import TenantDeportistaView
 from entidades.models import *
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.db import connection
-
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
+import json
 # Create your views here.
+
+#login con token
+@csrf_exempt
+def token_login(request):
+    if request.method == 'POST':
+        json_request = json.loads(request.body.decode('utf-8'))
+        usuario = json_request.get('username',None)
+        print(usuario)
+        password = json_request.get('password',None)
+        print(password)
+        usuario_obj = authenticate(username=usuario, password=password)
+        print(usuario_obj)
+        if usuario_obj is not None:
+            if usuario_obj.is_active:
+                print('en token')
+                token, created = Token.objects.get_or_create(user=usuario_obj)
+                print (token)
+                return JsonResponse({'token':token.key})
+        return Response('Usuario no existe o inactivo', status=status.HTTP_401_UNAUTHORIZED)
+    return Response('Metodo no permitido', status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 #Funciones generales para listado y recuperacion de deportistas en modelo adicionales a deportista
 def get_model_by_tenant(request,method):
