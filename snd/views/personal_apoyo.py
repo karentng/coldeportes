@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.http import HttpResponse, JsonResponse
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -7,7 +8,7 @@ from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
 from coldeportes.utilities import calculate_age,not_transferido_required
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from entidades.models import Entidad
+from entidades.models import Entidad, ModalidadDisciplinaDeportiva
 
 
 @login_required
@@ -243,7 +244,8 @@ def wizard_experiencia_laboral(request, id_personal_apoyo):
     experiencia_laboral_form = ExperienciaLaboralForm()
 
     if request.method == 'POST':
-        experiencia_laboral_form = ExperienciaLaboralForm(request.POST, request.FILES)
+        disciplina_id = request.POST['deporte']
+        experiencia_laboral_form = ExperienciaLaboralForm(request.POST, request.FILES, deporte_id = disciplina_id)
 
         if experiencia_laboral_form.is_valid():
             experiencia_laboral_nuevo = experiencia_laboral_form.save(commit=False)
@@ -293,6 +295,24 @@ def eliminar_experiencia_laboral(request,id_personal_apoyo,id_experiencia):
     except Exception:
         return redirect('wizard_experiencia_laboral', id_personal_apoyo)
 
+
+
+#Ajax para modalidad y categoria historia deportiva
+@login_required
+def get_modalidades(request, deporte_id):
+    modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+    if modalidades:
+        data = []
+        for m in modalidades:
+            dic = {}
+            dic['id'] = m.id
+            dic['text'] = m.__str__()
+            data.append(dic)
+    else:
+        return HttpResponse('Modalidades no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
 
 
 @login_required

@@ -1,7 +1,7 @@
 # encoding:utf-8
 
 from django.db import models
-from entidades.models import Entidad
+from entidades.models import Entidad, TipoDisciplinaDeportiva, ModalidadDisciplinaDeportiva
 from entidades.models import Ciudad, Entidad, Nacionalidad
 from coldeportes.utilities import calculate_age
 from django.conf import settings
@@ -49,23 +49,31 @@ class PersonalApoyo(models.Model):
         ('RAIZAL', 'RAIZAL'),
     )
     ACTIVIDADES = (
-        (14, 'ANIMADOR SOCIOCULTURAL'),
-        (9, 'BIOMECÁNICO'),
-        (11, 'ENTRENADOR'),
-        (13, 'ENTRENADOR PERSONALIZADO'),
-        (8, 'FISIÓLOGO'),
-        (1, 'FISIOTERAPEUTA'),
-        (0, 'MÉDICO DEPORTÓLOGO'),
-        (10, 'METODÓLOGO'),
-        (12, 'MONITOR'),
-        (3, 'NUTRICIONISTA'),
-        (6, 'PREPARADOR FÍSICO'),
-        (16, 'PROMOTOR DE ACTIVIDAD FÍSICA'),
-        (2, 'PSICÓLOGO DEPORTIVO'),
-        (4, 'QUINESIÓLOGO'),
-        (5, 'QUIROPRÁCTICO'),
-        (15, 'RECREADOR'),
-        (7, 'TRABAJADOR SOCIAL'),
+        (0,'MÉDICO DEPORTÓLOGO'),
+        (1,'FISIOTERAPEUTA'),
+        (2,'PSICÓLOGO DEPORTIVO'),
+        (3,'NUTRICIONISTA'),
+        (4,'QUINESIÓLOGO'),
+        (5,'QUIROPRÁCTICO'),
+        (6,'PREPARADOR FÍSICO'),
+        (7,'TRABAJADOR SOCIAL'),
+        (8,'FISIÓLOGO'),
+        (9,'BIOMECÁNICO'),
+        (10,'METODÓLOGO'),
+        (11,'ENTRENADOR'),
+        (12,'MONITOR'),
+        (13,'ENTRENADOR PERSONALIZADO'),
+        (14,'ANIMADOR SOCIOCULTURAL'),
+        (15,'RECREADOR'),
+        (16,'COORDINADOR DE PROYECTO'),
+        (17,'AUXILIARES ASISTENCIALES'),
+        (18,'APOYOS LOGÍSTICOS'),
+        (19,'COORDINADOR DEL OBSERVATORIO'),
+        (20,'GESTOR PROGRAMA HEVS'),
+        (21,'GUÍAS'),
+        (22,'AUXILIARES'),
+        (23,'CLASIFICADORES FUNCIONALES'),
+        (24,'CLASIFICADORES DEPORTISTAS'),
     )
 
     actividad = models.IntegerField(choices=ACTIVIDADES, verbose_name='Actividad a desempeñar')
@@ -124,7 +132,7 @@ class FormacionDeportiva(models.Model):
     institucion = models.CharField(max_length=100, verbose_name='Institución')
     nivel = models.CharField(choices=tipo_academica, max_length=20, verbose_name='Nivel')
     estado = models.CharField(choices=tipo_estado, max_length=20, verbose_name='Estado')
-    profesion = models.CharField(max_length=100, blank=True, null=True, verbose_name='Profesión')
+    profesion = models.CharField(max_length=100, blank=True, null=True, verbose_name='título obtenido')
     grado_semestre = models.IntegerField(verbose_name='Grado, año o semestre', null=True, blank=True)
     soporte_cualificacion = models.FileField(upload_to="Personal_apoyo/soporte_cualificacion/",
                                              verbose_name="Soporte cualificación y formación (escaneado)")
@@ -141,6 +149,8 @@ class FormacionDeportiva(models.Model):
 class ExperienciaLaboral(models.Model):
     nombre_cargo = models.CharField(max_length=50, verbose_name='Nombre del cargo')
     institucion = models.CharField(max_length=150, verbose_name='Institución donde se desempeñó')
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='disciplina deportiva')
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='modalidad del deporte')
     fecha_comienzo = models.DateField()
     actual = models.BooleanField(verbose_name='¿Aún en el cargo?', default=False)
     fecha_fin = models.DateField(blank=True, null=True)

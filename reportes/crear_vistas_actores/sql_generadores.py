@@ -106,6 +106,30 @@ def seleccion_datos_escenarios(tenant=''):
     """)%(tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant, tenant)
 
 
+def seleccion_datos_dirigentes(tenant=''):
+    if tenant != '':
+        tenant = ("%s.")%(tenant)
+    return (
+        """
+        SELECT
+            DIR.id, NAL.nacionalidad_id,
+            DIR.nombres, DIR.apellidos,
+            DIR.foto, DIR.identificacion,
+            DIR.entidad_id, DIR.fecha_creacion,
+            DIR.genero, DIR.telefono_fijo as telefono_contacto,
+            DIR.estado, DIR.ciudad_residencia_id AS ciudad_id,
+            C.cargo, DIR.email,
+            IA.nivel as nivel_formacion, IA.estado as estado_formacion,
+            IA.fecha_finalizacion,
+            DIR.nombres||' '||DIR.apellidos||' '||EN.nombre as contenido
+        FROM
+        {0}snd_dirigente DIR
+        LEFT JOIN snd_dirigente_nacionalidad NAL ON NAL.dirigente_id = DIR.id
+        LEFT join (SELECT DIC.id, DIC.dirigente_id, DIC.nombre as cargo, max(fecha_posesion) as fecha_posesion_cargo FROM snd_dirigentecargo as DIC group by DIC.id) C on C.dirigente_id=DIR.id
+        LEFT JOIN {0}snd_dirigenteformacionacademica IA ON IA.dirigente_id = DIR.id
+        LEFT join public.entidades_entidad EN on DIR.entidad_id=EN.id
+        """.format(tenant))
+
 def seleccion_datos_personal_apoyo(tenant=''):
     if tenant != '':
         tenant = ("%s.")%(tenant)
@@ -113,6 +137,7 @@ def seleccion_datos_personal_apoyo(tenant=''):
         """
         SELECT
             PA.id, PA.actividad,
+            C.cargo,
             PA.genero, PA.tipo_id, PA.foto,
             PA.nombres, PA.apellidos, PA.identificacion,
             PA.fecha_nacimiento, NAL.nacionalidad_id,            
@@ -127,8 +152,9 @@ def seleccion_datos_personal_apoyo(tenant=''):
         %ssnd_personalapoyo PA
         LEFT JOIN %ssnd_formaciondeportiva FD ON FD.personal_apoyo_id = PA.id
         LEFT JOIN %ssnd_personalapoyo_nacionalidad NAL ON NAL.personalapoyo_id = PA.id 
+        LEFT join (SELECT DIC.id, DIC.personal_apoyo_id, DIC.nombre_cargo as cargo, max(fecha_comienzo) as fecha_posesion_cargo FROM %ssnd_experiencialaboral as DIC group by DIC.id) C on C.personal_apoyo_id=PA.id
         LEFT join public.entidades_entidad EN on PA.entidad_id=EN.id
-        """)%(tenant,tenant,tenant)
+        """)%(tenant,tenant,tenant,tenant)
 
 
 def seleccion_datos_deportistas(tenant=''):
@@ -162,30 +188,6 @@ def seleccion_datos_deportistas(tenant=''):
         LEFT JOIN %ssnd_historiallesiones HL ON HL.deportista_id = DE.id
         LEFT join public.entidades_entidad EN on DE.entidad_id=EN.id
         """)%(tenant,tenant,tenant,tenant,tenant,tenant,tenant)
-
-def seleccion_datos_dirigentes(tenant=''):
-    if tenant != '':
-        tenant = ("%s.")%(tenant)
-    return (
-        """
-        SELECT
-            DIR.id, NAL.nacionalidad_id,
-            DIR.nombres, DIR.apellidos,
-            DIR.foto, DIR.identificacion,
-            DIR.entidad_id, DIR.fecha_creacion,
-            DIR.genero, DIR.telefono_fijo as telefono_contacto,
-            DIR.estado, DIR.ciudad_residencia_id AS ciudad_id,
-            C.cargo, DIR.email,
-            IA.nivel as nivel_formacion, IA.estado as estado_formacion,
-            IA.fecha_finalizacion,
-            DIR.nombres||' '||DIR.apellidos||' '||EN.nombre as contenido
-        FROM
-        {0}snd_dirigente DIR
-        LEFT JOIN {0}snd_dirigente_nacionalidad NAL ON NAL.dirigente_id = DIR.id
-        LEFT join (SELECT DIC.id, DIC.dirigente_id, DIC.nombre as cargo, max(fecha_posesion) as fecha_posesion_cargo FROM snd_dirigentecargo as DIC group by DIC.id) C on C.dirigente_id=DIR.id
-        LEFT JOIN {0}snd_dirigenteformacionacademica IA ON IA.dirigente_id = DIR.id
-        LEFT join public.entidades_entidad EN on DIR.entidad_id=EN.id
-        """.format(tenant))
 
 def seleccion_datos_escuelas(tenant=''):
     if tenant != '':
