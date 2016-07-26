@@ -385,6 +385,7 @@ def ver_personal_apoyo_tenantnacional(request,id_personal_apoyo,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -423,6 +424,7 @@ def ver_dirigente_tenantnacional(request,dirigente_id,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -464,6 +466,7 @@ def ver_deportista_tenantnacional(request,id_depor,id_entidad,estado):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
 
     if estado != 'TRANSFERIDO':
         tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
@@ -513,7 +516,7 @@ def ver_escenario_tenantnacional(request,escenario_id,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
-
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -569,6 +572,7 @@ def ver_caf_tenantnacional(request,idCAF,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -601,6 +605,7 @@ def ver_cajas_tenantnacional(request,ccf_id,id_entidad):
     :param ccf_id:   Identificador del escenario
     :type ccf_id:    String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -639,6 +644,7 @@ def ver_escuelas_tenantnacional(request,id_escuela,id_entidad):
     :param id_entidad: Llave primaria de la entidad a la que pertenece el personal de apoyo
     :type id_entidad: String
     """
+    print(request.user)  # Solución para que no se pierda la sesión de usuario actual
     tenant = Entidad.objects.get(id=id_entidad).obtenerTenant()
     connection.set_tenant(tenant)
     ContentType.objects.clear_cache()
@@ -1042,6 +1048,103 @@ def foto_entidad(request):
         entidad.save()
         return redirect("inicio")
     return redirect("inicio")
+
+def obtener_jerarquicas(entidad_actual,hijos,icono ):
+    """
+    Mayo 23, 2016
+    Autor: Daniel Correa
+
+    Permite orgnizar la informacion de los hijos de una entidad en el formato estandar JSON para renderizacion en el template de tree view
+
+    :param entidad_actual: entidad a añadir hijos en JSON
+    :type entidad_actual: JSON
+    :param hijos: listado de entidades hijas
+     :type hijos: QuerySet
+    :param icono: icono de hijos
+    :type icono: String
+    """
+    hijos_array = []
+    for h in hijos:
+        json_h = {}
+        json_h["id"] = h.id
+        json_h["text"] = h.__class__.__name__+": " + h.nombre
+        json_h["a_attr"] = {"href": "http://" + h.domain_url, "target":"_blank"}
+        json_h["state"]= {"opened": 'true'}
+        json_h["icon"] = icono
+        hijos_array.append(json_h)
+
+    entidad_actual["children"] = hijos_array
+    return entidad_actual
+
+
+def vista_jerarquica(request):
+    """
+    Mayo 23, 2016
+    Autor: Daniel Correa
+
+    Permite organizar la jerarquia de ligas y federaciones para su visualizacion en forma de tree view
+
+    :param request:        Petición realizada
+    :type request:         WSGIRequest
+    """
+    #Vista unicamente para ligas y federaciones
+    if not request.tenant.tipo in [1,2]:
+        return redirect("/inicio")
+
+    entidades = []
+    entidad_actual = {
+            "id" : request.tenant.id,
+            "text" : request.tenant.nombre,
+             "icon": "fa fa-sort-amount-desc fa-lg text-inverse",
+            "state": {"opened": 'true'}
+        }
+    if request.tenant.tipo == 1:
+
+        hijos = Club.objects.filter(liga=entidad_actual["id"])
+        entidad_actual = obtener_jerarquicas(entidad_actual,hijos,"fa fa-dribbble text-warning fa-lg")
+        entidades = [entidad_actual]
+
+    elif request.tenant.tipo == 2:
+        hijos = Liga.objects.filter(federacion=entidad_actual["id"])
+        entidad_actual = obtener_jerarquicas(entidad_actual,hijos, "fa fa-trophy text-info fa-lg")
+        hijos_array = entidad_actual["children"]
+        for liga in hijos_array:
+            hijos_liga = Club.objects.filter(liga = liga["id"])
+            obtener_jerarquicas(liga,hijos_liga, "fa fa-dribbble text-warning fa-lg")
+        entidades = [entidad_actual]
+
+    return render(request,'jerarquia_entidades.html',{
+        'entidades' : entidades,
+        'nombre_entidad': request.tenant.nombre
+    })
+
+def buscar_entidades(request):
+    form_busqueda = BuscarEntidadForm()
+    entidades = []
+    cantidad = 0
+    if request.method == 'POST':
+        form_busqueda = BuscarEntidadForm(request.POST)
+        if form_busqueda.is_valid():
+            entidades = Entidad.objects.exclude(tipo=0)
+            tipos = request.POST.getlist('tipo') or []
+            departamentos = request.POST.getlist('departamento') or []
+            nombre = request.POST.get('nombre') or ''
+
+            if tipos:
+                entidades = entidades.filter(tipo__in=tipos)
+            if departamentos:
+                entidades = entidades.filter(ciudad__departamento__id__in=departamentos)
+
+            entidades = entidades.filter(nombre__icontains = nombre)
+
+            cantidad = len(entidades)
+
+    return render(request,'entidades_buscar.html',{
+        'form':form_busqueda,
+        'listado_resultados' : entidades,
+        'cantidad_resultados' : cantidad,
+    })
+
 """
 @login_required()
 def borrar_schemas(request):

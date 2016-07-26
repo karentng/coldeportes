@@ -49,8 +49,16 @@ $(document).ready(function() {
                         message: 'La descripción no puede ser vacía'
                     }
                 }
-            }            
-            
+            },            
+            archivo: {
+                validators:{
+                    file: {
+                        extension: 'pdf,PDF,png,PNG,jpg,JPEG',
+                        message: 'Seleccione una imagen o documento con alguno de los siguientes formatos (pdf, png, jpg, JPEG) cuyo tamaño sea menor a 5MB',
+                        maxSize: 5242880,
+                    }                        
+                }
+            }
 
 
             }

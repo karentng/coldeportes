@@ -1,47 +1,47 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-{% load i18n %}
 
-{% block titulo %}
-    EFD - SND COLDEPORTES
+{% block head %}
+    Sedes EFD - SND COLDEPORTES
 {% endblock %}
 
 {% block css %}
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
-    <link href="{{STATIC_URL}}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
     {{form.media}} {# js y css para datetime #}
-{% endblock %}
-
-{% block js %}
-    <script src="{{STATIC_URL}}js/validaciones/escuela_deportiva/wizard_identificacion-validations.js"></script>
+    
+    
 {% endblock %}
 
 {% block miga_pan %}
     <li><a href="{% url 'inicio' %}">Inicio</a></li>
-    <li><a href="{% url 'escuela_deportiva_listar' %}">EFD</a>
-    {% if edicion == '1' or edicion == 1 %}
+    <li><a href="{% url 'escuela_deportiva_listar' %}">Sedes</a>
+    {% if escuela_id %}
         <li class="active">Editar</li>
     {% else %}
         <li class="active">Registrar</li>
     {% endif %}
 {% endblock %}
 
+{% block titulo_contenido %}
+    Sedes EFD
+{% endblock %}
+
 {% block titulo_panel %}
-    {% if edicion == '1' or edicion == 1 %}
-        Edición Escuela de Formación Deportiva
-    {% else %}
-        Registro Nueva Escuela de Formación Deportiva
-    {% endif %}
+    {{titulo_panel}}
+{% endblock %}
+
+{% block panel_botones %}
 {% endblock %}
 
 {% block contenido_panel %}
     {% include 'escuela_deportiva/wizard/_wizard.html' %}
-    
+
     <form id="form-wizard-identificacion" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
         <fieldset>
             <div class="well row">
                 <legend class="pull-left width-full">
-                    {% include 'escuela_deportiva/wizard/_mensajes.html' %}
+                    <h3>{{titulo}}</h3>
                 </legend>
                 <div class="row">
                     <div class="col-md-6">
@@ -63,12 +63,15 @@
                         {% bootstrap_field form.telefono_celular layout="vertical" %}
                     </div>
                     <div class="col-md-6">
+                        {% bootstrap_field form.tipo_sede layout="vertical" %}
+                    </div>
+                    <div class="col-md-6">
                         {% bootstrap_field form.aval layout="vertical" %}
                     </div>
                 </div>
                 <hr>
                 <legend class="pull-left width-full">
-                    <h3>Ingrese los datos de ubicación de la Escuela de Formación Deportiva</h3>
+                    <h3>Ubicación de la Sede</h3>
                 </legend>
                 <div class="row">
                     <div class="col-md-6">
@@ -86,14 +89,35 @@
                     <div class="col-md-6">
                         {% bootstrap_field form.estrato layout="vertical" %}
                     </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.descripcion_lugar layout="vertical" %}
+                    </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-xs-12">
-                        <input class="btn btn-primary pull-right" type="submit" value="{% trans "Siguiente →" %}"/>
+                        <input class="btn btn-primary pull-right" type="submit" value="Siguiente →"/>
                     </div>
                 </div>
             </div>
         </fieldset>
     </form>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    
+    <script src="{{ STATIC_URL }}js/validaciones/escuela_deportiva/wizard_identificacion-validations.js"></script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            FormWizard.init();
+        });
+    </script>
 {% endblock %}

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Solicitud Reserva de Escenario - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Solicitudes de Reserva de Escenarios
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listar_solicitudes_respuesta' %}">Solicitudes de Reserva de Escenarios</a></li>
+    <li>Ver</li>
+{% endblock %}
+
+{% block css %}
+    {{ form_comentarios.media }}
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/tooltip.js"></script>
+    <script src="{{ STATIC_URL }}js/validaciones/solicitud_escenario/wizard-respuesta-validations.js"></script>
+{% endblock %}
+
+{% block titulo_panel %}
+    Solicitud de Reservas de Escenarios
+{% endblock %}
+
+{% block contenido_panel %}
+    <!-- begin vertical-box -->
+            <div class="vertical-box">
+                <!-- begin vertical-box-column -->
+                <div class="vertical-box-column width-250">
+                    <!-- begin wrapper -->
+                    <div class="wrapper bg-silver text-center">
+                        <a href="{% url 'listar_solicitudes_reservas' %}" class="btn btn-success p-l-40 p-r-40 btn-sm">
+                            Regresar
+                        </a>
+                    </div>
+
+                    <!-- end wrapper -->
+                    <!-- begin wrapper -->
+                    <div class="wrapper">
+                        <p><b>Detalles</b></p>
+                        <ul class="nav nav-pills nav-stacked nav-sm">
+                            <li><a><i class="fa fa-barcode fa-fw m-r-5"></i> {{ solicitud.codigo_unico }}</a></li>
+                                <li><a ><i class="fa fa-calendar fa-fw m-r-5"></i> {{ solicitud.fecha_inicio }}</a></li>
+                                <li><a ><i class="fa fa-gavel fa-fw m-r-5"></i> {{ solicitud.fecha_fin }}</a></li>
+                                <li><a ><i class="fa fa-circle fa-fw m-r-5"></i> {{ solicitud.get_estado_display }}</a></li>
+                        </ul>
+                    </div>
+                    <!-- end wrapper -->
+                </div>
+                <!-- end vertical-box-column -->
+                <!-- begin vertical-box-column -->
+                <div class="vertical-box-column bg-white">
+                    <!-- begin wrapper -->
+                    <div class="wrapper bg-silver-lighter clearfix">
+
+                        <div class="pull-right">
+
+                            <div class="btn-group btn-toolbar">
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
+                                <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
+                            </div>
+                            <div class="btn-group m-l-5">
+                                <a href="{% url 'imprimir_solicitud_reservas' solicitud.id %}" target="_blank" class="btn btn-warning p-l-40 p-r-40 btn-sm pull-right">
+                                    <i class="fa fa-print"></i> Imprimir
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end wrapper -->
+                    <!-- begin wrapper -->
+                    <div class="wrapper">
+                        <h4 class="m-b-15 m-t-0 p-b-10 underline"> Solicitud {{ solicitud.codigo_unico }}</h4>
+                        <ul class="media-list underline m-b-20 p-b-15">
+                            <li class="media media-sm clearfix">
+                                <a class="pull-left">
+                                    <i class="fa fa-exchange fa-2x modal-icon"></i>
+                                </a>
+                                <div class="media-body">
+                                    <span class="email-from text-inverse f-w-600">
+                                        Solicitud de: {{ solicitud.nombre_solicitante }}
+
+                                    </span><span class="text-muted m-l-5"><i class="fa fa-clock-o fa-fw"></i> {{ solicitud.fecha_creacion }}</span><br />
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="row">
+                            <h5><strong>Información de la solicitud</strong></h5><br>
+                            <div class="col-lg-6">
+                                <strong>Fecha de Inicio</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.fecha_inicio }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong>Fecha Fin</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.fecha_fin }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong>Nombre Grupo que Utilizará el Escenario</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.nombre_equipo }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong>Nombre solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.nombre_solicitante }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong>Identificación solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.identificacion_solicitante }}
+                                </p>
+                            </div>
+                             <div class="col-lg-6">
+                                <strong>Teléfono solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.telefono_solicitante|upper }}
+                                </p>
+                            </div>
+                             <div class="col-lg-6">
+                                <strong>Dirección solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.direccion_solicitante|upper }}
+                                </p>
+                            </div>
+                             <div class="col-lg-6">
+                                <strong>Correo Electrónico solicitante</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.correo_solicitante|upper }}
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong>Descripción</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.descripcion|upper }}
+                                </p>
+                            </div>
+                            {% if solicitud.comentarios_respuesta %}
+                            <div class="col-lg-6">
+                                <strong>Comentarios al contestar solicitud</strong><br><br>
+                                <p class="f-s-12 text-inverse">
+                                    {{ solicitud.comentarios_respuesta|upper }}
+                                </p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if responder and solicitud.estado == 2 %}
+                        <div class="row">
+                            <h5><strong>Responder</strong></h5>
+                            <div class="col-md-12">
+                                <form id="form-respuesta-solicitud-reconocimiento" action="" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {% bootstrap_form form %}
+                                    <span class="pull-right">
+                                        <br>
+                                        <button class="btn btn-primary" type="submit"><i class="fa fa-pencil"></i> Enviar</button>
+                                    </span>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- end wrapper -->
+                    <!-- begin wrapper -->
+                    <div class="wrapper bg-silver-lighter text-right clearfix">
+                        Solicitudes de reservas de escenarios, <strong>SISTEMA NACIONAL DEL DEPORTE</strong>
+                    </div>
+                    <!-- end wrapper -->
+                </div>
+                <!-- end vertical-box-column -->
+            </div>
+            <!-- end vertical-box -->
+{% endblock %}

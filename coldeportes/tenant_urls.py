@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^gestion-usuarios/', include('gestion_usuarios.urls')),
     url(r'^transferencias/',include('transferencias.urls')),#urls del modulo de transferencias
     url(r'^directorio/',include('directorio.entidad_urls')),#urls del modulo de directorio perfil entidad
+    url(r'^reconocimiento-deportivo/',include('reconocimiento_deportivo.urls.solicitudes')),#urls del modulo de directorio perfil entidad
+    url(r'^reconocimiento-deportivo/',include('reconocimiento_deportivo.urls.respuestas')),#urls del modulo de reconocimiento_deportivo
+    url(r'^reserva-escenarios/',include('reserva_escenarios.urls')),#urls del modulo de reserva de escenarios
     url(r'^directorio-publico/',include('directorio.publico_urls')),#urls del modulo de directorio publico
     url(r'^normograma/',include('normograma.urls')),#urls del modulo de normograma
     url(r'^clasificados/',include('publicidad.urls')),#urls del modulo de clasificados
@@ -31,6 +34,8 @@ urlpatterns = patterns('',
     url(r'^cargado-datos/', include('snd.urls.cargado_datos')),
     url(r'^manual/',include('manual.urls')),
     url(r'^reportes/', include('reportes.urls.publico')),
+    url(r'^rest/', include('api_interoperable.urls', namespace='rest_framework')),
+
     url(r'^solicitudes-escenarios/solicitud/', include('solicitudes_escenarios.solicitud.urls')),
     url(r'^solicitudes-escenarios/respuesta/', include('solicitudes_escenarios.respuesta.urls')),
     url(r'^socios/registrar$', 'entidades.views.mostrar_gestion_socios', name='gestion_socios'),
@@ -42,7 +47,17 @@ urlpatterns = patterns('',
     url(r'^cambiar/(\d+)$', 'entidades.views.cambiar_estado_plan_costo', name='cambiar_estado_plan_costo'),
     url(r'^editar/(\d+)$', 'entidades.views.editar_plan_de_costo', name='editar_plan_de_costo'),
 
+    #VISTA JERARQUICA
+    url(r'^jerarquia$', 'entidades.views.vista_jerarquica', name='vista_jerarquica'),
+
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += required(
+    tenant_actor('calendarionacional'),
+    patterns('',
+        url(r'^calendario-deportivo/', include('calendario_deportivo.urls_tenant')),
+    ),
+)
 
 urlpatterns += required(
     tenant_actor('solicitudescenario'),

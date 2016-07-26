@@ -28,9 +28,10 @@ class CompetenciaForm(forms.ModelForm):
         (1, "Tiempos"),
         (2, "Puntos"),
         (3, "Metros"),
+        (4, "Posición"),
     )
 
-    tipo_registro = forms.ChoiceField(widget=forms.RadioSelect, choices=TIPOS_REGISTROS, label='Registros De Competencia')
+    tipo_registro = forms.ChoiceField(widget=forms.RadioSelect, choices=TIPOS_REGISTROS, label='Marcas de la Competencia')
 
     def __init__(self, *args, **kwargs):
 
@@ -47,6 +48,30 @@ class CompetenciaForm(forms.ModelForm):
     class Meta:
         model = Competencia
         exclude = ('juego',)
+        widgets = {
+            'fecha_competencia': MyDateWidget(),
+        }
+
+
+class CompetenciaEditarForm(forms.ModelForm):
+
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+
+        deporte_id = kwargs.pop('deporte_id',None)
+        super(CompetenciaEditarForm, self).__init__(*args, **kwargs)
+        self.fields['deporte'] = adicionarClase(self.fields['deporte'], 'one')
+        self.fields['deporte'].queryset = TipoDisciplinaDeportiva.objects.all().order_by('descripcion')
+        self.fields['descripcion'].widget.attrs['rows'] = 3
+
+        if deporte_id:
+            self.fields['categoria'].queryset = CategoriaDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+            self.fields['modalidad'].queryset = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+
+    class Meta:
+        model = Competencia
+        exclude = ('juego', 'tipo_registro','tipos_participantes')
         widgets = {
             'fecha_competencia': MyDateWidget(),
         }
@@ -110,7 +135,9 @@ class ParticipanteTiempoForm(forms.ModelForm):
 
 
 class ParticipantePuntosForm(forms.ModelForm):
+
     required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
 
         competencia = kwargs.pop('competencia')
@@ -135,6 +162,37 @@ class ParticipantePuntosForm(forms.ModelForm):
                 return self.cleaned_data['fecha_nacimiento']
         else:
             pass
+
+
+class ParticipantePosicionForm(forms.ModelForm):
+
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+
+        competencia = kwargs.pop('competencia')
+        super(ParticipantePosicionForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+    
+    class Meta:
+
+        model = Participante
+        exclude = ("competencia", 'tiempo', 'marca', 'equipo', 'metros', 'puntos')
+        widgets = {
+            'fecha_nacimiento': MyDateWidget(),
+        }
+
+    def clean_fecha_nacimiento(self):
+
+        fecha = self.cleaned_data['fecha_nacimiento']
+        if fecha:            
+            if fecha >= datetime.date.today():
+                raise ValidationError('La fecha de nacimiento no puede ser mayor o igual a la actual.')
+            else:
+                return self.cleaned_data['fecha_nacimiento']
+        else:
+            pass
+
 
 class ParticipanteMetrosForm(forms.ModelForm):
 
@@ -180,7 +238,9 @@ class ParticipanteMetrosForm(forms.ModelForm):
             pass
 
 class ParticipanteEquipoForm(forms.ModelForm):
+
     required_css_class = 'required'
+    
     def __init__(self, *args, **kwargs):
 
         competencia = kwargs.pop('competencia')
@@ -241,8 +301,15 @@ class EquipoTiempoForm(forms.ModelForm):
                     raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
             except:
                 raise ValidationError('El tiempo debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05.102')
-        pass
     
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
 
     class Meta:
 
@@ -263,6 +330,39 @@ class EquipoPuntosForm(forms.ModelForm):
 
         model = Equipo
         exclude = ("competencia", 'tiempo', 'marca', 'metros')
+
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
+
+
+class EquipoPosicionForm(forms.ModelForm):
+
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+
+        super(EquipoPosicionForm, self).__init__(*args, **kwargs)
+        self.fields['departamento'] = adicionarClase(self.fields['departamento'], 'one')
+
+    class Meta:
+
+        model = Equipo
+        exclude = ("competencia", 'tiempo', 'marca', 'metros', 'puntos')
+
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
 
 
 class EquipoMetrosForm(forms.ModelForm):
@@ -292,6 +392,15 @@ class EquipoMetrosForm(forms.ModelForm):
                 raise ValidationError('La marca debe tener números, puntos y/o dos puntos. Ej: 24.100, 03:05')
         else:
             pass
+
+    def clean(self):
+
+        cantidad = self.cleaned_data['cantidad_medallas_equipo']
+        medalleria_individual = self.cleaned_data['medallas_por_integrantes']
+        if medalleria_individual:
+            if not cantidad:
+                mensaje = "El campo de la cantidad de medallas del equipo es obligatorio"
+                self.add_error('cantidad_medallas_equipo', mensaje)
 
     
 class CompetenciasBaseDeDatos(forms.Form):
@@ -326,6 +435,8 @@ class FiltrosMedalleriaDeptGenForm(forms.Form):
         
         if eliminar:
             del self.fields[eliminar]
+
+        add_visualizacion(self.fields['visualizacion'], visualizaciones_definidas)
 
 
 class FiltrosTablaMedalleriaForm(forms.Form):

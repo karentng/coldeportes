@@ -20,7 +20,7 @@ fields = {
     nombres: {
         validators: {
             notEmpty: {
-                message: 'Los nombres del dirigente no puedes ser vacíos'
+                message: 'Los nombres del dirigente no pueden ser vacíos'
             }
         }
     },

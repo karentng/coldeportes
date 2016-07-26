@@ -166,3 +166,51 @@ def cantidad_dirigentes(request):
         'fecha_generado': datetime.now(),
         'nombres_columnas':"Descripción"
     })
+
+def formacion_academica_dirigentes(request):
+    """
+    Mayo 6, 2016
+    Autor: Daniel Correa
+
+    Permite conocer la formacion academica de los dirigentes caracterizadas por niveles de formacion
+    """
+    tipoTenant = request.tenant.obtenerTenant()
+
+    if tipoTenant.schema_name == 'public':
+        tabla = PublicDirigenteView
+    else:
+        tabla = TenantDirigenteView
+
+    if request.is_ajax():
+        departamentos = None if request.GET['departamentos'] == 'null'  else ast.literal_eval(request.GET['departamentos'])
+        genero = None if request.GET['genero'] == 'null'  else ast.literal_eval(request.GET['genero'])
+
+        consultas = [
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',ciudad__departamento__id__in=%s,genero__in=%s).annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',ciudad__departamento__id__in=%s).annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado',genero__in=%s).annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+            "list("+tabla.__name__+".objects.filter(estado=0,estado_formacion='Finalizado').annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))",
+        ]
+
+        formaciones = ejecutar_filtros(consultas,departamentos,genero,tipoTenant)
+        formaciones = tipoTenant.ajustar_resultado(formaciones)
+
+        return JsonResponse(formaciones)
+
+    else:
+        formaciones = list(tabla.objects.filter(estado=0,estado_formacion='Finalizado').annotate(descripcion=F('nivel_formacion')).values('id','descripcion','entidad','fecha_finalizacion').annotate(cantidad=Count('id',distinct=True)))
+        formaciones = tipoTenant.ajustar_resultado(formaciones)
+
+
+    visualizaciones = [1, 3, 5, 6]
+    form = NacionalidadForm(visualizaciones=visualizaciones)
+    return render(request, 'dirigentes/base_dirigentes.html', {
+        'nombre_reporte' : 'Formación Académica de los dirigentes',
+        'url_data' : 'reportes_formacion_academica_dirigentes',
+        'datos': formaciones,
+        'visualizaciones': visualizaciones,
+        'form': form,
+        'actor': 'Dirigentes',
+        'fecha_generado': datetime.now(),
+        'nombre_columna': 'Niveles de Formación'
+    })

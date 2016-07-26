@@ -44,6 +44,12 @@ class TipoDisciplinaDeportiva(models.Model):
     def __str__(self):
         return self.descripcion
 
+#General para deportistas y escenarios
+class TipoRequerimientoReconocimientoDeportivo(models.Model):
+    descripcion = models.CharField(max_length=100, verbose_name='descripción')
+
+    def __str__(self):
+        return self.descripcion
 
 class ModalidadDisciplinaDeportiva(models.Model):
     deporte = models.ForeignKey(TipoDisciplinaDeportiva)
@@ -86,6 +92,9 @@ class Actores(models.Model):
     listados_doping = models.BooleanField(verbose_name="Listados de casos de doping", default=False)
     solicitud = models.BooleanField(verbose_name="Solicitud Escenarios", default=False)
     respuesta = models.BooleanField(verbose_name="Respuesta Solicitud Escenatios", default=False)
+    reconocimiento_solicitud = models.BooleanField(verbose_name="reconocimiento deportivo solicitud", default=False)
+    reconocimiento_respuesta = models.BooleanField(verbose_name="reconocimiento deportivo respuesta", default=False)
+    calendario_deportivo = models.BooleanField(verbose_name="Calendario Deportivo Nacional", default=False)
 
     def resumen(self):
         actores = []
@@ -451,6 +460,8 @@ class ClubParalimpico(ResolucionReconocimiento):
     discapacidad = models.IntegerField(choices=DISCAPACIDADES)
     disciplinas = models.ManyToManyField(TipoDisciplinaDeportiva,blank=True)
     liga = models.ForeignKey(LigaParalimpica, null=True, blank=True)
+    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia", null=True, default=None)    
+    reconocimiento = models.BooleanField(default=False)
 
     def obtener_padre(self):
         return self.liga
@@ -806,6 +817,8 @@ class Club(ResolucionReconocimiento):
     socios = models.ManyToManyField(SocioClub, blank=True);
     planes_de_costo = models.ManyToManyField(PlanesDeCostoClub, blank=True)
     tipo_club = models.IntegerField(choices=TIPOS_CLUBES, default=0)
+    fecha_vigencia = models.DateField(verbose_name="fecha de vigencia", null=True)    
+    reconocimiento = models.BooleanField(default=False)
 
     def obtener_padre(self):
         return self.liga
@@ -985,7 +998,10 @@ class Permisos(models.Model):
     listados_doping = models.IntegerField(choices=ACTORES, default=1)
     solicitud = models.IntegerField(choices=ACTORES, default=1)
     respuesta = models.IntegerField(choices=ACTORES, default=1)
+    reconocimiento_solicitud = models.IntegerField(choices=ACTORES, default=1)
+    reconocimiento_respuesta = models.IntegerField(choices=ACTORES, default=1)
     eventos = models.IntegerField(choices=ACTORES, default=2)
+    calendario_deportivo = models.IntegerField(choices=ACTORES, default=1)
 
     class Meta:
         unique_together = ('entidad','tipo',)
@@ -1002,8 +1018,55 @@ class Permisos(models.Model):
 
         actores_seleccionados = []
         actores = ['centros','escenarios','deportistas','personal_apoyo','dirigentes','cajas','selecciones','centros_biomedicos',
-                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'eventos']
+                   'normas','escuelas_deportivas','noticias','publicidad','listados_doping','solicitud','respuesta', 'reconocimiento_solicitud', 
+                   'reconocimiento_respuesta','eventos','calendario_deportivo']
+
         for actor in actores:
             if getattr(self,actor) in opcion:
                 actores_seleccionados.append(actor)
         return(actores_seleccionados)
+
+class CalendarioNacional(models.Model):
+    TIPO = (
+        (0, 'DEPORTIVO'),
+        (1, 'CAPACITACIÓN'),
+        (3, 'CAMPEONATO'),
+        #(3, 'CULTURAL'),
+        #(4, 'RECREATIVO'),
+    )
+
+    ESTADOS = (
+        (0,'APROBADO'),
+        (1,'NO APROBADO'),
+        (2,'ESPERANDO APROBACIÓN'),
+        (3,'CANCELADO')
+    )
+
+    titulo_evento = models.CharField(max_length=255, verbose_name="Título del evento")
+    tipo = models.IntegerField(choices=TIPO,default=0)
+    ciudad = models.ForeignKey(Ciudad,help_text="Ciudad donde se desarrollará el evento")
+    nombre_lugar = models.CharField(max_length=255, help_text="Nombre del lugar donde se realizará el evento",
+                                    verbose_name="Escenario del evento")
+    direccion = models.CharField(max_length=255,verbose_name="Dirección", help_text="Dirección del lugar del evento")
+    deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name="Deporte del evento")
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva, verbose_name="Categoría del deporte",null=True,blank=True)
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva, verbose_name="Modalidad del deporte",null=True,blank=True)
+    fecha_inicio = models.DateField(verbose_name="Fecha de inicio del evento")
+    fecha_finalizacion = models.DateField(verbose_name="Fecha de finalización del evento")
+    objetivo = models.TextField(verbose_name="Objetivo del evento (cualitativo)", max_length=200)
+    cupo_atletas = models.PositiveIntegerField(verbose_name="Cupo total de competidores",null=True,blank=True)
+    cupo_personas = models.PositiveIntegerField(verbose_name="Cupo total de asistentes",null=True,blank=True)
+    estado = models.IntegerField(choices=ESTADOS,default=2)
+    entidad = models.ForeignKey(Entidad)
+
+    class Meta:
+        permissions = (
+            ("view_calendarionacional", "Permite ver eventos del calendario deportivo"),
+        )
+
+    def save(self, *args, **kwargs):
+        self.titulo_evento = self.titulo_evento.upper()
+        self.nombre_lugar = self.nombre_lugar.upper()
+        self.direccion = self.direccion.upper()
+        self.objetivo = self.objetivo.upper()
+        super(CalendarioNacional, self).save(*args, **kwargs)

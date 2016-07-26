@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block titulo_panel %}
-    Registro de Competencia
+    Registro de Competencia por Modalidad
 {% endblock %}
 
 {% block js %}
@@ -28,14 +28,11 @@
 
 {% block contenido_panel %}
 <div  class="wrapper bg-silver-lighter clearfix">
-    <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Listar Competencias</a>
+    <a href="{% url 'listado_competencias' juego_id %}" class="btn btn-sm btn-primary p-l-20 p-r-20"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
     <div class="pull-right">
         <div class="btn-group btn-toolbar">
             <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
             <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
-        </div>
-        <div class="btn-group m-l-5">
-            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>

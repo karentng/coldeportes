@@ -12,13 +12,7 @@ $(document).ready(function() {
             feedbackIcons: faIcon,
             excluded: ':disabled',
             fields: {
-                nombre: {
-                    validators: {
-                        notEmpty: {
-                            message: 'El nombre del juego no puede ser vacío'
-                        }
-                    }
-                },
+                
                 fecha_competencia: {
                     validators: {
                         notEmpty: {
@@ -29,35 +23,35 @@ $(document).ready(function() {
                 tipo_competencia: {
                     validators: {
                         notEmpty: {
-                            message: 'Por favor seleccione un país'
+                            message: 'Por favor seleccione un tipo de competencia'
                         }
                     }
                 },
                 tipo_registro: {
                     validators: {
                         notEmpty: {
-                            message: 'Por favor seleccione un país'
+                            message: 'Por favor seleccione un tipo de registro'
                         }
                     }
                 },
                 lugar: {
                     validators: {
                         notEmpty: {
-                            message: 'Por favor seleccione un país'
+                            message: 'Por favor escriba el lugar de la competencia'
                         }
                     }
                 }, 
                 tipos_participantes: {
                     validators: {
                         notEmpty: {
-                            message: 'Por favor seleccione un país'
+                            message: 'Por favor seleccione el tipo de participantes'
                         }
                     }
                 }, 
                 deporte: {
                     validators: {
                         notEmpty: {
-                            message: 'Por favor seleccione un país'
+                            message: 'Por favor seleccione un deporte'
                         }
                     }
                 },            

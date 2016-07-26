@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Solicitudes de reconocimiento deportivo-SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Solicitudes de reconocimiento deportivo
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Solicitudes de reconocimiento deportivo</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+
+
+{% block titulo_panel %}
+    Solicitudes de reconocimiento deportivo
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script>
+        idTabla = "tabla-solicitudes";
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        };
+    </script>
+{% endblock %}
+
+{% block contenido_panel %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+            <table id="tabla-solicitudes" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Código Único</th>
+                        <th>Estado</th>
+                        <th>A quien va dirigida</th>
+                        <th>Fecha de la última modificación</th>
+                        <th>Tipo</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for solicitud in solicitudes %}
+                    <tr>
+                        <td><strong>{{ solicitud.codigo }}</strong></td>
+                        <td>{{solicitud.get_estado_display}}</td>
+                        <td>{{ solicitud.para_quien }}</td>
+                        <td>{{ solicitud.fecha_creacion }}</td>
+                        <td>{{ solicitud.get_tipo_display }}</td>
+                        <td>
+                            <a href='{% url 'ver_solicitud_reconocimiento' solicitud.id %}'>
+                                <i class="fa fa-eye"></i> Ver más
+                            </a>
+                            <br/>                            
+                            {% if solicitud.estado == 0 or solicitud.estado == 1 %}
+                                <a href="#"  data-target="#modal-desactivate" data-toggle="modal" onclick="urlModal(this);" data-url="{% url 'cancelar_solicitud_reconocimiento' solicitud.id %}">
+                                    <i class="fa fa-trash"></i> Cancelar solicitud
+                                </a>
+                                <br/>
+                            {% endif %}                                
+                            {% if solicitud.estado == 1 %}
+                                {% if not club.reconocimiento %}
+                                <a href="{% url 'reconocimiento_deportivo_tramitar' solicitud.id %}">
+                                    <i class="fa fa-envelope"></i> Completar solicitud
+                                </a>
+                                <br/>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-desactivate">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Cancelar Solicitud:</h4>
+                    </div>
+                    <div class="modal-body">
+                        ¿Está seguro que desea cancelar la solicitud de reconocimiento deportivo?
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                        <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

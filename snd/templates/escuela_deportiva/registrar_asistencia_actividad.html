@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">EFD</a></li>
+    <li ><a href="">Actividades</a></li>
+    <li class="active">Asistencia</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Registrar asistencia
+{% endblock %}
+
+{% block titulo_panel %}
+    Registrar asistencia
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block botones_panel %}
+    <a href="{% url 'listar_actividadesefd' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="well row">
+        <div class="row ">
+            <div class="wrapper bg-silver clearfix">
+                <div class="col-xs-12">
+                    <h4><b>Nombre de la Actividad:</b> {{ actividad.titulo|upper }}</h4>
+                </div>
+                <div class="col-lg-6">
+                    <h5><b>Fecha de la Actividad:</b> {{ actividad.dia_actividad }}</h5>
+                    <h5><b>Dirigido a:</b> {{ actividad.get_dirigido_a_display|lower|capfirst }}</h5>
+                </div>
+                <div class="col-lg-6" style="word-break: break-all;">
+                    <h5 class="text-justify"><b>Descripción:</b> {{ actividad.descripcion }}</h5>
+                </div>
+            </div>
+            <hr>
+                <div class="table-responsive">
+                    <table id="tabla-asistentes" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Fecha de nacimiento</th>
+                                <th>Asistió</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asistente in asistentes %}
+                                <tr>
+                                    <td>{{ asistente.nombres }}</td>
+                                    <td>{{ asistente.apellidos }}</td>
+                                    <td>{{ asistente.fecha_nacimiento }}</td>
+                                    <td>
+                                        {% if perms.snd.change_escueladeportiva %}
+                                            <input title="Asistió?" {% if asistente.asistio %}checked{% endif %} id="{{ asistente.id }}" type="checkbox" data-group-cls="btn-group-sm">
+                                            <span style="visibility: hidden">{% if asistente.asistio %}SI{% else %}NO{% endif %}</span>
+                                        {% else %}
+                                            {% if asistente.asistio %}SI{% else %}NO{% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        idTabla = "tabla-asistentes";
+        $(document).ready(function(){
+            $(':checkbox').checkboxpicker({
+              html: true,
+              offLabel: '<span class="glyphicon glyphicon-remove">',
+              onLabel: '<span class="glyphicon glyphicon-ok">'
+            });
+        });
+    </script>
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script src="{{STATIC_URL}}plugins/bootstrap-checkbox/dist/js/bootstrap-checkbox.min.js"></script>
+
+    <script>
+        var actividad_id = {{ actividad.id }};
+        $("input:checkbox").change(function(){
+            var asistente_id = $(this).attr("id");
+            var asistio = 0;
+            if($(this).is(":checked")){
+                asistio = 1;
+            }
+
+
+            $.post("{% url 'ajax_asistencia' %}",{actividad_id: actividad_id, asistente_id: asistente_id,
+                csrfmiddlewaretoken: "{{csrf_token}}", dirigido_a:{{ actividad.dirigido_a }}, asistio: asistio })
+                    .success(function(response){
+                        toastr.options = {
+                            "closeButton": true,
+                            "progressBar": true,
+                            "showEasing": "swing"
+                        };
+                        toastr["success"](response.msj);
+                    })
+                    .error(function(response){
+                        console.log(response)
+                    });
+        });
+    </script>
+{% endblock %}

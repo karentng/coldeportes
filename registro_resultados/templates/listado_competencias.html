@@ -8,11 +8,11 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-    Listado de Competencias
+    Listado de Competencias por Modalidad
 {% endblock %}
 
 {% block titulo_panel %}
-    Listado de Competencias
+    Listado de Competencias por Modalidad
 {% endblock %}
 
 {% block js %}
@@ -29,16 +29,13 @@
 
 {% block contenido_panel %}
 <div  class="wrapper bg-silver-lighter clearfix">
-    <a href="{% url 'listar_juegos' %}" class="btn btn-sm btn-primary p-l-20 p-r-20 btn-sm"><i class="fa fa-arrow-left m-r-5"></i> Listar Juegos</a>
-    <a href="{% url 'datos_competencia' juego_id %}" class="btn btn-sm btn-success p-l-20 p-r-20 btn-sm"><i class="fa fa-plus m-r-5"></i> Nueva Competencia</a>
+    <a href="{% url 'listar_juegos' %}" class="btn btn-sm btn-primary p-l-20 p-r-20 btn-sm"><i class="fa fa-arrow-left m-r-5"></i> Regresar</a>
+    <a href="{% url 'datos_competencia' juego_id %}" class="btn btn-sm btn-success p-l-20 p-r-20 btn-sm"><i class="fa fa-plus m-r-5"></i> Nueva Competencia por Modalidad</a>
     <a href="{% url 'cargas_competencias' juego_id %}" class="btn btn-sm btn-success p-l-20 p-r-20 btn-sm"><i class="fa fa-refresh"></i> Cargar Competencias Archivo</a>
     <div class="pull-right">
         <div class="btn-group btn-toolbar">
             <a  class="btn btn-white btn-sm disabled"><i class="fa fa-bicycle"></i></a>
             <a  class="btn btn-white btn-sm disabled"><i class="fa fa-futbol-o"></i></a>
-        </div>
-        <div class="btn-group m-l-5">
-            <a  class="btn btn-white btn-sm disabled"><i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>
@@ -54,7 +51,6 @@
                         <th>Lugar</th>
                         <th>Tipo de Competencia</th>
                         <th>Tipo de Disciplina</th>
-                        <th>Deporte</th>
                         <th>Tipos de Participantes</th>
                         <th>Fecha</th>
                         <th>Categoría</th>
@@ -77,8 +73,7 @@
                         <td>{{competencia.nombre}}</td>
                         <td>{{competencia.lugar}}</td>                       
                         <td>{{competencia.get_tipo_competencia_display}}</td>                       
-                        <td>{{competencia.deporte}}</td>                       
-                        <td>{{competencia.deporte}}</td>
+                        <td>{{competencia.deporte}}</td> 
                         <td>{{competencia.get_tipos_participantes_display}}</td>
                         <td>{{competencia.fecha_competencia}}</td>
                         <td>{%if competencia.categoria %}{{competencia.categoria}}{% else %}No registra{% endif %}</td>
@@ -89,11 +84,9 @@
                             <a href='{% url 'listar_participantes' competencia.id %}'>
                                 <i class="fa fa-check"></i> Ingresar Resultados
                             </a><br>
-                            {% comment %}
                             <a href='{% url 'datos_competencia' juego_id competencia.id %}'>
                                 <i class="fa fa-edit"></i> Editar
                             </a><br>
-                            {% endcomment %}
 
                             <a href="#" data-target="#modal-eliminar-{{competencia.id}}" data-toggle="modal">
                                 <i class="fa fa-trash"></i> Eliminar
@@ -111,7 +104,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <a href="" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
-                                            <a href="{% url 'eliminar_competencia' juego_id competencia.id %}" class="btn btn-sm btn-danger">Aceptar</a>
+                                            <a href="{% url 'eliminar_competencia' juego_id competencia.id %}" class="btn btn-sm btn-warning">Aceptar</a>
                                         </div>
                                     </div>
                                 </div>

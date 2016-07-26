@@ -1,6 +1,6 @@
 <ol class="bwizard-steps clearfix" role="tablist">
     <li role="tab" {% if wizard_stage >= 1 %} aria-selected="true" class="active" {% endif %} style="z-index: 7;"><span class="label badge-inverse">1</span><a class="hidden-phone">
-            <a {% if escenario_id %} href="{% url 'wizard_identificacion' escenario_id %}" style="cursor:pointer;"{% endif %}>
+            <a href="{% url 'listar_participantes' competencia.id %}" style="cursor:pointer;">
                 
                 Participantes <small>Registro de participantes individuales o por équipos</small>
             </a>
@@ -8,20 +8,12 @@
     </li>
     <li role="tab"  {% if wizard_stage >= 2 %} aria-selected="true" class="active" {% endif %} style="z-index: 6;"><span class="label">2</span>
         <a class="hidden-phone">
-            <a {% if escenario_id %} href="{% url 'wizard_caracterizacion' escenario_id %}" style="cursor:pointer;"{% endif %}>
+            <a href="{% url 'medalleria_por_competencia' competencia.id %}" style="cursor:pointer;">
                 
                 Medallería <small>Medallería final de la competencia</small>                
             </a>
         </a>
-    </li>
-    <li role="tab"  {% if wizard_stage >= 3 %} aria-selected="true" class="active" {% endif %} style="z-index: 5;"><span class="label">3</span>
-        <a class="hidden-phone">
-            <a {% if escenario_id %}href="{% url 'wizard_horarios' escenario_id %}" style="cursor:pointer;" {% endif %}>
-                Cargar Archivos<small>Registrar datos masivamente</small>
-            </a>
-        </a>
-    </li>
-      
+    </li>      
 </ol>
 <br/>
 

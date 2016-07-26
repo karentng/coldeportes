@@ -134,7 +134,15 @@ class PublicPersonalApoyoView(models.Model):
         (13,'ENTRENADOR PERSONALIZADO'),
         (14,'ANIMADOR SOCIOCULTURAL'),
         (15,'RECREADOR'),
-        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+        (16,'COORDINADOR DE PROYECTO'),
+        (17,'AUXILIARES ASISTENCIALES'),
+        (18,'APOYOS LOGÍSTICOS'),
+        (19,'COORDINADOR DEL OBSERVATORIO'),
+        (20,'GESTOR PROGRAMA HEVS'),
+        (21,'GUÍAS'),
+        (22,'AUXILIARES'),
+        (23,'CLASIFICADORES FUNCIONALES'),
+        (24,'CLASIFICADORES DEPORTISTAS'),
     )
     class Meta:
         managed = False
@@ -181,19 +189,30 @@ class PublicDeportistaView(models.Model):
         managed = False
 
     #campos modelo deportista
-    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
-    genero = models.CharField(max_length=11)
-    ciudad_residencia = models.ForeignKey(Ciudad)
-    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
-    fecha_nacimiento = models.DateField()
-    fecha_creacion = models.DateTimeField()
-    lgtbi = models.BooleanField()
-    etnia = models.CharField(max_length=20)
-    nacionalidad = models.ForeignKey(Nacionalidad)
-    estado = models.IntegerField()
     nombres = models.CharField(max_length=100, verbose_name='Nombres')
     apellidos = models.CharField(max_length=100,verbose_name='Apellidos')
+    tipo_id = models.CharField(max_length=10,verbose_name='Tipo de Identificación')
+    genero = models.CharField(max_length=11)
+    identificacion = models.CharField(max_length=100,verbose_name='Identificación')
+    fecha_nacimiento = models.DateField()
+    ciudad_residencia = models.ForeignKey(Ciudad)
+    barrio = models.CharField(max_length=100,verbose_name='Barrio')
+    comuna = models.CharField(max_length=100,verbose_name='Comuna')
+    email = models.EmailField(null=True,blank=True)
+    telefono = models.CharField(max_length=100,verbose_name='Teléfono')
+    direccion = models.CharField(max_length=100,verbose_name='Dirección')
+    lgtbi = models.BooleanField()
     entidad = models.ForeignKey(Entidad)
+    estado = models.IntegerField()
+    etnia = models.CharField(max_length=20)
+    video = models.URLField(max_length=1024, verbose_name='Video', null=True, blank=True)
+
+    tipodisciplinadeportiva = models.ForeignKey(TipoDisciplinaDeportiva)
+
+    nacionalidad = models.ForeignKey(Nacionalidad)
+    foto = models.ImageField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField()
+
     #campos historial deportivo
     tipo_participacion = models.CharField(max_length=100)
     estado_participacion = models.CharField(max_length=50)
@@ -242,6 +261,10 @@ class PublicDirigenteView(models.Model):
     estado = models.IntegerField()
     ciudad = models.ForeignKey(Ciudad)
     genero = models.CharField(max_length=11)
+    #campos informacion academica
+    nivel_formacion = models.CharField(max_length=20)
+    estado_formacion = models.CharField(max_length=20)
+    fecha_finalizacion = models.IntegerField(blank=True,null=True)
 
 
 class PublicEscuelaView(models.Model):
@@ -251,6 +274,7 @@ class PublicEscuelaView(models.Model):
 
     nombre = models.CharField(max_length=100)
     telefono_fijo = models.CharField(max_length=100)
+    tipo_sede = models.CharField(max_length=150)
     email = models.CharField(max_length=100)
     web = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField()

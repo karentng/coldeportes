@@ -55,6 +55,14 @@
                     $('.cropControlCrop').click();
                 }
             });
+            //asignar mismo alto a div de informacion de tenant y al logo cuando es club
+            var altomax = 0;  
+            $('.mismoalto').each(function(){  
+                if($(this).height() > altomax){  
+                    altomax = $(this).height();  
+                }  
+            });  
+            $('.mismoalto').height(altomax);
 
         });
         {% if user.is_authenticated %}
@@ -97,10 +105,11 @@
 {% block contenido %}
     {% if entidad.mostrar_info %}
         <div class="row p-b-30">
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-10 {% if not tipoTenant.reconocimiento %}col-md-offset-1 {% endif %} ">
                 <div class="result-container">
                     <ul class="result-list">
-                        <li id="info-tenant" class="animated fadeInDownBig" style="display:none;">
+                        <li id="info-tenant" class="animated fadeInDownBig {% if tipoTenant.reconocimiento %} mismoalto {% endif %}" style="display:none;">                           
+                             
                             <div class="result-image" style="background: white !important;">
                                 <img src="{% if entidad.foto %}{{ MEDIA_URL }}{{ entidad.foto }}{% else %}{{ STATIC_URL }}img/info-tenant-imagen.png{% endif %}" class="img-responsive" alt="Info Tenant"/>
                                 {% if request.user.is_superuser  or request.user|has_group:"Digitador" %}
@@ -114,17 +123,19 @@
                                         <button id="submit-crop" hidden></button>
                                     </form>
                                 {% endif %}
-                            </div>
-                            <div class="result-info">
-                                <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4>
+                            </div>                            
+                            
+                            <div class="result-info" width="100%">
+                                <h4 class="title"><strong>{{ entidad.nombre | upper }}</strong></h4> 
                                 <p class="location">{{ entidad.tipo_tenant }} {% if entidad.disciplina %} de {{ entidad.disciplina }}{% endif %}</p>
                                 <p class="desc">
                                     {% if entidad.descripcion %} {{entidad.descripcion }} {% else %} Descripción no especificada{% endif %}
                                 </p>
+                                <p>{% if tipoTenant.reconocimiento %}Vigencia de Reconocimiento Deportivo Hasta El <b>{{tipoTenant.fecha_vigencia}}</b>{% endif %}</p>                               
                                 <div class="m-b-10">
                                     {% if entidad.tipo_tenant == "Club" and user.is_authenticated %}
                                         <a href="" data-target="#modal-socios" data-toggle="modal" style="margin-right: 10px;"> <i class="fa fa-group"></i> Ver socios del club</a>
-                                        <a data-toggle="modal" data-target="#modal-planes"  href=""><i class="fa fa-money"></i> Ver planes de costos</a>
+                                        <a data-toggle="modal" data-target="#modal-planes"  href=""><i class="fa fa-money"></i> Ver planes de costos</a>                                        
                                     {% endif %}
                                 </div>
                                 <div class="btn-row">
@@ -137,20 +148,34 @@
                                     <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Teléfono">
                                         <i class="fa fa-fw fa-phone"></i>
                                     </a><span>{% if entidad.telefono %} {{entidad.telefono }} {% else %} No especificado{% endif %}</span>
-                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Pagina web">
+                                    <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Página web">
                                         <i class="fa fa-fw fa-link"></i>
-                                    </a><span>{% if entidad.pagina_web %} {{entidad.pagina_web }} {% else %} No especificado{% endif %}</span>
+                                    </a><span>{% if entidad.pagina_web %}<a href="{{entidad.pagina_web}}" target="_blank" style="font-size: 14px; color: #337ab7; opacity: inherit;"> {{entidad.pagina_web }} </a>{% else %} No especificado{% endif %}</span>
                                     {% if entidad.has_deportes %}
                                         <a href="javascript:;" data-toggle="tooltip" data-container="body" data-title="Disciplinas deportivas">
                                             <i class="fa fa-fw fa-futbol-o"></i>
                                         </a><span>{% if entidad.deportes %} {{entidad.deportes }} {% else %} No especificado{% endif %}</span>
                                     {% endif %}
-                                </div>
-                            </div>
+                                </div>                                
+                            </div>                        
                         </li>
                     </ul>
                 </div>
             </div>
+            {% if tipoTenant.reconocimiento %}
+            <div class="col-md-2">
+                <div class="result-container">
+                    <ul class="result-list mismoalto">
+                        <li id="info-reconocimiento" class="animated mismoalto fadeInDownBig">
+                            <div align="center">                        
+                                <img class="img-responsive"  style="height: 100px; width: 95px;"src="{{STATIC_URL}}img/reconocimiento_deportivo/reconocimiento_deportivo.png?V=1.1" alt="certificado">
+                                <h6><b>Club Con Reconocimiento Deportivo</b></h6>
+                            </div>
+                        </li>
+                    </ul>
+                </div>                
+            </div>
+            {% endif %}
         </div>
         {% include 'modal_croppic.html' %}
     {% endif %}

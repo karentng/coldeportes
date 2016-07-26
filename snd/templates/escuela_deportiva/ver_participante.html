@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Participantes - SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Ver Detalles de Participante de EFD
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listar_participante' %}">Participantes</a></li>
+    <li class="active">Ver Participante</li>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .profile-image img {
+          display: block;
+          width: 100%;
+          max-height: 100%;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="{% url 'listar_participante' %}" class="btn btn-warning btn-xs "><i class="fa fa-arrow-left"></i> Regresar</a>
+        </div>
+        <h4 class="panel-title">
+            Información del participante: {{participante.full_name}}
+        </h4>
+    </div>
+    <div class="panel-body" style="padding:0">
+        <div class="row">
+            <div class="col-sm-12">
+                <img src="{{STATIC_URL}}img/ver_mas_deportistas.png" alt="deportistas" style="width:100%; height:250px">
+                <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
+                    <div class="panel-heading p-0">
+                        <div class="panel-heading-btn m-r-10 m-t-10">
+                            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-inverse" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                        </div>
+
+                        <div class="tab-overflow">
+                            <ul class="nav nav-tabs">
+                                <li class="prev-button">
+                                    <a href="javascript:;" data-click="prev-tab" class="text-inverse">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </a>
+                                </li>
+
+                                <li class="active"><a href="#nav-tab2-11" data-toggle="tab"><i class="fa fa-globe"></i> Datos de Identificación</a></li>
+
+                                <li class=""><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-stethoscope"></i> Datos Acudiente</a></li>
+
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-info-circle"></i> Informe de alertas</a></li>
+
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="ion fa-md ion-trophy"></i> Seguimiento talla y peso</a></li>
+
+                                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" style="margin-bottom:0px;padding-bottom:0px">
+                        <div class="tab-pane fade active in" id="nav-tab2-11" style="margin-bottom:0px">
+                            <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
+                                <div class="invoice-company">
+                                    <b>{{participante.full_name}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <address class="m-t-5 m-b-5">
+                                            <div class="profile-left">
+                                                <div class="profile-image">
+                                                    {%if participante.foto %}
+                                                        <img src="{{MEDIA_URL}}{{participante.foto}}" alt="Foto del participante">
+                                                    {%else%}
+                                                        <img src="{{STATIC_URL}}img/depor_default.png" alt="Foto del participante" />
+                                                    {%endif%}
+                                                    <i class="fa fa-user hide"></i>
+                                                </div>
+                                            </div>
+                                            <div class="profile-right">
+                                                <div class="col-lg-9">
+                                                    <p>{% if perms.snd.change_escueladeportiva and request.tenant.schema_name != 'public' %}
+                                                        <b>{{participante.get_tipo_id_display | title}} </b>: {{participante.identificacion}}<br />
+                                                    {% else %}
+                                                        <b>Entidad:</b> {{ participante.entidad | upper}}<br/>
+                                                    {% endif %}</p>
+                                                    {% if request.tenant.schema_name != 'public' %}
+                                                        {% ifequal participante.estado 3 %}
+                                                            <p><b>Estado:</b> {{participante.get_estado_display}} A {{ participante.entidad | upper  }}</p>
+                                                        {% else %}
+                                                            <p><b>Estado:</b> {{participante.get_estado_display}}</p>
+                                                        {% endifequal %}
+                                                    {% endif %}
+                                                    <p><b>Género:</b> {{participante.get_genero_display}}</p>
+                                                    <p><b>Edad:</b> {{ participante.edad }}</p>
+                                                    <p><b>Etnia:</b>
+                                                        {%if participante.etnia%}
+                                                            {{ participante.etnia}}
+                                                        {%else%}
+                                                            Ninguna
+                                                        {%endif%}
+                                                    </p>
+                                                    <p><b>Nacionalidades:</b> {{participante.nacionalidad_str}}</p>
+                                                    <p><b>Ciudad (Departamento) de Residencia:</b> {{ participante.ciudad_residencia}}</p>
+                                                    <p><b>Sistema de salud afiliado:</b> {{ participante.eps }}</p>
+                                                </div>
+                                            {% if perms.snd.change_escueladeportiva and request.tenant.schema_name != 'public' %}
+                                                <p><strong>Información adicional:</strong></p>
+                                                <p><b>Teléfono:</b> {{participante.telefono}}</p>
+                                                <p><b>Dirección:</b> {{participante.direccion}}</p>
+                                                <p><b>Talla:</b> {{participante.talla}} Cm</p>
+                                                <p><b>Peso:</b> {{participante.peso}} Kg</p>
+                                                <p><b>Institución educativa actual:</b> {{ participante.institucion_educativa }}</p>
+                                                <p><b>Año que cursa:</b> {{ participante.anho_curso }} </p>
+                                            {% endif %}
+                                            </div>
+                                        </address>
+
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--COMPOSICION CORPORAL-->
+                        <div class="tab-pane fade" id="nav-tab2-12">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>ACUDIENTES DEL PARTICIPANTE</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <div class="row">
+                                            <address class="m-t-5 m-b-5">
+                                                <div class="col-lg-6">
+                                                    {% if acudientes %}
+                                                        {% for acudiente in acudientes %}
+                                                            <p><strong>Datos:</strong></p>
+                                                            <p><b>Nombre:</b> {{ acudiente.full_name | upper}}</p>
+                                                            {% if perms.snd.view_escueladeportiva %}
+                                                                <p><b>{{ acudiente.get_tipo_id_display }}:</b> {{ acudiente.identificacion }}</p>
+                                                                <p><b>Soporte Identificación:</b>
+                                                                    {% if acudiente.soporte_id  %}
+                                                                        <a href="{{ acudiente.soporte_id.url }}" target="_blank">Soporte</a>
+                                                                    {% else %}
+                                                                        No disponible
+                                                                    {% endif %}
+                                                                </p>
+                                                            {% endif %}
+                                                            <p><b>Genero:</b> {{ acudiente.get_genero_display | upper}}</p>
+                                                            <p><b>Fecha Nacimiento:</b> {{acudiente.fecha_nacimiento}} </p>
+                                                            <p><b>Sistema de salud afiliado:</b> {{ acudiente.eps }} </p>
+                                                            <hr>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </address>
+                                        </div>
+                                        <div class="row">
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--INFORMACIÓN ADICIONAL-->
+                        <div class="tab-pane fade" id="nav-tab2-13">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{participante.nombres}} {{participante.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <div class="row">
+                                            <address class="m-t-5 m-b-5">
+                                                <div class="col-lg-12">
+                                                    <p><strong>Alertas tempranas:</strong></p>
+                                                </div>
+                                                {% if perms.snd.change_escueladeportiva %}
+                                                    <div class="col-lg-4">
+                                                        <form action="{% url 'gestion_alertas' participante.id %}" id="form-alerta" method="post">{% csrf_token %}
+                                                            <div class="well row">
+                                                                <div class="col-xs-12" id="cargar_form">
+                                                                    {% bootstrap_form alerta_form %}
+                                                                    <input type="number" hidden name="alerta_id" value="-1">
+                                                                    <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="{% if perms.snd.change_escueladeportiva %}col-lg-8{% else %}col-lg-12{% endif %}">
+                                                {% if alertas %}
+                                                    <div class="table-responsive">
+                                                        <table class="table table-invoice">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>NIVEL ALERTA</th>
+                                                                    <th>REFERENCIA</th>
+                                                                    <th>DESCRIPCIÓN</th>
+                                                                    <th>FECHA DE REGISTRO</th>
+                                                                    <th>FECHA ÚLTIMA ACTUALIZACIÓN</th>
+                                                                    <th>ESTADO</th>
+                                                                    {% if perms.snd.change_escueladeportiva %}
+                                                                    <th>OPCIONES</th>
+                                                                    {% endif %}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for alerta in alertas %}
+                                                                <tr>
+                                                                    <td>{{alerta.get_nivel_alerta_display}}</td>
+                                                                    <td>{{alerta.referencia_alerta}}</td>
+                                                                    <td>{{alerta.descripcion}}</td>
+                                                                    <td>{{alerta.fecha_registro}}</td>
+                                                                    <td>{% if alerta.fecha_ultima_actualizacion %}{{alerta.fecha_ultima_actualizacion}}{% else %}Nunca{% endif %}</td>
+                                                                    <td>{{alerta.get_estado_display}}</td>
+                                                                    {% if perms.snd.change_escueladeportiva %}
+                                                                    <td>
+                                                                        <a href="#" onclick="urlModal(this);" data-url="{% url 'cambiar_estado_alerta' alerta.id %}" data-toggle="modal" data-target="#modal-desactivate">
+                                                                            <i class="fa fa-ban"></i>
+                                                                            A/I <i style="cursor:pointer;" data-toggle="tooltip" title="Activar/Inactivar" class="fa fa-question-circle add-tooltip"></i>
+                                                                        </a><br>
+                                                                        <a href="#" >
+                                                                            <span data-id="{{ alerta.id }}"   id="editar-alerta" onclick="getEdit(this);"><i class="fa fa-edit"></i> Editar</span>
+                                                                        </a>
+                                                                    </td>
+                                                                    {% endif %}
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal fade" id="modal-desactivate">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                    <h4 class="modal-title">Cambiar de estado alerta temprana:</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Está seguro que desea cambiar el estado de esta alerta temprana?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                                    <a id="confirmar-desactivate" href="" class="btn btn-sm btn-warning">Aceptar</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="alert alert-warning" role="alert"> No hay alertas tempranas registradas</div>
+                                                {% endif %}
+                                                </div>
+                                            </address>
+                                        </div>
+                                        <div class="row">
+                                            <div align="right">
+                                                <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--HISTORIAL DEPORTIVO-->
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                                <div class="invoice-company">
+                                    <b>{{participante.nombres}} {{participante.apellidos}}</b>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <div class="row">
+                                            <address class="m-t-5 m-b-5">
+                                                <div class="col-lg-12">
+                                                    <p><strong>Talla actual: {{ participante.talla }}(cm), Peso actual: {{ participante.peso }}(kg) </strong></p>
+                                                </div>
+                                                {% if perms.snd.change_escueladeportiva %}
+                                                    <div class="col-lg-4">
+                                                        <form action="{% url 'registrar_typ' participante.id %}" id="form-alerta" method="post">{% csrf_token %}
+                                                            <div class="well row">
+                                                                <div class="col-xs-12">
+                                                                    {% bootstrap_form seguimientotyp_form %}
+                                                                    <button class="pull-right row btn btn-primary" type="submit" style="margin-top:10px;margin-right: 1px;"><i class="fa fa-plus"></i> Añadir</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="{% if perms.snd.change_escueladeportiva %}col-lg-8{% else %}col-lg-12{% endif %}">
+                                                {% if seguimientostyp %}
+                                                    <div class="table-responsive">
+                                                        <table class="table table-invoice">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>TALLA (CM)</th>
+                                                                    <th>PESO (KG)</th>
+                                                                    <th>FECHA DE REGISTRO</th>
+                                                                    {% if perms.snd.change_escueladeportiva %}
+                                                                    <th>OPCIONES</th>
+                                                                    {% endif %}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for seguimientotyp in seguimientostyp %}
+                                                                <tr>
+                                                                    <td>{{seguimientotyp.talla}}</td>
+                                                                    <td>{{seguimientotyp.peso}}</td>
+                                                                    <td>{{seguimientotyp.fecha_registro}}</td>
+                                                                    {% if perms.snd.change_escueladeportiva %}
+                                                                    <td>
+                                                                        <a href="{% url "eliminar_typ" seguimientotyp.id %}" >
+                                                                            <i class="fa fa-trash"></i> Eliminar
+                                                                        </a>
+                                                                    </td>
+                                                                    {% endif %}
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="alert alert-warning" role="alert"> No hay seguimientos registrados</div>
+                                                {% endif %}
+                                                </div>
+                                            </address>
+                                        </div>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+    <script src="{{ STATIC_URL }}js/validaciones/escuela_deportiva/alertas-validations.js"></script>
+    <script src="{{STATIC_URL}}plugins/superbox/js/superbox.js"></script>
+    <script src="{{STATIC_URL}}js/apps.min.js"></script>
+    <script>
+        function urlModal(link) {
+            //Funcionalidad para agregar la url al modal
+            var url = link.getAttribute("data-url");
+            document.getElementById("confirmar-desactivate").setAttribute("href",url);
+        }
+        function getEdit(a){
+            var alerta_id = $(a).attr("data-id");
+            var url = "{% url 'ajax_alerta' %}";
+
+            $.get( url, {alerta_id: alerta_id}).success(function(data){
+                        $("#cargar_form").html(data.html);
+                    })
+                    .error(function(data){
+                        console.log(data);
+
+            });
+        }
+
+    </script>
+{% endblock %}

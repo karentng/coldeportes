@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="">EFD</a></li>
+    <li ><a href="">Participantes</a></li>
+    <li class="active">Registrar</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} participante
+{% endblock %}
+
+{% block titulo_panel %}
+    {% if edicion %}Editar{% else %}Registrar{% endif %} participante
+{% endblock %}
+
+{% block css %}
+    {{ form.media }}
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="well row">
+        <div class="row">
+            <form id="form-participante" action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="col-md-6">
+                        {% bootstrap_field field %}
+                    </div>
+                {% endfor %}
+                <hr>
+                {% if edicion %}
+                    <a type="button" class="btn btn-warning pull-right" href="{% url 'listar_participante' %}">
+                        Cancelar
+                    </a>
+                {% endif %}
+                <button class="btn btn-primary pull-right" type="submit" style="margin-right:15px;">
+                    {% if edicion %}Guardar cambios{% else %}Registrar{% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/validaciones/escuela_deportiva/participantes-validations.js"></script>
+    <script>
+        $("#id_sede_perteneciente").select2().change(function(){
+            var sede_id = $(this).val();
+            if(sede_id!=""){
+                $.get("{% url 'ajax_categoria_sede' %}", {sede_id: sede_id})
+                        .success(function(data){
+                            if(data["status"] == "empty"){
+                                toastr.options = {
+                                    "closeButton": true,
+                                    "progressBar": true,
+                                    "showEasing": "swing"
+                                };
+                                toastr["error"]("La sede seleccionada no tiene categorías registradas");
+                            }else {
+                                var $selector = $('#id_categoria');
+                                $selector.empty();
+                                $selector.select2({
+                                    data: data.data
+                                });
+                            }
+                        })
+                        .error(function(data){
+                            toastr.options = {
+                                "closeButton": true,
+                                "progressBar": true,
+                                "showEasing": "swing"
+                            };
+                            toastr["error"](data.error);
+                        });
+            }
+        });
+    </script>
+
+{% endblock %}

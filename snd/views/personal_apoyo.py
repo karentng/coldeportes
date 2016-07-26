@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.http import HttpResponse, JsonResponse
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -7,7 +8,7 @@ from snd.models import PersonalApoyo, FormacionDeportiva, ExperienciaLaboral
 from coldeportes.utilities import calculate_age,not_transferido_required
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from entidades.models import Entidad
+from entidades.models import Entidad, ModalidadDisciplinaDeportiva
 
 
 @login_required
@@ -130,7 +131,7 @@ def wizard_personal_apoyo(request,id_personal_apoyo):
 
 @login_required
 @permission_required('snd.change_personalapoyo')
-def wizard_formacion_deportiva(request,id_personal_apoyo):
+def wizard_formacion_deportiva(request, id_personal_apoyo):
     """
 
     Junio 9 / 2015
@@ -164,13 +165,14 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
     formaciondep_form = FormacionDeportivaForm()
 
     if request.method == 'POST':
-        formaciondep_form = FormacionDeportivaForm(request.POST)
+        formaciondep_form = FormacionDeportivaForm(request.POST, request.FILES)
         if formaciondep_form.is_valid():
             formacion_deportiva = formaciondep_form.save(commit=False)
             formacion_deportiva.personal_apoyo = personal_apoyo
             formacion_deportiva.save()
             formaciondep_form.save()
             return redirect('wizard_formacion_deportiva', id_personal_apoyo)
+        print(formaciondep_form.errors)
 
     return render(request, 'personal_apoyo/wizard/wizard_formacion_deportiva.html', {
         'titulo': 'Formación académica',
@@ -178,7 +180,7 @@ def wizard_formacion_deportiva(request,id_personal_apoyo):
         'form': formaciondep_form,
         'historicos': formacion_deportiva,
         'id_personal_apoyo': id_personal_apoyo,
-        'edicion':edicion
+        'edicion': edicion
     })
 
 @login_required
@@ -211,7 +213,7 @@ def eliminar_formacion_deportiva(request,id_personal_apoyo,id_formacion):
 
 @login_required
 @permission_required('snd.change_personalapoyo')
-def wizard_experiencia_laboral(request,id_personal_apoyo):
+def wizard_experiencia_laboral(request, id_personal_apoyo):
     """
     Junio 9 / 2015
     Autor: Milton Lenis
@@ -242,7 +244,8 @@ def wizard_experiencia_laboral(request,id_personal_apoyo):
     experiencia_laboral_form = ExperienciaLaboralForm()
 
     if request.method == 'POST':
-        experiencia_laboral_form = ExperienciaLaboralForm(request.POST)
+        disciplina_id = request.POST['deporte']
+        experiencia_laboral_form = ExperienciaLaboralForm(request.POST, request.FILES, deporte_id = disciplina_id)
 
         if experiencia_laboral_form.is_valid():
             experiencia_laboral_nuevo = experiencia_laboral_form.save(commit=False)
@@ -292,6 +295,24 @@ def eliminar_experiencia_laboral(request,id_personal_apoyo,id_experiencia):
     except Exception:
         return redirect('wizard_experiencia_laboral', id_personal_apoyo)
 
+
+
+#Ajax para modalidad y categoria historia deportiva
+@login_required
+def get_modalidades(request, deporte_id):
+    modalidades = ModalidadDisciplinaDeportiva.objects.filter(deporte=deporte_id).order_by('nombre')
+    if modalidades:
+        data = []
+        for m in modalidades:
+            dic = {}
+            dic['id'] = m.id
+            dic['text'] = m.__str__()
+            data.append(dic)
+    else:
+        return HttpResponse('Modalidades no encontradas',status=404)
+    return JsonResponse({
+        'data': data
+    })
 
 
 @login_required

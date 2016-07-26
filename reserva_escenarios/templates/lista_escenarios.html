@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Lista Escenarios-SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista Escenarios
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Reserva de Escenarios</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block titulo_panel %}
+    Lista de Escenarios
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script>
+        idTabla = "tabla-escenarios";
+    </script>
+{% endblock %}
+
+{% block contenido_panel %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-escenarios" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Ciudad</th>
+                            <th>Dirección</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for escenario in escenarios %}
+                        <tr>
+                            <td><strong>{{ escenario.nombre }}</strong></td>
+                            <td>{{ escenario.ciudad }}</td>                        
+                            <td>{% if escenario.direccion %}{{ escenario.direccion }}{% endif %}</td>                        
+                            <td>
+                                <a href='{% url 'agendar_reserva' escenario.id %}'>
+                                    <i class="fa fa-clock-o"></i> Solicitar Reservar
+                                </a>
+                                <br/>
+                                {% if request.user.username %}
+                                <a href='{% url 'configurar_reservas' escenario.id %}'>
+                                    <i class="fa fa-cog"></i> Configurar Reservas
+                                </a>
+                                {% endif %}
+                                <br/>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>        
+    </div>
+    
+{% endblock %}

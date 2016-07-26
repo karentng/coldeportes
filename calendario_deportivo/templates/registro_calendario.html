@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+    {% if edicion %}
+	    Edición Calendario Deportivo Nacional
+    {% else %}
+        Registro Eventos Calendario Deportivo Nacional
+    {% endif %}
+{% endblock %}
+
+{% block css %}
+	<link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+
+	{{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+	<li><a href="{% url 'inicio' %}">Inicio</a></li>
+	<li><a href="{% url 'listado_calendario_nacional' %}">Calendario Deportivo Nacional</a>
+    {% if edicion %}
+	    <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
+{% endblock %}
+
+{% block titulo_contenido %}
+	Calendario Deportivo Nacional
+{% endblock %}
+
+{% block titulo_panel %}
+	{% if edicion %}
+	    Edición Calendario Deportivo Nacional
+    {% else %}
+        Registro Eventos Calendario Deportivo Nacional
+    {% endif %}
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+
+	<form id="form-registro-calendario" action="" method="post">{% csrf_token %}
+		<fieldset>
+				<div class="col-xs-12">
+					<h3>
+                        {% if edicion %}
+                            Edición Calendario Deportivo Nacional
+                        {% else %}
+                            Registro Eventos Calendario Deportivo Nacional
+                        {% endif %}
+                    </h3>
+
+					<div class="well row">
+						<strong><h4>Información del Evento</h4></strong>
+
+						<div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.titulo_evento layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.cupo_atletas layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.tipo layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.cupo_personas layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.objetivo layout="verical" %}
+                            </div>
+						</div>
+                        <strong><h4>Fecha y Lugar</h4></strong>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.fecha_inicio layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.fecha_finalizacion layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.ciudad layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.nombre_lugar layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.direccion layout="verical" %}
+                            </div>
+                        </div>
+                        <strong><h4>Deporte</h4></strong>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.deporte layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.categoria layout="verical" %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.modalidad layout="verical" %}
+                            </div>
+                        </div>
+						<hr>
+						<div class="row">
+							<div class="col-xs-12">
+								<button class="btn btn-primary pull-right" type="submit">
+									Enviar
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+		</fieldset>
+	</form>
+
+	
+
+{% endblock %}
+
+{% block js %}
+	<script src="{{STATIC_URL}}js/funciones_calculos/deportistas/historia_deportiva.js"></script>
+    <script src="{{STATIC_URL}}js/validaciones/calendario_deportivo/registro-calendario-validations.js"></script>
+{% endblock %}

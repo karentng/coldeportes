@@ -93,37 +93,30 @@
                 <!-- begin header navigation right -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- begin breadcrumb -->
-                    <!--Inicio campana notificaciones>
-                    <li class="dropdown">
-                        <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label">2</span>
-                        </a>
-                        <ul class="dropdown-menu media-list pull-right animated fadeInDown">
-                            <li class="dropdown-header">Notifications (2)</li>
-                            <li class="media">
-                                <a href="javascript:;">
-                                    <div class="media-left"><i class="fa fa-bug media-object bg-red"></i></div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading">Server Error Reports</h6>
-                                        <div class="text-muted f-s-11">3 minutes ago</div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="media">
-                                <a href="javascript:;">
-                                    <div class="media-left"><img src="assets/img/user-1.jpg" class="media-object" alt="" /></div>
-                                    <div class="media-body">
-                                        <h6 class="media-heading">John Smith</h6>
-                                        <p>Quisque pulvinar tellus sit amet sem scelerisque tincidunt.</p>
-                                        <div class="text-muted f-s-11">25 minutes ago</div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <Fin camapana notificaciones-->
+                
                     {% if request.user.username %}
+                        <!--Inicio campana notificaciones-->
+                        {% if request.tenant.schema_name != 'public' %}
+                        <li class="dropdown">
+                            <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14 add-tooltip" data-toggle="tooltip" title="Muestra la cantidad de solicitudes de reservas de escenarios en espera de respuesta.">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label cantidad-reservas-escenarios"></span>
+                            </a>
+                            <ul class="dropdown-menu media-list pull-right animated fadeInLeft">
+                                <li class="dropdown-header">Notificaciones (<b class="cantidad-reservas-escenarios"></b>)</li>
+                                <li class="media">
+                                    <a href="{% url 'listar_solicitudes_reservas' %}">
+                                        <div class="media-left"><i class="fa fa-calendar media-object bg-blue"></i></div>
+                                        <div class="media-body">
+                                            <h6 class="media-heading">Ir Al Listado Reservas de Escenarios</h6>
+                                            <div class="text-muted f-s-11">Esperando Respuesta</div>
+                                        </div>
+                                    </a>
+                                </li>                      
+                            </ul>
+                        </li>
+                        {% endif %}
+                        <!--Fin camapana notificaciones-->
                     <li class="dropdown navbar-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="{{STATIC_URL}}img/user-13.jpg" alt="" /> 
@@ -324,8 +317,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('[data-toggle=tooltip]').tooltip();
-            $("select.one").select2({width: 'resolve',});
-            $("select.many").select2({multiple:true});
+            $("select.one").select2({width: '100%'});
+            $("select.many").select2({multiple:true, width: '100%'});
             $('.fecha').datetimepicker({
                 timepicker:false,
                 format:'Y-m-d',
@@ -353,7 +346,21 @@
             });
         {% endfor %}
     </script>
+    <!-- Calcula la cantidad de solicitudes de reservas de escenarios, en espera de respuesta -->
+    <script type="text/javascript">
+        $(document).ready(function(){              
+           $.ajax({
+                url: "/reserva-escenarios/barra-solicitudes-reservas",
+                async: true,
+                success: function(data) { 
+                    $(".cantidad-reservas-escenarios").html(data.total_esperando_respuesta);
+                }, error: function(err){
+                    console.log(err);
+                }
+            });
+        });
 
+    </script>
 
     {% block js %}
     {% endblock %}

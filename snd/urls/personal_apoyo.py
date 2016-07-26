@@ -22,4 +22,6 @@ urlpatterns = patterns('snd.views.personal_apoyo',
     url(r'^finalizar/(?P<opcion>.+)', 'finalizar_personal_apoyo', name='finalizar_personal_apoyo'),
     url(r'^ver/(\d+)/(\d+)$','ver_personal_apoyo',name='ver_personal_apoyo'),
     url(r'^verificar$', 'verificar_personal_apoyo', name='verificar_personal_apoyo'),
+    url(r'^modalidades/get/(\d+)$','get_modalidades',name='get_modalidades'),
+    
 )

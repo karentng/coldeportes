@@ -8,6 +8,8 @@ $(document).ready(function() {
         validating: 'fa fa-refresh'
     }
 
+
+
     $('#form-participante').bootstrapValidator({
             feedbackIcons: faIcon,
             excluded: ':disabled',
@@ -46,6 +48,19 @@ $(document).ready(function() {
                         }
                     }
                 },
+                /*cantidad_medallas_equipo: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Por favor ingrese una cantidad'
+                            },
+                            integer: {
+                                message: 'Por favor ingrese valores enteros'
+                            },
+                            greaterThan:{
+                                message: 'Por favor ingrese valores enteros mayores o iguales a 0'
+                            }
+                        }
+                },*/
             
 
 

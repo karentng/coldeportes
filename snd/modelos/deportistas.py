@@ -6,19 +6,19 @@ from coldeportes.utilities import calculate_age,extraer_codigo_video
 from django.db.models.fields.files import ImageFieldFile, FileField
 from coldeportes.settings import STATIC_URL
 from django.conf import settings
-import os
+import os, unicodedata
 
 
 class Deportista(models.Model):
 
     def foto_name(instance, filename):
-        #el nombre de la imagen es la identificación del deportista, filename[-4:] indica la extensión del archivo
-        #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
-        ruta = 'fotos_deportistas/' + instance.identificacion + filename[-4:]
-        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
-        if(os.path.exists(ruta_delete)):
-            os.remove(ruta_delete)
-        return ruta
+        """
+        Se implementa funcion encargada de eliminar tildes de nombres
+        :param filename: nombre del archivo
+        :return: ruta del archivo sin tildes
+        """
+        sin_tilde = 'fotos_deportistas/' + ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
+        return sin_tilde
 
     #Datos personales
         #Identificacion
@@ -37,6 +37,7 @@ class Deportista(models.Model):
         (1,'INACTIVO'),
         (2,'EN TRANSFERENCIA'),
         (3,'TRANSFERIDO'),
+        (4,'TRANSFERIDO INTERNACIONAL'),
     )
 
     ETNIAS = (
@@ -136,7 +137,7 @@ class ComposicionCorporal(models.Model):
         ('XL','XL'),
         ('XXL','XXL'),
     )
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista, related_name='corporal')
     peso = models.FloatField(help_text="En kg", verbose_name="Peso (kg)")
     estatura = models.IntegerField(help_text="En cm", verbose_name="Estatura (cm)")
     RH = models.CharField(max_length=4,choices=tipos_rh,verbose_name='Tipo de sangre')
@@ -175,12 +176,12 @@ class HistorialDeportivo(models.Model):
     tipo = models.CharField(choices=tipo_his_deportivo,max_length=100,verbose_name='Clase de campeonato')
     puesto = models.IntegerField(verbose_name='Puesto obtenido')
     marca = models.CharField(max_length=100,blank=True,verbose_name='Marca obtenida')
-    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad de competencia')
+    modalidad = models.ForeignKey(ModalidadDisciplinaDeportiva,null=True,blank=True,verbose_name='Modalidad del deporte')
     division = models.CharField(max_length=100,blank=True,verbose_name='División de competencia')
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='Deporte en el que participó')
-    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría en la que participó')
+    categoria = models.ForeignKey(CategoriaDisciplinaDeportiva,null=True,blank=True,verbose_name='Categoría del deporte')
     estado = models.CharField(choices=ESTADOS_AVAL,default='Aprobado',max_length=50)
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='deportivo')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def obtener_info_aval(self):
@@ -233,10 +234,10 @@ class InformacionAcademica(models.Model):
     institucion = models.CharField(max_length=100,verbose_name='Institución')
     nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
     estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
-    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
+    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='título obtenido')
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='academico')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -260,7 +261,7 @@ class CambioDocumentoDeportista(models.Model):
 
 
 class InformacionAdicional(models.Model):
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='adicional')
     usa_centros_biomedicos = models.BooleanField(verbose_name='¿Usa centros biomédicos?')
     es_beneficiario_programa_apoyo = models.BooleanField(verbose_name='¿Es beneficiario de algún programa de apoyo?')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -286,7 +287,7 @@ class HistorialLesiones(models.Model):
         (1,'EXTREMIDADES SUPERIORES'),
         (5,'PELVIS'),
     )
-    deportista = models.ForeignKey(Deportista)
+    deportista = models.ForeignKey(Deportista,related_name='lesiones')
     fecha_lesion = models.DateField(verbose_name='Fecha de la lesión')
     tipo_lesion = models.IntegerField(choices=TIPOS_LESION,verbose_name='Tipo de lesión')
     periodo_rehabilitacion = models.IntegerField(choices=PERIODOS_REHABILITACION,verbose_name='Periodo de rehabilitación')

@@ -7,10 +7,17 @@ Website: http://www.seantheme.com/color-admin-v1.7/admin/
 
 var handleCalendarDemo = function () {
 	"use strict";
+	var date;
 	var buttonSetting = {left: 'today prev,next ', center: 'title', right: 'month,agendaWeek,agendaDay'};
 	var data = {};
 	var revert;
-	var date = new Date();
+	if(calendarEvents[0]) {
+		date = new Date(calendarEvents[0].start);
+	}else {
+
+		date = new Date();
+	}
+	var d = date.getDate();
 	var m = date.getMonth();
 	var y = date.getFullYear();
 	
@@ -48,7 +55,10 @@ var handleCalendarDemo = function () {
             element.find(".fc-event-title").append('<small>'+ description +'</small>');
         },
 		editable: editableCal,
-		events: calendarEvents
+		events: calendarEvents,
+		year: y,
+		month: m,
+		date: d
 	});
 	
 	/* initialize the external events
@@ -99,7 +109,7 @@ var handleCalendarDemo = function () {
 	$('#modal-confirmacion').on('click', '.btn-not', function(e) {
 		revert();
 	});
-	$(".external-event i").click(function(){
+	$(".external-event a").click(function(){
 		var diaAct = $(this).attr("data-date");
 		var goDate = new Date(diaAct);
 		var anio = goDate.getFullYear();

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+    Sedes EFD - SND COLDEPORTES
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}plugins/bootstrap-wizard/css/bwizard.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}css/build.css" rel="stylesheet" />
+    {{form.media}} {# js y css para datetime #}
+    
+    
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'escuela_deportiva_listar' %}">Sedes</a>
+    {% if escuela_id %}
+        <li class="active">Editar</li>
+    {% else %}
+        <li class="active">Registrar</li>
+    {% endif %}
+{% endblock %}
+
+{% block titulo_contenido %}
+    Sedes EFD
+{% endblock %}
+
+{% block titulo_panel %}
+    {{titulo_panel}}
+{% endblock %}
+
+{% block panel_botones %}
+{% endblock %}
+
+{% block contenido_panel %}
+    {% include 'escuela_deportiva/wizard/_wizard.html' %}
+        <div class="row">
+            <fieldset class="col-md-6" >
+                <form id="form-wizard-horarios" action="" method="post">{% csrf_token %}
+                <div class="well row">
+                    <div class="col-xs-12">
+                        <h3>{{titulo}}</h3>
+                        {% for field in form %}
+                            <div class="col-lg-6">
+
+                                {% bootstrap_field field layout="vertical" %}
+                            </div>
+                        {% endfor %}
+                        <div class="col-lg-12">
+                            <button class="pull-right row btn btn-info" type="submit" style="margin-top:10px;"><i class="fa fa-plus"></i> Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </fieldset>
+            <div class="col-md-6">
+                <h4>Horarios Actuales:</h4>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Días</th>
+                            <th>Descripción</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for horario in horarios %}
+                        <tr>
+                            <td>{{horario.hora_inicio}}</td>
+                            <td>{{horario.hora_fin}}</td>
+                            <td>{{horario.dias.all|join:", "}}</td>
+                            <td style="word-break: break-all;">{{horario.descripcion}}</td>
+                            <td>
+                                <a href="#modal-desactivate{{horario.id}}" data-toggle="modal"><i class="fa fa-trash"></i></a>
+                                <div class="modal fade" id="modal-desactivate{{horario.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Eliminar Horario:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar este horario?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cancelar</a>
+                                                <a href="{% url 'eliminar_horario_sede' escuela_id horario.id %}" class="btn btn-sm btn-warning">Aceptar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <a href="{% url 'wizard_servicios' escuela_id %}" class="btn btn-primary pull-left" type="button">← Anterior</a>
+        <a href="{% url 'wizard_categorias_sede' escuela_id %}" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Siguiente →</a>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}plugins/bootstrap-wizard/js/bwizard.js"></script>
+    <script src="{{STATIC_URL}}js/form-wizards.demo.min.js"></script>
+    <script src="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
+    
+    <script src="{{ STATIC_URL }}js/validaciones/escuela_deportiva/wizard_horarios-validations.js"></script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            App.init();
+            FormWizard.init();
+        });
+    </script>
+{% endblock %}

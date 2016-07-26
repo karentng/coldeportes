@@ -43,7 +43,7 @@
     <div class="panel-body" style="padding:0">
         <div class="row">
             <div class="col-sm-12">
-                <img src="http://www.podiumns.com/i-img/es/servicios/medicina-deportiva/md-medicina-deportiva-pamplona-navarra.jpg" alt="gimnasio" style="width:100%; height:250px">
+                <img src="{{ STATIC_URL }}img/escuelas.deportivas.jpg" alt="gimnasio" style="width:100%; height:250px">
                 <div class="panel panel-default panel-with-tabs" data-sortable-id="ui-unlimited-tabs-2">
                     <div class="panel-heading p-0">
                         <div class="panel-heading-btn m-r-10 m-t-10">
@@ -59,9 +59,12 @@
                                 </li>
 
                                 <li class="active"><a href="#nav-tab2-12" data-toggle="tab"><i class="fa fa-location-arrow"></i> Datos de Identificación</a></li>
+                                <li class=""><a href="#nav-tab2-13" data-toggle="tab"><i class="fa fa-list"></i> Datos de Ubicación de la Escuela</a></li>
 
                                 <li class=""><a href="#nav-tab2-15" data-toggle="tab"><i class="fa fa-phone"></i> Servicios</a></li>
+                                <li class=""><a href="#nav-tab2-14" data-toggle="tab"><i class="fa fa-clock-o"></i> Horarios de Actividad</a></li>
 
+                                <li class=""><a href="#nav-tab2-17" data-toggle="tab"><i class="fa fa-tags"></i> Categorías</a></li>
                                 <li class=""><a href="#nav-tab2-16" data-toggle="tab"><i class="fa fa-file-pdf-o"></i> Aval funcionamiento</a></li>
                                 
                                 <li class="next-button"><a href="javascript:;" data-click="next-tab" class="text-inverse"><i class="fa fa-arrow-right"></i></a></li>
@@ -73,19 +76,10 @@
                             <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
                                 <div class="invoice-company">
                                     <b>{{escuela.nombre}}</b><br>
-                                    <b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
-                                        <address class="m-t-5 m-b-5">
-                                            <p><b>Dirección:</b> {% if escuela.direccion %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
-                                            <p><b>Barrio:</b> {% if escuela.barrio %} {{escuela.barrio}} {% else %} No especificado {% endif %}</p>
-                                            <p><b>Ciudad:</b> {% if escuela.ciudad %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
-                                            <p><b>Estrato:</b> {% if escuela.estrato %} {{escuela.estrato}} {% else %} No especificado {% endif %}</p>
-                                            <p><b>Comuna:</b> {% if escuela.comuna %} {{escuela.comuna}} {% else %} No especificado {% endif %}</p>
-                                        </address>
-                                        <br/>
-                                        <h5 class="m-t-10"><b>Información de contacto:</b></h5>
+                                        <p><b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}</p>
                                         <p><b>Teléfono:</b> {% if escuela.telefono_fijo %} {{escuela.telefono_fijo}} {% else %} No especificado {% endif %}</p>
                                         <p><b>Teléfono celular:</b> {% if escuela.telefono_celular %} {{escuela.telefono_celular}} {% else %} No especificado {% endif %}</p>
                                         <p><b>Email:</b> {% if escuela.email %} {{escuela.email}} {% else %} No especificado {% endif %}</p>
@@ -99,12 +93,32 @@
 
                             </div>
                         </div>
+                        <div class="tab-pane fade in" id="nav-tab2-13" style="margin-bottom:0px">
+                            <div class="invoice" style="margin-bottom:0px;padding-bottom:0px">
+                                <div class="invoice-company">
+                                    <b>{{escuela.nombre}}</b><br>
+                                </div>
+                                <div class="invoice-header">
+                                    <div class="invoice-from">
+                                        <p><b>Dirección:</b> {% if escuela.direccion %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Barrio:</b> {% if escuela.barrio %} {{escuela.barrio}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Ciudad:</b> {% if escuela.ciudad %} {{escuela.direccion}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Estrato:</b> {% if escuela.estrato %} {{escuela.estrato}} {% else %} No especificado {% endif %}</p>
+                                        <p><b>Comuna:</b> {% if escuela.comuna %} {{escuela.comuna}} {% else %} No especificado {% endif %}</p><br>
+                                        <h5 class="m-t-10"><b>Descripción:</b></h5>
+                                        <p class="text-justify">{{ escuela.descripcion_lugar }}</p>
+                                        <div align="right">
+                                            <img src="{{STATIC_URL}}img/logo_snd_marca_agua.png" alt="marca_agua">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
                         <div class="tab-pane fade" id="nav-tab2-15">
                             <div class="invoice">
                                 <div class="invoice-company">
                                     <b>{{escuela.nombre}}</b><br>
-                                    <b>Deporte:</b> {{escuela.entidad.escueladeportiva_.disciplina}}
                                 </div>
                                 <div class="invoice-header">
                                     <div class="invoice-from">
@@ -121,6 +135,79 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-tab2-14">
+                            <div class="invoice">
+                            <div class="invoice-company">
+                                <b>{{escuela.nombre}}</b>
+                            </div>
+                            {% if horarios %}
+
+                                <div class="invoice-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>HORA INICIO</th>
+                                                    <th>HORA FIN</th>
+                                                    <th>DÍAS</th>
+                                                    <th>DESCRIPCIÓN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for horario in horarios %}
+                                                <tr>
+                                                    <td>{{horario.hora_inicio}}</td>
+                                                    <td>{{horario.hora_fin}}</td>
+                                                    <td>{% for dia in horario.dias.all %} {{dia.nombre}} {% endfor %}</td>
+                                                    <td>{{horario.descripcion}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <p>No hay horarios disponibles</p>
+                            {% endif %}
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-tab2-17">
+                            <div class="invoice">
+                            <div class="invoice-company">
+                                <b>{{escuela.nombre}}</b>
+                            </div>
+                            {% if categorias %}
+
+                                <div class="invoice-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>NOMBRE CATEGORÍA</th>
+                                                    <th>DESCRIPCIÓN</th>
+                                                    <th>EDAD MÍNIMA</th>
+                                                    <th>EDAD MÁXIMA</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for categoria in categorias %}
+                                                <tr>
+                                                    <td>{{categoria.nombre_categoria}}</td>
+                                                    <td>{{categoria.descripcion}}</td>
+                                                    <td>{{categoria.edad_minima}}</td>
+                                                    <td>{{categoria.edad_maxima}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <p>No hay categorías disponibles</p>
+                            {% endif %}
                             </div>
                         </div>
 
