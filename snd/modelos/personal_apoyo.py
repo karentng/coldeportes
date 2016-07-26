@@ -21,6 +21,15 @@ class PersonalApoyo(models.Model):
         sin_tilde = 'fotos_personal_apoyo/' + ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
         return sin_tilde
 
+    def pdf_name(instance, filename):
+        """
+        Se implementa funcion encargada de eliminar tildes de nombres
+        :param filename: nombre del archivo
+        :return: ruta del archivo sin tildes
+        """
+        sin_tilde = 'Personal_apoyo/' + ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
+        return sin_tilde
+
     ESTADOS = (
         (0, "ACTIVO"),
         (1, "INACTIVO"),
@@ -83,7 +92,7 @@ class PersonalApoyo(models.Model):
     genero = models.CharField(choices=tipo_genero, verbose_name='Género', max_length=11)
     foto = models.ImageField(upload_to=foto_name, null=True, blank=True)
     tipo_id = models.CharField(max_length=5, verbose_name='Tipo de identificación', choices=TIPO_IDENTIDAD)
-    soporte_identificacion = models.FileField(upload_to="Personal_apoyo/soporte_identificacion/",
+    soporte_identificacion = models.FileField(upload_to=pdf_name,
                                               verbose_name="Soporte de indentificacion (escaneado)")
     identificacion = models.CharField(max_length=100, verbose_name='Número de identificación', unique=True)
     telefono_fijo = models.CharField(max_length=50, verbose_name='Teléfono fijo', blank=True)
@@ -117,6 +126,16 @@ class PersonalApoyo(models.Model):
 
 
 class FormacionDeportiva(models.Model):
+
+    def pdf_name(instance, filename):
+        """
+        Se implementa funcion encargada de eliminar tildes de nombres
+        :param filename: nombre del archivo
+        :return: ruta del archivo sin tildes
+        """
+        sin_tilde = 'Personal_apoyo/' + ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
+        return sin_tilde
+
     tipo_academica = (
         ('Técnico', 'Técnico'),
         ('Tecnólogo', 'Tecnólogo'),
@@ -134,7 +153,7 @@ class FormacionDeportiva(models.Model):
     estado = models.CharField(choices=tipo_estado, max_length=20, verbose_name='Estado')
     profesion = models.CharField(max_length=100, blank=True, null=True, verbose_name='título obtenido')
     grado_semestre = models.IntegerField(verbose_name='Grado, año o semestre', null=True, blank=True)
-    soporte_cualificacion = models.FileField(upload_to="Personal_apoyo/soporte_cualificacion/",
+    soporte_cualificacion = models.FileField(upload_to=pdf_name,
                                              verbose_name="Soporte cualificación y formación (escaneado)")
     fecha_finalizacion = models.IntegerField(blank=True, null=True, verbose_name='Año finalización')
     fecha_creacion = models.DateField(auto_now_add=True)
@@ -147,6 +166,16 @@ class FormacionDeportiva(models.Model):
 
 
 class ExperienciaLaboral(models.Model):
+
+    def pdf_name(instance, filename):
+        """
+        Se implementa funcion encargada de eliminar tildes de nombres
+        :param filename: nombre del archivo
+        :return: ruta del archivo sin tildes
+        """
+        sin_tilde = 'Personal_apoyo/' + ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
+        return sin_tilde
+
     nombre_cargo = models.CharField(max_length=50, verbose_name='Nombre del cargo')
     institucion = models.CharField(max_length=150, verbose_name='Institución donde se desempeñó')
     deporte = models.ForeignKey(TipoDisciplinaDeportiva,verbose_name='disciplina deportiva')
@@ -156,5 +185,5 @@ class ExperienciaLaboral(models.Model):
     fecha_fin = models.DateField(blank=True, null=True)
     fecha_creacion = models.DateField(auto_now_add=True)
     personal_apoyo = models.ForeignKey(PersonalApoyo)
-    soporte_hoja_de_vida = models.FileField(upload_to="Personal_apoyo/soporte_hoja_de_vida/",
+    soporte_hoja_de_vida = models.FileField(upload_to=pdf_name,
                                             verbose_name="Soporte hoja de vida (escaneado)")
