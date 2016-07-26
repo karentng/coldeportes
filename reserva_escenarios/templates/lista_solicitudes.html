@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block titulo %}
+    Lista Solicitudes de Reservas -SND COLDEPORTES
+{% endblock %}
+
+{% block titulo_contenido %}
+    Lista Solicitudes de Reservas
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li class="active">Listado Solicitudes de Reserva</li>
+{% endblock %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}plugins/DataTables/css/data-table.css" rel="stylesheet" />
+{% endblock %}
+
+{% block titulo_panel %}
+    Lista de Solicitudes de Reservas
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/coldeportes/tabla_extendida.js"></script>
+    <script>
+        idTabla = "tabla-solicitudes-reservas";
+    </script>
+{% endblock %}
+
+{% block contenido_panel %}
+    <div class="row">
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-green">
+                <div class="stats-icon"><i class="fa fa-envelope"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL SOLICITUDES RECIBIDAS</h4>
+                    <p>{{dashboard.total_solicitudes}}</p>    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-blue">
+                <div class="stats-icon"><i class="fa fa-check"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL APROBADAS</h4>
+                    <p>{{dashboard.total_aprobadas}}</p>    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-orange">
+                <div class="stats-icon"><i class="fa fa-times"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL RECHAZADAS</h4>
+                    <p>{{dashboard.total_rechazadas}}</p>    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="widget widget-stats bg-red">
+                <div class="stats-icon"><i class="fa fa-clock-o"></i></div>
+                <div class="stats-info">
+                    <h4>TOTAL ESPERANDO RESPUESTA</h4>
+                    <p>{{dashboard.total_esperando_respuesta}}</p>    
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="tabla-solicitudes-reservas" class="table table-bordered table-hover toggle-circle" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Escenario</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Nombre Grupo Solicitante</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for solicitud in solicitudes %}
+                        <tr>
+                            <td><strong>{{ solicitud.escenario }}</strong></td>
+                            <td>{{ solicitud.fecha_inicio }}</td>                        
+                            <td>{{ solicitud.fecha_fin }}</td>                        
+                            <td>{{ solicitud.nombre_equipo }}</td>                        
+                            <td>
+                                <a href="{% url 'responder_solicitud_reserva' solicitud.id %}">
+                                    <i class="fa fa-envelope-o"></i> Responder
+                                </a>
+                                <br/>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>        
+    </div>
+    
+{% endblock %}

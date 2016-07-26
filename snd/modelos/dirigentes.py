@@ -3,17 +3,17 @@
 from entidades.models import *
 from django.db import models
 from django.conf import settings
-import os
+import os,unicodedata
 
 class Dirigente(models.Model):
     def foto_name(instance, filename):
-        #el nombre de la imagen es la identificación del dirigente, filename[-4:] indica la extensión del archivo
-        #primero se borra alguna imagen existente que tenga el mismo nombre. Si la imagen anterior tiene una extensión distinta a la nueva se crea una copia
-        ruta = 'fotos_dirigentes/' + instance.identificacion + filename[-4:]
-        ruta_delete = settings.MEDIA_ROOT + "/" + ruta
-        if(os.path.exists(ruta_delete)):
-            os.remove(ruta_delete)
-        return ruta
+        """
+        Se implementa funcion encargada de eliminar tildes de nombres
+        :param filename: nombre del archivo
+        :return: ruta del archivo sin tildes
+        """
+        sin_tilde = 'fotos_dirigentes/' + ''.join((c for c in unicodedata.normalize('NFD', filename) if unicodedata.category(c) != 'Mn'))
+        return sin_tilde
 
     TIPO_GENERO = (
         ('HOMBRE','MASCULINO'),
@@ -117,7 +117,7 @@ class DirigenteFormacionAcademica(models.Model):
     institucion = models.CharField(max_length=100,verbose_name='Institución')
     nivel = models.CharField(choices=tipo_academica,max_length=20,verbose_name='Nivel')
     estado = models.CharField(choices=tipo_estado,max_length=20,verbose_name='Estado')
-    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='Profesión')
+    profesion =  models.CharField(max_length=100,blank=True,null=True,verbose_name='título obtenido')
     grado_semestre = models.IntegerField(verbose_name='Grado, Año o Semestre', null=True, blank=True)
     fecha_finalizacion = models.IntegerField(blank=True,null=True,verbose_name='Año Finalización')
     dirigente = models.ForeignKey(Dirigente)

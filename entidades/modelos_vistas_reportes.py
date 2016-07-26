@@ -134,7 +134,15 @@ class PublicPersonalApoyoView(models.Model):
         (13,'ENTRENADOR PERSONALIZADO'),
         (14,'ANIMADOR SOCIOCULTURAL'),
         (15,'RECREADOR'),
-        (16,'PROMOTOR DE ACTIVIDAD FÍSICA'),
+        (16,'COORDINADOR DE PROYECTO'),
+        (17,'AUXILIARES ASISTENCIALES'),
+        (18,'APOYOS LOGÍSTICOS'),
+        (19,'COORDINADOR DEL OBSERVATORIO'),
+        (20,'GESTOR PROGRAMA HEVS'),
+        (21,'GUÍAS'),
+        (22,'AUXILIARES'),
+        (23,'CLASIFICADORES FUNCIONALES'),
+        (24,'CLASIFICADORES DEPORTISTAS'),
     )
     class Meta:
         managed = False

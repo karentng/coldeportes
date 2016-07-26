@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import ModelForm
 from coldeportes.utilities import adicionarClase, verificar_tamano_archivo
-from entidades.models import Entidad, TipoRequerimientoReconocimientoDeportivo
+from entidades.models import Entidad, Ente, TipoRequerimientoReconocimientoDeportivo
 from reconocimiento_deportivo.modelos.solicitudes import *
 
 class ReconocimientoDeportivoForm(ModelForm):
@@ -14,7 +14,7 @@ class ReconocimientoDeportivoForm(ModelForm):
         self.fields['vinculo_solicitante'] = adicionarClase(self.fields['vinculo_solicitante'], 'one')
         self.fields['tipo'] = adicionarClase(self.fields['tipo'], 'one')
         self.fields['descripcion'].widget.attrs['rows'] = 3
-        self.fields['para_quien'].queryset = Entidad.objects.filter(tipo=5).order_by('nombre')
+        self.fields['para_quien'].queryset = Ente.objects.filter(tipo_ente=1).order_by('nombre')
 
     class Meta:
         model = ReconocimientoDeportivo

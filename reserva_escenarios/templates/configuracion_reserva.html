@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+    Configuración de Reserva de Escenario
+{% endblock %}
+
+{% block css %}
+    <link href="{{ STATIC_URL }}plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+    {{form.media}} {# js y css para datetime #}
+{% endblock %}
+
+{% block miga_pan %}
+    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+    <li><a href="{% url 'listado_calendario_nacional' %}">Reserva de Escenarios</a>
+    <li class="active">Configuración</li>
+{% endblock %}
+
+{% block titulo_contenido %}
+    Configuración de Reserva de Escenario
+{% endblock %}
+
+{% block titulo_panel %}
+    <i class="fa fa-cog"></i> Configuración de Reserva de Escenarios
+{% endblock %}
+
+{% block contenido_panel %}
+
+    <form id="form-registro-calendario" action="" method="post">{% csrf_token %}
+        <fieldset>
+                <div class="col-xs-12">
+                    <h3>
+                        Configuración de Reservas de Escenarios Deportivos
+                    </h3>
+                    <div class="well row">
+                        <strong><h4>Ingrese los parámetros:</h4></strong>
+
+                        <div class="row">
+                            {% for field in form %}
+                                <div class="col-md-6">
+                                    {% bootstrap_field field layout="verical" %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button class="btn btn-primary pull-right" type="submit">
+                                   <i class="fa fa-save"></i> Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </fieldset>
+    </form>
+
+    
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/funciones_calculos/deportistas/historia_deportiva.js"></script>
+    <script src="{{STATIC_URL}}js/validaciones/calendario_deportivo/registro-calendario-validations.js"></script>
+{% endblock %}

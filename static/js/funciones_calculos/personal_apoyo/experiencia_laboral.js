@@ -27,4 +27,37 @@ $(document).ready(function() {
            $(form).bootstrapValidator('revalidateField', 'fecha_fin');
        }
     });
+    var modalidad = $("#id_modalidad");
+    if (!modalidad.val()){
+        modalidad.prop("disabled", true);
+    }
+    
 });
+
+$("#id_deporte").on('change',function(){
+    var valor_deporte = $(this).val();
+    ajax_modalidades(valor_deporte);
+});
+
+function ajax_modalidades(deporte){
+    $("#id_modalidad").empty();
+    $.ajax({
+        url: '/personal-apoyo/modalidades/get/' + deporte,
+        dataType: 'json',
+        success: function(response) {
+            $("#id_modalidad").prop("disabled", false);
+            var datos = response.data;
+            $("#id_modalidad").select2({
+              data: datos
+            })
+        },
+        error: function(err){
+            $("#id_modalidad").prop("disabled", true);
+            $("#id_modalidad").select2({
+              data: null
+            });
+            $("#id_modalidad").empty();
+            console.log(err)
+        }
+    });
+}

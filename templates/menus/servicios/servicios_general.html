@@ -22,11 +22,10 @@
         {% endif %}
 
         {% include "menus/servicios/gestion_eventos.html" %}        
-        {# include "menus/servicios/reserva_escenarios.html" #}
+        {% include "menus/servicios/reserva_escenarios.html" %}
         {% if perms.entidades.add_calendarionacional %}
             {% include "menus/aplicacion/calendario_deportivo.html" %}
         {% endif %}
-
     {% endif %}
 
 
